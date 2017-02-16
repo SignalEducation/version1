@@ -1727,7 +1727,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: relative;
   margin-bottom: -50px; /* negative value of footer height */
   background: $colour-7;
-  border-top: 0px solid $colour-3;
+  border-top: 10px solid $colour-3;
   padding: $gutter*1.5 0 $gutter*2 0;
   text-align: center;
   @include clearfix();
@@ -1781,6 +1781,102 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     }
   }
 }
+.foot-list-large {
+  color: $white;
+  list-style: none;
+  padding: 0;
+  margin: $gutter 0 0 0;
+  @include font-size(1.8);
+  @include breakpoint(md-min) {
+    @include font-size(1.4);
+  }
+  & li {
+    position: relative;
+    //display: inline-block;
+    color: tint($colour-7, 20%);
+    margin-left: $gutter/4;
+    margin-bottom: $gutter;
+  }
+  & a {
+    color: $white;
+    text-decoration: none;
+    margin-left: $gutter/1.5;
+    @include opacity(0.8);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
+.social-nav {
+  margin-top: $gutter;
+  color: $white;
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  @include font-size(1.6);
+  & li {
+    position: relative;
+    display: inline-block;
+    color: tint($colour-7, 20%);
+    //margin-left: $gutter/4;
+  }
+  & a {
+    color: $white;
+    text-decoration: none;
+    //margin-left: $gutter/1.5;
+    @include opacity(0.8);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
+.social-nav-xs {
+  color: $white;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+  @include font-size(1.8);
+  & li {
+    position: relative;
+    color: tint($colour-7, 20%);
+    margin-top: $gutter;
+  }
+  & a {
+    color: $white;
+    text-decoration: none;
+    margin-left: $gutter/1.5;
+    @include opacity(0.8);
+    &:hover {
+      @include opacity(1);
+    }
+  }
+}
+.footer-container {
+  position: relative;
+  min-height: 230px;
+}
+.foot-pull-down {
+  position: absolute;
+  bottom: 0;
+}
+.foot-copyright {
+  color: $white;
+  margin-top: $gutter*3;
+  @include opacity(0.8);
+  @include font-size(1.2);
+  @include breakpoint(md-min) {
+    @include font-size(1.4);
+  }
+}
+.foot-copyright-small {
+  width: 100%;
+  color: $white;
+  margin-top: $gutter;
+  @include opacity(0.8);
+  @include font-size(1.8);
+}
+
+// Corporate Footer
 .foot-nav-small {
   color: $white;
   list-style: none;
@@ -1822,57 +1918,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     }
   }
 }
-.social-nav {
-  color: $white;
-  list-style: none;
-  padding: 0;
-  margin: $gutter $gutter*5 0 $gutter*5;
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: right;
-    @include font-size(1.4);
-  }
-  & li {
-    position: relative;
-    display: inline-block;
-    color: tint($colour-7, 20%);
-    margin-left: $gutter/4;
-    &:before {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  }
-  & li:first-child {
-    margin: 0;
-    &:before {
-      content: "";
-    }
-    & a {
-      margin: 0;
-    }
-  }
-  & a {
-    color: $white;
-    text-decoration: none;
-    margin-left: $gutter/1.5;
-    @include opacity(0.8);
-    &:hover {
-      @include opacity(1);
-    }
-  }
-}
-.foot-copyright {
-  color: $white;
-  margin-top: $gutter;
-  @include opacity(0.8);
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: left;
-    @include font-size(1.4);
-  }
-}
-
 .foot-powered-by {
   color: $white;
   margin-top: $gutter;
@@ -5446,9 +5491,8 @@ footer nav ul li a{
   text-overflow: ellipsis;
 }
 
-
 .admin-nav {
-  //display: block;
+  display: block;
   background: $white;
   position: relative;
   @include border-radius(5px);
@@ -5457,27 +5501,83 @@ footer nav ul li a{
 }
 
 .admin-nav-block {
-  color: $white;
   list-style: none;
   padding: 0;
-  margin: $gutter 0 0 0;
-  @include font-size(1.2);
+  color: $colour-7;
+  @include font-size(1.6);
   @include breakpoint(md-min) {
-    @include font-size(1.4);
+    @include font-size(1.8);
+    margin-left: 5%;
+    margin-right: 5%;
   }
   & li {
     position: relative;
     display: inline-block;
-    color: $colour-7;
-    margin: $gutter/2;
+    padding: $gutter/2;
+    margin-left: 2%;
+    margin-right: 2%;
+    @include breakpoint(sm-min) {
+      padding: $gutter/2;
+      margin-left: 7%;
+      margin-right: 7%;
+    }
   }
   & a {
     color: $colour-7;
     text-decoration: none;
-    margin-left: $gutter/1.5;
     @include opacity(0.8);
+    @include font-size(1.6);
     &:hover {
-      @include opacity(1);
+      @include opacity(2);
     }
   }
+}
+.user-nav-block {
+  list-style: none;
+  padding: 0;
+  color: $colour-7;
+  @include font-size(1.6);
+  @include breakpoint(md-min) {
+    @include font-size(1.8);
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  & li {
+    position: relative;
+    display: inline-block;
+    padding: $gutter/2;
+    margin-left: 2%;
+    margin-right: 2%;
+    @include breakpoint(sm-min) {
+      padding: $gutter/2;
+      margin-left: 4%;
+      margin-right: 4%;
+    }
+  }
+  & a {
+    color: $colour-7;
+    text-decoration: none;
+    @include opacity(0.8);
+    @include font-size(1.6);
+    &:hover {
+      @include opacity(2);
+    }
+  }
+}
+
+.stats-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+}
+.stats-box-inner {
+  padding: $gutter/1.5 $gutter/1.5;
 }

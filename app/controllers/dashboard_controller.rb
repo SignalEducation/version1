@@ -1,10 +1,20 @@
 class DashboardController < ApplicationController
 
   before_action :logged_in_required
+  before_action only: [:admin] do
+    ensure_user_is_of_type(['admin'])
+  end
+  before_action only: [:export_users, :export_users_monthly, :export_courses] do
+    ensure_user_is_of_type(['admin', 'marketing_manager'])
+  end
+
   before_action :get_variables
 
   def admin
-
+    @users = User.this_week.all_students
+    @conversions = Subscription.this_week.all_active.all_of_status('active')
+    @active_users = User.active_this_week.all_students
+    @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
   end
 
   def export_users
@@ -38,10 +48,27 @@ class DashboardController < ApplicationController
   end
 
   def content_manager
+    ensure_user_is_of_type(['content_manager'])
+  end
 
+  def marketing_manager
+    ensure_user_is_of_type(['marketing_manager'])
+    @users = User.this_week.all_students
+    @conversions = Subscription.this_week.all_active.all_of_status('active')
+    @active_users = User.active_this_week.all_students
+    @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
+  end
+
+  def customer_support_manager
+    ensure_user_is_of_type(['customer_support_manager'])
+    @users = User.this_week.all_students
+    @conversions = Subscription.this_week.all_active.all_of_status('active')
+    @active_users = User.active_this_week.all_students
+    @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
   end
 
   def corporate_student
+    ensure_user_is_of_type(['corporate_student'])
     if current_user && current_user.corporate_student?
       if !current_user.restricted_subject_course_ids.empty?
         @permitted_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids)
@@ -65,6 +92,7 @@ class DashboardController < ApplicationController
   end
 
   def corporate_customer
+    ensure_user_is_of_type(['corporate_customer'])
     if current_user && current_user.corporate_student?
       if !current_user.restricted_subject_course_ids.empty?
         @permitted_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids)
@@ -97,6 +125,7 @@ class DashboardController < ApplicationController
   end
 
   def tutor
+    ensure_user_is_of_type(['tutor'])
     # Compile all CourseModuleElementUserLog for the current_user(tutor)
     @tutor_courses = SubjectCourse.all_in_order.all_active.where(tutor_id: current_user.id)
     @course_modules = CourseModule.where(tutor_id: current_user.id).where(subject_course_id: @tutor_courses)

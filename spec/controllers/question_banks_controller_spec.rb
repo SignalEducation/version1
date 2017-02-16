@@ -528,6 +528,136 @@ describe QuestionBanksController, type: :controller do
 
   end
 
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with subject_course_1' do
+        get :edit, id: question_bank_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with subject_course_2' do
+        get :edit, id: question_bank_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, question_bank: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, question_bank: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for subject_course_1' do
+        put :update, id: question_bank_1.id, question_bank: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: question_bank_1.id, question_bank: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: question_bank_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: question_bank_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with subject_course_1' do
+        get :edit, id: question_bank_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with subject_course_2' do
+        get :edit, id: question_bank_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, question_bank: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, question_bank: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for subject_course_1' do
+        put :update, id: question_bank_1.id, question_bank: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: question_bank_1.id, question_bank: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: question_bank_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: question_bank_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a admin_user: ' do
 
     before(:each) do

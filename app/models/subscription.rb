@@ -60,6 +60,7 @@ class Subscription < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id, :id) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
   scope :all_active, -> { where(active: true) }
+  scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   # class methods
   def self.create_using_stripe_subscription(stripe_subscription_hash, stripe_customer_hash)

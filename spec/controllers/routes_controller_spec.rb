@@ -201,6 +201,56 @@ describe RoutesController, type: :controller do
 
   end
 
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'root' with no subdomain" do
+      xit 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(customer_support_manager_dashboard_url)
+      end
+    end
+
+    describe "GET 'root' with a valid subdomain" do
+      xit 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(customer_support_manager_dashboard_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'root' with no subdomain" do
+      xit 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(marketing_manager_dashboard_url)
+      end
+    end
+
+    describe "GET 'root' with a valid subdomain" do
+      xit 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(marketing_manager_dashboard_url)
+      end
+    end
+
+  end
+
   context 'Logged in as a admin_user: ' do
 
     before(:each) do

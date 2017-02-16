@@ -610,6 +610,156 @@ RSpec.describe EnrollmentsController, type: :controller do
 
   end
 
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with enrollment_1' do
+        get :edit, id: enrollment_1.id
+        expect_edit_success_with_model('enrollment', enrollment_1.id)
+      end
+    end
+
+    describe "POST 'create'" do
+      xit 'should report OK for registered_params' do
+        post :create, params: registered_params
+        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      end
+
+      xit 'should report OK for registered_params_with_custom_date' do
+        post :create, enrollment: registered_params_with_custom_date
+        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      end
+
+      xit 'should report OK for non_registered_params' do
+        post :create, enrollment: non_registered_params
+        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      end
+
+    end
+
+    describe "PUT 'update/1'" do
+      xit 'should redirect to sign_in' do
+        put :update, id: 1, params: registered_params
+        expect_bounce_as_not_signed_in
+      end
+
+
+      xit 'should redirect to sign_in' do
+        put :update, id: 1, params: registered_params_with_custom_date
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'create_with_order'" do
+      xit 'should redirect to sign_in' do
+        get :create_with_order
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'basic_create'" do
+      xit 'should report OK for no_exam_body_params' do
+        get :basic_create, enrollment: no_exam_body_params
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'pause'" do
+      xit 'should redirect to sign_in' do
+        post :pause, enrollment_id: enrollment_1.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'activate'" do
+      xit 'should redirect to sign_in' do
+        post :activate, enrollment_id: enrollment_2.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with enrollment_1' do
+        get :edit, id: enrollment_1.id
+        expect_edit_success_with_model('enrollment', enrollment_1.id)
+      end
+    end
+
+    describe "POST 'create'" do
+      xit 'should report OK for registered_params' do
+        post :create, params: registered_params
+        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      end
+
+      xit 'should report OK for registered_params_with_custom_date' do
+        post :create, enrollment: registered_params_with_custom_date
+        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      end
+
+      xit 'should report OK for non_registered_params' do
+        post :create, enrollment: non_registered_params
+        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      end
+
+    end
+
+    describe "PUT 'update/1'" do
+      xit 'should redirect to sign_in' do
+        put :update, id: 1, params: registered_params
+        expect_bounce_as_not_signed_in
+      end
+
+
+      xit 'should redirect to sign_in' do
+        put :update, id: 1, params: registered_params_with_custom_date
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'create_with_order'" do
+      xit 'should redirect to sign_in' do
+        get :create_with_order
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'basic_create'" do
+      xit 'should report OK for no_exam_body_params' do
+        get :basic_create, enrollment: no_exam_body_params
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'pause'" do
+      xit 'should redirect to sign_in' do
+        post :pause, enrollment_id: enrollment_1.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'activate'" do
+      xit 'should redirect to sign_in' do
+        post :activate, enrollment_id: enrollment_2.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+  end
+
   context 'Logged in as a admin_user: ' do
 
     before(:each) do

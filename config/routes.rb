@@ -112,10 +112,12 @@ Rails.application.routes.draw do
     get '/dashboard/export_users_monthly', to: 'dashboard#export_users_monthly', as: :export_users_monthly
     get '/dashboard/export_course', to: 'dashboard#export_courses', as: :export_courses
 
-    get '/dashboard/student', to: 'dashboard#student', as: :student_dashboard
+    get '/dashboard', to: 'dashboard#student', as: :student_dashboard
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
     get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
     get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
+    get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard
+    get '/dashboard/customer_support_manager', to: 'dashboard#customer_support_manager', as: :customer_support_manager_dashboard
     get '/dashboard/corporate_manager', to: 'dashboard#corporate_customer', as: :corporate_customer_dashboard
     get '/dashboard/corporate_student', to: 'dashboard#corporate_student', as: :corporate_student_dashboard
 
@@ -184,7 +186,12 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     resources :user_notifications
-    resources :users, only: [:new, :create]
+    resources :users, only: [:new, :create] do
+      get  '/user_personal_details', action: :user_personal_details, as: :personal_details
+      get  '/user_subscription_status', action: :user_subscription_status, as: :subscription_status
+      get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
+      get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
+    end
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do

@@ -74,6 +74,7 @@ describe UsersController, type: :controller do
   let!(:country_1) { FactoryGirl.create(:uk) }
   let!(:country_2) { FactoryGirl.create(:ireland) }
   let!(:country_3) { FactoryGirl.create(:usa) }
+  let!(:upgrading_user) { FactoryGirl.create(:individual_student_user) }
   let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
   context 'Not logged in...' do
@@ -159,16 +160,18 @@ describe UsersController, type: :controller do
         it 'signs up new student' do
           referral_codes = ReferralCode.count
           post :student_create, user: sign_up_params
+          user = assigns(:user)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(ReferralCode.count).to eq(referral_codes + 1)
         end
 
         it 'creates referred signup if user comes from referral link' do
           cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
           post :student_create, user: sign_up_params
+          user = assigns(:user)
           expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url)
+          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(Subscription.all.count).to eq(0)
 
           expect(ReferredSignup.count).to eq(1)
@@ -305,30 +308,12 @@ describe UsersController, type: :controller do
     end
 
     describe "new_paid_subscription" do
-      xit 'should respond OK and render upgrade page' do
-        get :new_paid_subscription, id: individual_student_user.id
+      it 'should respond OK and render new subscription page' do
+        get :new_subscription, user_id: upgrading_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response).to render_template(:new_paid_subscription)
         expect(response.status).to eq(200)
-        expect(response).to render_template(:new_paid_subscription)
-
-      end
-    end
-
-    describe "upgrade_from_free_trial as a referred sign_up user" do
-      xit 'allow upgrade as all necessary params are present' do
-        post :create, user: valid_params
-        expect_create_success_with_model('user', users_url)
-        expect(assigns(:user).password_change_required).to eq(true)
-        expect(ReferralCode.count).to eq(referral_codes + 1)
-
-
-      end
-    end
-
-    describe "upgrade_from_free_trial with wrong currency coupon" do
-      xit 'deny upgrade as currency of coupon and current sub dont match' do
+        expect(response).to render_template(:new_subscription)
 
       end
     end
@@ -1044,6 +1029,252 @@ describe UsersController, type: :controller do
       it 'should respond ERROR to incorrect details' do
         post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
         expect_change_password_error_with_model(account_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see my own profile' do
+        get :show, id: marketing_manager_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should see my own profile even if I ask for another' do
+        get :show, id: marketing_manager_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: marketing_manager_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+    end
+
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond with OK' do
+        get :edit, id: marketing_manager_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should only allow editing of own user' do
+        get :edit, id: marketing_manager_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to root' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'student_create'" do
+      it 'should redirect to root' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params' do
+        put :update, id: marketing_manager_user.id, user: valid_params
+        expect_update_success_with_model('user', account_url)
+        expect(assigns(:user).id).to eq(marketing_manager_user.id)
+      end
+
+      it 'should respond OK to valid params and insist on their own user ID being updated' do
+        put :update, id: marketing_manager_user.id, user: valid_params
+        expect_update_success_with_model('user', account_url)
+        expect(assigns(:user).id).to eq(marketing_manager_user.id)
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: marketing_manager_user.id, user: {email: 'a'}
+        expect(response.status).to eq(200)
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(marketing_manager_user.id)
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(account_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(account_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a customer_support_manager_user' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_index_success_with_model('users', User.all.count)
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see my own profile' do
+        get :show, id: individual_student_user.id
+        expect_show_success_with_model('user', individual_student_user.id)
+      end
+
+      it 'should see my own profile even if I ask for another' do
+        get :show, id: customer_support_manager_user.id
+        expect_show_success_with_model('user', customer_support_manager_user.id)
+      end
+    end
+
+    describe "GET account" do
+      it 'should see my own profile' do
+        get :account, id: customer_support_manager_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+
+    end
+
+    describe "GET 'student_new'" do
+      it 'should redirect to root' do
+        get :student_new
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_new_success_with_model('user')
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond with OK' do
+        get :edit, id: customer_support_manager_user.id
+        expect_edit_success_with_model('user', customer_support_manager_user.id)
+      end
+
+    end
+
+    describe "POST 'admin create'" do
+      it 'should report OK for valid params' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, user: {email: 'abc'}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create - sign_up'" do
+      it 'should report OK for valid params' do
+        post :student_create, user: valid_params
+        expect_bounce_as_signed_in
+      end
+
+      it 'should report error for invalid params' do
+        post :student_create, user: {email: 'abc'}
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params' do
+        put :update, id: individual_student_user.id, user: valid_params
+        expect_update_success_with_model('user', users_url)
+      end
+
+      it 'should respond OK to valid params and insist on their own user ID being updated' do
+        put :update, id: individual_student_user.id, user: valid_params
+        expect_update_success_with_model('user', users_url)
+        expect(assigns(:user).id).to eq(individual_student_user.id)
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: individual_student_user.id, user: {email: 'a'}
+        expect_update_error_with_model('user')
+        expect(assigns(:user).id).to eq(individual_student_user.id)
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should be OK if deleting normal user' do
+        delete :destroy, id: individual_student_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be ERROR if deleting admin user' do
+        delete :destroy, id: admin_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      it 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_with_model(users_url)
+      end
+
+      it 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_with_model(users_url)
       end
     end
 

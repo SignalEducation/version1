@@ -316,6 +316,70 @@ describe SubscriptionsController, type: :controller do
 
   end
 
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
+        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      xit 'should respond with OK' do
+        delete :destroy, id: subscription_1.id
+        expect(flash[:error]).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+        expect(assigns(:subscription).current_status).to eq('canceled')
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, currency: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a admin_user: ' do
 
     before(:each) do

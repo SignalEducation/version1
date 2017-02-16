@@ -19,7 +19,6 @@ describe SubscriptionPlanCategoriesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for subscription_plan_category_1
   let!(:subscription_plan_category_1) { FactoryGirl.create(:subscription_plan_category) }
   let!(:subscription_plan) { FactoryGirl.create(:subscription_plan,
                 subscription_plan_category_id: subscription_plan_category_1.id) }
@@ -427,6 +426,120 @@ describe SubscriptionPlanCategoriesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(content_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should bounce as not allowed' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should bounce as not allowed' do
+        get :show, id: subscription_plan_category_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as not allowed' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should bounce as not allowed' do
+        get :edit, id: subscription_plan_category_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, subscription_plan_category: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should bounce as not allowed' do
+        put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should bounce as not allowed' do
+        delete :destroy, id: subscription_plan_category_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should bounce as not allowed' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should bounce as not allowed' do
+        get :show, id: subscription_plan_category_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as not allowed' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should bounce as not allowed' do
+        get :edit, id: subscription_plan_category_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, subscription_plan_category: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should bounce as not allowed' do
+        put :update, id: subscription_plan_category_1.id, subscription_plan_category: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should bounce as not allowed' do
+        delete :destroy, id: subscription_plan_category_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
     end
 
     describe "GET 'index'" do

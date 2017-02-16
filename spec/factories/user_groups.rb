@@ -17,6 +17,8 @@
 #  created_at                           :datetime
 #  updated_at                           :datetime
 #  complimentary                        :boolean          default(FALSE)
+#  customer_support                     :boolean          default(FALSE)
+#  marketing_support                    :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -32,7 +34,9 @@ FactoryGirl.define do
     site_admin                           false
     subscription_required_at_sign_up     false
     subscription_required_to_see_content false
-    complimentary false
+    complimentary                        false
+    customer_support                     false
+    marketing_support                    false
 
     factory :blogger_user_group do
       name 'Blogger Group'
@@ -81,6 +85,18 @@ FactoryGirl.define do
     factory :complimentary_user_group do
       name 'Comp User Group'
       complimentary true
+    end
+
+    factory :marketing_manager_user_group do
+      name 'Marketing Managers User Group'
+      complimentary true
+      marketing_support true
+    end
+
+    factory :customer_support_user_group do
+      name 'Customer Support User Group'
+      complimentary true
+      customer_support true
     end
 
   end

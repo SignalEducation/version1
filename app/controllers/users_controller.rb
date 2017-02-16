@@ -66,27 +66,18 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_create, :student_new, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
-
-  before_action :logged_out_required, only: [:student_create, :student_new, :new_product_user, :create_session_product, :new_session_product]
-
-  before_action except: [:change_password, :new_subscription, :profile, :profile_index, :subscription_invoice, :personal_upgrade_complete, :change_plan, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :student_new, :new_product_user, :student_create, :create_subscription, :create_product_user, :create_session_product, :new_session_product, :create_discourse_user, :account, :update] do
+  before_action :logged_in_required, except: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product, :profile, :profile_index]
+  before_action :logged_out_required, only: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product]
+  before_action only: [:destroy, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:student_new, :student_create, :profile, :profile_index, :new_product_user, :create_product_user, :create_session_product, :new_session_product]
-
-  def index
-    #TODO this needs a massive visual overhaul [pagination, search, filtering]
-    @users = params[:search_term].to_s.blank? ?
-             @users = User.paginate(per_page: 50, page: params[:page]) :
-             @users = User.search_for(params[:search_term].to_s).
-                     paginate(per_page: 50, page: params[:page])
-    @users = params[:sort_by].to_s.blank? ?
-             @users.all_in_order :
-             @users = @users.sort_by(params[:sort_by].to_s)
-    @sort_choices = User::SORT_OPTIONS.map { |x| [x.humanize.camelcase, x] }
+  before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details] do
+    ensure_user_is_of_type(['admin', 'customer_support_manager'])
   end
 
+  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan, :subscription_invoice]
+
+  #User account view for all users
   def account
     #user account info page
     @user.create_referral_code unless @user.referral_code
@@ -104,15 +95,109 @@ class UsersController < ApplicationController
 
   end
 
-  def show
-    #TODO admin viewing a user
-
+  #Admin & CustomerSupport Manager views under dashboard tabs
+  def index
+    @users = params[:search_term].to_s.blank? ?
+             @users = User.sort_by_recent_registration.paginate(per_page: 50, page: params[:page]) :
+             @users = User.sort_by_recent_registration.search_for(params[:search_term].to_s).
+                     paginate(per_page: 50, page: params[:page])
   end
 
+  def show #(Admin Overview)
+    @user = User.find(params[:id])
+    @user_sessions_count = @user.login_count
+    @enrollments = @user.enrollments
+    seo_title_maker("#{@user.full_name} - Details", '', true)
+  end
+
+  def user_personal_details
+    @user = User.find(params[:user_id])
+    render 'users/admin_view/user_personal_details'
+  end
+
+  def user_subscription_status
+    @user = User.find(params[:user_id])
+    @subscription = @user.active_subscription if @user.subscriptions.any?
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    @default_card = @subscription_payment_cards.all_default_cards.last
+    render 'users/admin_view/user_subscription_status'
+  end
+
+  def user_enrollments_details
+    @user = User.find(params[:user_id])
+    render 'users/admin_view/user_enrollments_details'
+  end
+
+  def user_purchases_details
+    @user = User.find(params[:user_id])
+    @orders = @user.orders
+    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
+    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
+    render 'users/admin_view/user_purchases_details'
+  end
+
+
+
+  #Admin & CustomerSupport Manager user actions
   def new
     @user = User.new
   end
 
+  def edit
+  end
+
+  def create
+    if Rails.env.production?
+      password = SecureRandom.hex(5)
+    else
+      password = '123123123'
+    end
+    @user = User.new(allowed_params.merge({password: password,
+                                           password_confirmation: password,
+                                           password_change_required: true}))
+    @user.activate_user
+    @user.generate_email_verification_code
+    @user.locale = 'en'
+    if @user.user_group.try(:site_admin) == false && @user.save
+      if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
+        new_referral_code = ReferralCode.new
+        new_referral_code.generate_referral_code(@user.id)
+      end
+      if @user.corporate_manager? || @user.corporate_student?
+        MandrillWorker.perform_async(@user.id, 'corporate_invite', user_verification_url(email_verification_code: @user.email_verification_code))
+      else
+        MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
+      end
+      flash[:success] = I18n.t('controllers.users.create.flash.success')
+      redirect_to users_url
+    else
+      render action: :new
+    end
+  end
+
+  def update
+    if @user.update_attributes(allowed_params)
+      flash[:success] = I18n.t('controllers.users.update.flash.success')
+      if current_user.admin? || current_user.customer_support_manager?
+        redirect_to users_url
+      else
+        redirect_to account_url
+      end
+    else
+      render action: :edit
+    end
+  end
+
+  def destroy
+    if @user.destroy
+      flash[:success] = I18n.t('controllers.users.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.users.destroy.flash.error')
+    end
+    redirect_to users_url
+  end
+
+  #Logged Out actions to create account/session for sub account and product accounts
   def student_new
     redirect_to root_url if current_corporate
     @user = User.new
@@ -207,17 +292,6 @@ class UsersController < ApplicationController
     @footer = false
   end
 
-  def new_session_product
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = @country.currency_id
-    @product = @course.products.in_currency(@currency_id).last
-    @user_session = UserSession.new
-    @navbar = false
-    @footer = false
-  end
-
   def create_product_user
     redirect_to root_url if current_user
     @navbar = false
@@ -259,6 +333,17 @@ class UsersController < ApplicationController
     end
   end
 
+  def new_session_product
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @currency_id = @country.currency_id
+    @product = @course.products.in_currency(@currency_id).last
+    @user_session = UserSession.new
+    @navbar = false
+    @footer = false
+  end
+
   def create_session_product
     @navbar = nil
     @footer = nil
@@ -275,85 +360,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit
-  end
 
-  # Admins new tutors, content managers or admins
-  def create
-    if Rails.env.production?
-      password = SecureRandom.hex(5)
-    else
-      password = '123123123'
-    end
-    @user = User.new(allowed_params.merge({password: password,
-                                           password_confirmation: password,
-                                           password_change_required: true}))
-    @user.activate_user
-    @user.generate_email_verification_code
-    @user.locale = 'en'
-    if @user.user_group.try(:site_admin) == false && @user.save
-      if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
-        new_referral_code = ReferralCode.new
-        new_referral_code.generate_referral_code(@user.id)
-      end
-      if @user.corporate_manager? || @user.corporate_student?
-        MandrillWorker.perform_async(@user.id, 'corporate_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      else
-        MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      end
-      flash[:success] = I18n.t('controllers.users.create.flash.success')
-      redirect_to users_url
-    else
-      render action: :new
-    end
-  end
-
-  def update
-    if @user.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.users.update.flash.success')
-      if current_user.admin?
-        redirect_to users_url
-      else
-        redirect_to account_url
-      end
-    else
-      render action: :edit
-    end
-  end
-
-  def destroy
-    if @user.destroy
-      flash[:success] = I18n.t('controllers.users.destroy.flash.success')
-    else
-      flash[:error] = I18n.t('controllers.users.destroy.flash.error')
-    end
-    redirect_to users_url
-  end
-
-  # non-standard methods
-
-  def change_password
-    @user = current_user
-    if @user.change_the_password(change_password_params)
-      flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-      #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
-    else
-      flash[:error] = I18n.t('controllers.users.change_password.flash.error')
-    end
-    if current_user.admin?
-      redirect_to users_url
-    else
-      redirect_to account_url
-    end
-  end
-
-  def create_discourse_user
-    @user = current_user
-    @user.create_on_discourse
-    flash[:success] = "An activation email has just been sent to #{@user.email}. Please follow its instructions to access the Community"
-    redirect_to account_url
-  end
-
+  #Logged In actions to create subscriptions and associated objects(invoices, coupons)
   def new_subscription
     redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
     @navbar = false
@@ -365,30 +373,13 @@ class UsersController < ApplicationController
 
 
     @subscription_plans = SubscriptionPlan
-                          .where('price > 0.0')
-                          .includes(:currency)
-                          .for_students
-                          .in_currency(@currency_id)
-                          .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
-                          .all_active
-                          .all_in_order
-  end
-
-  def profile
-    #/profile/id
-    @tutor = User.all_tutors.where(id: params[:id]).first
-    if @tutor
-      @courses = SubjectCourse.where(tutor_id: @tutor.id)
-      seo_title_maker(@tutor.full_name, @tutor.first_description, nil)
-    else
-      redirect_to root_url
-    end
-  end
-
-  def profile_index
-    #/profiles
-    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
-    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
+                              .where('price > 0.0')
+                              .includes(:currency)
+                              .for_students
+                              .in_currency(@currency_id)
+                              .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
+                              .all_active
+                              .all_in_order
   end
 
   def create_subscription
@@ -397,7 +388,7 @@ class UsersController < ApplicationController
     # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
     if current_user && current_user.individual_student?
       if !current_user.subscriptions.any? &&
-         params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
+          params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
         user = User.find(params[:user_id])
         subscription_params = params[:user][:subscriptions_attributes]["0"]
         subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
@@ -582,18 +573,62 @@ class UsersController < ApplicationController
   end
 
 
+
+  #Non-standard actions logged in required
+
+  def change_password
+    @user = current_user
+    if @user.change_the_password(change_password_params)
+      flash[:success] = I18n.t('controllers.users.change_password.flash.success')
+      #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
+    else
+      flash[:error] = I18n.t('controllers.users.change_password.flash.error')
+    end
+    if current_user.admin? || current_user.customer_support_manager?
+      redirect_to users_url
+    else
+      redirect_to account_url
+    end
+  end
+
+  def create_discourse_user
+    @user = current_user
+    @user.create_on_discourse
+    flash[:success] = "An activation email has just been sent to #{@user.email}. Please follow its instructions to access the Community"
+    redirect_to account_url
+  end
+
+
+
+  #Public facing standard views for tutors (TODO move this footer_pages controller)
+  def profile
+    #/profile/id
+    @tutor = User.all_tutors.where(id: params[:id]).first
+    if @tutor
+      @courses = SubjectCourse.where(tutor_id: @tutor.id)
+      seo_title_maker(@tutor.full_name, @tutor.first_description, nil)
+    else
+      redirect_to root_url
+    end
+  end
+
+  def profile_index
+    #/profiles
+    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
+    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
+  end
+
+
+
   protected
 
   def get_variables
-    @user = params[:id].to_i > 0 && current_user.admin? ?
+    @user = params[:id].to_i > 0 && (current_user.admin? || current_user.customer_support_manager?) ?
                   @user = User.where(id: params[:id]).first :
                   current_user
+
+    @user_groups = UserGroup.where(site_admin: false).all_in_order
     @countries = Country.all_in_order
-    if (action_name == 'show' || action_name == 'edit' || action_name == 'update') && @user.admin?
-      @user_groups = UserGroup.all_in_order
-    else
-      @user_groups = UserGroup.where(site_admin: false).all_in_order
-    end
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
@@ -628,6 +663,5 @@ class UsersController < ApplicationController
   def sign_in_params
     params.require(:user_session).permit(:email, :password)
   end
-
 
 end

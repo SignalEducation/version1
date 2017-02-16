@@ -88,6 +88,10 @@ class ApplicationController < ActionController::Base
   def set_navbar_and_footer
     @navbar = 'standard'
     @footer = 'standard'
+    @groups = Group.all_active.all_in_order.for_public
+    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
+    @diplomas = @product_course_category.subject_courses if @product_course_category
+
   end
 
   def set_assets_from_subdomain
@@ -149,6 +153,8 @@ class ApplicationController < ActionController::Base
          (the_user_group.corporate_customer && permitted_thing == 'corporate_customer') ||
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
          (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
+         (the_user_group.customer_support    && permitted_thing == 'customer_support_manager') ||
+         (the_user_group.marketing_support    && permitted_thing == 'marketing_manager') ||
          (the_user_group.site_admin)
         permission_granted = true
       end
@@ -359,6 +365,10 @@ class ApplicationController < ActionController::Base
         corporate_customer_dashboard_url
       when UserGroup.default_content_manager_user_group.id
         content_manager_dashboard_url
+      when UserGroup.default_marketing_support_user_group.id
+        marketing_manager_dashboard_url
+      when UserGroup.default_customer_support_user_group.id
+        customer_support_manager_dashboard_url
     else
       student_dashboard_url
     end

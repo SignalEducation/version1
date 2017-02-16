@@ -284,6 +284,52 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
   end
 
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "POST 'create'" do
+      it 'expect ERROR as not allowed' do
+        post :create, subscription_payment_card: {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update'" do
+      it 'expect ERROR as not allowed' do
+        put :update, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "POST 'create'" do
+      it 'expect ERROR as not allowed' do
+        post :create, subscription_payment_card: {}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update'" do
+      it 'expect ERROR as not allowed' do
+        put :update, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as admin_user: ' do
 
     before(:each) do

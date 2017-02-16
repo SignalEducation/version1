@@ -60,7 +60,7 @@
     -if (Rails.env.production?) && (current_user.nil? || current_user.individual_student?)
       =render partial: 'layouts/google_tag_manager'
     -if Rails.env.production?
-      =render partial: 'layouts/hubspot'
+      =render partial: 'layouts/linkedin_pixel'
     -if controller_name == 'referral_codes' && action_name == 'show'
       =render partial: 'layouts/facebook_sdk'
 
@@ -82,7 +82,7 @@
           =render partial: 'layouts/navbar'
       =yield
       -if @footer
-        =render partial: 'layouts/footer'
+        =render partial: 'layouts/large_footer'
 
 
     -#General partials
@@ -102,6 +102,3 @@
 
     <!-- Load Typekit Kit -->
     %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
-
-    -#TODO
-    =#render partial: 'layouts/contact_modal'

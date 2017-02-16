@@ -17,6 +17,8 @@
 #  created_at                           :datetime
 #  updated_at                           :datetime
 #  complimentary                        :boolean          default(FALSE)
+#  customer_support                     :boolean          default(FALSE)
+#  marketing_support                    :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -38,6 +40,7 @@ describe UserGroup do
   # Constants
   it { expect(UserGroup.const_defined?(:FEATURES)).to eq(true) }
   it { expect(UserGroup.const_defined?(:CORPORATE_STUDENTS)).to eq(true) }
+  it { expect(UserGroup.const_defined?(:CORPORATE_CUSTOMERS)).to eq(true) }
 
   # relationships
   it { should have_many(:users) }
@@ -60,6 +63,11 @@ describe UserGroup do
   it { expect(UserGroup).to respond_to(:default_complimentary_user_group) }
   it { expect(UserGroup).to respond_to(:default_student_user_group) }
   it { expect(UserGroup).to respond_to(:default_tutor_user_group) }
+  it { expect(UserGroup).to respond_to(:default_corporate_student_user_group) }
+  it { expect(UserGroup).to respond_to(:default_corporate_customer_user_group) }
+  it { expect(UserGroup).to respond_to(:default_content_manager_user_group) }
+  it { expect(UserGroup).to respond_to(:default_customer_support_user_group) }
+  it { expect(UserGroup).to respond_to(:default_marketing_support_user_group) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

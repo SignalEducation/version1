@@ -152,6 +152,8 @@ class User < ActiveRecord::Base
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_recent_registration, -> { order(created_at: :desc) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
+  scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
+  scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_students, -> { where(user_group_id: UserGroup.default_student_user_group.id) }
 
   # class methods
@@ -382,6 +384,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def minutes_left
+    free_trial_minutes = ENV['free_trial_limit_in_seconds'].to_i
+    free_trial_minutes - self.trial_limit_in_seconds
+  end
+
   def check_and_free_trial_status
     if self.no_subscription_user && !self.days_or_seconds_valid?
       self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)
@@ -516,6 +523,14 @@ class User < ActiveRecord::Base
 
   def blogger?
     self.user_group.try(:blogger)
+  end
+
+  def customer_support_manager?
+    self.user_group.try(:customer_support)
+  end
+
+  def marketing_support_manager?
+    self.user_group.try(:marketing_support)
   end
 
   def content_manager?
@@ -851,9 +866,11 @@ class User < ActiveRecord::Base
   end
 
   def create_free_trial_email_workers
-    new_subscription_url = Rails.application.routes.url_helpers.user_new_subscription_url(user_id: self.id, host: ENV['learnsignal_v3_server_email_domain'])
-    FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
-    FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
+    unless Rails.env.test?
+      new_subscription_url = Rails.application.routes.url_helpers.user_new_subscription_url(user_id: self.id, host: ENV['learnsignal_v3_server_email_domain'])
+      FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
+      FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
+    end
   end
 
 end
