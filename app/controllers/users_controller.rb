@@ -140,6 +140,7 @@ class UsersController < ApplicationController
 
   #Admin & CustomerSupport Manager user actions
   def new
+    @user_groups = UserGroup.where(site_admin: false).all_in_order
     @user = User.new
   end
 
