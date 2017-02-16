@@ -36,6 +36,7 @@
 #  external_url_name                       :string
 #  external_url                            :string
 #  exam_body_id                            :integer
+#  survey_url                              :string
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -51,7 +52,7 @@ class SubjectCourse < ActiveRecord::Base
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
                   :subject_course_category_id, :email_content,
                   :external_url, :external_url_name, :quiz_count, :question_count,
-                  :video_count, :total_video_duration, :exam_body_id
+                  :video_count, :total_video_duration, :exam_body_id, :survey_url
 
   # Constants
 
