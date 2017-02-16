@@ -128,13 +128,21 @@
             -@diplomas.each do |diploma|
               %li
                 =link_to diploma.name, library_special_link(diploma)
+          %li
+            =link_to 'ACCA Info', acca_info_url
 
       .col-md-3
         %ul.foot-list-large
           %li
-            =link_to 'Lecturers', tutors_url
+            %a{href: 'http://blog.learnsignal.com/', target: '_blank'}
+              ='Blog'
+
           %li
-            =link_to 'ACCA Info', acca_info_url
+            %a{href: 'https://community.learnsignal.com/', target: '_blank'}
+              ='Community'
+
+          %li
+            =link_to 'Lecturers', tutors_url
           %li
             =link_to 'Media', media_library_url
 
