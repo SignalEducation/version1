@@ -939,6 +939,8 @@ en:
         mailchimp_guid_placeholder: MailChimp ID
         external_url_name: Name of Exam Body
         external_url_name_placeholder: ACCA or CFA
+        survey_url: Completion Survey URL
+        survey_url_placeholder: Survey Monkey URL
         external_url: URL of Exam Body Site
         external_url_placeholder: acca.com, cfa.com
         discourse_topic_id: Community Topic ID

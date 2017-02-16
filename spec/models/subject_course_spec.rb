@@ -36,6 +36,7 @@
 #  external_url_name                       :string
 #  external_url                            :string
 #  exam_body_id                            :integer
+#  survey_url                              :string
 #
 
 require 'rails_helper'
