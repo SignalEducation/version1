@@ -550,7 +550,7 @@ class UsersController < ApplicationController
     return verified_coupon
   end
 
-  def subscription_invoice
+  def invoice
     invoice = Invoice.where(id: params[:id]).first
     Payday::Config.default.invoice_logo = "#{Rails.root}/app/assets/images/invoice-logo.svg"
     Payday::Config.default.company_name = "LearnSignal"
@@ -571,6 +571,20 @@ class UsersController < ApplicationController
       end
     else
       redirect_to account_url
+    end
+  end
+
+  def subscription_invoice
+    invoice = Invoice.where(id: params[:id]).first
+    if invoice
+      @invoice = invoice
+      respond_to do |format|
+        format.html
+        format.pdf do
+          pdf = InvoiceDocument.new(@invoice, view_context)
+          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf"
+        end
+      end
     end
   end
 

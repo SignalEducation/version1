@@ -173,12 +173,6 @@ class Invoice < ActiveRecord::Base
     else
       'Other'
     end
-    # payment_attempted
-    # payment_closed
-    # livemode
-    # attempt_count
-    # next_payment_attempt_at
-    # 'hello'
   end
 
   protected
