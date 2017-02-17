@@ -20,7 +20,7 @@ class QuizQuestionsController < ApplicationController
   before_action do
     ensure_user_is_of_type(['admin', 'tutor', 'content_manager'])
   end
-  before_action :get_variables
+  before_action :get_variables, except: :reorder
 
   def show
 
