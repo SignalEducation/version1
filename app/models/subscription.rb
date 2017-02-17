@@ -31,7 +31,7 @@ class Subscription < ActiveRecord::Base
                   :terms_and_conditions
 
   # Constants
-  STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
+  STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
@@ -58,6 +58,7 @@ class Subscription < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
+  scope :in_created_order, -> { order(:created_at) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
   scope :all_active, -> { where(active: true) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }

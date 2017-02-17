@@ -96,7 +96,6 @@ class User < ActiveRecord::Base
   belongs_to :corporate_customer
              # employed by the corporate customer
   belongs_to :country
-  belongs_to :student_user_type
   has_many :course_modules, foreign_key: :tutor_id
   has_many :completion_certificates
   has_many :course_module_element_user_logs
@@ -129,7 +128,6 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
-  validates :student_user_type_id, presence: true, if: :individual_student?
   validates :country_id, presence: true, if: :individual_student?
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
@@ -240,112 +238,37 @@ class User < ActiveRecord::Base
     self.user_group.try(:site_admin)
   end
 
-  def process_free_trial_limit_reached
-    text = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
-    #MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: self.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
-    if self.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-      new_user_type_id = StudentUserType.default_no_access_user_type.id
-    elsif self.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
-      new_user_type_id = StudentUserType.default_product_user_type.id
-    else
-      new_user_type_id = self.student_user_type_id
-    end
-    self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
+  def active_subscription
+    self.subscriptions.where(active: true).in_created_order.last
   end
 
-  def user_status
-    if self.individual_student?
-      if self.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-        if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid?
-          return 'valid_free_member'
-        else
-          return 'expired_free_member'
-        end
-      elsif self.student_user_type_id == StudentUserType.default_sub_user_type.id
-        if !self.free_trial && self.subscriptions.any?
-          if self.valid_subscription
-            return 'valid_sub_member'
-          elsif self.canceled_member?
-            return 'canceled_sub_member'
-          elsif self.canceled_pending?
-            return 'cancel_pending_sub_member'
-          elsif self.active_subscription && self.active_subscription.current_status == 'past_due'
-            return 'failed_payment_sub_member'
-          end
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_product_user_type.id
-        if self.valid_orders?
-          return 'product_order_member'
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-        if !self.free_trial && self.subscriptions.any? && self.valid_orders?
-          if self.valid_subscription
-            return 'valid_sub_product_member'
-          elsif self.canceled_member?
-            return 'canceled_sub_product_member'
-          elsif self.canceled_pending?
-            return 'cancel_pending_sub_product_member'
-          elsif self.active_subscription && self.active_subscription.current_status == 'past_due'
-            return 'failed_payment_sub_product_member'
-          end
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
-        if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid? && self.valid_orders?
-          return 'valid_free_product_member'
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid?
-          return 'valid_free_member'
-        elsif !self.subscriptions.any? && !self.days_or_seconds_valid?
-          return 'expired_free_member'
-        elsif !self.free_trial && self.subscriptions.any?
-          if self.valid_subscription
-            return 'valid_sub_member'
-          elsif self.canceled_member?
-            return 'canceled_sub_member'
-          elsif self.canceled_pending?
-            return 'cancel_pending_sub_member'
-          elsif self.active_subscription && self.active_subscription.current_status == 'past_due'
-            return 'failed_payment_sub_member'
-          else
-            return 'no_access_member'
-          end
-        else
-          return 'no_access_member'
-        end
-      end
-    else
-      return 'non_student_member'
-    end
+  def process_free_trial_limit_reached
+    #Called from a Cron Task
+    self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now) unless days_or_seconds_valid?
   end
 
   def user_subscription_status
-    if self.user_status == 'valid_free_member'
-      status =  'Free Trial Member'
-    elsif self.user_status == 'expired_free_member'
-      status =  'Free Trial Expired'
-    elsif self.user_status == 'valid_sub_member' || self.user_status == 'valid_sub_product_member'
-      status =  'Valid Subscription'
-    elsif self.user_status == 'canceled_sub_member'
-      status =  'Canceled Subscription'
-    elsif self.user_status == 'cancel_pending_sub_member'
-      status =  'Subscription Set to Cancel'
-    elsif self.user_status == 'failed_payment_sub_member'
-      status =  'Failed Payment'
-    elsif self.user_status == 'product_order_member' && self.subscriptions.any?
-      status =  'Canceled Subscription'
+    current_subscription = self.active_subscription
+    if current_subscription
+      case current_subscription.current_status
+        when 'active'
+          'Active Subscription'
+        when 'past_due'
+          'Past Due Subscription'
+        when 'canceled-pending'
+          'Canceled-pending Subscription'
+        when 'canceled'
+          'Canceled Subscription'
+        when 'unpaid'
+          'Unpaid Subscription'
+        when 'suspended'
+          'Suspended Subscription'
+        else
+          'Invalid Subscription'
+      end
     else
-      status =  'Unknown'
+      'Invalid Subscription'
     end
-    return status
   end
 
   def days_or_seconds_valid?
@@ -389,28 +312,12 @@ class User < ActiveRecord::Base
     free_trial_minutes - self.trial_limit_in_seconds
   end
 
-  def check_and_free_trial_status
-    if self.no_subscription_user && !self.days_or_seconds_valid?
-      self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)
-    elsif self.no_subscription_user && self.days_or_seconds_valid?
-      self.update_attributes(free_trial: true, trial_ended_notification_sent_at: nil)
-    end
-  end
-
   def free_member?
-    self.user_status == 'valid_free_member'
+    self.free_trial
   end
 
   def expired_free_member?
-    self.user_status == 'expired_free_member'
-  end
-
-  def no_subscription_user
-    if !self.subscriptions.any? && self.student_user_type_id == (StudentUserType.default_product_user_type.id || StudentUserType.default_no_access_user_type.id)
-      true
-    else
-      false
-    end
+    self.free_trial && !self.days_or_seconds_valid?
   end
 
   def canceled_member?
@@ -426,75 +333,40 @@ class User < ActiveRecord::Base
   end
 
   def valid_subscription
-    true if self.active_subscription && %w(active past_due).include?(self.active_subscription.current_status)
+    true if self.active_subscription && %w(active past_due canceled-pending).include?(self.active_subscription.current_status)
   end
 
-  def valid_subject_course_ids
-    subject_course_ids = []
+  def valid_order_ids
+    order_ids = []
     self.orders.each do |order|
       if %w(paid).include?(order.current_status)
-        subject_course_ids << order.subject_course_id
+        order_ids << order.id
       end
     end
-    return subject_course_ids
+    return order_ids
   end
 
   def valid_orders?
-    self.valid_subject_course_ids.any?
-  end
-
-  def active_subscription
-    self.subscriptions.where(active: true).last
-  end
-
-  def one_active_subscription?
-    if self.subscriptions.any?
-      self.subscriptions.all_active.count == 1
-    end
+    self.valid_order_ids.any?
   end
 
   def permission_to_see_content(course)
-    if self.corporate_user?
-      if course.restricted && self.corporate_customer_id != course.corporate_customer_id
-        return false
-      else
-        if self.corporate_student?
-          if self.restricted_subject_course_ids.include?(course.id)
-            return false
-          else
-            return true
-          end
-        elsif self.corporate_customer? || self.corporate_manager?
-          return true
+    if self.individual_student?
+      if course.active && course.live
+        if self.free_trial
+          true
+        elsif self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
+          true
         else
-          return false
+          false
         end
+      else
+        false
       end
     elsif self.complimentary_user?
-      if course.subscription
-        return true
-      else
-        return true
-      end
-    elsif self.individual_student?
-
-      if course.subscription
-        if self.free_trial && self.free_trial_student?
-          return true
-        elsif self.subscription_student? && self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
-          return true
-        else
-          return false
-        end
-      elsif course.product
-        if self.product_order_student? && valid_subject_course_ids.include?(course.id)
-          return true
-        else
-          return false
-        end
-      end
+      true
     else
-      return true
+      false
     end
   end
 
@@ -549,10 +421,6 @@ class User < ActiveRecord::Base
     self.user_group.try(:corporate_student)
   end
 
-  def corporate_tutor?
-    self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
-  end
-
   def activate_user
     self.active = true
     self.account_activated_at = Proc.new{Time.now}.call
@@ -586,15 +454,13 @@ class User < ActiveRecord::Base
 
   def destroyable?
     !self.admin? &&
-        self.course_modules.empty? &&
         self.course_module_element_user_logs.empty? &&
         self.invoices.empty? &&
         self.quiz_attempts.empty? &&
         self.student_exam_tracks.empty? &&
         self.subscriptions.empty? &&
         self.subscription_payment_cards.empty? &&
-        self.subscription_transactions.empty? &&
-        self.user_notifications.empty?
+        self.subscription_transactions.empty?
   end
 
   def full_name
@@ -617,32 +483,12 @@ class User < ActiveRecord::Base
     self.subject_course_user_logs.map(&:subject_course_id)
   end
 
-  #######################################################
-  #StudentUserTypes
-  #######################################################
-  def free_trial_student?
-    self.student_user_type.try(:free_trial)
-  end
-
-  def subscription_student?
-    self.student_user_type.try(:subscription)
-  end
-
-  def product_order_student?
-    self.student_user_type.try(:product_order)
-  end
-
-  def no_product_or_sub_student?
-    #User that created an account through purchase product process but didn't complete purchase or has an expired free trial so has an account but no access to any content
-    !self.student_user_type.try(:product_order) && !self.student_user_type.try(:subscription) && !self.student_user_type.try(:free_trial)
-  end
-
   def tutor?
     self.user_group.try(:tutor)
   end
 
   #######################################################
-  #CorporateAccountMethods
+  # CorporateAccount Methods
   #######################################################
 
   def compulsory_group_ids
@@ -754,17 +600,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Should only be used from the console, it is to fix issues where free_trial subscriptions were canceled but no new plan was created
-  def create_free_trial_subscription
-    if self.subscriptions.first.free_trial? && self.subscriptions.first.current_status == 'canceled'
-      previous_free_trial_sub = self.subscriptions.first
-      currency = previous_free_trial_sub.subscription_plan.currency_id
-      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
-      new_sub = self.subscriptions.new(subscription_plan_id: subscription_plan.id, stripe_customer_id: self.stripe_customer_id, user_id: self.id)
-      new_sub.save
-    end
-  end
-
   #User reactivating their account by adding a new subscription and card
   def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, terms_and_conditions, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
@@ -868,8 +703,8 @@ class User < ActiveRecord::Base
   def create_free_trial_email_workers
     unless Rails.env.test?
       new_subscription_url = Rails.application.routes.url_helpers.user_new_subscription_url(user_id: self.id, host: ENV['learnsignal_v3_server_email_domain'])
-      FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
-      FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
+      FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student? || self.free_member?
+      FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student? || self.free_member?
     end
   end
 

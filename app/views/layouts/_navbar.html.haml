@@ -25,12 +25,9 @@
                     =link_to 'Diplomas', all_diplomas_url
               %li
                 =link_to 'Courses', subscription_groups_url
-              -if current_user.user_status == 'valid_free_member'
+              -if current_user.free_member? && !current_user.active_subscription
                 %li
                   %li=link_to "#{current_user.days_left} Days left in Trial", user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
-              -elsif  current_user.user_status == 'expired_free_member'
-                %li=link_to 'Upgrade Account', user_new_subscription_url(current_user.id), class: 'days-left', title: 'Free Trial Expired - Upgrade Here'
-
               -#Admin Dropdown
               -if current_user.admin?
                 %li.dropdown.dropdown-admin
