@@ -11,6 +11,7 @@
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
+#  sorting_order                 :integer
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -22,7 +23,7 @@ class QuizQuestion < ActiveRecord::Base
   attr_accessible :course_module_element_quiz_id,
                   :difficulty_level, :hints,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :subject_course_id
+                  :quiz_solutions_attributes, :subject_course_id, :sorting_order
 
   # Constants
 
@@ -43,7 +44,6 @@ class QuizQuestion < ActiveRecord::Base
   validates :course_module_element_id, presence: true, on: :update
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: { maximum: 255}
   validates :hints, allow_nil: true, length: {maximum: 65535}
-  # todo validate :at_least_one_answer_is_correct
 
   # callbacks
   before_validation :set_course_module_element
@@ -51,7 +51,7 @@ class QuizQuestion < ActiveRecord::Base
   before_update :set_subject_course_id
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_quiz_id) }
+  scope :all_in_order, -> { order(:sorting_order) }
   scope :all_easy, -> { where(difficulty_level: 'easy') }
   scope :all_medium, -> { where(difficulty_level: 'medium') }
   scope :all_difficult, -> { where(difficulty_level: 'difficult') }

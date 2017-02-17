@@ -11,6 +11,7 @@
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
+#  sorting_order                 :integer
 #
 
 FactoryGirl.define do
