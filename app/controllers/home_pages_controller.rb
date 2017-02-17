@@ -24,18 +24,36 @@ class HomePagesController < ApplicationController
 
   def home
     #This is the main home_page
-    if current_user
-      redirect_to dashboard_special_link(current_user)
-    else
-      @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-      @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
-      @product_courses = @product_course_category.subject_courses if @product_course_category
-      @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
-      @groups = Group.all_active.for_public.all_in_order
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-      seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+    redirect_to dashboard_special_link(current_user) if current_user
+
+    @groups = Group.all_active.for_public.all_in_order
+    @user = User.new
+    # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
+    @currency_id = @country.currency_id
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:sign_up_errors] && session[:valid_params]
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      session.delete(:sign_up_errors)
+      session.delete(:valid_params)
     end
+    # Don't remember why this needs to be set
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+
+    #To show each pricing plan on the page; not involved in the sign up process
+    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
+    @groups = Group.all_active.for_public.all_in_order
+    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
+
+    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+
   end
 
   def group_index
@@ -63,17 +81,6 @@ class HomePagesController < ApplicationController
     @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
     @groups = Group.all_active.for_public.all_in_order
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
-  end
-
-  def diploma_index
-    product = Product.first
-    redirect_to product_course_url(product.subject_course.home_pages.first.public_url)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = @country.currency_id
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @navbar = nil
-    @footer = nil
   end
 
   def group
@@ -115,22 +122,6 @@ class HomePagesController < ApplicationController
       seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
     end
     @navbar = nil
-  end
-
-  def diploma
-    redirect_to root_url
-    #Needs to render a custom partial if one exists or render the default
-    @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
-    @default_element = params[:default] if params[:default]
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-    @course = @home_page.subject_course
-    @currency_id = @country.currency_id
-    @product = @course.products.all_active.in_currency(@currency_id).last
-    @navbar = nil
-    @footer = nil
   end
 
   def subscribe

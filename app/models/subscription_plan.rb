@@ -104,7 +104,7 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def unlimited_access
-    I18n.t('views.general.all_courses')
+    I18n.t('views.general.all_you_can_eat_yes')
   end
 
   def cancel_anytime
