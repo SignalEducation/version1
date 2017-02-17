@@ -185,9 +185,9 @@ class Invoice < ActiveRecord::Base
 
   def set_vat_rate
     country = user.country
-    if country.vat_codes.any?
+    if country && country.vat_codes.any?
       vat_code = country.vat_codes.first
-      vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).id
+      vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).try(:id)
       self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
     end
   end
