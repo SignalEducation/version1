@@ -149,11 +149,9 @@ Rails.application.routes.draw do
 
 
     # Library Structure
-    get 'subscription_groups', to: 'library#group_index', as: :subscription_groups
-    get 'subscription_group/:group_name_url', to: 'library#group_show', as: :subscription_group
-    get 'subscription_course/:subject_course_name_url', to: 'library#course_show', as: :subscription_course
-    get 'product_course/:subject_course_name_url', to: 'library#diploma_show', as: :diploma_course
-
+    get 'library', to: 'library#index', as: :library
+    get 'library/:group_name_url', to: 'library#group_show', as: :library_group
+    get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
 
 
      get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user

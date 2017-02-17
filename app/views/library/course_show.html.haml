@@ -12,10 +12,8 @@
               =@course.parent.name
 
 
-      -if current_user && !current_user.corporate_user?
-        -if @course.subscription
-          =render partial: 'layouts/content_notice', locals: {course: @course}
-
+      -if current_user
+        =render partial: 'layouts/content_notice', locals: {course: @course}
 
         -if @course.enrolled_user_ids.include?(current_user.id)
           =render partial: 'enrollment_info'

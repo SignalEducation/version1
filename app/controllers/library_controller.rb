@@ -1,185 +1,80 @@
 class LibraryController < ApplicationController
 
-  before_action :logged_in_required, only: [:diploma_show, :cert]
+  before_action :logged_in_required, only: [:cert]
 
-  def group_index
-    @navbar = nil
-
-    #Filter Groups for corporate students by corporate_customer_id and by restrictions.
-    if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-
-      all_groups = Group.all_active.all_in_order
-      public_groups = all_groups.for_public
-      private_groups = all_groups.for_corporates
-      users_private_groups = private_groups.where(corporate_customer_id: current_user.corporate_customer_id)
-      non_restricted_private_groups = users_private_groups.where.not(id: current_user.restricted_group_ids)
-      non_restricted_public_groups = public_groups.where.not(id: current_user.restricted_group_ids)
-      @groups = (non_restricted_private_groups + non_restricted_public_groups).uniq
-
-      grouped_courses = []
-      @groups.each do |group|
-        group.active_children.each do |course|
-          grouped_courses << course.id
-        end
-      end
-      ids = grouped_courses.uniq
-      no_grouped_corp_courses = SubjectCourse.where.not(id: ids).for_corporates.where(corporate_customer_id: current_user.corporate_customer_id)
-      no_grouped_non_corp_courses = SubjectCourse.where.not(id: ids).for_public
-      @no_grouped_courses = no_grouped_corp_courses + no_grouped_non_corp_courses
-
-    else
-      @groups = Group.all_active.for_public.all_in_order
-      grouped_courses = []
-      @groups.each do |group|
-        group.active_children.each do |course|
-          grouped_courses << course.id
-        end
-      end
-      ids = grouped_courses.uniq
-      @no_grouped_courses = SubjectCourse.where.not(id: ids).for_public.all_active.all_live.all_not_restricted
-    end
+  def index
+    @groups = Group.all_active.for_public.all_in_order
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
   def group_show
-    @group = Group.where(name_url: params[:group_name_url]).first || Group.where(id: params[:id]).first
-    if @group.nil?
-      redirect_to subscription_groups_url
-    else
-      courses = @group.try(:active_children)
-      if current_user && (current_user.corporate_student? || current_user.corporate_customer?)
-        corporate_courses = courses.where(corporate_customer_id: current_user.corporate_customer_id).all_in_order
-        non_restricted_courses = courses.where.not(id: current_user.restricted_group_ids).all_in_order
-        allowed_courses = corporate_courses + non_restricted_courses
-        @courses = allowed_courses.uniq
-      else
-        courses = courses.try(:all_not_restricted)
-        @courses = courses.try(:all_in_order)
-      end
-      if current_user
-        @logs = SubjectCourseUserLog.where(user_id: current_user.id)
-      end
-      seo_title_maker(@group.try(:name), @group.try(:description), nil)
-      tag_manager_data_layer(@group.try(:name))
-    end
+    @group = Group.find_by_name_url(params[:group_name_url])
+    redirect_to library_url unless @group
+    @courses = @group.active_children.all_not_restricted.all_in_order
+    seo_title_maker(@group.name, @group.description, nil)
+    tag_manager_data_layer(@group.try(:name))
   end
 
   def course_show
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    redirect_to library_url unless @course
 
-    @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-    if @course.nil?
-      redirect_to subscription_groups_url
-    else
-      if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
+    @course_modules = @course.children.all_active.all_in_order
+    @tuition_course_modules = @course_modules.all_tuition
+    @test_course_modules = @course_modules.all_test
+    @revision_course_modules = @course_modules.all_revision
+    @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
+    tag_manager_data_layer(@course.try(:name))
 
-        if @course.exam_body
-          @exam_body = @course.exam_body
-          @enrollments = @exam_body.enrollments.where(user_id: current_user.id)
-          possible_student_number = @enrollments.map(&:student_number).first
-        else
-          possible_student_number = nil
-        end
-        @enrollment = Enrollment.new(student_number: possible_student_number)
-        @exam_sittings = ExamSitting.where(subject_course_id: @course.id).all_in_order
-      end
-
-      @course_modules = @course.children.all_active.all_in_order
-      @tuition_course_modules = @course_modules.all_tuition
-      @test_course_modules = @course_modules.all_test
-      @revision_course_modules = @course_modules.all_revision
-      tag_manager_data_layer(@course.try(:name))
-      @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
-      if @course.corporate_customer_id
-        if current_user.nil? || (@course.restricted && (current_user.corporate_customer_id == nil || current_user.corporate_customer_id != @course.corporate_customer_id))
-          redirect_to subscription_groups_url
-        else
-          users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
-          user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-          latest_set = user_course_sets.first
-          @latest_element_id = latest_set.try(:latest_course_module_element_id)
-          @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-          if !@course.try(:live)
-            @navbar = nil
-            render 'preview_course'
-          else
-
-          end
-          seo_title_maker(@course.try(:name), @course.try(:seo_description), @course.try(:seo_no_index))
-        end
+    #Enrollment and SubjectCourseUserLog
+    if current_user && !@course.enrolled_user_ids.include?(current_user.id)
+      #Make Enrollment Form and required params
+      if @course.exam_body
+        @exam_body = @course.exam_body
+        @enrollments = @exam_body.enrollments.where(user_id: current_user.id)
+        possible_student_number = @enrollments.map(&:student_number).first
       else
-
-        if current_user
-          if current_user && @course.enrolled_user_ids.include?(current_user.id)
-            @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
-            if @enrollment
-              @subject_course_user_log = @enrollment.subject_course_user_log
-            else
-              @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
-            end
-
-          else
-            @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
-          end
-          users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
-          user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-          latest_set = user_course_sets.first
-          @latest_element_id = latest_set.try(:latest_course_module_element_id)
-          @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-          cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
-          scores = cmeuls.all.map(&:quiz_score_actual)
-          pass_rate = @course.cpd_pass_rate || 65
-          array = []
-          scores.each { |score| score >= pass_rate ? array << true : array << false }
-          array2 = array.uniq
-          @question_bank_passed = array2.include? true
-          @cert = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).first
-          cme_ids = @course.course_module_elements.all_active.map(&:id)
-        end
-
-        @course_resources = CourseModuleElementResource.where(course_module_element_id: cme_ids).all_in_order
-
-        if !@course.try(:live)
-          seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
-          render 'preview_course'
-        else
-
-        end
+        possible_student_number = nil
       end
-    end
-  end
+      @enrollment = Enrollment.new(student_number: possible_student_number)
+      @exam_sittings = ExamSitting.where(subject_course_id: @course.id).all_in_order
 
-  def diploma_show
-    @course = SubjectCourse.where(name_url: params[:subject_course_name_url].to_s).first
-
-    if current_user && @course
-      if (current_user.individual_student? && current_user.valid_subject_course_ids.include?(@course.id)) || current_user.admin?
-
-        if @course.enrolled_user_ids.include?(current_user.id)
-          @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
-          @subject_course_user_log = @enrollment.subject_course_user_log
-        else
-          @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
-        end
-
-        @course_modules = @course.children.all_active.all_in_order
-        @tuition_course_modules = @course_modules.all_tuition
-        @test_course_modules = @course_modules.all_test
-        @revision_course_modules = @course_modules.all_revision
-        tag_manager_data_layer(@course.try(:name))
-        @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
-        @navbar = true
-
+    elsif current_user && @course.enrolled_user_ids.include?(current_user.id)
+      #Get existing enrollment and try find an associated SCUL
+      @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
+      if @enrollment
+        @subject_course_user_log = @enrollment.subject_course_user_log
       else
-        if current_user.corporate_user?
-          redirect_to root_url
-        else
-          redirect_to product_course_url(@course.home_page.public_url)
-        end
-
+        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
       end
+
     else
-      redirect_to root_url
+      #As a backup try find a related SCUL
+      @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
     end
+
+    if current_user
+      users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
+      user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
+      latest_set = user_course_sets.first
+      @latest_element_id = latest_set.try(:latest_course_module_element_id)
+      @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+      cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
+      scores = cmeuls.all.map(&:quiz_score_actual)
+      pass_rate = @course.cpd_pass_rate || 65
+      array = []
+      scores.each { |score| score >= pass_rate ? array << true : array << false }
+      array2 = array.uniq
+      @question_bank_passed = array2.include? true
+      @cert = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).first
+      cme_ids = @course.course_module_elements.all_active.map(&:id)
+    end
+
+    unless @course.live
+      seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
+      render 'preview_course'
+    end
+
   end
 
   def cert
