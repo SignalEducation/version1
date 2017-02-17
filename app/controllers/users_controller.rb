@@ -555,7 +555,11 @@ class UsersController < ApplicationController
     if invoice
       @invoice = invoice
       description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
-      vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
+      if @invoice.vat_rate
+        vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
+      else
+        vat_rate = '0%'
+      end
       respond_to do |format|
         format.html
         format.pdf do

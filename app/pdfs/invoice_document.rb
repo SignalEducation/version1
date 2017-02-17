@@ -74,7 +74,8 @@ class InvoiceDocument < Prawn::Document
 
     summary_details = [
         ['Subtotal', @invoice.sub_total],
-        ['Total',    @invoice.total]
+        ['Currency', @invoice.currency.name],
+        ['Total',    @invoice.currency.format_number(@invoice.total)]
     ]
     table(summary_details, column_widths: [480, 60], header: true,
               cell_style: {padding: 5, border_width: 0.5}) do
