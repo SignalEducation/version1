@@ -77,6 +77,7 @@ class Invoice < ActiveRecord::Base
   validates_length_of :subscription_guid, maximum: 255, allow_blank: true
 
   # callbacks
+  after_create :set_vat_rate
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, id: :desc) }
@@ -182,4 +183,12 @@ class Invoice < ActiveRecord::Base
 
   protected
 
+  def set_vat_rate
+    country = user.country
+    if country.vat_codes.any?
+      vat_code = country.vat_codes.first
+      vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).id
+      self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
+    end
+  end
 end
