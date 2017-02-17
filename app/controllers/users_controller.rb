@@ -552,25 +552,21 @@ class UsersController < ApplicationController
 
   def subscription_invoice
     invoice = Invoice.where(id: params[:id]).first
-    Payday::Config.default.invoice_logo = "#{Rails.root}/app/assets/images/invoice-logo.svg"
-    Payday::Config.default.company_name = "LearnSignal"
-    Payday::Config.default.company_details = "27 South Frederick Street, Dublin 2, Ireland"
-
-    if current_user.id == invoice.user_id
+    if invoice
       @invoice = invoice
+      description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
+      if @invoice.vat_rate
+        vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
+      else
+        vat_rate = '0%'
+      end
       respond_to do |format|
         format.html
         format.pdf do
-          user = @invoice.user
-          Payday::Config.default.currency = "#{@invoice.currency.iso_code.downcase}"
-          sub_plan = @invoice.subscription.subscription_plan
-          pdf = Payday::Invoice.new(invoice_number: @invoice.id, bill_to: "#{user.full_name}")
-          pdf.line_items << Payday::LineItem.new(price: @invoice.total, quantity: 1, description: t("views.general.subscription_in_months.a#{sub_plan.payment_frequency_in_months}"))
-          send_data pdf.render_pdf, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: 'inline'
+          pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate)
+          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: "inline"
         end
       end
-    else
-      redirect_to account_url
     end
   end
 

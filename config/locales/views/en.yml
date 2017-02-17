@@ -1341,7 +1341,7 @@ en:
       form:
         name: Name
         name_placeholder: Standard or Reduced
-        country_id: Country id
+        country_id: Country
         label:  Label
         label_placeholder:  VAT or GST
         wiki_url: Wiki URL
