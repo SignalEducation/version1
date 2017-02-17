@@ -11,6 +11,7 @@
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
+#  sorting_order                 :integer
 #
 
 class QuizQuestionsController < ApplicationController
@@ -55,6 +56,14 @@ class QuizQuestionsController < ApplicationController
     end
   end
 
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      QuizQuestion.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
+  end
+
   def destroy
     if @quiz_question.destroy
       flash[:success] = I18n.t('controllers.quiz_questions.destroy.flash.success')
@@ -88,6 +97,7 @@ class QuizQuestionsController < ApplicationController
     params.require(:quiz_question).permit(
         :course_module_element_quiz_id,
         :difficulty_level,
+        :sorting_order,
         :hints,
         quiz_solutions_attributes: [
             :id,
