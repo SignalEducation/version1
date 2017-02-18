@@ -66,8 +66,8 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product, :profile, :profile_index]
-  before_action :logged_out_required, only: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product]
+  before_action :logged_in_required, except: [:student_new, :student_create, :new_product_user, :new_session_product, :profile, :profile_index]
+  before_action :logged_out_required, only: [:student_new, :student_create, :new_product_user, :new_session_product]
   before_action only: [:destroy, :create] do
     ensure_user_is_of_type(['admin'])
   end
@@ -83,7 +83,6 @@ class UsersController < ApplicationController
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
     @orders = @user.orders
-    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
 
     if current_user.corporate_manager? || current_user.corporate_customer?
       @corporate_customer = current_user.corporate_customer
