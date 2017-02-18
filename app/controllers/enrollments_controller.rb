@@ -96,25 +96,6 @@ class EnrollmentsController < ApplicationController
     MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
   end
 
-  def create_with_order
-    #Needs a review before Diplomas are reactivated
-    log = create_subject_course_user_log
-    @enrollment = Enrollment.new(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
-    if @enrollment.save
-      if @course.email_content
-        content = @course.email_content
-      else
-        content = @course.short_description
-      end
-      course_parent_url = @course.subject_course_category == SubjectCourseCategory.default_subscription_category ? 'subscription_course' : 'product_course'
-      unless Rails.env.test?
-        url = Rails.application.routes.default_url_options[:host] + "/#{course_parent_url}/#{@course.name_url}"
-        MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
-      end
-      redirect_to diploma_course_url(@course.name_url)
-    end
-  end
-
   def basic_create
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     @user = current_user

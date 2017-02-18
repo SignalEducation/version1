@@ -83,7 +83,6 @@ class UsersController < ApplicationController
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
     @orders = @user.orders
-    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
     @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
 
     if current_user.corporate_manager? || current_user.corporate_customer?
@@ -149,6 +148,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    #Admin creating users
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else
@@ -231,7 +231,6 @@ class UsersController < ApplicationController
       @topic_interests = Group.all_active.all_in_order.for_public
 
       @user = User.new(student_allowed_params)
-      @user.student_user_type_id = StudentUserType.default_free_trial_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -281,88 +280,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def new_product_user
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @user = User.new
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
-    @product = @course.products.in_currency(@currency_id).last
-    @topic_interests = Group.all_active.all_in_order.for_public
-    @navbar = false
-    @footer = false
-  end
-
-  def create_product_user
-    redirect_to root_url if current_user
-    @navbar = false
-    @footer = false
-    @topic_interests = Group.all_active.all_in_order.for_public
-
-    @course = SubjectCourse.find(params[:user][:subject_course_id])
-    @product = Product.where(subject_course_id: @course.id).first
-    @user = User.new(student_allowed_params)
-    @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-    @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @user.account_activation_code = SecureRandom.hex(10)
-    @user.email_verification_code = SecureRandom.hex(10)
-    @user.password_confirmation = @user.password
-    # Check for CrushOffers cookie and assign it to the User
-    if cookies.encrypted[:crush_offers]
-      @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
-      cookies.delete(:crush_offers)
-    end
-    # Create the customer object on stripe
-    stripe_customer = Stripe::Customer.create(
-        email: @user.try(:email)
-    )
-    @user.stripe_customer_id = stripe_customer.id
-    @user.free_trial = false
-    @user.trial_limit_in_days = 0
-
-    if @user.valid? && @user.save
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-
-      user = User.get_and_activate(@user.account_activation_code)
-      UserSession.create(user)
-      redirect_to users_new_order_url(@course.name_url)
-    else
-      render action: :new_product_user
-    end
-  end
-
-  def new_session_product
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = @country.currency_id
-    @product = @course.products.in_currency(@currency_id).last
-    @user_session = UserSession.new
-    @navbar = false
-    @footer = false
-  end
-
-  def create_session_product
-    @navbar = nil
-    @footer = nil
-    @course = SubjectCourse.find_by_id(params[:user_session][:subject_course_id])
-    @product = Product.where(subject_course_id: @course.id).first
-    @user_session = UserSession.new(sign_in_params)
-    if @user_session.save
-      @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
-      @user_session.user.update_attribute(:session_key, session[:session_id])
-      flash[:error] = nil
-      redirect_to users_new_order_url(@course.name_url)
-    else
-      render action: :new_session_product
-    end
-  end
-
-
   #Logged In actions to create subscriptions and associated objects(invoices, coupons)
   def new_subscription
     redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
@@ -372,8 +289,6 @@ class UsersController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : @user.country
     @currency_id = @country.currency_id
-
-
     @subscription_plans = SubscriptionPlan
                               .where('price > 0.0')
                               .includes(:currency)
@@ -424,19 +339,7 @@ class UsersController < ApplicationController
 
           if upgrade
             user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-
-            if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-              new_user_type_id = StudentUserType.default_sub_user_type.id
-            elsif user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-              new_user_type_id = StudentUserType.default_sub_user_type.id
-
-            elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-              new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-            else
-              new_user_type_id = user.student_user_type_id
-            end
-
-            current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
+            current_user.update_attributes(free_trial: false)
             redirect_to personal_upgrade_complete_url
           else
             redirect_to user_new_subscription_url(current_user.id)

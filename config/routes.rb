@@ -92,7 +92,6 @@ Rails.application.routes.draw do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
-    get '/orders/enrollment/:subject_course_name_url', to: 'enrollments#create_with_order', as: :new_order_enrollment
     get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
     get 'enrollments/:enrollment_id/pause', to: 'enrollments#pause', as: :pause_enrollment
     get 'enrollments/:enrollment_id/activate', to: 'enrollments#activate', as: :activate_enrollment
@@ -153,17 +152,9 @@ Rails.application.routes.draw do
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
 
-
-     get 'new_product_user/:subject_course_name_url', to: 'users#new_product_user', as: :new_product_user
-    get 'new_session_product/:subject_course_name_url', to: 'users#new_session_product', as: :new_session_product
-    get 'users_new_order/:subject_course_name_url', to: 'orders#new', as: :users_new_order
-    post '/create_product_user', to: 'users#create_product_user', as: :create_product_user
-
-    post '/create_session_product', to: 'users#create_session_product', as: :create_session_product
-
-    post '/mock_exam_create', to: 'orders#mock_exam_create', as: :mock_exam_create
     resources :mock_exams, concerns: :supports_reordering
-    resources :orders
+    resources :orders, except: [:new]
+    get 'order/new/:product_id', to: 'orders#new', as: :new_order
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
@@ -175,7 +166,6 @@ Rails.application.routes.draw do
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
     resources :subscription_plan_categories
-    resources :subject_course_categories
     resources :tutor_applications
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'business', to: 'footer_pages#business', as: :business

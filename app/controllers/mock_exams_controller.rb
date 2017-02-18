@@ -35,12 +35,6 @@ class MockExamsController < ApplicationController
   end
 
   def show
-    #This functions as OrdersController#new
-    @order = Order.new
-    @product = @mock_exam.product
-    @course = @mock_exam.subject_course
-    @navbar = false
-    @footer = false
   end
 
   def new
@@ -93,10 +87,8 @@ class MockExamsController < ApplicationController
     if params[:id].to_i > 0
       @mock_exam = MockExam.where(id: params[:id]).first
     end
-    @subject_courses = SubjectCourse.all_in_order
     @products = Product.all_in_order
     @currencies = Currency.all_in_order
-
   end
 
   def allowed_params
