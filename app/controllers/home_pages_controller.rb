@@ -19,8 +19,8 @@ class HomePagesController < ApplicationController
   before_action only: [:index, :new, :edit, :update, :create] do
     ensure_user_is_of_type(['admin'])
   end
-  before_action :get_variables, except: [:diploma, :home, :diploma_index]
-  before_action :layout_variables, only: [:diploma, :home, :diploma_index, :group_index]
+  before_action :get_variables, except: [:home]
+  before_action :layout_variables, only: [:home]
 
   def home
     #This is the main home_page
@@ -56,33 +56,6 @@ class HomePagesController < ApplicationController
 
   end
 
-  def group_index
-    @user = User.new
-    # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
-    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
-    if session[:sign_up_errors] && session[:valid_params]
-      session[:sign_up_errors].each do |k, v|
-        v.each { |err| @user.errors.add(k, err) }
-      end
-      @user.first_name = session[:valid_params][0]
-      @user.last_name = session[:valid_params][1]
-      @user.email = session[:valid_params][2]
-      session.delete(:sign_up_errors)
-      session.delete(:valid_params)
-    end
-    # Don't remember why this needs to be set
-    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
-
-    #To show each pricing plan on the page; not involved in the sign up process
-    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
-    @groups = Group.all_active.for_public.all_in_order
-    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
-  end
-
   def group
     # Ensuring that the correct params are present for home_page with a valid group and url is present so that the right view file or the default view is loaded
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
@@ -91,7 +64,7 @@ class HomePagesController < ApplicationController
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @group = @home_page.try(:group)
     @url_value = @home_page.try(:public_url)
-    redirect_to all_groups_url unless @group
+    redirect_to root_url unless @group
 
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
@@ -195,9 +168,6 @@ class HomePagesController < ApplicationController
     if params[:id].to_i > 0
       @home_page = HomePage.where(id: params[:id]).first
     end
-    @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
     @groups = Group.all_active.all_in_order.for_public

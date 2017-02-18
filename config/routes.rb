@@ -205,16 +205,9 @@ Rails.application.routes.draw do
 
     resources :home_pages, only: [:index, :new, :edit, :update, :create]
 
-    # HomePage Structure
-    #HomePage or Root
+    # HomePages Structure
     get 'home', to: 'home_pages#home', as: :home
-    #Product Course Landing Pages
-    get 'diploma/:home_pages_public_url', to: 'home_pages#diploma', as: :product_course
-    #Subscription Group/Course Landing Pages
     get 'group/:home_pages_public_url', to: 'home_pages#group', as: :group_landing
-
-    get 'all_groups', to: 'home_pages#group_index', as: :all_groups
-    get 'all_diploma', to: 'home_pages#diploma_index', as: :all_diplomas
 
 
     constraints(Subdomain) do

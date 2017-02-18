@@ -1727,7 +1727,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: relative;
   margin-bottom: -50px; /* negative value of footer height */
   background: $colour-7;
-  border-top: 10px solid $colour-3;
+  border-top: 0px solid $colour-3;
   padding: $gutter*1.5 0 $gutter*2 0;
   text-align: center;
   @include clearfix();
