@@ -1,12 +1,12 @@
 .col-md-12
   .corporate-box-item.table-box#invoices-panel
-    -if @current_subscription || @user.free_member? || @user.expired_free_member?
+    -if @current_subscription || @user.free_member?
       .col-sm-12
         .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
           %h4
             ="Account Status: "
             &nbsp;
-            =@user.user_subscription_status
+            =@user.user_account_status
           %br/
           %h4
             ="Memeber since: "
@@ -22,8 +22,9 @@
                 =number_in_local_currency(last_invoice.total, last_invoice.currency_id)
                 =" on "
                 =humanize_datetime(last_invoice.created_at)
-                %br/
+
             -if @user.valid_subscription
+              %br/
               %h4
                 =t('views.users.show.your_next_payment_will_be_on')
                 &nbsp;

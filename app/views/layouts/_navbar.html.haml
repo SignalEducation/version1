@@ -30,16 +30,12 @@
                 %li.dropdown.dropdown-admin
                   %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                     Admin
-                    -#Todo when user notifications are reactivated
-                    -#%span.user-notification
-                      1
                     %span.caret
                   %ul#menu.dropdown-menu
                     %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                     %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
                     %li=link_to t('views.products.index.h1'), products_url
                     %li=link_to t('views.mock_exams.index.h1'), mock_exams_url
-                    %li=link_to t('views.subject_course_categories.index.h1'), subject_course_categories_url
                     %li.divider
                     %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
                     %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
@@ -55,9 +51,6 @@
               %li.dropdown.dropdown-normal
                 %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   =t('views.general.user_name') + current_user.first_name.to_s
-                  -#Todo when user notifications are reactivated
-                  -#%span.user-notification
-                    1
                   %span.caret
                 %ul#menu.dropdown-menu
                   -if current_user.corporate_customer?
@@ -71,16 +64,12 @@
                     %li=link_to t('views.user_groups.index.h1'), user_groups_url
                     %li=link_to t('views.exam_bodies.index.h1'), exam_bodies_url
                     %li=link_to t('views.exam_sittings.index.h1'), exam_sittings_url
-                    %li=link_to t('views.student_user_types.index.h1'), student_user_types_url
                     %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
                     %li=link_to t('views.currencies.index.h1'), currencies_url
                     %li=link_to t('views.countries.index.h1'), countries_url
                     %li.divider
                   %li
                     %li=link_to t('views.users.show.h1'), account_url
-                  -#if current_user.blogger? || current_user.individual_student?
-                    %li
-                      %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
                   %li
                     =link_to t('views.general.sign_out'), sign_out_url
 

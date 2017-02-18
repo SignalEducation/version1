@@ -14,8 +14,9 @@
         =render partial: 'layouts/flash_messages'
       .col-md-12
         .col-md-11.col-md-offset-1
-          %p.p
-            Please enter you payment details below to complete your purchase. The Mock Exam will be emailed upon successful payment.
+          -unless current_user.purchased_products.include?(@product)
+            %p.p
+              Please enter you payment details below to complete your purchase. The Mock Exam will be emailed upon successful payment.
 
         .col-sm-4.l-margin-top
           .course-side-info
@@ -32,27 +33,36 @@
 
         .col-sm-8
           .new-product-user-form.l-margin-top
-            =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
-              =f.hidden_field :mock_exam_id, value: @mock_exam.id
-              =f.hidden_field :stripe_token
-              =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-              =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+            -if current_user.purchased_products.include?(@product)
               .row
                 .col-md-12
-                  .payment-heading
-
-                  =render partial: 'orders/order_card_form', locals: {f: f}
-
-                  .container-fluid
-                    .col-md-12
-                      .col-md-4.col-sm-offset-4.text-center
-                        .spinner
-                          .bounce1
-                          .bounce2
-                          .bounce3
+                  .payment-heading.text-center
+                    %p.p
+                      You have already purchased this Product. Visit your account page to view your purchase history.
 
 
-                  .row.l-margin-top-big
-                    .col-md-10.col-md-offset-1
-                      =f.submit 'Purchase Mock Exam', class: 'btn btn-red'
+            -else
+              =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
+                =f.hidden_field :mock_exam_id, value: @mock_exam.id
+                =f.hidden_field :stripe_token
+                =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+                =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+                .row
+                  .col-md-12
+                    .payment-heading
+
+                    =render partial: 'orders/order_card_form', locals: {f: f}
+
+                    .container-fluid
+                      .col-md-12
+                        .col-md-4.col-sm-offset-4.text-center
+                          .spinner
+                            .bounce1
+                            .bounce2
+                            .bounce3
+
+
+                    .row.l-margin-top-big
+                      .col-md-10.col-md-offset-1
+                        =f.submit 'Purchase Mock Exam', class: 'btn btn-red'
 

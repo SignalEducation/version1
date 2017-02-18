@@ -271,6 +271,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def user_account_status
+    if self.valid_free_member?
+      'Valid Free Trial'
+    elsif self.expired_free_member?
+      'Expired Free Trial'
+    elsif self.active_subscription
+      self.user_subscription_status
+    end
+  end
+
   def days_or_seconds_valid?
     if free_trial_days_expired? || free_trial_minutes_expired?
       false
@@ -316,6 +326,10 @@ class User < ActiveRecord::Base
     self.free_trial
   end
 
+  def valid_free_member?
+    self.free_trial && self.days_or_seconds_valid?
+  end
+
   def expired_free_member?
     self.free_trial && !self.days_or_seconds_valid?
   end
@@ -333,7 +347,7 @@ class User < ActiveRecord::Base
   end
 
   def valid_subscription
-    true if self.active_subscription && %w(active past_due canceled-pending).include?(self.active_subscription.current_status)
+    true if self.active_subscription && %w(active past_due).include?(self.active_subscription.current_status)
   end
 
   def valid_order_ids
@@ -350,11 +364,23 @@ class User < ActiveRecord::Base
     self.valid_order_ids.any?
   end
 
+  def purchased_products
+    if self.valid_orders?
+      ids = self.valid_order_ids
+      orders = Order.where(id: ids)
+      product_ids = orders.map(&:product_id)
+      products = Product.where(id: product_ids)
+      products
+    end
+  end
+
   def permission_to_see_content(course)
     if self.individual_student?
       if course.active && course.live
-        if self.free_trial
+        if self.valid_free_member?
           true
+        elsif expired_free_member?
+          false
         elsif self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
           true
         else
