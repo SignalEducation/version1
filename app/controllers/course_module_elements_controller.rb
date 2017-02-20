@@ -155,6 +155,10 @@ class CourseModuleElementsController < ApplicationController
     end
   end
 
+  def quiz_questions_order
+    @quiz_questions = @course_module_element.quiz_questions
+  end
+
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|

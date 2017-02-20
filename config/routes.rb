@@ -105,6 +105,7 @@ Rails.application.routes.draw do
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
     resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
+    get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
     get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
 
@@ -167,7 +168,7 @@ Rails.application.routes.draw do
     resources :orders
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
-    resources :quiz_questions, except: [:index]
+    resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :subject_courses, concerns: :supports_reordering
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs

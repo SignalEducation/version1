@@ -44,7 +44,8 @@
       numberOfQuestions = #{@number_of_questions},
       currentQuestion = 1,
       nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
-      nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
+      //nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
+      nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : 'allQuestions'}List,
       progressBar = $('.progress-bar'),
       questionCount = $('.l-margin-bottom-small.l-margin-top'),
       previousAnswerCorrect = true;

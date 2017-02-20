@@ -25,6 +25,11 @@
               =f.check_box :active, default: true
               =t('views.course_modules.form.active')
 
+      -if @course_module_element.is_quiz?
+        %br/
+        %br/
+        =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_module_element), class: 'btn btn-red'
+
     .col-md-6
       -# Dropdown list of other CourseModules in the SubjectCourse, not available to Corporates
       -if current_user.admin? || current_user.content_manager?

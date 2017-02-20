@@ -21,7 +21,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   include Archivable
 
   # Constants
-  STRATEGIES = %w(random)
+  STRATEGIES = %w(random ordered)
   #STRATEGIES = %w(random progressive)
 
   # attr-accessible
@@ -97,6 +97,10 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   def difficult_ids
     self.quiz_questions.all_difficult.map(&:id)
+  end
+
+  def all_ids_ordered
+    self.quiz_questions.all_in_order.map(&:id)
   end
 
   protected
