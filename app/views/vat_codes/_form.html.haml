@@ -1,36 +1,38 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    =form_for(@vat_code, html: {class: 'form-horizontal', role: 'form'}) do |f|
-      .well.well-sm
-        =render partial: '/layouts/error_messages', locals: {thing: @vat_code, message: nil}
-        =f.hidden_field :country_id, value: 1
-        -# todo .form-group
-          =f.label :country_id, t('views.vat_codes.form.country_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
-          =f.label :name, t('views.vat_codes.form.name'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :name, placeholder: t('views.vat_codes.form.name_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :label, t('views.vat_codes.form.label'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :label, placeholder: t('views.vat_codes.form.label_placeholder'), class: 'form-control'
-        .form-group
-          =f.label :wiki_url, t('views.vat_codes.form.wiki_url'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.text_field :wiki_url, placeholder: t('views.vat_codes.form.wiki_url_placeholder'), class: 'form-control'
-        -if f.object.id.nil?
-          =f.fields_for :vat_rates do |rate|
-            .form-group
-              =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate'), class: 'control-label col-sm-4'
-              .col-sm-8
-                =rate.text_field :percentage_rate, placeholder: t('views.vat_rates.form.percentage_rate_placeholder'), class: 'form-control'
-            .form-group
-              =rate.label :effective_from, t('views.vat_rates.form.effective_from'), class: 'control-label col-sm-4'
-              .col-sm-8
-                =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control datepicker', data: {'date-format' => t('controllers.application.datepicker_date_format')}
+=form_for(@vat_code, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-md-6
+      =render partial: '/layouts/error_messages', locals: {thing: @vat_code, message: nil}
+      =f.hidden_field :country_id, value: 1
 
-      =f.submit t('views.general.save'), class: 'btn btn-success'
-      =t('views.general.or')
-      =link_to t('views.general.cancel'), vat_codes_path
+      =f.label :country_id, t('views.vat_codes.form.country_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %br/
+      =f.label :name, t('views.vat_codes.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.vat_codes.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :label, t('views.vat_codes.form.label'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :label, placeholder: t('views.vat_codes.form.label_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+    .col-md-6
+      -#if f.object.id.nil?
+      =f.fields_for :vat_rates do |rate|
+        =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =rate.text_field :percentage_rate, placeholder: t('views.vat_rates.form.percentage_rate_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =rate.label :effective_from, t('views.vat_rates.form.effective_from'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control datepicker', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_date_format')}
+
+
+
+  %br/
+  %br/
+  %br/
+  .row
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-red'
+      =link_to t('views.general.cancel'), vat_codes_path, class: 'btn btn-cyan'
