@@ -19,19 +19,16 @@
                   %tr
                     %th=t('views.vat_codes.form.country_id')
                     %th=t('views.vat_codes.form.name')
-                    %th=t('views.vat_codes.form.label')
-                    %th=t('views.vat_codes.form.wiki_url')
-                    %th=t('views.vat_codes.form.vat_rates')
+                    %th=t('views.vat_rates.form.percentage_rate')
+                    %th
                     %th
                 %tbody
                   -@vat_codes.each do |vat_code|
                     %tr{id: vat_code.id}
+                      %td=vat_code.country.name
                       %td=vat_code.name
-                      %td=vat_code.label
                       %td
                         -vat_code.vat_rates.each do |rate|
-                          =rate.effective_from.to_s(:standard)
-                          \-
                           =rate.percentage_rate.to_s + '%'
                           %br/
                       %td

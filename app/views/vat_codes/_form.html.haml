@@ -25,7 +25,7 @@
         %br/
         =rate.label :effective_from, t('views.vat_rates.form.effective_from'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control datepicker', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_date_format')}
+          =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
 
 
 
@@ -36,3 +36,10 @@
     .col-md-12
       =f.submit t('views.general.save'), class: 'btn btn-red'
       =link_to t('views.general.cancel'), vat_codes_path, class: 'btn btn-cyan'
+
+
+:javascript
+
+  $(function () {
+    $('#datetimepicker1').datetimepicker();
+  });
