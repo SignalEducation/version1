@@ -20,8 +20,6 @@
             .profile-text
               %p
                 =@tutor.try(:first_description).html_safe
-              %p
-                =@tutor.try(:second_description).html_safe
               -#if @tutor.personal_url
                 %p
                   %a{href: "#{@tutor.personal_url}", target: "_blank"} See #{@tutor.first_name.pluralize} other work
