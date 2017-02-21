@@ -153,7 +153,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def limited_params
-    params.require(:enrollment).permit(:registered)
+    params.require(:enrollment).permit(:subject_course_id, :registered)
   end
 
   def get_variables
