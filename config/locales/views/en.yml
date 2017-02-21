@@ -1111,7 +1111,7 @@ en:
         current_password_placeholder: Current password
         password: Password
         password_placeholder: New Password
-        password_confirmation_placeholderpassword_confirmation: Password confirmation
+        password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
         address: Address
         address_placeholder: Billing address
