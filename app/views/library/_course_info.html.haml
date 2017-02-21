@@ -18,8 +18,6 @@
           =@course.tutor.full_name
         =link_to profile_url(@course.tutor) do
           =image_tag @course.tutor.profile_image.url, class: 'profile-pic profile-pic-small pull-right'
-        %p
-          =@course.tutor.try(:first_description).truncate(225).try(:html_safe)
     -else
       %p.h4.l-margin-bottom
         =t('views.general.course_tutor')
