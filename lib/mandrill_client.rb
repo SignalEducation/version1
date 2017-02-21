@@ -10,19 +10,19 @@ class MandrillClient
   def send_verification_email(verification_url)
     msg = message_stub.merge({"subject" => "LearnSignal Account Verification"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('email-verification-20-02-17', msg)
+    send_template('email-verification', msg)
   end
 
   def admin_invite(verification_url)
     msg = message_stub.merge({"subject" => "Welcome to LearnSignal"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('admin-invite-20-02-17', msg)
+    send_template('admin-invite-email', msg)
   end
 
   def password_reset_email(password_reset_url)
     msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send_template('password-reset-20-02-17', msg)
+    send_template('password-reset-email', msg)
   end
 
 
@@ -44,25 +44,31 @@ class MandrillClient
   def send_card_payment_failed_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Payment Failed"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('card-payment-failed-20-02-17', msg)
+    send_template('card-payment-failed', msg)
   end
 
   def send_account_suspended_email
     msg = message_stub.merge({"subject" => "Account Suspended"})
-    send_template('account-suspended-20-02-17', msg)
+    send_template('account-suspended', msg)
   end
 
   def send_successful_payment_email(account_url, invoice_url)
     msg = message_stub.merge({"subject" => "LearnSignal Payment Invoice "})
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "INVOICEURL", "content" => invoice_url }
-    send_template('successful-payment-20-02-17', msg)
+    send_template('invoice-payment-successful', msg)
+  end
+
+  def send_subscription_error_email(trial_length)
+    msg = message_stub.merge({"subject" => "There's been an error with your subscription"})
+    msg["global_merge_vars"] << { "name" => "USERTRIALLENGTH", "content" => trial_length }
+    send_template('subscription-error', msg)
   end
 
   def send_referral_discount_email(amount)
     msg = message_stub.merge({"subject" => 'Referral Discount Achieved'})
     msg["global_merge_vars"] << { "name" => "AMOUNT", "content" => amount }
-    send_template('referral-discount-20-02-17', msg)
+    send_template('referral-discount-email', msg)
   end
 
   def send_mock_exam_email(account_url, file_name, attachment)
@@ -70,7 +76,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
-    send_template('mock-exam-purchase-20-02-17', msg)
+    send_template('mock-exam-purchase', msg)
   end
 
   def send_white_paper_request_email(name, title, url)
@@ -78,7 +84,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
     msg["global_merge_vars"] << { "name" => "TITLE", "content" => title }
     msg["global_merge_vars"] << { "name" => "URL", "content" => url }
-    send_template('white-paper-download-20-02-17', msg)
+    send_template('white-paper-email', msg)
   end
 
 
@@ -89,7 +95,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "TEXT", "content" => text }
     msg["global_merge_vars"] << { "name" => "LINK", "content" => url }
     msg["global_merge_vars"] << { "name" => "CONTACTLINK", "content" => contact_link }
-    send_template('enrolment-welcome-20-02-17', msg)
+    send_template('enrollment-welcome-email-2017', msg)
   end
 
   def send_we_havent_seen_you_in_a_while_email(url, course_name, days)
@@ -97,14 +103,14 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
     msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
     msg["global_merge_vars"] << { "name" => "DAYS_SINCE_LAST_SEEN", "content" => days }
-    send_template('we-have-t-seen-you-in-a-while-20-02-17', msg)
+    send_template('we-havent-seen-you-in-a-while', msg)
   end
 
   def send_study_streak_email(url, course_name)
     msg = message_stub.merge({"subject" => "#{course_name} Study"})
     msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
     msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
-    send_template('study-streak-20-02-17', msg)
+    send_template('study-streak', msg)
   end
 
 
@@ -114,7 +120,7 @@ class MandrillClient
     msg = message_stub.merge({"subject" => "Free Trial Status"})
     msg["global_merge_vars"] << { "name" => "DAYSLEFT", "content" => days_left }
     msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
-    send_template('free-trial-ending-20-02-17', msg)
+    send_template('free-trial-ending', msg)
   end
 
 
@@ -126,7 +132,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
     msg["global_merge_vars"] << { "name" => "INFO", "content" => info }
     msg["global_merge_vars"] << { "name" => "DESCRIPTION", "content" => description }
-    send_template('tutor-application-20-02-17', msg)
+    send_template('new-tutor-application', msg)
   end
 
   def send_corporate_request_email(name, company, email, phone_number)
@@ -141,7 +147,7 @@ class MandrillClient
   def send_survey_email(url)
     msg = message_stub.merge({"subject" => "Student Feedback Survey"})
     msg["global_merge_vars"] << { "name" => "URL", "content" => url }
-    send_template('course-completion-survey-20-02-17', msg)
+    send_template('course-completion-survey-email', msg)
   end
 
   private
