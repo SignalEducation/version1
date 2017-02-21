@@ -26,6 +26,3 @@
       .tutor-header
         %p.h6
           =@course.tutor.full_name
-        -if @course.tutor.first_description
-          %p
-            =@course.tutor.first_description.truncate(225).html_safe
