@@ -586,7 +586,6 @@ class User < ActiveRecord::Base
 
   def destroyable?
     !self.admin? &&
-        self.course_modules.empty? &&
         self.course_module_element_user_logs.empty? &&
         self.invoices.empty? &&
         self.quiz_attempts.empty? &&

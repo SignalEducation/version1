@@ -153,54 +153,49 @@ describe CourseModuleJumboQuizzesController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('course_module_jumbo_quiz')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with course_module_jumbo_quiz_1' do
         get :edit, id: course_module_jumbo_quiz_1.id
-        expect_edit_success_with_model('course_module_jumbo_quiz', course_module_jumbo_quiz_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with course_module_jumbo_quiz_2' do
         get :edit, id: course_module_jumbo_quiz_2.id
-        expect_edit_success_with_model('course_module_jumbo_quiz', course_module_jumbo_quiz_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      #TODO This does not fail when run by itself
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, course_module_jumbo_quiz: valid_params
-        expect_create_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, course_module_jumbo_quiz: {valid_params.keys.first => ''}
-        expect_create_error_with_model('course_module_jumbo_quiz')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      #TODO This does not fail when run by itself
-      xit 'should respond OK to valid params for course_module_jumbo_quiz_1' do
+      it 'should respond OK to valid params for course_module_jumbo_quiz_1' do
         put :update, id: course_module_jumbo_quiz_1.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', subject_course_url(course_module_jumbo_quiz_1.course_module.subject_course))
+        expect_bounce_as_not_allowed
       end
 
-      #TODO This does not fail when run by itself
-      xit 'should respond OK to valid params for course_module_jumbo_quiz_2' do
+      it 'should respond OK to valid params for course_module_jumbo_quiz_2' do
         put :update, id: course_module_jumbo_quiz_2.id, course_module_jumbo_quiz: valid_params
-        expect_update_success_with_model('course_module_jumbo_quiz', course_module_jumbo_quiz_2.course_module.subject_course)
-        expect(assigns(:course_module_jumbo_quiz).id).to eq(course_module_jumbo_quiz_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: course_module_jumbo_quiz_1.id, course_module_jumbo_quiz: {valid_params.keys.first => ''}
-        expect_update_error_with_model('course_module_jumbo_quiz')
-        expect(assigns(:course_module_jumbo_quiz).id).to eq(course_module_jumbo_quiz_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 

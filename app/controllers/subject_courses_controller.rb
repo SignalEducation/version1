@@ -64,7 +64,6 @@ class SubjectCoursesController < ApplicationController
 
   def new
     @subject_course = SubjectCourse.new(sorting_order: 1)
-    @tutors = User.where(user_groups_id: UserGroup.default_tutor_user_group.id).all_in_order
   end
 
   def edit

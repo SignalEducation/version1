@@ -125,7 +125,7 @@ class DashboardController < ApplicationController
   end
 
   def tutor
-
+    ensure_user_is_of_type(['tutor'])
   end
 
   protected
