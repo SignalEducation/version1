@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170217080142) do
+ActiveRecord::Schema.define(version: 20170222110859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -732,7 +732,6 @@ ActiveRecord::Schema.define(version: 20170217080142) do
     t.boolean  "active",                                  default: false, null: false
     t.boolean  "live",                                    default: false, null: false
     t.string   "wistia_guid"
-    t.integer  "tutor_id"
     t.integer  "cme_count"
     t.integer  "video_count"
     t.integer  "quiz_count"
@@ -763,8 +762,15 @@ ActiveRecord::Schema.define(version: 20170217080142) do
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
-  add_index "subject_courses", ["tutor_id"], name: "index_subject_courses_on_tutor_id", using: :btree
   add_index "subject_courses", ["wistia_guid"], name: "index_subject_courses_on_wistia_guid", using: :btree
+
+  create_table "subject_courses_users", id: false, force: :cascade do |t|
+    t.integer "subject_course_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "subject_courses_users", ["subject_course_id"], name: "index_subject_courses_users_on_subject_course_id", using: :btree
+  add_index "subject_courses_users", ["user_id"], name: "index_subject_courses_users_on_user_id", using: :btree
 
   create_table "subscription_payment_cards", force: :cascade do |t|
     t.integer  "user_id"

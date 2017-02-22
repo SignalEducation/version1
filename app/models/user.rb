@@ -101,7 +101,7 @@ class User < ActiveRecord::Base
   has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :enrollments
-  has_many :subject_courses, foreign_key: :tutor_id
+  has_and_belongs_to_many :subject_courses
   has_many :invoices
   has_many :quiz_attempts
   has_many :question_banks

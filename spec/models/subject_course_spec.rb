@@ -9,7 +9,6 @@
 #  active                                  :boolean          default(FALSE), not null
 #  live                                    :boolean          default(FALSE), not null
 #  wistia_guid                             :string
-#  tutor_id                                :integer
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer

@@ -9,7 +9,6 @@
 #  active                                  :boolean          default(FALSE), not null
 #  live                                    :boolean          default(FALSE), not null
 #  wistia_guid                             :string
-#  tutor_id                                :integer
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
@@ -58,7 +57,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # relationships
   belongs_to :exam_body
-  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  has_and_belongs_to_many :users
   belongs_to :subject_course_category
   has_and_belongs_to_many :groups
   has_many :course_modules
