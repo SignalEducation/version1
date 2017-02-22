@@ -125,7 +125,11 @@ class UsersController < ApplicationController
 
   def user_courses_status
     @user = User.find(params[:user_id])
-    @subject_courses = SubjectCourse.all_active.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_in_order.for_public.all_not_restricted
+    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
+    @first_courses = all_courses.first
+    @second_courses = all_courses.last
+
     render 'users/admin_view/user_courses_status'
   end
 

@@ -12,31 +12,34 @@
           .col-md-12
             =render partial: 'user_tabs'
 
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12
-            .corporate-box-item.table-box
-              %h3.h-dark
-                Courses
-              %table.table{style: 'font-size: 18px;'}
-                %thead
-                  %tr
-                    %th
-                      =t('views.subject_courses.form.name')
-                    %th
-                      =t('views.subject_courses.form.active')
-                    %th
-                      =t('views.subject_courses.form.live')
-                    %th
-                %tbody
-                  -@subject_courses.each do |course|
-                    %tr
-                      %td
-                        =course.name
-                      %td
-                        =tick_or_cross(course.active)
-                      %td
-                        =tick_or_cross(course.live)
-                      %td
-                        =link_to course_special_link(course) do
-                          .btn.btn-purple.btn-small.pull-right
-                            View
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
+          %h2.l-margin-bottom.text-center
+            ='Courses'
+
+          .corporate-box-item.table-box
+            =form_for(@user, url: { action: :update_courses }, html: {class: 'form-horizontal', role: 'form', id: 'user-courses-form'}) do |f|
+              .col-sm-12
+                .col-sm-6
+                  %table
+                    %thead
+                    %tbody
+                      -@first_courses.each do |course|
+                        %tr
+                          %td= course.name
+                          %td{style: 'width: 5%;'}
+                            =check_box_tag "user[subject_course_ids][]", course.id, @user.subject_courses.include?(course)
+
+                .col-sm-6
+                  %table
+                    %thead
+                    %tbody
+                      -@second_courses.each do |course|
+                        %tr
+                          %td= course.name
+                          %td{style: 'width: 5%;'}
+                            =check_box_tag "user[subject_course_ids][]", course.id, @user.subject_courses.include?(course)
+
+
+              =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

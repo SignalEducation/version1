@@ -11,18 +11,28 @@
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top
           .corporate-box-item.table-box
-            = form_for(@subject_course, url: { action: :update_tutors }, html: {class: 'form-horizontal', role: 'form', id: 'course-courses-form'}) do |f|
-              %table
-                %thead
-                  %tr
-                    %th{style: 'font-size: 1.6rem;'}= 'Users'
-                    %th
-                %tbody
-                  -@tutors.each do |tutor|
-                    %tr
-                      %td= tutor.full_name
-                      %td{style: 'width: 5%;'}
-                        =check_box_tag "subject_course[user_ids][]", tutor.id, @subject_course.users.include?(tutor)
+            =form_for(@subject_course, url: { action: :update_tutors }, html: {class: 'form-horizontal', role: 'form', id: 'course-tutors-form'}) do |f|
+              .col-sm-12
+                .col-sm-6
+                  %table
+                    %thead
+                    %tbody
+                      -@first_tutors.each do |tutor|
+                        %tr
+                          %td= tutor.full_name
+                          %td{style: 'width: 5%;'}
+                            =check_box_tag "subject_course[user_ids][]", tutor.id, @subject_course.users.include?(tutor)
+                .col-sm-6
+                  %table
+                    %thead
+                    %tbody
+                      -@second_tutors.each do |tutor|
+                        %tr
+                          %td= tutor.full_name
+                          %td{style: 'width: 5%;'}
+                            =check_box_tag "subject_course[user_ids][]", tutor.id, @subject_course.users.include?(tutor)
 
+              .col-sm-12.l-margin-top
+                =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                =link_to t('views.general.cancel'), subject_courses_url, class: 'btn btn-cyan l-margin-right-big l-padding-side-3x l-margin-top'
 
-              =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

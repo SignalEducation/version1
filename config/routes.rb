@@ -196,6 +196,7 @@ Rails.application.routes.draw do
       get  '/user_courses_status', action: :user_courses_status, as: :courses_status
       get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
       get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
+      patch  '/update_courses', action: :update_courses, as: :update_courses
     end
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]

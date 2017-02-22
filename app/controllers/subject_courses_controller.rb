@@ -113,7 +113,10 @@ class SubjectCoursesController < ApplicationController
 
   def edit_tutors
     @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
-    @tutors = User.all_tutors
+    @tutors = User.where(user_group_id: UserGroup.default_tutor_user_group.id).all_in_order
+    all_tutors = @tutors.each_slice( (@tutors.size/2.0).round ).to_a
+    @first_tutors = all_tutors.first
+    @second_tutors = all_tutors.last
     if @subject_course.nil?
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to subject_courses_url
