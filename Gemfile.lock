@@ -250,6 +250,8 @@ GEM
       activesupport (>= 3.2.0)
       cocaine (~> 0.5.5)
       mime-types
+    paperclip-dimension-validator (0.1.1)
+      paperclip (>= 4.0.0)
     payday (1.1.4)
       i18n (~> 0.7)
       money (~> 6.5)
@@ -510,6 +512,7 @@ DEPENDENCIES
   multipart-post
   newrelic_rpm
   paperclip (~> 4.2.1)
+  paperclip-dimension-validator
   payday
   pg
   poltergeist
