@@ -62,6 +62,7 @@
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
+#  description                      :text
 #
 
 class UsersController < ApplicationController
@@ -623,12 +624,8 @@ class UsersController < ApplicationController
   def profile
     #/profile/id
     @tutor = User.all_tutors.where(id: params[:id]).first
-    if @tutor
-      @courses = SubjectCourse.where(tutor_id: @tutor.id)
-      seo_title_maker(@tutor.full_name, @tutor.first_description, nil)
-    else
-      redirect_to root_url
-    end
+    @courses = @tutor.subject_courses
+    seo_title_maker(@tutor.full_name, @tutor.description, nil)
   end
 
   def profile_index
@@ -659,9 +656,9 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image, :date_of_birth, :student_user_type_id)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :profile_image, :date_of_birth, :student_user_type_id, :description)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest, :subject_course_id, :date_of_birth, :terms_and_conditions)
+      params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions)
     end
   end
 

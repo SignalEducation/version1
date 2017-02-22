@@ -62,6 +62,7 @@
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
+#  description                      :text
 #
 
 class User < ActiveRecord::Base
@@ -84,7 +85,8 @@ class User < ActiveRecord::Base
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
                   :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
                   :trial_limit_in_days, :trial_ended_notification_sent_at,
-                  :terms_and_conditions, :student_user_type_id, :date_of_birth
+                  :terms_and_conditions, :student_user_type_id, :date_of_birth,
+                  :description
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -131,6 +133,7 @@ class User < ActiveRecord::Base
   validates :user_group_id, presence: true
   validates :student_user_type_id, presence: true, if: :individual_student?
   validates :country_id, presence: true, if: :individual_student?
+  validates :description, presence: true, if: :tutor?
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }

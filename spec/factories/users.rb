@@ -62,6 +62,7 @@
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
+#  description                      :text
 #
 
 FactoryGirl.define do
