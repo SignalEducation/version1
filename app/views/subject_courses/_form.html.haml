@@ -4,7 +4,6 @@
       =render partial: '/layouts/error_messages', locals: {thing: @subject_course, message: nil}
       .row
         .col-md-6
-          =f.hidden_field :tutor_id
           =f.hidden_field :corporate_customer_id
           =f.hidden_field :wistia_guid
           =f.hidden_field :default_number_of_possible_exam_answers, value: 4
@@ -44,10 +43,6 @@
 
         .col-md-6
           -if current_user.admin? || current_user.content_manager?
-            =f.label :tutor_id, t('views.subject_courses.form.tutor_id'), class: 'control-label'
-            .input-group.input-group-lg.full-width
-              =f.collection_select :tutor_id, @tutors, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
-            %br/
             %br/
             %br/
             .col-sm-12

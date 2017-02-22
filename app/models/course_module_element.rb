@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
 #  created_at                :datetime
@@ -33,7 +32,7 @@ class CourseModuleElement < ActiveRecord::Base
   attr_accessible :name, :name_url, :description,
                   :estimated_time_in_seconds, :active,
                   :course_module_id, :sorting_order,
-                  :tutor_id, :related_quiz_id,
+                  :related_quiz_id,
                   :related_video_id, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
@@ -59,7 +58,6 @@ class CourseModuleElement < ActiveRecord::Base
              foreign_key: :related_video_id
   has_many :student_exam_tracks, class_name: 'StudentExamTrack',
            foreign_key: :latest_course_module_element_id
-  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
 
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video
@@ -73,7 +71,6 @@ class CourseModuleElement < ActiveRecord::Base
   validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
   validates :estimated_time_in_seconds, presence: true
   validates :sorting_order, presence: true
-  validates :tutor_id, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks

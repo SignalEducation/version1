@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
 #  created_at                :datetime

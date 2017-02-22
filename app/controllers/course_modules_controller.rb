@@ -6,7 +6,6 @@
 #  name                      :string
 #  name_url                  :string
 #  description               :text
-#  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
 #  active                    :boolean          default(FALSE), not null
@@ -44,13 +43,13 @@ class CourseModulesController < ApplicationController
     @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
     if @subject_course
       if @subject_course.children.count > 0
-        @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+        @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id)
       else
-        @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id, tutor_id: @subject_course.tutor_id)
+        @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id)
       end
     else
       course = SubjectCourse.all_active.all_in_order.last
-      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: course.id, tutor_id: course.tutor_id)
+      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: course.id)
     end
   end
 
@@ -104,7 +103,7 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:name, :name_url, :description, :tutor_id, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision, :discourse_topic_id)
+    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision, :discourse_topic_id)
   end
 
 end

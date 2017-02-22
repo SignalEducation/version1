@@ -99,7 +99,6 @@ class User < ActiveRecord::Base
              # employed by the corporate customer
   belongs_to :country
   belongs_to :student_user_type
-  has_many :course_modules, foreign_key: :tutor_id
   has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :enrollments
@@ -133,7 +132,6 @@ class User < ActiveRecord::Base
   validates :user_group_id, presence: true
   validates :student_user_type_id, presence: true, if: :individual_student?
   validates :country_id, presence: true, if: :individual_student?
-  validates :description, presence: true, if: :tutor?
   validates :corporate_customer_id,
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }

@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
 #  created_at                :datetime
@@ -64,7 +63,6 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
         course_module_id: params[:cm_id].to_i, active: false)
-    @course_module_element.tutor_id = @course_module_element.course_module.tutor_id
     @course_module_element.active = true
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
@@ -203,7 +201,6 @@ class CourseModuleElementsController < ApplicationController
         :estimated_time_in_seconds,
         :course_module_id,
         :sorting_order,
-        :tutor_id,
         :active,
         :related_quiz_id,
         :related_video_id,

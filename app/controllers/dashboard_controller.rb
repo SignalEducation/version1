@@ -125,35 +125,6 @@ class DashboardController < ApplicationController
   end
 
   def tutor
-    ensure_user_is_of_type(['tutor'])
-    # Compile all CourseModuleElementUserLog for the current_user(tutor)
-    @tutor_courses = SubjectCourse.all_in_order.all_active.where(tutor_id: current_user.id)
-    @course_modules = CourseModule.where(tutor_id: current_user.id).where(subject_course_id: @tutor_courses)
-    @quiz_logs = CourseModuleElementUserLog.where(is_quiz: true).where(course_module_id: @course_modules)
-    @video_logs = CourseModuleElementUserLog.where(is_video: true).where(course_module_id: @course_modules)
-
-    #Graph Dates Data
-    date_to  = Date.parse("#{Proc.new{Time.now}.call}")
-    date_from = date_to - 5.months
-    date_range = date_from..date_to
-    date_months = date_range.map {|d| Date.new(d.year, d.month, 1) }.uniq
-    @labels = date_months.map {|d| d.strftime "%B" }
-
-    #CourseModuleElementUserLogs Video Data
-    @videos_this_month = @video_logs.this_month.count | 0
-    @videos_one_month_ago = @video_logs.one_month_ago.count | 0
-    @videos_two_months_ago = @video_logs.two_months_ago.count | 0
-    @videos_three_months_ago = @video_logs.three_months_ago.count | 0
-    @videos_four_months_ago = @video_logs.four_months_ago.count | 0
-    @videos_five_months_ago = @video_logs.five_months_ago.count | 0
-
-    #CourseModuleElementUserLogs Quiz Data
-    @quizzes_this_month = @quiz_logs.this_month.count | 0
-    @quizzes_one_month_ago = @quiz_logs.one_month_ago.count | 0
-    @quizzes_two_months_ago = @quiz_logs.two_months_ago.count | 0
-    @quizzes_three_months_ago = @quiz_logs.three_months_ago.count | 0
-    @quizzes_four_months_ago = @quiz_logs.four_months_ago.count | 0
-    @quizzes_five_months_ago = @quiz_logs.five_months_ago.count | 0
 
   end
 

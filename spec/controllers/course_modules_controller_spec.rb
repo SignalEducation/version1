@@ -6,7 +6,6 @@
 #  name                      :string
 #  name_url                  :string
 #  description               :text
-#  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
 #  active                    :boolean          default(FALSE), not null

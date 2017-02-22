@@ -50,7 +50,7 @@ class SubjectCoursesController < ApplicationController
     if current_user.tutor? && current_user.corporate_customer?
       @subject_courses = SubjectCourse.where(corporate_customer_id: current_user.corporate_customer_id).paginate(per_page: 50, page: params[:page])
     elsif current_user.tutor?
-      @subject_courses = SubjectCourse.where(tutor_id: current_user.id).paginate(per_page: 50, page: params[:page]).all_in_order
+      @subject_courses = current_user.subject_courses.paginate(per_page: 50, page: params[:page]).all_in_order
     else
       @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
     end
@@ -64,7 +64,7 @@ class SubjectCoursesController < ApplicationController
 
   def new
     @subject_course = SubjectCourse.new(sorting_order: 1)
-    @subject_course.tutor_id = current_user.id if current_user.tutor?
+    @tutors = User.where(user_groups_id: UserGroup.default_tutor_user_group.id).all_in_order
   end
 
   def edit
@@ -78,7 +78,6 @@ class SubjectCoursesController < ApplicationController
       @subject_course.active = true
       @subject_course.restricted = true
       @subject_course.certificate = true
-      @subject_course.tutor_id = current_user.id
       @subject_course.subject_course_category_id = @subject_course_categories.default_corporate_category.id
       corporate_group = Group.where(corporate_customer_id: current_user.corporate_customer_id).first
       @subject_course.groups << corporate_group

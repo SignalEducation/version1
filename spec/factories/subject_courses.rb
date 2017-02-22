@@ -46,7 +46,6 @@ FactoryGirl.define do
     active false
     live false
     sequence(:wistia_guid)       {|n| "dfgsdfg#{n}"}
-    tutor_id 1
     cme_count 1
     video_count 1
     quiz_count 1

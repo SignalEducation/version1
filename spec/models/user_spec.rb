@@ -90,7 +90,6 @@ describe User do
   # relationships
   it { should belong_to(:corporate_customer) }
   it { should belong_to(:country) }
-  it { should have_many(:course_modules) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:invoices) }
   it { should have_many(:quiz_attempts) }
@@ -104,6 +103,7 @@ describe User do
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
   it { should have_and_belong_to_many(:corporate_groups) }
+  it { should have_and_belong_to_many(:subject_courses) }
 
   # validation
   it { should validate_presence_of(:email) }
@@ -203,83 +203,4 @@ describe User do
   it { should respond_to(:individual_student?) }
   it { should respond_to(:tutor?) }
 
-  context "compulsory and restricted levels and sections" do
-    before do
-      @corporate_student_user_group = FactoryGirl.create(:corporate_student_user_group)
-
-      @junior_group = FactoryGirl.create(:corporate_group)
-      @senior_group = FactoryGirl.create(:corporate_group)
-
-      @subject_courses = FactoryGirl.create_list(:active_subject_course, 3, live: true)
-      @junior_group.corporate_group_grants.create(subject_course_id: @subject_courses[0].id, restricted: true)
-      @junior_group.corporate_group_grants.create(subject_course_id: @subject_courses[1].id, restricted: true)
-      @senior_group.corporate_group_grants.create(subject_course_id: @subject_courses[1].id, compulsory: true)
-      @senior_group.corporate_group_grants.create(subject_course_id: @subject_courses[2].id, compulsory: true)
-
-    end
-
-    context 'non-corporate student' do
-      it 'returns empty arrays for compulsory and restricted subject courses' do
-        corporate_customer = FactoryGirl.create(:corporate_customer)
-        student = FactoryGirl.create(:individual_student_user, corporate_customer_id: corporate_customer.id)
-        expect(student.compulsory_subject_course_ids.length).to eq(0)
-        expect(student.restricted_subject_course_ids.length).to eq(0)
-      end
-    end
-
-    context "single group membership" do
-      before do
-        @junior = FactoryGirl.create(:corporate_student_user, user_group_id: @corporate_student_user_group.id)
-        @junior.corporate_group_ids = [@junior_group.id]
-
-        @senior = FactoryGirl.create(:corporate_student_user, user_group_id: @corporate_student_user_group.id)
-        @senior.corporate_group_ids = [@senior_group.id]
-      end
-
-      it 'returns all compulsory subject courses' do
-        expect(@junior.compulsory_subject_course_ids.length).to eq(0)
-        expect(@senior.compulsory_subject_course_ids.length).to eq(@senior_group
-                                                             .corporate_group_grants
-                                                             .count)
-        expect(@senior.compulsory_subject_course_ids.sort).to eq(@senior_group
-                                                             .corporate_group_grants
-                                                             .pluck(:subject_course_id)
-                                                             .sort)
-      end
-
-      it 'returns all restricted subject courses' do
-        expect(@junior.restricted_subject_course_ids.length).to eq(@junior_group
-                                                             .corporate_group_grants
-                                                             .count)
-        expect(@junior.restricted_subject_course_ids.sort).to eq(@junior_group
-                                                              .corporate_group_grants
-                                                              .pluck(:subject_course_id)
-                                                              .sort)
-        expect(@senior.restricted_subject_course_ids.length).to eq(0)
-      end
-
-    end
-
-    context "multiple group membership" do
-      before do
-        @corporate_student = FactoryGirl.create(:corporate_student_user, user_group_id: @corporate_student_user_group.id)
-        @corporate_student.corporate_group_ids = [@junior_group.id, @senior_group.id]
-      end
-
-      it 'returns all compulsory subject courses' do
-        expect(@corporate_student.compulsory_subject_course_ids.length).to eq(@senior_group
-                                                                           .corporate_group_grants
-                                                                           .count)
-        expect(@corporate_student.compulsory_subject_course_ids.sort).to eq(@senior_group
-                                                                         .corporate_group_grants
-                                                                         .pluck(:subject_course_id)
-                                                                         .sort)
-      end
-
-      it 'returns all restricted subject courses' do
-        expect(@corporate_student.restricted_subject_course_ids.length).to eq(1)
-        expect(@corporate_student.restricted_subject_course_ids[0]).to eq(@subject_courses[0].id)
-      end
-    end
-  end
 end

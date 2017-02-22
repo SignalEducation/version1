@@ -71,6 +71,7 @@ describe SubjectCourse do
   it { should have_many(:subject_course_user_logs) }
   it { should have_one(:question_bank) }
   it { should have_and_belong_to_many(:groups) }
+  it { should have_and_belong_to_many(:users) }
 
   # validation
   it { should validate_presence_of(:name) }
@@ -81,8 +82,6 @@ describe SubjectCourse do
 
   it { should_not validate_presence_of(:wistia_guid) }
   it { should validate_length_of(:wistia_guid).is_at_most(255) }
-
-  it { should validate_presence_of(:tutor_id) }
 
   it { should validate_presence_of(:description) }
 
@@ -140,7 +139,6 @@ describe SubjectCourse do
   it { should respond_to(:total_questions_answered) }
   it { should respond_to(:test_children?) }
   it { should respond_to(:tuition_children?) }
-  it { should respond_to(:tutor_name) }
   it { should respond_to(:users_allowed_access) }
 
 

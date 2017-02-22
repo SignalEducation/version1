@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170222144627) do
+ActiveRecord::Schema.define(version: 20170222162037) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,7 +200,6 @@ ActiveRecord::Schema.define(version: 20170222144627) do
     t.integer  "estimated_time_in_seconds"
     t.integer  "course_module_id"
     t.integer  "sorting_order"
-    t.integer  "tutor_id"
     t.integer  "related_quiz_id"
     t.integer  "related_video_id"
     t.datetime "created_at"
@@ -219,7 +218,6 @@ ActiveRecord::Schema.define(version: 20170222144627) do
   add_index "course_module_elements", ["name_url"], name: "index_course_module_elements_on_name_url", using: :btree
   add_index "course_module_elements", ["related_quiz_id"], name: "index_course_module_elements_on_related_quiz_id", using: :btree
   add_index "course_module_elements", ["related_video_id"], name: "index_course_module_elements_on_related_video_id", using: :btree
-  add_index "course_module_elements", ["tutor_id"], name: "index_course_module_elements_on_tutor_id", using: :btree
 
   create_table "course_module_jumbo_quizzes", force: :cascade do |t|
     t.integer  "course_module_id"
@@ -242,7 +240,6 @@ ActiveRecord::Schema.define(version: 20170222144627) do
     t.string   "name"
     t.string   "name_url"
     t.text     "description"
-    t.integer  "tutor_id"
     t.integer  "sorting_order"
     t.integer  "estimated_time_in_seconds"
     t.boolean  "active",                    default: false, null: false
@@ -266,7 +263,6 @@ ActiveRecord::Schema.define(version: 20170222144627) do
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
   add_index "course_modules", ["sorting_order"], name: "index_course_modules_on_sorting_order", using: :btree
-  add_index "course_modules", ["tutor_id"], name: "index_course_modules_on_tutor_id", using: :btree
 
   create_table "currencies", force: :cascade do |t|
     t.string   "iso_code"

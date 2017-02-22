@@ -45,7 +45,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid,
-                  :tutor_id, :cme_count, :description, :short_description,
+                  :cme_count, :description, :short_description,
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
                   :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
@@ -82,7 +82,6 @@ class SubjectCourse < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
-  validates :tutor_id, presence: true
   validates :description, presence: true
   validates :subject_course_category_id, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
@@ -278,10 +277,6 @@ class SubjectCourse < ActiveRecord::Base
       monthly_questions_answered << log.quiz_attempts.count
     end
     monthly_questions_answered.inject(:+)
-  end
-
-  def tutor_name
-    self.tutor.full_name
   end
 
   def recalculate_fields
