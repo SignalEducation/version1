@@ -169,7 +169,10 @@ Rails.application.routes.draw do
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
-    resources :subject_courses, concerns: :supports_reordering
+    resources :subject_courses, concerns: :supports_reordering do
+      get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors
+      patch 'update_tutors', action: :update_tutors, as: :update_course_tutors
+    end
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
 
@@ -190,6 +193,7 @@ Rails.application.routes.draw do
     resources :users, only: [:new, :create] do
       get  '/user_personal_details', action: :user_personal_details, as: :personal_details
       get  '/user_subscription_status', action: :user_subscription_status, as: :subscription_status
+      get  '/user_courses_status', action: :user_courses_status, as: :courses_status
       get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
       get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
     end

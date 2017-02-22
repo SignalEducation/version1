@@ -1,0 +1,28 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .container-fluid.l-padding-side-3x
+      .row.l-margin-bottom.l-margin-top
+        .col-md-12.text-center
+          %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            ="Tutors of #{@subject_course.name}"
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
+          .corporate-box-item.table-box
+            = form_for(@subject_course, url: { action: :update_tutors }, html: {class: 'form-horizontal', role: 'form', id: 'course-courses-form'}) do |f|
+              %table
+                %thead
+                  %tr
+                    %th{style: 'font-size: 1.6rem;'}= 'Users'
+                    %th
+                %tbody
+                  -@tutors.each do |tutor|
+                    %tr
+                      %td= tutor.full_name
+                      %td{style: 'width: 5%;'}
+                        =check_box_tag "subject_course[user_ids][]", tutor.id, @subject_course.users.include?(tutor)
+
+
+              =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

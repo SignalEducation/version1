@@ -9,7 +9,6 @@
 #  active                                  :boolean          default(FALSE), not null
 #  live                                    :boolean          default(FALSE), not null
 #  wistia_guid                             :string
-#  tutor_id                                :integer
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
@@ -110,6 +109,31 @@ class SubjectCoursesController < ApplicationController
 
   def course_modules_order
     @course_modules = @subject_course.children
+  end
+
+  def edit_tutors
+    @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
+    @tutors = User.all_tutors
+    if @subject_course.nil?
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to subject_courses_url
+    end
+  end
+
+  def update_tutors
+    @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
+    if @subject_course && current_user.admin?
+      if params[:subject_course]
+        @subject_course.user_ids = params[:subject_course][:user_ids]
+      else
+        @subject_course.user_ids = []
+      end
+
+      flash[:success] = I18n.t('controllers.subject_courses.update_subjects.flash.success')
+      redirect_to subject_courses_url
+    else
+      render action: :edit_tutors
+    end
   end
 
   def update_student_exam_tracks

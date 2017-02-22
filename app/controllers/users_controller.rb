@@ -123,6 +123,12 @@ class UsersController < ApplicationController
     render 'users/admin_view/user_subscription_status'
   end
 
+  def user_courses_status
+    @user = User.find(params[:user_id])
+    @subject_courses = SubjectCourse.all_active.all_in_order
+    render 'users/admin_view/user_courses_status'
+  end
+
   def user_enrollments_details
     @user = User.find(params[:user_id])
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
@@ -596,6 +602,17 @@ class UsersController < ApplicationController
     redirect_to account_url
   end
 
+  def update_courses
+    @user = User.find(params[:user_id]) rescue nil
+    if params[:user]
+      @user.subject_course_ids = params[:user][:subject_course_ids]
+    else
+      @user.subject_course_ids = []
+    end
+
+    flash[:success] = I18n.t('controllers.users.update_subjects.flash.success')
+    redirect_to users_url
+  end
 
 
   #Public facing standard views for tutors (TODO move this footer_pages controller)
