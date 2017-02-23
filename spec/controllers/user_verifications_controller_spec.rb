@@ -6,7 +6,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:unverified_user) { FactoryGirl.create(:active_individual_student_user) }
+  let!(:unverified_user) { FactoryGirl.create(:unverified_user) }
 
   context 'Non-verified user' do
     describe "Get 'update'" do
