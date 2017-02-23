@@ -14,6 +14,25 @@
       .input-group.input-group-lg.full-width
         =f.text_area :description, placeholder: t('views.subject_course_resources.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
 
+      %br/
+      =f.label :file_upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+      -if f.object.file_upload_file_name
+        .form-control-static
+          =link_to f.object.file_upload_file_name, f.object.file_upload.url, target: '_blank'
+          =number_to_human_size(f.object.file_upload_file_size)
+          %br/
+          %br/
+
+        .input-group.input-group-lg.form-control
+          =f.label :file_upload, t('views.course_module_element_resources.form.replace')
+          =f.file_field :file_upload, style: 'border-radius: 6px;'
+          %p{style: 'margin: 10px 0;'}
+      -else
+        .input-group.input-group-lg
+          =f.file_field :file_upload, class: 'form-control', style: 'border-radius: 6px;'
+
+
+
       .row
         .col-md-12.l-margin-top-big
           =f.submit t('views.general.save'), class: 'btn btn-red'

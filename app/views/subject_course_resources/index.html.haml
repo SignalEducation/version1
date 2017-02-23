@@ -25,8 +25,8 @@
                       %td=subject_course_resource.subject_course.name
                       %td=subject_course_resource.description
                       %td
-                        =#link_to t('views.general.view'), subject_course_resource
-                        =link_to t('views.general.edit'), edit_subject_course_resource_url(subject_course_resource), class: 'btn btn-purple btn-small'
+                        =link_to t('views.general.view'), subject_course_resource.file_upload.url, target: '_blank', class: 'btn btn-purple btn-small'
+                        =link_to t('views.general.edit'), edit_subject_course_resource_url(subject_course_resource), class: 'btn btn-cyan btn-small'
                         -if subject_course_resource.destroyable?
                           =link_to t('views.general.delete'), subject_course_resource, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
