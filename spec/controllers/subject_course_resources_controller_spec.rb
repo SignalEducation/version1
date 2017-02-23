@@ -21,7 +21,6 @@ describe SubjectCourseResourcesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for subject_course_resource_1
   let!(:subject_course_resource_1) { FactoryGirl.create(:subject_course_resource) }
   let!(:subject_course_resource_2) { FactoryGirl.create(:subject_course_resource) }
   let!(:valid_params) { FactoryGirl.attributes_for(:subject_course_resource) }
@@ -90,72 +89,70 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_resources', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see subject_course_resource_1' do
         get :show, id: subject_course_resource_1.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see subject_course_resource_2' do
         get :show, id: subject_course_resource_2.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_resource_1' do
         get :edit, id: subject_course_resource_1.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with subject_course_resource_2' do
         get :edit, id: subject_course_resource_2.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
-        expect_create_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_resource: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_resource_2' do
         put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_resource')
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -163,12 +160,12 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_resource_2.id
-        expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -178,78 +175,76 @@ describe SubjectCourseResourcesController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(complimentary_user)
+      UserSession.create!(comp_user)
     end
 
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_resources', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see subject_course_resource_1' do
         get :show, id: subject_course_resource_1.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see subject_course_resource_2' do
         get :show, id: subject_course_resource_2.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_resource_1' do
         get :edit, id: subject_course_resource_1.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with subject_course_resource_2' do
         get :edit, id: subject_course_resource_2.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
-        expect_create_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_resource: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_resource_2' do
         put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_resource')
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -257,12 +252,12 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_resource_2.id
-        expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -278,72 +273,70 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_resources', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see subject_course_resource_1' do
         get :show, id: subject_course_resource_1.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see subject_course_resource_2' do
         get :show, id: subject_course_resource_2.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_resource_1' do
         get :edit, id: subject_course_resource_1.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with subject_course_resource_2' do
         get :edit, id: subject_course_resource_2.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
-        expect_create_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_resource: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_resource_2' do
         put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_resource')
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -351,12 +344,12 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_resource_2.id
-        expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -372,72 +365,70 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_resources', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see subject_course_resource_1' do
         get :show, id: subject_course_resource_1.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see subject_course_resource_2' do
         get :show, id: subject_course_resource_2.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_resource_1' do
         get :edit, id: subject_course_resource_1.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with subject_course_resource_2' do
         get :edit, id: subject_course_resource_2.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
-        expect_create_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_resource: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_resource_2' do
         put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_resource')
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -445,12 +436,12 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_resource_2.id
-        expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -466,72 +457,70 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_resources', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see subject_course_resource_1' do
         get :show, id: subject_course_resource_1.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see subject_course_resource_2' do
         get :show, id: subject_course_resource_2.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_resource_1' do
         get :edit, id: subject_course_resource_1.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with subject_course_resource_2' do
         get :edit, id: subject_course_resource_2.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
-        expect_create_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_resource: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_resource_2' do
         put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_resource')
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -539,12 +528,12 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_resource_2.id
-        expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -560,72 +549,70 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_course_resources', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see subject_course_resource_1' do
         get :show, id: subject_course_resource_1.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
       it 'should see subject_course_resource_2' do
         get :show, id: subject_course_resource_2.id
-        expect_show_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_resource_1' do
         get :edit, id: subject_course_resource_1.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with subject_course_resource_2' do
         get :edit, id: subject_course_resource_2.id
-        expect_edit_success_with_model('subject_course_resource', subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
-        expect_create_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, subject_course_resource: {valid_params.keys.first => ''}
-        expect_create_error_with_model('subject_course_resource')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_resource_2' do
         put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
-        expect_update_success_with_model('subject_course_resource', subject_course_resources_url)
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
-        expect_update_error_with_model('subject_course_resource')
-        expect(assigns(:subject_course_resource).id).to eq(subject_course_resource_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -633,12 +620,196 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: subject_course_resource_2.id
-        expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see subject_course_resource_1' do
+        get :show, id: subject_course_resource_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see subject_course_resource_2' do
+        get :show, id: subject_course_resource_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with subject_course_resource_1' do
+        get :edit, id: subject_course_resource_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with subject_course_resource_2' do
+        get :edit, id: subject_course_resource_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, subject_course_resource: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, subject_course_resource: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for subject_course_resource_1' do
+        put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for subject_course_resource_2' do
+        put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: subject_course_resource_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: subject_course_resource_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see subject_course_resource_1' do
+        get :show, id: subject_course_resource_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see subject_course_resource_2' do
+        get :show, id: subject_course_resource_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with subject_course_resource_1' do
+        get :edit, id: subject_course_resource_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with subject_course_resource_2' do
+        get :edit, id: subject_course_resource_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, subject_course_resource: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, subject_course_resource: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for subject_course_resource_1' do
+        put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for subject_course_resource_2' do
+        put :update, id: subject_course_resource_2.id, subject_course_resource: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: subject_course_resource_1.id, subject_course_resource: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: subject_course_resource_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: subject_course_resource_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -725,13 +896,8 @@ describe SubjectCourseResourcesController, type: :controller do
 
 
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
+      it 'should be successfully deleted' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_resource_2.id
         expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
       end
     end
@@ -821,11 +987,6 @@ describe SubjectCourseResourcesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: subject_course_resource_1.id
-        expect_delete_error_with_model('subject_course_resource', subject_course_resources_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_resource_2.id
         expect_delete_success_with_model('subject_course_resource', subject_course_resources_url)
       end
     end
