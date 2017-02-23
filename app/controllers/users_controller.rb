@@ -624,8 +624,12 @@ class UsersController < ApplicationController
   def profile
     #/profile/id
     @tutor = User.all_tutors.where(id: params[:id]).first
-    @courses = @tutor.subject_courses
-    seo_title_maker(@tutor.full_name, @tutor.description, nil)
+    if @tutor
+      @courses = @tutor.subject_courses
+      seo_title_maker(@tutor.full_name, @tutor.description, nil)
+    else
+      redirect_to tutors_url
+    end
   end
 
   def profile_index
