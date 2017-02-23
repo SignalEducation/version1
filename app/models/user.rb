@@ -136,7 +136,6 @@ class User < ActiveRecord::Base
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
-  validates_attachment :profile_image, dimensions: { height: 200, width: 200 }
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
