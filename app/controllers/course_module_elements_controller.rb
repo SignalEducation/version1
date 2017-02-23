@@ -154,7 +154,7 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def quiz_questions_order
-    @quiz_questions = @course_module_element.quiz_questions
+    @quiz_questions = @course_module_element.course_module_element_quiz.quiz_questions
   end
 
   def reorder
