@@ -55,7 +55,6 @@ class SubjectCourseResourcesController < ApplicationController
     end
   end
 
-
   def destroy
     if @subject_course_resource.destroy
       flash[:success] = I18n.t('controllers.subject_course_resources.destroy.flash.success')

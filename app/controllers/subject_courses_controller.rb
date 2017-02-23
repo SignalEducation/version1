@@ -109,6 +109,28 @@ class SubjectCoursesController < ApplicationController
     @course_modules = @subject_course.children
   end
 
+  def subject_course_resources
+    @subject_course = SubjectCourse.find(params[:id])
+    @subject_course_resources = @subject_course.subject_course_resources
+  end
+
+  def new_subject_course_resources
+    @subject_course = SubjectCourse.find(params[:id])
+    @subject_course_resource = SubjectCourseResource.new(subject_course_id: @subject_course.id)
+  end
+
+  def create_subject_course_resources
+    @subject_course = SubjectCourse.find(params[:id])
+    @subject_course_resource = SubjectCourseResource.new(resource_allowed_params)
+    @subject_course_resource.subject_course_id = @subject_course.id
+    if @subject_course_resource.save
+      flash[:success] = I18n.t('controllers.subject_course_resources.create.flash.success')
+      redirect_to subject_course_url(@subject_course)
+    else
+      render action: :new_subject_course_resources
+    end
+  end
+
   def edit_tutors
     @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
     @tutors = User.where(user_group_id: UserGroup.default_tutor_user_group.id).all_in_order
@@ -178,6 +200,10 @@ class SubjectCoursesController < ApplicationController
 
   def allowed_params
     params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :email_content, :external_url, :external_url_name, :exam_body_id, :survey_url)
+  end
+
+  def resource_allowed_params
+    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description, :file_upload)
   end
 
 end
