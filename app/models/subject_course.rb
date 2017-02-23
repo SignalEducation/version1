@@ -123,7 +123,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{name subject_area new_enrollments total_enrollments  paused_enrollments completed_enrollments}
+    attributes = %w{name subject_area new_enrollments total_enrollments paused_enrollments completed_enrollments}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -317,8 +317,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def new_enrollments
-    time_now = Proc.new{Time.now}.call
-    self.enrollments.where(created_at > (time_now - 7.days)).count
+    self.enrollments.this_week.count
   end
 
   def paused_enrollments
