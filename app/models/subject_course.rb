@@ -68,6 +68,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
+  has_many :subject_course_resources
   has_many :corporate_group_grants
   has_many :products
   has_many :orders

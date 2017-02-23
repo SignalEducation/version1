@@ -983,6 +983,32 @@ en:
       new:
         h1: New Course
 
+    subject_course_resources:
+      form:
+        name: Name
+        name_placeholder: Course name
+        description: Description
+        description_placeholder: Description
+        subject_course_id: Course
+        subject_course_id_placeholder: Course
+
+      index:
+        h1: Course Resources
+        add_course_resource: Add Course Resource
+        edit_course_resource: Edit Course Resource
+
+      show:
+        h1: Course Resource
+        description: Description
+        name: Name
+        subject_course_id: Course
+
+      edit:
+        h1: Edit Course Resource
+
+      new:
+        h1: New Course Resource
+
     subject_course_user_log:
       show:
         course: Course

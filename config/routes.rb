@@ -181,6 +181,7 @@ Rails.application.routes.draw do
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :subject_course_categories
+    resources :subject_course_resources
     resources :tutor_applications
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'business', to: 'footer_pages#business', as: :business
