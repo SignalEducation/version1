@@ -51,11 +51,11 @@
                     %th{style: 'font-size: 1.6rem;'}= t('views.groups.manage_courses.course')
                     %th
                 %tbody
-                  - @subject_courses.each do |courses|
+                  - @subject_courses.each do |course|
                     %tr
-                      %td= courses.name
+                      %td= course.name
                       %td{style: 'width: 5%;'}= check_box_tag "group[subject_course_ids][]",
-                            courses.id, @group.subject_courses.include?(courses)
+                            course.id, @group.subject_courses.include?(course)
 
 
               =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

@@ -62,6 +62,7 @@
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
+#  description                      :text
 #
 
 class UsersController < ApplicationController
@@ -121,6 +122,16 @@ class UsersController < ApplicationController
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last
     render 'users/admin_view/user_subscription_status'
+  end
+
+  def user_courses_status
+    @user = User.find(params[:user_id])
+    @subject_courses = SubjectCourse.all_active.all_in_order.for_public.all_not_restricted
+    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
+    @first_courses = all_courses.first
+    @second_courses = all_courses.last
+
+    render 'users/admin_view/user_courses_status'
   end
 
   def user_enrollments_details
@@ -596,18 +607,25 @@ class UsersController < ApplicationController
     redirect_to account_url
   end
 
+  def update_courses
+    @user = User.find(params[:user_id]) rescue nil
+    if params[:user]
+      @user.subject_course_ids = params[:user][:subject_course_ids]
+    else
+      @user.subject_course_ids = []
+    end
+
+    flash[:success] = I18n.t('controllers.users.update_subjects.flash.success')
+    redirect_to users_url
+  end
 
 
   #Public facing standard views for tutors (TODO move this footer_pages controller)
   def profile
     #/profile/id
     @tutor = User.all_tutors.where(id: params[:id]).first
-    if @tutor
-      @courses = SubjectCourse.where(tutor_id: @tutor.id)
-      seo_title_maker(@tutor.full_name, @tutor.first_description, nil)
-    else
-      redirect_to root_url
-    end
+    @courses = @tutor.subject_courses
+    seo_title_maker(@tutor.full_name, @tutor.description, nil)
   end
 
   def profile_index
@@ -638,9 +656,9 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :first_description, :second_description, :wistia_url, :personal_url, :name_url, :qualifications, :profile_image, :date_of_birth, :student_user_type_id)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :profile_image, :date_of_birth, :student_user_type_id, :description)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :address, :country_id, :employee_guid, :first_description, :second_description, :wistia_url, :personal_url, :qualifications, :profile_image, :topic_interest, :subject_course_id, :date_of_birth, :terms_and_conditions)
+      params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions)
     end
   end
 

@@ -6,7 +6,6 @@
 #  name                      :string
 #  name_url                  :string
 #  description               :text
-#  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
 #  active                    :boolean          default(FALSE), not null
@@ -34,7 +33,6 @@ FactoryGirl.define do
     sequence(:name)           { |n| "Course Module #{n}" }
     sequence(:name_url)       { |n| "course-module-#{n}" }
     description               'Lorem ipsum'
-    tutor_id                  1
     sequence(:sorting_order)  { |n| n * 100 }
     estimated_time_in_seconds 0
     seo_description           'Lorem Ipsum'

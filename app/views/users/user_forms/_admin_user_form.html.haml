@@ -56,21 +56,15 @@
         %h3.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
           Additional Tutor Info
 
-        .col-md-6
-          =f.label :wistia_url, t('views.users.form.wistia_url'), class: 'control-label'
+        .col-md-12
+          =f.label :description, t('views.users.form.description'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.text_field :wistia_url, placeholder: t('views.users.form.wistia_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            =f.text_area :description, as: :summernote, placeholder: t('views.users.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
+
           %br/
-          =f.label :qualifications, t('views.users.form.qualifications'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :qualifications, placeholder: t('views.users.form.qualifications_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-          %br/
-          =f.label :personal_url, t('views.users.form.personal_url'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :personal_url, placeholder: t('views.users.form.personal_url'), class: 'form-control', style: 'border-radius: 6px;'
-          %br/
-        .col-md-6
-          .col-sm-8
+        .col-md-12
+          .col-sm-6
+          .col-sm-6
             =f.label :profile_image, t('views.users.form.profile_image'), class: 'control-label'
             -if f.object.profile_image.url
               =image_tag f.object.profile_image.url, class: 'img-responsive'
@@ -78,14 +72,6 @@
               Upload a replacement if you wish
               %br/
             =f.file_field :profile_image, class: 'form-control'
-
-    .row
-      .col-md-12
-        .col-md-12
-          %br/
-          =f.label :first_description, t('views.subject_courses.form.description'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_area :first_description, as: :summernote, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
 
 
   .row
@@ -99,6 +85,11 @@
       $('#datetimepicker').datetimepicker();
         format: 'DD/MM/YYYY'
     });
+    $('#editor').summernote({
+      disableDragAndDrop: true,
+      height: 150
+    });
+
     function handleUserGroupChange() {
       if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).where(tutor: false).first.try(:id)}" ||
           $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).where(tutor: false).first.try(:id)}" ||

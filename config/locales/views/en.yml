@@ -17,7 +17,7 @@ en:
       approve_tooltip: click to approve
       at_date_time: At
       author: "Author : "
-      course_tutor: Course Tutor
+      course_tutors: Course Tutors
       course_structure: Course Stucture
       course_content: Course Content
       course_tuition: Tuition
@@ -343,7 +343,6 @@ en:
         name_url_placeholder: course-module-name
         description: Description
         description_placeholder: Describe the course module here
-        tutor_id: Tutor
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         estimated_time_in_seconds: "Time (in seconds)"
@@ -390,7 +389,6 @@ en:
         course_module_element_quiz_id: Course module element quiz id
         sorting_order: Sorting order
         forum_topic_id: Forum topic
-        tutor_id: Tutor
         related_quiz_id: Related quiz
         related_video_id: Related video
         created_at: Created at
@@ -924,7 +922,6 @@ en:
         live: Live
         wistia_guid: Wistia Project ID
         wistia_guid_placeholder: Wistia Project ID
-        tutor_id: Tutor
         live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
         subject_course_category_id: Course Category
@@ -965,6 +962,7 @@ en:
         my_courses: My Courses
         add_course: Add Course
         edit_content: Edit Content
+        edit_tutors: Edit Tutors
 
 
       show:
@@ -1152,6 +1150,8 @@ en:
         profile_image: Profile Image
         date_of_birth: Date of Birth
         date_of_birth_placeholder: D.O.B
+        description: Description
+        description_placeholder: Tutor Info
 
       edit:
         h1: Edit Account
@@ -1295,7 +1295,6 @@ en:
         destroyed_at_placeholder: Destroyed at
         message_type: Message type
         message_type_placeholder: Blog, study plan, forum, marketing etc
-        tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
         created_at: Sent at
@@ -1311,7 +1310,6 @@ en:
         unread: Unread
         destroyed_at: Destroyed at
         message_type: Type
-        tutor_id: Tutor
         falling_behind: Falling behind
         blog_post_id: Blog post
 

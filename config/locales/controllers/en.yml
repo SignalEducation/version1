@@ -358,6 +358,9 @@ en:
         flash:
           success: Subject Course has been deleted
           error: Subject Course was not deleted
+      update_subjects:
+        flash:
+          success: Course Tutors have been updated successfully
 
     subject_course_categories:
       create:
@@ -450,6 +453,10 @@ en:
         flash:
           success: Your password has been updated successfully
           error: Your password was not chnaged
+      update_subjects:
+        flash:
+          success: User Courses have been updated successfully
+
 
     user_activations:
       update:

@@ -32,6 +32,7 @@ gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'prawn' # PDF creator
 gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
+gem 'paperclip-dimension-validator'
 gem 'payday' #Invoice PDF's
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'

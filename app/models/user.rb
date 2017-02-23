@@ -62,6 +62,7 @@
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
+#  description                      :text
 #
 
 class User < ActiveRecord::Base
@@ -84,7 +85,8 @@ class User < ActiveRecord::Base
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
                   :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
                   :trial_limit_in_days, :trial_ended_notification_sent_at,
-                  :terms_and_conditions, :student_user_type_id, :date_of_birth
+                  :terms_and_conditions, :student_user_type_id, :date_of_birth,
+                  :description
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
@@ -97,11 +99,10 @@ class User < ActiveRecord::Base
              # employed by the corporate customer
   belongs_to :country
   belongs_to :student_user_type
-  has_many :course_modules, foreign_key: :tutor_id
   has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :enrollments
-  has_many :subject_courses, foreign_key: :tutor_id
+  has_and_belongs_to_many :subject_courses
   has_many :invoices
   has_many :quiz_attempts
   has_many :question_banks
@@ -135,8 +136,7 @@ class User < ActiveRecord::Base
             numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
             presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
-  #validates :employee_guid, allow_nil: true,
-  #          uniqueness: { scope: :corporate_customer_id }
+  validates_attachment :profile_image, dimensions: { height: 200, width: 200 }
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
@@ -586,7 +586,6 @@ class User < ActiveRecord::Base
 
   def destroyable?
     !self.admin? &&
-        self.course_modules.empty? &&
         self.course_module_element_user_logs.empty? &&
         self.invoices.empty? &&
         self.quiz_attempts.empty? &&

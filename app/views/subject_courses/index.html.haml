@@ -37,9 +37,6 @@
                         %th Restricted
                       -else
                         %th Live
-                      -if current_user.admin? || current_user.content_manager?
-                        %th Tutor
-                        %th
                       %th
                       %th
                   %tbody
@@ -51,10 +48,10 @@
                           %td=tick_or_cross(subject_course.restricted)
                         -else
                           %td=tick_or_cross(subject_course.live)
-                        -if current_user.admin? || current_user.content_manager?
-                          %td=subject_course.tutor.full_name
                         %td
                           =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
+                        %td
+                          =link_to t('views.subject_courses.index.edit_tutors'), subject_course_edit_course_tutors_url(subject_course), class: 'btn btn-small btn-cyan'
                         %td
                           =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-red'
                 =will_paginate @subject_courses, renderer: BootstrapPagination::Rails

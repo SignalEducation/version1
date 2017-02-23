@@ -6,7 +6,6 @@
 #  name                      :string
 #  name_url                  :string
 #  description               :text
-#  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
 #  active                    :boolean          default(FALSE), not null
@@ -35,7 +34,7 @@ class CourseModule < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :description,
-                  :tutor_id, :sorting_order, :estimated_time_in_seconds,
+                  :sorting_order, :estimated_time_in_seconds,
                   :active, :cme_count, :seo_description, :seo_no_index,
                   :number_of_questions, :subject_course_id, :highlight_colour,
                   :tuition, :test, :revision, :discourse_topic_id, :quiz_count,
@@ -45,8 +44,6 @@ class CourseModule < ActiveRecord::Base
 
   # relationships
   belongs_to :subject_course
-  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
-
   has_many :course_module_elements
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_element_videos, through: :course_module_elements
@@ -60,7 +57,6 @@ class CourseModule < ActiveRecord::Base
             uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
   validates :name_url, presence: true,
             uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
-  validates :tutor_id, presence: true
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
