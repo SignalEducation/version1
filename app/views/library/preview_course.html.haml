@@ -32,53 +32,18 @@
 
 
       .row.l-margin-top-big
-        .col-md-12
-          .col-md-6
-            %p.h4.l-margin-top
-              ='About this Course'
-            %p
-              =@course.description.to_s.html_safe
-          .col-md-6
-            .course-info
-              -if @course.tutor.try(:profile_image_file_name)
-                %p.h4.l-margin-bottom.l-margin-top
-                  =t('views.general.course_tutor')
-                .tutor-header
-                  %p.h6
-                    =@course.tutor.full_name
-                  =link_to profile_url(@course.tutor) do
-                    =image_tag @course.tutor.profile_image.url, class: 'profile-pic profile-pic-small pull-right'
-                  %p
-                    =@course.tutor.try(:first_description).truncate(225).try(:html_safe)
-                  -if @course.try(:live_date)
-                    .days-left.l-margin-top-big
-                      .h8.text-center
-                        =humanize_datetime(@course.live_date)
-
-              -else
-                %p.h4.l-margin-bottom
-                  =t('views.general.course_tutor')
-                .tutor-header
-                  %p.h6
-                    =@course.tutor.full_name
-                  -if @course.tutor.first_description
-                    %p
-                      =@course.tutor.first_description.truncate(225).html_safe
-                  -if @course.try(:live_date)
-                    .days-left.l-margin-top-big
-                      .h8.text-center
-                        =humanize_datetime(@course.live_date)
+        .l-margin-top-huge
+          =render partial: 'course_info'
 
       .row
-        .col-md-12
-          .col-md-8.l-margin-top-big
-            %p.h4.l-margin-bottom
-              =t('views.general.course_content')
-          .col-md-8.l-margin-top-big.l-margin-bottom
-            %ul.course-topics-list
-              -if @course.children.count > 0
-                -@course.children.all_active.all_in_order.each do |child|
-                  %li
-                    .box-item.upcoming
-                      =child.try(:name)
+        .col-md-8.l-margin-top-big
+          %p.h4.l-margin-bottom
+            =t('views.general.course_content')
+        .col-md-8.l-margin-top-big.l-margin-bottom
+          %ul.course-topics-list
+            -if @course.children.count > 0
+              -@course.children.all_active.all_in_order.each do |child|
+                %li
+                  .box-item.upcoming
+                    =child.try(:name)
 
