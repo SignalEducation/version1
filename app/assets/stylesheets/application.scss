@@ -3641,7 +3641,7 @@ a.image-link {
 .signal-tabs {
   padding: 8px;
   padding-left:0px;
-  border-bottom: 2px solid lighten($colour-7, 65%) ;
+  border-bottom: 2px solid lighten($colour-7, 65%);
   a {
     color: $colour-1;
     margin-bottom: $gutter;
@@ -3689,9 +3689,10 @@ a.image-link {
     color: $white;
     text-decoration: none;
   }
-  @include border-radius(2px);
+  @include border-radius(4px);
   @include box-shadow(0, 0, 3px, darken($colour-3, 30%));
   @include transition(box-shadow .1s ease);
+  border-bottom: 2px solid darken($colour-12, 20%) ;
   &:hover, &:active {
     text-decoration: none;
     @include box-shadow(0, 0, 12px, rgba(#000, .25));
