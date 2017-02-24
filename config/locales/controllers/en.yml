@@ -362,6 +362,18 @@ en:
         flash:
           success: Course Tutors have been updated successfully
 
+    subject_course_resources:
+      create:
+        flash:
+          success: Course Resource has been created successfully
+      update:
+        flash:
+          success: Course Resource details have been updated successfully
+      destroy:
+        flash:
+          success: Course Resource has been deleted
+          error: Course Resource was not deleted
+
     subject_course_categories:
       create:
         flash:

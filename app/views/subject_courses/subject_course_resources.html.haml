@@ -1,0 +1,32 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+    .container-fluid.l-padding-side-3x
+      .row.l-margin-bottom.l-margin-top
+        .col-md-12.col-sm-12.col-xs-12.text-center
+          %h2.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@subject_course.name
+            =t('views.subject_course_resources.index.h1')
+
+        .col-md-12.l-margin-top-big
+          .corporate-box-item.table-box
+            .table-responsive
+              %table.table.sorted_table{style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th=t('views.subject_course_resources.form.name')
+                    %th=t('views.subject_course_resources.form.subject_course_id')
+                    %th
+                %tbody
+                  -@subject_course_resources.each do |subject_course_resource|
+                    %tr
+                      %td=subject_course_resource.name
+                      %td=subject_course_resource.subject_course.name
+                      %td
+                        =link_to t('views.general.view'), subject_course_resource.file_upload.url, target: '_blank', class: 'btn btn-purple btn-small'
+
+      .row
+        =link_to t('views.general.new'), new_course_resources_url(@subject_course), class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+=render partial: 'layouts/large_footer'

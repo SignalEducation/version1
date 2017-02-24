@@ -68,6 +68,7 @@ describe SubjectCourse do
   it { should have_many(:products) }
   it { should have_many(:orders) }
   it { should have_many(:white_papers) }
+  it { should have_many(:subject_course_resources) }
   it { should have_many(:subject_course_user_logs) }
   it { should have_one(:question_bank) }
   it { should have_and_belong_to_many(:groups) }

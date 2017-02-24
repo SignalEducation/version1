@@ -83,6 +83,10 @@ class LibraryController < ApplicationController
         @exam_sittings = ExamSitting.where(subject_course_id: @course.id).all_in_order
       end
 
+      if current_user && current_user.permission_to_see_content(@course)
+        @subject_course_resources = @course.subject_course_resources
+      end
+
       @course_modules = @course.children.all_active.all_in_order
       @tuition_course_modules = @course_modules.all_tuition
       @test_course_modules = @course_modules.all_test

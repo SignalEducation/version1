@@ -23,7 +23,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.csv { send_data @users.to_csv() }
-      format.xls { send_data @users.to_csv(col_sep: "\t", headers: true) }
+      format.xls { send_data @users.to_csv(col_sep: "\t", headers: true), filename: "total-users-#{Date.today}.xls" }
     end
   end
 
@@ -33,7 +33,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.csv { send_data @users.to_csv() }
-      format.xls { send_data @users.to_csv(col_sep: "\t", headers: true) }
+      format.xls { send_data @users.to_csv(col_sep: "\t", headers: true), filename: "monthly-users-#{Date.today}.xls" }
     end
   end
 
@@ -43,7 +43,7 @@ class DashboardController < ApplicationController
     respond_to do |format|
       format.html
       format.csv { send_data @courses.to_csv() }
-      format.xls { send_data @courses.to_csv(col_sep: "\t") }
+      format.xls { send_data @courses.to_csv(col_sep: "\t", headers: true), filename: "courses-#{Date.today}.xls" }
     end
   end
 

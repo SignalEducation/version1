@@ -23,7 +23,6 @@ class CourseModuleElementResource < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_id, :name, :upload, :_destroy
-  #attr_accessible :course_module_element_id, :name, :upload
 
   # Constants
 
