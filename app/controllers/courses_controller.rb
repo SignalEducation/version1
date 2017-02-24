@@ -1,52 +1,47 @@
 class CoursesController < ApplicationController
 
   before_action :logged_in_required
+  before_action :check_permission, only: :show
 
   def show
     @mathjax_required = true
-    @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    if @course && current_user.permission_to_see_content(@course)
-      @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
-      if @course_module
-        @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
-        @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
-        @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+    @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
+    @question_bank = @course.try(:question_bank)
 
-        #CME name is not in the seo title because it is html_safe and could have <b></b> tags
-        seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
-      end
+    if @course_module
+      #Find CourseModuleElement or CourseModuleElementJumboQuiz
+      @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
+      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
+      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
 
-      if @course_module_element.nil? && @course_module.nil?
-
-        @question_bank = @course.try(:question_bank)
-        if @question_bank.nil?
-          # The URL is out of date or wrong.
-          flash[:warning] = t('controllers.courses.show.warning')
-          Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-          redirect_to library_special_link(@course)
-        else
-          set_up_question_bank
-
-        end
-      else
-        # The URL worked out Okay
-        reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
-        if current_user
-          #current_user.check_and_free_trial_status if current_user.individual_student?
-          if @course_module_element.try(:is_quiz)
-            set_up_quiz
-          elsif @course_module_jumbo_quiz
-            set_up_jumbo_quiz
-          elsif @course_module_element.try(:is_video)
-            @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
-          end
-        end
-      end
-      @paywall = paywall_checkpoint
-    else
-      flash[:warning] = 'Sorry, you are not permitted to access that content.'
-      redirect_to root_url
+      #CME name is not in the seo title because it is html_safe
+      seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
     end
+
+    if @course_module_element.nil? && @course_module.nil?
+      #Final Exam
+      if @question_bank
+        set_up_question_bank
+      else
+        # The URL is out of date or wrong.
+        flash[:warning] = t('controllers.courses.show.warning')
+        Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+        redirect_to library_special_link(@course)
+      end
+
+    else
+      # The URL worked out Okay
+      reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
+
+      if @course_module_element.try(:is_quiz)
+        set_up_quiz
+      elsif @course_module_jumbo_quiz
+        set_up_jumbo_quiz
+      elsif @course_module_element.try(:is_video)
+        @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
+      end
+    end
+    @paywall = paywall_checkpoint
   end
 
   def create
@@ -254,5 +249,14 @@ class CoursesController < ApplicationController
   end
 
   protected
+
+  def check_permission
+    @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+    unless @course && current_user && current_user.permission_to_see_content(@course)
+      flash[:warning] = 'Sorry, you are not permitted to access that content.'
+      redirect_to root_url
+    end
+
+  end
 
 end

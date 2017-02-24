@@ -122,16 +122,6 @@ class UsersController < ApplicationController
     render 'users/admin_view/user_subscription_status'
   end
 
-  def user_courses_status
-    @user = User.find(params[:user_id])
-    @subject_courses = SubjectCourse.all_active.all_in_order.for_public.all_not_restricted
-    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
-    @first_courses = all_courses.first
-    @second_courses = all_courses.last
-
-    render 'users/admin_view/user_courses_status'
-  end
-
   def user_enrollments_details
     @user = User.find(params[:user_id])
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
@@ -141,12 +131,18 @@ class UsersController < ApplicationController
   def user_purchases_details
     @user = User.find(params[:user_id])
     @orders = @user.orders
-    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
-    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
     render 'users/admin_view/user_purchases_details'
   end
 
-
+  def user_courses_status
+    #This is for seeing a tutors courses
+    @user = User.find(params[:user_id])
+    @subject_courses = SubjectCourse.all_active.all_in_order.for_public.all_not_restricted
+    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
+    @first_courses = all_courses.first
+    @second_courses = all_courses.last
+    render 'users/admin_view/user_courses_status'
+  end
 
   #Admin & CustomerSupport Manager user actions
   def new

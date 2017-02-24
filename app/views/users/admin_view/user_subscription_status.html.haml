@@ -12,7 +12,7 @@
           .col-md-12
             =render partial: 'user_tabs'
 
-        -if @user.free_trial_student?
+        -if @user.free_member?
           .row.l-margin-top.l-margin-bottom
             .col-md-12
               .corporate-box-item
