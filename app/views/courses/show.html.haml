@@ -13,7 +13,7 @@
                 &#60;
                 ="Back To #{@course_module.try(:subject_course).try(:name)}"
         =render 'side_nav_xs'
-        .row
+        .row.l-margin-bottom-big
           %div
             =render 'side_nav_md'
           .col-md-8.col-sm-8{style: 'margin-bottom: 150px;'}
@@ -40,7 +40,7 @@
 
         -# Tabs for Question, Answer, Notes and Description
         -if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
-          .row.l-margin-top-big
+          .row.l-margin-top-huge
             .col-md-12{role: 'tablist'}
               .col-sm-12
                 .signal-tabs
