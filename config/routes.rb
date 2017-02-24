@@ -110,7 +110,7 @@ Rails.application.routes.draw do
 
     get '/dashboard/export_users', to: 'dashboard#export_users', as: :export_users
     get '/dashboard/export_users_monthly', to: 'dashboard#export_users_monthly', as: :export_users_monthly
-    get '/dashboard/export_course', to: 'dashboard#export_courses', as: :export_courses
+    get '/dashboard/export_courses', to: 'dashboard#export_courses', as: :export_courses
 
     get '/dashboard', to: 'dashboard#student', as: :student_dashboard
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
@@ -158,14 +158,21 @@ Rails.application.routes.draw do
     resources :products
     resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
-    resources :subject_courses, concerns: :supports_reordering
+    resources :subject_courses, concerns: :supports_reordering do
+      get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors
+      patch 'update_tutors', action: :update_tutors, as: :update_course_tutors
+    end
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
+    get 'subject_courses/:id/resources', to: 'subject_courses#subject_course_resources', as: :course_resources
+    get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
+    post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
     resources :subscriptions, only: [:create, :update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
     resources :subscription_plan_categories
+    resources :subject_course_resources
     resources :tutor_applications
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'business', to: 'footer_pages#business', as: :business
@@ -178,8 +185,10 @@ Rails.application.routes.draw do
     resources :users, only: [:new, :create] do
       get  '/user_personal_details', action: :user_personal_details, as: :personal_details
       get  '/user_subscription_status', action: :user_subscription_status, as: :subscription_status
+      get  '/user_courses_status', action: :user_courses_status, as: :courses_status
       get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
       get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
+      patch  '/update_courses', action: :update_courses, as: :update_courses
     end
     resources :vat_codes
     resources :referral_codes, except: [:new, :edit, :update]

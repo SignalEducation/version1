@@ -5,7 +5,6 @@
     =f.hidden_field :course_module_id
     =f.hidden_field :is_quiz
     =f.hidden_field :is_video
-    =f.hidden_field :tutor_id
 
     .col-md-6
       =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
@@ -25,7 +24,7 @@
               =f.check_box :active, default: true
               =t('views.course_modules.form.active')
 
-      -if @course_module_element.is_quiz?
+      -if @course_module_element.is_quiz? && !@course_module_element.new_record?
         %br/
         %br/
         =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_module_element), class: 'btn btn-red'

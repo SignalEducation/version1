@@ -6,7 +6,6 @@
 #  name                      :string
 #  name_url                  :string
 #  description               :text
-#  tutor_id                  :integer
 #  sorting_order             :integer
 #  estimated_time_in_seconds :integer
 #  active                    :boolean          default(FALSE), not null
@@ -33,7 +32,7 @@ require 'rails_helper'
 describe CourseModule do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at exam_section_id exam_level_id institution_id qualification_id )
+  black_list = %w(id created_at updated_at destroyed_at)
   CourseModule.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -45,11 +44,9 @@ describe CourseModule do
   subject { FactoryGirl.build(:course_module) }
 
   # Constants
-  #it { expect()CourseModule.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:subject_course) }
-  it { should belong_to(:tutor) }
 
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
@@ -70,8 +67,6 @@ describe CourseModule do
   it { should validate_presence_of(:name_url) }
   it { should validate_uniqueness_of(:name_url).scoped_to(:subject_course_id) }
   it { should validate_length_of(:name_url).is_at_most(255) }
-
-  it { should validate_presence_of(:tutor_id) }
 
   it { should validate_presence_of(:sorting_order) }
 

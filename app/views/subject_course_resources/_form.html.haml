@@ -1,0 +1,45 @@
+=form_for(@subject_course_resource, url: (controller_name == 'subject_course_resources' ? subject_course_resource_url : create_course_resources_url), html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-md-8.col-md-offset-2
+      =render partial: '/layouts/error_messages', locals: {thing: @subject_course_resource, message: nil}
+      =f.label :name, t('views.subject_course_resources.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.subject_course_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      %br/
+      -if controller_name == 'subject_course_resources'
+        =f.label :subject_course_id, t('views.subject_course_resources.form.subject_course_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        %br/
+      =f.label :description, t('views.subject_course_resources.form.description'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_area :description, placeholder: t('views.subject_course_resources.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+
+      %br/
+      =f.label :file_upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+      -if f.object.file_upload_file_name
+        .form-control-static
+          =link_to f.object.file_upload_file_name, f.object.file_upload.url, target: '_blank'
+          =number_to_human_size(f.object.file_upload_file_size)
+          %br/
+          %br/
+
+        .input-group.input-group-lg.form-control
+          =f.label :file_upload, t('views.course_module_element_resources.form.replace')
+          =f.file_field :file_upload, style: 'border-radius: 6px;'
+          %p{style: 'margin: 10px 0;'}
+      -else
+        .input-group.input-group-lg
+          =f.file_field :file_upload, class: 'form-control', style: 'border-radius: 6px;'
+
+
+
+      .row
+        .col-md-12.l-margin-top-huge
+          =f.submit t('views.general.save'), class: 'btn btn-red'
+          =t('views.general.or')
+
+          -if controller_name == 'subject_courses'
+            =link_to t('views.general.cancel'), course_special_link(@subject_course), class: 'btn btn-purple'
+          -else
+            =link_to t('views.general.cancel'), subject_course_resources_path, class: 'btn btn-cyan'

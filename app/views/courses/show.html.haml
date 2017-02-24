@@ -13,7 +13,7 @@
                 &#60;
                 ="Back To #{@course_module.try(:subject_course).try(:name)}"
         =render 'side_nav_xs'
-        .row
+        .row.l-margin-bottom-big
           %div
             =render 'side_nav_md'
           .col-md-8.col-sm-8{style: 'margin-bottom: 150px;'}
@@ -40,101 +40,145 @@
 
         -# Tabs for Question, Answer, Notes and Description
         -if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
-          .row.l-margin-top-big
+          .row.l-margin-top-huge
             .col-md-12{role: 'tablist'}
-              .signal-tabs
-                -if @course_module_element.description?
-                  %a{href: '#description', aria: {controls: 'active'}, role: 'tab', data: {toggle: 'tab'}}
-                    =t('views.course_module_elements.show.tabs.description')
+              .col-sm-12
+                .signal-tabs
+                  -if @course_module_element.video_resource
+                    -if @course_module_element.description?
+                      %a{href: '#description', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.description')
+                    -if @course_module_element.video_resource.question
+                      %a{href: '#question', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.question')
+                    -if @course_module_element.video_resource.answer
+                      %a{href: '#answer', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.answer')
+                    -if @course_module_element.video_resource.transcript
+                      %a{href: '#transcript', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.transcript')
+                    -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
+                      %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.notes')
+                    -if @course_module_element.course_module_element_resources.count > 0
+                      %a{href: '#resources', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.resources')
+                    -if @course_module.discourse_topic_id
+                      %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        Community
 
-                -if @course_module_element.video_resource
-                  -if @course_module_element.video_resource.question
-                    %a{href: '#question', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.question')
-                  -if @course_module_element.video_resource.answer
-                    %a{href: '#answer', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.answer')
-                  -if @course_module_element.video_resource.transcript
-                    %a{href: '#transcript', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.transcript')
-                  -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
-                    %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.notes')
+                  -else
+                    -if @course_module_element.description?
+                      %a{href: '#description', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.description')
+                    -if @course_module_element.course_module_element_resources.count > 0
+                      %a{href: '#resources', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        =t('views.course_module_elements.show.tabs.resources')
+                    -if @course_module.discourse_topic_id
+                      %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                        Community
 
-                -else
-                  -if @course_module_element.course_module_element_resources.count > 0
-                    %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                      =t('views.course_module_elements.show.tabs.notes')
-                -if @course_module.discourse_topic_id
-                  %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', data: {toggle: 'tab'}}
-                    Community
 
-          -if @course_module_element.try(:video_resource)
-            .row
-              .l-margin-top-big
-                .l-margin-bottom
-                  .tab-content
+          .row
+            .col-sm-12
+              .l-margin-bottom
+                .tab-content
+                  -if @course_module_element.try(:video_resource)
                     .tab-pane.fade.in.active#description{role: 'tabpanel'}
                       .col-md-12
-                        .l-margin-bottom-huge
-                          %p.big
-                            -if @course_module_element.try(:description)
-                              =@course_module_element.description.html_safe
+                        .content-box.content-box-outer.l-margin-bottom-huge
+                          .content-box-inner
+                            %p.big
+                              -if @course_module_element.try(:description)
+                                =@course_module_element.description.html_safe
 
                     .tab-pane.fade#question{role: 'tabpanel'}
                       .col-md-12
-                        .l-margin-bottom-huge
-                          %p.big
-                            =@course_module_element.video_resource.try(:question).try(:html_safe)
+                        .content-box.content-box-outer.l-margin-bottom-huge
+                          .content-box-inner
+                            %p.big
+                              =@course_module_element.video_resource.try(:question).try(:html_safe)
 
 
                     .tab-pane.fade#answer{role: 'tabpanel'}
                       .col-md-12
-                        .l-margin-bottom-huge
-                          %p.big
-                            =@course_module_element.video_resource.try(:answer).try(:html_safe)
+                        .content-box.content-box-outer.l-margin-bottom-huge
+                          .content-box-inner
+                            %p.big
+                              =@course_module_element.video_resource.try(:answer).try(:html_safe)
 
                     .tab-pane.fade#transcript{role: 'tabpanel'}
                       .col-md-12
-                        .l-margin-bottom-huge
-                          %p.big
-                            =@course_module_element.video_resource.try(:transcript).try(:html_safe)
+                        .content-box.content-box-outer.l-margin-bottom-huge
+                          .content-box-inner
+                            %p.big
+                              =@course_module_element.video_resource.try(:transcript).try(:html_safe)
 
                     .tab-pane.fade#notes{role: 'tabpanel'}
                       .col-md-12
-                        .l-margin-bottom-huge
-                          %p.big
-                            =@course_module_element.video_resource.try(:notes).try(:html_safe)
-                          %p.big
-                            -@course_module_element.course_module_element_resources.each do |r|
-                              -if r.web_url && r.web_url.length > 0
-                                %li
-                                  =link_to r.name, r.web_url, target: '_blank'
-                              -else
-                                %li
-                                  =link_to r.name, r.upload.url, target: '_blank'
+                        .content-box.content-box-outer.l-margin-bottom-huge
+                          .content-box-inner
+                            %p.big
+                              =@course_module_element.video_resource.try(:notes).try(:html_safe)
+
+                    -if @course_module_element.course_module_element_resources.count > 0
+                      .tab-pane.fade#resources{role: 'tabpanel'}
+                        .col-md-12
+                          .content-box.content-box-outer.l-margin-bottom-huge
+                            .content-box-inner
+                              -@course_module_element.course_module_element_resources.each do |r|
+                                -if r.web_url && r.web_url.length > 0
+                                  =link_to r.web_url, target: '_blank' do
+                                    .resource-box
+                                      .resource-box-inner
+                                        =r.name
+
+                                -else
+                                  =link_to r.upload.url, target: '_blank' do
+                                    .resource-box
+                                      .resource-box-inner
+                                        =r.name
+
+
                     -if @course_module.discourse_topic_id
                       .tab-pane.fade#community{role: 'tabpanel'}
                         .col-md-12
-                          .l-margin-bottom-huge
-                            %div{id: 'discourse-comments'}
-          -else
-            .tab-pane.fade#notes{role: 'tabpanel'}
-              .col-md-12
-                .l-margin-bottom-huge
-                  %p.big
-                    -@course_module_element.course_module_element_resources.each do |r|
-                      -if r.web_url && r.web_url.length > 0
-                        %li
-                          =link_to r.name, r.web_url, target: '_blank'
-                      -else
-                        %li
-                          =link_to r.name, r.upload.url, target: '_blank'
-            -if @course_module.discourse_topic_id
-              .tab-pane.fade#community{role: 'tabpanel'}
-                .col-md-12
-                  .l-margin-bottom-huge
-                    %div{id: 'discourse-comments'}
+                          .content-box.content-box-outer.l-margin-bottom-huge
+                            .content-box-inner
+                              %div{id: 'discourse-comments'}
+
+                  -else
+                    -if @course_module_element.description
+                      .tab-pane.fade.in.active#description{role: 'tabpanel'}
+                        .col-md-12
+                          .content-box.content-box-outer.l-margin-bottom-huge
+                            .content-box-inner
+                              %p.big
+                                -if @course_module_element.try(:description)
+                                  =@course_module_element.description.html_safe
+                    -if @course_module_element.course_module_element_resources.count > 0
+                      .tab-pane.fade#resources{role: 'tabpanel'}
+                        .col-md-12
+                          .content-box.content-box-outer.l-margin-bottom-huge
+                            .content-box-inner
+                              -@course_module_element.course_module_element_resources.each do |r|
+                                -if r.web_url && r.web_url.length > 0
+                                  =link_to r.web_url, target: '_blank' do
+                                    .resource-box
+                                      .resource-box-inner
+                                        =r.name
+                                -else
+                                  =link_to r.upload.url, target: '_blank' do
+                                    .resource-box
+                                      .resource-box-inner
+                                        =r.name
+
+                    -if @course_module.discourse_topic_id
+                      .tab-pane.fade#community{role: 'tabpanel'}
+                        .col-md-12
+                          .content-box.content-box-outer.l-margin-bottom-huge
+                            .content-box-inner
+                              %div{id: 'discourse-comments'}
 
 
 -else

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170217080142) do
+ActiveRecord::Schema.define(version: 20170223164047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,7 +200,6 @@ ActiveRecord::Schema.define(version: 20170217080142) do
     t.integer  "estimated_time_in_seconds"
     t.integer  "course_module_id"
     t.integer  "sorting_order"
-    t.integer  "tutor_id"
     t.integer  "related_quiz_id"
     t.integer  "related_video_id"
     t.datetime "created_at"
@@ -219,7 +218,6 @@ ActiveRecord::Schema.define(version: 20170217080142) do
   add_index "course_module_elements", ["name_url"], name: "index_course_module_elements_on_name_url", using: :btree
   add_index "course_module_elements", ["related_quiz_id"], name: "index_course_module_elements_on_related_quiz_id", using: :btree
   add_index "course_module_elements", ["related_video_id"], name: "index_course_module_elements_on_related_video_id", using: :btree
-  add_index "course_module_elements", ["tutor_id"], name: "index_course_module_elements_on_tutor_id", using: :btree
 
   create_table "course_module_jumbo_quizzes", force: :cascade do |t|
     t.integer  "course_module_id"
@@ -242,7 +240,6 @@ ActiveRecord::Schema.define(version: 20170217080142) do
     t.string   "name"
     t.string   "name_url"
     t.text     "description"
-    t.integer  "tutor_id"
     t.integer  "sorting_order"
     t.integer  "estimated_time_in_seconds"
     t.boolean  "active",                    default: false, null: false
@@ -266,7 +263,6 @@ ActiveRecord::Schema.define(version: 20170217080142) do
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
   add_index "course_modules", ["sorting_order"], name: "index_course_modules_on_sorting_order", using: :btree
-  add_index "course_modules", ["tutor_id"], name: "index_course_modules_on_tutor_id", using: :btree
 
   create_table "currencies", force: :cascade do |t|
     t.string   "iso_code"
@@ -705,6 +701,21 @@ ActiveRecord::Schema.define(version: 20170217080142) do
   add_index "subject_course_categories", ["name"], name: "index_subject_course_categories_on_name", using: :btree
   add_index "subject_course_categories", ["subdomain"], name: "index_subject_course_categories_on_subdomain", using: :btree
 
+  create_table "subject_course_resources", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "subject_course_id"
+    t.text     "description"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.string   "file_upload_file_name"
+    t.string   "file_upload_content_type"
+    t.integer  "file_upload_file_size"
+    t.datetime "file_upload_updated_at"
+  end
+
+  add_index "subject_course_resources", ["name"], name: "index_subject_course_resources_on_name", using: :btree
+  add_index "subject_course_resources", ["subject_course_id"], name: "index_subject_course_resources_on_subject_course_id", using: :btree
+
   create_table "subject_course_user_logs", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "session_guid"
@@ -732,7 +743,6 @@ ActiveRecord::Schema.define(version: 20170217080142) do
     t.boolean  "active",                                  default: false, null: false
     t.boolean  "live",                                    default: false, null: false
     t.string   "wistia_guid"
-    t.integer  "tutor_id"
     t.integer  "cme_count"
     t.integer  "video_count"
     t.integer  "quiz_count"
@@ -763,8 +773,15 @@ ActiveRecord::Schema.define(version: 20170217080142) do
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
-  add_index "subject_courses", ["tutor_id"], name: "index_subject_courses_on_tutor_id", using: :btree
   add_index "subject_courses", ["wistia_guid"], name: "index_subject_courses_on_wistia_guid", using: :btree
+
+  create_table "subject_courses_users", id: false, force: :cascade do |t|
+    t.integer "subject_course_id", null: false
+    t.integer "user_id",           null: false
+  end
+
+  add_index "subject_courses_users", ["subject_course_id"], name: "index_subject_courses_users_on_subject_course_id", using: :btree
+  add_index "subject_courses_users", ["user_id"], name: "index_subject_courses_users_on_user_id", using: :btree
 
   create_table "subscription_payment_cards", force: :cascade do |t|
     t.integer  "user_id"
@@ -1010,6 +1027,7 @@ ActiveRecord::Schema.define(version: 20170217080142) do
     t.integer  "student_user_type_id"
     t.boolean  "discourse_user",                               default: false
     t.date     "date_of_birth"
+    t.text     "description"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

@@ -204,53 +204,51 @@ describe QuestionBanksController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('question_bank')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with question_bank_1' do
         get :edit, id: question_bank_1.id
-        expect_edit_success_with_model('question_bank', question_bank_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with question_bank_2' do
         get :edit, id: question_bank_2.id
-        expect_edit_success_with_model('question_bank', question_bank_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      #TODO This does not fail when run by itself
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, question_bank: {valid_params.keys.first => ''}
-        expect_create_error_with_model('question_bank')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      #TODO This does not fail when run by itself
-      xit 'should respond OK to valid params for question_bank_1' do
+      it 'should respond OK to valid params for question_bank_1' do
         put :update, id: question_bank_1.id, question_bank: valid_params
-        expect_update_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: question_bank_2.id, question_bank: {valid_params.keys[3] => ''}
-        expect_update_error_with_model('question_bank')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -338,53 +336,51 @@ describe QuestionBanksController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('question_bank')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with question_bank_1' do
         get :edit, id: question_bank_1.id
-        expect_edit_success_with_model('question_bank', question_bank_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with question_bank_2' do
         get :edit, id: question_bank_2.id
-        expect_edit_success_with_model('question_bank', question_bank_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      #TODO This does not fail when run by itself
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, question_bank: valid_params
-        expect_create_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, question_bank: {valid_params.keys.first => ''}
-        expect_create_error_with_model('question_bank')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      #TODO This does not fail when run by itself
-      xit 'should respond OK to valid params for question_bank_1' do
+      it 'should respond OK to valid params for question_bank_1' do
         put :update, id: question_bank_1.id, question_bank: valid_params
-        expect_update_success_with_model('question_bank', subject_course_url(question_bank_1.subject_course))
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: question_bank_2.id, question_bank: {valid_params.keys[3] => ''}
-        expect_update_error_with_model('question_bank')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: question_bank_2.id
-        expect_delete_success_with_model('question_bank', subject_course_url(question_bank_2.subject_course))
+        expect_bounce_as_not_allowed
       end
     end
 

@@ -37,7 +37,7 @@ describe 'User changing their email', type: :feature do
           click_button(I18n.t('views.general.save'))
         end
       end
-      sleep(1)
+      sleep(3)
       find('.dropdown.dropdown-normal').click
       click_link(I18n.t('views.general.sign_out'))
       if this_user.corporate_user?

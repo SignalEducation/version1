@@ -1,0 +1,27 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.subject_course_resources.show.h1')
+            \#
+            =@subject_course_resource.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.subject_course_resources.form.name')
+                  %td.col-sm-8=@subject_course_resource.name
+                %tr
+                  %td.col-sm-4=t('views.subject_course_resources.form.subject_course_id')
+                  %td.col-sm-8=@subject_course_resource.subject_course.name
+                %tr
+                  %td.col-sm-4=t('views.subject_course_resources.form.description')
+                  %td.col-sm-8=@subject_course_resource.description
+              %p
+                =link_to t('views.general.back'), subject_course_resources_url
+                |
+                =link_to t('views.general.edit'), edit_subject_course_resource_url(id: @subject_course_resource.id), title: t('views.general.edit_tooltip')

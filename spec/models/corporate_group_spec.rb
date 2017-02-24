@@ -52,30 +52,4 @@ describe CorporateGroup do
   it { should respond_to(:subject_course_restricted?) }
   it { should respond_to(:subject_course_compulsory?) }
 
-  context "compulsory and restricted flags handling" do
-    before do
-      @corporate_group = FactoryGirl.create(:corporate_group)
-      @compulsory_courses = FactoryGirl.create_list(:active_subject_course, 2, live: true)
-      @compulsory_courses.each do |cl|
-        @corporate_group.corporate_group_grants.create(subject_course_id: cl.id, compulsory: true)
-      end
-
-      @restricted_courses = FactoryGirl.create_list(:active_subject_course, 3, live: true)
-      @restricted_courses.each do |rl|
-        @corporate_group.corporate_group_grants.create(subject_course_id: rl.id, restricted: true)
-      end
-
-    end
-
-    it "returns exact compulsory level IDs" do
-      expect(@corporate_group.compulsory_subject_course_ids.count).to eq(@compulsory_courses.length)
-      expect(@corporate_group.compulsory_subject_course_ids.sort).to eq(@compulsory_courses.map(&:id).sort)
-    end
-
-    it "returns exact restricted level IDs" do
-      expect(@corporate_group.restricted_subject_course_ids.count).to eq(@restricted_courses.length)
-      expect(@corporate_group.restricted_subject_course_ids.sort).to eq(@restricted_courses.map(&:id).sort)
-    end
-
-  end
 end

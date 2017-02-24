@@ -9,7 +9,6 @@
 #  active                                  :boolean          default(FALSE), not null
 #  live                                    :boolean          default(FALSE), not null
 #  wistia_guid                             :string
-#  tutor_id                                :integer
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
@@ -46,7 +45,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid,
-                  :tutor_id, :cme_count, :description, :short_description,
+                  :cme_count, :description, :short_description,
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
                   :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
@@ -58,7 +57,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # relationships
   belongs_to :exam_body
-  belongs_to :tutor, class_name: 'User', foreign_key: :tutor_id
+  has_and_belongs_to_many :users
   belongs_to :subject_course_category
   has_and_belongs_to_many :groups
   has_many :course_modules
@@ -69,6 +68,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :home_pages
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
+  has_many :subject_course_resources
   has_many :corporate_group_grants
   has_many :products
   has_many :orders
@@ -83,7 +83,6 @@ class SubjectCourse < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
-  validates :tutor_id, presence: true
   validates :description, presence: true
   validates :subject_course_category_id, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
@@ -124,7 +123,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{name subject_area new_enrollments total_enrollments  paused_enrollments completed_enrollments}
+    attributes = %w{name subject_area new_enrollments total_enrollments paused_enrollments completed_enrollments}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -281,10 +280,6 @@ class SubjectCourse < ActiveRecord::Base
     monthly_questions_answered.inject(:+)
   end
 
-  def tutor_name
-    self.tutor.full_name
-  end
-
   def recalculate_fields
     cme_count = self.active_children.sum(:cme_count)
     quiz_count = self.active_children.sum(:quiz_count)
@@ -322,8 +317,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def new_enrollments
-    time_now = Proc.new{Time.now}.call
-    self.enrollments.where(created_at > (time_now - 7.days)).count
+    self.enrollments.this_week.count
   end
 
   def paused_enrollments

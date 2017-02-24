@@ -11,20 +11,13 @@
           .pull-left{style: 'margin-left: 40px;'}
             %h1.h1.h-separator.h-separator-left.text-left.l-margin-bottom-big
               =@tutor.full_name
-            -if @tutor.qualifications
-              %h4
-                =@tutor.qualifications
-
         .row.l-margin-top
           .col-sm-10.col-md-offset-1
             .profile-text
-              %p
-                =@tutor.try(:first_description).html_safe
-              %p
-                =@tutor.try(:second_description).html_safe
-              -#if @tutor.personal_url
+              -if @tutor.description
                 %p
-                  %a{href: "#{@tutor.personal_url}", target: "_blank"} See #{@tutor.first_name.pluralize} other work
+                  =@tutor.description.html_safe
+
 .l-section-profile.is-bg-asphalt
   .l-wrap
     .container-fluid

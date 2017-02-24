@@ -9,7 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  tutor_id                  :integer
 #  related_quiz_id           :integer
 #  related_video_id          :integer
 #  created_at                :datetime
@@ -54,7 +53,6 @@ describe CourseModuleElement do
   it { should belong_to(:related_quiz) }
   it { should belong_to(:related_video) }
   it { should have_many(:student_exam_tracks) }
-  it { should belong_to(:tutor) }
 
   # validation
   it { should validate_presence_of(:name) }
@@ -70,8 +68,6 @@ describe CourseModuleElement do
   it { should validate_presence_of(:course_module_id) }
 
   it { should validate_presence_of(:sorting_order) }
-
-  it { should validate_presence_of(:tutor_id) }
 
   it { should_not validate_presence_of(:related_quiz_id) }
 

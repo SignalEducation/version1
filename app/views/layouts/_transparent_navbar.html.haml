@@ -61,8 +61,6 @@
             %ul#menu.dropdown-menu
               -if current_user.corporate_customer?
                 %li=link_to t('views.subject_courses.index.your_courses'), subject_courses_url
-              -elsif current_user.tutor?
-                %li=link_to t('views.subject_courses.index.my_courses'), subject_courses_url
               -elsif current_user.content_manager?
                 %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
               -if current_user.admin?

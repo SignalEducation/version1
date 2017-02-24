@@ -9,7 +9,6 @@
 #  active                                  :boolean          default(FALSE), not null
 #  live                                    :boolean          default(FALSE), not null
 #  wistia_guid                             :string
-#  tutor_id                                :integer
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
@@ -43,7 +42,7 @@ class SubjectCoursesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin', 'tutor', 'content_manager', 'corporate_customer'])
+    ensure_user_is_of_type(['admin', 'content_manager', 'corporate_customer'])
   end
   before_action :get_variables
 
@@ -51,7 +50,7 @@ class SubjectCoursesController < ApplicationController
     if current_user.tutor? && current_user.corporate_customer?
       @subject_courses = SubjectCourse.where(corporate_customer_id: current_user.corporate_customer_id).paginate(per_page: 50, page: params[:page])
     elsif current_user.tutor?
-      @subject_courses = SubjectCourse.where(tutor_id: current_user.id).paginate(per_page: 50, page: params[:page]).all_in_order
+      @subject_courses = current_user.subject_courses.paginate(per_page: 50, page: params[:page]).all_in_order
     else
       @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
     end
@@ -65,7 +64,6 @@ class SubjectCoursesController < ApplicationController
 
   def new
     @subject_course = SubjectCourse.new(sorting_order: 1)
-    @subject_course.tutor_id = current_user.id if current_user.tutor?
   end
 
   def edit
@@ -79,7 +77,6 @@ class SubjectCoursesController < ApplicationController
       @subject_course.active = true
       @subject_course.restricted = true
       @subject_course.certificate = true
-      @subject_course.tutor_id = current_user.id
       @subject_course.subject_course_category_id = @subject_course_categories.default_corporate_category.id
       corporate_group = Group.where(corporate_customer_id: current_user.corporate_customer_id).first
       @subject_course.groups << corporate_group
@@ -110,6 +107,56 @@ class SubjectCoursesController < ApplicationController
 
   def course_modules_order
     @course_modules = @subject_course.children
+  end
+
+  def subject_course_resources
+    @subject_course = SubjectCourse.find(params[:id])
+    @subject_course_resources = @subject_course.subject_course_resources
+  end
+
+  def new_subject_course_resources
+    @subject_course = SubjectCourse.find(params[:id])
+    @subject_course_resource = SubjectCourseResource.new(subject_course_id: @subject_course.id)
+  end
+
+  def create_subject_course_resources
+    @subject_course = SubjectCourse.find(params[:id])
+    @subject_course_resource = SubjectCourseResource.new(resource_allowed_params)
+    @subject_course_resource.subject_course_id = @subject_course.id
+    if @subject_course_resource.save
+      flash[:success] = I18n.t('controllers.subject_course_resources.create.flash.success')
+      redirect_to subject_course_url(@subject_course)
+    else
+      render action: :new_subject_course_resources
+    end
+  end
+
+  def edit_tutors
+    @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
+    @tutors = User.where(user_group_id: UserGroup.default_tutor_user_group.id).all_in_order
+    all_tutors = @tutors.each_slice( (@tutors.size/2.0).round ).to_a
+    @first_tutors = all_tutors.first
+    @second_tutors = all_tutors.last
+    if @subject_course.nil?
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to subject_courses_url
+    end
+  end
+
+  def update_tutors
+    @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
+    if @subject_course && current_user.admin?
+      if params[:subject_course]
+        @subject_course.user_ids = params[:subject_course][:user_ids]
+      else
+        @subject_course.user_ids = []
+      end
+
+      flash[:success] = I18n.t('controllers.subject_courses.update_subjects.flash.success')
+      redirect_to subject_courses_url
+    else
+      render action: :edit_tutors
+    end
   end
 
   def update_student_exam_tracks
@@ -153,6 +200,10 @@ class SubjectCoursesController < ApplicationController
 
   def allowed_params
     params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :email_content, :external_url, :external_url_name, :exam_body_id, :survey_url)
+  end
+
+  def resource_allowed_params
+    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description, :file_upload)
   end
 
 end

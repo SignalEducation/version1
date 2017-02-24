@@ -62,6 +62,7 @@
 #  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
+#  description                      :text
 #
 
 FactoryGirl.define do
@@ -96,9 +97,9 @@ FactoryGirl.define do
         active                          true
         account_activation_code         'abcde12345'
         account_activated_at            Time.now
-        email_verified                          false
-        email_verification_code         'abcde12345'
-        email_verified_at               nil
+        email_verified                  true
+        email_verification_code         nil
+        email_verified_at               Time.now
       end
 
       factory :unverified_user do

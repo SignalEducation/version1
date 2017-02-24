@@ -568,6 +568,7 @@ label, .label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-bottom: 10px;
   }
 
 }
@@ -3638,9 +3639,9 @@ a.image-link {
   }
 }
 .signal-tabs {
-  padding: 13px;
+  padding: 8px;
   padding-left:0px;
-  border-bottom: 4px solid gainsboro ;
+  border-bottom: 2px solid lighten($colour-7, 65%);
   a {
     color: $colour-1;
     margin-bottom: $gutter;
@@ -3650,32 +3651,57 @@ a.image-link {
       @include font-size(1.6);
     }
     text-decoration: initial;
-    margin-right: 20px;
-    &:hover {
-      padding-bottom: 15px;
-      //border-bottom: 4px solid;
-      box-sizing: content-box;
-      color: $colour-7;
-      font-weight: bold;
-    }
-    &:focus {
-      padding-bottom: 15px;
-      border-bottom: 4px solid;
-      box-sizing: content-box;
-      color: $colour-7;
-      font-weight: bold;
-    }
   }
 }
 .signal-tabs .underline {
-  padding-bottom: 15px;
-  border-bottom: 4px solid;
+  background: lighten($colour-7, 65%);
+  border-top: 4px solid;
+  border-radius: 2px;
   box-sizing: content-box;
   color: $colour-7;
   font-weight: bold;
 }
-
-
+.signal-tab {
+  background: $white;
+  padding: $gutter/2;
+}
+.content-box {
+  display: block;
+  background: $white;
+  position: relative;
+  text-align: left;
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+}
+.content-box-outer {
+  min-height: 300px;
+}
+.content-box-inner {
+  padding: $gutter*2;
+}
+.resource-box {
+  display: inline-block;
+  background: $colour-12;
+  margin: $gutter*.5 $gutter $gutter 0;
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+  @include border-radius(4px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 30%));
+  @include transition(box-shadow .1s ease);
+  border-bottom: 2px solid darken($colour-12, 20%) ;
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    cursor: pointer;
+  }
+}
+.resource-box-inner {
+  padding: $gutter/2 $gutter;
+}
 // Iubenda
 #iubenda {
   background-color: #eee;
