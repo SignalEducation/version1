@@ -49,7 +49,7 @@ class SubjectCourse < ActiveRecord::Base
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
                   :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
-                  :subject_course_category_id, :email_content,
+                  :email_content,
                   :external_url, :external_url_name, :quiz_count, :question_count,
                   :video_count, :total_video_duration, :exam_body_id, :survey_url
 
@@ -58,7 +58,6 @@ class SubjectCourse < ActiveRecord::Base
   # relationships
   belongs_to :exam_body
   has_and_belongs_to_many :users
-  belongs_to :subject_course_category
   has_and_belongs_to_many :groups
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
@@ -84,7 +83,6 @@ class SubjectCourse < ActiveRecord::Base
             length: {maximum: 255}
   validates :wistia_guid, allow_nil: true, length: {maximum: 255}
   validates :description, presence: true
-  validates :subject_course_category_id, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates :mailchimp_guid, allow_nil: true, length: {maximum: 255}
   validates :default_number_of_possible_exam_answers, presence: true
@@ -106,7 +104,6 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
   scope :for_public, -> { where(corporate_customer_id: nil) }
-  scope :in_category, lambda { |cat_id| where(subject_course_category_id: cat_id) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
   # class methods
@@ -135,22 +132,6 @@ class SubjectCourse < ActiveRecord::Base
 
 
   # instance methods
-  def users_allowed_access
-    self.orders.map(&:user_id) if self.subject_course_category_id == SubjectCourseCategory.all_product.first.id
-  end
-
-  def subscription
-    self.subject_course_category_id == SubjectCourseCategory.default_subscription_category.id
-  end
-
-  def product
-    self.subject_course_category_id == SubjectCourseCategory.default_product_category.id
-  end
-
-  def corporate
-    self.subject_course_category_id == SubjectCourseCategory.default_corporate_category.id
-  end
-
   def home_page
     self.home_pages.all_in_order.first
   end

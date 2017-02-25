@@ -124,15 +124,6 @@ class Subscription < ActiveRecord::Base
       self.update_attribute(:current_status, 'canceled')
 
       user = self.user
-      if user.student_user_type_id == StudentUserType.default_sub_user_type.id
-        new_user_type_id = StudentUserType.default_no_access_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-        new_user_type_id = StudentUserType.default_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attribute(:student_user_type_id, new_user_type_id)
-
       Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
     else
       Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
@@ -159,16 +150,6 @@ class Subscription < ActiveRecord::Base
     else
       self.update_attribute(:current_status, 'canceled')
     end
-
-    user = self.user
-    if user.student_user_type_id == StudentUserType.default_sub_user_type.id
-      new_user_type_id = StudentUserType.default_no_access_user_type.id
-    elsif user.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-      new_user_type_id = StudentUserType.default_product_user_type.id
-    else
-      new_user_type_id = user.student_user_type_id
-    end
-    user.update_attribute(:student_user_type_id, new_user_type_id)
 
     # return true or false - if everything went well
     errors.messages.count == 0
@@ -228,16 +209,6 @@ class Subscription < ActiveRecord::Base
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
       self.update_attributes(current_status: 'active', active: true)
-
-      user = self.user
-      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        new_user_type_id = StudentUserType.default_sub_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attribute(:student_user_type_id, new_user_type_id)
 
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))

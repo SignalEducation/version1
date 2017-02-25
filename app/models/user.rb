@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
                   :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
                   :trial_limit_in_days, :trial_ended_notification_sent_at,
-                  :terms_and_conditions, :student_user_type_id, :date_of_birth,
+                  :terms_and_conditions, :date_of_birth,
                   :description
 
   # Constants
@@ -98,7 +98,6 @@ class User < ActiveRecord::Base
   belongs_to :corporate_customer
              # employed by the corporate customer
   belongs_to :country
-  belongs_to :student_user_type
   has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :enrollments
@@ -681,14 +680,7 @@ class User < ActiveRecord::Base
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
-      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        new_user_type_id = StudentUserType.default_sub_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
 
       return new_sub
     end

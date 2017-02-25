@@ -88,11 +88,7 @@ class EnrollmentsController < ApplicationController
     else
       content = @course.short_description
     end
-    if @course.subject_course_category == SubjectCourseCategory.default_subscription_category
-      url = subscription_course_url(@course.name_url)
-    else
-      url = diploma_course_url(@course.name_url)
-    end
+    url = library_special_link(@course.name_url)
     MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
   end
 

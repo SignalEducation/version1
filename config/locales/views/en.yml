@@ -193,27 +193,6 @@ en:
       new:
         h1: New Order
 
-    subject_course_categories:
-      form:
-        name: Name
-        name_placeholder: Category Name
-        payment_type: Payment Type
-        active: Active
-        subdomain: Subdomain
-        subdomain_placeholder: Subdomain - Optional
-
-      index:
-        h1: Course Categories
-
-      show:
-        h1: Course Category
-
-      edit:
-        h1: Edit Course Category
-
-      new:
-        h1: New Course Category
-
     corporate_customers:
       form:
         organisation_name: Name
@@ -925,7 +904,6 @@ en:
         wistia_guid_placeholder: Wistia Project ID
         live_date: "Live Date(Optional)"
         corporate_customer: "Corporate account to restrict this course to:"
-        subject_course_category_id: Course Category
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100

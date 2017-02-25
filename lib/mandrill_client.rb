@@ -119,6 +119,7 @@ class MandrillClient
 
 
   #Other Emails
+  #Change this to submit to ZenDesk
   def send_tutor_application_email(first_name, last_name, email, info, description)
     msg = message_stub.merge({"subject" => "New Tutor Application"})
     msg["global_merge_vars"] << { "name" => "FIRSTNAME", "content" => first_name }
@@ -129,6 +130,7 @@ class MandrillClient
     send_template('tutor-application-20-02-17', msg)
   end
 
+  #Change this to submit to ZenDesk
   def send_corporate_request_email(name, company, email, phone_number)
     msg = message_stub.merge({"subject" => "New Business Account Enquiry"})
     msg["global_merge_vars"] << { "name" => "NAME", "content" => name }

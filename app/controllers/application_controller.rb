@@ -61,17 +61,6 @@ class ApplicationController < ActionController::Base
     @current_user_session = UserSession.find
   end
 
-  #def current_user
-  #  if @current_user && @current_user.corporate_customer? && @current_user.session_key != session[:session_id]
-  #    flash[:notice] = I18n.t('controllers.application.simultaneous_logins_detected')
-  #    current_user_session.destroy
-  #    return nil
-  #  else
-  #    return @current_user if defined?(@current_user)
-  #    @current_user = current_user_session && current_user_session.record
-  #  end
-  #end
-
   def current_user
     return @current_user if defined?(@current_user)
     @current_user = current_user_session && current_user_session.record
@@ -89,9 +78,6 @@ class ApplicationController < ActionController::Base
     @navbar = 'standard'
     @footer = 'standard'
     @groups = Group.all_active.all_in_order.for_public
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @diplomas = @product_course_category.subject_courses if @product_course_category
-
   end
 
   def set_assets_from_subdomain
@@ -350,33 +336,16 @@ class ApplicationController < ActionController::Base
   end
   helper_method :dashboard_special_link
 
-  def new_product_order_link(course_url)
-    course = SubjectCourse.find_by_name_url(course_url)
-    if current_user
-      if current_user.valid_subject_course_ids.include?(course.id)
-         library_special_link(course)
-       else
-         users_new_order_url(course_url)
-       end
-    else
-      new_product_user_url(course_url)
-    end
-  end
-  helper_method :new_product_order_link
-
   def subscription_special_link(user_id)
     user = User.find(user_id)
     if user.individual_student?
-      if user.subscriptions.any?
-        if user.subscriptions.last.current_status == 'canceled'
-          reactivate_account_url
-        end
-
+      if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
+        reactivate_account_url
       else
         user_new_subscription_url(user_id)
       end
     else
-      root_url
+      account_url
     end
   end
   helper_method :subscription_special_link

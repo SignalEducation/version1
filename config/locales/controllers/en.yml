@@ -374,18 +374,6 @@ en:
           success: Course Resource has been deleted
           error: Course Resource was not deleted
 
-    subject_course_categories:
-      create:
-        flash:
-          success: Course Category has been created successfully
-      update:
-        flash:
-          success: Course Category details have been updated successfully
-      destroy:
-        flash:
-          success: Course Category has been deleted
-          error: Course Category was not deleted
-
 
     subscription_payment_cards:
       create:

@@ -77,7 +77,6 @@ class SubjectCoursesController < ApplicationController
       @subject_course.active = true
       @subject_course.restricted = true
       @subject_course.certificate = true
-      @subject_course.subject_course_category_id = @subject_course_categories.default_corporate_category.id
       corporate_group = Group.where(corporate_customer_id: current_user.corporate_customer_id).first
       @subject_course.groups << corporate_group
     end
@@ -192,14 +191,13 @@ class SubjectCoursesController < ApplicationController
     @non_corporate_groups = @groups.for_public
     @corporate_groups = @groups.where(corporate_customer_id: current_user.corporate_customer_id)
     @tutors = User.all_tutors.all_in_order
-    @subject_course_categories = SubjectCourseCategory.all_active.all_in_order
     @exam_bodies = ExamBody.all_in_order
     @corporate_customers = CorporateCustomer.all_in_order
     @footer = nil
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :subject_course_category_id, :email_content, :external_url, :external_url_name, :exam_body_id, :survey_url)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :corporate_customer_id, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :email_content, :external_url, :external_url_name, :exam_body_id, :survey_url)
   end
 
   def resource_allowed_params
