@@ -67,10 +67,10 @@ class CoursesController < ApplicationController
       elsif @question_bank || (@course_module && (@course_module_element || @course_module_jumbo_quiz))
         render :show
       else
-        redirect_to subscription_groups_url
+        redirect_to library_url
       end
     else
-      redirect_to subscription_groups_url
+      redirect_to library_url
     end
   end
 

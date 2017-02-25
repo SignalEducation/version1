@@ -41,7 +41,7 @@ class CorporateProfilesController < ApplicationController
     @corporate_student.locale = 'en'
     if @corporate_student.valid? && @corporate_student.save
       UserSession.create(@corporate_student)
-      redirect_to subscription_groups_url(subdomain: current_corporate.subdomain)
+      redirect_to library_url(subdomain: current_corporate.subdomain)
     else
       render action: :new
     end
