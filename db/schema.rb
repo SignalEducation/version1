@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170223164047) do
+ActiveRecord::Schema.define(version: 20170225114159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1024,10 +1024,10 @@ ActiveRecord::Schema.define(version: 20170223164047) do
     t.boolean  "free_trial",                                   default: false
     t.integer  "trial_limit_in_days",                          default: 0
     t.boolean  "terms_and_conditions",                         default: false
-    t.integer  "student_user_type_id"
     t.boolean  "discourse_user",                               default: false
     t.date     "date_of_birth"
     t.text     "description"
+    t.datetime "free_trial_ended_at"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

@@ -59,10 +59,10 @@
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
 #  terms_and_conditions             :boolean          default(FALSE)
-#  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
 #  description                      :text
+#  free_trial_ended_at              :datetime
 #
 
 require 'rails_helper'
