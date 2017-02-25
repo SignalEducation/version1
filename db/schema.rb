@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170225114159) do
+ActiveRecord::Schema.define(version: 20170225115333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -675,32 +675,6 @@ ActiveRecord::Schema.define(version: 20170225114159) do
   add_index "student_exam_tracks", ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id", using: :btree
   add_index "student_exam_tracks", ["user_id"], name: "index_student_exam_tracks_on_user_id", using: :btree
 
-  create_table "student_user_types", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "subscription",  default: false
-    t.boolean  "product_order", default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.boolean  "free_trial",    default: false
-  end
-
-  add_index "student_user_types", ["name"], name: "index_student_user_types_on_name", using: :btree
-  add_index "student_user_types", ["product_order"], name: "index_student_user_types_on_product_order", using: :btree
-  add_index "student_user_types", ["subscription"], name: "index_student_user_types_on_subscription", using: :btree
-
-  create_table "subject_course_categories", force: :cascade do |t|
-    t.string   "name"
-    t.string   "payment_type"
-    t.boolean  "active",       default: false
-    t.string   "subdomain"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
-
-  add_index "subject_course_categories", ["name"], name: "index_subject_course_categories_on_name", using: :btree
-  add_index "subject_course_categories", ["subdomain"], name: "index_subject_course_categories_on_subdomain", using: :btree
-
   create_table "subject_course_resources", force: :cascade do |t|
     t.string   "name"
     t.integer  "subject_course_id"
@@ -764,7 +738,6 @@ ActiveRecord::Schema.define(version: 20170225114159) do
     t.datetime "live_date"
     t.boolean  "certificate",                             default: false, null: false
     t.string   "hotjar_guid"
-    t.integer  "subject_course_category_id"
     t.text     "email_content"
     t.string   "external_url_name"
     t.string   "external_url"

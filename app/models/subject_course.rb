@@ -30,7 +30,6 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
@@ -49,9 +48,9 @@ class SubjectCourse < ActiveRecord::Base
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
                   :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
                   :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
-                  :email_content,
-                  :external_url, :external_url_name, :quiz_count, :question_count,
-                  :video_count, :total_video_duration, :exam_body_id, :survey_url
+                  :email_content, :external_url, :external_url_name,
+                  :quiz_count, :question_count, :video_count,
+                  :total_video_duration, :exam_body_id, :survey_url
 
   # Constants
 
