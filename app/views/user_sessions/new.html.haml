@@ -29,7 +29,4 @@
                 =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'
 
         .col-sm-8.col-sm-offset-2.text-center.l-margin-bottom-big.l-margin-top-big
-          -if current_corporate
-            =link_to 'create account', corporate_login_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
-          -else
-            =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+          =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
