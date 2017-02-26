@@ -106,8 +106,6 @@ describe SubjectCourse do
   it { expect(SubjectCourse).to respond_to(:all_in_order) }
   it { expect(SubjectCourse).to respond_to(:all_not_live) }
   it { expect(SubjectCourse).to respond_to(:all_not_restricted) }
-  it { expect(SubjectCourse).to respond_to(:for_corporates) }
-  it { expect(SubjectCourse).to respond_to(:for_public) }
   it { expect(SubjectCourse).to respond_to(:in_category) }
 
 

@@ -66,8 +66,6 @@ describe Group do
   # scopes
   it { expect(Group).to respond_to(:all_in_order) }
   it { expect(Group).to respond_to(:all_active) }
-  it { expect(Group).to respond_to(:for_corporates) }
-  it { expect(Group).to respond_to(:for_public) }
 
   # class methods
 
