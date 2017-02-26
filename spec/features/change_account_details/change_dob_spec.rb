@@ -14,8 +14,6 @@ describe 'User changing their date of birth', type: :feature do
   before(:each) do
     a = admin_user
     b = individual_student_user
-    c = corporate_student_user
-    d = corporate_customer_user
     e = comp_user
     f = content_manager_user
     g = tutor_user
@@ -24,11 +22,6 @@ describe 'User changing their date of birth', type: :feature do
 
   scenario 'when logged in as one of the users', js: false do
     user_list.each do |this_user|
-      if this_user.corporate_user?
-        switch_to_subdomain("#{corporate_organisation.subdomain}")
-      else
-        switch_to_main_domain
-      end
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
       if this_user.corporate_customer?

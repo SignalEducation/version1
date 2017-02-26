@@ -11,8 +11,6 @@ describe 'User changing their name', type: :feature do
   before(:each) do
     a = admin_user
     b = individual_student_user
-    c = corporate_student_user
-    d = corporate_customer_user
     e = comp_user
     f = content_manager_user
     g = tutor_user
@@ -21,24 +19,13 @@ describe 'User changing their name', type: :feature do
 
   scenario 'when logged in as a user', js: true do
     user_list.each do |this_user|
-      if this_user.corporate_user?
-        switch_to_subdomain("#{corporate_organisation.subdomain}")
-      else
-        switch_to_main_domain
-      end
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
       sleep(3)
-      if this_user.corporate_customer?
+      within('#personal-details') do
         fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
         fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
-        click_button(I18n.t('views.general.save_changes'))
-      else
-        within('#personal-details') do
-          fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
-          fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
-          click_button(I18n.t('views.general.save'))
-        end
+        click_button(I18n.t('views.general.save'))
       end
       sleep(1)
       sign_out

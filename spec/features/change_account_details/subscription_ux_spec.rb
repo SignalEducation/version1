@@ -27,8 +27,6 @@ describe 'Subscription UX:', type: :feature do
   before(:each) do
     a = admin_user
     b = individual_student_user
-    c = corporate_student_user
-    d = corporate_customer_user
     activate_authlogic
   end
 
