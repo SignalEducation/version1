@@ -242,8 +242,8 @@ class User < ActiveRecord::Base
   end
 
   def process_free_trial_limit_reached
-    #Called from a Cron Task
-    self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now) unless days_or_seconds_valid?
+    #Called from a Cron Task and CMEUL
+    self.update_attributes(free_trial_ended_at: Time.now) unless days_or_seconds_valid?
   end
 
   def user_subscription_status

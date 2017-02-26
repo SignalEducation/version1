@@ -345,7 +345,12 @@ class UsersController < ApplicationController
 
           if upgrade
             user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-            current_user.update_attributes(free_trial: false)
+            if user.free_trial_ended_at
+              trial_ended_date = user.free_trial_ended_at
+            else
+              trial_ended_date = Proc.new{Time.now}.call
+            end
+            current_user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
             redirect_to personal_upgrade_complete_url
           else
             redirect_to user_new_subscription_url(current_user.id)

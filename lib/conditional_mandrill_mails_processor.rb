@@ -72,36 +72,20 @@ class ConditionalMandrillMailsProcessor
 
   def self.process_free_trial_ended_notifications
     individual_user_group = UserGroup.default_student_user_group
-    free_trial_student_type = StudentUserType.default_free_trial_user_type
-    free_and_product_student_type = StudentUserType.default_free_trial_and_product_user_type
 
     free_trial_users = User.where(free_trial: true).where(
-        user_group_id: individual_user_group.id).where(
-        student_user_type_id: free_trial_student_type.id)
-
-    free_trial_product_users = User.where(free_trial: true).where(
-        user_group_id: individual_user_group.id).where(
-        student_user_type_id: free_and_product_student_type.id)
-
-    users = free_trial_product_users + free_trial_users
+        user_group_id: individual_user_group.id)
 
 
-    users.each do |user|
+
+    free_trial_users.each do |user|
       if !user.subscriptions.any? &&
          !user.days_or_seconds_valid? &&
-         user.trial_ended_notification_sent_at.nil? &&
+         user.free_trial_ended_at.nil? &&
          user.active?
 
 
-        if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-          new_user_type_id = StudentUserType.default_no_access_user_type.id
-        elsif user.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
-          new_user_type_id = StudentUserType.default_product_user_type.id
-        else
-          new_user_type_id = user.student_user_type_id
-        end
-
-        user.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
+        user.update_attribute(:free_trial_ended_at, Time.now)
       end
     end
   end

@@ -119,7 +119,6 @@ class CoursesController < ApplicationController
     )
   end
 
-
   def create_a_cme_user_log
     #Creating Video Log upon loading video page, later updated by JSON request to video_watched_data method
 
