@@ -35,63 +35,6 @@ en:
           success: NameOfThing has been deleted
           error: NameOfThing was not deleted
 
-    corporate_groups:
-      create:
-        flash:
-          success: Corporate Group has been created successfully
-      update:
-        flash:
-          success: Corporate Group details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate Group has been deleted
-          error: Corporate Group was not deleted
-      update_members:
-        flash:
-          success: Corporate group members have been updated successfully
-
-    corporate_students:
-      create:
-        flash:
-          success: Corporate student user has been created successfully
-          error: There was invalid data Please try again
-      update:
-        flash:
-          success: Corporate student user details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate student user has been deactivated
-          error: Corporate student user was not deactivated
-      import_csv:
-        flash:
-          error: There was an issue with your upload file, please ensure it meets the requirements
-      preview_csv:
-        flash:
-          error: There was an issue with your upload file, please ensure it meets the requirements
-
-
-    corporate_managers:
-      create:
-        flash:
-          success: Corporate manager user has been created successfully
-          error: There was invalid data Please try again
-      update:
-        flash:
-          success: Corporate manager user details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate manager user has been deactivated
-          error: Corporate manager user was not deactivated
-
-    corporate_profiles:
-      create:
-        flash:
-          success: Your profile has been created successfully!
-          error: Sorry an error occured while creating your profile please try again!
-      show:
-        flash:
-          error: The username and/or password are incorrect. Please try again!
-
     corporate_requests:
       create:
         flash:
@@ -103,18 +46,6 @@ en:
         flash:
           success: Corporate Request has been deleted
           error: Corporate Request was not deleted
-
-    corporate_customers:
-      create:
-        flash:
-          success: Corporate Customer has been created successfully
-      update:
-        flash:
-          success: Corporate Customer details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate Customer has been deleted
-          error: Corporate Customer was not deleted
 
     countries:
       create:
@@ -334,18 +265,6 @@ en:
       update:
         flash:
           success: Referred Signup details have been updated successfully
-
-    student_user_types:
-      create:
-        flash:
-          success: Student User Type has been created successfully
-      update:
-        flash:
-          success: Student User Type details have been updated successfully
-      destroy:
-        flash:
-          success: Student User Type has been deleted
-          error: Student User Type was not deleted
 
     subject_courses:
       create:

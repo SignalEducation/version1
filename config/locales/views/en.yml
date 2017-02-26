@@ -156,30 +156,8 @@ en:
       new:
         h1: New Category
 
-    student_user_types:
-      form:
-        name: Name
-        name_placeholder: Name
-        description: Description
-        description_placeholder: Description
-        free_trial: Free Trial
-        subscription: Subscription
-        product_order: Product
-
-      index:
-        h1: Student Types
-
-      show:
-        h1: Student User Type
-
-      edit:
-        h1: Edit Student User Type
-
-      new:
-        h1: New Student User Type
 
     orders:
-
       index:
         h1: Orders
         subject_course_id: Course
@@ -192,38 +170,6 @@ en:
 
       new:
         h1: New Order
-
-    corporate_customers:
-      form:
-        organisation_name: Name
-        organisation_name_placeholder: 'Smyth & co. Accountants'
-        address: Address
-        address_placeholder: '123 Fake Street'
-        country_id: Country
-        payments_by_card: Payments by card
-        stripe_customer_guid: Stripe Customer ID
-        subdomain: Subdomian
-        user_name: Create Account Username
-        passcode: Create Account Password
-        external_url: URL of Corporates Site (Include http://)
-        external_logo_link: Make Logo an external Link
-        corporate_email: An @learnsignal email account for this corporate account for emails
-        footer_border_colour: Footer Border Colour
-
-      index:
-        h1: Corporate Customers
-
-      show:
-        h1: Corporate Customer
-        compulsory_courses: Compulsory Courses
-        started_courses: Other Courses
-        overview: Overview
-
-      edit:
-        h1: Edit Corporate Customer
-
-      new:
-        h1: New Corporate Customer
 
     corporate_requests:
       form:
@@ -608,7 +554,6 @@ en:
         sorting_order_placeholder: 100
         subject_id: Subject
         course_count: No. of Courses
-        corporate_customer: Corporate Customer (Optional)
 
       index:
         h1: Subject Areas
@@ -661,7 +606,6 @@ en:
     invoices:
       form:
         user_id: User
-        corporate_customer_id: Corporate Customer
         subscription_transaction_id: Subscription transaction
         subscription_id: Subscription
         number_of_users: No. of Users
@@ -867,9 +811,6 @@ en:
         choose_an_answer: Choose an Answer
 
     shared:
-      breadcrumbs:
-        you_are_here: "You are here:"
-
       filter_panel:
         filter: 'filter:'
 
@@ -904,7 +845,6 @@ en:
         wistia_guid: Wistia Project ID
         wistia_guid_placeholder: Wistia Project ID
         live_date: "Live Date(Optional)"
-        corporate_customer: "Corporate account to restrict this course to:"
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -1014,7 +954,6 @@ en:
         name: Name
         name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
         available_to_students: Available to students
-        available_to_corporates: Available to corporates
         all_you_can_eat: All you can eat
         payment_frequency_in_months: Payment frequency in months
         currency_id: Currency
@@ -1034,7 +973,6 @@ en:
 
       index:
         h1: Subscription Plans
-        corporates: For Corporates
         students: For Students
 
       public_index:
@@ -1148,7 +1086,6 @@ en:
         password_reset_at: Password reset at
         stripe_customer_id: Stripe customer ID
         email_verified: Email Verified
-        corporate_customer_id: Corporate customer
         created_at: Created at
         updated_at: Updated at
         guid: GUID
@@ -1249,7 +1186,6 @@ en:
         tutor: Tutor
         content_manager: Content manager
         blogger: Blogger
-        corporate_customer: Corporate customer
         site_admin: Site admin
         customer_support: Customer Support
         marketing_support: Marketing Support
@@ -1283,9 +1219,6 @@ en:
         h1: Reset your password
         paragraph_1: "Enter a new password for your account:"
 
-      corporate_new:
-        h1: Set Password
-        paragraph_1: "Enter a password for your account:"
 
     user_notifications:
       form:
@@ -1405,95 +1338,6 @@ en:
       edit:
         h1: Editing Referred Signup
         payed_at: Payed At
-
-    corporate_groups:
-      form:
-        name: Name
-        name_placeholder: Team Name
-        corporate_customer: Corporate Customer
-        corporate_managers: Corporate Managers
-
-      index:
-        h1: Teams
-        corp_h1: Teams
-        compulsory: Compulsory
-        restricted: Restricted
-        members: Members
-
-      show:
-        h1: Team
-
-      edit:
-        h1: Edit Team
-
-      new:
-        h1: New Team
-
-      manage_members:
-        student: Students
-
-    corporate_students:
-      form:
-        email: Email
-        email_placeholder: john@example.com
-        full_name: Full name
-        first_name: First name
-        first_name_placeholder: John
-        last_name: Last name
-        last_name_placeholder: Smith
-        employee_guid: "Employee ID (Optional)"
-        employee_guid_placeholder: Employee ID
-        active: Active
-        country: Country
-        corporate_customer: Corporate customer
-        corporate_group_name: Corporate group
-        add_to_groups: Add to Groups
-        password: Password
-        password_placeholder: XXXXX
-        password_confirmation: Confirmation Password
-        password_confirmation_placeholder: XXXXXX
-
-      index:
-        h1: Students
-        corp_h1: Users
-        corp_managers: Managers
-
-      edit:
-        h1: Edit Corporate Student
-
-      new:
-        h1: New Corporate Student
-
-      show:
-        h1: Corporate Student
-
-    corporate_managers:
-      form:
-        email: Email
-        email_placeholder: john@example.com
-        first_name: First name
-        first_name_placeholder: John
-        last_name: Last name
-        last_name_placeholder: Smith
-        employee_guid: Employee ID
-        employee_guid_placeholder: Employee ID
-        active: Active
-        country: Country
-        corporate_customer: Corporate customer
-        corporate_group_name: Corporate group
-        add_to_groups: Add to Groups
-
-      index:
-        h1: Corporate Managers
-
-      edit:
-        h1: Edit Corporate Managers
-
-      new:
-        h1: New Corporate Managers
-
-      show:
-        h1: Corporate Managers
 
     contact_modal:
       form:
