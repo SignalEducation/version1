@@ -18,6 +18,7 @@ class LibraryController < ApplicationController
   def course_show
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     redirect_to library_url unless @course
+    redirect_to preview_course_url unless @course.live
 
     @course_modules = @course.children.all_active.all_in_order
     @tuition_course_modules = @course_modules.all_tuition
@@ -82,10 +83,18 @@ class LibraryController < ApplicationController
       cme_ids = @course.course_module_elements.all_active.map(&:id)
     end
 
-    unless @course.live
-      seo_title_maker(@course.try(:name), @course.try(:description), @course.try(:seo_no_index))
-      render 'preview_course'
-    end
+  end
+
+  def preview_course
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    redirect_to library_url unless @course
+
+    @course_modules = @course.children.all_active.all_in_order
+    @tuition_course_modules = @course_modules.all_tuition
+    @test_course_modules = @course_modules.all_test
+    @revision_course_modules = @course_modules.all_revision
+    @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
+    tag_manager_data_layer(@course.try(:name))
 
   end
 

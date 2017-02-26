@@ -77,11 +77,10 @@
             =f.label :survey_url, t('views.subject_courses.form.survey_url'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.text_field :survey_url, placeholder: t('views.subject_courses.form.survey_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-            -unless current_user.corporate_customer?
-              %br/
-              =f.label :hotjar_guid, t('views.subject_courses.form.hotjar_guid'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.text_field :hotjar_guid, placeholder: t('views.subject_courses.form.hotjar_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            =f.label :hotjar_guid, t('views.subject_courses.form.hotjar_guid'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :hotjar_guid, placeholder: t('views.subject_courses.form.hotjar_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
             %br/
             =f.label :mailchimp_guid, t('views.subject_courses.form.mailchimp_guid'), class: 'control-label'
