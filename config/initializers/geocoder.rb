@@ -20,15 +20,13 @@ Geocoder.configure(
   # distances: :linear          # :spherical or :linear
 
 
-  :lookup => {
-      :google => {
-          api_key: ENV["learnsignal_google_api_key"]
-      }
+  lookup: :google,
+  :google => {
+      api_key: ENV["learnsignal_google_api_key"]
   },
 
-  :ip_lookup => {
-    :pointpin => {
-        api_key: ENV["learnsignal_pointpin_api_key"]
-    }
+  ip_lookup: :pointpin,
+  :pointpin => {
+      api_key: ENV["learnsignal_pointpin_api_key"]
   }
 )
