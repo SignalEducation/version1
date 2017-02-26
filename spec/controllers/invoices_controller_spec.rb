@@ -44,16 +44,12 @@ describe InvoicesController, type: :controller do
 
   let!(:individual_student_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: individual_student_user.id) }
-  let!(:corporate_student_user_invoice) { FactoryGirl.create(:invoice,
-                                  user_id: corporate_student_user.id) }
   let!(:tutor_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: tutor_user.id) }
   let!(:content_manager_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: content_manager_user.id) }
   let!(:blogger_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: blogger_user.id) }
-  let!(:corporate_customer_user_invoice) { FactoryGirl.create(:invoice,
-                                  user_id: corporate_customer_user.id) }
   let!(:admin_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: admin_user.id) }
   let!(:comp_user_invoice) { FactoryGirl.create(:invoice,
@@ -100,7 +96,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: corporate_student_user_invoice.id
+        get :show, id: tutor_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -166,64 +162,6 @@ describe InvoicesController, type: :controller do
 
   end
 
-  context 'Logged in as a corporate_student_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(corporate_student_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see invoice' do
-        get :show, id: corporate_student_user_invoice.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a corporate_customer_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(corporate_customer_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see invoice' do
-        get :show, id: corporate_customer_user_invoice.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
   context 'Logged in as a blogger_user: ' do
 
     before(:each) do
@@ -246,7 +184,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: corporate_student_user_invoice.id
+        get :show, id: individual_student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -275,7 +213,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: corporate_student_user_invoice.id
+        get :show, id: individual_student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -304,7 +242,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: corporate_student_user_invoice.id
+        get :show, id: individual_student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -321,7 +259,7 @@ describe InvoicesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('invoices', 8)
+        expect_index_success_with_model('invoices', 6)
       end
     end
 

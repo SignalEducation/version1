@@ -86,6 +86,6 @@ shared_context 'course_content' do
   let!(:quiz_content_2_5)  { FactoryGirl.create(:quiz_content,
                              quiz_answer_id: quiz_answer_4.id) }
 
-  let!(:subject_course_1_home_page)  { FactoryGirl.create(:home_page, subject_course_id: subject_course_3.id) }
+  let!(:subject_course_1_home_page)  { FactoryGirl.create(:home_page, subject_course_id: subject_course_1.id) }
 
 end
