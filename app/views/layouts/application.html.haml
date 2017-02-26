@@ -49,9 +49,10 @@
 
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
-      =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/hotjar'
+    -if Rails.env.production? && (controller_name == 'home_pages' || controller_name == 'footer_pages')
+      =render partial: 'layouts/cookie_banner'
 
   %body
     %noscript

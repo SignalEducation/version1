@@ -9,11 +9,6 @@
                 %li
                   =link_to group.name, library_special_link(group)
 
-          -if @diplomas
-            -@diplomas.each do |diploma|
-              %li
-                =link_to diploma.name, library_special_link(diploma)
-
           %li
             =link_to 'Lecturers', tutors_url
           %li
@@ -57,11 +52,6 @@
               -if group.active_children.any?
                 %li
                   =link_to group.name, library_special_link(group)
-
-          -if @diplomas
-            -@diplomas.each do |diploma|
-              %li
-                =link_to diploma.name, library_special_link(diploma)
 
           %li
             =link_to 'Lecturers', tutors_url
@@ -123,10 +113,6 @@
                 %li
                   =link_to group.name, library_special_link(group)
 
-          -if @diplomas
-            -@diplomas.each do |diploma|
-              %li
-                =link_to diploma.name, library_special_link(diploma)
           %li
             =link_to 'ACCA Info', acca_info_url
 
