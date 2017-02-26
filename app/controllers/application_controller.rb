@@ -21,7 +21,6 @@ class ApplicationController < ActionController::Base
   end
 
   before_action :authenticate_if_staging
-  before_action :check_current_corporate_logged_in, if: 'current_corporate'
   before_action :setup_mcapi
 
   def authenticate_if_staging
@@ -32,22 +31,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def check_current_corporate_logged_in
-    unless controller_name == 'user_sessions' || controller_name == 'corporate_profiles' || controller_name == 'routes' || controller_name == 'user_password_resets' || controller_name == 'footer_pages' || controller_name == 'user_verifications'
-      logged_in_required
-    end
-  end
-
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  before_action :set_assets_from_subdomain
   before_action :set_navbar_and_footer
 
-  helper_method :current_user_session, :current_user, :current_corporate
+  helper_method :current_user_session, :current_user
 
   Time::DATE_FORMATS[:simple] = I18n.t('controllers.application.datetime_formats.simple')
   Time::DATE_FORMATS[:standard] = I18n.t('controllers.application.datetime_formats.standard')
@@ -66,32 +58,10 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
 
-  def current_corporate
-    if current_user
-      CorporateCustomer.find_by_subdomain(request.subdomain) if current_user.corporate_customer? || current_user.corporate_student?
-    else
-      CorporateCustomer.find_by_subdomain(request.subdomain)
-    end
-  end
-
   def set_navbar_and_footer
     @navbar = 'standard'
     @footer = 'standard'
-    @groups = Group.all_active.all_in_order.for_public
-  end
-
-  def set_assets_from_subdomain
-    corporate_domains = CorporateCustomer.all.map(&:subdomain)
-    if request.subdomain.present? && corporate_domains.include?(request.subdomain)
-      asset_folder = "#{Rails.root}/app/assets/stylesheets/#{request.subdomain}/application.scss"
-      if File.exists?(asset_folder)
-        @css_root = "#{request.subdomain}/application"
-      else
-        @css_root = 'application'
-      end
-    else
-      @css_root = 'application'
-    end
+    @groups = Group.all_active.all_in_order
   end
 
   def logged_in_required
@@ -133,10 +103,8 @@ class ApplicationController < ActionController::Base
     permission_granted = false
     authorised_features.each do |permitted_thing|
       if (the_user_group.individual_student && permitted_thing == 'individual_student') ||
-         (the_user_group.corporate_student  && permitted_thing == 'corporate_student') ||
          (the_user_group.tutor              && permitted_thing == 'tutor') ||
          (the_user_group.blogger            && permitted_thing == 'blogger') ||
-         (the_user_group.corporate_customer && permitted_thing == 'corporate_customer') ||
          (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
          (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
          (the_user_group.customer_support    && permitted_thing == 'customer_support_manager') ||
@@ -309,6 +277,7 @@ class ApplicationController < ActionController::Base
   helper_method :course_special_link
 
   def dashboard_special_link(user = nil)
+    #TODO this needs to be better
     user = user || current_user
     redirect_to root_url unless user
     case user.user_group_id
@@ -320,10 +289,6 @@ class ApplicationController < ActionController::Base
         admin_dashboard_url
       when UserGroup.default_tutor_user_group.id
         tutor_dashboard_url
-      when UserGroup.default_corporate_student_user_group.id
-        corporate_student_dashboard_url
-      when UserGroup.default_corporate_customer_user_group.id
-        corporate_customer_dashboard_url
       when UserGroup.default_content_manager_user_group.id
         content_manager_dashboard_url
       when UserGroup.default_marketing_support_user_group.id
@@ -337,6 +302,7 @@ class ApplicationController < ActionController::Base
   helper_method :dashboard_special_link
 
   def subscription_special_link(user_id)
+    #TODO where is this used ? Should it be used everywhere for subscription links?
     user = User.find(user_id)
     if user.individual_student?
       if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'

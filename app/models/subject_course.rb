@@ -46,10 +46,9 @@ class SubjectCourse < ActiveRecord::Base
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid,
                   :cme_count, :description, :short_description,
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
-                  :restricted, :corporate_customer_id, :is_cpd, :cpd_hours,
-                  :cpd_pass_rate, :live_date, :certificate, :hotjar_guid,
-                  :email_content, :external_url, :external_url_name,
-                  :quiz_count, :question_count, :video_count,
+                  :restricted, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date,
+                  :certificate, :hotjar_guid, :email_content, :external_url,
+                  :external_url_name, :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url
 
   # Constants
@@ -67,7 +66,6 @@ class SubjectCourse < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :subject_course_resources
-  has_many :corporate_group_grants
   has_many :products
   has_many :orders
   has_many :white_papers
@@ -101,8 +99,6 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_not_live, -> { where(live: false) }
   scope :all_not_restricted, -> { where(restricted: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
-  scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
-  scope :for_public, -> { where(corporate_customer_id: nil) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
   # class methods
@@ -186,7 +182,6 @@ class SubjectCourse < ActiveRecord::Base
     the_list += self.course_modules.to_a
     the_list << self.question_bank if self.question_bank
     the_list << self.groups if self.groups
-    the_list << self.corporate_group_grants if self.corporate_group_grants
     the_list
   end
 

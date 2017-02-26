@@ -64,25 +64,14 @@
     -if controller_name == 'referral_codes' && action_name == 'show'
       =render partial: 'layouts/facebook_sdk'
 
-    -if current_corporate
-      -if @navbar
-        -if @navbar == 'transparent'
-          =render partial: 'layouts/transparent_corporate_navbar'
-        -else
-          =render partial: 'layouts/corporate_navbar'
-      =yield
-      -if @footer
-        =render partial: 'layouts/corporate_footer'
-
-    -else
-      -if @navbar
-        -if @navbar == 'transparent'
-          =render partial: 'layouts/transparent_navbar'
-        -else
-          =render partial: 'layouts/navbar'
-      =yield
-      -if @footer
-        =render partial: 'layouts/large_footer'
+    -if @navbar
+      -if @navbar == 'transparent'
+        =render partial: 'layouts/transparent_navbar'
+      -else
+        =render partial: 'layouts/navbar'
+    =yield
+    -if @footer
+      =render partial: 'layouts/large_footer'
 
 
     -#General partials

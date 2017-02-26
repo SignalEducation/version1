@@ -25,17 +25,15 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
 
   # attr-accessible
-  attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode, :next_renewal_date, :active,
-                  :terms_and_conditions
+  attr_accessible :user_id, :subscription_plan_id, :complimentary,
+                  :current_status, :stripe_customer_id, :stripe_token,
+                  :livemode, :next_renewal_date, :active, :terms_and_conditions
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
-  belongs_to :corporate_customer
   has_many :invoices
   has_many :invoice_line_items
   belongs_to :subscription_plan
@@ -70,7 +68,6 @@ class Subscription < ActiveRecord::Base
     plan = SubscriptionPlan.find_by_stripe_guid(stripe_subscription_hash[:plan][:id])
     x = Subscription.new(
           user_id: user.id,
-          corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: plan.id,
           complimentary: false,
           livemode: (stripe_subscription_hash[:livemode]),
@@ -177,10 +174,6 @@ class Subscription < ActiveRecord::Base
       self.referred_signup.nil?
   end
 
-  def free_trial?
-    self.subscription_plan.free_trial?
-  end
-
   # setter method
   def stripe_token=(t)
     @stripe_token = t
@@ -194,8 +187,7 @@ class Subscription < ActiveRecord::Base
   def reactivation_options
     SubscriptionPlan
       .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: true,
-             available_to_corporates: false)
+             available_to_students: true)
       .where('price > 0.0')
       .generally_available
       .all_active
@@ -219,8 +211,7 @@ class Subscription < ActiveRecord::Base
   def upgrade_options
     SubscriptionPlan
       .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: self.subscription_plan.available_to_students,
-             available_to_corporates: self.subscription_plan.available_to_corporates)
+             available_to_students: self.subscription_plan.available_to_students)
       .generally_available
       .all_active
       .where('price > 0.0')
@@ -245,7 +236,7 @@ class Subscription < ActiveRecord::Base
       return self
     end
     # only individual students are allowed to upgrade their plan
-    unless self.user.individual_student? || self.user.corporate_customer?
+    unless self.user.individual_student?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
       return self
     end
@@ -291,7 +282,6 @@ class Subscription < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       new_sub = Subscription.new(
               user_id: self.user_id,
-              corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complimentary: false,
               active: true,

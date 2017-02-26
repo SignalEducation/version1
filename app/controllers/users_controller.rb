@@ -67,13 +67,13 @@
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_new, :student_create, :new_product_user, :new_session_product, :profile, :profile_index]
-  before_action :logged_out_required, only: [:student_new, :student_create, :new_product_user, :new_session_product]
+  before_action :logged_in_required, except: [:student_new, :student_create, :profile, :profile_index]
+  before_action :logged_out_required, only: [:student_new, :student_create]
   before_action only: [:destroy, :create] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details] do
-    ensure_user_is_of_type(['admin', 'customer_support_manager'])
+    ensure_user_is_of_type(%w(admin customer_support_manager))
   end
 
   before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan, :subscription_invoice]
@@ -84,14 +84,7 @@ class UsersController < ApplicationController
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
     @orders = @user.orders
-
-    if current_user.corporate_manager? || current_user.corporate_customer?
-      @corporate_customer = current_user.corporate_customer
-      @footer = false
-    else
-      @footer = true
-    end
-
+    @footer = true
   end
 
   #Admin & CustomerSupport Manager views under dashboard tabs
@@ -137,7 +130,7 @@ class UsersController < ApplicationController
   def user_courses_status
     #This is for seeing a tutors courses
     @user = User.find(params[:user_id])
-    @subject_courses = SubjectCourse.all_active.all_in_order.for_public.all_not_restricted
+    @subject_courses = SubjectCourse.all_active.all_in_order
     all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
     @first_courses = all_courses.first
     @second_courses = all_courses.last
@@ -171,11 +164,7 @@ class UsersController < ApplicationController
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
       end
-      if @user.corporate_manager? || @user.corporate_student?
-        MandrillWorker.perform_async(@user.id, 'corporate_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      else
-        MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      end
+      MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -207,7 +196,6 @@ class UsersController < ApplicationController
 
   #Logged Out actions to create account/session for sub account and product accounts
   def student_new
-    redirect_to root_url if current_corporate
     @user = User.new
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -295,14 +283,7 @@ class UsersController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : @user.country
     @currency_id = @country.currency_id
-    @subscription_plans = SubscriptionPlan
-                              .where('price > 0.0')
-                              .includes(:currency)
-                              .for_students
-                              .in_currency(@currency_id)
-                              .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
-                              .all_active
-                              .all_in_order
+    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
   end
 
   def create_subscription
@@ -321,9 +302,7 @@ class UsersController < ApplicationController
           redirect_to user_new_subscription_url(current_user.id)
         else
           stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-
           stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
-
           stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
           if stripe_customer && stripe_subscription
             subscription = Subscription.new(
@@ -345,7 +324,7 @@ class UsersController < ApplicationController
 
           if upgrade
             user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-            if user.free_trial_ended_at
+            if !user.free_trial_ended_at.nil?
               trial_ended_date = user.free_trial_ended_at
             else
               trial_ended_date = Proc.new{Time.now}.call
@@ -436,7 +415,7 @@ class UsersController < ApplicationController
   def reactivation_complete
     @subscription = current_user.active_subscription
     @subject_course_user_logs = current_user.subject_course_user_logs
-    @groups = Group.for_public.all_active.all_in_order
+    @groups = Group.all_active.all_in_order
   end
 
   def change_plan
@@ -555,7 +534,6 @@ class UsersController < ApplicationController
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
-    @corporate_customers = CorporateCustomer.all_in_order
     @certs = SubjectCourseUserLog.for_user_or_session(@user.try(:id), current_session_guid).where(completed: true)
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
@@ -563,7 +541,7 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :profile_image, :date_of_birth, :description)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description)
     else
       params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions)
     end

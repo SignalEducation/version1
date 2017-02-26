@@ -24,20 +24,19 @@ class SubscriptionPlansController < ApplicationController
 
   before_action :logged_in_required, except: [:public_index]
   before_action except: [:public_index] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables
 
   def index
     @student_subscription_plans = SubscriptionPlan.for_students.paginate(per_page: 50, page: params[:page]).all_in_order
-    @corporate_subscription_plans = SubscriptionPlan.for_corporates.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def public_index
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = country.currency_id
-    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(livemode: true).where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
+    @student_subscription_plans = SubscriptionPlan.where(livemode: true).where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
     @student_plan_1 = @student_subscription_plans[0]
     @student_plan_2 = @student_subscription_plans[1]
     @student_plan_3 = @student_subscription_plans[2]
@@ -96,11 +95,11 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def create_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name, :subscription_plan_category_id)
+    params.require(:subscription_plan).permit(:available_to_students, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name, :subscription_plan_category_id)
   end
 
   def update_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_to_corporates, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat)
+    params.require(:subscription_plan).permit(:available_to_students, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat)
   end
 
 end

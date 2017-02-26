@@ -2,10 +2,10 @@ class DashboardController < ApplicationController
 
   before_action :logged_in_required
   before_action only: [:admin] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action only: [:export_users, :export_users_monthly, :export_courses] do
-    ensure_user_is_of_type(['admin', 'marketing_manager'])
+    ensure_user_is_of_type(%w(admin marketing_manager))
   end
 
   before_action :get_variables
@@ -65,54 +65,6 @@ class DashboardController < ApplicationController
     @conversions = Subscription.this_week.all_active.all_of_status('active')
     @active_users = User.active_this_week.all_students
     @completed_cmes = CourseModuleElementUserLog.this_week.all_completed
-  end
-
-  def corporate_student
-    ensure_user_is_of_type(['corporate_student'])
-    if current_user && current_user.corporate_student?
-      if !current_user.restricted_subject_course_ids.empty?
-        @permitted_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids)
-        @course_ids = @permitted_courses.map(&:id)
-        @backup_courses =  @permitted_courses
-      else
-        @course_ids = @courses.map(&:id)
-        @backup_courses =  @courses
-      end
-      @compulsory_courses = @courses.all_active.all_live.where(id: current_user.compulsory_subject_course_ids).all_in_order
-      logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
-      permitted_course_logs = logs.where(subject_course_id: @course_ids)
-      @all_incomplete_logs = permitted_course_logs.where('percentage_complete < ?', 100)
-      @all_completed_logs = permitted_course_logs.where('percentage_complete > ?', 99)
-      @all_active_logs = @all_incomplete_logs + @all_completed_logs
-      @other_active_logs = @all_active_logs[1..-1]
-      @first_corp_log = permitted_course_logs.first
-
-    end
-
-  end
-
-  def corporate_customer
-    ensure_user_is_of_type(['corporate_customer'])
-    if current_user && current_user.corporate_student?
-      if !current_user.restricted_subject_course_ids.empty?
-        @permitted_courses = @courses.where('id not in (?)', current_user.restricted_subject_course_ids)
-        @course_ids = @permitted_courses.map(&:id)
-        @backup_courses =  @permitted_courses
-      else
-        @course_ids = @courses.map(&:id)
-        @backup_courses =  @courses
-      end
-      @compulsory_courses = @courses.all_active.all_live.where(id: current_user.compulsory_subject_course_ids).all_in_order
-      logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
-      permitted_course_logs = logs.where(subject_course_id: @course_ids)
-      @all_incomplete_logs = permitted_course_logs.where('percentage_complete < ?', 100)
-      @all_completed_logs = permitted_course_logs.where('percentage_complete > ?', 99)
-      @all_active_logs = @all_incomplete_logs + @all_completed_logs
-      @other_active_logs = @all_active_logs[1..-1]
-      @first_corp_log = permitted_course_logs.first
-
-    end
-
   end
 
   def student

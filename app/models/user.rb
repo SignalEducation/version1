@@ -77,26 +77,21 @@ class User < ActiveRecord::Base
   attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
                   :password_reset_token, :password_reset_at, :stripe_customer_id,
-                  :corporate_customer_id, :password,
-                  :password_confirmation, :current_password, :locale,
+                  :password, :password_confirmation, :current_password, :locale,
                   :subscriptions_attributes, :employee_guid, :password_change_required,
                   :address, :first_description, :second_description, :wistia_url, :personal_url,
                   :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
                   :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
                   :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
                   :trial_limit_in_days, :trial_ended_notification_sent_at,
-                  :terms_and_conditions, :date_of_birth,
-                  :description
+                  :terms_and_conditions, :date_of_birth, :description
 
   # Constants
   EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
-  USER_STATUS = %w(valid_free_member expired_free_member valid_paying_member canceled_paying_member expired_paying_member other_user)
 
   # relationships
-  belongs_to :corporate_customer
-             # employed by the corporate customer
   belongs_to :country
   has_many :completion_certificates
   has_many :course_module_element_user_logs
@@ -116,7 +111,6 @@ class User < ActiveRecord::Base
   has_one :referral_code
   has_one :referred_signup
   belongs_to :subscription_plan_category
-  has_and_belongs_to_many :corporate_groups
   has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :subscriptions
@@ -130,9 +124,6 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
   validates :country_id, presence: true, if: :individual_student?
-  validates :corporate_customer_id,
-            numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
-            presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
@@ -182,11 +173,7 @@ class User < ActiveRecord::Base
       if user
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
         #Send reset password email from Mandrill
-        if user.corporate_customer_id
-          MandrillWorker.perform_async(user.id, 'corporate_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
-        else
-          MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
-        end
+        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
       end
     end
   end
@@ -434,18 +421,6 @@ class User < ActiveRecord::Base
     self.user_group.try(:content_manager)
   end
 
-  def corporate_customer?
-    self.user_group.try(:corporate_customer)
-  end
-
-  def corporate_manager?
-    self.user_group.try(:corporate_manager)
-  end
-
-  def corporate_student?
-    self.user_group.try(:corporate_student)
-  end
-
   def activate_user
     self.active = true
     self.account_activated_at = Proc.new{Time.now}.call
@@ -493,15 +468,11 @@ class User < ActiveRecord::Base
   end
 
   def individual_student?
-    self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
+    self.user_group.try(:individual_student)
   end
 
   def complimentary_user?
-    self.user_group.try(:complimentary) && self.corporate_customer_id.to_i == 0
-  end
-
-  def corporate_user?
-    self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
+    self.user_group.try(:complimentary)
   end
 
   def subject_course_user_log_course_ids
@@ -510,108 +481,6 @@ class User < ActiveRecord::Base
 
   def tutor?
     self.user_group.try(:tutor)
-  end
-
-  #######################################################
-  # CorporateAccount Methods
-  #######################################################
-
-  def compulsory_group_ids
-    @compulsory_group_ids ||=
-      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_group_ids }.flatten.uniq : []
-  end
-
-  def restricted_group_ids
-    @restricted_group_ids ||=
-      corporate_student? ?
-        (corporate_groups.map { |cg| cg.restricted_group_ids }.flatten.uniq - compulsory_group_ids) : []
-  end
-
-  def compulsory_subject_course_ids
-    @compulsory_subject_course_ids ||=
-      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_subject_course_ids }.flatten.uniq : []
-  end
-
-  def restricted_subject_course_ids
-    @restricted_subject_course_ids ||=
-      corporate_student? ?
-        (corporate_groups.map { |cg| cg.restricted_subject_course_ids }.flatten.uniq - compulsory_subject_course_ids) : []
-  end
-
-  def self.parse_csv(csv_content)
-    csv_data = []
-    duplicate_emails = []
-    has_errors = false
-    if csv_content.lines.count == 1 && csv_content.include?("\r")
-      csv_content.strip.split("\r").each do |line|
-        line.to_s.strip.split(',').tap do |fields|
-          error_msgs = []
-          if fields.length == 3
-            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-            error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
-
-            duplicate_emails << fields[0]
-          else
-            error_msgs << I18n.t('models.users.invalid_field_count')
-          end
-          has_errors = true unless error_msgs.empty?
-          csv_data << { values: fields, error_messages: error_msgs }
-        end
-      end
-    else
-      if csv_content.respond_to?(:each_line)
-        csv_content.each_line do |line|
-          line.strip.split(',').tap do |fields|
-            error_msgs = []
-            if fields.length == 3
-              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-              error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
-
-              duplicate_emails << fields[0]
-            else
-              error_msgs << I18n.t('models.users.invalid_field_count')
-            end
-            has_errors = true unless error_msgs.empty?
-            csv_data << { values: fields, error_messages: error_msgs }
-          end
-        end
-      else
-        has_errors = true
-      end
-
-    end
-    has_errors = true if csv_data.empty?
-    return csv_data, has_errors
-  end
-
-  def self.bulk_create(csv_data, corporate_manager)
-    users = []
-    used_emails = []
-    if csv_data.is_a?(Hash)
-      self.transaction do
-        csv_data.each do |k,v|
-          user = User.where(email: v['email']).first
-          if user || v['email'].empty?
-            users = []
-            raise ActiveRecord::Rollback
-          end
-          password = SecureRandom.hex(5)
-          verification_code = ApplicationController::generate_random_code(20)
-          time_now = Proc.new{Time.now}.call
-          user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
-          if used_emails.include?(v['email']) || !user.valid?
-            users = []
-            raise ActiveRecord::Rollback
-          end
-          users << user
-          used_emails << user.email
-        end
-      end
-    end
-    users
   end
 
   def self.to_csv(options = {})
@@ -662,7 +531,6 @@ class User < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       new_sub = Subscription.new(
           user_id: user_id,
-          corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
           active: true,

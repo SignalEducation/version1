@@ -50,7 +50,6 @@ class CoursesController < ApplicationController
       @mathjax_required = true
       @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
       @course_module_element_user_log.session_guid = current_session_guid
-      @course_module_element_user_log.corporate_customer_id = current_user.try(:corporate_customer_id)
       @course_module_element_user_log.element_completed = true
       @course_module_element = @course_module_element_user_log.course_module_element
       @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
@@ -99,16 +98,7 @@ class CoursesController < ApplicationController
             :course_module_jumbo_quiz_id,
             :question_bank_id,
             :user_id,
-            #:session_guid,
-            #:element_completed,
             :time_taken_in_seconds,
-            #:quiz_score_actual,
-            #:quiz_score_potential,
-            #:is_video,
-            #:is_quiz,
-            #:is_jumbo_quiz,
-            #:latest_attempt,
-            :corporate_customer_id,
             quiz_attempts_attributes: [
                     :id,
                     :user_id,
@@ -133,7 +123,6 @@ class CoursesController < ApplicationController
             is_video: true,
             is_quiz: false,
             course_module_id: @course_module_element.course_module_id,
-            corporate_customer_id: current_user.try(:corporate_customer_id),
             course_module_jumbo_quiz_id: nil,
             is_jumbo_quiz: false,
             question_bank_id: nil,
@@ -149,9 +138,7 @@ class CoursesController < ApplicationController
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
             is_video: false,
-            user_id: current_user.try(:id),
-            corporate_customer_id: current_user.try(:corporate_customer_id)
-    )
+            user_id: current_user.try(:id))
     @number_of_questions = @course_module_element.course_module_element_quiz.number_of_questions
 
     @number_of_questions.times do
@@ -189,9 +176,8 @@ class CoursesController < ApplicationController
             course_module_element_id: nil,
             course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
             is_jumbo_quiz: true,
-            user_id: current_user.try(:id),
-            corporate_customer_id: current_user.try(:corporate_customer_id)
-    )
+            user_id: current_user.try(:id))
+
     @number_of_questions = @course_module_jumbo_quiz.total_number_of_questions
 
     @number_of_questions.times do
@@ -221,9 +207,8 @@ class CoursesController < ApplicationController
         course_module_element_id: nil,
         question_bank_id: @question_bank.try(:id),
         is_question_bank: true,
-        user_id: current_user.try(:id),
-        corporate_customer_id: current_user.try(:corporate_customer_id)
-    )
+        user_id: current_user.try(:id))
+
     @number_of_questions = @question_bank.number_of_questions
 
     @number_of_questions.times do

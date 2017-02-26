@@ -17,7 +17,7 @@ class HomePagesController < ApplicationController
 
   before_action :logged_in_required, only: [:index, :new, :edit, :update, :create]
   before_action only: [:index, :new, :edit, :update, :create] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables, except: [:home]
   before_action :layout_variables, only: [:home]
@@ -45,12 +45,11 @@ class HomePagesController < ApplicationController
       session.delete(:valid_params)
     end
     # Don't remember why this needs to be set
-    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
 
     #To show each pricing plan on the page; not involved in the sign up process
-    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
-    @groups = Group.all_active.for_public.all_in_order
-    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
+    @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
+    @groups = Group.all_active.all_in_order
 
     seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
 
@@ -60,7 +59,6 @@ class HomePagesController < ApplicationController
     # Ensuring that the correct params are present for home_page with a valid group and url is present so that the right view file or the default view is loaded
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
-    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @group = @home_page.try(:group)
     @url_value = @home_page.try(:public_url)
@@ -86,7 +84,7 @@ class HomePagesController < ApplicationController
       session.delete(:valid_params)
     end
 
-    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
 
     if @home_page
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
@@ -170,8 +168,8 @@ class HomePagesController < ApplicationController
     end
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
-    @groups = Group.all_active.all_in_order.for_public
-    @subject_courses = SubjectCourse.all_active.all_in_order.for_public
+    @groups = Group.all_active.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_in_order
   end
 
   def layout_variables

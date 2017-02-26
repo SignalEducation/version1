@@ -18,7 +18,8 @@ class HomePage < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :seo_title, :seo_description, :subscription_plan_category_id, :public_url, :group_id, :subject_course_id
+  attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
+                  :public_url, :group_id, :subject_course_id
 
   # Constants
 

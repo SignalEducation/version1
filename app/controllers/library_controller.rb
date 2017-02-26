@@ -3,14 +3,14 @@ class LibraryController < ApplicationController
   before_action :logged_in_required, only: [:cert]
 
   def index
-    @groups = Group.all_active.for_public.all_in_order
+    @groups = Group.all_active.all_in_order
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end
 
   def group_show
     @group = Group.find_by_name_url(params[:group_name_url])
     redirect_to library_url unless @group
-    @courses = @group.active_children.all_not_restricted.all_in_order
+    @courses = @group.active_children.all_in_order
     seo_title_maker(@group.name, @group.description, nil)
     tag_manager_data_layer(@group.try(:name))
   end

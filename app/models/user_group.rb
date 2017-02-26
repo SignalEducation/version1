@@ -27,14 +27,11 @@ class UserGroup < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :description, :individual_student, :tutor, :content_manager,
-                  :blogger, :corporate_customer, :site_admin,
-                  :subscription_required_at_sign_up, :corporate_student,
+                  :blogger, :site_admin, :subscription_required_at_sign_up,
                   :subscription_required_to_see_content, :complimentary,
                   :customer_support, :marketing_support
   # Constants
-  FEATURES = %w(individual_student tutor corporate_student corporate_customer blogger content_manager admin complimentary customer_support_manager marketing_manager)
-  CORPORATE_STUDENTS = 2
-  CORPORATE_CUSTOMERS = 3
+  FEATURES = %w(individual_student tutor blogger content_manager admin complimentary customer_support_manager marketing_manager)
 
   # relationships
   has_many :users
@@ -59,31 +56,23 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_student_user_group
-    where(individual_student: true, complimentary: false, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
+    where(individual_student: true, complimentary: false, tutor: false, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
   end
 
   def self.default_tutor_user_group
-    where(individual_student: false, complimentary: true, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
-  end
-
-  def self.default_corporate_student_user_group
-    where(individual_student: false, complimentary: false, corporate_student: true, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
-  end
-
-  def self.default_corporate_customer_user_group
-    where(individual_student: false, complimentary: false, corporate_student: false, tutor: true, content_manager: false, blogger: false, corporate_customer: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, complimentary: true, tutor: true, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
   end
 
   def self.default_content_manager_user_group
-    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: true, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, complimentary: true, tutor: false, content_manager: true, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
   end
 
   def self.default_customer_support_user_group
-    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: true, marketing_support: false).first
+    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: true, marketing_support: false).first
   end
 
   def self.default_marketing_support_user_group
-    where(individual_student: false, complimentary: true, corporate_student: false, tutor: false, content_manager: false, blogger: false, corporate_customer: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: true).first
+    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: true).first
   end
 
   # instance methods

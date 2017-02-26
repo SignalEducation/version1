@@ -22,10 +22,10 @@ class OrdersController < ApplicationController
 
   before_action :logged_in_required
   before_action except: [:new, :create] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action only: [:new, :create] do
-    ensure_user_is_of_type(['individual_student'])
+    ensure_user_is_of_type(%w(individual_student))
   end
   before_action :get_variables
 

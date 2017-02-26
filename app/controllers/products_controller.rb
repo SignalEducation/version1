@@ -20,7 +20,7 @@ class ProductsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables
 
@@ -79,7 +79,6 @@ class ProductsController < ApplicationController
       @product = Product.where(id: params[:id]).first
     end
     @currencies = Currency.all_in_order
-    @product_category = SubjectCourseCategory.all_product.first
     @subject_courses = SubjectCourse.all_active.all_in_order
     seo_title_maker(@product.try(:name) || 'Products', '', true)
   end
