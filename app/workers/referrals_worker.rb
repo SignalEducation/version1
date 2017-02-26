@@ -6,9 +6,8 @@ class ReferralsWorker
 
   def perform(user_id, method_name, *template_args)
     @user = User.find_by_id(user_id)
-    @corporate = nil
     if @user && @user.email
-      mc = MandrillClient.new(@user, @corporate)
+      mc = MandrillClient.new(@user)
       mc.send(method_name, *template_args)
     end
 

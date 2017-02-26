@@ -6,9 +6,8 @@ class FreeTrialEmailWorker
 
   def perform(email, method_name, *template_args)
     @user = User.where(email: email).first
-    @corporate = nil
     if @user && @user.email && @user.free_member?
-      mc = MandrillClient.new(@user, @corporate)
+      mc = MandrillClient.new(@user)
       mc.send(method_name, *template_args)
     end
   end
