@@ -54,9 +54,7 @@ describe SubjectCourse do
   # Constants
 
   # relationships
-  it { should belong_to(:subject_course_category) }
   it { should belong_to(:exam_body) }
-  it { should have_many(:corporate_group_grants) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
@@ -103,10 +101,9 @@ describe SubjectCourse do
   # scopes
   it { expect(SubjectCourse).to respond_to(:all_active) }
   it { expect(SubjectCourse).to respond_to(:all_live) }
-  it { expect(SubjectCourse).to respond_to(:all_in_order) }
   it { expect(SubjectCourse).to respond_to(:all_not_live) }
-  it { expect(SubjectCourse).to respond_to(:all_not_restricted) }
-  it { expect(SubjectCourse).to respond_to(:in_category) }
+  it { expect(SubjectCourse).to respond_to(:all_in_order) }
+  it { expect(SubjectCourse).to respond_to(:this_month) }
 
 
   # class methods
@@ -137,7 +134,6 @@ describe SubjectCourse do
   it { should respond_to(:total_questions_answered) }
   it { should respond_to(:test_children?) }
   it { should respond_to(:tuition_children?) }
-  it { should respond_to(:users_allowed_access) }
 
 
 end

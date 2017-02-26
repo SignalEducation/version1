@@ -34,7 +34,6 @@ describe Country do
   it { expect(Country.const_defined?(:CONTINENTS)).to eq(true) }
 
   # relationships
-  it { should have_many(:corporate_customers) }
   it { should belong_to(:currency) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:users) }

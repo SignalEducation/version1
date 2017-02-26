@@ -81,8 +81,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
-      corporate_customer_id             nil
-      student_user_type_id              1
       account_activation_code           'abc123'
 
       factory :inactive_individual_student_user do
@@ -135,7 +133,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
     factory :blogger_user do
@@ -143,7 +140,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
     factory :content_manager_user do
@@ -151,7 +147,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
     factory :admin_user do
@@ -159,7 +154,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
     factory :comp_user do
@@ -167,7 +161,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
     factory :customer_support_manager_user do
@@ -175,7 +168,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
     factory :marketing_manager_user do
@@ -183,7 +175,6 @@ FactoryGirl.define do
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
-      corporate_customer_id             nil
     end
 
   end

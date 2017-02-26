@@ -60,7 +60,7 @@ describe ReferralCode do
     end
 
     it "should not create valid referral code for not allowed types of users" do
-      [content_manager_user, corporate_customer_user, corporate_student_user, admin_user].each do |not_allowed_user|
+      [content_manager_user, admin_user].each do |not_allowed_user|
         expect(not_allowed_user.create_referral_code).not_to be_valid
       end
     end

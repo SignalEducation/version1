@@ -83,12 +83,10 @@ describe User do
   end
 
   # Constants
-  it { expect(User.const_defined?(:EMAIL_FREQUENCIES)).to eq(true) }
   it { expect(User.const_defined?(:LOCALES)).to eq(true) }
   it { expect(User.const_defined?(:SORT_OPTIONS)).to eq(true) }
 
   # relationships
-  it { should belong_to(:corporate_customer) }
   it { should belong_to(:country) }
   it { should have_many(:course_module_element_user_logs) }
   it { should have_many(:invoices) }
@@ -102,7 +100,6 @@ describe User do
   it { should have_one(:referral_code) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
-  it { should have_and_belong_to_many(:corporate_groups) }
   it { should have_and_belong_to_many(:subject_courses) }
 
   # validation
@@ -129,7 +126,7 @@ describe User do
   context "user email validation" do
     before do
       user_group = FactoryGirl.create(:individual_student_user_group)
-      @user = FactoryGirl.create(:user, user_group_id: user_group.id, student_user_type_id: 1)
+      @user = FactoryGirl.create(:user, user_group_id: user_group.id)
     end
 
     it "validates uniqueness of email" do
@@ -137,39 +134,8 @@ describe User do
     end
   end
 
-  context "corporate_customer_id validation" do
-    before do
-      FactoryGirl.create(:individual_student_user_group)
-      @corporate_student_group = FactoryGirl.create(:corporate_student_user_group)
-      FactoryGirl.create(:tutor_user_group)
-      FactoryGirl.create(:content_manager_user_group)
-      FactoryGirl.create(:blogger_user_group)
-      @corporate_customer_group = FactoryGirl.create(:corporate_customer_user_group)
-      FactoryGirl.create(:site_admin_user_group)
-    end
-
-    it "does not validate presence for non-corporate users" do
-      UserGroup.where(corporate_customer: false, corporate_student: false).each do |ug|
-        user = FactoryGirl.create(:user, user_group_id: ug.id, student_user_type_id: 1)
-        expect(user).not_to validate_presence_of(:corporate_customer_id)
-      end
-    end
-
-    it "requires corporate_customer_id for corporate customer" do
-      user = FactoryGirl.create(:user, user_group_id: @corporate_customer_group.id, corporate_customer_id: 1)
-      expect(user).to validate_presence_of(:corporate_customer_id)
-    end
-
-    it "requires corporate_customer_id for corporate student" do
-      user = FactoryGirl.create(:user, user_group_id: @corporate_student_group.id, corporate_customer_id: 1)
-      expect(user).to validate_presence_of(:corporate_customer_id)
-    end
-  end
-
 
   it { should validate_inclusion_of(:locale).in_array(User::LOCALES) }
-
-  xit { should validate_uniqueness_of(:employee_guid).scoped_to(:corporate_customer_id) }
 
   # callbacks
   it { should callback(:add_guid).before(:create) }
@@ -195,8 +161,6 @@ describe User do
   it { should respond_to(:assign_anonymous_logs_to_user) }
   it { should respond_to(:change_the_password) }
   it { should respond_to(:content_manager?) }
-  it { should respond_to(:corporate_customer?) }
-  it { should respond_to(:corporate_student?) }
   it { should respond_to(:de_activate_user) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }

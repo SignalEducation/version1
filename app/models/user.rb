@@ -87,7 +87,6 @@ class User < ActiveRecord::Base
                   :terms_and_conditions, :date_of_birth, :description
 
   # Constants
-  EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
 

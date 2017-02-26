@@ -38,7 +38,6 @@ describe Subscription do
 
   # relationships
   it { should belong_to(:user) }
-  it { should belong_to(:corporate_customer) }
   it { should have_many(:invoices) }
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
@@ -49,8 +48,6 @@ describe Subscription do
   it { should validate_presence_of(:user_id).on(:update) }
 
   it { should validate_presence_of(:terms_and_conditions).on(:update) }
-
-  it { should_not validate_presence_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:subscription_plan_id) }
 
@@ -82,6 +79,5 @@ describe Subscription do
   it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
-  it { should respond_to(:free_trial?) }
 
 end

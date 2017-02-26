@@ -28,7 +28,7 @@ RSpec.describe OrdersController, type: :routing do
     end
 
     it 'routes to #new' do
-      expect(get: '/orders/new').to route_to('orders#new')
+      expect(get: '/order/new/1').to route_to('orders#new', product_id: '1')
     end
 
     it 'routes to #show' do

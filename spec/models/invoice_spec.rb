@@ -54,7 +54,6 @@ describe Invoice do
 
   # relationships
   it { should belong_to(:currency) }
-  it { should belong_to(:corporate_customer) }
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_transaction) }
   it { should belong_to(:subscription) }

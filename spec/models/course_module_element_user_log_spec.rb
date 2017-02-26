@@ -44,7 +44,6 @@ describe CourseModuleElementUserLog do
   #it { expect()CourseModuleElementUserLog.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:corporate_customer) }
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
   it { should belong_to(:course_module_jumbo_quiz) }

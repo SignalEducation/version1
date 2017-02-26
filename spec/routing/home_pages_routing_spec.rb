@@ -22,28 +22,20 @@ RSpec.describe HomePagesController, type: :routing do
       expect(get: '/home').to route_to('home_pages#home')
     end
 
-    it 'routes to #group_index' do
-      expect(get: '/all_groups').to route_to('home_pages#group_index')
-    end
-
-    it 'routes to #diploma_index' do
-      expect(get: '/all_diploma').to route_to('home_pages#diploma_index')
-    end
-
     it 'routes to #group' do
       expect(get: '/group/group_1').to route_to('home_pages#group', home_pages_public_url: 'group_1')
     end
 
-    it 'routes to #diploma' do
-      expect(get: '/diploma/diploma_1').to route_to('home_pages#diploma', home_pages_public_url: 'diploma_1')
-    end
-
-    it 'routes to #new' do
-      expect(get: '/home_pages/new').to route_to('home_pages#new')
+    it 'routes to #home_page_subscribe' do
+      expect(post: '/home_page_subscribe').to route_to('home_pages#subscribe')
     end
 
     it 'routes to #index' do
       expect(get: '/home_pages').to route_to('home_pages#index')
+    end
+
+    it 'routes to #new' do
+      expect(get: '/home_pages/new').to route_to('home_pages#new')
     end
 
     it 'routes to #edit' do

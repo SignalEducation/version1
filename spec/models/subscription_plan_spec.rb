@@ -35,7 +35,6 @@ describe SubscriptionPlan do
   end
 
   # Constants
-  #it { expect()SubscriptionPlan.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:currency) }
@@ -74,7 +73,6 @@ describe SubscriptionPlan do
   # scopes
   it { expect(SubscriptionPlan).to respond_to(:all_in_order) }
   it { expect(SubscriptionPlan).to respond_to(:all_active) }
-  it { expect(SubscriptionPlan).to respond_to(:for_corporates) }
   it { expect(SubscriptionPlan).to respond_to(:for_students) }
   it { expect(SubscriptionPlan).to respond_to(:generally_available) }
   it { expect(SubscriptionPlan).to respond_to(:in_currency) }
@@ -88,6 +86,5 @@ describe SubscriptionPlan do
   it { should respond_to(:description) }
   it { should respond_to(:description_without_trial) }
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:free_trial?) }
 
 end
