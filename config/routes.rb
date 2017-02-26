@@ -6,7 +6,6 @@ Rails.application.routes.draw do
 
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
-  require 'subdomain'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
   get '404' => redirect('404-page')
@@ -208,10 +207,6 @@ Rails.application.routes.draw do
     get 'home', to: 'home_pages#home', as: :home
     get 'group/:home_pages_public_url', to: 'home_pages#group', as: :group_landing
 
-
-    constraints(Subdomain) do
-      get '/' => 'routes#root'
-    end
 
     # home page
     root 'routes#root'

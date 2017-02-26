@@ -107,8 +107,5 @@
                         =link_to t('views.general.delete'), @subject_course.question_bank, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
 
--if current_user.corporate_customer?
-  =render partial: 'layouts/corporate_footer'
--else
-  =render partial: 'layouts/footer'
+=render partial: 'layouts/large_footer'
 

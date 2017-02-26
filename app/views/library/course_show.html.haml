@@ -34,9 +34,6 @@
 
 
 
-      -elsif current_user && current_user.corporate_user?
-        =render partial: 'corporate_enrollment_form'
-
       -else
         =render partial: 'layouts/content_notice', locals: {course: @course}
         %h1.h1.h-separator.h-separator-left
@@ -159,7 +156,7 @@
           =render partial: 'course_info'
 
 
--if current_user && !current_corporate && @subject_course_user_log && @subject_course_user_log.completed && @course.hotjar_guid
+-if current_user && @subject_course_user_log && @subject_course_user_log.completed && @course.hotjar_guid
 
   :javascript
     hj('trigger', "#{@course.hotjar_guid}");

@@ -1,60 +1,51 @@
--if current_user.corporate_customer?
-  =render partial: 'corporate_index'
--else
-  .margin-top
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.text-center
-            %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              Courses
-        .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'layouts/stats_navbar'
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Courses
+      .row.l-margin-top.l-margin-bottom
+      .col-md-12
+        =render partial: 'layouts/stats_navbar'
 
-        .row.l-margin-top.l-margin-bottom
-          .col-md-4.col-sm-4.l-margin-top
-            =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-4.col-sm-4.l-margin-top
+          =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
-          .col-md-offset-4.col-md-4.l-margin-top
-            =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
-              .form-group.input-group.input-group-lg
-                =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-                .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                  %span.glyphicon.glyphicon-search
-          .col-md-12.l-margin-top-big
-            .no-image-box-item.table-box
-              .table-responsive
-                %table.table.sorted_table{style: 'font-size: 18px;'}
-                  %thead
+        .col-md-offset-4.col-md-4.l-margin-top
+          =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.sorted_table{style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th Name
+                    %th Active
+                    %th Live
+                    %th
+                    %th
+                %tbody
+                  -@courses.each do |subject_course|
                     %tr
-                      %th Name
-                      %th Active
-                      -if current_user.corporate_customer? && current_user.tutor?
-                        %th Restricted
-                      -else
-                        %th Live
-                      %th
-                      %th
-                  %tbody
-                    -@courses.each do |subject_course|
-                      %tr
-                        %td=subject_course.name
-                        %td=tick_or_cross(subject_course.active)
-                        -if current_user.corporate_customer? && current_user.tutor?
-                          %td=tick_or_cross(subject_course.restricted)
-                        -else
-                          %td=tick_or_cross(subject_course.live)
-                        %td
-                          =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
-                        %td
-                          =link_to t('views.subject_courses.index.edit_tutors'), subject_course_edit_course_tutors_url(subject_course), class: 'btn btn-small btn-cyan'
-                        %td
-                          =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-red'
-                =will_paginate @subject_courses, renderer: BootstrapPagination::Rails
+                      %td=subject_course.name
+                      %td=tick_or_cross(subject_course.active)
+                      %td=tick_or_cross(subject_course.live)
+                      %td
+                        =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
+                      %td
+                        =link_to t('views.subject_courses.index.edit_tutors'), subject_course_edit_course_tutors_url(subject_course), class: 'btn btn-small btn-cyan'
+                      %td
+                        =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-red'
+              =will_paginate @subject_courses, renderer: BootstrapPagination::Rails
 
 
 

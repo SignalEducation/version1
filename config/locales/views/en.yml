@@ -479,6 +479,7 @@ en:
         maximum_question_count_per_quiz: Max Questions from each Quiz
         total_number_of_questions: Total Number of Questions
         course_module_id: Course Module
+        active: Active
 
       edit:
         h1: Edit Final Quiz

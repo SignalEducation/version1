@@ -15,7 +15,7 @@
         =@seo_title
       -else
         Business Training Library | LearnSignal
-    =stylesheet_link_tag @css_root, media: 'all'
+    =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
@@ -76,9 +76,8 @@
 
     -#General partials
     =render partial: 'layouts/misc_javascript'
-    -unless current_corporate
-      =render partial: 'layouts/intercom'
-    -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
+    =render partial: 'layouts/intercom'
+    -if current_user && (current_user.individual_student? || current_user.tutor? || current_user.blogger?)
       =render partial: 'layouts/ls_referral'
     <!-- Mathjax -->
     -if @mathjax_required

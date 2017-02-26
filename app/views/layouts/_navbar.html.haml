@@ -12,14 +12,8 @@
         #myNavbar.collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
             -if current_user
-              -if current_user.corporate_customer?
-                %li
-                  =link_to 'Overview', corporate_customer_url(current_user.corporate_customer)
-                %li
-                  =link_to 'Dashboard', dashboard_special_link
-              -else
-                %li
-                  =link_to 'Dashboard', student_dashboard_url
+              %li
+                =link_to 'Dashboard', student_dashboard_url
               %li
                 =link_to 'Courses', library_url
               -if current_user.free_member? && !current_user.active_subscription
@@ -37,10 +31,7 @@
                     %li=link_to t('views.products.index.h1'), products_url
                     %li=link_to t('views.mock_exams.index.h1'), mock_exams_url
                     %li.divider
-                    %li=link_to t('views.corporate_customers.index.h1'), corporate_customers_url
-                    %li=link_to t('views.corporate_groups.index.h1'), corporate_groups_url
                     %li=link_to t('views.white_papers.index.h1'), white_papers_url
-                    %li.divider
                     %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
                     %li=link_to t('views.home_pages.index.h1'), home_pages_url
                     %li.divider
@@ -54,9 +45,7 @@
                   =t('views.general.user_name') + current_user.first_name.to_s
                   %span.caret
                 %ul#menu.dropdown-menu
-                  -if current_user.corporate_customer?
-                    %li=link_to t('views.subject_courses.index.your_courses'), subject_courses_url
-                  -elsif current_user.content_manager?
+                  -if current_user.content_manager?
                     %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
                   -if current_user.admin?
                     %li=link_to t('views.users.index.h1'), users_url

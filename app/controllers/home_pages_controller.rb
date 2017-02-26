@@ -26,7 +26,7 @@ class HomePagesController < ApplicationController
     #This is the main home_page
     redirect_to dashboard_special_link(current_user) if current_user
 
-    @groups = Group.all_active.for_public.all_in_order
+    @groups = Group.all_active.all_in_order
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
     ip_country = IpAddress.get_country(request.remote_ip)

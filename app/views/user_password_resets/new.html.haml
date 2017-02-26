@@ -1,53 +1,26 @@
--if current_corporate
-  .external_layout.top-content
-    .corporate-heading
-      =render partial: 'layouts/corporate_logo'
-  .l-section-corp-home
-    .l-wrap-corp-home
-      .container-fluid
-        .row
-          .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              =t('views.user_password_resets.new.h1')
-          .col-md-8.col-md-offset-2.l-margin-bottom-6x
-            .forgot-password-modal
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.user_password_resets.new.h1')
+        .col-md-8.col-md-offset-2.l-margin-bottom-6x
+          .forgot-password-modal
+            .col-md-8.col-md-offset-2.l-margin-top-small
+              %p
+                =t('views.user_password_resets.new.paragraph_1')
+            =form_tag(user_password_resets_url, {class: 'form', role: 'form'}) do
               .col-md-8.col-md-offset-2.l-margin-top-small
-                %p
-                  =t('views.user_password_resets.new.paragraph_1')
-              =form_tag(user_password_resets_url, {class: 'form', role: 'form'}) do
-                .col-md-8.col-md-offset-2.l-margin-top-small
-                  = label_tag :email, 'E-mail'
-                  %br/
-                  %div#validation-div
-                    =email_field_tag :email_address, nil, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', id: '#email-field'
-                .col-md-8.col-md-offset-2.l-margin-top-big
-                  = submit_tag 'SEND MY PASSWORD', class: 'btn btn-red l-margin-right-big l-padding-side-3x', id: 'btn-send-password'
-
-
--else
-  .margin-top
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              =t('views.user_password_resets.new.h1')
-          .col-md-8.col-md-offset-2.l-margin-bottom-6x
-            .forgot-password-modal
-              .col-md-8.col-md-offset-2.l-margin-top-small
-                %p
-                  =t('views.user_password_resets.new.paragraph_1')
-              =form_tag(user_password_resets_url, {class: 'form', role: 'form'}) do
-                .col-md-8.col-md-offset-2.l-margin-top-small
-                  = label_tag :email, 'E-mail'
-                  %br/
-                  %div#validation-div
-                    =email_field_tag :email_address, nil, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', id: '#email-field'
-                .col-md-8.col-md-offset-2.l-margin-top-big
-                  = submit_tag 'SEND MY PASSWORD', class: 'btn btn-red l-margin-right-big l-padding-side-3x', id: 'btn-send-password'
+                = label_tag :email, 'E-mail'
+                %br/
+                %div#validation-div
+                  =email_field_tag :email_address, nil, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', id: '#email-field'
+              .col-md-8.col-md-offset-2.l-margin-top-big
+                = submit_tag 'SEND MY PASSWORD', class: 'btn btn-red l-margin-right-big l-padding-side-3x', id: 'btn-send-password'
 
 
 

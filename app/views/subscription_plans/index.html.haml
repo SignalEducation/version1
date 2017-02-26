@@ -10,20 +10,7 @@
             =t('views.subscription_plans.index.h1')
 
       .row.l-margin-top.l-margin-bottom
-        %div{role: 'tabpanel'}
-          %ul.nav.nav-tabs{role: 'tablist'}
-            %li.active{role: 'presentation'}
-              %a{href: '#students', aria: {controls: 'students'}, role: 'tab', data: {toggle: 'tab'}}
-                =t('views.subscription_plans.index.students')
-            %li{role: 'presentation'}
-              %a{href: '#corporates', aria: {controls: 'corporates'}, role: 'tab', data: {toggle: 'tab'}}
-                =t('views.subscription_plans.index.corporates')
-
-          .tab-content
-            #students.tab-pane.active{role: 'tabpanel'}
-              =render partial: 'subscription_plans/index', locals: {the_plans: @student_subscription_plans}
-            #corporates.tab-pane{role: 'tabpanel'}
-              =render partial: 'subscription_plans/index', locals: {the_plans: @corporate_subscription_plans}
+        =render partial: 'subscription_plans/index', locals: {the_plans: @student_subscription_plans}
 
       .row
         .col-sm-12

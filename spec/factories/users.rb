@@ -138,22 +138,6 @@ FactoryGirl.define do
       corporate_customer_id             nil
     end
 
-    factory :corporate_student_user do
-      sequence(:email)                  { |n| "corporate.student-#{n}@example.com" }
-      active                            true
-      user_group_id                     UserGroup::CORPORATE_STUDENTS
-      stripe_customer_id                nil
-      corporate_customer_id             1
-    end
-
-    factory :corporate_customer_user do
-      sequence(:email)                  { |n| "corporate.customer-#{n}@example.com" }
-      active                            true
-      user_group_id                     UserGroup::CORPORATE_CUSTOMERS
-      stripe_customer_id                nil
-      corporate_customer_id             1
-    end
-
     factory :blogger_user do
       sequence(:email)                  { |n| "blogger.user-#{n}@example.com" }
       active                            true
