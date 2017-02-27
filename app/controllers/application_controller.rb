@@ -309,11 +309,10 @@ class ApplicationController < ActionController::Base
   helper_method :dashboard_special_link
 
   def subscription_special_link(user_id)
-    #TODO where is this used ? Should it be used everywhere for subscription links?
     user = User.find(user_id)
     if user.individual_student?
       if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
-        reactivate_account_url
+        user_reactivate_account_url
       else
         user_new_subscription_url(user_id)
       end

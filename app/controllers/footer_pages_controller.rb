@@ -28,6 +28,25 @@ class FooterPagesController < ApplicationController
     seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
   end
 
+  def profile
+    #/profile/id
+    @tutor = User.all_tutors.where(id: params[:id]).first
+    if @tutor
+      @courses = @tutor.subject_courses
+      seo_title_maker(@tutor.full_name, @tutor.description, nil)
+    else
+      redirect_to tutors_url
+    end
+    @navbar = true
+  end
+
+  def profile_index
+    #/profiles
+    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
+    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
+    @navbar = true
+  end
+
   def missing_page
     if params[:first_element].to_s == '' && current_user
       redirect_to dashboard_special_link

@@ -76,7 +76,7 @@ class UsersController < ApplicationController
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
 
-  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan, :subscription_invoice]
+  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan]
 
   #User account view for all users
   def account
@@ -338,7 +338,6 @@ class UsersController < ApplicationController
         end
       else
         redirect_to user_new_subscription_url(current_user.id)
-        #TODO need to add notification here for me
         flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
       end
 
@@ -500,26 +499,6 @@ class UsersController < ApplicationController
     flash[:success] = I18n.t('controllers.users.update_subjects.flash.success')
     redirect_to users_url
   end
-
-
-  #Public facing standard views for tutors (TODO move this footer_pages controller)
-  def profile
-    #/profile/id
-    @tutor = User.all_tutors.where(id: params[:id]).first
-    if @tutor
-      @courses = @tutor.subject_courses
-      seo_title_maker(@tutor.full_name, @tutor.description, nil)
-    else
-      redirect_to tutors_url
-    end
-  end
-
-  def profile_index
-    #/profiles
-    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
-    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
-  end
-
 
 
   protected

@@ -42,8 +42,6 @@ Rails.application.routes.draw do
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'account', to: 'users#account', as: :account
     get 'account/change_plan', to: 'users#change_plan', as: :account_change_plan
-    get 'profile/:id', to: 'users#profile', as: :profile
-    get 'profiles', to: 'users#profile_index', as: :tutors
     post 'change_password', to: 'users#change_password', as: :change_password
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
@@ -152,6 +150,9 @@ Rails.application.routes.draw do
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
+    get 'profile/:id', to: 'footer_pages#profile', as: :profile
+    get 'profiles', to: 'footer_pages#profile_index', as: :tutors
+
     resources :user_notifications
     resources :users, only: [:new, :create] do
       get  '/user_personal_details', action: :user_personal_details, as: :personal_details
