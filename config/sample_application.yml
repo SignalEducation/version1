@@ -56,3 +56,6 @@ aws_load_balancers: aws_load_balancers_ips_go_here
 
 # Pointpin Api
 learnsignal_pointpin_api_key: b36dbb3d-b657-44fb-83fd-84519a7c0520
+
+# Google Api
+learnsignal_google_api_key: AIzaSyAy_pLHbNFWC9aT-PGrkEv7fyfdiDv2ECk
