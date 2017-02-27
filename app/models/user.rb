@@ -76,15 +76,20 @@ class User < ActiveRecord::Base
   # attr-accessible
   attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
-                  :password_reset_token, :password_reset_at, :stripe_customer_id,
-                  :password, :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes, :employee_guid, :password_change_required,
-                  :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
-                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
-                  :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
-                  :trial_limit_in_days, :trial_ended_notification_sent_at,
-                  :terms_and_conditions, :date_of_birth, :description
+                  :password_reset_token, :password_reset_at,
+                  :stripe_customer_id, :password, :password_confirmation,
+                  :current_password, :locale, :subscriptions_attributes,
+                  :employee_guid, :password_change_required, :address,
+                  :first_description, :second_description, :wistia_url,
+                  :personal_url, :name_url, :qualifications,
+                  :profile_image, :topic_interest,
+                  :email_verification_code, :email_verified_at,
+                  :email_verified, :account_activated_at,
+                  :account_activation_code, :session_key,
+                  :stripe_account_balance, :trial_limit_in_seconds,
+                  :free_trial, :trial_limit_in_days,
+                  :trial_ended_notification_sent_at, :terms_and_conditions,
+                  :date_of_birth, :description
 
   # Constants
   LOCALES = %w(en)
