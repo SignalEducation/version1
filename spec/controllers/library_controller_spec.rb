@@ -34,20 +34,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
@@ -81,20 +81,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
@@ -128,20 +128,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
@@ -175,32 +175,21 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
-    end
-
-    describe "GET diploma_show" do
-      it "returns http success" do
-        get :diploma_show, subject_course_name_url: subject_course_2.name_url
-        expect(flash[:success]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(product_course_url(subject_course_2.home_page.public_url))
-
-      end
-
     end
 
   end
@@ -233,20 +222,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
@@ -280,32 +269,21 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
-    end
-
-    describe "GET diploma_show" do
-      it "returns http success" do
-        get :diploma_show, subject_course_name_url: subject_course_2.name_url
-        expect(flash[:success]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(product_course_url(subject_course_2.home_page.public_url))
-
-      end
-
     end
 
   end
@@ -338,20 +316,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
@@ -385,20 +363,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
@@ -432,20 +410,20 @@ RSpec.describe LibraryController, type: :controller do
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
     describe "GET course_show" do
       it "returns http success" do
-        get :course_show, subject_course_name_url: subject_course_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
         expect(Group.count).to eq(2)
-        expect(SubjectCourse.count).to eq(4)
+        expect(SubjectCourse.count).to eq(2)
       end
     end
 
