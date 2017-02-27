@@ -76,13 +76,6 @@
                 .h6
                   Student Number
 
-          .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  =tick_or_cross(@user.corporate_user?)
-                .h6
-                  Corporate User
 
         .row.l-margin-top.l-margin-bottom-huge
           -if !@user.email_verified && @user.email_verification_code

@@ -23,9 +23,8 @@ class UserGroup < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :description, :individual_student, :tutor, :content_manager,
-                  :blogger, :site_admin, :subscription_required_at_sign_up,
-                  :subscription_required_to_see_content, :complimentary,
-                  :customer_support, :marketing_support
+                  :blogger, :site_admin, :complimentary, :customer_support,
+                  :marketing_support
   # Constants
   FEATURES = %w(individual_student tutor blogger content_manager admin complimentary customer_support_manager marketing_manager)
 
@@ -48,27 +47,27 @@ class UserGroup < ActiveRecord::Base
   end
 
   def self.default_complimentary_user_group
-    where(individual_student: false, complimentary: true, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: false).first
+    where(individual_student: false, complimentary: true, site_admin: false,customer_support: false, marketing_support: false).first
   end
 
   def self.default_student_user_group
-    where(individual_student: true, complimentary: false, tutor: false, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: true, subscription_required_to_see_content: true).first
+    where(individual_student: true, complimentary: false, tutor: false, content_manager: false, blogger: false, site_admin: false).first
   end
 
   def self.default_tutor_user_group
-    where(individual_student: false, complimentary: true, tutor: true, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, complimentary: true, tutor: true, content_manager: false, blogger: false, site_admin: false).first
   end
 
   def self.default_content_manager_user_group
-    where(individual_student: false, complimentary: true, tutor: false, content_manager: true, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false).first
+    where(individual_student: false, complimentary: true, tutor: false, content_manager: true, blogger: false, site_admin: false).first
   end
 
   def self.default_customer_support_user_group
-    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: true, marketing_support: false).first
+    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, customer_support: true, marketing_support: false).first
   end
 
   def self.default_marketing_support_user_group
-    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, subscription_required_at_sign_up: false, subscription_required_to_see_content: false, customer_support: false, marketing_support: true).first
+    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, customer_support: false, marketing_support: true).first
   end
 
   # instance methods

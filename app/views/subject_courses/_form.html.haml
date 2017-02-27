@@ -4,7 +4,6 @@
       =render partial: '/layouts/error_messages', locals: {thing: @subject_course, message: nil}
       .row
         .col-md-6
-          =f.hidden_field :corporate_customer_id
           =f.hidden_field :wistia_guid
           =f.hidden_field :default_number_of_possible_exam_answers, value: 4
           =f.label :name, t('views.subject_courses.form.name'), class: 'control-label'

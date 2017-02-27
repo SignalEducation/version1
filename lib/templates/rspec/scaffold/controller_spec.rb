@@ -1,4 +1,4 @@
-<%- @user_types = %w(individual_student complimentary tutor corporate_student corporate_customer blogger content_manager admin) -%>
+<%- @user_types = %w(individual_student complimentary tutor comp_user marketing_manager_user customer_support_manager_user blogger content_manager admin) -%>
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 

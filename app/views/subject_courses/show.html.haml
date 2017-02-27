@@ -35,21 +35,19 @@
                     .table-responsive
                       .col-md-9.l-margin-bottom
                         %h2=course_module.name.to_s.truncate(50)
-                      -unless current_user.corporate_customer?
-                        .col-md-3
-                          .pull-right
-                            =course_module.category
-                            &#160;
-                            &#160;
-                            =tick_or_cross(course_module.active)
+                      .col-md-3
+                        .pull-right
+                          =course_module.category
+                          &#160;
+                          &#160;
+                          =tick_or_cross(course_module.active)
                       %table.table.sorted_table{data: {destination: course_module_elements_url}, id: course_module.id, style: 'font-size: 18px;'}
                         %thead
                           %tr
                             %th Name
                             %th Active
                             %th Type
-                            -unless current_user.corporate_customer?
-                              %th
+                            %th
                             %th
                             %th
                         %tbody
@@ -57,9 +55,8 @@
                             %tr{id: cme.id, data: {parent: course_module.id, destination: course_module_elements_url}}
                               %td
                                 =cme.name.to_s.html_safe.truncate(30)
-                              -unless current_user.corporate_customer?
-                                %td
-                                  =tick_or_cross(cme.active)
+                              %td
+                                =tick_or_cross(cme.active)
                               %td
                                 =cme.type_name
                               %td

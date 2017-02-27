@@ -4,10 +4,6 @@
       .well.well-sm
         =render partial: '/layouts/error_messages', locals: {thing: @invoice, message: nil}
         .form-group
-          =f.label :corporate_customer_id, t('views.invoices.form.corporate_customer_id'), class: 'control-label col-sm-4'
-          .col-sm-8
-            =f.collection_select :corporate_customer_id, @corporate_customers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        .form-group
           =f.label :subscription_id, t('views.invoices.form.subscription_id'), class: 'control-label col-sm-4'
           .col-sm-8
             =f.collection_select :subscription_id, @subscriptions, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}

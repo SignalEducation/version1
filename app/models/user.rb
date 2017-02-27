@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
                   :password_reset_token, :password_reset_at,
                   :stripe_customer_id, :password, :password_confirmation,
                   :current_password, :locale, :subscriptions_attributes,
-                  :employee_guid, :password_change_required, :address,
+                  :password_change_required, :address,
                   :first_description, :second_description, :wistia_url,
                   :personal_url, :name_url, :qualifications,
                   :profile_image, :topic_interest,

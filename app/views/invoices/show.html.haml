@@ -23,9 +23,6 @@
         %td.col-xs-6{rowspan:5}
           =@invoice.user.full_name
           %br/
-          -if @invoice.corporate_customer
-            =@invoice.corporate_customer.name
-            %br/
           =sanitizer @invoice.user.address.to_s.gsub(', ','<br/>').gsub("\r",'<br/>')
           %br/
           =@invoice.user.country.name
