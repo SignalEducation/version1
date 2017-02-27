@@ -143,4 +143,4 @@
                   =t('views.users.show.your_invoices')
                 .table-responsive
                   -@invoices = @user.invoices.where('sub_total > 0').all_in_order
-                    =render partial: 'invoices/index'
+                  =render partial: 'invoices/index'
