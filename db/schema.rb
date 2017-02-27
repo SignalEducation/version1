@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170227135846) do
+ActiveRecord::Schema.define(version: 20170227140801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,60 +27,6 @@ ActiveRecord::Schema.define(version: 20170227135846) do
   add_index "completion_certificates", ["guid"], name: "index_completion_certificates_on_guid", using: :btree
   add_index "completion_certificates", ["subject_course_user_log_id"], name: "index_completion_certificates_on_subject_course_user_log_id", using: :btree
   add_index "completion_certificates", ["user_id"], name: "index_completion_certificates_on_user_id", using: :btree
-
-  create_table "corporate_customers", force: :cascade do |t|
-    t.string   "organisation_name"
-    t.text     "address"
-    t.integer  "country_id"
-    t.boolean  "payments_by_card",     default: false,     null: false
-    t.string   "stripe_customer_guid"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "logo_file_name"
-    t.string   "logo_content_type"
-    t.integer  "logo_file_size"
-    t.datetime "logo_updated_at"
-    t.string   "subdomain"
-    t.string   "user_name"
-    t.string   "passcode"
-    t.string   "external_url"
-    t.string   "footer_border_colour", default: "#EFF3F6"
-    t.string   "corporate_email"
-    t.boolean  "external_logo_link",   default: false
-  end
-
-  add_index "corporate_customers", ["country_id"], name: "index_corporate_customers_on_country_id", using: :btree
-  add_index "corporate_customers", ["stripe_customer_guid"], name: "index_corporate_customers_on_stripe_customer_guid", using: :btree
-
-  create_table "corporate_group_grants", force: :cascade do |t|
-    t.integer  "corporate_group_id"
-    t.boolean  "compulsory"
-    t.boolean  "restricted"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.integer  "subject_course_id"
-    t.integer  "group_id"
-  end
-
-  add_index "corporate_group_grants", ["corporate_group_id"], name: "index_corporate_group_grants_on_corporate_group_id", using: :btree
-
-  create_table "corporate_groups", force: :cascade do |t|
-    t.integer  "corporate_customer_id"
-    t.string   "name"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.integer  "corporate_manager_id"
-  end
-
-  add_index "corporate_groups", ["corporate_customer_id"], name: "index_corporate_groups_on_corporate_customer_id", using: :btree
-
-  create_table "corporate_groups_users", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "corporate_group_id"
-  end
-
-  add_index "corporate_groups_users", ["corporate_group_id"], name: "index_corporate_groups_users_on_corporate_group_id", using: :btree
-  add_index "corporate_groups_users", ["user_id"], name: "index_corporate_groups_users_on_user_id", using: :btree
 
   create_table "corporate_requests", force: :cascade do |t|
     t.string   "name"
