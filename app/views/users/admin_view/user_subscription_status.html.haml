@@ -133,3 +133,11 @@
                       -else
                         ='--------'
 
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
+                %h2.l-margin-bottom-big.text-center
+                  =t('views.users.show.your_invoices')
+                .table-responsive
+                  -@invoices = @user.invoices.where('sub_total > 0').all_in_order
+                  =render partial: 'invoices/index'
