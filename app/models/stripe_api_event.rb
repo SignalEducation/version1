@@ -148,7 +148,7 @@ class StripeApiEvent < ActiveRecord::Base
       end
       subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
       #The subscription charge was successful so send successful payment email
-      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
 
     else
       set_process_error("Unknown User or Subscription #{user} - #{subscription}")

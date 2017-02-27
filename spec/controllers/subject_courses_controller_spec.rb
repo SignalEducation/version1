@@ -693,7 +693,7 @@ describe SubjectCoursesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_courses', 5)
+        expect_index_success_with_model('subject_courses', 3)
       end
     end
 
@@ -793,7 +793,7 @@ describe SubjectCoursesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('subject_courses', 5)
+        expect_index_success_with_model('subject_courses', 3)
       end
     end
 

@@ -12,6 +12,8 @@ describe RoutesController, type: :controller do
     a = admin_user
     cm = content_manager_user
     cu = comp_user
+    cs = customer_support_manager_user
+    mm = marketing_manager_user
   end
 
   context 'Not logged in: ' do
@@ -73,7 +75,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(tutor_dashboard_url)
+        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 
@@ -87,10 +89,10 @@ describe RoutesController, type: :controller do
     end
 
     describe "GET 'root'" do
-      xit 'should redirect to dashboard#index' do
+      it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
+        expect(response).to redirect_to(content_manager_dashboard_url)
       end
     end
 
@@ -104,7 +106,7 @@ describe RoutesController, type: :controller do
     end
 
     describe "GET 'root'" do
-      xit 'should redirect to dashboard#index' do
+      it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
         expect(response).to redirect_to(customer_support_manager_dashboard_url)
@@ -121,7 +123,7 @@ describe RoutesController, type: :controller do
     end
 
     describe "GET 'root'" do
-      xit 'should redirect to dashboard#index' do
+      it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
         expect(response).to redirect_to(marketing_manager_dashboard_url)

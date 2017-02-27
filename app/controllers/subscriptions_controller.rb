@@ -88,9 +88,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def get_subscription
-    @subscription = (current_user.admin? || current_user.customer_support_manager?) ?
-            Subscription.find_by_id(params[:id]) :
-            current_user.subscriptions.find_by_id(params[:id])
+    @subscription = Subscription.find_by_id(params[:id])
   end
 
 end

@@ -30,30 +30,32 @@ FactoryGirl.define do
     customer_support                     false
     marketing_support                    false
 
-    factory :blogger_user_group do
-      name 'Blogger Group'
-      blogger true
-    end
-
-    factory :content_manager_user_group do
-      name 'Content Manager Group'
-      content_manager true
-    end
-
-    factory :individual_student_user_group do
-      name 'Individual Student Group'
-      individual_student true
-      complimentary false
-    end
-
     factory :site_admin_user_group do
       name 'Site Admin Group'
       site_admin true
     end
 
+    factory :individual_student_user_group do
+      name 'Individual Student Group'
+      individual_student true
+    end
+
     factory :tutor_user_group do
       name 'Tutor Group'
       tutor true
+      complimentary true
+    end
+
+    factory :blogger_user_group do
+      name 'Blogger Group'
+      blogger true
+      complimentary true
+    end
+
+    factory :content_manager_user_group do
+      name 'Content Manager Group'
+      content_manager true
+      complimentary true
     end
 
     factory :complimentary_user_group do
@@ -61,16 +63,16 @@ FactoryGirl.define do
       complimentary true
     end
 
-    factory :marketing_manager_user_group do
-      name 'Marketing Managers User Group'
-      complimentary true
-      marketing_support true
-    end
-
     factory :customer_support_user_group do
       name 'Customer Support User Group'
       complimentary true
       customer_support true
+    end
+
+    factory :marketing_manager_user_group do
+      name 'Marketing Managers User Group'
+      complimentary true
+      marketing_support true
     end
 
   end

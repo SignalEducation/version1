@@ -21,7 +21,6 @@
 FactoryGirl.define do
   factory :subscription do
     user_id               1
-    corporate_customer_id 1
     subscription_plan_id  1
     stripe_guid           'sub_DUMMY-ABC123'
     next_renewal_date     { 6.days.from_now}

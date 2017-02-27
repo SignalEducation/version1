@@ -10,9 +10,9 @@ describe Api::StripeV01Controller, type: :controller do
   let(:stripe_helper) { StripeMock.create_test_helper }
 
   let!(:usd) { FactoryGirl.create(:usd) }
-  let!(:student) { FactoryGirl.create(:individual_student_user, student_user_type_id: subscription_user_type.id) }
-  let!(:new_student) { FactoryGirl.create(:individual_student_user, student_user_type_id: subscription_user_type.id) }
-  let!(:reactivating_student) { FactoryGirl.create(:individual_student_user, student_user_type_id: no_access_user_type.id) }
+  let!(:student) { FactoryGirl.create(:individual_student_user) }
+  let!(:new_student) { FactoryGirl.create(:individual_student_user) }
+  let!(:reactivating_student) { FactoryGirl.create(:individual_student_user) }
   let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
 
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
@@ -126,7 +126,6 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
           expect(sae.error_message).to eq(nil)
           subscription_1.reload
           expect(subscription_1.current_status).to eq('canceled')
-          expect(subscription_1.user.student_user_type_id).to eq(no_access_user_type.id)
         end
 
         it 'invoice.payment_succeeded first attempt' do
@@ -232,10 +231,10 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
       describe 'customer.subscription.updated' do
 
         it 'with valid data' do
-          evt = StripeMock.mock_webhook_event("customer.subscription.updated", status: 'trialing')
+          evt = StripeMock.mock_webhook_event("customer.subscription.updated", status: 'active')
           subscription_3.update_attribute(:stripe_guid, evt.data.object.id)
 
-          expect(MandrillClient).not_to receive(:new)
+          #expect(MandrillClient).not_to receive(:new)
           post :create, evt.to_json
 
           expect(StripeApiEvent.count).to eq(1)
@@ -260,13 +259,11 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
-          expect(subscription_1.user.student_user_type_id).to eq(subscription_user_type.id)
         end
 
 
         it 'marks api event as processed since the users is re-activating their account by subscribing to a new plan' do
           subscription_7.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-          expect(subscription_7.user.student_user_type_id).to eq(no_access_user_type.id)
 
           post :create, customer_subscription_created_event.to_json
 
@@ -274,7 +271,6 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
-          expect(subscription_1.user.student_user_type_id).to eq(subscription_user_type.id)
         end
 
       end

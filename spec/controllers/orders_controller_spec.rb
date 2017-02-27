@@ -27,7 +27,9 @@ describe OrdersController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:order_1) { FactoryGirl.create(:order) }
+  let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
+  let!(:product_1) { FactoryGirl.create(:product, mock_exam_id: mock_exam_1.id) }
+  let!(:order_1) { FactoryGirl.create(:order, product_id: product_1.id) }
   let!(:order_2) { FactoryGirl.create(:order) }
   let!(:valid_params) { FactoryGirl.attributes_for(:order) }
 
@@ -49,7 +51,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should redirect to sign_in' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -92,12 +94,11 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new, subject_course_name_url: subject_course_2.name_url
+        get :new, product_id: product_1.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:new)
-
       end
     end
 
@@ -144,7 +145,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new, subject_course_name_url: subject_course_2.name_url
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -192,7 +193,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -240,7 +241,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -288,7 +289,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -336,7 +337,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -384,7 +385,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end
@@ -432,7 +433,7 @@ describe OrdersController, type: :controller do
 
     describe "GET 'new'" do
       xit 'should respond OK' do
-        get :new
+        get :new, product_id: product_1.id
         expect_bounce_as_not_allowed
       end
     end

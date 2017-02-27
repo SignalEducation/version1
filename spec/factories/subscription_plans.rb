@@ -37,7 +37,6 @@ FactoryGirl.define do
 
     factory :student_subscription_plan do
       available_to_students         true
-      available_to_corporates       false
       factory :student_subscription_plan_m do # monthly
         payment_frequency_in_months 1
       end

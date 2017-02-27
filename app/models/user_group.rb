@@ -46,28 +46,32 @@ class UserGroup < ActiveRecord::Base
     where(site_admin: true).first
   end
 
-  def self.default_complimentary_user_group
-    where(individual_student: false, complimentary: true, site_admin: false,customer_support: false, marketing_support: false).first
-  end
-
   def self.default_student_user_group
-    where(individual_student: true, complimentary: false, tutor: false, content_manager: false, blogger: false, site_admin: false).first
+    where(individual_student: true, tutor: false, blogger: false, content_manager: false, site_admin: false, complimentary: false, customer_support: false, marketing_support: false).first
   end
 
   def self.default_tutor_user_group
-    where(individual_student: false, complimentary: true, tutor: true, content_manager: false, blogger: false, site_admin: false).first
+    where(individual_student: false, tutor: true, blogger: false, content_manager: false, site_admin: false, complimentary: true, customer_support: false, marketing_support: false).first
+  end
+
+  def self.default_blogger_user_group
+    where(individual_student: false, tutor: false, blogger: true, content_manager: false, site_admin: false, complimentary: true, customer_support: false, marketing_support: false).first
   end
 
   def self.default_content_manager_user_group
-    where(individual_student: false, complimentary: true, tutor: false, content_manager: true, blogger: false, site_admin: false).first
+    where(individual_student: false, tutor: false, blogger: false, content_manager: true, site_admin: false, complimentary: true, customer_support: false, marketing_support: false).first
+  end
+
+  def self.default_complimentary_user_group
+    where(individual_student: false, tutor: false, blogger: false, content_manager: false, site_admin: false, complimentary: true, customer_support: false, marketing_support: false).first
   end
 
   def self.default_customer_support_user_group
-    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, customer_support: true, marketing_support: false).first
+    where(individual_student: false, tutor: false, blogger: false, content_manager: false, site_admin: false, complimentary: true, customer_support: true, marketing_support: false).first
   end
 
   def self.default_marketing_support_user_group
-    where(individual_student: false, complimentary: true, tutor: false, content_manager: false, blogger: false, site_admin: false, customer_support: false, marketing_support: true).first
+    where(individual_student: false, tutor: false, blogger: false, content_manager: false, site_admin: false, complimentary: true, customer_support: false, marketing_support: true).first
   end
 
   # instance methods
