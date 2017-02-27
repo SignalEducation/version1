@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170225115333) do
+ActiveRecord::Schema.define(version: 20170227135846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,7 +160,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.boolean  "is_quiz",                     default: false, null: false
     t.integer  "course_module_id"
     t.boolean  "latest_attempt",              default: true,  null: false
-    t.integer  "corporate_customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "course_module_jumbo_quiz_id"
@@ -172,7 +171,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.integer  "count_of_questions_correct"
   end
 
-  add_index "course_module_element_user_logs", ["corporate_customer_id"], name: "cme_user_logs_corporate_customer_id", using: :btree
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree
   add_index "course_module_element_user_logs", ["course_module_id"], name: "index_course_module_element_user_logs_on_course_module_id", using: :btree
   add_index "course_module_element_user_logs", ["user_id"], name: "index_course_module_element_user_logs_on_user_id", using: :btree
@@ -323,7 +321,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.integer  "subject_id"
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
-    t.integer  "corporate_customer_id"
     t.datetime "destroyed_at"
     t.string   "image_file_name"
     t.string   "image_content_type"
@@ -401,7 +398,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
 
   create_table "invoices", force: :cascade do |t|
     t.integer  "user_id"
-    t.integer  "corporate_customer_id"
     t.integer  "subscription_transaction_id"
     t.integer  "subscription_id"
     t.integer  "number_of_users"
@@ -432,7 +428,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.text     "original_stripe_data"
   end
 
-  add_index "invoices", ["corporate_customer_id"], name: "index_invoices_on_corporate_customer_id", using: :btree
   add_index "invoices", ["currency_id"], name: "index_invoices_on_currency_id", using: :btree
   add_index "invoices", ["subscription_id"], name: "index_invoices_on_subscription_id", using: :btree
   add_index "invoices", ["subscription_transaction_id"], name: "index_invoices_on_subscription_transaction_id", using: :btree
@@ -728,8 +723,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.datetime "updated_at",                                              null: false
     t.float    "best_possible_first_attempt_score"
     t.integer  "default_number_of_possible_exam_answers"
-    t.boolean  "restricted",                              default: false, null: false
-    t.integer  "corporate_customer_id"
     t.float    "total_video_duration",                    default: 0.0
     t.datetime "destroyed_at"
     t.boolean  "is_cpd",                                  default: false
@@ -807,7 +800,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
 
   create_table "subscription_plans", force: :cascade do |t|
     t.boolean  "available_to_students",         default: false, null: false
-    t.boolean  "available_to_corporates",       default: false, null: false
     t.boolean  "all_you_can_eat",               default: true,  null: false
     t.integer  "payment_frequency_in_months",   default: 1
     t.integer  "currency_id"
@@ -825,7 +817,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
 
   add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree
   add_index "subscription_plans", ["available_to"], name: "index_subscription_plans_on_available_to", using: :btree
-  add_index "subscription_plans", ["available_to_corporates"], name: "index_subscription_plans_on_available_to_corporates", using: :btree
   add_index "subscription_plans", ["available_to_students"], name: "index_subscription_plans_on_available_to_students", using: :btree
   add_index "subscription_plans", ["currency_id"], name: "index_subscription_plans_on_currency_id", using: :btree
   add_index "subscription_plans", ["payment_frequency_in_months"], name: "index_subscription_plans_on_payment_frequency_in_months", using: :btree
@@ -855,22 +846,20 @@ ActiveRecord::Schema.define(version: 20170225115333) do
 
   create_table "subscriptions", force: :cascade do |t|
     t.integer  "user_id"
-    t.integer  "corporate_customer_id"
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complimentary",         default: false, null: false
+    t.boolean  "complimentary",        default: false, null: false
     t.string   "current_status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "stripe_customer_id"
     t.text     "stripe_customer_data"
-    t.boolean  "livemode",              default: false
-    t.boolean  "active",                default: false
-    t.boolean  "terms_and_conditions",  default: false
+    t.boolean  "livemode",             default: false
+    t.boolean  "active",               default: false
+    t.boolean  "terms_and_conditions", default: false
   end
 
-  add_index "subscriptions", ["corporate_customer_id"], name: "index_subscriptions_on_corporate_customer_id", using: :btree
   add_index "subscriptions", ["current_status"], name: "index_subscriptions_on_current_status", using: :btree
   add_index "subscriptions", ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date", using: :btree
   add_index "subscriptions", ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id", using: :btree
@@ -903,20 +892,16 @@ ActiveRecord::Schema.define(version: 20170225115333) do
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.boolean  "individual_student",                   default: false, null: false
-    t.boolean  "corporate_student",                    default: false, null: false
-    t.boolean  "tutor",                                default: false, null: false
-    t.boolean  "content_manager",                      default: false, null: false
-    t.boolean  "blogger",                              default: false, null: false
-    t.boolean  "corporate_customer",                   default: false, null: false
-    t.boolean  "site_admin",                           default: false, null: false
-    t.boolean  "subscription_required_at_sign_up",     default: false, null: false
-    t.boolean  "subscription_required_to_see_content", default: false, null: false
+    t.boolean  "individual_student", default: false, null: false
+    t.boolean  "tutor",              default: false, null: false
+    t.boolean  "content_manager",    default: false, null: false
+    t.boolean  "blogger",            default: false, null: false
+    t.boolean  "site_admin",         default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "complimentary",                        default: false
-    t.boolean  "customer_support",                     default: false
-    t.boolean  "marketing_support",                    default: false
+    t.boolean  "complimentary",      default: false
+    t.boolean  "customer_support",   default: false
+    t.boolean  "marketing_support",  default: false
   end
 
   create_table "user_notifications", force: :cascade do |t|
@@ -966,7 +951,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.string   "password_reset_token"
     t.datetime "password_reset_at"
     t.string   "stripe_customer_id"
-    t.integer  "corporate_customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "locale"
@@ -974,7 +958,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
     t.datetime "trial_ended_notification_sent_at"
     t.string   "crush_offers_session_id"
     t.integer  "subscription_plan_category_id"
-    t.string   "employee_guid"
     t.boolean  "password_change_required"
     t.string   "session_key"
     t.text     "first_description"
@@ -1004,7 +987,6 @@ ActiveRecord::Schema.define(version: 20170225115333) do
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
-  add_index "users", ["corporate_customer_id"], name: "index_users_on_corporate_customer_id", using: :btree
   add_index "users", ["country_id"], name: "index_users_on_country_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["password_reset_token"], name: "index_users_on_password_reset_token", using: :btree

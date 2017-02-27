@@ -2,23 +2,19 @@
 #
 # Table name: user_groups
 #
-#  id                                   :integer          not null, primary key
-#  name                                 :string
-#  description                          :text
-#  individual_student                   :boolean          default(FALSE), not null
-#  corporate_student                    :boolean          default(FALSE), not null
-#  tutor                                :boolean          default(FALSE), not null
-#  content_manager                      :boolean          default(FALSE), not null
-#  blogger                              :boolean          default(FALSE), not null
-#  corporate_customer                   :boolean          default(FALSE), not null
-#  site_admin                           :boolean          default(FALSE), not null
-#  subscription_required_at_sign_up     :boolean          default(FALSE), not null
-#  subscription_required_to_see_content :boolean          default(FALSE), not null
-#  created_at                           :datetime
-#  updated_at                           :datetime
-#  complimentary                        :boolean          default(FALSE)
-#  customer_support                     :boolean          default(FALSE)
-#  marketing_support                    :boolean          default(FALSE)
+#  id                 :integer          not null, primary key
+#  name               :string
+#  description        :text
+#  individual_student :boolean          default(FALSE), not null
+#  tutor              :boolean          default(FALSE), not null
+#  content_manager    :boolean          default(FALSE), not null
+#  blogger            :boolean          default(FALSE), not null
+#  site_admin         :boolean          default(FALSE), not null
+#  created_at         :datetime
+#  updated_at         :datetime
+#  complimentary      :boolean          default(FALSE)
+#  customer_support   :boolean          default(FALSE)
+#  marketing_support  :boolean          default(FALSE)
 #
 
 require 'rails_helper'

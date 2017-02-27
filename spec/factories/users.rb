@@ -28,7 +28,6 @@
 #  password_reset_token             :string
 #  password_reset_at                :datetime
 #  stripe_customer_id               :string
-#  corporate_customer_id            :integer
 #  created_at                       :datetime
 #  updated_at                       :datetime
 #  locale                           :string
@@ -36,7 +35,6 @@
 #  trial_ended_notification_sent_at :datetime
 #  crush_offers_session_id          :string
 #  subscription_plan_category_id    :integer
-#  employee_guid                    :string
 #  password_change_required         :boolean
 #  session_key                      :string
 #  first_description                :text

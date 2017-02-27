@@ -4,7 +4,6 @@
 #
 #  id                            :integer          not null, primary key
 #  available_to_students         :boolean          default(FALSE), not null
-#  available_to_corporates       :boolean          default(FALSE), not null
 #  all_you_can_eat               :boolean          default(TRUE), not null
 #  payment_frequency_in_months   :integer          default(1)
 #  currency_id                   :integer

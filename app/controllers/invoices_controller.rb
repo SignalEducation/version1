@@ -4,7 +4,6 @@
 #
 #  id                          :integer          not null, primary key
 #  user_id                     :integer
-#  corporate_customer_id       :integer
 #  subscription_transaction_id :integer
 #  subscription_id             :integer
 #  number_of_users             :integer
