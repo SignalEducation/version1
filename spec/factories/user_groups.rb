@@ -22,14 +22,10 @@ FactoryGirl.define do
     sequence(:name)                      { |n| "User Group #{n}" }
     description                          'Lorem ipsum'
     individual_student                   false
-    corporate_student                    false
     tutor                                false
     content_manager                      false
     blogger                              false
-    corporate_customer                   false
     site_admin                           false
-    subscription_required_at_sign_up     false
-    subscription_required_to_see_content false
     complimentary                        false
     customer_support                     false
     marketing_support                    false
@@ -37,22 +33,6 @@ FactoryGirl.define do
     factory :blogger_user_group do
       name 'Blogger Group'
       blogger true
-    end
-
-    factory :corporate_student_user_group do
-      name 'Corporate Student Group'
-      individual_student false
-      corporate_student true
-      subscription_required_at_sign_up false
-      subscription_required_to_see_content false
-    end
-
-    factory :corporate_customer_user_group do
-      name 'Corporate Customer Group'
-      corporate_customer true
-      tutor   true
-      subscription_required_at_sign_up false
-      subscription_required_to_see_content false
     end
 
     factory :content_manager_user_group do
@@ -64,8 +44,6 @@ FactoryGirl.define do
       name 'Individual Student Group'
       individual_student true
       complimentary false
-      subscription_required_at_sign_up true
-      subscription_required_to_see_content true
     end
 
     factory :site_admin_user_group do

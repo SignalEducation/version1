@@ -40,7 +40,6 @@ describe CourseModuleElement do
   subject { FactoryGirl.build(:course_module_element) }
 
   # Constants
-  #it { expect()CourseModuleElement.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module) }

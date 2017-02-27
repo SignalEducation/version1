@@ -81,13 +81,17 @@ describe Invoice do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:set_vat_rate).after(:create) }
 
   # scopes
   it { expect(Invoice).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(Invoice).to respond_to(:build_from_stripe_data) }
+  it { expect(Invoice).to respond_to(:get_updates_for_user) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:status) }
 
 end

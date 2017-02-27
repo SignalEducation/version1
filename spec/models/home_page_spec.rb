@@ -28,9 +28,10 @@ describe HomePage do
   end
 
   # Constants
-  #it { expect(HomePage.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
+  it { should belong_to(:group) }
+  it { should belong_to(:subject_course) }
   it { should belong_to(:subscription_plan_category) }
 
   # validation
@@ -46,10 +47,13 @@ describe HomePage do
 
   # scopes
   it { expect(HomePage).to respond_to(:all_in_order) }
+  it { expect(HomePage).to respond_to(:for_groups) }
+  it { expect(HomePage).to respond_to(:for_courses) }
 
   # class methods
 
   # instance methods
+  it { should respond_to(:default_home_page) }
   it { should respond_to(:destroyable?) }
 
 end

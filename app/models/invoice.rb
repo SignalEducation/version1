@@ -114,7 +114,6 @@ class Invoice < ActiveRecord::Base
           original_stripe_data: stripe_data_hash.to_hash,
           # todo - these need further attention
           subscription_transaction_id: nil,
-          vat_rate_id: nil,
           number_of_users: 0
         )
         if inv.save

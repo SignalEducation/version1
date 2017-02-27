@@ -29,7 +29,6 @@ describe QuizAttempt do
   end
 
   # Constants
-  #it { expect()QuizAttempt.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element_user_log) }
@@ -57,6 +56,12 @@ describe QuizAttempt do
   it { expect(QuizAttempt).to respond_to(:all_in_order) }
   it { expect(QuizAttempt).to respond_to(:all_correct) }
   it { expect(QuizAttempt).to respond_to(:all_incorrect) }
+  it { expect(QuizAttempt).to respond_to(:this_month) }
+  it { expect(QuizAttempt).to respond_to(:one_month_ago) }
+  it { expect(QuizAttempt).to respond_to(:two_months_ago) }
+  it { expect(QuizAttempt).to respond_to(:three_months_ago) }
+  it { expect(QuizAttempt).to respond_to(:four_months_ago) }
+  it { expect(QuizAttempt).to respond_to(:five_months_ago) }
 
   # class methods
 

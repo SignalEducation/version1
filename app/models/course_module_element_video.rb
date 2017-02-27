@@ -32,7 +32,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true, on: :update
   validates :video_id, presence: true, length: {maximum: 255}, on: :create
-  #validates :duration, presence: true, numericality: true
   validates :tags, allow_nil: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
   #validates :thumbnail, presence: true

@@ -46,6 +46,7 @@ describe CourseModuleElementUserLog do
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
   it { should belong_to(:course_module_jumbo_quiz) }
+  it { should belong_to(:question_bank) }
   it { should have_many(:quiz_attempts) }
   it { should belong_to(:user) }
 
@@ -80,6 +81,7 @@ describe CourseModuleElementUserLog do
 
   # scopes
   it { expect(CourseModuleElementUserLog).to respond_to(:all_in_order) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:all_completed) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_session_guid) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_unknown_users) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module) }
@@ -89,6 +91,13 @@ describe CourseModuleElementUserLog do
   it { expect(CourseModuleElementUserLog).to respond_to(:quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:videos) }
   it { expect(CourseModuleElementUserLog).to respond_to(:jumbo_quizzes) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:with_elements_active) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:this_week) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:this_month) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:two_months_ago) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:three_months_ago) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:four_months_ago) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:five_months_ago) }
 
   # class methods
   it { expect(CourseModuleElementUserLog).to respond_to(:assign_user_to_session_guid) }
@@ -96,7 +105,6 @@ describe CourseModuleElementUserLog do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:recent_attempts) }
   it { should respond_to(:recent_attempts) }
   it { should respond_to(:student_exam_track) }
 

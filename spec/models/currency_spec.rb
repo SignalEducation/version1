@@ -30,13 +30,12 @@ describe Currency do
   subject { FactoryGirl.build(:currency) }
 
   # Constants
-  #it { expect()Currency.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  # todo it { should have_many(:corporate_customer_prices) }
   it { should have_many(:countries) }
   it { should have_many(:invoices) }
   it { should have_many(:invoice_line_items) }
+  it { should have_many(:products) }
   it { should have_many(:subscription_plans) }
   it { should have_many(:subscription_transactions) }
 

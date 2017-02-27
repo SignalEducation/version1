@@ -18,8 +18,8 @@ class ExamBody < ActiveRecord::Base
 
   # relationships
   has_many :enrollments
-  has_many :subject_courses
   has_many :exam_sittings
+  has_many :subject_courses
 
   # validation
   validates :name, presence: true, uniqueness: true
