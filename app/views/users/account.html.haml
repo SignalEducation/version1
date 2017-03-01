@@ -1,6 +1,1 @@
--if current_user.corporate_customer?
-  =render partial: 'users/corporate_account/corporate_customer_account'
--elsif current_user.corporate_student?
-  =render partial: 'users/corporate_account/corporate_student'
--else
-  =render partial: 'users/user_account/student_account'
+=render partial: 'users/user_account/student_account'

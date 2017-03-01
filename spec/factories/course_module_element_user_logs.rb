@@ -14,7 +14,6 @@
 #  is_quiz                     :boolean          default(FALSE), not null
 #  course_module_id            :integer
 #  latest_attempt              :boolean          default(TRUE), not null
-#  corporate_customer_id       :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
@@ -39,7 +38,6 @@ FactoryGirl.define do
     is_quiz false
     course_module_id 1
     latest_attempt false
-    corporate_customer_id 1
     course_module_jumbo_quiz_id 1
     is_jumbo_quiz false
   end

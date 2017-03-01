@@ -50,6 +50,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
   let(:stripe_card_token) { stripe_helper.generate_card_token(card_params) }
   let(:stripe_bad_token) { StripeMock.prepare_card_error(:incorrect_number) }
 
+  let(:individual_student_user_2) { FactoryGirl.create(:individual_student_user)}
   let!(:stripe_customer_1) { customer = Stripe::Customer.create({
                   email: individual_student_user.email,
                   card: stripe_helper.generate_card_token})
@@ -58,10 +59,10 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
                   customer
   }
   let!(:stripe_customer_2) { customer = Stripe::Customer.create({
-                  email: corporate_customer_user.email,
+                  email: individual_student_user_2.email,
                   card: stripe_helper.generate_card_token})
-                  corporate_customer_user.stripe_customer_id = customer.id
-                  corporate_customer_user.save!
+  individual_student_user_2.stripe_customer_id = customer.id
+  individual_student_user_2.save!
                   customer
   }
 
@@ -71,8 +72,8 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
                   customer_guid: individual_student_user.stripe_customer_id) }
   let(:card_2) { FactoryGirl.create(:subscription_payment_card,
                   stripe_token: stripe_helper.generate_card_token(card_params),
-                  user_id: corporate_customer_user.id,
-                  customer_guid: corporate_customer_user.stripe_customer_id) }
+                  user_id: individual_student_user_2.id,
+                  customer_guid: individual_student_user_2.stripe_customer_id) }
   let!(:create_params) { {stripe_token: stripe_card_token, make_default_card: true} }
                   # needs a user_id too
 
@@ -177,65 +178,6 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
       end
     end
 
-  end
-
-  context 'Logged in as a corporate_student_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(corporate_student_user)
-    end
-
-    describe "POST 'create'" do
-      it 'expect ERROR as not allowed' do
-        post :create, subscription_payment_card: {}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update'" do
-      it 'expect ERROR as not allowed' do
-        put :update, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as corporate_customer_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(corporate_customer_user)
-    end
-
-    describe "POST 'create'" do
-      it 'should be OK with redirect' do
-        post :create, subscription_payment_card: create_params.merge(user_id: corporate_customer_user.id)
-        expect(flash[:error]).to eq(nil)
-        expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
-      end
-
-      it 'should report ERROR as token is invalid' do
-        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: corporate_customer_user.id, make_default_card: true}
-        expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
-        expect(flash[:success]).to eq(nil)
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
-      end
-    end
-
-    describe "PUT 'update'" do
-      it 'should be OK with redirect' do
-        put :update, id: card_2.id
-        expect(flash[:error]).to eq(nil)
-        expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
-      end
-    end
   end
 
   context 'Logged in as a blogger_user: ' do
@@ -347,7 +289,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
       end
 
       it 'should report ERROR as token is invalid' do
-        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: corporate_customer_user.id, make_default_card: true}
+        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: individual_student_user_2.id, make_default_card: true}
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
         expect(response.status).to eq(302)

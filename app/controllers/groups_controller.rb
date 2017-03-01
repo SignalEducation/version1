@@ -11,7 +11,6 @@
 #  subject_id                    :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  corporate_customer_id         :integer
 #  destroyed_at                  :datetime
 #  image_file_name               :string
 #  image_content_type            :string
@@ -28,16 +27,12 @@ class GroupsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin', 'content_manager'])
+    ensure_user_is_of_type(%w(admin content_manager))
   end
   before_action :get_variables
 
   def index
-    if current_user.corporate_customer?
-      @groups = Group.where(corporate_customer_id: current_user.corporate_customer_id)
-    else
-      @groups = Group.paginate(per_page: 50, page: params[:page])
-    end
+    @groups = Group.paginate(per_page: 50, page: params[:page])
     @footer = nil
   end
 
@@ -48,24 +43,17 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
-    @corporates = CorporateCustomer.all_in_order
     @footer = nil
   end
 
   def edit
     @footer = nil
-    @corporates = CorporateCustomer.all_in_order
   end
 
   def edit_courses
     @group = Group.find(params[:group_id]) rescue nil
-    if current_user.corporate_customer?
-      @subject_courses = SubjectCourse.all_active.all_in_order.where(corporate_customer_id: current_user.corporate_customer_id)
-    else
-      @subject_courses = SubjectCourse.all_active.all_in_order.where(corporate_customer_id: nil)
-    end
-    if @group.nil? ||
-        (current_user.corporate_customer? && current_user.corporate_customer_id != @group.corporate_customer_id)
+    @subject_courses = SubjectCourse.all_active.all_in_order
+    unless @group
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to groups_url
     end
@@ -74,9 +62,6 @@ class GroupsController < ApplicationController
 
   def create
     @group = Group.new(allowed_params)
-    if current_user.corporate_customer
-      @group.corporate_customer_id = current_user.corporate_customer_id
-    end
     if @group.save
       flash[:success] = I18n.t('controllers.groups.create.flash.success')
       redirect_to groups_url
@@ -96,8 +81,7 @@ class GroupsController < ApplicationController
 
   def update_courses
     @group = Group.find(params[:group_id]) rescue nil
-    if @group &&
-        (current_user.admin? || current_user.corporate_customer_id == @group.corporate_customer_id)
+    if @group
       if params[:group]
         @group.subject_course_ids = params[:group][:subject_course_ids]
       else
@@ -107,7 +91,7 @@ class GroupsController < ApplicationController
       flash[:success] = I18n.t('controllers.groups.update_subjects.flash.success')
       redirect_to groups_url
     else
-      render action: :edit_members
+      render action: :edit_courses
     end
   end
 
@@ -135,7 +119,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :corporate_customer_id, :background_image)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_image)
   end
 
 end

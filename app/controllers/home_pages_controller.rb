@@ -17,28 +17,16 @@ class HomePagesController < ApplicationController
 
   before_action :logged_in_required, only: [:index, :new, :edit, :update, :create]
   before_action only: [:index, :new, :edit, :update, :create] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
-  before_action :get_variables, except: [:diploma, :home, :diploma_index]
-  before_action :layout_variables, only: [:diploma, :home, :diploma_index, :group_index]
+  before_action :get_variables, except: [:home]
+  before_action :layout_variables, only: [:home]
 
   def home
     #This is the main home_page
-    if current_user
-      redirect_to dashboard_special_link(current_user)
-    else
-      @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-      @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
-      @product_courses = @product_course_category.subject_courses if @product_course_category
-      @subscription_courses = @subscription_course_category.subject_courses if @subscription_course_category
-      @groups = Group.all_active.for_public.all_in_order
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-      seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
-    end
-  end
+    redirect_to dashboard_special_link(current_user) if current_user
 
-  def group_index
+    @groups = Group.all_active.all_in_order
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
     ip_country = IpAddress.get_country(request.remote_ip)
@@ -57,34 +45,24 @@ class HomePagesController < ApplicationController
       session.delete(:valid_params)
     end
     # Don't remember why this needs to be set
-    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
 
     #To show each pricing plan on the page; not involved in the sign up process
-    @student_subscription_plans = SubscriptionPlan.where('price > 0.0').where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
-    @groups = Group.all_active.for_public.all_in_order
-    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
-  end
+    @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
+    @groups = Group.all_active.all_in_order
 
-  def diploma_index
-    product = Product.first
-    redirect_to product_course_url(product.subject_course.home_pages.first.public_url)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = @country.currency_id
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @navbar = nil
-    @footer = nil
+    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+
   end
 
   def group
     # Ensuring that the correct params are present for home_page with a valid group and url is present so that the right view file or the default view is loaded
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
-    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     @group = @home_page.try(:group)
     @url_value = @home_page.try(:public_url)
-    redirect_to all_groups_url unless @group
+    redirect_to root_url unless @group
 
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
@@ -106,7 +84,7 @@ class HomePagesController < ApplicationController
       session.delete(:valid_params)
     end
 
-    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).where('price > 0.0').first
+    @subscription_plan = SubscriptionPlan.in_currency(@currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
 
     if @home_page
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
@@ -115,22 +93,6 @@ class HomePagesController < ApplicationController
       seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
     end
     @navbar = nil
-  end
-
-  def diploma
-    redirect_to root_url
-    #Needs to render a custom partial if one exists or render the default
-    @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
-    @default_element = params[:default] if params[:default]
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-    @course = @home_page.subject_course
-    @currency_id = @country.currency_id
-    @product = @course.products.all_active.in_currency(@currency_id).last
-    @navbar = nil
-    @footer = nil
   end
 
   def subscribe
@@ -204,13 +166,10 @@ class HomePagesController < ApplicationController
     if params[:id].to_i > 0
       @home_page = HomePage.where(id: params[:id]).first
     end
-    @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @product_course_category = SubjectCourseCategory.all_active.all_product.all_in_order.first
-    @subscription_course_category = SubjectCourseCategory.all_active.all_subscription.all_in_order.first
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
-    @groups = Group.all_active.all_in_order.for_public
-    @subject_courses = SubjectCourse.all_active.all_in_order.for_public
+    @groups = Group.all_active.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_in_order
   end
 
   def layout_variables

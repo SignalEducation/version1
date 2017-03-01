@@ -22,7 +22,6 @@ class QuizAnswer < ActiveRecord::Base
   attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
 
   # Constants
-  #WRONGNESS = ['correct', 'slightly wrong', 'wrong', 'very wrong']
   WRONGNESS = ['correct', 'incorrect']
 
   # relationships
@@ -40,7 +39,6 @@ class QuizAnswer < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:wrong_answer_explanation_text) }
   before_save :set_the_field_correct
-  #before_update :set_wrong_answer_video_id
 
   # scopes
   scope :all_in_order, -> { order(:quiz_question_id).where(destroy_at: nil) }
@@ -69,9 +67,5 @@ class QuizAnswer < ActiveRecord::Base
     self.correct = self.degree_of_wrongness == 'correct'
     true
   end
-
-  #def set_wrong_answer_video_id
-    #self.wrong_answer_video_id = self.quiz_question.course_module_element.try(:related_video_id)
-  #end
 
 end

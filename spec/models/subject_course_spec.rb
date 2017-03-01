@@ -20,8 +20,6 @@
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
-#  restricted                              :boolean          default(FALSE), not null
-#  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
 #  is_cpd                                  :boolean          default(FALSE)
@@ -30,7 +28,6 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
@@ -55,9 +52,7 @@ describe SubjectCourse do
   # Constants
 
   # relationships
-  it { should belong_to(:subject_course_category) }
   it { should belong_to(:exam_body) }
-  it { should have_many(:corporate_group_grants) }
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
@@ -104,12 +99,9 @@ describe SubjectCourse do
   # scopes
   it { expect(SubjectCourse).to respond_to(:all_active) }
   it { expect(SubjectCourse).to respond_to(:all_live) }
-  it { expect(SubjectCourse).to respond_to(:all_in_order) }
   it { expect(SubjectCourse).to respond_to(:all_not_live) }
-  it { expect(SubjectCourse).to respond_to(:all_not_restricted) }
-  it { expect(SubjectCourse).to respond_to(:for_corporates) }
-  it { expect(SubjectCourse).to respond_to(:for_public) }
-  it { expect(SubjectCourse).to respond_to(:in_category) }
+  it { expect(SubjectCourse).to respond_to(:all_in_order) }
+  it { expect(SubjectCourse).to respond_to(:this_month) }
 
 
   # class methods
@@ -140,7 +132,6 @@ describe SubjectCourse do
   it { should respond_to(:total_questions_answered) }
   it { should respond_to(:test_children?) }
   it { should respond_to(:tuition_children?) }
-  it { should respond_to(:users_allowed_access) }
 
 
 end

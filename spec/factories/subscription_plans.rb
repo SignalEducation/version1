@@ -4,7 +4,6 @@
 #
 #  id                            :integer          not null, primary key
 #  available_to_students         :boolean          default(FALSE), not null
-#  available_to_corporates       :boolean          default(FALSE), not null
 #  all_you_can_eat               :boolean          default(TRUE), not null
 #  payment_frequency_in_months   :integer          default(1)
 #  currency_id                   :integer
@@ -38,7 +37,6 @@ FactoryGirl.define do
 
     factory :student_subscription_plan do
       available_to_students         true
-      available_to_corporates       false
       factory :student_subscription_plan_m do # monthly
         payment_frequency_in_months 1
       end

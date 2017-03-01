@@ -14,9 +14,9 @@
       .input-group.input-group-lg.full-width
         =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
       %br/
-      =f.label :subject_course_id, t('views.products.form.subject_course'), class: 'control-label'
+      =f.label :mock_exam_id, t('views.products.form.mock_exam_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        =f.collection_select :mock_exam_id, @mock_exams, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
       %br/
       .form-group

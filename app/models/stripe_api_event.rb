@@ -148,7 +148,7 @@ class StripeApiEvent < ActiveRecord::Base
       end
       subscription.update_attributes(current_status: 'active') if subscription.current_status == 'past_due'
       #The subscription charge was successful so send successful payment email
-      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
 
     else
       set_process_error("Unknown User or Subscription #{user} - #{subscription}")
@@ -208,17 +208,7 @@ class StripeApiEvent < ActiveRecord::Base
         self.processed = true
         self.processed_at = Time.now
         user = subscription.user
-        if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-          new_user_type_id = StudentUserType.default_sub_user_type.id
-        elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-          new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-        else
-          new_user_type_id = user.student_user_type_id
-        end
-        user.update_attribute(:student_user_type_id, new_user_type_id)
 
-        #TODO Mandrill doesn't have any template for this email
-        MandrillWorker.perform_async(user.id, 'send_account_reactivated_email', self.account_url)
       else
         set_process_error "API Event with Stripe ID #{stripe_subscription_data} was created but the necessary conditions for the user subscription were not met."
       end

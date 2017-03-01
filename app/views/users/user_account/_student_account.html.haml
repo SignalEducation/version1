@@ -19,13 +19,10 @@
             .tab.account-tab#personal-details
               =render partial: 'users/user_account/student_user_form'
 
+            .tab.account-tab#subscriptions
+              =render partial: 'users/user_account/subscription_info'
 
-            -if @current_subscription
-              .tab.account-tab#subscriptions
-
-                =render partial: 'users/user_account/subscription_info'
-
-
+              -if @current_subscription
                 .col-md-12
                   .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
                     %h2.l-margin-bottom-big.text-center
@@ -56,10 +53,9 @@
               %li
                 %a.active{href: '#personal-details', role: 'tab', data: {toggle: 'tab'}}
                   =t('views.users.show.tabs.personal_details')
-              -if @current_subscription
-                %li
-                  %a{href: '#subscriptions', role: 'tab', data: {toggle: 'tab'}}
-                    =t('views.users.show.tabs.subscriptions')
+              %li
+                %a{href: '#subscriptions', role: 'tab', data: {toggle: 'tab'}}
+                  =t('views.users.show.tabs.subscriptions')
               -if @valid_order
                 %li
                   %a{href: '#orders', role: 'tab', data: {toggle: 'tab'}}

@@ -41,9 +41,6 @@ en:
       corporate_enquiry:
         subject_line: This is a new enquiry for a corporate account.
 
-      corporate_enquiry:
-        subject_line: This is a new enquiry for a corporate account.
-
       white_paper_request:
         subject_line: A user has requested a white paper download.
 

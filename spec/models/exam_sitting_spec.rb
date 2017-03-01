@@ -26,16 +26,19 @@ describe ExamSitting do
   end
 
   # Constants
-  #it { expect(ExamSitting.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:subject_course) }
+  it { should belong_to(:exam_body) }
 
   # validation
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
+
+  it { should validate_presence_of(:exam_body_id) }
+  it { should validate_numericality_of(:exam_body_id) }
 
   it { should_not validate_presence_of(:date) }
 
@@ -49,6 +52,7 @@ describe ExamSitting do
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:formatted_date) }
 
 
 end

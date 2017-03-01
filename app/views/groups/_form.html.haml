@@ -17,10 +17,6 @@
               =f.check_box :active
               =t('views.groups.form.active')
       .col-md-6
-        =f.label :corporate_customer_id, t('views.groups.form.corporate_customer'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.collection_select :corporate_customer_id, @corporates, :id, :organisation_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        %br/
         =f.label :description, t('views.groups.form.description'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_area :description, rows: 5, class: 'form-control', style: 'border-radius: 6px;'

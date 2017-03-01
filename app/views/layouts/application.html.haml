@@ -1,21 +1,18 @@
 !!! 5
-%html{lang: params[:locale] || @delivered_page.try(:language) || 'en'}
+%html{lang: params[:locale] || 'en'}
   %head
     -if Rails.env.production?
       %script{src: '//cdn.optimizely.com/js/5168310932.js'}
-    -if @delivered_page
-      <!-- page ID #{@delivered_page.id} -->
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
-    %title<
-      -if @delivered_page
-        =@delivered_page.seo_title
-      -elsif @seo_title
+    %title
+      -if @seo_title
         =@seo_title
       -else
         Business Training Library | LearnSignal
-    =stylesheet_link_tag @css_root, media: 'all'
+
+    =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v2/'}
@@ -35,23 +32,17 @@
       %script{type: 'text/javascript', src: 'https://jwpsrv.com/library/w07RSqLlEeOssyIACi0I_Q.js'}
 
     =csrf_meta_tags
-    -if @delivered_page
-      =head_sanitizer(@delivered_page.head_content)
-      -if @delivered_page.mark_as_nofollow
-        %meta{name: 'robots', content: 'nofollow'}
-      -if @delivered_page.mark_as_noindex
-        %meta{name: 'robots', content: 'noindex'}
-      %meta{name: 'description', content: @delivered_page.seo_description}
-    -elsif @seo_description
+    -if @seo_description
       %meta{name: 'description', content: @seo_description}
     -if @seo_no_index
       %meta{name: 'robots', content: 'noindex'}
 
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
-      =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/hotjar'
+    -if Rails.env.production? && (controller_name == 'home_pages' || controller_name == 'footer_pages')
+      =render partial: 'layouts/cookie_banner'
 
   %body
     %noscript
@@ -64,32 +55,20 @@
     -if controller_name == 'referral_codes' && action_name == 'show'
       =render partial: 'layouts/facebook_sdk'
 
-    -if current_corporate
-      -if @navbar
-        -if @navbar == 'transparent'
-          =render partial: 'layouts/transparent_corporate_navbar'
-        -else
-          =render partial: 'layouts/corporate_navbar'
-      =yield
-      -if @footer
-        =render partial: 'layouts/corporate_footer'
-
-    -else
-      -if @navbar
-        -if @navbar == 'transparent'
-          =render partial: 'layouts/transparent_navbar'
-        -else
-          =render partial: 'layouts/navbar'
-      =yield
-      -if @footer
-        =render partial: 'layouts/large_footer'
+    -if @navbar
+      -if @navbar == 'transparent'
+        =render partial: 'layouts/transparent_navbar'
+      -else
+        =render partial: 'layouts/navbar'
+    =yield
+    -if @footer
+      =render partial: 'layouts/large_footer'
 
 
     -#General partials
     =render partial: 'layouts/misc_javascript'
-    -unless current_corporate
-      =render partial: 'layouts/intercom'
-    -if !current_user.nil? && (current_user.individual_student? || current_user.corporate_student? || current_user.tutor? || current_user.blogger?)
+    =render partial: 'layouts/intercom'
+    -if current_user && (current_user.individual_student? || current_user.tutor? || current_user.blogger?)
       =render partial: 'layouts/ls_referral'
     <!-- Mathjax -->
     -if @mathjax_required

@@ -9,11 +9,6 @@
       =f.label :subject_course_id, t('views.mock_exams.form.subject_course_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-      %br/
-      =f.label :product_id, t('views.mock_exams.form.product_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :product_id, @products, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-      %br/
 
     .col-md-6
       -if f.object.file_file_name

@@ -20,8 +20,6 @@
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
-#  restricted                              :boolean          default(FALSE), not null
-#  corporate_customer_id                   :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
 #  is_cpd                                  :boolean          default(FALSE)
@@ -30,7 +28,6 @@
 #  live_date                               :datetime
 #  certificate                             :boolean          default(FALSE), not null
 #  hotjar_guid                             :string
-#  subject_course_category_id              :integer
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string

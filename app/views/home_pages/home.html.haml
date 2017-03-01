@@ -1,21 +1,45 @@
 .home_page_layout
-  %header.home-background
+  %header.why-background
     .l-wrap-home
       =render partial: 'layouts/transparent_navbar'
 
-      .home.text-center
-        %h2.h-white
-          The First Ever On-Demand training library for business professionals
-        %ul
-          %li
-            %p study online
-          %li
-            %p
-              Anywhere
-          %li
-            %p
-              Anytime
+      .cfa#sign-up
+        .row
+          .col-sm-6.col-md-8.col-lg-8
+            %p.h5.h-white.l-margin-bottom-huge
+              Prepare for your finance exams with our online courses
+            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
+              Professional Finance courses
 
+            %p.h7
+              Our subscription model provides unlimited access to all subscription content for a small monthly subscription
+
+          -unless current_user
+            .col-sm-6.col-md-4.col-lg-4#sign-up-form
+              =render partial: 'sign_up_form'
+
+  %section#home_info
+    .l-wrap-home
+      .col-sm-12.text-center
+
+        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+          Courses
+
+        -@groups.each_with_index do |group|
+          -if group.active_children.any?
+            .col-sm-4.col-md-4.l-margin-bottom-big.l-margin-top
+              =link_to library_special_link(group), class: 'box box-course' do
+                .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
+                .box-inner
+                  .l-margin-top-xl
+                    %h2{style: 'margin-bottom: 5px;'}
+                      =group.name
+                    %p.p
+                      =group.description
+
+                .box-label
+                  %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                    Browse Courses
 
 
   %section#advance_career{style: 'padding: 40px 0 40px 0;'}
@@ -53,56 +77,55 @@
           %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
 
 
-
-  %section#home_info
-    .l-wrap-home
-      .col-sm-12.text-center
-
-        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-          Subscription Courses
-
-        -@groups.each_with_index do |group|
-          -if group.active_children.any?
-            .col-sm-6.col-md-6.l-margin-bottom-big.l-margin-top
-              =link_to library_special_link(group), class: 'box box-course' do
-                .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
-                .box-inner
-                  .l-margin-top-xl
-                    %h2{style: 'margin-bottom: 5px;'}
-                      =group.name
-                    %p.p
-                      =group.description
-
-                .box-label
-                  %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                    Browse Courses
-
-
-
-  -if @product_courses
-    %section#subscribe
-      .l-wrap-home
-
+  -if @student_subscription_plans.any?
     %section#diploma_courses
       .l-wrap-home
         .col-sm-12.text-center
           %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-            Diploma Courses
+            Pricing
 
-          -@product_courses.all_in_order.each do |course|
-            .col-sm-12
-              .course-panel.course-panel-inner
-                .col-sm-2.hidden-xs
-                  =image_tag('certificate.png', alt: 'certificate', class: 'cert-image')
-                .col-sm-10
-                  %h3
-                    =course.name
-                  %p.p.hidden-xs
-                    =course.short_description.truncate(150)
-                .col-sm-2
-                .col-sm-10
-                  =link_to library_special_link(course), class: 'btn btn-cyan l-margin-top' do
-                    Course Info
+        -@student_subscription_plans.each do |plan|
+          .col-sm-4
+            .plan{class: plan_interval_alt(plan.payment_frequency_in_months)}
+              .currency
+                .plan-header
+                  %h3.h4.plan-title
+                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                .plan-inner
+                  %h4.h3.plan-price
+                    =plan.currency.format_number(plan.price)
+                  %br/
+                  %p.plan-text
+                    =plan.unlimited_access
+                  %p.plan-text
+                    &middot;
+                  %p.plan-text
+                    =plan.cancel_anytime
+
+
+  %section#study_online
+    .l-wrap-home
+      .so_descrip
+        %h2 Study online with LearnSignal
+        .option
+          %p.key Study Time:
+          %p.value
+            Over 100 hrs
+        .option
+          %p.key Assessment:
+          %p.value Online Exam
+        .option
+          %p.key Resources:
+          %p.value Video lectures, slide presentations, practical exercises
+        .option
+          %p.key Payment Options:
+          %p.value
+            ='7-day Free Trial with 200 minutes of content'
+
+        =link_to new_student_url, class: 'enroll_now' do
+          Claim your Free Trial?
+
+      =image_tag('iphone.png', alt: 'iphone', class: 'phone-image hidden-xs hidden-sm')
 
 
 

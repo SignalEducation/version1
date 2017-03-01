@@ -1,9 +1,8 @@
 require 'mandrill'
 
 class MandrillClient
-  def initialize(user, corporate)
+  def initialize(user)
     @user = user
-    @corporate = corporate
   end
 
   # Basic Account Emails
@@ -24,21 +23,6 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
     send_template('password-reset-20-02-17', msg)
   end
-
-
-  # Corporate Account Emails
-  def corporate_invite(verification_url)
-    msg = corporate_message_stub.merge({"subject" => "Welcome to #{@corporate.organisation_name} Training"})
-    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('corporate-invite-email', msg)
-  end
-
-  def corporate_password_reset_email(password_reset_url)
-    msg = corporate_message_stub.merge({"subject" => "#{@corporate.organisation_name} Password Reset"})
-    msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send_template('corporate-password-reset-email', msg)
-  end
-
 
   # Subscription/Stripe/Purchase Emails
   def send_card_payment_failed_email(account_settings_url)
@@ -65,11 +49,12 @@ class MandrillClient
     send_template('referral-discount-20-02-17', msg)
   end
 
-  def send_mock_exam_email(account_url, file_name, attachment)
+  def send_mock_exam_email(account_url, file_name, attachment, guid)
     msg = message_stub.merge({"subject" => "LearnSignal Mock Exam "})
     msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
+    msg["global_merge_vars"] << { "name" => "GUID", "content" => guid }
     send_template('mock-exam-purchase-20-02-17', msg)
   end
 
@@ -119,25 +104,6 @@ class MandrillClient
 
 
   #Other Emails
-  def send_tutor_application_email(first_name, last_name, email, info, description)
-    msg = message_stub.merge({"subject" => "New Tutor Application"})
-    msg["global_merge_vars"] << { "name" => "FIRSTNAME", "content" => first_name }
-    msg["global_merge_vars"] << { "name" => "LASTNAME", "content" => last_name }
-    msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
-    msg["global_merge_vars"] << { "name" => "INFO", "content" => info }
-    msg["global_merge_vars"] << { "name" => "DESCRIPTION", "content" => description }
-    send_template('tutor-application-20-02-17', msg)
-  end
-
-  def send_corporate_request_email(name, company, email, phone_number)
-    msg = message_stub.merge({"subject" => "New Business Account Enquiry"})
-    msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
-    msg["global_merge_vars"] << { "name" => "COMPANY", "content" => company }
-    msg["global_merge_vars"] << { "name" => "EMAIL", "content" => email }
-    msg["global_merge_vars"] << { "name" => "PHONENUMBER", "content" => phone_number }
-    send_template('new-business-account-enquiry', msg)
-  end
-
   def send_survey_email(url)
     msg = message_stub.merge({"subject" => "Student Feedback Survey"})
     msg["global_merge_vars"] << { "name" => "URL", "content" => url }
@@ -208,64 +174,6 @@ class MandrillClient
       "images" => [
         # { "type" => "image/png", "content" => "ZXhhbXBsZSBmaWxl", "name" => "IMAGECID" }
       ],
-    }
-  end
-
-  def corporate_message_stub
-    {
-      "html" => nil,
-      "text" => nil,
-      "subject" => nil,
-      "from_email" => @corporate.corporate_email,
-      "from_name" => @corporate.organisation_name,
-      "to" => [{
-                 "email" => @user.email,
-                 "type" => "to",
-                 "name" => @user.full_name
-               }],
-      "headers" => nil, #{"Reply-To" => "message.reply.learnsignal@example.com"},
-      "important" => false,
-      "track_opens" => nil,
-      "track_clicks" => nil,
-      "auto_text" => nil,
-      "auto_html" => nil,
-      "inline_css" => nil,
-      "url_strip_qs" => nil,
-      "preserve_recipients" => nil,
-      "view_content_link" => nil,
-      "bcc_address" => nil, #"message.bcc_address@example.com",
-      "tracking_domain" => nil,
-      "signing_domain" => nil,
-      "return_path_domain" => nil,
-      "merge" => true,
-      "merge_language" => "mailchimp",
-      "global_merge_vars" => [
-        { "name" => "FNAME", "content" => @user.first_name },
-        { "name" => "LNAME", "content" => @user.last_name },
-        { "name" => "COMPANY", "content" => @corporate.organisation_name },
-        { "name" => "IMAGENAME", "content" => @corporate.logo.url },
-        { "name" => "COMPANYURL", "content" => @corporate.external_url }
-      ],
-      "merge_vars" => [
-        # { "rcpt" => "some.email@example.com",
-        #   "vars" => [{
-        #                "FNAME" => "First Name",
-        #                "COMPANY" => "Signal Education",
-        #                "COMPANYURL" => "http://learnsignal.com"
-        #              }],
-        # }
-      ],
-      "tags" => [],
-      "subaccount" => @corporate.subdomain,
-      "google_analytics_domains" => [],
-      "google_analytics_campaign" => nil,
-      "metadata" => {},
-      "recipient_metadata" => [
-        # { "rcpt" => "recipient.email@example.com", "values" => { "user_id" => 123456 } }
-      ],
-      "attachments" => [
-        # { "type" => "text/plain", "content" => "ZXhhbXBsZSBmaWxl", "name" => "myfile.txt" }
-      ]
     }
   end
 

@@ -1,5 +1,0 @@
--tracker = nil
--StaticPage.all_active.all_of_type(link_type).with_logged_in_status(current_user).all_in_order.each do |link|
-  -unless tracker == link.public_url
-    -tracker = link.public_url
-    %li=link_to link.menu_label, url_for(root_url + link.public_url), title: link.tooltip_text

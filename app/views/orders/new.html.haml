@@ -1,48 +1,68 @@
 .home_page_layout
-  %header.purchase-background
+  %header.mock-background
     .l-wrap-purchase
       =render partial: 'layouts/transparent_navbar'
     .l-wrap-session.l-margin-top
       %h1.h-white.h-separator.h-separator-center.text-center
-        Payment Details
+        =@mock_exam.name
+      %p.h3.h-white.text-center.l-margin-top
+        Purchase Process
 
   .l-wrap-product-user
     .row
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-md-12
-        .col-md-4.l-margin-top
+        .col-md-11.col-md-offset-1
+          -if current_user.purchased_products && !current_user.purchased_products.include?(@product)
+            %p.p
+              Please enter you payment details below to complete your purchase. The Mock Exam will be emailed upon successful payment.
+
+        .col-sm-4.l-margin-top
           .course-side-info
             %h2.h-separator.h-separator-left.l-margin-bottom
-              =@course.name
-            %p.h3
+              =@mock_exam.name
+            %p.h3.l-margin-bottom
               ='Total: '
               =number_in_local_currency(@product.price, @product.currency_id)
+            .box.box-profile
+              .box-inner
+                =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
 
 
-        .col-md-8
+
+        .col-sm-8
           .new-product-user-form.l-margin-top
-            =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
-              =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-              =f.hidden_field :subject_course_id, value: @course.id
-              =f.hidden_field :stripe_token
-              =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+            -if current_user.purchased_products && current_user.purchased_products.include?(@product)
               .row
                 .col-md-12
-                  .payment-heading
-
-                  =render partial: 'order_card_form', locals: {f: f}
-
-                  .container-fluid
-                    .col-md-12
-                      .col-md-4.col-sm-offset-4.text-center
-                        .spinner
-                          .bounce1
-                          .bounce2
-                          .bounce3
+                  .payment-heading.text-center
+                    %p.p
+                      You have already purchased this Product. Visit your account page to view your purchase history.
 
 
-                  .row.l-margin-top-big
-                    .col-md-10.col-md-offset-1
-                      =f.submit 'Purchase Course', class: 'btn btn-red'
+            -else
+              =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
+                =f.hidden_field :product_id, value: @product.id
+                =f.hidden_field :stripe_token
+                =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+                =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+                .row
+                  .col-md-12
+                    .payment-heading
+
+                    =render partial: 'orders/order_card_form', locals: {f: f}
+
+                    .container-fluid
+                      .col-md-12
+                        .col-md-4.col-sm-offset-4.text-center
+                          .spinner
+                            .bounce1
+                            .bounce2
+                            .bounce3
+
+
+                    .row.l-margin-top-big
+                      .col-md-10.col-md-offset-1
+                        =f.submit 'Purchase Mock Exam', class: 'btn btn-red'
 

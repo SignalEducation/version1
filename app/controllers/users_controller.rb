@@ -28,7 +28,6 @@
 #  password_reset_token             :string
 #  password_reset_at                :datetime
 #  stripe_customer_id               :string
-#  corporate_customer_id            :integer
 #  created_at                       :datetime
 #  updated_at                       :datetime
 #  locale                           :string
@@ -36,7 +35,6 @@
 #  trial_ended_notification_sent_at :datetime
 #  crush_offers_session_id          :string
 #  subscription_plan_category_id    :integer
-#  employee_guid                    :string
 #  password_change_required         :boolean
 #  session_key                      :string
 #  first_description                :text
@@ -59,21 +57,21 @@
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
 #  terms_and_conditions             :boolean          default(FALSE)
-#  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
 #  description                      :text
+#  free_trial_ended_at              :datetime
 #
 
 class UsersController < ApplicationController
 
-  before_action :logged_in_required, except: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product, :profile, :profile_index]
-  before_action :logged_out_required, only: [:student_new, :student_create, :new_product_user, :create_product_user, :new_session_product, :create_session_product]
+  before_action :logged_in_required, except: [:student_new, :student_create, :profile, :profile_index]
+  before_action :logged_out_required, only: [:student_new, :student_create]
   before_action only: [:destroy, :create] do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details] do
-    ensure_user_is_of_type(['admin', 'customer_support_manager'])
+    ensure_user_is_of_type(%w(admin customer_support_manager))
   end
 
   before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan]
@@ -84,16 +82,7 @@ class UsersController < ApplicationController
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
     @orders = @user.orders
-    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
-    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
-
-    if current_user.corporate_manager? || current_user.corporate_customer?
-      @corporate_customer = current_user.corporate_customer
-      @footer = false
-    else
-      @footer = true
-    end
-
+    @footer = true
   end
 
   #Admin & CustomerSupport Manager views under dashboard tabs
@@ -124,16 +113,6 @@ class UsersController < ApplicationController
     render 'users/admin_view/user_subscription_status'
   end
 
-  def user_courses_status
-    @user = User.find(params[:user_id])
-    @subject_courses = SubjectCourse.all_active.all_in_order.for_public.all_not_restricted
-    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
-    @first_courses = all_courses.first
-    @second_courses = all_courses.last
-
-    render 'users/admin_view/user_courses_status'
-  end
-
   def user_enrollments_details
     @user = User.find(params[:user_id])
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
@@ -143,12 +122,18 @@ class UsersController < ApplicationController
   def user_purchases_details
     @user = User.find(params[:user_id])
     @orders = @user.orders
-    @product_orders = @orders.where.not(subject_course_id: nil).all_in_order
-    @mock_exam_orders = @orders.where.not(mock_exam_id: nil).all_in_order
     render 'users/admin_view/user_purchases_details'
   end
 
-
+  def user_courses_status
+    #This is for seeing a tutors courses
+    @user = User.find(params[:user_id])
+    @subject_courses = SubjectCourse.all_active.all_in_order
+    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
+    @first_courses = all_courses.first
+    @second_courses = all_courses.last
+    render 'users/admin_view/user_courses_status'
+  end
 
   #Admin & CustomerSupport Manager user actions
   def new
@@ -160,6 +145,7 @@ class UsersController < ApplicationController
   end
 
   def create
+    #Admin creating users
     if Rails.env.production?
       password = SecureRandom.hex(5)
     else
@@ -176,11 +162,7 @@ class UsersController < ApplicationController
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
       end
-      if @user.corporate_manager? || @user.corporate_student?
-        MandrillWorker.perform_async(@user.id, 'corporate_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      else
-        MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      end
+      MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -212,12 +194,11 @@ class UsersController < ApplicationController
 
   #Logged Out actions to create account/session for sub account and product accounts
   def student_new
-    redirect_to root_url if current_corporate
     @user = User.new
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
-    @topic_interests = Group.all_active.all_in_order.for_public
+    @topic_interests = Group.all_active.all_in_order
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|
@@ -239,10 +220,9 @@ class UsersController < ApplicationController
     else
       @navbar = false
       @footer = false
-      @topic_interests = Group.all_active.all_in_order.for_public
+      @topic_interests = Group.all_active.all_in_order
 
       @user = User.new(student_allowed_params)
-      @user.student_user_type_id = StudentUserType.default_free_trial_user_type.try(:id)
       @user.user_group_id = UserGroup.default_student_user_group.try(:id)
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -292,88 +272,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def new_product_user
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @user = User.new
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
-    @product = @course.products.in_currency(@currency_id).last
-    @topic_interests = Group.all_active.all_in_order.for_public
-    @navbar = false
-    @footer = false
-  end
-
-  def create_product_user
-    redirect_to root_url if current_user
-    @navbar = false
-    @footer = false
-    @topic_interests = Group.all_active.all_in_order.for_public
-
-    @course = SubjectCourse.find(params[:user][:subject_course_id])
-    @product = Product.where(subject_course_id: @course.id).first
-    @user = User.new(student_allowed_params)
-    @user.user_group_id = UserGroup.default_student_user_group.try(:id)
-    @user.student_user_type_id = StudentUserType.default_product_user_type.try(:id)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @user.account_activation_code = SecureRandom.hex(10)
-    @user.email_verification_code = SecureRandom.hex(10)
-    @user.password_confirmation = @user.password
-    # Check for CrushOffers cookie and assign it to the User
-    if cookies.encrypted[:crush_offers]
-      @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
-      cookies.delete(:crush_offers)
-    end
-    # Create the customer object on stripe
-    stripe_customer = Stripe::Customer.create(
-        email: @user.try(:email)
-    )
-    @user.stripe_customer_id = stripe_customer.id
-    @user.free_trial = false
-    @user.trial_limit_in_days = 0
-
-    if @user.valid? && @user.save
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-
-      user = User.get_and_activate(@user.account_activation_code)
-      UserSession.create(user)
-      redirect_to users_new_order_url(@course.name_url)
-    else
-      render action: :new_product_user
-    end
-  end
-
-  def new_session_product
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = @country.currency_id
-    @product = @course.products.in_currency(@currency_id).last
-    @user_session = UserSession.new
-    @navbar = false
-    @footer = false
-  end
-
-  def create_session_product
-    @navbar = nil
-    @footer = nil
-    @course = SubjectCourse.find_by_id(params[:user_session][:subject_course_id])
-    @product = Product.where(subject_course_id: @course.id).first
-    @user_session = UserSession.new(sign_in_params)
-    if @user_session.save
-      @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
-      @user_session.user.update_attribute(:session_key, session[:session_id])
-      flash[:error] = nil
-      redirect_to users_new_order_url(@course.name_url)
-    else
-      render action: :new_session_product
-    end
-  end
-
-
   #Logged In actions to create subscriptions and associated objects(invoices, coupons)
   def new_subscription
     redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
@@ -383,16 +281,7 @@ class UsersController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : @user.country
     @currency_id = @country.currency_id
-
-
-    @subscription_plans = SubscriptionPlan
-                              .where('price > 0.0')
-                              .includes(:currency)
-                              .for_students
-                              .in_currency(@currency_id)
-                              .generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid])
-                              .all_active
-                              .all_in_order
+    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
   end
 
   def create_subscription
@@ -411,9 +300,7 @@ class UsersController < ApplicationController
           redirect_to user_new_subscription_url(current_user.id)
         else
           stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-
           stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
-
           stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
           if stripe_customer && stripe_subscription
             subscription = Subscription.new(
@@ -435,19 +322,12 @@ class UsersController < ApplicationController
 
           if upgrade
             user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-
-            if user.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-              new_user_type_id = StudentUserType.default_sub_user_type.id
-            elsif user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-              new_user_type_id = StudentUserType.default_sub_user_type.id
-
-            elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-              new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
+            if !user.free_trial_ended_at.nil?
+              trial_ended_date = user.free_trial_ended_at
             else
-              new_user_type_id = user.student_user_type_id
+              trial_ended_date = Proc.new{Time.now}.call
             end
-
-            current_user.update_attributes(free_trial: false, student_user_type_id: new_user_type_id)
+            current_user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
             redirect_to personal_upgrade_complete_url
           else
             redirect_to user_new_subscription_url(current_user.id)
@@ -456,7 +336,6 @@ class UsersController < ApplicationController
         end
       else
         redirect_to user_new_subscription_url(current_user.id)
-        #TODO need to add notification here for me
         flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
       end
 
@@ -533,7 +412,7 @@ class UsersController < ApplicationController
   def reactivation_complete
     @subscription = current_user.active_subscription
     @subject_course_user_logs = current_user.subject_course_user_logs
-    @groups = Group.for_public.all_active.all_in_order
+    @groups = Group.all_active.all_in_order
   end
 
   def change_plan
@@ -620,26 +499,6 @@ class UsersController < ApplicationController
   end
 
 
-  #Public facing standard views for tutors (TODO move this footer_pages controller)
-  def profile
-    #/profile/id
-    @tutor = User.all_tutors.where(id: params[:id]).first
-    if @tutor
-      @courses = @tutor.subject_courses
-      seo_title_maker(@tutor.full_name, @tutor.description, nil)
-    else
-      redirect_to tutors_url
-    end
-  end
-
-  def profile_index
-    #/profiles
-    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
-    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
-  end
-
-
-
   protected
 
   def get_variables
@@ -652,7 +511,6 @@ class UsersController < ApplicationController
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
-    @corporate_customers = CorporateCustomer.all_in_order
     @certs = SubjectCourseUserLog.for_user_or_session(@user.try(:id), current_session_guid).where(completed: true)
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
@@ -660,7 +518,7 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :corporate_customer_id, :address, :country_id, :profile_image, :date_of_birth, :student_user_type_id, :description)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description)
     else
       params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions)
     end

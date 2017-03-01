@@ -1,1 +1,1 @@
-json.extract! @user_group, :id, :name, :description, :individual_student, :tutor, :content_manager, :blogger, :corporate_customer, :site_admin, :subscription_required_at_sign_up, :subscription_required_to_see_content, :created_at, :updated_at
+json.extract! @user_group, :id, :name, :description, :individual_student, :tutor, :content_manager, :blogger, :site_admin, :created_at, :updated_at

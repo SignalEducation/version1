@@ -20,9 +20,7 @@
                   %th=t('views.user_groups.form.complimentary')
                   %th=t('views.user_groups.form.tutor')
                   %th=t('views.user_groups.form.content_manager')
-                  %th=t('views.user_groups.form.corporate_customer')
                   %th=t('views.user_groups.form.site_admin')
-                  %th=t('views.user_groups.form.subscription_required_to_see_content')
                   %th
                 -@user_groups.each do |user_group|
                   %tr
@@ -31,9 +29,7 @@
                     %td=tick_or_cross(user_group.complimentary)
                     %td=tick_or_cross(user_group.tutor)
                     %td=tick_or_cross(user_group.content_manager)
-                    %td=tick_or_cross(user_group.corporate_customer)
                     %td=tick_or_cross(user_group.site_admin)
-                    %td=tick_or_cross(user_group.subscription_required_to_see_content)
                     %td
                       =link_to t('views.general.show'), user_group_url(user_group), class: 'btn btn-cyan btn-small'
                       =link_to t('views.general.edit'), edit_user_group_url(user_group), class: 'btn btn-cyan btn-small'

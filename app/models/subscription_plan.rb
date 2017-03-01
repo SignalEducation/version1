@@ -4,7 +4,6 @@
 #
 #  id                            :integer          not null, primary key
 #  available_to_students         :boolean          default(FALSE), not null
-#  available_to_corporates       :boolean          default(FALSE), not null
 #  all_you_can_eat               :boolean          default(TRUE), not null
 #  payment_frequency_in_months   :integer          default(1)
 #  currency_id                   :integer
@@ -26,9 +25,9 @@ class SubscriptionPlan < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :available_to_students, :available_to_corporates,
-                  :all_you_can_eat, :payment_frequency_in_months,
-                  :currency_id, :price, :available_from, :available_to,
+  attr_accessible :available_to_students, :all_you_can_eat,
+                  :payment_frequency_in_months, :currency_id,
+                  :price, :available_from, :available_to,
                   :trial_period_in_days, :name, :subscription_plan_category_id,
                   :livemode
 
@@ -52,7 +51,7 @@ class SubscriptionPlan < ActiveRecord::Base
   validates :trial_period_in_days, presence: true,
             numericality: {only_integer: true, greater_than_or_equal_to: 0,
                            less_than: 32}
-  validate  :one_of_customer_types_checked
+  validates  :available_to_students, presence: true
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
 
   # callbacks
@@ -65,7 +64,6 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :all_in_display_order, -> { order(:created_at) }
   scope :all_in_update_order, -> { order(:updated_at) }
   scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
-  scope :for_corporates, -> { where(available_to_corporates: true) }
   scope :for_students, -> { where(available_to_students: true) }
   scope :generally_available, -> { where(subscription_plan_category_id: nil) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
@@ -104,7 +102,7 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def unlimited_access
-    I18n.t('views.general.all_courses')
+    I18n.t('views.general.all_you_can_eat_yes')
   end
 
   def cancel_anytime
@@ -119,10 +117,6 @@ class SubscriptionPlan < ActiveRecord::Base
 
   def destroyable?
     self.subscriptions.empty? && self.livemode == Invoice::STRIPE_LIVE_MODE
-  end
-
-  def free_trial?
-    self.price == 0.0
   end
 
   protected
@@ -172,13 +166,6 @@ class SubscriptionPlan < ActiveRecord::Base
   rescue => e
     errors.add(:stripe, e.message)
     false
-  end
-
-  def one_of_customer_types_checked
-    if !self.available_to_students && !self.available_to_corporates
-      errors.add(:base, I18n.t('models.subscription_plans.at_least_one_customer_type'))
-      false
-    end
   end
 
   def update_on_stripe_platform

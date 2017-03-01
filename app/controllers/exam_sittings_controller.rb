@@ -15,7 +15,7 @@ class ExamSittingsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables
 
@@ -68,7 +68,7 @@ class ExamSittingsController < ApplicationController
     if params[:id].to_i > 0
       @exam_sitting = ExamSitting.where(id: params[:id]).first
     end
-    @subject_courses = SubjectCourse.all_active.all_live.for_public.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_live.all_in_order
     @exam_bodies = ExamBody.all_in_order
   end
 

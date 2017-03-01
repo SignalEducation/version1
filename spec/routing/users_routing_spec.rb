@@ -28,7 +28,6 @@
 #  password_reset_token             :string
 #  password_reset_at                :datetime
 #  stripe_customer_id               :string
-#  corporate_customer_id            :integer
 #  created_at                       :datetime
 #  updated_at                       :datetime
 #  locale                           :string
@@ -36,7 +35,6 @@
 #  trial_ended_notification_sent_at :datetime
 #  crush_offers_session_id          :string
 #  subscription_plan_category_id    :integer
-#  employee_guid                    :string
 #  password_change_required         :boolean
 #  session_key                      :string
 #  first_description                :text
@@ -59,10 +57,10 @@
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
 #  terms_and_conditions             :boolean          default(FALSE)
-#  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
 #  description                      :text
+#  free_trial_ended_at              :datetime
 #
 
 require 'rails_helper'

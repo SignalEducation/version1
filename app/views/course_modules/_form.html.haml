@@ -4,13 +4,11 @@
       =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
       =f.hidden_field :sorting_order
       =f.hidden_field :subject_course_id
-      -if current_user.corporate_customer?
-        =f.hidden_field :active, value: true
-      -if current_user.admin? || current_user.content_manager?
-        =f.label :subject_course_id, t('views.course_modules.form.subject_course_id'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-        %br/
+
+      =f.label :subject_course_id, t('views.course_modules.form.subject_course_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %br/
       =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
@@ -18,41 +16,39 @@
       =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      -unless current_user.corporate_customer?
-        %br/
-        .col-sm-11.col-sm-offset-1
-          .checkbox
-            %label
-              =f.check_box :active
-              =t('views.course_modules.form.active')
+      %br/
+      .col-sm-11.col-sm-offset-1
+        .checkbox
+          %label
+            =f.check_box :active
+            =t('views.course_modules.form.active')
 
     .col-md-6
       =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
 
-      -unless current_corporate
-        %br/
-        %br/
-        .col-sm-11.col-sm-offset-1
-          .form-group{style: 'margin-left: 0px;'}
-            %table.col-sm-12
-              %thead
-                %tr
-                  %th='Tuition'
-                  %th='Test'
-                  %th='Revision'
-                  %th
-              %tbody
-                %tr
-                  %td.check
-                    =f.check_box :tuition
-                  %td.check
-                    =f.check_box :test
-                  %td.check
-                    =f.check_box :revision
-                  %td
-                    =link_to('Clear', '#', class: 'check clear')
+      %br/
+      %br/
+      .col-sm-11.col-sm-offset-1
+        .form-group{style: 'margin-left: 0px;'}
+          %table.col-sm-12
+            %thead
+              %tr
+                %th='Tuition'
+                %th='Test'
+                %th='Revision'
+                %th
+            %tbody
+              %tr
+                %td.check
+                  =f.check_box :tuition
+                %td.check
+                  =f.check_box :test
+                %td.check
+                  =f.check_box :revision
+                %td
+                  =link_to('Clear', '#', class: 'check clear')
         %br/
         =f.label :discourse_topic_id, t('views.subject_courses.form.discourse_topic_id'), class: 'control-label'
         .input-group.input-group-lg.full-width

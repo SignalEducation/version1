@@ -16,6 +16,7 @@
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
 #  terms_and_conditions      :boolean          default(FALSE)
+#  reference_guid            :string
 #
 
 require 'rails_helper'
@@ -28,7 +29,7 @@ RSpec.describe OrdersController, type: :routing do
     end
 
     it 'routes to #new' do
-      expect(get: '/orders/new').to route_to('orders#new')
+      expect(get: '/order/new/1').to route_to('orders#new', product_id: '1')
     end
 
     it 'routes to #show' do

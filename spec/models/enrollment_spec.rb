@@ -33,10 +33,10 @@ describe Enrollment do
   #it { expect(Enrollment.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
+  it { should belong_to(:exam_body) }
   it { should belong_to(:user) }
   it { should belong_to(:subject_course) }
   it { should belong_to(:subject_course_user_log) }
-  it { should belong_to(:exam_body) }
 
   # validation
   it { should validate_presence_of(:user_id) }
@@ -54,11 +54,15 @@ describe Enrollment do
   # scopes
   it { expect(Enrollment).to respond_to(:all_in_order) }
   it { expect(Enrollment).to respond_to(:all_active) }
+  it { expect(Enrollment).to respond_to(:all_paused) }
+  it { expect(Enrollment).to respond_to(:this_week) }
+  it { expect(Enrollment).to respond_to(:all_completed) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:set_empty_strings_to_nil) }
 
 
 end

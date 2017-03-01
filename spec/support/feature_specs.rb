@@ -31,14 +31,6 @@ def fill_in_sign_in_form(user)
   end
 end
 
-def fill_in_corp_verification_form(corp)
-  within('.login-form') do
-    fill_in I18n.t('views.user_sessions.form.user_name'), with: corp.user_name
-    fill_in I18n.t('views.user_sessions.form.password'), with: corp.passcode
-    click_button I18n.t('views.general.enter')
-  end
-end
-
 def sign_out
   find('.dropdown.dropdown-normal').click
   click_link(I18n.t('views.general.sign_out'))
@@ -124,7 +116,7 @@ def student_picks_a_subscription_plan(currency, payment_frequency)
 end
 
 def sign_up_and_upgrade_from_free_trial
-  visit all_groups_path
+  visit root_path
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)

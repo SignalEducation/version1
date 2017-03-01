@@ -28,7 +28,6 @@
 #  password_reset_token             :string
 #  password_reset_at                :datetime
 #  stripe_customer_id               :string
-#  corporate_customer_id            :integer
 #  created_at                       :datetime
 #  updated_at                       :datetime
 #  locale                           :string
@@ -36,7 +35,6 @@
 #  trial_ended_notification_sent_at :datetime
 #  crush_offers_session_id          :string
 #  subscription_plan_category_id    :integer
-#  employee_guid                    :string
 #  password_change_required         :boolean
 #  session_key                      :string
 #  first_description                :text
@@ -59,10 +57,10 @@
 #  free_trial                       :boolean          default(FALSE)
 #  trial_limit_in_days              :integer          default(0)
 #  terms_and_conditions             :boolean          default(FALSE)
-#  student_user_type_id             :integer
 #  discourse_user                   :boolean          default(FALSE)
 #  date_of_birth                    :date
 #  description                      :text
+#  free_trial_ended_at              :datetime
 #
 
 class User < ActiveRecord::Base
@@ -76,29 +74,27 @@ class User < ActiveRecord::Base
   # attr-accessible
   attr_accessible :email, :first_name, :last_name, :active,
                   :country_id, :user_group_id, :password_reset_requested_at,
-                  :password_reset_token, :password_reset_at, :stripe_customer_id,
-                  :corporate_customer_id, :password,
-                  :password_confirmation, :current_password, :locale,
-                  :subscriptions_attributes, :employee_guid, :password_change_required,
-                  :address, :first_description, :second_description, :wistia_url, :personal_url,
-                  :name_url, :qualifications, :profile_image, :topic_interest, :email_verification_code,
-                  :email_verified_at, :email_verified, :account_activated_at, :account_activation_code,
-                  :session_key, :stripe_account_balance, :trial_limit_in_seconds, :free_trial,
-                  :trial_limit_in_days, :trial_ended_notification_sent_at,
-                  :terms_and_conditions, :student_user_type_id, :date_of_birth,
-                  :description
+                  :password_reset_token, :password_reset_at,
+                  :stripe_customer_id, :password, :password_confirmation,
+                  :current_password, :locale, :subscriptions_attributes,
+                  :password_change_required, :address,
+                  :first_description, :second_description, :wistia_url,
+                  :personal_url, :name_url, :qualifications,
+                  :profile_image, :topic_interest,
+                  :email_verification_code, :email_verified_at,
+                  :email_verified, :account_activated_at,
+                  :account_activation_code, :session_key,
+                  :stripe_account_balance, :trial_limit_in_seconds,
+                  :free_trial, :trial_limit_in_days,
+                  :trial_ended_notification_sent_at, :terms_and_conditions,
+                  :date_of_birth, :description, :free_trial_ended_at
 
   # Constants
-  EMAIL_FREQUENCIES = %w(off daily weekly monthly)
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
-  USER_STATUS = %w(valid_free_member expired_free_member valid_paying_member canceled_paying_member expired_paying_member other_user)
 
   # relationships
-  belongs_to :corporate_customer
-             # employed by the corporate customer
   belongs_to :country
-  belongs_to :student_user_type
   has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :enrollments
@@ -117,7 +113,6 @@ class User < ActiveRecord::Base
   has_one :referral_code
   has_one :referred_signup
   belongs_to :subscription_plan_category
-  has_and_belongs_to_many :corporate_groups
   has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :subscriptions
@@ -130,11 +125,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
-  validates :student_user_type_id, presence: true, if: :individual_student?
   validates :country_id, presence: true, if: :individual_student?
-  validates :corporate_customer_id,
-            numericality: { unless: -> { corporate_customer_id.nil? }, only_integer: true, greater_than: 0 },
-            presence: { if: -> { ug = UserGroup.find_by_id(user_group_id); ug.try(:corporate_customer) || ug.try(:corporate_student) } }
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
@@ -184,11 +175,7 @@ class User < ActiveRecord::Base
       if user
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
         #Send reset password email from Mandrill
-        if user.corporate_customer_id
-          MandrillWorker.perform_async(user.id, 'corporate_password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
-        else
-          MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
-        end
+        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
       end
     end
   end
@@ -239,112 +226,47 @@ class User < ActiveRecord::Base
     self.user_group.try(:site_admin)
   end
 
-  def process_free_trial_limit_reached
-    text = "We just wanted to let you know that you have reached the free trial limit of #{ENV["free_trial_limit_in_seconds"].to_i/60} minutes!"
-    #MandrillWorker.perform_async(user.id, "send_free_trial_ended_email", url_helpers.user_new_subscription_url(user_id: self.id, host: 'www.learnsignal.com'), text) if Rails.env.production?
-    if self.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-      new_user_type_id = StudentUserType.default_no_access_user_type.id
-    elsif self.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
-      new_user_type_id = StudentUserType.default_product_user_type.id
-    else
-      new_user_type_id = self.student_user_type_id
-    end
-    self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now, student_user_type_id: new_user_type_id)
+  def active_subscription
+    self.subscriptions.where(active: true).in_created_order.last
   end
 
-  def user_status
-    if self.individual_student?
-      if self.student_user_type_id == StudentUserType.default_free_trial_user_type.id
-        if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid?
-          return 'valid_free_member'
-        else
-          return 'expired_free_member'
-        end
-      elsif self.student_user_type_id == StudentUserType.default_sub_user_type.id
-        if !self.free_trial && self.subscriptions.any?
-          if self.valid_subscription
-            return 'valid_sub_member'
-          elsif self.canceled_member?
-            return 'canceled_sub_member'
-          elsif self.canceled_pending?
-            return 'cancel_pending_sub_member'
-          elsif self.active_subscription && self.active_subscription.current_status == 'past_due'
-            return 'failed_payment_sub_member'
-          end
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_product_user_type.id
-        if self.valid_orders?
-          return 'product_order_member'
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-        if !self.free_trial && self.subscriptions.any? && self.valid_orders?
-          if self.valid_subscription
-            return 'valid_sub_product_member'
-          elsif self.canceled_member?
-            return 'canceled_sub_product_member'
-          elsif self.canceled_pending?
-            return 'cancel_pending_sub_product_member'
-          elsif self.active_subscription && self.active_subscription.current_status == 'past_due'
-            return 'failed_payment_sub_product_member'
-          end
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_free_trial_and_product_user_type.id
-        if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid? && self.valid_orders?
-          return 'valid_free_product_member'
-        else
-          return ''
-        end
-      elsif self.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        if self.free_trial && !self.subscriptions.any? && self.days_or_seconds_valid?
-          return 'valid_free_member'
-        elsif !self.subscriptions.any? && !self.days_or_seconds_valid?
-          return 'expired_free_member'
-        elsif !self.free_trial && self.subscriptions.any?
-          if self.valid_subscription
-            return 'valid_sub_member'
-          elsif self.canceled_member?
-            return 'canceled_sub_member'
-          elsif self.canceled_pending?
-            return 'cancel_pending_sub_member'
-          elsif self.active_subscription && self.active_subscription.current_status == 'past_due'
-            return 'failed_payment_sub_member'
-          else
-            return 'no_access_member'
-          end
-        else
-          return 'no_access_member'
-        end
-      end
-    else
-      return 'non_student_member'
-    end
+  def process_free_trial_limit_reached
+    #Called from a Cron Task and CMEUL
+    self.update_attributes(free_trial_ended_at: Time.now) unless days_or_seconds_valid?
   end
 
   def user_subscription_status
-    if self.user_status == 'valid_free_member'
-      status =  'Free Trial Member'
-    elsif self.user_status == 'expired_free_member'
-      status =  'Free Trial Expired'
-    elsif self.user_status == 'valid_sub_member' || self.user_status == 'valid_sub_product_member'
-      status =  'Valid Subscription'
-    elsif self.user_status == 'canceled_sub_member'
-      status =  'Canceled Subscription'
-    elsif self.user_status == 'cancel_pending_sub_member'
-      status =  'Subscription Set to Cancel'
-    elsif self.user_status == 'failed_payment_sub_member'
-      status =  'Failed Payment'
-    elsif self.user_status == 'product_order_member' && self.subscriptions.any?
-      status =  'Canceled Subscription'
+    current_subscription = self.active_subscription
+    if current_subscription
+      case current_subscription.current_status
+        when 'active'
+          'Active Subscription'
+        when 'past_due'
+          'Past Due Subscription'
+        when 'canceled-pending'
+          'Canceled-pending Subscription'
+        when 'canceled'
+          'Canceled Subscription'
+        when 'unpaid'
+          'Unpaid Subscription'
+        when 'suspended'
+          'Suspended Subscription'
+        else
+          'Invalid Subscription'
+      end
     else
-      status =  'Unknown'
+      'Invalid Subscription'
     end
-    return status
+  end
+
+  def user_account_status
+    if self.valid_free_member?
+      'Valid Free Trial'
+    elsif self.expired_free_member?
+      'Expired Free Trial'
+    elsif self.active_subscription
+      self.user_subscription_status
+    end
   end
 
   def days_or_seconds_valid?
@@ -388,28 +310,16 @@ class User < ActiveRecord::Base
     free_trial_minutes - self.trial_limit_in_seconds
   end
 
-  def check_and_free_trial_status
-    if self.no_subscription_user && !self.days_or_seconds_valid?
-      self.update_attributes(free_trial: false, trial_ended_notification_sent_at: Time.now)
-    elsif self.no_subscription_user && self.days_or_seconds_valid?
-      self.update_attributes(free_trial: true, trial_ended_notification_sent_at: nil)
-    end
+  def free_member?
+    self.free_trial
   end
 
-  def free_member?
-    self.user_status == 'valid_free_member'
+  def valid_free_member?
+    self.free_trial && self.days_or_seconds_valid?
   end
 
   def expired_free_member?
-    self.user_status == 'expired_free_member'
-  end
-
-  def no_subscription_user
-    if !self.subscriptions.any? && self.student_user_type_id == (StudentUserType.default_product_user_type.id || StudentUserType.default_no_access_user_type.id)
-      true
-    else
-      false
-    end
+    self.free_trial && !self.days_or_seconds_valid?
   end
 
   def canceled_member?
@@ -428,72 +338,49 @@ class User < ActiveRecord::Base
     true if self.active_subscription && %w(active past_due).include?(self.active_subscription.current_status)
   end
 
-  def valid_subject_course_ids
-    subject_course_ids = []
+  def valid_order_ids
+    order_ids = []
     self.orders.each do |order|
       if %w(paid).include?(order.current_status)
-        subject_course_ids << order.subject_course_id
+        order_ids << order.id
       end
     end
-    return subject_course_ids
+    return order_ids
   end
 
   def valid_orders?
-    self.valid_subject_course_ids.any?
+    self.valid_order_ids.any?
   end
 
-  def active_subscription
-    self.subscriptions.where(active: true).last
-  end
-
-  def one_active_subscription?
-    if self.subscriptions.any?
-      self.subscriptions.all_active.count == 1
+  def purchased_products
+    if self.valid_orders?
+      ids = self.valid_order_ids
+      orders = Order.where(id: ids)
+      product_ids = orders.map(&:product_id)
+      products = Product.where(id: product_ids)
+      products
     end
   end
 
   def permission_to_see_content(course)
-    if self.corporate_user?
-      if course.restricted && self.corporate_customer_id != course.corporate_customer_id
-        return false
-      else
-        if self.corporate_student?
-          if self.restricted_subject_course_ids.include?(course.id)
-            return false
-          else
-            return true
-          end
-        elsif self.corporate_customer? || self.corporate_manager?
-          return true
+    if self.individual_student?
+      if course.active && course.live
+        if self.valid_free_member?
+          true
+        elsif expired_free_member?
+          false
+        elsif self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
+          true
         else
-          return false
+          false
         end
+      else
+        false
       end
     elsif self.complimentary_user?
-      if course.subscription
-        return true
-      else
-        return true
-      end
-    elsif self.individual_student?
-
-      if course.subscription
-        if self.free_trial && self.free_trial_student?
-          return true
-        elsif self.subscription_student? && self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
-          return true
-        else
-          return false
-        end
-      elsif course.product
-        if self.product_order_student? && valid_subject_course_ids.include?(course.id)
-          return true
-        else
-          return false
-        end
-      end
+      true
     else
-      return true
+      false
     end
   end
 
@@ -536,22 +423,6 @@ class User < ActiveRecord::Base
     self.user_group.try(:content_manager)
   end
 
-  def corporate_customer?
-    self.user_group.try(:corporate_customer)
-  end
-
-  def corporate_manager?
-    self.user_group.try(:corporate_manager)
-  end
-
-  def corporate_student?
-    self.user_group.try(:corporate_student)
-  end
-
-  def corporate_tutor?
-    self.user_group.try(:corporate_tutor) && !self.user_group.try(:corporate_customer)
-  end
-
   def activate_user
     self.active = true
     self.account_activated_at = Proc.new{Time.now}.call
@@ -591,8 +462,7 @@ class User < ActiveRecord::Base
         self.student_exam_tracks.empty? &&
         self.subscriptions.empty? &&
         self.subscription_payment_cards.empty? &&
-        self.subscription_transactions.empty? &&
-        self.user_notifications.empty?
+        self.subscription_transactions.empty?
   end
 
   def full_name
@@ -600,145 +470,19 @@ class User < ActiveRecord::Base
   end
 
   def individual_student?
-    self.user_group.try(:individual_student) && self.corporate_customer_id.to_i == 0
+    self.user_group.try(:individual_student)
   end
 
   def complimentary_user?
-    self.user_group.try(:complimentary) && self.corporate_customer_id.to_i == 0
-  end
-
-  def corporate_user?
-    self.user_group.try(:corporate_customer) || self.user_group.try(:corporate_student) || self.user_group.try(:corporate_manager)
+    self.user_group.try(:complimentary)
   end
 
   def subject_course_user_log_course_ids
     self.subject_course_user_logs.map(&:subject_course_id)
   end
 
-  #######################################################
-  #StudentUserTypes
-  #######################################################
-  def free_trial_student?
-    self.student_user_type.try(:free_trial)
-  end
-
-  def subscription_student?
-    self.student_user_type.try(:subscription)
-  end
-
-  def product_order_student?
-    self.student_user_type.try(:product_order)
-  end
-
-  def no_product_or_sub_student?
-    #User that created an account through purchase product process but didn't complete purchase or has an expired free trial so has an account but no access to any content
-    !self.student_user_type.try(:product_order) && !self.student_user_type.try(:subscription) && !self.student_user_type.try(:free_trial)
-  end
-
   def tutor?
     self.user_group.try(:tutor)
-  end
-
-  #######################################################
-  #CorporateAccountMethods
-  #######################################################
-
-  def compulsory_group_ids
-    @compulsory_group_ids ||=
-      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_group_ids }.flatten.uniq : []
-  end
-
-  def restricted_group_ids
-    @restricted_group_ids ||=
-      corporate_student? ?
-        (corporate_groups.map { |cg| cg.restricted_group_ids }.flatten.uniq - compulsory_group_ids) : []
-  end
-
-  def compulsory_subject_course_ids
-    @compulsory_subject_course_ids ||=
-      corporate_student? ? corporate_groups.map { |cg| cg.compulsory_subject_course_ids }.flatten.uniq : []
-  end
-
-  def restricted_subject_course_ids
-    @restricted_subject_course_ids ||=
-      corporate_student? ?
-        (corporate_groups.map { |cg| cg.restricted_subject_course_ids }.flatten.uniq - compulsory_subject_course_ids) : []
-  end
-
-  def self.parse_csv(csv_content)
-    csv_data = []
-    duplicate_emails = []
-    has_errors = false
-    if csv_content.lines.count == 1 && csv_content.include?("\r")
-      csv_content.strip.split("\r").each do |line|
-        line.to_s.strip.split(',').tap do |fields|
-          error_msgs = []
-          if fields.length == 3
-            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-            error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
-
-            duplicate_emails << fields[0]
-          else
-            error_msgs << I18n.t('models.users.invalid_field_count')
-          end
-          has_errors = true unless error_msgs.empty?
-          csv_data << { values: fields, error_messages: error_msgs }
-        end
-      end
-    else
-      if csv_content.respond_to?(:each_line)
-        csv_content.each_line do |line|
-          line.strip.split(',').tap do |fields|
-            error_msgs = []
-            if fields.length == 3
-              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-              error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
-
-              duplicate_emails << fields[0]
-            else
-              error_msgs << I18n.t('models.users.invalid_field_count')
-            end
-            has_errors = true unless error_msgs.empty?
-            csv_data << { values: fields, error_messages: error_msgs }
-          end
-        end
-      else
-        has_errors = true
-      end
-
-    end
-    has_errors = true if csv_data.empty?
-    return csv_data, has_errors
-  end
-
-  def self.bulk_create(csv_data, corporate_manager)
-    users = []
-    used_emails = []
-    if csv_data.is_a?(Hash)
-      self.transaction do
-        csv_data.each do |k,v|
-          user = User.where(email: v['email']).first
-          if user || v['email'].empty?
-            users = []
-            raise ActiveRecord::Rollback
-          end
-          password = SecureRandom.hex(5)
-          verification_code = ApplicationController::generate_random_code(20)
-          time_now = Proc.new{Time.now}.call
-          user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, user_group_id: UserGroup.where(corporate_student: true).first.id, country_id: corporate_manager.country_id, password_change_required: true, corporate_customer_id: corporate_manager.corporate_customer_id, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
-          if used_emails.include?(v['email']) || !user.valid?
-            users = []
-            raise ActiveRecord::Rollback
-          end
-          users << user
-          used_emails << user.email
-        end
-      end
-    end
-    users
   end
 
   def self.to_csv(options = {})
@@ -749,17 +493,6 @@ class User < ActiveRecord::Base
       all.each do |user|
         csv << attributes.map{ |attr| user.send(attr) }
       end
-    end
-  end
-
-  # Should only be used from the console, it is to fix issues where free_trial subscriptions were canceled but no new plan was created
-  def create_free_trial_subscription
-    if self.subscriptions.first.free_trial? && self.subscriptions.first.current_status == 'canceled'
-      previous_free_trial_sub = self.subscriptions.first
-      currency = previous_free_trial_sub.subscription_plan.currency_id
-      subscription_plan = SubscriptionPlan.in_currency(currency).where(price: 0.0).last
-      new_sub = self.subscriptions.new(subscription_plan_id: subscription_plan.id, stripe_customer_id: self.stripe_customer_id, user_id: self.id)
-      new_sub.save
     end
   end
 
@@ -800,7 +533,6 @@ class User < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       new_sub = Subscription.new(
           user_id: user_id,
-          corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
           active: true,
@@ -818,14 +550,7 @@ class User < ActiveRecord::Base
       old_sub.update_attribute(:active, false)
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
-      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        new_user_type_id = StudentUserType.default_sub_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attributes(stripe_account_balance: stripe_customer.account_balance, student_user_type_id: new_user_type_id)
+      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
 
       return new_sub
     end
@@ -866,8 +591,8 @@ class User < ActiveRecord::Base
   def create_free_trial_email_workers
     unless Rails.env.test?
       new_subscription_url = Rails.application.routes.url_helpers.user_new_subscription_url(user_id: self.id, host: ENV['learnsignal_v3_server_email_domain'])
-      FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student?
-      FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student?
+      FreeTrialEmailWorker.perform_at(4.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 3) if self.individual_student? || self.free_member?
+      FreeTrialEmailWorker.perform_at(6.days, self.email, 'send_free_trial_ending_email', new_subscription_url, 1) if self.individual_student? || self.free_member?
     end
   end
 

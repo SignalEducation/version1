@@ -15,8 +15,6 @@
               %table.table.sorted_table{data: {destination: mock_exams_url}, style: 'font-size: 18px;'}
                 %thead
                   %tr
-                    %th=t('views.mock_exams.form.subject_course_id')
-                    %th=t('views.mock_exams.form.product_id')
                     %th=t('views.mock_exams.form.name')
                     %th
                     %th
@@ -24,12 +22,9 @@
                 %tbody
                   -@mock_exams.each do |mock_exam|
                     %tr{id: mock_exam.id}
-                      %td=mock_exam.subject_course.name
-                      %td=mock_exam.try(:product).try(:name)
                       %td=mock_exam.name
                       %td=mock_exam.sorting_order
                       %td
-                        =link_to t('views.general.view'), mock_exam, class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_mock_exam_url(mock_exam), class: 'btn btn-cyan btn-small'
                         -if mock_exam.destroyable?
                           =link_to t('views.general.delete'), mock_exam, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'

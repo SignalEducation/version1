@@ -27,6 +27,7 @@ describe ExamBody do
 
   # relationships
   it { should have_many(:enrollments) }
+  it { should have_many(:exam_sittings) }
   it { should have_many(:subject_courses) }
 
   # validation

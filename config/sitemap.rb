@@ -48,10 +48,10 @@ sitemap :site do
     end
   end
   url library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-  Group.all_active.for_public.each do |group|
+  Group.all_active.each do |group|
     url library_special_link(group), last_mod: group.updated_at, change_freq: 'weekly', priority: 1.0
   end
-  SubjectCourse.all_active.all_live.all_not_restricted.for_public.each do |course|
+  SubjectCourse.all_active.all_live.all_not_restricted.each do |course|
     url library_special_link(course), last_mod: course.updated_at, change_freq: 'weekly', priority: 1.0
   end
   #Sign In, Forgot Password

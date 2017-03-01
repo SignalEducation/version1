@@ -2,21 +2,20 @@
 #
 # Table name: subscriptions
 #
-#  id                    :integer          not null, primary key
-#  user_id               :integer
-#  corporate_customer_id :integer
-#  subscription_plan_id  :integer
-#  stripe_guid           :string
-#  next_renewal_date     :date
-#  complimentary         :boolean          default(FALSE), not null
-#  current_status        :string
-#  created_at            :datetime
-#  updated_at            :datetime
-#  stripe_customer_id    :string
-#  stripe_customer_data  :text
-#  livemode              :boolean          default(FALSE)
-#  active                :boolean          default(FALSE)
-#  terms_and_conditions  :boolean          default(FALSE)
+#  id                   :integer          not null, primary key
+#  user_id              :integer
+#  subscription_plan_id :integer
+#  stripe_guid          :string
+#  next_renewal_date    :date
+#  complimentary        :boolean          default(FALSE), not null
+#  current_status       :string
+#  created_at           :datetime
+#  updated_at           :datetime
+#  stripe_customer_id   :string
+#  stripe_customer_data :text
+#  livemode             :boolean          default(FALSE)
+#  active               :boolean          default(FALSE)
+#  terms_and_conditions :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -38,7 +37,6 @@ describe Subscription do
 
   # relationships
   it { should belong_to(:user) }
-  it { should belong_to(:corporate_customer) }
   it { should have_many(:invoices) }
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
@@ -49,8 +47,6 @@ describe Subscription do
   it { should validate_presence_of(:user_id).on(:update) }
 
   it { should validate_presence_of(:terms_and_conditions).on(:update) }
-
-  it { should_not validate_presence_of(:corporate_customer_id) }
 
   it { should validate_presence_of(:subscription_plan_id) }
 
@@ -82,6 +78,5 @@ describe Subscription do
   it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
-  it { should respond_to(:free_trial?) }
 
 end

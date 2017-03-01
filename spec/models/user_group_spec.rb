@@ -2,23 +2,19 @@
 #
 # Table name: user_groups
 #
-#  id                                   :integer          not null, primary key
-#  name                                 :string
-#  description                          :text
-#  individual_student                   :boolean          default(FALSE), not null
-#  corporate_student                    :boolean          default(FALSE), not null
-#  tutor                                :boolean          default(FALSE), not null
-#  content_manager                      :boolean          default(FALSE), not null
-#  blogger                              :boolean          default(FALSE), not null
-#  corporate_customer                   :boolean          default(FALSE), not null
-#  site_admin                           :boolean          default(FALSE), not null
-#  subscription_required_at_sign_up     :boolean          default(FALSE), not null
-#  subscription_required_to_see_content :boolean          default(FALSE), not null
-#  created_at                           :datetime
-#  updated_at                           :datetime
-#  complimentary                        :boolean          default(FALSE)
-#  customer_support                     :boolean          default(FALSE)
-#  marketing_support                    :boolean          default(FALSE)
+#  id                 :integer          not null, primary key
+#  name               :string
+#  description        :text
+#  individual_student :boolean          default(FALSE), not null
+#  tutor              :boolean          default(FALSE), not null
+#  content_manager    :boolean          default(FALSE), not null
+#  blogger            :boolean          default(FALSE), not null
+#  site_admin         :boolean          default(FALSE), not null
+#  created_at         :datetime
+#  updated_at         :datetime
+#  complimentary      :boolean          default(FALSE)
+#  customer_support   :boolean          default(FALSE)
+#  marketing_support  :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -39,8 +35,6 @@ describe UserGroup do
 
   # Constants
   it { expect(UserGroup.const_defined?(:FEATURES)).to eq(true) }
-  it { expect(UserGroup.const_defined?(:CORPORATE_STUDENTS)).to eq(true) }
-  it { expect(UserGroup.const_defined?(:CORPORATE_CUSTOMERS)).to eq(true) }
 
   # relationships
   it { should have_many(:users) }
@@ -63,8 +57,6 @@ describe UserGroup do
   it { expect(UserGroup).to respond_to(:default_complimentary_user_group) }
   it { expect(UserGroup).to respond_to(:default_student_user_group) }
   it { expect(UserGroup).to respond_to(:default_tutor_user_group) }
-  it { expect(UserGroup).to respond_to(:default_corporate_student_user_group) }
-  it { expect(UserGroup).to respond_to(:default_corporate_customer_user_group) }
   it { expect(UserGroup).to respond_to(:default_content_manager_user_group) }
   it { expect(UserGroup).to respond_to(:default_customer_support_user_group) }
   it { expect(UserGroup).to respond_to(:default_marketing_support_user_group) }

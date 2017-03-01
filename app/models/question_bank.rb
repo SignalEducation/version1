@@ -17,7 +17,8 @@ class QuestionBank < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :question_selection_strategy, :subject_course_id, :number_of_questions, :name, :active
+  attr_accessible :question_selection_strategy, :subject_course_id,
+                  :number_of_questions, :name, :active
 
   # Constants
   STRATEGIES = %w(random)

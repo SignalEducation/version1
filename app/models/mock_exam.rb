@@ -21,16 +21,18 @@
 
 class MockExam < ActiveRecord::Base
 
+  #TODO product_id field should be removed since relationships have changed
+
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :subject_course_id, :product_id, :name, :sorting_order, :file, :cover_image
+  attr_accessible :name, :sorting_order, :file, :cover_image, :subject_course_id
 
   # Constants
 
   # relationships
   belongs_to :subject_course
-  belongs_to :product
+  has_many :products
   has_many :orders
 
   has_attached_file :file, default_url: '/assets/images/missing.png'
@@ -39,10 +41,7 @@ class MockExam < ActiveRecord::Base
   # validation
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :product_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
-
   validates_attachment_content_type :file, :content_type => ['application/pdf']
   validates_attachment_content_type :cover_image, content_type: %w('image/jpg image/jpeg image/png')
 

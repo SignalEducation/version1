@@ -14,7 +14,6 @@
 #  is_quiz                     :boolean          default(FALSE), not null
 #  course_module_id            :integer
 #  latest_attempt              :boolean          default(TRUE), not null
-#  corporate_customer_id       :integer
 #  created_at                  :datetime
 #  updated_at                  :datetime
 #  course_module_jumbo_quiz_id :integer
@@ -35,14 +34,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :element_completed, :time_taken_in_seconds,
                   :quiz_score_actual, :quiz_score_potential,
                   :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
-                  :corporate_customer_id, :course_module_jumbo_quiz_id,
-                  :quiz_attempts_attributes, :seconds_watched, :is_question_bank,
-                  :question_bank_id
+                  :course_module_jumbo_quiz_id, :quiz_attempts_attributes,
+                  :seconds_watched, :is_question_bank, :question_bank_id
 
   # Constants
 
   # relationships
-  belongs_to :corporate_customer
   belongs_to :course_module
   belongs_to :course_module_element
   belongs_to :course_module_jumbo_quiz
@@ -155,7 +152,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def add_to_user_trial_limit
     user = self.user
-    if user.individual_student? && user.free_trial_student?
+    if user.individual_student? && user.valid_free_member?
       new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
       user.update_column(:trial_limit_in_seconds, new_limit)
       user.process_free_trial_limit_reached if user.trial_limit_in_seconds > ENV['free_trial_limit_in_seconds'].to_i

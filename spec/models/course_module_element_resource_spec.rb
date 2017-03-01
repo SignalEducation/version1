@@ -31,7 +31,6 @@ describe CourseModuleElementResource do
   end
 
   # Constants
-  #it { expect()CourseModuleElementResource.const_defined?(:CONSTANT_NAME).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }
@@ -53,7 +52,6 @@ describe CourseModuleElementResource do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should_not respond_to(:destroyable_children) }
 
 
 end

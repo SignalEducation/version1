@@ -2,21 +2,20 @@
 #
 # Table name: subscriptions
 #
-#  id                    :integer          not null, primary key
-#  user_id               :integer
-#  corporate_customer_id :integer
-#  subscription_plan_id  :integer
-#  stripe_guid           :string
-#  next_renewal_date     :date
-#  complimentary         :boolean          default(FALSE), not null
-#  current_status        :string
-#  created_at            :datetime
-#  updated_at            :datetime
-#  stripe_customer_id    :string
-#  stripe_customer_data  :text
-#  livemode              :boolean          default(FALSE)
-#  active                :boolean          default(FALSE)
-#  terms_and_conditions  :boolean          default(FALSE)
+#  id                   :integer          not null, primary key
+#  user_id              :integer
+#  subscription_plan_id :integer
+#  stripe_guid          :string
+#  next_renewal_date    :date
+#  complimentary        :boolean          default(FALSE), not null
+#  current_status       :string
+#  created_at           :datetime
+#  updated_at           :datetime
+#  stripe_customer_id   :string
+#  stripe_customer_data :text
+#  livemode             :boolean          default(FALSE)
+#  active               :boolean          default(FALSE)
+#  terms_and_conditions :boolean          default(FALSE)
 #
 
 class Subscription < ActiveRecord::Base
@@ -25,17 +24,15 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
 
   # attr-accessible
-  attr_accessible :user_id, :corporate_customer_id, :subscription_plan_id,
-                  :complimentary, :current_status, :stripe_customer_id,
-                  :stripe_token, :livemode, :next_renewal_date, :active,
-                  :terms_and_conditions
+  attr_accessible :user_id, :subscription_plan_id, :complimentary,
+                  :current_status, :stripe_customer_id, :stripe_token,
+                  :livemode, :next_renewal_date, :active, :terms_and_conditions
 
   # Constants
-  STATUSES = %w(trialing active past_due canceled canceled-pending unpaid suspended paused previous)
+  STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
-  belongs_to :corporate_customer
   has_many :invoices
   has_many :invoice_line_items
   belongs_to :subscription_plan
@@ -58,6 +55,7 @@ class Subscription < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
+  scope :in_created_order, -> { order(:created_at) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
   scope :all_active, -> { where(active: true) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
@@ -69,7 +67,6 @@ class Subscription < ActiveRecord::Base
     plan = SubscriptionPlan.find_by_stripe_guid(stripe_subscription_hash[:plan][:id])
     x = Subscription.new(
           user_id: user.id,
-          corporate_customer_id: user.corporate_customer_id,
           subscription_plan_id: plan.id,
           complimentary: false,
           livemode: (stripe_subscription_hash[:livemode]),
@@ -123,15 +120,6 @@ class Subscription < ActiveRecord::Base
       self.update_attribute(:current_status, 'canceled')
 
       user = self.user
-      if user.student_user_type_id == StudentUserType.default_sub_user_type.id
-        new_user_type_id = StudentUserType.default_no_access_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-        new_user_type_id = StudentUserType.default_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attribute(:student_user_type_id, new_user_type_id)
-
       Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
     else
       Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
@@ -159,16 +147,6 @@ class Subscription < ActiveRecord::Base
       self.update_attribute(:current_status, 'canceled')
     end
 
-    user = self.user
-    if user.student_user_type_id == StudentUserType.default_sub_user_type.id
-      new_user_type_id = StudentUserType.default_no_access_user_type.id
-    elsif user.student_user_type_id == StudentUserType.default_sub_and_product_user_type.id
-      new_user_type_id = StudentUserType.default_product_user_type.id
-    else
-      new_user_type_id = user.student_user_type_id
-    end
-    user.update_attribute(:student_user_type_id, new_user_type_id)
-
     # return true or false - if everything went well
     errors.messages.count == 0
   end
@@ -195,10 +173,6 @@ class Subscription < ActiveRecord::Base
       self.referred_signup.nil?
   end
 
-  def free_trial?
-    self.subscription_plan.free_trial?
-  end
-
   # setter method
   def stripe_token=(t)
     @stripe_token = t
@@ -212,8 +186,7 @@ class Subscription < ActiveRecord::Base
   def reactivation_options
     SubscriptionPlan
       .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: true,
-             available_to_corporates: false)
+             available_to_students: true)
       .where('price > 0.0')
       .generally_available
       .all_active
@@ -228,16 +201,6 @@ class Subscription < ActiveRecord::Base
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
       self.update_attributes(current_status: 'active', active: true)
 
-      user = self.user
-      if user.student_user_type_id == StudentUserType.default_no_access_user_type.id
-        new_user_type_id = StudentUserType.default_sub_user_type.id
-      elsif user.student_user_type_id == StudentUserType.default_product_user_type.id
-        new_user_type_id = StudentUserType.default_sub_and_product_user_type.id
-      else
-        new_user_type_id = user.student_user_type_id
-      end
-      user.update_attribute(:student_user_type_id, new_user_type_id)
-
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
@@ -247,8 +210,7 @@ class Subscription < ActiveRecord::Base
   def upgrade_options
     SubscriptionPlan
       .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: self.subscription_plan.available_to_students,
-             available_to_corporates: self.subscription_plan.available_to_corporates)
+             available_to_students: self.subscription_plan.available_to_students)
       .generally_available
       .all_active
       .where('price > 0.0')
@@ -273,7 +235,7 @@ class Subscription < ActiveRecord::Base
       return self
     end
     # only individual students are allowed to upgrade their plan
-    unless self.user.individual_student? || self.user.corporate_customer?
+    unless self.user.individual_student?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
       return self
     end
@@ -319,7 +281,6 @@ class Subscription < ActiveRecord::Base
     ActiveRecord::Base.transaction do
       new_sub = Subscription.new(
               user_id: self.user_id,
-              corporate_customer_id: self.corporate_customer_id,
               subscription_plan_id: new_subscription_plan.id,
               complimentary: false,
               active: true,

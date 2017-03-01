@@ -1,0 +1,30 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+
+.l-section-library.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row
+        .col-md-6.col-md-offset-3
+          %h1.h1.h-separator.h-separator-center.text-center.l-margin-bottom-big.library-heading
+            Learn anytime, anywhere
+          %p.h5.text-center.l-margin-bottom-big.library-text
+            Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
+
+      .row.l-margin-top-big.l-margin-bottom-huge
+        -@groups.each_with_index do |group|
+          -if group.active_children.any?
+            .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
+              =link_to library_special_link(group), class: 'box box-course' do
+                .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
+                .box-inner
+                  .l-margin-top-xl
+                    %h2{style: 'margin-bottom: 5px;'}
+                      =group.name
+                    %p.p
+                      =group.description
+
+                .box-label
+                  %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                    Browse Courses

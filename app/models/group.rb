@@ -11,7 +11,6 @@
 #  subject_id                    :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  corporate_customer_id         :integer
 #  destroyed_at                  :datetime
 #  image_file_name               :string
 #  image_content_type            :string
@@ -30,12 +29,11 @@ class Group < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :corporate_customer_id, :background_image
+  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_image
 
   # Constants
 
   # relationships
-  #belongs_to :subject
   has_and_belongs_to_many :subject_courses
   has_many :home_pages
   has_attached_file :image, default_url: "missing_corporate_logo.png"
@@ -55,8 +53,6 @@ class Group < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
-  scope :for_corporates, -> { where.not(corporate_customer_id: nil) }
-  scope :for_public, -> { where(corporate_customer_id: nil) }
 
   # class methods
 

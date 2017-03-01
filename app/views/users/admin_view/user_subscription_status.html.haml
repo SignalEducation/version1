@@ -12,7 +12,7 @@
           .col-md-12
             =render partial: 'user_tabs'
 
-        -if @user.free_trial_student?
+        -if @user.free_member?
           .row.l-margin-top.l-margin-bottom
             .col-md-12
               .corporate-box-item
@@ -28,9 +28,6 @@
                       Trial Limit in Days
                     .h6
                       =@user.trial_limit_in_days
-
-                .col-sm-2.l-margin-top
-                  =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
 
 
                 .col-sm-10.l-margin-top-big

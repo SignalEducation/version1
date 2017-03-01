@@ -8,7 +8,6 @@ class SubscriptionDeferredCancellerWorker
     if sub
       if sub.current_status == 'canceled-pending'
         sub.update_attribute(:current_status, 'canceled')
-        sub.user.update_attribute(:student_user_type_id, StudentUserType.default_no_access_user_type.id)
         Rails.logger.info "INFO: SubscriptionDeferredCancellerWorker - subscription #{subscription_id} cancelled OK."
       else
         Rails.logger.error "ERROR: SubscriptionDeferredCancellerWorker - subscription #{subscription_id} was NOT cancelled because its status was not set to 'canceled-pending' - its status was '#{sub.current_status}'."

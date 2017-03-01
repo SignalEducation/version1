@@ -42,12 +42,6 @@
               %label
                 =f.check_box :blogger
                 =t('views.user_groups.form.blogger')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :corporate_customer
-                =t('views.user_groups.form.corporate_customer')
       .col-md-6
         .form-group
           .col-sm-8.col-sm-offset-4
@@ -67,18 +61,6 @@
               %label
                 =f.check_box :marketing_support
                 =t('views.user_groups.form.marketing_support')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :subscription_required_at_sign_up
-                =t('views.user_groups.form.subscription_required_at_sign_up')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :subscription_required_to_see_content
-                =t('views.user_groups.form.subscription_required_to_see_content')
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), user_groups_path, class: 'btn btn-cyan'

@@ -4,7 +4,6 @@
 #
 #  id                          :integer          not null, primary key
 #  user_id                     :integer
-#  corporate_customer_id       :integer
 #  subscription_transaction_id :integer
 #  subscription_id             :integer
 #  number_of_users             :integer
@@ -42,7 +41,7 @@ class Invoice < ActiveRecord::Base
   serialize :original_stripe_data, Hash
 
   # attr-accessible
-  attr_accessible :user_id, :corporate_customer_id, :subscription_transaction_id,
+  attr_accessible :user_id, :subscription_transaction_id,
                   :subscription_id, :number_of_users, :currency_id, :vat_rate_id,
                   :issued_at, :stripe_guid, :sub_total, :total, :total_tax,
                   :stripe_customer_guid, :object_type, :payment_attempted,
@@ -56,7 +55,6 @@ class Invoice < ActiveRecord::Base
 
   # relationships
   belongs_to :currency
-  belongs_to :corporate_customer
   has_many :invoice_line_items
   belongs_to :subscription_transaction
   belongs_to :subscription
@@ -91,7 +89,6 @@ class Invoice < ActiveRecord::Base
       if user && subscription
         inv = Invoice.new(
           user_id: user.id,
-          corporate_customer_id: nil,
           subscription_id: subscription.id,
           currency_id: Currency.find_by_iso_code(stripe_data_hash[:currency].upcase).id,
           issued_at: Time.at(stripe_data_hash[:date]),
@@ -117,7 +114,6 @@ class Invoice < ActiveRecord::Base
           original_stripe_data: stripe_data_hash.to_hash,
           # todo - these need further attention
           subscription_transaction_id: nil,
-          vat_rate_id: nil,
           number_of_users: 0
         )
         if inv.save

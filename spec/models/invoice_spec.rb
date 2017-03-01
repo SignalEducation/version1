@@ -4,7 +4,6 @@
 #
 #  id                          :integer          not null, primary key
 #  user_id                     :integer
-#  corporate_customer_id       :integer
 #  subscription_transaction_id :integer
 #  subscription_id             :integer
 #  number_of_users             :integer
@@ -54,7 +53,6 @@ describe Invoice do
 
   # relationships
   it { should belong_to(:currency) }
-  it { should belong_to(:corporate_customer) }
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_transaction) }
   it { should belong_to(:subscription) }
@@ -83,13 +81,17 @@ describe Invoice do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:set_vat_rate).after(:create) }
 
   # scopes
   it { expect(Invoice).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(Invoice).to respond_to(:build_from_stripe_data) }
+  it { expect(Invoice).to respond_to(:get_updates_for_user) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:status) }
 
 end

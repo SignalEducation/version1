@@ -24,7 +24,7 @@ class WhitePapersController < ApplicationController
 
   before_action :logged_in_required, except: [:show, :create_request, :media_library]
   before_action except: [:show, :create_request, :media_library] do
-    ensure_user_is_of_type(['admin', 'content_manager'])
+    ensure_user_is_of_type(%w(admin content_manager))
   end
   before_action :get_variables, except: [:show]
 
@@ -34,7 +34,14 @@ class WhitePapersController < ApplicationController
 
   def media_library
     @white_papers = WhitePaper.all_in_order
-    @mock_exams = MockExam.all_in_order
+
+    mock_exams = MockExam.all_in_order
+    mock_exam_ids = mock_exams.map(&:id)
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : @user.country
+    @currency_id = @country.currency_id
+    @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+
   end
 
   def show

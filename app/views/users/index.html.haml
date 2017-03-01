@@ -45,7 +45,7 @@
                       %td
                         =tick_or_cross(user.email_verified)
                       %td=user.user_group.try(:name)
-                      %td=user.user_subscription_status if user.individual_student?
+                      %td=user.user_account_status if user.individual_student?
                       %td
                         =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
                       %td

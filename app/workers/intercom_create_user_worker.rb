@@ -16,7 +16,7 @@ class IntercomCreateUserWorker
                           created_at: user.created_at,
                           custom_data: {guid: user.guid,
                                         user_group: user.user_group,
-                                        free_trial: user.free_member?,
+                                        free_trial: user.valid_free_member?,
                                         email_verified: user.email_verified,
                                         topic_interest: user.topic_interest,
 

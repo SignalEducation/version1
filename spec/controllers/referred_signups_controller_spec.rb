@@ -144,66 +144,6 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
   end
 
-  context 'Logged in as a corporate_student_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(corporate_student_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should bounce as not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should bounce as not allowed' do
-        put :update, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a corporate_customer_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(corporate_customer_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should bounce as not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should bounce as not allowed' do
-        put :update, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
   context 'Logged in as a blogger_user: ' do
 
     before(:each) do

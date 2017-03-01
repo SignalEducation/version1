@@ -6,7 +6,6 @@ class StudentSignUpsController < ApplicationController
 
   def show
     #This is the post sign-up landing page.
-    #FAQ should be in this view
     @user = User.get_and_activate(params[:account_activation_code])
     redirect_to root_url unless @user
   end
@@ -17,7 +16,7 @@ class StudentSignUpsController < ApplicationController
       home_page = HomePage.where(public_url: current_user.topic_interest.downcase).first
       @group = home_page.group if home_page
     end
-    @groups = Group.for_public.all_active.all_in_order
+    @groups = Group.all_active.all_in_order
   end
 
   def resend_verification_mail

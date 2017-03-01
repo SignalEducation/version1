@@ -98,9 +98,6 @@
               .col-sm-12.l-margin-top-big
                 .col-sm-6
                   .h3
-                    Student Type
+                    Account Type
                   .h6
-                    -if @user.student_user_type
-                      =@user.student_user_type.name
-                    -else
-                      ='------'
+                    =@user.user_account_status

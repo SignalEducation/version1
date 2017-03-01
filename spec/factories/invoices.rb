@@ -4,7 +4,6 @@
 #
 #  id                          :integer          not null, primary key
 #  user_id                     :integer
-#  corporate_customer_id       :integer
 #  subscription_transaction_id :integer
 #  subscription_id             :integer
 #  number_of_users             :integer
@@ -38,7 +37,6 @@
 FactoryGirl.define do
   factory :invoice do
     user_id 1
-    corporate_customer_id nil
     subscription_transaction_id 1
     subscription_id 1
     number_of_users 1

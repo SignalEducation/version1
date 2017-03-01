@@ -31,7 +31,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//$sans-font: Rubik, Montserrat, HelveticaNeue, Helvetica, Arial, sans-serif;
 $sans-font: 'Rubik', Montserrat, HelveticaNeue;
 $gutter: 20px;
 $white: #fff;
@@ -106,9 +105,6 @@ body {
   color: $colour-1;
   @include breakpoint(md-min) {
     margin: 0 auto;
-  }
-  .external_layout {      // These allow for different BG colours on external pages [sign-in, sign-up, corp-home]
-    background: #34495e;
   }
   .home_page_layout {
     min-width: 320px;
@@ -408,6 +404,7 @@ label, .label {
   text-align: left;
   color: #fff !important;
 }
+//Mock Exams Form
 .new-product-user-form {
   padding: $gutter*2 $gutter;
   background: $colour-2;
@@ -620,114 +617,6 @@ a.btn-block {
 }
 
 
-.fake-btn {
-  @include font-size(1.1);
-  @include transition(background-color .2s ease);
-
-  @include breakpoint(xs-min) {
-    display: inline-block;
-  }
-
-  @include breakpoint(sm-min) {
-    display: inline-block;
-    @include font-size(1.2);
-  }
-
-  display: block;
-  height: 40px;
-  padding: 0 $gutter;
-  line-height: 40px;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  border: 0;
-
-  &:link, &:visited {
-    text-decoration: none;
-    color: $colour-12;
-  }
-  &:hover {
-    color: shade($colour-12, 20%);
-  }
-  &:active {
-    @include box-shadow(0, 0, 0, 0);
-  }
-  &.btn-red {
-    background: $colour-12;
-    color: $white;
-    &:hover {
-      cursor: not-allowed;
-      background: shade($colour-12, 10%);
-    }
-    &:active {
-      background: ($colour-12);
-    }
-  }
-  &.btn-purple {
-    background: $colour-7;
-    color: $white;
-    &:hover {
-      background: shade($colour-7, 10%);
-    }
-    &:active {
-      background: ($colour-7);
-    }
-  }
-  &.btn-cyan {
-    background: $colour-13;
-    color: $white;
-    &:hover {
-      cursor: not-allowed;
-      background: shade($colour-13, 10%);
-    }
-    &:active {
-      background: ($colour-13);
-    }
-  }
-  &.btn-secondary {
-    @include box-shadow(0, 0, 0, 0);
-
-    color: $colour-12;
-    background: transparent;
-    border: 1px solid $white;
-    line-height: 38px;
-    &:hover, &:active {
-      background: transparent;
-      color: shade($colour-12, 20%);
-    }
-    &.btn-red{
-      color: $colour-12;
-      border: 1px solid $colour-12;
-      &:hover {
-        background: transparent;
-        color: shade($colour-12, 20%);
-        border: 1px solid shade($colour-12, 20%);
-      }
-    }
-    &.btn-purple {
-      color: $colour-7;
-      border: 1px solid $colour-7;
-      &:hover {
-        background: transparent;
-        color: shade($colour-7, 20%);
-        border: 1px solid shade($colour-7, 20%);
-      }
-    }
-    &.btn-cyan {
-      color: $colour-13;
-      border: 1px solid $colour-13;
-      &:hover {
-        background: transparent;
-        color: shade($colour-13, 20%);
-        border: 1px solid shade($colour-13, 20%);
-      }
-    }
-  }
-  &.btn-small {
-    line-height: 28px;
-    height: 28px;
-  }
-}
-
 //Bootstrap Social
 $bs-height-base: ($line-height-computed + $padding-base-vertical * 2);
 $bs-height-lg:   (floor($font-size-large * $line-height-base) + $padding-large-vertical * 2);
@@ -867,81 +756,8 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     max-width: 1200px;
   }
 }
-.l-wrap-default {
-  padding: 100px 0 170px 0;
-}
 .l-wrap-product-user {
   padding: $gutter*2 $gutter 170px $gutter;
-}
-.l-wrap-courses {
-  padding: 20px 0 20px 0;
-  margin: $gutter*2.5 $gutter*10;
-
-  @include breakpoint(xs-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter $gutter*5;
-  }
-}
-.l-wrap-dashboard {
-  padding: 20px 0 20px 0;
-  margin: $gutter*2.5 $gutter*10;
-
-  @include breakpoint(xs-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter $gutter*2;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter $gutter*5;
-  }
-
-}
-.l-wrap-corp-home {
-  padding: 20px 0 170px 0;
-  @include breakpoint(xs-min) {
-    padding: 20px 0 200px 0;
-    margin: 0 $gutter;
-  }
-  @include breakpoint(lg-min) {
-    padding: 50px 0 450px 0;
-  }
-  color: $white;
-}
-.l-wrap-corporate {
-  padding: 100px 0 170px 0;
-}
-.l-wrap-medium {
-  @include breakpoint(sm-min) {
-    padding: 0 $gutter/1;
-  }
-  margin: 0 auto;
-  @include breakpoint(md-min) {
-    max-width: 1400px;
-  }
-}
-.l-wrap-small {
-  @include breakpoint(sm-min) {
-    padding: 0 $gutter/2;
-  }
-  margin: 0 auto;
-  @include breakpoint(md-min) {
-    max-width: 1600px;
-  }
-}
-.l-wrap-big {
-  @include breakpoint(sm-min) {
-    padding: 0 $gutter/2;
-  }
-  margin: 0 auto;
-  @include breakpoint(md-min) {
-    max-width: 1600px;
-  }
 }
 .l-wrap-home {
   padding: 0 $gutter/2;
@@ -1001,85 +817,10 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     padding: 2rem 0;
   }
 }
-.l-section-corporate {
-  padding-bottom: 250px;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2 $gutter/2 $gutter;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5 $gutter/2 0;
-  }
-}
-.l-section-overview {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
 .l-section-library {
   padding: 3rem 0;
   @include breakpoint(md-min) {
     padding: 4rem 0;
-  }
-}
-.l-section-corp-groups {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-corp-courses {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-corp-subject-areas {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
   }
 }
 .l-section-courses {
@@ -1088,88 +829,14 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     padding: 3rem 0;
   }
 }
-.l-section-corp-account {
-  padding: $gutter*1 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-corp-managers {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-corp-students {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-dashboard {
-  padding: $gutter 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 0 $gutter/2 0;
-  }
-}
-.l-section-corp-home {
-
-}
-
 .l-section-profile {
   padding: 5rem 0;
   @include breakpoint(md-min) {
     padding: 5rem 0;
   }
-
 }
 
 // Padding
-.l-padding-zero {
-  padding: 0;
-}
-.l-padding-top {
-  padding-top: $gutter;
-}
-.l-padding-top-xl { // if header is fixed, this is required on the next element
-  padding-top: $gutter*3;
-}
 .l-margin-bottom {
   margin-bottom: $gutter;
 }
@@ -1194,146 +861,8 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .l-margin-top-huge {
   margin-top: $gutter*4;
 }
-.corporate-padding {
-  padding-left: 30px;
-  padding-right: 30px;
-}
-.corporate-form-margin {
-  margin-left: 0px;
-}
-.corporate-heading {
-  padding: 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter*6 $gutter $gutter $gutter;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
-  }
-}
-.corporate-title {
-  margin: $gutter 0;
-}
-.default-heading {
-  padding: 0;
-  @include breakpoint(xs-min) {
-    margin: $gutter*6 $gutter $gutter $gutter;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter*6 $gutter*5 $gutter $gutter*5;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter*6 $gutter*15 $gutter $gutter*15;
-  }
-}
-.default-title {
-  @include breakpoint(xs-min) {
-    margin: auto;
-    width: 100%;
-    padding: 10px;
-  }
-  @include breakpoint(sm-min) {
-    margin: auto;
-    width: 90%;
-    padding: 10px;
-  }
-  @include breakpoint(lg-min) {
-    margin: auto;
-    width: 65%;
-    padding: 10px;
-  }
-}
-.default-logo {
-  display: block;
-  margin: auto;
-  width: 80%;
-}
-.secondary-logo {
-  //display: block;
-  margin: auto;
-  width: 60%;
-}
 
 // Hero
-.hero-home {
-  background: $colour-11 asset-url('home-page-1003.png') 10% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  //min-height: 1100px;
-  @include breakpoint(md-min) {
-    background: $colour-11 asset-url('home-page-1003.png') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-inner {
-  padding: 8rem 0;
-  @include breakpoint(md-min) {
-    padding: 20rem 0;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.hero-inner-small {
-  padding: 4rem 0;
-  @include breakpoint(md-min) {
-    padding: 10rem 0;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.hero-inner-wide {
-  padding: 2rem 2rem;
-  @include breakpoint(md-min) {
-    padding: 5rem 1rem;
-  }
-  .h1 {
-    @include breakpoint(lg-min) {
-      padding-right: 10%;
-    }
-  }
-}
-.hero-acca {
-  background: $colour-11 asset-url('acca-background.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  @include breakpoint(md-min) {
-    background: $colour-11 asset-url('acca-background.png') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-why-learn {
-  background: $colour-8 asset-url('bg-acca.jpg') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $colour-8 asset-url('bg-acca.jpg') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-business {
-  background: $colour-11 asset-url('business-home-1001.png') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $colour-11 asset-url('business-home-1001.png') no-repeat;
-    background-size: cover;
-  }
-}
-.hero-upcoming {
-  background: $colour-8 asset-url('bg-upcoming.jpg') 50% 0 no-repeat;
-  color: $white;
-  @include breakpoint(md-min) {
-    background: $colour-8 asset-url('bg-upcoming.jpg') no-repeat;
-    background-size: cover;
-  }
-}
-
 .hero-cfa {
   background: $colour-11 asset-url('acca-background.png') 50% 0 no-repeat;
   color: $white;
@@ -1360,80 +889,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     background-size: cover;
   }
 }
-// Landing Page Images
-.home-image-1 {
-  background: lighten($colour-7, 5%) asset-url('professional-qualifications.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 500px;
-  @include breakpoint(md-min) {
-    background: lighten($colour-7, 5%) asset-url('professional-qualifications.png') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    //min-height: 500px;
-  }
-}
-.home-image-2 {
-  background: lighten($colour-7, 5%) asset-url('it-perations.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 500px;
-  @include breakpoint(md-min) {
-    background: lighten($colour-7, 5%) asset-url('it-perations.png') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 500px;
-  }
-}
-.home-image-3 {
-  background: lighten($colour-7, 5%) asset-url('business-professionals.png') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 500px;
-  @include breakpoint(md-min) {
-    background: lighten($colour-7, 5%) asset-url('business-professionals.png') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 500px;
-  }
-}
-
-.blog-image-1 {
-  background: lighten($colour-7, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 250px;
-  @include breakpoint(md-min) {
-    background: lighten($colour-7, 5%) asset-url('maximise-employee-memory-retention-with-on-demand-training.jpg') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 250px;
-  }
-}
-.blog-image-2 {
-  background: lighten($colour-7, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 250px;
-  @include breakpoint(md-min) {
-    background: lighten($colour-7, 5%) asset-url('meeting-millennials-needs-with-on-demand-learning.jpg') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 250px;
-  }
-}
-.blog-image-3 {
-  background: lighten($colour-7, 5%) asset-url('elearning-employee-retention.jpg') 50% 0 no-repeat;
-  color: $white;
-  background-size: cover;
-  min-height: 250px;
-  @include breakpoint(md-min) {
-    background: lighten($colour-7, 5%) asset-url('elearning-employee-retention.jpg') 50% 25 no-repeat;
-    color: $white;
-    background-size: cover;
-    min-height: 250px;
-  }
-}
 
 .group_show {
   background: asset-url('group_show_1.png') 50% 0 no-repeat;
@@ -1449,61 +904,17 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 
 // States
-.is-disabled {
-  pointer-events: none;
-  @include opacity(0.5);
-}
-.is-lg-right {
-  @include breakpoint(sm-min) {
-    float: right;
-  }
-}
-.is-visually-hidden {
-  left: -9999px;
-  position: absolute;
-  top: -9999px;
-}
-.is-text-disabled {
-  color: #999;
-}
-.is-text-white {
-  color: $white;
-}
-.is-bg-red {
-  background: $colour-12;
-}
 .is-bg-purple {
   background: $colour-7;
 }
-.is-bg-purple-1 {
-  background: $colour-8;
-}
-.is-bg-purple-2 {
-  background: $colour-9;
-}
-.is-bg-cyan {
-  background: $colour-13;
-}
-.is-bg-gray {
-  background: $colour-1;
-}
 .is-bg-asphalt {
   background: $colour-3;
-}
-.is-bg-asphalt-dark {
-  background: $colour-6;
 }
 .is-bg-white-to-asphalt {
   @include gradient-vertical($white, $colour-3, 0%, 50%);
 }
 .is-bg-white {
   background: $white;
-}
-.is-bg-yellow {
-  background: $colour-14;
-}
-.is-bg-green {
-  background: $colour-17;
 }
 
 
@@ -1522,35 +933,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     z-index: 100;
   }
 }
-.nav-wrap {
-  @include breakpoint(xs-min) {
-    margin: $gutter/4 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: $gutter/4 $gutter;
-  }
-  @include breakpoint(md-min) {
-    margin: $gutter/4 $gutter;
-  }
-  @include breakpoint(lg-min) {
-    margin: $gutter/4 $gutter*5;
-  }
-}
-.transparent-nav-wrap {
-  @include breakpoint(xs-min) {
-    margin: 0 $gutter/2;
-  }
-  @include breakpoint(sm-min) {
-    margin: 0 $gutter;
-  }
-  @include breakpoint(md-min) {
-    margin: 0 $gutter*5;
-  }
-  @include breakpoint(lg-min) {
-    margin: 0 $gutter*5;
-  }
-}
-
 .navbar {
   min-height: auto;
   margin: 0;
@@ -1728,7 +1110,7 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
   position: relative;
   margin-bottom: -50px; /* negative value of footer height */
   background: $colour-7;
-  border-top: 10px solid $colour-3;
+  border-top: 0px solid $colour-3;
   padding: $gutter*1.5 0 $gutter*2 0;
   text-align: center;
   @include clearfix();
@@ -1919,169 +1301,6 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
     }
   }
 }
-.foot-powered-by {
-  color: $white;
-  margin-top: $gutter;
-  @include opacity(0.8);
-  @include font-size(1.2);
-  @include breakpoint(md-min) {
-    float: right;
-    @include font-size(1.4);
-  }
-}
-
-//Corporate Sidebar
-#wrapper {
-  padding-left: 0;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-  padding-left: 250px;
-}
-
-#sidebar-wrapper {
-  position: fixed;
-  left: 250px;
-  width: 0;
-  height: 100%;
-  margin-left: -250px;
-  overflow-y: auto;
-  background: $colour-9;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-  width: 250px;
-}
-
-#page-content-wrapper {
-  width: 100%;
-  position: absolute;
-  padding: 15px;
-}
-
-#wrapper.toggled #page-content-wrapper {
-  position: absolute;
-  margin-right: -250px;
-}
-
-.main-content {
-  //position: absolute;
-  overflow: auto;
-}
-
-/* Sidebar Styles */
-
-.sidebar-nav {
-  position: fixed;
-  top: 0;
-  width: 250px;
-  margin-top: $gutter*8;
-  padding: 0;
-  list-style: none;
-}
-
-.sidebar-nav li {
-  //text-indent: 20px;
-  line-height: 40px;
-  border-bottom: 1px solid rgba(120,120,120,.5);
-  font-size: 17px;
-  &.first-li {
-    border-top: 1px solid rgba(120,120,120,.5);
-  }
-}
-
-.sidebar-nav li a {
-  display: block;
-  text-decoration: none;
-  color: rgba(255,255,255,0.8);
-  padding-top: 5px;
-  padding-bottom: 5px;
-  &:hover, &:focus {
-    background: $colour-13;
-
-  }
-}
-
-.sidebar-nav li a:active,
-.sidebar-nav li a:focus {
-  text-decoration: none;
-}
-
-.sidebar-nav > .sidebar-brand {
-  height: 75px;
-  font-size: 18px;
-  line-height: 60px;
-  margin-bottom: 30px;
-  margin-top: 100px;
-  border-bottom: none;
-  a:hover, a:focus {
-    background: none;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-}
-.brand-logo {
-  width: 50%;
-  a:hover, a:focus {
-    background: none;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-}
-
-.sidebar-nav > .sidebar-brand a {
-  color: $white;
-
-}
-
-.sidebar-nav > .sidebar-brand a:hover {
-  color: #fff;
-  background: none;
-}
-
-@media(min-width:768px) {
-  #wrapper {
-    padding-left: 250px;
-  }
-
-  #wrapper.toggled {
-    padding-left: 0;
-  }
-
-  #sidebar-wrapper {
-    width: 250px;
-  }
-
-  #wrapper.toggled #sidebar-wrapper {
-    width: 0;
-  }
-
-  #page-content-wrapper {
-    padding: 20px;
-    position: relative;
-  }
-
-  #wrapper.toggled #page-content-wrapper {
-    position: relative;
-    margin-right: 0;
-  }
-}
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 7. Subscriptions & Sign Ups
@@ -2453,39 +1672,6 @@ a.list-group-item {
 // 9. Dashboard
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-.one-line-text {
-  overflow: hidden;
-  white-space: nowrap;
-}
-.coursebar {
-  color: white;
-  padding: 24px;
-  a.btn.btn-purple {
-    @include breakpoint(xs-min) {
-      margin-bottom: $gutter;
-    }
-  }
-}
-.coursebar a:hover {
-  color: white;
-  text-decoration: initial;
-}
-.coursetype {
-  text-decoration: initial;
-  padding: 13px;
-  padding-left: $gutter;
-  padding-right: $gutter;
-  margin-right: $gutter;
-  text-transform: uppercase;
-  letter-spacing: .2rem;
-  text-decoration: none;
-  font-size: 12px;
-  background-color: $colour-7;
-  border-radius: 5%;
-  border: 0px solid $colour-7;
-  text-decoration: initial;
-  color: rgba(255, 255, 255, 0.9);
-}
 .resume-course {
   @include breakpoint(xs-min) {
     margin-top: $gutter;
@@ -2503,14 +1689,6 @@ a.list-group-item {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 10. Library
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-.lib-header{
-  background-image: asset-url('header_bg.jpg');
-  -webkit-background-size: cover;
-  background-size: cover;
-  padding: 25px 0 60px 0;
-  color: #fff;
-}
 
 
 a.box {
@@ -2556,9 +1734,6 @@ a.box {
       background: asset-url("graph_1.png") repeat-x 50% 0;
       background-size: contain;
     }
-  }
-  &.box-faq {
-
   }
   &.box-enrollment {
     text-align: center;
@@ -2634,43 +1809,6 @@ a.box-item {
   &:before {
     position: absolute;
     background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-dark.png") no-repeat 0 0;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.box-topic-item {
-
-  }
-}
-.completed-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $colour-7;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-arrow-right-green.png") no-repeat 0 0;
     background-size: contain;
     top: 50%;
     margin-top: -11px;
@@ -2850,37 +1988,6 @@ a.card {
   //margin: 0 0 $gutter*2 0;
   padding-left: 0;
 }
-.lined-list {
-  border-top: 1px solid rgba($colour-1, .15);
-  padding: 0;
-  li {
-    list-style: none;
-  }
-  a {
-    text-decoration: none;
-  }
-}
-.lined-list-item {
-  display: block;
-  list-style: none;
-  margin: 0;
-  padding: $gutter/2 $gutter/2 $gutter/2 0;
-  border-bottom: 1px solid rgba($colour-1, .15);
-  position: relative;
-  .current {
-    color: #009900;
-  }
-}
-.collapse-list {
-  ul {
-    margin-top: -10px;
-    border-top: 0;
-  }
-  li {
-    padding-left: $gutter*.75;
-    padding-right: $gutter*.75;
-  }
-}
 .lib-panel {
   cursor: pointer;
   &:hover {
@@ -2891,31 +1998,7 @@ a.card {
   background: $colour-3 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2.jpg") no-repeat 50% 50%;
   @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg2%402x.jpg", 1620px, 168px);
 }
-.course-info {
-  width: 60%;
-  float: right;
-  margin-top: $gutter*4;
-  @include breakpoint(xs-min) {
-    width: 100%;
-    margin-top: $gutter*2;
-  }
 
-  @include breakpoint(md-min) {
-    width: 60%;
-    margin-top: $gutter*4;
-  }
-
-}
-.course-action {
-  width: 93%;
-  float: right;
-  margin-top: $gutter*4;
-  @include breakpoint(xs-min) {
-    width: 100%;
-  }
-  @include breakpoint(md-min) {
-  }
-}
 ul.course-resources {
   list-style: none;
   padding-left: $gutter;
@@ -3050,188 +2133,9 @@ ul.course-resources {
   max-height: 150px;
   margin: 0 auto $gutter auto;
 }
-
-//////////////////////
-a.library-box {
-  text-decoration: none;
-
-  &:link {
-    text-decoration: none;
-  }
-  &:hover, &:active {
-    text-decoration: none;
-    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
-  }
-  &:hover {
-    .library-box-title {
-      //color: $colour-12;
-    }
-    .library-box-label {
-      background: shade($colour-12, 10%);
-    }
-  }
-}
-.library-box {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: center;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &.library-box-course {
-    text-align: center;
-    margin-top: $gutter*1.5;
-    &:after {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      content: "";
-      height: 30px;
-      width: 30px;
-      margin-left: -15px;
-      margin-top: -15px;
-      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
-      background-size: contain;
-    }
-    & .library-box-inner {
-      padding-top: $gutter*2.5;
-    }
-  }
-}
-.library-box-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
-  margin: 0 auto;
-}
-.library-box-inner {
-  padding: $gutter*2 $gutter/2;
-}
-.library-box-desc {
-  margin: $gutter/2 0 0 0;
-}
-.library-box-label {
-  background: $colour-12;
-  color: $white;
-  padding: $gutter/1.45;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  @include transition(background-color .2s ease);
-  @include border-bottom-radius(4px);
-  @include font-size(1.1);
-  @include breakpoint(sm-min) {
-    @include font-size(1.2);
-  }
-}
-a.library-box-item {
-  color: $colour-7;
-  text-decoration: none;
-  display: block;
-  border: 1px solid $white;
-  @include transition(border .1s ease);
-  &:hover, &:active {
-    border: 1px solid $colour-7;
-    @include box-shadow(0, 0, 12px, darken($colour-3, 15%));
-  }
-}
-.library-box-item {
-  display: block;
-  background: $white;
-  position: relative;
-  margin: 0 0 $gutter/2 0;
-  color: $colour-7;
-  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
-  &:before {
-    position: absolute;
-    background-size: contain;
-    top: 50%;
-    margin-top: -11px;
-    left: $gutter/1.5;
-    content: "";
-    height: 22px;
-    width: 22px;
-  }
-  @include breakpoint(sm-min) {
-    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
-    &:before {
-      left: $gutter/1.5;
-    }
-  }
-  &.upcoming {
-    &:before {
-      @include opacity(0.4);
-    }
-  }
-  &.library-box-topic-item {
-
-  }
-}
-.library-box-topic-item {
-  padding-right: $gutter*2;
-}
-.library-box-item .panel-icon {
-  background-color: $colour-13;
-  color: white;
-  display: inline-block;
-  font-size: 12px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  padding-top: 7px;
-  position: absolute;
-  top: -18px;
-  left: 50%;
-  margin-left: -15px;
-  text-align: center;
-}
-.library-box-item .panel-icon.icon-big {
-  width: 40px;
-  height:40px;
-  padding-top: 12px;
-  margin-left: -18px;
-}
-.library-box-item .panel-icon.icon-inner {
-  top: 30px;
-  width: 90px;
-  height: 90px;
-  padding-top: 30px;
-  font-size: 34px;
-  margin-left: -45px;
-}
-.library-box-item .panel-icon.icon-inner.icon-red {
-  background-color: $colour-12;
-}
-.library-box-item .panel-icon.icon-inner.icon-cyan {
-  background-color: $colour-13;
-}
-.library-box-item .panel-icon.icon-inner.icon-purple {
-  background-color: $colour-7;
-}
-.library-box-item.panel {
-  padding-left: 0px;
-  padding-right:0px;
-  padding-top: 35px;
-  padding-bottom: 0px;
-
-}
 .question-bank-passed {
   color: green;
-  //margin-bottom: 0px;
 }
-
 .selected {
   background: $colour-17;
 }
@@ -3241,50 +2145,9 @@ a.library-box-item {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-//Testimonials
-.testimonials {
-  background: $colour-3 url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg") repeat-x 50% 0;
-  @include image-2x("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/tools-bg.jpg", 750px, 220px);
-  &.testimonials-alt {
-    background: $white;
-  }
-}
-.testimonial {
-  h1, h2, h3, h4 {
-    text-align: center;
-  }
-}
-.testimonial-pic-wrap {
-  position: relative;
-  max-width: 140px;
-  margin: $gutter*2 auto;
-  &:after {
-    position: absolute;
-    top: 0;
-    left: 0;
-    content: "";
-    height: 30px;
-    width: 30px;
-    background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-quote.png") repeat-x 50% 0;
-    background-size: contain;
-  }
-}
-.testimonial-pic {
-  display: block;
-  max-width: 140px;
-  @include border-radius(100%);
-}
-.testimonial-sig {
-  color: darken($colour-1, 15%);
-}
 .features {
   text-align: center;
   background: $white;
-}
-.course-types {
-  text-align: center;
-  background: lighten($colour-7, 5%);
-  color: lighten($colour-7, 40%);
 }
 .business {
   text-align: center;
@@ -3311,18 +2174,6 @@ a.library-box-item {
   max-width: 110px;
   max-height: 110px;
   margin: $gutter*2 auto;
-}
-.laptop-img {
-  display: block;
-  max-width: 200px;
-  max-height: 200px;
-  margin: $gutter*2 auto;
-}
-.video_player-img {
-  display: block;
-  max-width: 160px;
-  max-height: 160px;
-  margin: $gutter*2.5 auto;
 }
 .padded-features-img {
   display: block;
@@ -3468,10 +2319,7 @@ a.image-link {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 12. Corporate Layout
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+//This needs to be relabeled to not be corporate
 .corporate-box-item {
   display: block;
   background: $white;
@@ -3908,14 +2756,6 @@ ol.example li.placeholder:before {
     max-width: 159px;
   }
 }
-.corporate-logo {
-  padding: $gutter/4 0;
-  float: left;
-  max-height: 65px;
-  @include breakpoint(sm-min) {
-    max-height: 65px;
-  }
-}
 .profile-single {
   padding-bottom: $gutter*2;
 }
@@ -3934,7 +2774,6 @@ ol.example li.placeholder:before {
 .email-pic-padding {
   padding-bottom: $gutter/2;
 }
-
 .email-pic {
   display: block;
   max-width: 75px;
@@ -4354,11 +3193,7 @@ header{
 }
 
 
-.main_logo{
-  display: inline-block;
-  margin: 10px 0 0;
-}
-.top_header{
+.top_header {
   padding: 0 0 25px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   -webkit-background-clip: padding-box;
@@ -4746,108 +3581,6 @@ a.course-panel-label {
     background: darken($colour-13, 6%);
 
   }
-
-}
-
-.group-panel{
-  display: block;
-  background: $white;
-  position: relative;
-  margin: $gutter*.5 0 $gutter 0;
-  text-align: left;
-  @include border-radius(4px);
-  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    margin: $gutter*.5 0 $gutter 0;
-  }
-  &:hover, &:active {
-    @include box-shadow(0, 0, 4px, darken($colour-3, 35%));
-  }
-}
-a.group-panel {
-  text-decoration: none;
-  display: block;
-  border: 1px solid $white;
-  @include transition(border .1s ease);
-}
-
-.group-panel-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-decoration: none;
-  display: block;
-  margin: 0 auto;
-}
-.group-panel-group-title {
-  float: right;
-}
-
-.group-panel-inner {
-  padding: $gutter $gutter*2;
-  height: 160px;
-  position: relative;
-  @include breakpoint(xs-min) {
-    height: 100px;
-    padding: $gutter $gutter;
-    text-align: center;
-  }
-  @include breakpoint(sm-min) {
-    height: 100px;
-    padding: $gutter $gutter;
-
-  }
-}
-.group-panel-text {
-  display: inline-block;
-  max-width: 79%;
-
-}
-.group-panel-desc {
-  color: $colour-1;
-  margin: 0;
-  white-space: pre-line;
-  text-overflow: ellipsis;
-  text-decoration: none;
-  @include font-size(1.4);
-  @include breakpoint(md-min) {
-    @include font-size(1.6);
-  }
-  @include breakpoint(sm-min) {
-    margin: 15px 0 0 0;
-  }
-}
-.group-panel-info {
-  padding: $gutter/2 $gutter $gutter $gutter;
-}
-.group-panel-label {
-  background: $colour-13;
-  padding: $gutter/2;
-  text-align: center;
-  @include border-bottom-radius(4px);
-
-  .label-text {
-    color: $white;
-    font-weight: normal;
-    text-transform: uppercase;
-    letter-spacing: 0;
-    margin-top: 0;
-    position: relative;
-    @include font-size(1.8);
-    @include breakpoint(sm-min) {
-      @include font-size(2.4);
-    }
-  }
-}
-
-
-.group-image {
-  //padding: $gutter/2 0;
-  max-width: 50%;
-}
-.cert-image {
-  padding-top: $gutter/2;
 }
 
 .phone-image {
@@ -4855,8 +3588,6 @@ a.group-panel {
 }
 
 /* --- What You'll Learn Section --- */
-
-
 #will_learn{
   background-image: asset-url('learn_bg.jpg');
   background-size: cover;

@@ -31,30 +31,12 @@
           =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
 
 
-  #corporate-fields
-    %hr/
-    .row
-      .col-md-12.l-margin-bottom-big
-        %h3.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-          Additional Corporate Info
-
-        .col-md-6
-          =f.label :corporate_customer_id, t('views.users.form.corporate_customer_id'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.collection_select :corporate_customer_id, @corporate_customers, :id, :organisation_name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          %br/
-
-        .col-md-6
-          =f.label :employee_guid, t('views.users.form.employee_guid'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :employee_guid, placeholder: t('views.users.form.employee_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
   #tutor-fields
     %hr/
     .row
       .col-md-12
         %h3.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-          Additional Tutor Info
+          Additional Info Only for Tutors
 
         .col-md-12
           =f.label :description, t('views.users.form.description'), class: 'control-label'
@@ -89,39 +71,3 @@
       disableDragAndDrop: true,
       height: 150
     });
-
-    function handleUserGroupChange() {
-      if ($('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).where(tutor: false).first.try(:id)}" ||
-          $('#user_user_group_id').val() == "#{UserGroup.where(corporate_student: true).where(tutor: false).first.try(:id)}" ||
-          $('#user_user_group_id').val() == "#{UserGroup.where(corporate_customer: true).where(tutor: true).first.try(:id)}") {
-        $('#corporate-fields').show();
-        $('#tutor-fields').hide();
-      } else if ($('#user_user_group_id').val() == "#{UserGroup.where(tutor: true).where(corporate_customer: false).where(corporate_student: false).first.try(:id)}") {
-        $('#tutor-fields').show();
-        $('#corporate-fields').hide();
-      } else {
-        $('#user_corporate_customer_id option:first').attr('selected', 'selected');
-        $('#corporate-fields').hide();
-        $('#tutor-fields').hide();
-      }
-    }
-
-    $(document).ready(function() {
-      $('#tutor-fields').hide();
-      $('#corporate-fields').hide();
-    });
-
-    $('#user_user_group_id').bind('change', function() {
-      handleUserGroupChange();
-    });
-
-    $('#editor').summernote({
-      disableDragAndDrop: true,
-    });
-
-
-  -unless @user.new_record?
-    :javascript
-      $(document).ready(function() {
-        handleUserGroupChange()
-      });

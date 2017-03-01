@@ -22,7 +22,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
 
   # Constants
   STRATEGIES = %w(random ordered)
-  #STRATEGIES = %w(random progressive)
 
   # attr-accessible
   attr_accessible :course_module_element_id,

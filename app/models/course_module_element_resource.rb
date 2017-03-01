@@ -39,7 +39,6 @@ class CourseModuleElementResource < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:name) }
   before_destroy :check_dependencies
-  #before_validation { upload.clear if delete_upload == '1' }
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -52,6 +51,5 @@ class CourseModuleElementResource < ActiveRecord::Base
   end
 
   protected
-
 
 end
