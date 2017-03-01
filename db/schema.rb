@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170227140801) do
+ActiveRecord::Schema.define(version: 20170301115012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -447,6 +447,7 @@ ActiveRecord::Schema.define(version: 20170227140801) do
     t.text     "stripe_order_payment_data"
     t.integer  "mock_exam_id"
     t.boolean  "terms_and_conditions",      default: false
+    t.string   "reference_guid"
   end
 
   add_index "orders", ["product_id"], name: "index_orders_on_product_id", using: :btree
@@ -457,7 +458,6 @@ ActiveRecord::Schema.define(version: 20170227140801) do
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
-    t.integer  "subject_course_id"
     t.integer  "mock_exam_id"
     t.string   "stripe_guid"
     t.boolean  "live_mode",         default: false
@@ -467,12 +467,12 @@ ActiveRecord::Schema.define(version: 20170227140801) do
     t.integer  "currency_id"
     t.decimal  "price"
     t.string   "stripe_sku_guid"
+    t.integer  "subject_course_id"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
-  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "question_banks", force: :cascade do |t|
     t.string   "question_selection_strategy"

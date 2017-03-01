@@ -43,7 +43,7 @@
 
             -else
               =form_for(@order, html: {class: 'form-horizontal', role: 'form'}) do |f|
-                =f.hidden_field :mock_exam_id, value: @mock_exam.id
+                =f.hidden_field :product_id, value: @product.id
                 =f.hidden_field :stripe_token
                 =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
                 =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}

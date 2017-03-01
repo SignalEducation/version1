@@ -16,6 +16,7 @@
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
 #  terms_and_conditions      :boolean          default(FALSE)
+#  reference_guid            :string
 #
 
 require 'rails_helper'

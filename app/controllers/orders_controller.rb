@@ -16,6 +16,7 @@
 #  stripe_order_payment_data :text
 #  mock_exam_id              :integer
 #  terms_and_conditions      :boolean          default(FALSE)
+#  reference_guid            :string
 #
 
 class OrdersController < ApplicationController
@@ -45,28 +46,27 @@ class OrdersController < ApplicationController
   end
 
   def create
-    if current_user && params[:order] && params[:order][:mock_exam_id] && params[:order][:stripe_token]
+    if current_user && params[:order] && params[:order][:product_id] && params[:order][:stripe_token]
 
       user = current_user
-      mock_exam_id = params[:order][:mock_exam_id]
-      @mock_exam = MockExam.find(mock_exam_id)
-      product = @mock_exam.product
-      currency = Currency.find(product.currency_id)
+      @product = Product.find(params[:order][:product_id])
+      @mock_exam = @product.mock_exam
+      currency = Currency.find(@product.currency_id)
       stripe_token = params[:order][:stripe_token]
 
       @order = Order.new(allowed_params)
       @order.user_id = user.id
-      @order.product_id = product.id
+      @order.product_id = @product.id
 
       stripe_order = Stripe::Order.create(
           currency: currency.iso_code,
           customer: user.stripe_customer_id,
           email: user.email,
           items: [{
-                      amount: (product.price.to_f * 100).to_i,
+                      amount: (@product.price.to_f * 100).to_i,
                       currency: currency.iso_code,
                       quantity: 1,
-                      parent: product.stripe_sku_guid
+                      parent: @product.stripe_sku_guid
                   }]
       )
 
@@ -74,6 +74,8 @@ class OrdersController < ApplicationController
       @order.stripe_guid = stripe_order.id
       @order.live_mode = stripe_order.livemode
       @order.current_status = stripe_order.status
+      random_guid = "Order_#{ApplicationController.generate_random_number(10)}"
+      @order.reference_guid = random_guid
 
       if @order.valid?
         order = Stripe::Order.retrieve(@order.stripe_guid)
@@ -83,7 +85,7 @@ class OrdersController < ApplicationController
       @order.current_status = order.status
       @order.stripe_order_payment_data = @pay_order
     else
-      redirect_to media_library_url
+      render action: :new
     end
 
     if @order.save
@@ -91,8 +93,9 @@ class OrdersController < ApplicationController
       MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file)
       redirect_to account_url(anchor: :orders)
     else
-      redirect_to media_library_url
+      render action: :new
     end
+    @navbar = false
   end
 
   protected
@@ -106,7 +109,7 @@ class OrdersController < ApplicationController
   end
 
   def allowed_params
-    params.require(:order).permit(:subject_course_id, :user_id, :stripe_token, :mock_exam_id, :terms_and_conditions)
+    params.require(:order).permit(:subject_course_id, :product_id, :user_id, :stripe_token, :terms_and_conditions)
   end
 
 end
