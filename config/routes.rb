@@ -121,7 +121,7 @@ Rails.application.routes.draw do
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
     get 'library/:group_name_url/:subject_course_name_url/preview', to: 'library#preview_course', as: :preview_course
 
-    resources :mock_exams, concerns: :supports_reordering
+    resources :mock_exams, except: [:show], concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     resources :products

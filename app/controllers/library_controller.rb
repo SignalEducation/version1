@@ -67,6 +67,14 @@ class LibraryController < ApplicationController
     end
 
     if current_user
+      mock_exams = @course.mock_exams
+      mock_exam_ids = mock_exams.map(&:id)
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : @user.country
+      @currency_id = @country.currency_id
+      @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+
+
       users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
       user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
       latest_set = user_course_sets.first

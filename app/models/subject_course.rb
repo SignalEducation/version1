@@ -44,7 +44,7 @@ class SubjectCourse < ActiveRecord::Base
   attr_accessible :name, :name_url, :sorting_order, :active, :live, :wistia_guid,
                   :cme_count, :description, :short_description,
                   :mailchimp_guid, :default_number_of_possible_exam_answers,
-                  :restricted, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date,
+                  :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date,
                   :certificate, :hotjar_guid, :email_content, :external_url,
                   :external_url_name, :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url
@@ -67,9 +67,9 @@ class SubjectCourse < ActiveRecord::Base
   has_many :products
   has_many :orders
   has_many :white_papers
+  has_many :mock_exams
   has_one :exam_sitting
   has_one :question_bank
-  has_one :mock_exam
 
 
   # validation

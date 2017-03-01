@@ -131,14 +131,15 @@
 
         .col-md-4
           .l-margin-top-big
-            -if current_user && @course.mock_exam
+            -if current_user && @course.mock_exams.any?
               %p.h4.l-margin-bottom.l-margin-top-huge
-                Mock Exam
+                Mock Exams
               %ul.course-resources
-                %li
-                  =link_to new_order_url(@course.mock_exam.product) do
-                    .btn.btn-secondary.btn-red.btn-list
-                      =@course.mock_exam.name
+                -@products.each do |product|
+                  %li
+                    =link_to new_order_url(product) do
+                      .btn.btn-secondary.btn-red.btn-list
+                        =product.mock_exam.name
 
             -if current_user && @subject_course_resources && @subject_course_resources.any?
               %p.h4.l-margin-bottom.l-margin-top-huge

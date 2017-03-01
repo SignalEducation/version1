@@ -740,6 +740,7 @@ en:
         price_placeholder: Price of Product
         active: Active
         currency: Currency
+        mock_exam_id: Mock Exam
         subject_course: Course
         type: Type
         currency: Currency

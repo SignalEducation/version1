@@ -22,19 +22,13 @@
 class MockExamsController < ApplicationController
 
   before_action :logged_in_required
-  before_action except: [:show] do
-    ensure_user_is_of_type(%w(admin))
-  end
-  before_action only: [:show] do
-    ensure_user_is_of_type(%w(individual_student))
+  before_action do
+    ensure_user_is_of_type(%w(admin content_manager))
   end
   before_action :get_variables
 
   def index
     @mock_exams = MockExam.paginate(per_page: 50, page: params[:page]).all_in_order
-  end
-
-  def show
   end
 
   def new
@@ -87,12 +81,13 @@ class MockExamsController < ApplicationController
     if params[:id].to_i > 0
       @mock_exam = MockExam.where(id: params[:id]).first
     end
+    @subject_courses = SubjectCourse.all_active.all_in_order
     @products = Product.all_in_order
     @currencies = Currency.all_in_order
   end
 
   def allowed_params
-    params.require(:mock_exam).permit(:subject_course_id, :product_id, :name, :sorting_order, :file, :cover_image)
+    params.require(:mock_exam).permit(:subject_course_id, :name, :sorting_order, :file, :cover_image)
   end
 
 end

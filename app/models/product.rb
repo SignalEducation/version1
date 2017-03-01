@@ -22,19 +22,18 @@ class Product < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :active, :currency_id, :price, :stripe_sku_guid, :live_mode, :stripe_guid
+  attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid, :live_mode, :stripe_guid
 
   # Constants
 
   # relationships
-  belongs_to :subject_course
   belongs_to :currency
-  has_one :mock_exam
+  belongs_to :mock_exam
   has_many :orders
 
   # validation
   validates :name, presence: true
-  validates :subject_course_id, presence: true,
+  validates :mock_exam_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :stripe_guid, presence: true, uniqueness: true, on: :update
   validates :currency_id, presence: true
@@ -55,7 +54,7 @@ class Product < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def self.search(search)
@@ -64,11 +63,6 @@ class Product < ActiveRecord::Base
     else
       Product.all_active.all_in_order
     end
-  end
-
-
-  def type
-    self.mock_exam ? 'Mock Exam' : 'Diploma'
   end
 
   def create_on_stripe

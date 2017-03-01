@@ -14,7 +14,7 @@
         =render partial: 'layouts/flash_messages'
       .col-md-12
         .col-md-11.col-md-offset-1
-          -unless current_user.purchased_products.include?(@product)
+          -if current_user.purchased_products && !current_user.purchased_products.include?(@product)
             %p.p
               Please enter you payment details below to complete your purchase. The Mock Exam will be emailed upon successful payment.
 
@@ -33,7 +33,7 @@
 
         .col-sm-8
           .new-product-user-form.l-margin-top
-            -if current_user.purchased_products.include?(@product)
+            -if current_user.purchased_products && current_user.purchased_products.include?(@product)
               .row
                 .col-md-12
                   .payment-heading.text-center
