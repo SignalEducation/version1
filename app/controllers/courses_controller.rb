@@ -41,7 +41,7 @@ class CoursesController < ApplicationController
         @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
       end
     end
-    @paywall = paywall_checkpoint
+    #@paywall = paywall_checkpoint
   end
 
   def create
@@ -236,9 +236,15 @@ class CoursesController < ApplicationController
 
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    unless @course && current_user && current_user.permission_to_see_content(@course)
-      flash[:warning] = 'Sorry, you are not permitted to access that content.'
-      redirect_to root_url
+    if @course && current_user && !current_user.permission_to_see_content(@course)
+
+      if current_user.expired_free_member?
+        flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue learning'
+        redirect_to user_new_subscription_url(current_user.id)
+      else
+        flash[:warning] = 'Sorry, you are not permitted to access that content.'
+        redirect_to root_url
+      end
     end
 
   end
