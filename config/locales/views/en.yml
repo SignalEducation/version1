@@ -1190,8 +1190,6 @@ en:
         site_admin: Site admin
         customer_support: Customer Support
         marketing_support: Marketing Support
-        subscription_required_at_sign_up: Subscription required at sign up
-        subscription_required_to_see_content: Subscription required to see content
         complimentary: Complimentary
 
       edit:

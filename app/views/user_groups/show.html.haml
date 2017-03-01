@@ -37,12 +37,6 @@
                   %td.col-sm-4=t('views.user_groups.form.site_admin')
                   %td.col-sm-8=tick_or_cross(@user_group.site_admin)
                 %tr
-                  %td.col-sm-4=t('views.user_groups.form.subscription_required_at_sign_up')
-                  %td.col-sm-8=tick_or_cross(@user_group.subscription_required_at_sign_up)
-                %tr
-                  %td.col-sm-4=t('views.user_groups.form.subscription_required_to_see_content')
-                  %td.col-sm-8=tick_or_cross(@user_group.subscription_required_to_see_content)
-                %tr
                   %td.col-sm-4=t('views.user_groups.show.users')
                   %td.col-sm-8
                     -if @user_group.users.count > 0 && @user_group.users.count < 50

@@ -77,7 +77,7 @@ class UserGroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user_group).permit(:name, :description, :individual_student, :tutor, :content_manager, :blogger, :site_admin, :subscription_required_at_sign_up, :subscription_required_to_see_content, :complimentary, :customer_support, :marketing_support)
+    params.require(:user_group).permit(:name, :description, :individual_student, :tutor, :content_manager, :blogger, :site_admin, :complimentary, :customer_support, :marketing_support)
   end
 
 end
