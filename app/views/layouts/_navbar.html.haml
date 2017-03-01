@@ -16,7 +16,7 @@
                 =link_to 'Dashboard', student_dashboard_url
               %li
                 =link_to 'Courses', library_url
-              -if current_user.free_member? && !current_user.active_subscription
+              -if current_user.valid_free_member? && !current_user.active_subscription
                 %li
                   %li=link_to "#{current_user.days_left} Days left in Trial", user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
               -#Admin Dropdown
