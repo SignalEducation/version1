@@ -166,6 +166,7 @@ class HomePagesController < ApplicationController
     if params[:id].to_i > 0
       @home_page = HomePage.where(id: params[:id]).first
     end
+    @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
     @groups = Group.all_active.all_in_order
