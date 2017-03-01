@@ -88,7 +88,7 @@ class EnrollmentsController < ApplicationController
     else
       content = @course.short_description
     end
-    url = library_special_link(@course.name_url)
+    url = library_special_link(@course)
     MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
   end
 

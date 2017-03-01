@@ -64,7 +64,7 @@ class ConditionalMandrillMailsProcessor
       if log.enrollment
         course_name = log.subject_course.name
         days = DAYS_WITHOUT_UPDATE
-        url = Rails.application.routes.default_url_options[:host] + "/#{log.subject_course.parent.name_url}/#{log.subject_course.name_url}"
+        url = Rails.application.routes.url_helpers.library_course_url(group_name_url: log.subject_course.parent.name_url, subject_course_name_url: log.subject_course.name_url, host: ENV['learnsignal_v3_server_email_domain'])
         MandrillWorker.perform_async(log.user.id, "send_we_havent_seen_you_in_a_while_email", url, course_name, days) if log
       end
     end
