@@ -49,11 +49,12 @@ class MandrillClient
     send_template('referral-discount-20-02-17', msg)
   end
 
-  def send_mock_exam_email(account_url, file_name, attachment)
+  def send_mock_exam_email(account_url, file_name, attachment, guid)
     msg = message_stub.merge({"subject" => "LearnSignal Mock Exam "})
     msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
+    msg["global_merge_vars"] << { "name" => "GUID", "content" => guid }
     send_template('mock-exam-purchase-20-02-17', msg)
   end
 
