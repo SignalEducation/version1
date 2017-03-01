@@ -116,7 +116,7 @@ def student_picks_a_subscription_plan(currency, payment_frequency)
 end
 
 def sign_up_and_upgrade_from_free_trial
-  visit all_groups_path
+  visit root_path
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)

@@ -9,6 +9,9 @@ describe 'Subscription UX:', type: :feature do
   include_context 'course_content'
   include_context 'subscription_plans_setup' # starts StripeMock up for us.
 
+  let!(:individual_student_user_2) { FactoryGirl.create(:individual_student_user,
+                                                      user_group_id: individual_student_user_group.id) }
+
   let!(:subscription_1) { x = FactoryGirl.create(:subscription,
                           user_id: individual_student_user.id,
                           subscription_plan_id: subscription_plan_eur_m.id,
@@ -16,10 +19,10 @@ describe 'Subscription UX:', type: :feature do
                           individual_student_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
                           x }
   let!(:subscription_2) { x = FactoryGirl.create(:subscription,
-                          user_id: corporate_customer_user.id,
+                          user_id: individual_student_user_2.id,
                           subscription_plan_id: subscription_plan_eur_m.id,
                           stripe_token: stripe_helper.generate_card_token)
-                          corporate_customer_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
+  individual_student_user_2.update_attribute(:stripe_customer_id, x.stripe_customer_id)
                           x }
   #before { StripeMock.start }
   after { StripeMock.stop }

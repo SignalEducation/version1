@@ -13,7 +13,7 @@ describe 'The student sign-up process', type: :feature do
 
   before(:each) do
     activate_authlogic
-    visit all_groups_path
+    visit root_path
   end
 
   #### The Successful Path

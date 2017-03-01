@@ -80,6 +80,10 @@ FactoryGirl.define do
       user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       account_activation_code           'abc123'
+      email_verified                  true
+      email_verification_code         nil
+      email_verified_at               Time.now
+
 
       factory :inactive_individual_student_user do
         sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
@@ -100,8 +104,8 @@ FactoryGirl.define do
 
       factory :unverified_user do
         sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
-        active                          false
-        account_activation_code         'abcde12345'
+        active                          true
+        account_activation_code         nil
         account_activated_at            nil
         email_verified                  false
         email_verification_code         'abc123456'

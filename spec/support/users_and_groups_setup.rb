@@ -18,6 +18,8 @@ shared_context 'users_and_groups_setup' do
                                 user_group_id: individual_student_user_group.id) }
   let(:inactive_individual_student_user) { FactoryGirl.create(:inactive_individual_student_user,
                                 user_group_id: individual_student_user_group.id) }
+  let(:unverified_individual_student_user) { FactoryGirl.create(:unverified_user,
+                                user_group_id: individual_student_user_group.id) }
   let(:tutor_user) { FactoryGirl.create(:tutor_user,
                                 user_group_id: tutor_user_group.id) }
   let(:content_manager_user) { FactoryGirl.create(:content_manager_user,
