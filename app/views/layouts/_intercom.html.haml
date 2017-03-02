@@ -6,7 +6,11 @@
     created_at: current_user.created_at,
     custom_data: {guid: current_user.guid,
     user_group: current_user.user_group.try(:name),
-    free_trial: current_user.try(:valid_free_member?),
+    account_status: current_user.try(:user_account_status),
+    free_trial: current_user.try(:free_member?),
+    valid_free_trial: current_user.try(:valid_free_member?),
+    free_trial_days_left: current_user.try(:days_left),
+    free_trial_minutes_left: current_user.try(:minutes_left),
     email_verified: current_user.try(:email_verified),
     topic_interest: current_user.try(:topic_interest),
     }})
