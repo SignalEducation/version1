@@ -1059,16 +1059,6 @@ en:
         password_confirmation_placeholder: Password confirmation
         address: Address
         address_placeholder: Billing address
-        first_description: Description 1
-        first_description_placeholder: First paragraph
-        second_description: Description 2
-        second_description_placeholder: Second paragraph
-        wistia_url: Wistia URL
-        wistia_url_placeholder: Wistia Project URL
-        qualifications: Qualifications
-        qualifications_url_placeholder: FCCA, MBS (Finance)
-        personal_url: Site URL
-        personal_url_placeholder: Personal site or LinkedIn URL
         name_url: Name URL
         name_url_placeholder: must-be-lower-case-and-no-spaces
         country_id: Country
