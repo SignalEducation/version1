@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301115012) do
+ActiveRecord::Schema.define(version: 20170302150911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -906,17 +906,11 @@ ActiveRecord::Schema.define(version: 20170301115012) do
     t.integer  "subscription_plan_category_id"
     t.boolean  "password_change_required"
     t.string   "session_key"
-    t.text     "first_description"
-    t.text     "second_description"
-    t.text     "wistia_url"
-    t.text     "personal_url"
     t.string   "name_url"
-    t.text     "qualifications"
     t.string   "profile_image_file_name"
     t.string   "profile_image_content_type"
     t.integer  "profile_image_file_size"
     t.datetime "profile_image_updated_at"
-    t.string   "phone_number"
     t.string   "topic_interest"
     t.string   "email_verification_code"
     t.datetime "email_verified_at"
