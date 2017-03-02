@@ -180,6 +180,11 @@ Rails.application.routes.draw do
     get 'home', to: 'home_pages#home', as: :home
     get 'group/:home_pages_public_url', to: 'home_pages#group', as: :group_landing
 
+    # Catch old library urls
+    get 'subscription_groups', to: 'library#index'
+    get 'subscription_group/:group_name_url', to: 'library#group_show'
+    get 'subscription_course/:subject_course_name_url', to: 'library#index'
+
     root 'routes#root'
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
