@@ -37,6 +37,16 @@ class DashboardController < ApplicationController
     end
   end
 
+  def export_users_with_enrollments
+    @users = User.sort_by_recent_registration.all_students
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @users.to_csv_with_enrollments() }
+      format.xls { send_data @users.to_csv_with_enrollments(col_sep: "\t", headers: true), filename: "users-with-enrolments-#{Date.today}.xls" }
+    end
+  end
+
   def export_courses
     @courses = SubjectCourse.all_active.all_live.all_in_order
 

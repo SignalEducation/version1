@@ -496,6 +496,25 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.to_csv_with_enrollments(options = {})
+    attributes = %w{first_name last_name email date_of_birth enrolled_courses}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def enrolled_courses
+    course_names = []
+    self.enrollments.each do |enrollment|
+      course_names << enrollment.subject_course.name
+    end
+    course_names
+  end
+
   #User reactivating their account by adding a new subscription and card
   def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, terms_and_conditions, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)

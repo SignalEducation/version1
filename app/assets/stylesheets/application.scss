@@ -477,6 +477,16 @@ label, .label {
       background: ($colour-12);
     }
   }
+  &.btn-orange {
+    background: $colour-24;
+    color: $white;
+    &:hover {
+      background: shade($colour-24, 10%);
+    }
+    &:active {
+      background: ($colour-24);
+    }
+  }
   &.btn-wide {
     width: 100%;
     height: 60px;
