@@ -18,6 +18,7 @@ class UserSessionsController < ApplicationController
     if @user_session.save
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
       @user_session.user.update_attribute(:session_key, session[:session_id])
+      set_current_visit
       flash[:error] = nil
       if session[:return_to]
         redirect_back_or_default dashboard_special_link(@user_session.user)

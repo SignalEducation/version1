@@ -9,6 +9,7 @@ class UserVerificationsController < ApplicationController
       redirect_to set_password_url
     elsif @user
       UserSession.create(@user)
+      set_current_visit
       redirect_to account_verified_url
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')

@@ -58,6 +58,13 @@ class ApplicationController < ActionController::Base
     @current_user = current_user_session && current_user_session.record
   end
 
+  def set_current_visit
+    if current_visit && !current_visit.user
+      current_visit.user = current_user
+      current_visit.save!
+    end
+  end
+
   def set_navbar_and_footer
     @navbar = 'standard'
     @footer = 'standard'
