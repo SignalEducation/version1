@@ -30,6 +30,7 @@ FactoryGirl.define do
     current_status "MyString"
     coupon_code "MyString"
     terms_and_conditions true
+    sequence(:reference_guid)      { |n| "Order_#{ApplicationController.generate_random_number(10)}#{n}" }
   end
 
 end

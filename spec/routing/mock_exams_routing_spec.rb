@@ -32,10 +32,6 @@ RSpec.describe MockExamsController, type: :routing do
       expect(get: '/mock_exams/new').to route_to('mock_exams#new')
     end
 
-    it 'routes to #show' do
-      expect(get: '/mock_exams/1').to route_to('mock_exams#show', id: '1')
-    end
-
     it 'routes to #edit' do
       expect(get: '/mock_exams/1/edit').to route_to('mock_exams#edit', id: '1')
     end
@@ -51,8 +47,6 @@ RSpec.describe MockExamsController, type: :routing do
     it 'routes to #reorder' do
       expect(post: '/mock_exams/reorder').to route_to('mock_exams#reorder')
     end
-    # todo move this to routes.rb ABOVE the resource:
-    # post 'mock_exams/reorder', to: 'mock_exams#reorder'
 
     it 'routes to #destroy' do
       expect(delete: '/mock_exams/1').to route_to('mock_exams#destroy', id: '1')

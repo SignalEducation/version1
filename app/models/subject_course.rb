@@ -64,7 +64,6 @@ class SubjectCourse < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   has_many :subject_course_resources
-  has_many :products
   has_many :orders
   has_many :white_papers
   has_many :mock_exams

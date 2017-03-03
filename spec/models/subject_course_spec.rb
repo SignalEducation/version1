@@ -60,7 +60,6 @@ describe SubjectCourse do
   it { should have_many(:enrollments) }
   it { should have_many(:home_pages) }
   it { should have_many(:student_exam_tracks) }
-  it { should have_many(:products) }
   it { should have_many(:orders) }
   it { should have_many(:white_papers) }
   it { should have_many(:subject_course_resources) }
