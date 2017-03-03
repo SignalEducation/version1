@@ -57,6 +57,16 @@ class DashboardController < ApplicationController
     end
   end
 
+  def export_visits
+    @users = User.sort_by_recent_registration.all_students
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @users.to_csv_with_visits() }
+      format.xls { send_data @users.to_csv_with_visits(col_sep: "\t", headers: true), filename: "users-utm-data-#{Date.today}.xls" }
+    end
+  end
+
   def content_manager
     ensure_user_is_of_type(['content_manager'])
   end
