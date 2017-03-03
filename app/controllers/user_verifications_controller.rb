@@ -33,6 +33,7 @@ class UserVerificationsController < ApplicationController
                               account_activation_code: nil,
                               active: true)
       UserSession.create(@user)
+      set_current_visit
       redirect_to library_url
     else
       flash[:error] = I18n.t('controllers.user_activations.update.error')
