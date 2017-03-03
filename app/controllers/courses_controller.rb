@@ -2,6 +2,7 @@ class CoursesController < ApplicationController
 
   before_action :logged_in_required
   before_action :check_permission, only: :show
+  #skip_before_action :track_ahoy_visit, only: :video_watched_data
 
   def show
     @mathjax_required = true
