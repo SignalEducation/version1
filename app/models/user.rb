@@ -502,7 +502,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_visits(options = {})
-    attributes = %w{email id user_account_status visit_campaigns visit_sources}
+    attributes = %w{email id user_account_status visit_campaigns visit_sources visit_landing_pages}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -532,6 +532,14 @@ class User < ActiveRecord::Base
     visits = []
     self.visits.each do |visit|
       visits << visit.utm_source
+    end
+    visits
+  end
+
+  def visit_landing_pages
+    visits = []
+    self.visits.each do |visit|
+      visits << visit.landing_page
     end
     visits
   end
