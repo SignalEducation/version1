@@ -103,6 +103,7 @@ class User < ActiveRecord::Base
   belongs_to :user_group
   has_many :user_notifications
   has_many :visits
+  has_many :ahoy_events, :class_name => 'Ahoy::Event'
   has_one :referral_code
   has_one :referred_signup
   belongs_to :subscription_plan_category
