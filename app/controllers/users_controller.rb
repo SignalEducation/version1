@@ -235,14 +235,15 @@ class UsersController < ApplicationController
         subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
         @user.subscription_plan_category_id = subscription_plan_category.try(:id)
       end
-      # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(
-          email: @user.try(:email)
-      )
-      @user.stripe_customer_id = stripe_customer.id
       @user.free_trial = true
 
       if @user.valid? && @user.save
+        # Create the customer object on stripe
+        stripe_customer = Stripe::Customer.create(
+            email: @user.try(:email)
+        )
+        @user.update_attribute(:stripe_customer_id, stripe_customer.id)
+
         @subscription_plan = SubscriptionPlan.in_currency(@user.country.currency_id).where(payment_frequency_in_months: 1).where(subscription_plan_category_id: nil).first
         # Send User Activation email through Mandrill
         MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
