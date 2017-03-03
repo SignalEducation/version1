@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301115012) do
+ActiveRecord::Schema.define(version: 20170302154449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "ahoy_events", id: :uuid, default: nil, force: :cascade do |t|
+    t.uuid     "visit_id"
+    t.integer  "user_id"
+    t.string   "name"
+    t.text     "properties"
+    t.datetime "time"
+  end
+
+  add_index "ahoy_events", ["time"], name: "index_ahoy_events_on_time", using: :btree
+  add_index "ahoy_events", ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
+  add_index "ahoy_events", ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
 
   create_table "completion_certificates", force: :cascade do |t|
     t.integer  "user_id"
@@ -906,17 +918,11 @@ ActiveRecord::Schema.define(version: 20170301115012) do
     t.integer  "subscription_plan_category_id"
     t.boolean  "password_change_required"
     t.string   "session_key"
-    t.text     "first_description"
-    t.text     "second_description"
-    t.text     "wistia_url"
-    t.text     "personal_url"
     t.string   "name_url"
-    t.text     "qualifications"
     t.string   "profile_image_file_name"
     t.string   "profile_image_content_type"
     t.integer  "profile_image_file_size"
     t.datetime "profile_image_updated_at"
-    t.string   "phone_number"
     t.string   "topic_interest"
     t.string   "email_verification_code"
     t.datetime "email_verified_at"
@@ -974,6 +980,36 @@ ActiveRecord::Schema.define(version: 20170301115012) do
   end
 
   add_index "video_resources", ["course_module_element_id"], name: "index_video_resources_on_course_module_element_id", using: :btree
+
+  create_table "visits", id: :uuid, default: nil, force: :cascade do |t|
+    t.uuid     "visitor_id"
+    t.string   "ip"
+    t.text     "user_agent"
+    t.text     "referrer"
+    t.text     "landing_page"
+    t.integer  "user_id"
+    t.string   "referring_domain"
+    t.string   "search_keyword"
+    t.string   "browser"
+    t.string   "os"
+    t.string   "device_type"
+    t.integer  "screen_height"
+    t.integer  "screen_width"
+    t.string   "country"
+    t.string   "region"
+    t.string   "city"
+    t.string   "postal_code"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.string   "utm_source"
+    t.string   "utm_medium"
+    t.string   "utm_term"
+    t.string   "utm_content"
+    t.string   "utm_campaign"
+    t.datetime "started_at"
+  end
+
+  add_index "visits", ["user_id"], name: "index_visits_on_user_id", using: :btree
 
   create_table "white_paper_requests", force: :cascade do |t|
     t.string   "name"

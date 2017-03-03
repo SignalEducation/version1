@@ -6,6 +6,7 @@ gem 'rails', '4.2.1'
 # Core gems - common to all environments
 gem 'airbrake', '~> 4.3.4'
 gem 'authlogic', '~> 3.4.3'
+gem 'ahoy_matey' # visit tracking
 gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 #gem 'aws-sdk' # enables AWS functionality - use with AWS::...

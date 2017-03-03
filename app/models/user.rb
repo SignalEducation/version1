@@ -37,17 +37,11 @@
 #  subscription_plan_category_id    :integer
 #  password_change_required         :boolean
 #  session_key                      :string
-#  first_description                :text
-#  second_description               :text
-#  wistia_url                       :text
-#  personal_url                     :text
 #  name_url                         :string
-#  qualifications                   :text
 #  profile_image_file_name          :string
 #  profile_image_content_type       :string
 #  profile_image_file_size          :integer
 #  profile_image_updated_at         :datetime
-#  phone_number                     :string
 #  topic_interest                   :string
 #  email_verification_code          :string
 #  email_verified_at                :datetime
@@ -78,8 +72,6 @@ class User < ActiveRecord::Base
                   :stripe_customer_id, :password, :password_confirmation,
                   :current_password, :locale, :subscriptions_attributes,
                   :password_change_required, :address,
-                  :first_description, :second_description, :wistia_url,
-                  :personal_url, :name_url, :qualifications,
                   :profile_image, :topic_interest,
                   :email_verification_code, :email_verified_at,
                   :email_verified, :account_activated_at,
@@ -110,6 +102,7 @@ class User < ActiveRecord::Base
   has_many :subject_course_user_logs
   belongs_to :user_group
   has_many :user_notifications
+  has_many :visits
   has_one :referral_code
   has_one :referred_signup
   belongs_to :subscription_plan_category
@@ -494,6 +487,25 @@ class User < ActiveRecord::Base
         csv << attributes.map{ |attr| user.send(attr) }
       end
     end
+  end
+
+  def self.to_csv_with_enrollments(options = {})
+    attributes = %w{first_name last_name email date_of_birth enrolled_courses}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def enrolled_courses
+    course_names = []
+    self.enrollments.each do |enrollment|
+      course_names << enrollment.subject_course.name
+    end
+    course_names
   end
 
   #User reactivating their account by adding a new subscription and card

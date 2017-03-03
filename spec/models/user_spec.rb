@@ -37,17 +37,11 @@
 #  subscription_plan_category_id    :integer
 #  password_change_required         :boolean
 #  session_key                      :string
-#  first_description                :text
-#  second_description               :text
-#  wistia_url                       :text
-#  personal_url                     :text
 #  name_url                         :string
-#  qualifications                   :text
 #  profile_image_file_name          :string
 #  profile_image_content_type       :string
 #  profile_image_file_size          :integer
 #  profile_image_updated_at         :datetime
-#  phone_number                     :string
 #  topic_interest                   :string
 #  email_verification_code          :string
 #  email_verified_at                :datetime
@@ -70,7 +64,7 @@ describe User do
   subject { FactoryGirl.build(:individual_student_user) }
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number discourse_user)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number discourse_user name_url)
 
   User.column_names.each do |column_name|
     if black_list.include?(column_name)

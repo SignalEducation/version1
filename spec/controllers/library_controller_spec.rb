@@ -8,8 +8,19 @@ RSpec.describe LibraryController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
+  # currencies
   let!(:gbp) { FactoryGirl.create(:gbp) }
-  let!(:product_1)  { FactoryGirl.create(:product, subject_course_id: subject_course_2.id, currency_id: gbp.id) }
+  let!(:eur) { FactoryGirl.create(:euro) }
+  let!(:usd) { FactoryGirl.create(:usd) }
+
+  # countries
+  let!(:uk) { FactoryGirl.create(:uk, currency_id: gbp.id) }
+  let!(:ireland) { FactoryGirl.create(:ireland, currency_id: eur.id) }
+  let!(:usa) { FactoryGirl.create(:usa, currency_id: usd.id) }
+
+
+  let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
+  let!(:product_1) { FactoryGirl.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id) }
 
   context 'Not logged in: ' do
 

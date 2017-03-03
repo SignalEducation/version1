@@ -12,6 +12,7 @@
 //
 // //// Removed Turbolinks from just after jquery-sortable
 //= require jquery
+//= require ahoy
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart

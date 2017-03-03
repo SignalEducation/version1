@@ -21,7 +21,7 @@ require 'rails_helper'
 describe Product do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at mock_exam_id)
+  black_list = %w(id created_at updated_at)
   Product.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -31,24 +31,21 @@ describe Product do
   end
 
   # Constants
-  #it { expect(Product.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:subject_course) }
   it { should belong_to(:currency) }
+  it { should belong_to(:mock_exam) }
   it { should have_many(:orders) }
-  xit { should belong_to(:mock_exam) }
 
   # validation
   it { should validate_presence_of(:name) }
 
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  it { should validate_presence_of(:mock_exam_id) }
+  it { should validate_numericality_of(:mock_exam_id) }
 
-  it { should_not validate_presence_of(:mock_exam_id) }
-  it { should_not validate_numericality_of(:mock_exam_id) }
+  it { should validate_presence_of(:currency_id) }
 
-  it { should_not validate_presence_of(:stripe_guid) }
+  it { should validate_presence_of(:price) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

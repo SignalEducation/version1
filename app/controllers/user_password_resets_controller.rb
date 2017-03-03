@@ -31,6 +31,7 @@ class UserPasswordResetsController < ApplicationController
       @user = User.finish_password_reset_process(params[:id], params[:password], params[:password_confirmation])
       if @user
         @user_session = UserSession.create!(@user)
+        set_current_visit
         flash[:success] = I18n.t('controllers.user_password_resets.update.flash.success')
         @user.update_attribute(:password_change_required, nil)
         redirect_back_or_default root_url
