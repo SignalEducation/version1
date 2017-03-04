@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
       get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
       post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
+      resources :visits, only: [:index, :show]
     end
 
     #User Account & Session
@@ -170,6 +171,8 @@ Rails.application.routes.draw do
       patch  '/update_courses', action: :update_courses, as: :update_courses
     end
     resources :vat_codes
+    get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
+    get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered

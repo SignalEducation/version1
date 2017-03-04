@@ -28,8 +28,13 @@
               %ul#menu.dropdown-menu
                 %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                 %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
+                %li=link_to t('views.products.index.h1'), products_url
+                %li=link_to t('views.mock_exams.index.h1'), mock_exams_url
                 %li.divider
+                %li=link_to t('views.white_papers.index.h1'), white_papers_url
                 %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
+                %li.divider
+                %li=link_to t('views.visits.index.h1'), visits_all_index_url
                 %li=link_to t('views.home_pages.index.h1'), home_pages_url
                 %li.divider
                 %li=link_to t('views.groups.index.h1'), groups_url
