@@ -1,4 +1,5 @@
-.hidden-lg.hidden-md.visible-sm.visible-xs
+-if current_visit && current_visit.device_type == 'mobile'
+
   :javascript
     var _iub = _iub || [];
     _iub.csConfiguration = {
@@ -16,7 +17,7 @@
       if (w.addEventListener) { w.addEventListener("load", loader, false); } else if (w.attachEvent) { w.attachEvent("onload", loader); } else { w.onload = loader; }
     })(window, document);
 
-.hidden-xs.hidden-sm.visible-lg.visible-md
+-else
   :javascript
     var _iub = _iub || [];
     _iub.csConfiguration = {

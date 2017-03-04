@@ -86,6 +86,10 @@
             .col-md-3.col-sm-3.col-xs-6
               =link_to 'Delete User', @user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
 
+          -if @user.visits.any?
+            .col-md-3.col-sm-3.col-xs-6
+              =link_to 'User Visits', user_visits_url(@user), class: 'btn btn-cyan'
+
           .col-md-3.col-sm-3.col-xs-6
           .col-md-3.col-sm-3.col-xs-6
 

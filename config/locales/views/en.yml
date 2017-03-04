@@ -1424,3 +1424,57 @@ en:
 
       new:
         h1: Aditional Resources - (Optional)
+
+    visits:
+      all_index:
+        h1: All Visits
+
+      index:
+        h1: User Visits
+        id: Visit ID
+        visitor_id: Visitor ID
+        ip: IP
+        user_agent: User Agent
+        referrer: Referrer
+        landing_page: Landing Page
+        user_id: User ID
+        referring_domain: Referring Domain
+        search_keyword: Search Keyword
+        browser: Browser
+        os: OS
+        device_type: Device Type
+        screen_height: Screen Height
+        screen_width: Screen Width
+        country: Country
+        region: Region
+        city: City
+        utm_source: UTM Source
+        utm_medium: UTM Medium
+        utm_term: UTM Term
+        utm_content: UTM Content
+        utm_campaign: UTM Campaign
+        started_at: Started At
+
+      show:
+        h1: Visits
+        ip: IP
+        user_agent: User Agent
+        referrer: Referrer
+        landing_page: Landing Page
+        user_id: User ID
+        referring_domain: Referring Domain
+        search_keyword: Search Keyword
+        browser: Browser
+        os: OS
+        device_type: Device Type
+        screen_height: Screen Height
+        screen_width: Screen Width
+        country: Country
+        region: Region
+        city: City
+        utm_source: UTM Source
+        utm_medium: UTM Medium
+        utm_term: UTM Term
+        utm_content: UTM Content
+        utm_campaign: UTM Campaign
+        started_at: Started At
