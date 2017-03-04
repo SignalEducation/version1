@@ -92,10 +92,10 @@ class LibraryController < ApplicationController
         cme_ids = @course.course_module_elements.all_active.map(&:id)
       end
 
-    elsif @course.active && !@course.live
+    elsif @course && @course.active && !@course.live
       redirect_to preview_course_url
     else
-      redirect_to library_url unless @course
+      redirect_to library_url
     end
   end
 
