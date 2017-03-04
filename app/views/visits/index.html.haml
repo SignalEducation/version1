@@ -12,6 +12,7 @@
         .col-md-12.l-margin-top-big
           .corporate-box-item.table-box
             .table-responsive
+              =will_paginate @visits, renderer: BootstrapPagination::Rails
               %table.table.sorted_table{style: 'font-size: 18px;'}
                 %thead
                   %tr

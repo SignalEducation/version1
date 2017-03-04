@@ -7,11 +7,11 @@ class VisitsController < ApplicationController
   before_action :get_variables, except: [:all_index, :all_show]
 
   def index
-    @visits = @user.visits.all
+    @visits = @user.visits.all.paginate(per_page: 50, page: params[:page])
   end
 
   def all_index
-    @visits = Visit.all
+    @visits = Visit.all.paginate(per_page: 50, page: params[:page])
   end
 
   def show
