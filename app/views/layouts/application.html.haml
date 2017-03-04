@@ -28,7 +28,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    -if @mathjax_required
+    -if @mathjax_required && !controller_name == 'home_pages'
       %script{type: 'text/javascript', src: 'https://jwpsrv.com/library/w07RSqLlEeOssyIACi0I_Q.js'}
 
     =csrf_meta_tags
@@ -41,7 +41,7 @@
     -if Rails.env.production?
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/hotjar'
-    -if Rails.env.production? && (controller_name == 'home_pages' || controller_name == 'footer_pages')
+    -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
   %body
@@ -66,12 +66,16 @@
 
 
     -#General partials
-    =render partial: 'layouts/misc_javascript'
+    -unless controller_name == 'home_pages'
+      =render partial: 'layouts/misc_javascript'
+      -if current_user && (current_user.individual_student? || current_user.tutor? || current_user.blogger?)
+        =render partial: 'layouts/ls_referral'
+
     =render partial: 'layouts/intercom'
-    -if current_user && (current_user.individual_student? || current_user.tutor? || current_user.blogger?)
-      =render partial: 'layouts/ls_referral'
+
     <!-- Mathjax -->
-    -if @mathjax_required
+
+    -if @mathjax_required && !controller_name == 'home_pages'
       %script{type: 'text/x-mathjax-config'}
         MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
       -if Rails.env.production? || Rails.env.staging?
@@ -79,5 +83,5 @@
       -else
         %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
 
-    <!-- Load Typekit Kit -->
-    %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+    -unless controller_name == 'home_pages'
+      %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}

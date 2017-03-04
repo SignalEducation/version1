@@ -4,7 +4,7 @@ class RoutesController < ApplicationController
     if current_user
       redirect_to dashboard_special_link(current_user)
     else
-      redirect_to home_url
+      redirect_to root_url
     end
   end
 end

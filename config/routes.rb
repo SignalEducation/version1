@@ -187,10 +187,10 @@ Rails.application.routes.draw do
     resources :home_pages, only: [:index, :new, :edit, :update, :create]
 
     # HomePages Structure
-    get 'home', to: 'home_pages#home', as: :home
+    get 'home', to: 'routes#root', as: :home
     get 'group/:home_pages_public_url', to: 'home_pages#group', as: :group_landing
 
-    root 'routes#root'
+    root 'home_pages#home'
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
