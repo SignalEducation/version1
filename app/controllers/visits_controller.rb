@@ -43,7 +43,11 @@ class VisitsController < ApplicationController
   end
 
   def all_index
-    @visits = Visit.all.paginate(per_page: 50, page: params[:page])
+    @visits = params[:search_term].to_s.blank? ?
+        @visits = Visit.paginate(per_page: 50, page: params[:page]) :
+        @visits = Visit.search_for(params[:search_term].to_s).
+            paginate(per_page: 50, page: params[:page])
+
   end
 
   def show
