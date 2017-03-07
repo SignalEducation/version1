@@ -16,6 +16,7 @@
 #  count_of_questions_taken        :integer
 #  count_of_videos_taken           :integer
 #  count_of_quizzes_taken          :integer
+#  completed_at                    :datetime
 #
 
 FactoryGirl.define do
