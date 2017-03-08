@@ -22,7 +22,6 @@ describe RoutesController, type: :controller do
       it 'should redirect to home_page#show' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(home_url)
       end
     end
 

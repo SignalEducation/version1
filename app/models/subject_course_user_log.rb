@@ -16,12 +16,13 @@
 #  count_of_questions_taken        :integer
 #  count_of_videos_taken           :integer
 #  count_of_quizzes_taken          :integer
+#  completed_at                    :datetime
 #
 
 class SubjectCourseUserLog < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :session_guid, :subject_course_id
+  attr_accessible :user_id, :session_guid, :subject_course_id, :completed_at
 
   # Constants
 
@@ -148,7 +149,8 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def check_for_completion
     unless Rails.env.test?
-      if self.completed && self.subject_course.survey_url
+      if self.completed && !self.completed_at && self.subject_course.survey_url
+        self.update_attribute(:completed_at, Proc.new{Time.now}.call)
         MandrillWorker.perform_async(self.user_id, 'send_survey_email', self.subject_course.survey_url)
       end
     end

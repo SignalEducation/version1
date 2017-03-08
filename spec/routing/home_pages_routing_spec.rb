@@ -19,7 +19,7 @@ RSpec.describe HomePagesController, type: :routing do
   describe 'routing' do
 
     it 'routes to #home' do
-      expect(get: '/home').to route_to('home_pages#home')
+      expect(get: '/').to route_to('home_pages#home')
     end
 
     it 'routes to #group' do

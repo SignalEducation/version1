@@ -8,7 +8,12 @@
           %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.visits.all_index.h1')
 
-          -#TODO add search field
+        .col-md-12.col-sm-12.col-xs-12
+          =form_tag(visits_all_index_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
 
         .col-md-12.l-margin-top-big
           .corporate-box-item.table-box
