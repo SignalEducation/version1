@@ -3622,7 +3622,10 @@ a.course-panel-label {
   font-size: 24px;
   line-height: 2;
 }
-#advance_career ul{ text-align: left;}
+#advance_career ul{
+  text-align: left;
+  padding-left: 0;
+}
 #advance_career ul li{
   display: inline-block;
   width: 52%;
