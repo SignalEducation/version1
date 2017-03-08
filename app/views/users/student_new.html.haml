@@ -38,6 +38,12 @@
                     .form-group
                       =f.label :password, t('views.users.form.password'), class: 'control-label'
                       =f.password_field :password, required: true, class: 'form-control', id: 'user_password'
+                  .col-sm-12
+                    .form-group
+                      %label
+                        =f.check_box :terms_and_conditions
+                        =t('views.general.terms_and_conditions')
+
 
                   .col-sm-12.l-margin-top
                     =f.submit t('views.general.sign_up_now'), class: 'btn btn-red btn-wide btn-lg-text', id: 'signUp'
@@ -57,6 +63,10 @@
 
         .col-sm-8.col-sm-offset-2.text-center.l-margin-bottom-big.l-margin-top-big
           =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+
+
+
+=render partial: 'layouts/large_footer'
 
 :javascript
 
