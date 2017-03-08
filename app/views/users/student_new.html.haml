@@ -39,8 +39,8 @@
                       =f.label :password, t('views.users.form.password'), class: 'control-label'
                       =f.password_field :password, required: true, class: 'form-control', id: 'user_password'
                   .col-sm-12
-                    .form-group
-                      %label
+                    .form-group.l-margin-top
+                      %label.h5{style: 'color: #3E3F5B;'}
                         =f.check_box :terms_and_conditions
                         =t('views.general.terms_and_conditions')
 
