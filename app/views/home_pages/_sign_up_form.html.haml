@@ -20,8 +20,9 @@
       =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'user_password'
   .col-sm-12
     .form-group
-      %label{style: 'color: #ffffff;'}
+      %label.h5.h-white
         =f.check_box :terms_and_conditions
+
         =t('views.general.terms_and_conditions')
 
   .col-sm-6.col-xs-6
