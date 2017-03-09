@@ -104,23 +104,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -192,23 +183,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -280,23 +262,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(tutor_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -368,23 +341,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(student_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -456,24 +420,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(content_manager_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -545,24 +499,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(customer_support_manager_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -634,24 +578,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(marketing_manager_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
@@ -723,23 +657,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(admin_dashboard_url)
+        expect_bounce_as_signed_in
       end
     end
 
     describe "GET 'group'" do
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect_bounce_as_signed_in
       end
     end
 
