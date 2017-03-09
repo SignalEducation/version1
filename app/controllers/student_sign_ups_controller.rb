@@ -18,6 +18,7 @@ class StudentSignUpsController < ApplicationController
       @user.first_name = session[:valid_params][0]
       @user.last_name = session[:valid_params][1]
       @user.email = session[:valid_params][2]
+      @user.terms_and_conditions = session[:valid_params][3]
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
     end
@@ -75,7 +76,7 @@ class StudentSignUpsController < ApplicationController
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
     else
       session[:sign_up_errors] = @user.errors unless @user.errors.empty?
-      session[:valid_params] = [@user.first_name, @user.last_name, @user.email] unless @user.errors.empty?
+      session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.terms_and_conditions] unless @user.errors.empty?
       redirect_to request.referrer
     end
   end

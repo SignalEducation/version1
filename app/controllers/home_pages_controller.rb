@@ -16,43 +16,24 @@
 class HomePagesController < ApplicationController
 
   before_action :logged_in_required, only: [:index, :new, :edit, :update, :create]
+  before_action :logged_out_required, only: [:home, :group, :subscribe]
   before_action only: [:index, :new, :edit, :update, :create] do
     ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables, except: [:home]
   before_action :layout_variables, only: [:home]
+  before_action :create_user_object, only: [:home, :group]
 
   def home
     #This is the main home_page
-    redirect_to dashboard_special_link(current_user) if current_user
-
     @groups = Group.all_active.all_in_order
-    @user = User.new
-    # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
-    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
-    if session[:sign_up_errors] && session[:valid_params]
-      session[:sign_up_errors].each do |k, v|
-        v.each { |err| @user.errors.add(k, err) }
-      end
-      @user.first_name = session[:valid_params][0]
-      @user.last_name = session[:valid_params][1]
-      @user.email = session[:valid_params][2]
-      session.delete(:sign_up_errors)
-      session.delete(:valid_params)
-    end
-    # Displaying the monthly price
+    # Displaying the monthly price at top of page
     @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
-
     #To show each pricing plan on the page; not involved in the sign up process
     @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
     @groups = Group.all_active.all_in_order
 
     seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
-
   end
 
   def group
@@ -63,26 +44,6 @@ class HomePagesController < ApplicationController
     @group = @home_page.try(:group)
     @url_value = @home_page.try(:public_url)
     redirect_to root_url unless @group
-
-    @user = User.new
-    # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
-
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
-
-    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
-    if session[:sign_up_errors] && session[:valid_params]
-      session[:sign_up_errors].each do |k, v|
-        v.each { |err| @user.errors.add(k, err) }
-      end
-      @user.first_name = session[:valid_params][0]
-      @user.last_name = session[:valid_params][1]
-      @user.email = session[:valid_params][2]
-      session.delete(:sign_up_errors)
-      session.delete(:valid_params)
-    end
 
     # Displaying the monthly price
     @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
@@ -172,6 +133,27 @@ class HomePagesController < ApplicationController
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
     @groups = Group.all_active.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
+  end
+
+  def create_user_object
+    @user = User.new
+    # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user.country_id = @country.id
+    @currency_id = @country.currency_id
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:sign_up_errors] && session[:valid_params]
+      session[:sign_up_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      @user.terms_and_conditions = session[:valid_params][3]
+      session.delete(:sign_up_errors)
+      session.delete(:valid_params)
+    end
   end
 
   def layout_variables
