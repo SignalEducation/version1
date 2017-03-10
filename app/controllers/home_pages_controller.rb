@@ -16,7 +16,7 @@
 class HomePagesController < ApplicationController
 
   before_action :logged_in_required, only: [:index, :new, :edit, :update, :create]
-  before_action :logged_out_required, only: [:home, :group, :subscribe]
+  before_action :check_logged_in_status, only: [:home, :group, :subscribe]
   before_action except: [:home, :group, :subscribe] do
     ensure_user_is_of_type(%w(admin))
   end
@@ -154,6 +154,10 @@ class HomePagesController < ApplicationController
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
     end
+  end
+
+  def check_logged_in_status
+    redirect_to student_dashboard_url if current_user
   end
 
   def layout_variables
