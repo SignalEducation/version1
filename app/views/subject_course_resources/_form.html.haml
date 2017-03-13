@@ -38,8 +38,7 @@
         .col-md-12.l-margin-top-huge
           =f.submit t('views.general.save'), class: 'btn btn-red'
           =t('views.general.or')
-
-          -if controller_name == 'subject_courses'
-            =link_to t('views.general.cancel'), course_special_link(@subject_course), class: 'btn btn-purple'
+          -if controller_name == 'subject_course_resources'
+            =link_to t('views.general.cancel'), course_resources_url(@subject_course_resource.subject_course), class: 'btn btn-purple'
           -else
             =link_to t('views.general.cancel'), subject_course_resources_path, class: 'btn btn-cyan'

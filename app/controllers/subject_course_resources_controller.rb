@@ -40,7 +40,7 @@ class SubjectCourseResourcesController < ApplicationController
     @subject_course_resource = SubjectCourseResource.new(allowed_params)
     if @subject_course_resource.save
       flash[:success] = I18n.t('controllers.subject_course_resources.create.flash.success')
-      redirect_to subject_course_resources_url
+      redirect_to course_resources_url(@subject_course_resource.subject_course)
     else
       render action: :new
     end
@@ -49,7 +49,7 @@ class SubjectCourseResourcesController < ApplicationController
   def update
     if @subject_course_resource.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.subject_course_resources.update.flash.success')
-      redirect_to subject_course_resources_url
+      redirect_to course_resources_url(@subject_course_resource.subject_course)
     else
       render action: :edit
     end
