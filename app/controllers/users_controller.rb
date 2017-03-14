@@ -159,6 +159,7 @@ class UsersController < ApplicationController
         new_referral_code.generate_referral_code(@user.id)
       end
       MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
+      @user.create_on_discourse
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else

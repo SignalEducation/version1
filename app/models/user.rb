@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_trial_limit_in_days, :create_on_discourse
+  after_create :set_trial_limit_in_days
   after_create :create_free_trial_email_workers
 
   # scopes
@@ -614,7 +614,7 @@ class User < ActiveRecord::Base
   end
 
   def create_on_discourse
-    if Rails.env.production? && !self.discourse_user
+    if Rails.env.production?
       username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
       DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
     end
