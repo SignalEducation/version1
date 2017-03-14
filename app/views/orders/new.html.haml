@@ -13,11 +13,6 @@
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
       .col-md-12
-        .col-md-11.col-md-offset-1
-          -if current_user.purchased_products && !current_user.purchased_products.include?(@product)
-            %p.p
-              Please enter you payment details below to complete your purchase. The Mock Exam will be emailed upon successful payment.
-
         .col-sm-4.l-margin-top
           .course-side-info
             %h2.h-separator.h-separator-left.l-margin-bottom
@@ -31,7 +26,21 @@
 
 
 
-        .col-sm-8
+        .col-sm-8.l-margin-top-small
+          .new-order-text-box
+            .faq-inner
+              .faq-title.h6
+                %p
+                  The LearnSignal Mock Exam
+                %p
+                  When you purchase a LearnSignal Mock Exam, you will receive a pdf formatted exam.
+                %p
+                  Please complete this exam.  It is important that you give yourself a genuine attempt at the exam; the result will give you feedback on how your study is progressing.
+                %p
+                  After you have completed the exam you can submit your paper by emailing mockexams@learnsignal.com
+                %p
+                  We will reply with your result within 3 days.
+
           .new-product-user-form.l-margin-top
             -if current_user.purchased_products && current_user.purchased_products.include?(@product)
               .row

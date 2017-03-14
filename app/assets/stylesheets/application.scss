@@ -1492,6 +1492,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 .course-side-info {
   background: $colour-2;
   padding: $gutter;
+  @include breakpoint(sm-min) {
+    padding: $gutter $gutter $gutter*15 $gutter;
+  }
   -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
 }
 
@@ -4350,4 +4353,17 @@ footer nav ul li a{
 }
 .stats-box-inner {
   padding: $gutter/1.5 $gutter/1.5;
+}
+.new-order-text-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
 }

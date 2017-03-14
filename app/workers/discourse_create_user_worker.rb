@@ -12,10 +12,12 @@ class DiscourseCreateUserWorker
 
     payload = { name: name, username: name, email: email, password: password, api_key: ENV['learnsignal_discourse_api_key'], api_username: ENV['learnsignal_discourse_api_username'] }
 
-    conn.post '/users', payload
+    response = conn.post '/users', payload
 
-    user = User.find(user_id)
-    user.update_attribute(:discourse_user, true)
+    if response.status == 200
+      user = User.find(user_id)
+      user.update_attribute(:discourse_user, true)
+    end
 
   end
 

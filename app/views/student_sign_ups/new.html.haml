@@ -41,7 +41,7 @@
                   .col-sm-12
                     .form-group.l-margin-top
                       %label.h5{style: 'color: #3E3F5B;'}
-                        =f.check_box :terms_and_conditions
+                        =f.check_box :terms_and_conditions, required: true
                         =t('views.general.terms_and_conditions')
 
 
@@ -74,7 +74,7 @@
     $(".sk-circle").hide();
 
     $("#signUp").click(function(event) {
-      if($('#user_first_name').val() && $('#user_last_name').val() && $('#user_email').val() && $('#user_password').val() ) {
+      if($('#user_first_name').val() && $('#user_last_name').val() && $('#user_email').val() && $('#user_password').val() && $('#user_terms_and_conditions').is(':checked') ) {
         $("#signUp").hide();
         $(".sk-circle").show();
       }
