@@ -77,6 +77,109 @@ class SubscriptionsController < ApplicationController
 
   end
 
+  def new_subscription
+    redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
+    @navbar = false
+    @countries = Country.all_in_order
+    @user = User.where(id: params[:user_id]).first
+    @user.subscriptions.build
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : @user.country
+    @currency_id = @country.currency_id
+    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+  end
+
+  def create_subscription
+    ####  User creating their first subscription  #####
+
+    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
+    if current_user && current_user.individual_student?
+      if !current_user.subscriptions.any? &&
+          params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
+        user = User.find(params[:user_id])
+        subscription_params = params[:user][:subscriptions_attributes]["0"]
+        subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
+        coupon_code = params[:coupon] unless params[:coupon].empty?
+        verified_coupon = verify_coupon(coupon_code) if coupon_code
+        if coupon_code && verified_coupon == 'bad_coupon'
+          redirect_to user_new_subscription_url(current_user.id)
+        else
+          stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+          stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+          stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+          if stripe_customer && stripe_subscription
+            subscription = Subscription.new(
+                user_id: user.id,
+                subscription_plan_id: subscription_plan.id,
+                complimentary: false,
+                active: true,
+                livemode: stripe_subscription[:plan][:livemode],
+                current_status: stripe_subscription.status,
+            )
+            # mass-assign-protected attributes
+            subscription.stripe_guid = stripe_subscription.id
+            subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+            subscription.stripe_customer_id = stripe_customer.id
+            subscription.terms_and_conditions = subscription_params["terms_and_conditions"]
+            subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
+            upgrade = subscription.save(validate: false)
+          end
+
+          if upgrade
+            user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+            if !user.free_trial_ended_at.nil?
+              trial_ended_date = user.free_trial_ended_at
+            else
+              trial_ended_date = Proc.new{Time.now}.call
+            end
+            current_user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
+            redirect_to personal_upgrade_complete_url
+          else
+            redirect_to user_new_subscription_url(current_user.id)
+            flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
+          end
+        end
+      else
+        redirect_to user_new_subscription_url(current_user.id)
+        flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
+      end
+
+    else
+      redirect_to account_url
+    end
+  end
+
+  def create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+    begin
+      stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
+      return stripe_subscription
+    rescue Stripe::CardError => e
+      # Since it's a decline, Stripe::CardError will be caught
+      body = e.json_body
+      err  = body[:error]
+      puts "Status is: #{e.http_status}"
+      puts "Type is: #{err[:type]}"
+      puts "Code is: #{err[:code]}"
+      # param is '' in this case
+      puts "Param is: #{err[:param]}"
+      puts "Message is: #{err[:message]}"
+    rescue Stripe::RateLimitError => e
+      # Too many requests made to the API too quickly
+    rescue Stripe::InvalidRequestError => e
+      # Invalid parameters were supplied to Stripe's API
+    rescue Stripe::AuthenticationError => e
+      # Authentication with Stripe's API failed
+      # (maybe you changed API keys recently)
+    rescue Stripe::APIConnectionError => e
+      # Network communication with Stripe failed
+    rescue Stripe::StripeError => e
+      # Display a very generic error to the user, and maybe send
+      # yourself an email
+    rescue => e
+      # Something else happened, completely unrelated to Stripe
+    end
+  end
+
   protected
 
   def creatable_params

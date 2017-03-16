@@ -22,8 +22,8 @@ Rails.application.routes.draw do
 
     # users and authentication
     resources :users do
-      get 'new_subscription', to: 'users#new_subscription', as: :new_subscription
-      patch 'create_subscription', to: 'users#create_subscription', as: :create_subscription
+      get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
+      patch 'create_subscription', to: 'subscriptions#create_subscription', as: :create_subscription
 
       get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
       post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
@@ -52,7 +52,7 @@ Rails.application.routes.draw do
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
-    get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
