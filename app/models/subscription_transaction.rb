@@ -29,14 +29,16 @@ class SubscriptionTransaction < ActiveRecord::Base
                   :live_mode, :original_data, :subscription_payment_card_id
 
   # Constants
-  TRANSACTION_TYPES = %w(payment refund failed_payment trialing)
+  ## All SubscriptionTransactions are 'payment'
+  #TODO add creation of SubscriptionTransaction for failed subscription cancel event with the status of failed_payment
+  TRANSACTION_TYPES = %w(payment refund failed_payment)
 
   # relationships
   belongs_to :currency
   has_many :invoices
   belongs_to :subscription
   belongs_to :subscription_payment_card
-  belongs_to :user # the person that owns the transaction
+  belongs_to :user
 
   # validation
   validates :user_id, presence: true
@@ -56,15 +58,15 @@ class SubscriptionTransaction < ActiveRecord::Base
   scope :all_alarms, -> { where(alarm: true) }
 
   # class methods
+
+  #Called as an after_create in Subscription model
   def self.create_from_stripe_data(subscription)
     stripe_sub_data = subscription.stripe_customer_data[:subscriptions][:data][0]
     stripe_card_data = subscription.stripe_customer_data[:cards] ?
             subscription.stripe_customer_data[:cards] :
             subscription.stripe_customer_data[:sources]
     default_card = SubscriptionPaymentCard.find_by_stripe_card_guid(subscription.stripe_customer_data[:default_card])
-    if stripe_sub_data[:status] == 'trialing'
-      tran_type = 'trialing'
-    elsif stripe_sub_data[:status] == 'active'
+    if stripe_sub_data[:status] == 'active'
       tran_type = 'payment'
     else
       tran_type = 'failed_payment'
