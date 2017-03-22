@@ -193,20 +193,6 @@ class Subscription < ActiveRecord::Base
       .all_in_order
   end
 
-  def un_cancel
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    latest_subscription.plan = self.subscription_plan.stripe_guid
-    response = latest_subscription.save
-    if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attributes(current_status: 'active', active: true)
-
-    else
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    end
-    self
-  end
-
   def upgrade_options
     SubscriptionPlan
       .where(currency_id: self.subscription_plan.currency_id,
@@ -309,7 +295,6 @@ class Subscription < ActiveRecord::Base
     false
   end
 
-
   def create_on_stripe_platform
     Rails.logger.debug "DEBUG: Subscription#create_on_stripe_platform initialised at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     self.complimentary = false
@@ -383,9 +368,9 @@ class Subscription < ActiveRecord::Base
     raise ActiveRecord::Rollback
   end
 
-
   protected
 
+  #This also creates the SubscriptionPaymentCard
   def create_a_subscription_transaction
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)

@@ -221,10 +221,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def personal_upgrade_complete
-    @subscription = current_user.active_subscription
-  end
-
   def reactivation_complete
     @subscription = current_user.active_subscription
     @subject_course_user_logs = current_user.subject_course_user_logs

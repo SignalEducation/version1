@@ -44,10 +44,7 @@
 
     .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       .form-group.l-margin-top
-        -if current_user == @user
-          =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
-        -else
-          =link_to t('views.users.upgrade_subscription.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
+        =f.submit t('views.users.upgrade_subscription.upgrade_subscription'), class: 'btn btn-red upgrade-sub'
 
 
 :javascript
@@ -106,12 +103,10 @@
       }
     })
 
-    //$('#new_user').submit(function(event) {
     $('.payment-errors').closest("form").submit(function(event) {
       var $form = $(this);
-      //console.log($form);
-      // If we're in the student-signups page, make sure we have a subscription plan chosen
-      if ((window.location.pathname == '/en/student_sign_ups' || window.location.pathname == '/en/student_sign_up') && isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {
+      // Make sure we have a subscription plan chosen
+      if (isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {
         alert('Please choose a subscription plan');
 
         return false;
@@ -127,7 +122,6 @@
     });
 
     function stripeResponseHandler(status, response) {
-      //var $form = $('#new_user');
       var $form = $('.payment-errors').closest("form");
 
       if (response.error) {

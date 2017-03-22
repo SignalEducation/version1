@@ -145,7 +145,7 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
-    resources :subscriptions, only: [:create, :update, :destroy]
+    resources :subscriptions, only: [:update, :destroy]
     resources :subscription_payment_cards, only: [:create, :update]
     resources :subscription_plans
     resources :subscription_plan_categories
