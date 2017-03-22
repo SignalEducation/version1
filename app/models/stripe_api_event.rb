@@ -64,9 +64,9 @@ class StripeApiEvent < ActiveRecord::Base
         when 'invoice.created'
           invoice_created(self.payload[:data][:object])
         when 'invoice.payment_succeeded'
-          invoice_payment_succeeded(payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:total].to_f / 100.0, self.payload[:data][:object][:currency].upcase, self.payload[:data][:object][:subscription], self.payload[:data][:object])
+          invoice_payment_succeeded(payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:total].to_f / 100.0, self.payload[:data][:object][:currency].upcase, self.payload[:data][:object][:subscription])
         when 'invoice.payment_failed'
-          invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription])
+          invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription], self.payload[:data][:object][:id])
 
         when 'customer.subscription.updated'
           customer_subscription_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:current_period_end].to_i, self.payload[:data][:object][:status])
@@ -121,7 +121,7 @@ class StripeApiEvent < ActiveRecord::Base
     end
   end
 
-  def invoice_payment_succeeded(stripe_user_data, stripe_invoice_data, stripe_price_data, stripe_currency_data, stripe_subscription_data, stripe_data_hash)
+  def invoice_payment_succeeded(stripe_user_data, stripe_invoice_data, stripe_price_data, stripe_currency_data, stripe_subscription_data)
     user = User.where(stripe_customer_id: stripe_user_data).last
     invoice = Invoice.where(stripe_guid: stripe_invoice_data).last
     price = stripe_price_data
@@ -159,11 +159,12 @@ class StripeApiEvent < ActiveRecord::Base
     end
   end
 
-  def invoice_payment_failed(stripe_user_data, stripe_next_attempt, stripe_subscription_data)
+  def invoice_payment_failed(stripe_user_data, stripe_next_attempt, stripe_subscription_data, stripe_invoice_data)
     #Latest attempt to charge a user has failed
     user = User.find_by_stripe_customer_id(stripe_user_data)
-    if user
-
+    invoice = Invoice.where(stripe_guid: stripe_invoice_data).last
+    if user && invoice
+      invoice.update_from_stripe(stripe_invoice_data)
       if stripe_next_attempt
         #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due, allowing access to course content until the retry window has expired.
         MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)

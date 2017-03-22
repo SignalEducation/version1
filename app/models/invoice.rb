@@ -196,6 +196,8 @@ class Invoice < ActiveRecord::Base
   def payment_status
     if self.paid && self.payment_closed
       'Paid'
+    elsif self.payment_attempted && !self.paid
+      'Unpaid'
     elsif self.forgiven
       'Free'
     else
