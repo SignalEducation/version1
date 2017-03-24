@@ -44,7 +44,7 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  #Setting current sub to a cancel at period end
+  #Setting current sub to cancel at period end
   def destroy
     if @subscription
       if @subscription.cancel(account_url)
