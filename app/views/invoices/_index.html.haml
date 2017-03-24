@@ -16,7 +16,7 @@
         %td
           =number_in_local_currency(invoice.total, invoice.currency_id)
         %td
-          =invoice.payment_status
+          =invoice.status
         %td
           =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
             .btn.btn-purple.btn-small.pull-right

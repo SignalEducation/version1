@@ -55,7 +55,7 @@
           %h3=t('views.users.show.reactivate_subscription.h3')
           =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 
-        -elsif @user.active_subscription
+        -elsif @user.active_subscription && @user.valid_subscription
           =link_to account_change_plan_url do
             .btn.btn-purple.l-margin-bottom
               =t('views.users.show.change_subscription_plan')

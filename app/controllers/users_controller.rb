@@ -60,9 +60,6 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required
-  before_action only: [:new_subscription, :create_subscription] do
-    ensure_user_is_of_type(%w(individual_student))
-  end
   before_action only: [:destroy, :create] do
     ensure_user_is_of_type(%w(admin))
   end
@@ -70,7 +67,7 @@ class UsersController < ApplicationController
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
 
-  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan]
+  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :change_plan]
 
   #User account view for all users
   def account
@@ -189,8 +186,6 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  #Logged In actions to create subscriptions and associated objects(invoices, coupons)
-
   def reactivate_account
     @user = User.where(id: params[:user_id]).first
     @subscription = @user.active_subscription || @user.subscriptions.last
@@ -225,10 +220,6 @@ class UsersController < ApplicationController
     @subscription = current_user.active_subscription
     @subject_course_user_logs = current_user.subject_course_user_logs
     @groups = Group.all_active.all_in_order
-  end
-
-  def change_plan
-    @current_subscription = @user.active_subscription
   end
 
   def verify_coupon(coupon)

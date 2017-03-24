@@ -27,6 +27,10 @@ class SubscriptionsController < ApplicationController
   before_action :get_subscription
   before_action :check_subscriptions, only: [:new_subscription, :create_subscription]
 
+  def change_plan
+    @current_subscription = current_user.active_subscription
+  end
+
   #Upgrading current sub to a new subscription plan
   def update
     if @subscription
@@ -47,7 +51,7 @@ class SubscriptionsController < ApplicationController
   #Setting current sub to cancel at period end
   def destroy
     if @subscription
-      if @subscription.cancel(account_url)
+      if @subscription.cancel
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else
         Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
@@ -56,6 +60,7 @@ class SubscriptionsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
+
     if current_user.individual_student?
       redirect_to account_url(anchor: 'subscriptions')
     else
