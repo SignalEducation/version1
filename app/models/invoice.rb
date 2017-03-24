@@ -130,25 +130,13 @@ class Invoice < ActiveRecord::Base
           Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
         end
       else
-        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscritpion #{stripe_data_hash[:subscription]} do not exisr."
+        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscription #{stripe_data_hash[:subscription]} do not exist."
       end
     end
     inv
   end
 
-  def self.get_updates_for_user(stripe_customer_guid)
-    payload = Stripe::Invoice.all(limit: 10, customer: stripe_customer_guid).to_hash
-    if payload[:data].length > 0
-      known_invoice_guids = Invoice.where(stripe_customer_guid: stripe_customer_guid).pluck(:stripe_guid)
-      payload[:data].each do |incoming_inv|
-        unless known_invoice_guids.include?(incoming_inv[:id])
-          Invoice.build_from_stripe_data(incoming_inv)
-        end
-      end
-    end
-  end
-
-  def update_from_stripe(invoice_guid)
+  def self.update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
     invoice = Invoice.find_by_stripe_guid(stripe_invoice[:id])
     if invoice
@@ -188,18 +176,6 @@ class Invoice < ActiveRecord::Base
     elsif self.payment_attempted
       ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
               ' made to charge your card'
-    else
-      'Other'
-    end
-  end
-
-  def payment_status
-    if self.paid && self.payment_closed
-      'Paid'
-    elsif self.payment_attempted && !self.paid
-      'Unpaid'
-    elsif self.forgiven
-      'Free'
     else
       'Other'
     end
