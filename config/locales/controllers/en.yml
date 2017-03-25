@@ -303,6 +303,10 @@ en:
         flash:
           success: Your Card details have been updated successfully
           error: Your card details were not updated
+      delete:
+        flash:
+          success: Your Card was sucessfully removed
+          error: Your Card was not sucessfully removed
 
     subscription_plans:
       create:

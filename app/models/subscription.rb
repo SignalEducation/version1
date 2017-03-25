@@ -179,7 +179,7 @@ class Subscription < ActiveRecord::Base
       new_sub.next_renewal_date = Time.at(result[:current_period_end])
       new_sub.stripe_customer_id = self.stripe_customer_id
       new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-      new_sub.save(validate: false) # see "sample_response_from_stripe" above
+      new_sub.save(validate: false)
 
       self.update_attributes(current_status: 'canceled', active: false)
 

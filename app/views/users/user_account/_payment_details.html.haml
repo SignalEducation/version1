@@ -10,6 +10,7 @@
           %th
             Status
           %th
+          %th
 
       %tbody
         -@subscription_payment_cards.each do |card|
@@ -28,6 +29,9 @@
                   Active
                 -else
                   =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-cyan btn-small'
+            %td
+              -if card.destroyable?
+                =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
 
 
