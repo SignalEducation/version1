@@ -242,6 +242,23 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     end
   end
 
+  def expiring_soon?
+    unless self.status == 'expired'
+      if self.expiry_year && self.expiry_month && self.is_default_card && self.user.active_subscription
+
+        expiration = Date.new(self.expiry_year, self.expiry_month, 1)
+        month_before_expiration = Date.new(self.expiry_year, self.expiry_month, 1) - 1.month
+
+        if (Proc.new{Time.now}.call) > month_before_expiration && (Proc.new{Time.now}.call < expiration)
+          true
+        else
+          false
+        end
+
+      end
+    end
+  end
+
   def stripe_token=(t)
     @stripe_token = t
   end

@@ -31,6 +31,12 @@ class MandrillClient
     send_template('card-payment-failed-20-02-17', msg)
   end
 
+  def send_card_expiring_soon_email(account_settings_url)
+    msg = message_stub.merge({"subject" => "LearnSignal Card Expiring Soon"})
+    msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
+    send_template('card-expiring-soon-20-04-25', msg)
+  end
+
   def send_account_suspended_email
     msg = message_stub.merge({"subject" => "Account Suspended"})
     send_template('account-suspended-20-02-17', msg)

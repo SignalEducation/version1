@@ -27,4 +27,15 @@ class CronTasks
     end
   end
 
+  def self.check_for_expiring_cards
+
+    all_default_cards = SubscriptionPaymentCard.all_default_cards.all_in_order
+
+    all_default_cards.each do |card|
+      if card.expiring_soon?
+        MandrillWorker.perform_async(self.user_id, 'send_card_expiring_soon_email', Rails.application.routes.url_helpers.account_url(locale: 'en', host: 'www.learnsignal.com'))
+      end
+    end
+  end
+
 end
