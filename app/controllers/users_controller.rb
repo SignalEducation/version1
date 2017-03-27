@@ -147,10 +147,18 @@ class UsersController < ApplicationController
     @user = User.new(allowed_params.merge({password: password,
                                            password_confirmation: password,
                                            password_change_required: true}))
+
     @user.activate_user
     @user.generate_email_verification_code
     @user.locale = 'en'
+
     if @user.user_group.try(:site_admin) == false && @user.save
+      # Create the customer object on stripe
+      stripe_customer = Stripe::Customer.create(
+          email: @user.try(:email)
+      )
+      @user.update_attribute(:stripe_customer_id, stripe_customer.id)
+
       if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
