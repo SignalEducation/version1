@@ -1,37 +1,49 @@
-=form_for(@user, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
+.remodal{"data-remodal-id" => "personal-details-modal"}
   .row
-    .col-md-12.l-margin-bottom-big
-      =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :email, t('views.users.form.email'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'dob', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
-      %br/
-
-
-
-  .row.l-margin-top-big
     .col-md-12
-      =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          Edit Personal Details
+        %hr/
 
-      =link_to('#', data: {toggle: 'modal', target: '#change_password_modal'}) do
-        .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top
-          =t('views.users.show.change_your_password.link')
+  .row.l-margin-top
+    .col-sm-12.l-margin-top.text-left
+      =form_for(@user, html: {class: 'form-horizontal', role: 'form', id: 'personal-details'}, name: 'personal_details_form') do |f|
+        .col-md-12
+          .col-md-6
+            =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+          .col-md-6
+            =f.label :email, t('views.users.form.email'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'dob', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+            %br/
+
+
+
+        .col-sm-12.l-margin-top
+          .col-md-12
+            =f.submit t('views.general.actual_submit'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
 
 
 
 :javascript
+
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['personal_details_form'].submit();
+  });
 
   $(function () {
     $('#dob').datetimepicker();

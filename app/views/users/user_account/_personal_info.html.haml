@@ -1,0 +1,38 @@
+.row
+  .col-sm-8.l-margin-top-big
+    =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
+    .col-sm-6
+      .h3
+        First Name
+      .h6
+        =@user.first_name
+
+    .col-sm-6
+      .h3
+        Last Name
+      .h6
+        =@user.last_name
+
+    .col-sm-6.l-margin-top
+      .h3
+        Email
+      .h6
+        =@user.email
+
+    .col-sm-6.l-margin-top
+      .h3
+        ="D.O.B"
+      .h6
+        =@user.date_of_birth || '--------'
+
+
+  .col-sm-4.l-margin-top
+
+    %a{data: {remodal: {target: 'personal-details-modal'}}, class: 'btn btn-red full-width l-margin-bottom'}
+      Edit Details
+
+    %a{data: {remodal: {target: 'change-password-modal'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
+      =t('views.users.show.change_your_password.link')
+
+
+=render partial: 'users/user_account/student_user_form'

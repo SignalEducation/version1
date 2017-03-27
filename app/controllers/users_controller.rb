@@ -181,7 +181,11 @@ class UsersController < ApplicationController
         redirect_to account_url
       end
     else
-      render action: :edit
+      if current_user.admin? || current_user.customer_support_manager?
+        render action: :edit
+      else
+        redirect_to account_url
+      end
     end
   end
 
@@ -279,7 +283,6 @@ class UsersController < ApplicationController
     @user = current_user
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-      #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
     end

@@ -1054,7 +1054,9 @@ en:
         current_password: Current password
         current_password_placeholder: Current password
         password: Password
-        password_placeholder: New Password
+        password_placeholder: Password
+        new_password: New Password
+        new_password_placeholder: New Password
         password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
         address: Address
@@ -1106,7 +1108,7 @@ en:
         new_card: Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
-          link: Change your password
+          link: Change password
           h4: Change your password
         cancel_your_subscription_plan: Cancel Recurring Payments
         card_expired: "Expired"
