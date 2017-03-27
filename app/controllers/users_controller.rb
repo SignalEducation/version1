@@ -67,7 +67,7 @@ class UsersController < ApplicationController
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
 
-  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :reactivate_account, :reactivate_account_subscription, :reactivation_complete, :change_plan]
+  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :reactivate_account, :reactivate_account_subscription, :reactivation_complete]
 
   #User account view for all users
   def account

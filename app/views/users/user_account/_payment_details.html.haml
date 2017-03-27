@@ -1,40 +1,44 @@
-.col-md-12
-  .corporate-box-item.table-box
-    %table.table{style: 'font-size: 18px;'}
-      %thead
-        %tr
-          %th
-            Ending In
-          %th
-            Expiration
-          %th
-            Status
-          %th
-          %th
-
-      %tbody
-        -@subscription_payment_cards.each do |card|
+.row
+  .col-sm-12.col-md-12.l-margin-top
+    %h3
+      Subscription Payment Cards
+    .table-box
+      %table.table{style: 'font-size: 18px;'}
+        %thead
           %tr
-            %td
-              =card.last_4
-            %td
-              =card.expiry_month
-              &#45;
-              =card.expiry_year
-            %td
-              -if !card.status == 'expired'
-                Card Expired
-              -else
-                -if card.is_default_card?
-                  Active
+            %th
+              Ending In
+            %th
+              Expiration
+            %th
+              Status
+            %th
+
+
+        %tbody
+          -@subscription_payment_cards.each do |card|
+            %tr
+              %td
+                =card.last_4
+              %td
+                =card.expiry_month
+                &#45;
+                =card.expiry_year
+              %td
+                -if !card.status == 'expired'
+                  Card Expired
                 -else
-                  =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, class: 'btn btn-cyan btn-small'
-            %td
-              -if card.destroyable?
-                =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                  -if card.is_default_card?
+                    Active
+                  -else
+                    =link_to t('views.users.show.use_this_card'), subscription_payment_card_path(id: card.id, subscription_payment_card: {make_default_card: true}), method: :put, data: {confirm: t('views.users.show.confirm_use_this_card')}, class: 'btn btn-cyan btn-small'
+              %td
+                -if card.destroyable?
+                  =link_to t('views.users.show.remove_this_card'), card, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
 
 
-.col-md-12.l-margin-top-big
-  =link_to t('views.users.show.new_card'), '#', data: {toggle: 'modal', target: '#new-subscription-payment-card-modal'}, class: 'btn btn-red'
+  .col-md-12.l-margin-top-big
 
+    %a{data: {remodal: {target: 'add-card-modal'}}, class: 'btn btn-red'}
+      =t('views.users.show.new_card')

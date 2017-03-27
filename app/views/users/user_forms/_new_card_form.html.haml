@@ -1,41 +1,24 @@
-.l-margin-top-big
-  .modal-dialog
-    .modal-content.is-bg-asphalt.l-padding-side-15
-      .container-fluid
-        .modal-header
-          .row
-            .col-md-12.l-margin-bottom.l-margin-top.payment-errors
-              %button{type: 'button', class: 'close', "data-dismiss": 'modal', "aria-label": 'Close', style: 'font-size: 30px'} &times;
-              %h2.modal-title#newSubscriptionPaymentCardLabel{style: 'width: 95%'}
-                =t('views.subscription_payment_cards.modal.h4')
+.col-sm-12
+  %label{class: 'control-label'}
+    Card Number
+  =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
 
-            .col-sm-12
-              .form-group
-                %label
-                  Card Number
-                =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
-              .row
-                .form-group.col-sm-4
-                  %label
-                    CVV
-                  =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
-                .form-group.col-sm-4
-                  %label
-                    Expiry Month
-                  =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
-                .form-group.col-sm-4
-                  %label
-                    Expiry Year
-                  =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
-                -#.row{style: "margin-bottom: 15px;"}
-                  .col-sm-12
-                    .col-sm-6{style: 'padding-left: 0px;'}
-                      =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
-                    .col-sm-6
-                      %p.note{style: "text-align: left; margin-bottom: 0px; margin-top: 13px;"}
-                        =t('views.users.upgrade_subscription.secure_server')
-              .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
-              =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+  .row
+    .col-sm-4
+      %label{class: 'control-label'}
+        CVV
+      =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
+    .col-sm-4
+      %label{class: 'control-label'}
+        Expiry Month
+      =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
+    .col-sm-4
+      %label{class: 'control-label'}
+        Expiry Year
+      =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
+
+  .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
+  =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 
 :javascript
 

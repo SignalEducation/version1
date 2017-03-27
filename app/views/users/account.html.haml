@@ -6,28 +6,28 @@
     .container-fluid
       .col-sm-12
         %h1.h1.h-separator.h-separator-left.l-margin-bottom
-          Account
+          Account Details
 
       .col-md-12.l-margin-top-big{role: 'tablist'}
         .signal-tabs
-          %a{href: '#personal-details', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+          %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.users.show.tabs.personal_details')
 
-          %a{href: '#subscriptions', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+          %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.users.show.tabs.subscriptions')
 
           -if @subscription_payment_cards.any?
-            %a{href: '#payment-details', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+            %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.payments')
 
           -if @valid_order
-            %a{href: '#orders', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+            %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.orders')
 
-          %a{href: '#completion-certs', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+          %a{href: '#completion-certs', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.users.show.tabs.certificates')
 
-          %a{href: '#enrollments', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+          %a{href: '#enrollments', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.users.show.tabs.enrollments')
 
 
@@ -44,13 +44,6 @@
             .content-box.content-box-outer.l-margin-bottom-huge
               .content-box-inner
                 =render partial: 'users/user_account/subscription_info'
-
-                -if @current_subscription
-                  %h2.l-margin-bottom-big.text-center
-                    =t('views.users.show.your_invoices')
-                  .table-responsive
-                    -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
-                    =render partial: 'invoices/index'
 
 
         -if @subscription_payment_cards.any?

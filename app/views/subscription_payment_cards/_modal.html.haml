@@ -1,13 +1,27 @@
-=form_for(SubscriptionPaymentCard.new(make_default_card: true), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}) do |f|
-  =f.hidden_field :user_id, value: @current_subscription.try(:user_id)
-  =f.hidden_field :stripe_token
-  =f.hidden_field :make_default_card, value: true
+.remodal{"data-remodal-id" => "add-card-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          =t('views.subscription_payment_cards.modal.h4')
+        %hr/
 
-  .modal.fade#new-subscription-payment-card-modal{tabindex: '-1',  role: 'dialog',  aria: {labelledby: 'newSubscriptionPaymentCardLabel', hidden: 'true'}}
-    =render partial: 'users/user_forms/new_card_form', locals: {f: f}
-    -#.form-group
-      .col-sm-8.col-sm-offset-4
-        .checkbox
-          %label
-            =f.check_box :make_default_card
-            =t('views.subscription_payment_cards.form.make_default_card')
+  .row
+    .col-sm-12.text-left
+
+      =form_for(SubscriptionPaymentCard.new(make_default_card: true), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
+        =f.hidden_field :user_id, value: @current_subscription.try(:user_id)
+        =f.hidden_field :stripe_token
+        =f.hidden_field :make_default_card, value: true
+
+        =render partial: 'users/user_forms/new_card_form', locals: {f: f}
+
+
+
+
+:javascript
+
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['add_card_form'].submit();
+  });

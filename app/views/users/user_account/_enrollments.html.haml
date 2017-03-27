@@ -1,24 +1,25 @@
 .row
-  -@enrollments.each do |enrollment|
-    .col-sm-6.l-margin-bottom-big.l-margin-top
-      -if enrollment.exam_body && enrollment.registered
-        =link_to edit_enrollment_url(enrollment), style: 'cursor: pointer;', class: 'box box-enrollment' do
-          .box-inner.enrollment-box-inner
-            %h4
-              =enrollment.subject_course.name
-            -if enrollment.exam_date
-              %p.p
-                =exam_sitting_date(enrollment.exam_date)
-          .box-label
-            -if enrollment.active
-              %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                Pause/Edit Enrolment
-            -else
-              %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                Reactivate/Edit Enrolment
+  .col-sm-12.l-margin-top-big
+    -@enrollments.each do |enrollment|
+      .col-sm-6.l-margin-bottom-big.l-margin-top
+        -if enrollment.exam_body && enrollment.registered
+          =link_to edit_enrollment_url(enrollment), style: 'cursor: pointer;', class: 'box box-enrollment' do
+            .box-inner.enrollment-box-inner
+              %h4
+                =enrollment.subject_course.name
+              -if enrollment.exam_date
+                %p.p
+                  =exam_sitting_date(enrollment.exam_date)
+            .box-label
+              -if enrollment.active
+                %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                  Pause/Edit Enrolment
+              -else
+                %h4.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
+                  Reactivate/Edit Enrolment
 
-      -else
-        .box.box-enrollment
-          .box-inner.enrollment-box-inner
-            %h4
-              =enrollment.subject_course.name
+        -else
+          .box.box-enrollment
+            .box-inner.enrollment-box-inner
+              %h4
+                =enrollment.subject_course.name

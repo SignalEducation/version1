@@ -1144,6 +1144,8 @@ en:
         upgrade_subscription_plan: Upgrade Subscription
         change_subscription_plan: Change Subscription
         use_this_card: "Use this card"
+        confirm_use_this_card: Are you sure you want to change payment cards? All future invoices will charge this card.
+
         remove_this_card: Remove card
         your_card_details: Update Payment Info
         your_invoices: Payment History
