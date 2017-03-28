@@ -13,8 +13,9 @@
           %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.users.show.tabs.personal_details')
 
-          %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-            =t('views.users.show.tabs.subscriptions')
+          -if @user.individual_student?
+            %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+              =t('views.users.show.tabs.subscriptions')
 
           -if @subscription_payment_cards.any?
             %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
@@ -39,11 +40,12 @@
               .content-box-inner
                 =render partial: 'users/user_account/personal_info'
 
-        .tab-pane.fade#subscriptions{role: 'tabpanel'}
-          .col-md-12
-            .content-box.content-box-outer.l-margin-bottom-huge
-              .content-box-inner
-                =render partial: 'users/user_account/subscription_info'
+        -if @user.individual_student?
+          .tab-pane.fade#subscriptions{role: 'tabpanel'}
+            .col-md-12
+              .content-box.content-box-outer.l-margin-bottom-huge
+                .content-box-inner
+                  =render partial: 'users/user_account/subscription_info'
 
 
         -if @subscription_payment_cards.any?
