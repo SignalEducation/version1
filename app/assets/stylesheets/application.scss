@@ -2505,7 +2505,7 @@ a.image-link {
   border-bottom: 2px solid lighten($colour-7, 65%);
   a {
     color: $colour-1;
-    margin-bottom: $gutter;
+    //margin-bottom: $gutter;
     letter-spacing: .1rem;
     @include font-size(1.4);
     @include breakpoint(md-min) {
@@ -2525,6 +2525,12 @@ a.image-link {
 .signal-tab {
   background: $white;
   padding: $gutter/2;
+  display: inherit;
+  @include breakpoint(sm-min) {
+    display: inline;
+
+  }
+
 }
 .content-box {
   display: block;

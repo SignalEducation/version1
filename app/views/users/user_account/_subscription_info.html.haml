@@ -1,5 +1,5 @@
 .row
-  .col-sm-6.col-md-8.l-margin-top-big
+  .col-sm-6.col-md-8
     -if @current_subscription || @user.free_member?
       .col-sm-12
         .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
@@ -36,10 +36,9 @@
                 =@current_subscription.next_renewal_date.to_s + '.'
 
 
-  .col-sm-6.col-md-4.l-margin-top
+  .col-sm-6.col-md-4
     -if @user.free_member? || @user.expired_free_member?
-      .l-margin-bottom-big
-        =link_to 'Upgrade account', user_new_subscription_url(@user.id), class: 'btn btn-red full-width', style: 'line-height: 60px'
+      =link_to 'Upgrade account', user_new_subscription_url(@user.id), class: 'btn btn-red full-width'
 
     -elsif @user.canceled_member?
       %h3=t('views.users.show.reactivate_subscription.h3')
