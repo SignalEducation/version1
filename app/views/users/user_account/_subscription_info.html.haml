@@ -1,39 +1,49 @@
 .row
   .col-sm-6.col-md-8
     -if @current_subscription || @user.free_member?
-      .col-sm-12
-        .row.l-margin-bottom-big{style: 'margin-left: 10px;'}
-          %h4
-            ="Account Status: "
-            &nbsp;
-            =@user.user_account_status
-          %br/
-          %h4
-            ="Memeber since: "
-            &nbsp;
-            =humanize_datetime(@user.created_at)
-          %br/
-          -if @current_subscription
+      .col-sm-12.col-md-6
+        .h3
+          Account Status
 
-            -if @user.valid_subscription
-              %h4
-                ="Billing Interval: "
-                &nbsp;
-                =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
-              %br/
-              %h4
-                =t('views.users.show.your_next_payment_will_be_on')
-                &nbsp;
-                =@current_subscription.next_renewal_date
+        .h6
+          =@user.user_account_status
 
-            %h4
-              -if @user.canceled_member?
-                =t('views.users.show.your_plan_expired_on')
-                =humanize_datetime(@user.active_subscription.updated_at)
-              -elsif @user.canceled_pending?
-                =t('views.users.show.your_plan_will_expire_on')
-                &nbsp;
-                =@current_subscription.next_renewal_date.to_s + '.'
+      .col-sm-12.col-md-6
+        .h3
+          Member Since
+        .h6
+          =humanize_datetime(@user.created_at)
+
+      .col-sm-12.col-md-6.l-margin-top
+        -if @current_subscription
+          -if @user.valid_subscription
+            .h3
+              Billing Interval
+            .h6
+              =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
+
+      .col-sm-12.col-md-6.l-margin-top
+        .h3
+          =t('views.users.show.your_next_payment_will_be_on')
+        .h6
+          =@current_subscription.next_renewal_date
+
+
+
+      -if @user.canceled_member? || @user.canceled_pending?
+        .col-sm-6.l-margin-top
+          -if @user.canceled_member?
+            .h3
+              =t('views.users.show.your_plan_expired_on')
+            .h6
+              =humanize_datetime(@user.active_subscription.updated_at)
+
+        .col-sm-6.l-margin-top
+          -if @user.canceled_pending?
+            .h3
+              =t('views.users.show.your_plan_will_expire_on')
+            .h6
+              =@current_subscription.next_renewal_date.to_s + '.'
 
 
   .col-sm-6.col-md-4
@@ -62,7 +72,7 @@
 
   -if @current_subscription
     .col-sm-12.col-md-8.l-margin-top
-      %h2.l-margin-bottom-big.text-center
+      %h2.l-margin-bottom-big.l-margin-top-big.text-center
         =t('views.users.show.your_invoices')
       .table-responsive
         -@invoices = @user.invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order

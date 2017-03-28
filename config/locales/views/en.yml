@@ -1150,7 +1150,7 @@ en:
         your_card_details: Update Payment Info
         your_invoices: Payment History
         free_trial_heading: Free Trial
-        your_next_payment_will_be_on: "Next Bill Due: "
+        your_next_payment_will_be_on: Next Bill Due
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
         your_plan_will_expire_on: "Your subscription is cancelled, you will continue to have access until: "
