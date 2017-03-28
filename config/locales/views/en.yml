@@ -1213,6 +1213,10 @@ en:
         h1: Reset your password
         paragraph_1: "Enter a new password for your account:"
 
+      set_password:
+        h1: Enter password
+        paragraph_1: "Enter a password to finish your account setup:"
+
 
     user_notifications:
       form:
