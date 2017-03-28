@@ -17,7 +17,6 @@
         Expiry Year
       =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
 
-  .btn.btn-cyan.l-margin-right-big.l-padding-side-3x.l-margin-top{type: 'button', data: {dismiss: 'modal'}}=t('views.general.cancel')
   =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 
 :javascript

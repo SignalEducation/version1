@@ -76,6 +76,18 @@ class UsersController < ApplicationController
     @valid_order = @user.orders
     @orders = @user.orders
     @footer = true
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:user_update_errors] && session[:valid_params]
+      session[:user_update_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      @user.date_of_birth = session[:valid_params][3]
+      session.delete(:user_update_errors)
+      session.delete(:valid_params)
+    end
   end
 
   #Admin & CustomerSupport Manager views under dashboard tabs
@@ -184,7 +196,10 @@ class UsersController < ApplicationController
       if current_user.admin? || current_user.customer_support_manager?
         render action: :edit
       else
-        redirect_to account_url
+        session[:user_update_errors] = @user.errors unless @user.errors.empty?
+        session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.date_of_birth] unless @user.errors.empty?
+
+        redirect_to account_url(anchor: 'personal-details-modal')
       end
     end
   end
