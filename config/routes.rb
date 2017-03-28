@@ -47,6 +47,8 @@ Rails.application.routes.draw do
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
+    get 'set_password/:id', to: 'user_password_resets#set_password', as: :set_password
+    put 'create_password/:id', to: 'user_password_resets#create_password', as: :user_create_password
     get 'send_verification/:email_verification_code', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
     get 'resend_verification/:email_verification_code', to: 'student_sign_ups#admin_resend_verification_mail', as: :admin_resend_verification_mail
 
