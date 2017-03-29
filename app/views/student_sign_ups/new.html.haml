@@ -42,7 +42,8 @@
                     .form-group.l-margin-top
                       %label.h5{style: 'color: #3E3F5B;'}
                         =f.check_box :terms_and_conditions, required: true
-                        =t('views.general.terms_and_conditions')
+                        I Agree to LearnSignal
+                        =link_to 'Terms & Conditions', terms_and_conditions_url, style: 'color: #EE5457;'
 
 
                   .col-sm-12.l-margin-top
