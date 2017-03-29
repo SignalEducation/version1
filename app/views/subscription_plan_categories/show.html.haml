@@ -34,10 +34,3 @@
                 =link_to t('views.general.back'), subscription_plan_categories_url
                 |
                 =link_to t('views.general.edit'), edit_subscription_plan_category_url(id: @subscription_plan_category.id), title: t('views.general.edit_tooltip')
-
-      .row
-        .col-sm-12
-          %h2=t('views.subscription_plans.index.h1')
-      .row
-        .col-sm-12
-          =render partial: 'subscription_plans/index', locals: {the_plans: @subscription_plan_category.subscription_plans.paginate(per_page: 100, page: 1)}

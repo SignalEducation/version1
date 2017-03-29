@@ -968,6 +968,7 @@ en:
         trial_period_in_days: Trial
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
+        active: Active
 
       edit:
         h1: Edit Subscription Plan

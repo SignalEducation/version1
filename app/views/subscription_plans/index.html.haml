@@ -8,9 +8,32 @@
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.subscription_plans.index.h1')
-
       .row.l-margin-top.l-margin-bottom
-        =render partial: 'subscription_plans/index', locals: {the_plans: @student_subscription_plans}
+        .col-md-12.l-margin-top-big
+          .no-image-box-item.table-box
+            .table-responsive
+              %table.table.sorted_table{style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th=t('views.subscription_plans.form.name')
+                    %th=t('views.subscription_plans.form.currency_id')
+                    %th=t('views.subscription_plans.form.price')
+                    %th=t('views.subscription_plans.form.active')
+                    %th
+                %tbody
+                  -@subscription_plans.each do |plan|
+                    %tr
+                      %td=plan.name
+                      %td=plan.currency.iso_code
+                      %td=plan.price
+                      %td=tick_or_cross(plan.active?)
+                      %td
+                        =link_to t('views.general.show'), subscription_plan_url(plan), class: 'btn btn-red btn-small'
+                        =link_to t('views.general.edit'), edit_subscription_plan_url(plan), class: 'btn btn-cyan btn-small'
+                        -if plan.destroyable?
+                          =link_to t('views.general.delete'), plan, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+
+
 
       .row
         .col-sm-12
