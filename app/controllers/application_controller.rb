@@ -346,4 +346,26 @@ class ApplicationController < ActionController::Base
     @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
   end
 
+  def verify_coupon(coupon, currency_id)
+    @user_currency = Currency.find(currency_id)
+    verified_coupon = Stripe::Coupon.retrieve(coupon)
+    unless verified_coupon.valid
+      flash[:error] = 'Sorry! The coupon code you entered has expired'
+      verified_coupon = 'bad_coupon'
+      return verified_coupon
+    end
+    if verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
+      flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
+      verified_coupon = 'bad_coupon'
+      return verified_coupon
+    end
+    return verified_coupon
+  rescue => e
+    flash[:error] = 'The coupon code entered is not valid'
+    verified_coupon = 'bad_coupon'
+    Rails.logger.error("ERROR: UsersController#verify_coupon - failed to apply Stripe Coupon.  Details: #{e.inspect}")
+    return verified_coupon
+  end
+
+
 end

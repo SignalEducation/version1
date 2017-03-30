@@ -230,7 +230,7 @@ class UsersController < ApplicationController
     ####  User adding a subscription after previously canceling one  #####
     if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"] && params[:subscription]["terms_and_conditions"]
       coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      verified_coupon = verify_coupon(coupon_code, current_user.country.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_reactivate_account_url(current_user.id)
       else
@@ -247,27 +247,6 @@ class UsersController < ApplicationController
     @subscription = current_user.active_subscription
     @subject_course_user_logs = current_user.subject_course_user_logs
     @groups = Group.all_active.all_in_order
-  end
-
-  def verify_coupon(coupon)
-    @user_currency = @user.country.currency
-    verified_coupon = Stripe::Coupon.retrieve(coupon)
-    unless verified_coupon.valid
-      flash[:error] = 'Sorry! The coupon code you entered has expired'
-      verified_coupon = 'bad_coupon'
-      return verified_coupon
-    end
-    if verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
-      flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
-      verified_coupon = 'bad_coupon'
-      return verified_coupon
-    end
-    return verified_coupon
-  rescue => e
-    flash[:error] = 'The coupon code entered is not valid'
-    verified_coupon = 'bad_coupon'
-    Rails.logger.error("ERROR: UsersController#verify_coupon - failed to apply Stripe Coupon.  Details: #{e.inspect}")
-    return verified_coupon
   end
 
   def subscription_invoice

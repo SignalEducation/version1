@@ -91,7 +91,7 @@ class SubscriptionsController < ApplicationController
       subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
       #Check for a coupon code and if its valid
       coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      verified_coupon = verify_coupon(coupon_code, user.country.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         #Invalid coupon code so redirect back with errors
         redirect_to user_new_subscription_url(current_user.id)
@@ -130,7 +130,7 @@ class SubscriptionsController < ApplicationController
           redirect_to personal_upgrade_complete_url
         else
           redirect_to user_new_subscription_url(current_user.id)
-          flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
+          flash[:error] = "Your card was declined! Please check that it's valid and the details you entered are correct."
         end
       end
     else
