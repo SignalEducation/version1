@@ -63,19 +63,17 @@ describe Subscription do
 
   # scopes
   it { expect(Subscription).to respond_to(:all_in_order) }
+  it { expect(Subscription).to respond_to(:in_created_order) }
   it { expect(Subscription).to respond_to(:all_of_status) }
   it { expect(Subscription).to respond_to(:all_active) }
+  it { expect(Subscription).to respond_to(:this_week) }
 
   # class methods
-  it { expect(Subscription).to respond_to(:create_using_stripe_subscription) }
-  it { expect(Subscription).to respond_to(:get_updates_for_user) }
 
   # instance methods
   it { should respond_to(:cancel) }
-  it { should respond_to(:compare_to_stripe_details) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:reactivation_options) }
-  it { should respond_to(:un_cancel) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
 
