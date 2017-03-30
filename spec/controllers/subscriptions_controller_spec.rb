@@ -20,17 +20,19 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/subscription_plans_setup'
 require 'stripe_mock'
 
 describe SubscriptionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'subscription_plans_setup'
 
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
   let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:individual_student_user_2) { FactoryGirl.create(:individual_student_user) }
+  let!(:individual_student_user_2) { FactoryGirl.create(:individual_student_user, country_id: Country.first.id) }
   let!(:subscription_1) { x = FactoryGirl.create(:subscription,
                              user_id: individual_student_user.id,
                              subscription_plan_id: subscription_plan_1.id,
@@ -52,9 +54,9 @@ describe SubscriptionsController, type: :controller do
 
   context 'Not logged in: ' do
 
-    describe "POST 'create'" do
+    describe "Get 'change_plan'" do
       it 'should redirect to sign_in' do
-        post :create, subscription: valid_params
+        get :change_plan, subscription: valid_params
         expect_bounce_as_not_signed_in
       end
     end
@@ -73,6 +75,20 @@ describe SubscriptionsController, type: :controller do
       end
     end
 
+    describe "GET 'new_subscription'" do
+      it 'should redirect to sign_in' do
+        get :new_subscription, user_id: 1
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should redirect to sign_in' do
+        get :personal_upgrade_complete, id: 1
+        expect_bounce_as_not_signed_in
+      end
+    end
+
   end
 
   context 'Logged in as a individual_student_user: ' do
@@ -82,43 +98,50 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(individual_student_user)
     end
 
-    describe "POST 'create'" do
-      it 'should be OK locally and on Stripe' do
-        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
-        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:change_plan)
       end
     end
 
     describe "PUT 'update/1'" do
-      xit 'should be OK locally and on Stripe' do
-        put :update, id: subscription_1.id, subscription: valid_params
-        expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
-      end
-
-      xit 'should respond with ERROR as they do not own the subscription' do
-        put :update, id: subscription_2.id, subscription: valid_params
-        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(root_url)
+      it 'should redirect to sign_in' do
+        put :update, id: 1, subscription: valid_params
+        expect_bounce_as_not_signed_in
       end
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should respond with OK' do
-        delete :destroy, id: subscription_1.id
-        expect(flash[:error]).to eq(nil)
+      it 'should redirect to sign_in' do
+        delete :destroy, id: 1
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).current_status).to eq('canceled')
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
       end
+    end
 
-      xit 'should respond with ERROR as they do not own the subscription' do
-        delete :destroy, id: subscription_2.id
-        expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
+    describe "GET 'new_subscription'" do
+      it 'should redirect to sign_in' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new_subscription)
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should redirect to sign_in' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
       end
     end
 

@@ -515,8 +515,8 @@ describe SubscriptionPlansController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:index)
-        expect(assigns(:student_subscription_plans).first.class).to eq(SubscriptionPlan)
-        expect(assigns(:student_subscription_plans).count).to eq(2)
+        expect(assigns(:subscription_plans).first.class).to eq(SubscriptionPlan)
+        expect(assigns(:subscription_plans).count).to eq(2)
       end
     end
 
