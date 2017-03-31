@@ -27,7 +27,7 @@ describe HomePagesController, type: :controller do
   let!(:country_2) { FactoryGirl.create(:uk) }
   let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
-  let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
+  let!(:home_page_2) { FactoryGirl.create(:cfa_home, group_id: course_group_2.id) }
   let!(:home_page_3) { FactoryGirl.create(:home) }
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
   let!(:sign_up_params) { { first_name: "Test", last_name: "Student",

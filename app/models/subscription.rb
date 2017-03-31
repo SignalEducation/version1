@@ -156,35 +156,40 @@ class Subscription < ActiveRecord::Base
 
     #### if we're here, then we're good to go.
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    stripe_subscription.plan = new_subscription_plan.stripe_guid
-    stripe_subscription.prorate = true
-    stripe_subscription.trial_end = 'now'
+    if stripe_customer
+      stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+      stripe_subscription.plan = new_subscription_plan.stripe_guid
+      stripe_subscription.prorate = true
+      stripe_subscription.trial_end = 'now'
 
-    result = stripe_subscription.save # saves it at stripe.com, not in our DB
+      result = stripe_subscription.save # saves it at stripe.com, not in our DB
 
-    #### if we are here, the subscription change on Stripe has gone well
-    #### Now we need to create a new Subscription in our DB.
-    ActiveRecord::Base.transaction do
-      new_sub = Subscription.new(
-              user_id: self.user_id,
-              subscription_plan_id: new_subscription_plan.id,
-              complimentary: false,
-              active: true,
-              livemode: (result[:plan][:livemode]),
-              current_status: result[:status],
-      )
-      # mass-assign-protected attributes
-      new_sub.stripe_guid = result[:id]
-      new_sub.next_renewal_date = Time.at(result[:current_period_end])
-      new_sub.stripe_customer_id = self.stripe_customer_id
-      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-      new_sub.save(validate: false)
+      #### if we are here, the subscription change on Stripe has gone well
+      #### Now we need to create a new Subscription in our DB.
+      ActiveRecord::Base.transaction do
+        new_sub = Subscription.new(
+            user_id: self.user.id,
+            subscription_plan_id: new_plan_id,
+            complimentary: false,
+            active: true,
+            livemode: (result[:plan][:livemode]),
+            current_status: result[:status],
+        )
+        # mass-assign-protected attributes
+        new_sub.stripe_guid = result[:id]
+        new_sub.next_renewal_date = Time.at(result[:current_period_end])
+        new_sub.stripe_customer_id = self.stripe_customer_id
+        new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
+        new_sub.save(validate: false)
 
-      self.update_attributes(current_status: 'canceled', active: false)
+        self.update_attributes(current_status: 'canceled', active: false)
 
-      return new_sub
+        return new_sub
+      end
+    else
+      return self
     end
+
   rescue ActiveRecord::RecordInvalid => exception
     Rails.logger.error("ERROR: Subscription#upgrade_plan - AR.Transaction failed.  Details: #{exception.inspect}")
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))

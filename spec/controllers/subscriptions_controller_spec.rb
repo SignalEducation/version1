@@ -33,6 +33,7 @@ describe SubscriptionsController, type: :controller do
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
   let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
   let!(:individual_student_user_2) { FactoryGirl.create(:individual_student_user, country_id: Country.first.id) }
+  let!(:subscription_payment_card) { FactoryGirl.create(:subscription_payment_card, user_id: individual_student_user.id) }
   let!(:subscription_1) { x = FactoryGirl.create(:subscription,
                              user_id: individual_student_user.id,
                              subscription_plan_id: subscription_plan_1.id,
@@ -96,6 +97,17 @@ describe SubscriptionsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(individual_student_user)
+      stripe_plan = Stripe::Plan.create(
+          amount: (subscription_plan_1.price.to_f * 100).to_i,
+          interval: 'month',
+          interval_count: subscription_plan_1.payment_frequency_in_months.to_i,
+          trial_period_days: subscription_plan_1.trial_period_in_days.to_i,
+          name: 'LearnSignal ' + subscription_plan_1.name.to_s,
+          statement_descriptor: 'LearnSignal',
+          currency: subscription_plan_1.currency.try(:iso_code).try(:downcase),
+          id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+      subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
     end
 
     describe "Get 'change_plan'" do
@@ -109,16 +121,31 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should redirect to sign_in' do
-        put :update, id: 1, subscription: valid_params
-        expect_bounce_as_not_signed_in
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should redirect to sign_in' do
-        delete :destroy, id: 1
-        expect(flash[:success]).to be_nil
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
         expect(response).to redirect_to account_url(anchor: 'subscriptions')
@@ -126,7 +153,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "GET 'new_subscription'" do
-      it 'should redirect to sign_in' do
+      it 'should render upgrade page' do
         get :new_subscription, user_id: individual_student_user_2.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -136,7 +163,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "GET 'personal_upgrade_complete'" do
-      it 'should redirect to sign_in' do
+      it 'should render upgrade complete page' do
         get :personal_upgrade_complete
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
