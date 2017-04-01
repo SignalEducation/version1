@@ -162,6 +162,16 @@ describe SubscriptionsController, type: :controller do
       end
     end
 
+    describe "POST 'create_subscription'" do
+      it 'should respond ERROR not permitted' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
     describe "GET 'personal_upgrade_complete'" do
       it 'should render upgrade complete page' do
         get :personal_upgrade_complete
@@ -181,9 +191,9 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(comp_user)
     end
 
-    describe "POST 'create'" do
+    describe "POST 'create_subscription'" do
       it 'should respond ERROR not permitted' do
-        post :create, subscription: valid_params
+        post :create_subscription, user_id: comp_user.id
         expect_bounce_as_not_allowed
       end
     end
