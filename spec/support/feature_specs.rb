@@ -46,9 +46,9 @@ end
 #### Student sign_up process
 
 def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
+  expect(page).to have_content '7-DAY FREE TRIAL (UP TO 200 MINUTES)'
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
-  expect(page).to have_content '7-DAY FREE TRIAL (UP TO 200 MINUTES) No credit card needed'
-  page.all(:css, '#signUp').first.click
+    page.all(:css, '#signUp').first.click
   sleep 1
   if expect_sign_up
 
@@ -104,6 +104,7 @@ def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
   fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
+  check I18n.t('views.general.terms_and_conditions')
   fill_in('user_password', with: user_password)
 end
 
@@ -122,8 +123,9 @@ def sign_up_and_upgrade_from_free_trial
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
   end
   sleep(2)
-  expect(page).to have_content 'Final Step!'
-  expect(page).to have_content "To complete your membership we need to verify that we're sending emails to the correct address."
+  expect(page).to have_content 'Thanks for Signing Up'
+  expect(page).to have_content 'Verify Your Email Address'
+  visit user_verification_path(email_verification_code: User.last.email_verification_code)
   within('.navbar.navbar-default') do
     find('.days-left').click
   end
@@ -135,9 +137,9 @@ def sign_up_and_upgrade_from_free_trial
   sleep(10)
   expect(page).to have_content 'Thanks for upgrading your subscription!'
   visit_my_profile
-  click_on 'Subscription Info'
-  expect(page).to have_content 'Account Status: Valid Subscription'
-  expect(page).to have_content 'Billing Interval:   Monthly'
+  click_on I18n.t('views.users.show.tabs.subscriptions')
+  expect(page).to have_content 'Account Status Active Subscription'
+  expect(page).to have_content 'Billing Interval Monthly'
   end
 
 def sign_up_and_upgrade_from_free_trial_small_device
