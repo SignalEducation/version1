@@ -54,13 +54,12 @@ describe 'Course content Vs Paywall', type: :feature do
     scenario 'should still see all content with a cancelled pending account', js: true do
       visit_my_profile
       sleep(2)
-      click_on 'Subscription Info'
-      expect(page).to have_content 'Account Status: Valid Subscription'
-      expect(page).to have_content 'Billing Interval:   Monthly'
+      click_on I18n.t('views.users.show.tabs.subscriptions')
+      expect(page).to have_content 'Account Status Active Subscription'
+      expect(page).to have_content 'Billing Interval Monthly'
       click_link I18n.t('views.users.show.cancel_your_subscription_plan')
       page.driver.browser.switch_to.alert.accept
-      click_on 'Subscription Info'
-      expect(page).to have_content 'Undo Your Account Cancellation'
+      click_on I18n.t('views.users.show.tabs.subscriptions')
       click_link 'Courses'
       click_link('Group 1')
       click_link('Subject Course 1')

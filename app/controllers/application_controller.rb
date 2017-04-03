@@ -130,6 +130,7 @@ class ApplicationController < ActionController::Base
 
   def paywall_checkpoint
     allowed     = {course_content: {view_all: true, reason: nil}}
+    not_allowed     = {course_content: {view_all: false, reason: nil}}
 
     if current_user && current_user.permission_to_see_content(@course)
       result = allowed
