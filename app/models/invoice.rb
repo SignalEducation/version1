@@ -93,6 +93,7 @@ class Invoice < ActiveRecord::Base
         inv = Invoice.new(
           user_id: user.id,
           subscription_id: subscription.id,
+          number_of_users: 1,
           currency_id: currency.id,
           issued_at: Time.at(stripe_data_hash[:date]),
           stripe_guid: stripe_data_hash[:id],
@@ -136,26 +137,29 @@ class Invoice < ActiveRecord::Base
     inv
   end
 
-  def self.update_from_stripe(invoice_guid)
+  def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
-    invoice = Invoice.find_by_stripe_guid(stripe_invoice[:id])
-    if invoice
-      invoice.update_attributes(
-          sub_total: stripe_invoice[:subtotal].to_i / 100.0,
-          total: stripe_invoice[:total].to_i / 100.0,
-          total_tax: stripe_invoice[:tax].to_i / 100.0,
-          payment_attempted: stripe_invoice[:attempted],
-          payment_closed: stripe_invoice[:closed],
-          forgiven: stripe_invoice[:forgiven],
-          paid: stripe_invoice[:paid],
-          livemode: stripe_invoice[:livemode],
-          attempt_count: stripe_invoice[:attempt_count],
-          amount_due: stripe_invoice[:amount_due],
-          next_payment_attempt_at: (stripe_invoice[:next_payment_attempt] ? Time.at(stripe_invoice[:next_payment_attempt]) : nil),
-          webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
-          charge_guid: stripe_invoice[:charge]
-      )
+    if stripe_invoice
+      invoice = Invoice.find_by_stripe_guid(stripe_invoice[:id])
+      if invoice
+        invoice.update_attributes(
+            sub_total: stripe_invoice[:subtotal].to_i / 100.0,
+            total: stripe_invoice[:total].to_i / 100.0,
+            total_tax: stripe_invoice[:tax].to_i / 100.0,
+            payment_attempted: stripe_invoice[:attempted],
+            payment_closed: stripe_invoice[:closed],
+            forgiven: stripe_invoice[:forgiven],
+            paid: stripe_invoice[:paid],
+            livemode: stripe_invoice[:livemode],
+            attempt_count: stripe_invoice[:attempt_count],
+            amount_due: stripe_invoice[:amount_due],
+            next_payment_attempt_at: (stripe_invoice[:next_payment_attempt] ? Time.at(stripe_invoice[:next_payment_attempt]) : nil),
+            webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
+            charge_guid: stripe_invoice[:charge]
+        )
+      end
     end
+
   end
 
   # instance methods

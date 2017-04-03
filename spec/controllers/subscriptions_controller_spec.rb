@@ -83,6 +83,13 @@ describe SubscriptionsController, type: :controller do
       end
     end
 
+    describe "POST 'create_subscription'" do
+      it 'should respond ERROR not permitted' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_signed_in
+      end
+    end
+
     describe "GET 'personal_upgrade_complete'" do
       it 'should redirect to sign_in' do
         get :personal_upgrade_complete, id: 1
@@ -163,12 +170,21 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "POST 'create_subscription'" do
-      it 'should respond ERROR not permitted' do
+      xit 'should respond okay with correct params' do
         post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
         expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(user_new_subscription_url(individual_student_user.id))
       end
     end
 
@@ -191,23 +207,62 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(comp_user)
     end
 
-    describe "POST 'create_subscription'" do
-      it 'should respond ERROR not permitted' do
-        post :create_subscription, user_id: comp_user.id
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, subscription: valid_params
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
         expect_bounce_as_not_allowed
       end
     end
@@ -221,26 +276,66 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, subscription: valid_params
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, subscription: valid_params
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
         expect_bounce_as_not_allowed
       end
     end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
 
   end
 
@@ -251,26 +346,66 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(blogger_user)
     end
 
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, subscription: valid_params
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
         expect_bounce_as_not_allowed
       end
     end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
 
   end
 
@@ -280,61 +415,66 @@ describe SubscriptionsController, type: :controller do
       activate_authlogic
       UserSession.create!(content_manager_user)
     end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, subscription: valid_params
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-  end
-
-  context 'Logged in as a customer_support_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(customer_support_manager_user)
-    end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
-        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      xit 'should respond with OK' do
         delete :destroy, id: subscription_1.id
-        expect(flash[:error]).to eq(nil)
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).current_status).to eq('canceled')
+        expect_bounce_as_not_allowed
       end
     end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
 
   end
 
@@ -345,24 +485,168 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(marketing_manager_user)
     end
 
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, subscription: valid_params
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
         expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+  end
+
+  context 'Logged in as a customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+      stripe_plan = Stripe::Plan.create(
+          amount: (subscription_plan_1.price.to_f * 100).to_i,
+          interval: 'month',
+          interval_count: subscription_plan_1.payment_frequency_in_months.to_i,
+          trial_period_days: subscription_plan_1.trial_period_in_days.to_i,
+          name: 'LearnSignal ' + subscription_plan_1.name.to_s,
+          statement_descriptor: 'LearnSignal',
+          currency: subscription_plan_1.currency.try(:iso_code).try(:downcase),
+          id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+      subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:change_plan)
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to user_subscription_status_url(individual_student_user)
+
+      end
+    end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
+
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
+
       end
     end
 
@@ -375,29 +659,87 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(admin_user)
     end
 
-    describe "POST 'create'" do
-      it 'should be OK locally and on Stripe' do
-        post :create, subscription: {subscription_plan_id: subscription_plan_1.id, user_id: individual_student_user.id}
-        expect_create_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_1.id)
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:change_plan)
       end
     end
 
     describe "PUT 'update/1'" do
-      xit 'should respond OK to valid params' do
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
         put :update, id: subscription_1.id, subscription: valid_params
-        expect_update_success_with_model('subscription', account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).subscription_plan_id).to eq(subscription_plan_2.id)
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+
       end
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should respond with OK' do
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: individual_student_user.email)
+        individual_student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
         delete :destroy, id: subscription_1.id
-        expect(flash[:error]).to eq(nil)
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
+        expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'subscriptions'))
-        expect(assigns(:subscription).current_status).to eq('canceled')
+        expect(response).to redirect_to user_subscription_status_url(individual_student_user)
+
+      end
+    end
+
+    describe "GET 'new_subscription'" do
+      it 'should render upgrade page' do
+        get :new_subscription, user_id: individual_student_user_2.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
+      end
+    end
+
+    describe "POST 'create_subscription'" do
+      xit 'should respond okay with correct params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create_subscription, user_id: individual_student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(root_url)
+
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
+
       end
     end
 

@@ -125,7 +125,7 @@ class StripeApiEvent < ActiveRecord::Base
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid)
+      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
       self.processed = true
       self.processed_at = Time.now
 
@@ -160,7 +160,7 @@ class StripeApiEvent < ActiveRecord::Base
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid)
+      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
       if stripe_next_attempt
         #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due, allowing access to course content until the retry window has expired.
         self.processed = true
@@ -175,7 +175,7 @@ class StripeApiEvent < ActiveRecord::Base
         MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url) unless Rails.env.test?
       end
     else
-      Rails.logger.error "ERROR: Payment Failed webhook couldn't find user with Stripe id #{stripe_customer_guid} OR subscription with id - #{subscription.id} OR invoice with id - #{invoice.id}."
+      Rails.logger.error "ERROR: Payment Failed webhook couldn't find user with Stripe id #{stripe_customer_guid} OR subscription with id - #{subscription.try(:id)} OR invoice with id - #{invoice.try(:id)}."
       set_process_error "Could not find user with stripe id #{stripe_customer_guid}"
     end
 

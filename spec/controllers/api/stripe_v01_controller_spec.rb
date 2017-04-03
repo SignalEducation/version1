@@ -54,9 +54,6 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
     StripeMock.mock_webhook_event('invoice.payment_succeeded',
                                   subscription: subscription_7.stripe_guid,
                                   customer: student.reload.stripe_customer_id) }
-  let!(:customer_subscription_updated_event) { StripeMock.mock_webhook_event("customer.subscription.updated") }
-  let!(:customer_subscription_created_event) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active') }
-  let!(:customer_subscription_created_event_1) { StripeMock.mock_webhook_event("customer.subscription.created", status: 'active', subscription: subscription_7.stripe_guid) }
 
   describe "POST 'create'" do
     describe 'preliminary functionality: ' do
@@ -95,6 +92,7 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
         end
 
         it 'invoice.payment_failed first attempt' do
+          invoice = Invoice.build_from_stripe_data(invoice_created_event[:data][:object])
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
@@ -113,6 +111,7 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
         end
 
         it 'invoice.payment_failed last attempt' do
+          invoice = Invoice.build_from_stripe_data(invoice_created_event[:data][:object])
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
@@ -129,6 +128,7 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
         end
 
         it 'invoice.payment_succeeded first attempt' do
+          invoice = Invoice.build_from_stripe_data(invoice_created_event[:data][:object])
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
@@ -146,6 +146,7 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
         end
 
         it 'invoice.payment_succeeded after failed attempt' do
+          invoice = Invoice.build_from_stripe_data(invoice_created_event[:data][:object])
           mc = double
           #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
           #expect(MandrillClient).to receive(:new).and_return(mc)
@@ -228,52 +229,6 @@ subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active
         end
       end
 
-      describe 'customer.subscription.updated' do
-
-        it 'with valid data' do
-          evt = StripeMock.mock_webhook_event("customer.subscription.updated", status: 'active')
-          subscription_3.update_attribute(:stripe_guid, evt.data.object.id)
-
-          #expect(MandrillClient).not_to receive(:new)
-          post :create, evt.to_json
-
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(true)
-          expect(sae.error).to eq(false)
-          expect(sae.error_message).to eq(nil)
-
-          expect(subscription_3.reload.next_renewal_date).to eq(Time.at(evt.data.object.current_period_end.to_i).to_date)
-          expect(subscription_3.current_status).to eq(evt.data.object.status)
-        end
-      end
-
-      describe 'customer.subscription.created' do
-        it 'marks api event as processed since users is creating their first subscription' do
-          subscription_5.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-
-          post :create, customer_subscription_created_event.to_json
-
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(true)
-          expect(sae.error).to eq(false)
-          expect(sae.error_message).to eq(nil)
-        end
-
-
-        it 'marks api event as processed since the users is re-activating their account by subscribing to a new plan' do
-          subscription_7.update_attribute(:stripe_guid, customer_subscription_created_event.data.object.id)
-
-          post :create, customer_subscription_created_event.to_json
-
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(true)
-          expect(sae.error).to eq(false)
-        end
-
-      end
     end
 
   end
