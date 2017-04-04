@@ -26,6 +26,10 @@
         .input-group.input-group-lg.full-width
           =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
+        =f.label :country_id, t('views.users.form.country_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        %br/
         =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'

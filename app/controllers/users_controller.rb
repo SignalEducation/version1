@@ -188,6 +188,9 @@ class UsersController < ApplicationController
     if @user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
       if current_user.admin? || current_user.customer_support_manager?
+        if @user.individual_student? && @user.stripe_customer_id && @user.subscriptions.count == 0
+          @user.update_attribute(:free_trial, true)
+        end
         redirect_to users_url
       else
         redirect_to account_url
