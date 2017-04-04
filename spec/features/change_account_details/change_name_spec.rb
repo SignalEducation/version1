@@ -25,7 +25,7 @@ describe 'User changing their name', type: :feature do
       within('#modal-links') do
         find('.edit-details').click
       end
-
+      sleep(2)
       within('#personal-details-form') do
         fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
         fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"

@@ -79,7 +79,6 @@ describe 'Course content Vs Paywall', type: :feature do
       expect(page).to have_content(course_module_element_1_1.name)
       expect(page).to have_content(course_module_element_1_2.name)
       expect(page).to have_content(course_module_element_1_3.name)
-      click_link(course_module_element_1_3.name)
     end
 
     scenario 'should only see free content with an account problem', js: true do

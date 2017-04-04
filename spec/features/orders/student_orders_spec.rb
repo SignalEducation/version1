@@ -19,6 +19,7 @@ describe 'The student orders process', type: :feature do
     stripe_product = Stripe::Product.create(name: product_1.name, shippable: false, active: product_1.active)
     product_1.update_attribute(:stripe_guid, stripe_product.id)
 
+    sleep(2)
     stripe_sku = Stripe::SKU.create(
         currency: product_1.currency.iso_code,
         price: (product_1.price.to_f * 100).to_i,
