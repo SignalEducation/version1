@@ -9,19 +9,28 @@
 
   .row
     .col-sm-12.text-left
-
       =form_for(SubscriptionPaymentCard.new(make_default_card: true), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
         =f.hidden_field :user_id, value: @current_subscription.try(:user_id)
         =f.hidden_field :stripe_token
         =f.hidden_field :make_default_card, value: true
 
-        =render partial: 'users/user_forms/new_card_form', locals: {f: f}
+        .payment-errors
+          =render partial: 'users/user_forms/new_card_form', locals: {f: f}
+
+        .col-md-12
+          .sk-circle
+            .sk-circle1.sk-child
+            .sk-circle2.sk-child
+            .sk-circle3.sk-child
+            .sk-circle4.sk-child
+            .sk-circle5.sk-child
+            .sk-circle6.sk-child
+            .sk-circle7.sk-child
+            .sk-circle8.sk-child
+            .sk-circle9.sk-child
+            .sk-circle10.sk-child
+            .sk-circle11.sk-child
+            .sk-circle12.sk-child
 
 
 
-
-:javascript
-
-  $(document).on('confirmation', '.remodal', function () {
-    document.forms['add_card_form'].submit();
-  });

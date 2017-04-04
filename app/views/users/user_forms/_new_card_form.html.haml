@@ -49,6 +49,7 @@
   }
 
   $(document).on('ready', function() {
+    $(".sk-circle").hide();
     $('.creditCardNumber').keyup(function() {
       $(this).val(function(i, v) {
         var v = v.replace(/[^\d]/g, '').match(/.{1,4}/g);
@@ -65,25 +66,14 @@
       }
     })
 
-    //$('#new_user').submit(function(event) {
     $('.payment-errors').closest("form").submit(function(event) {
       var $form = $(this);
-      console.log('Happy Friday Dan!');
-      console.log($form);
-      // If we're in the student-signups page, make sure we have a subscription plan chosen
-      if ((window.location.pathname == '/en/student_sign_ups' || window.location.pathname == '/en/student_sign_up') && isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {
-        alert('Please choose a subscription plan');
-
-        return false;
-      } else {
-
-        // Disable the submit button to prevent repeated clicks
-        $form.find('input:submit').prop('disabled', true);
-        // Create the token
-        Stripe.card.createToken($form, stripeResponseHandler);
-        // Prevent the form from submitting with the default action
-        return false;
-      }
+      // Disable the submit button to prevent repeated clicks
+      $form.find('input:submit').prop('disabled', true);
+      // Create the token
+      Stripe.card.createToken($form, stripeResponseHandler);
+      // Prevent the form from submitting with the default action
+      return false;
     });
 
     function stripeResponseHandler(status, response) {
@@ -103,6 +93,7 @@
         // Kill the credit card details
         $form.find('[data-stripe]').remove();
         $form.find('.payment-errors').remove();
+        $(".sk-circle").show();
         // and submit the form
         $form.get(0).submit();
       }
