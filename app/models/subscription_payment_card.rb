@@ -85,6 +85,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # callbacks
   before_validation :create_on_stripe_using_token, on: :create, if: :stripe_token
   after_create :update_as_the_default_card, if: :is_default_card
+  before_destroy :remove_card_from_stripe
 
   # scopes
 
@@ -206,7 +207,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   end
 
   def destroyable?
-    self.subscription_transactions.empty?
+    !self.is_default_card?
   end
 
   def make_default_card=(t)
@@ -241,6 +242,23 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     end
   end
 
+  def expiring_soon?
+    unless self.status == 'expired'
+      if self.expiry_year && self.expiry_month && self.is_default_card && self.user.active_subscription
+
+        expiration = Date.new(self.expiry_year, self.expiry_month, 1)
+        month_before_expiration = Date.new(self.expiry_year, self.expiry_month, 1) - 1.month
+
+        if (Proc.new{Time.now}.call) > month_before_expiration && (Proc.new{Time.now}.call < expiration)
+          true
+        else
+          false
+        end
+
+      end
+    end
+  end
+
   def stripe_token=(t)
     @stripe_token = t
   end
@@ -271,5 +289,21 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   end
 
   protected
+
+  def remove_card_from_stripe
+    stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
+    response = stripe_customer.sources.retrieve(self.stripe_card_guid).delete
+    if response[:deleted]
+      true
+    else
+      errors.add(:base, 'Stripe could not delete the card')
+      false
+    end
+
+  rescue => e
+    Rails.logger.error "ERROR: SubscriptionPaymentCard#delete_card failed. Error: #{e.inspect}. Self: #{self.errors.inspect}"
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    false
+  end
 
 end

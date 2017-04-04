@@ -968,6 +968,7 @@ en:
         trial_period_in_days: Trial
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
+        active: Active
 
       edit:
         h1: Edit Subscription Plan
@@ -1054,7 +1055,9 @@ en:
         current_password: Current password
         current_password_placeholder: Current password
         password: Password
-        password_placeholder: New Password
+        password_placeholder: Password
+        new_password: New Password
+        new_password_placeholder: New Password
         password_confirmation: Password confirmation
         password_confirmation_placeholder: Password confirmation
         address: Address
@@ -1106,7 +1109,7 @@ en:
         new_card: Add New Card
         change_company_data: "Change Company Data"
         change_your_password:
-          link: Change your password
+          link: Change password
           h4: Change your password
         cancel_your_subscription_plan: Cancel Recurring Payments
         card_expired: "Expired"
@@ -1132,7 +1135,7 @@ en:
           orders: Purchase History
           payments: Payment Info
           certificates: Certificates
-          enrollments: Enrollments
+          enrollments: Enrolments
           exam_sittings: Exam Sittings
           notifications: Notifications
           admin: Admin
@@ -1142,10 +1145,13 @@ en:
         upgrade_subscription_plan: Upgrade Subscription
         change_subscription_plan: Change Subscription
         use_this_card: "Use this card"
+        confirm_use_this_card: Are you sure you want to change payment cards? All future invoices will charge this card.
+
+        remove_this_card: Remove card
         your_card_details: Update Payment Info
         your_invoices: Payment History
         free_trial_heading: Free Trial
-        your_next_payment_will_be_on: "Next Bill Due: "
+        your_next_payment_will_be_on: Next Bill Due
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
         your_plan_will_expire_on: "Your subscription is cancelled, you will continue to have access until: "

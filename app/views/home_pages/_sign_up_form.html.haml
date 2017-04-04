@@ -22,8 +22,9 @@
     .form-group
       %label.h5.h-white
         =f.check_box :terms_and_conditions, required: true
+        I Agree to LearnSignal
+        =link_to 'Terms & Conditions', terms_and_conditions_url, style: 'color: #EE5457;'
 
-        =t('views.general.terms_and_conditions')
 
   .col-sm-6.col-xs-6
     =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red', id: 'signUp'

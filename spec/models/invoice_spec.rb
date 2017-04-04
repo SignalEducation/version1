@@ -88,10 +88,10 @@ describe Invoice do
 
   # class methods
   it { expect(Invoice).to respond_to(:build_from_stripe_data) }
-  it { expect(Invoice).to respond_to(:get_updates_for_user) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:status) }
+  it { should respond_to(:update_from_stripe) }
 
 end

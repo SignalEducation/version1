@@ -19,8 +19,11 @@ describe 'The student sign-up process', type: :feature do
       student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
     end
     within('#thank-you-message') do
-      expect(page).to have_content 'Final Step!'
+      expect(page).to have_content 'Thanks for Signing Up'
+      expect(page).to have_content 'Verify Your Email Address'
     end
+    visit user_verification_path(email_verification_code: User.last.email_verification_code)
+
   end
 
   #Todo This needs to be replicated for USD and GBP
@@ -40,9 +43,9 @@ describe 'The student sign-up process', type: :feature do
           expect(page).to have_content 'Thanks for upgrading your subscription!'
         end
         visit_my_profile
-        click_on 'Subscription Info'
-        expect(page).to have_content 'Account Status: Valid Subscription'
-        expect(page).to have_content 'Billing Interval:   Monthly'
+        click_on I18n.t('views.users.show.tabs.subscriptions')
+        expect(page).to have_content 'Account Status Active Subscription'
+        expect(page).to have_content 'Billing Interval Monthly'
       end
 
       scenario 'Quarterly GBP', js: true do
@@ -59,9 +62,9 @@ describe 'The student sign-up process', type: :feature do
           expect(page).to have_content 'Thanks for upgrading your subscription!'
         end
         visit_my_profile
-        click_on 'Subscription Info'
-        expect(page).to have_content 'Account Status: Valid Subscription'
-        expect(page).to have_content 'Billing Interval:   Quarterly'
+        click_on I18n.t('views.users.show.tabs.subscriptions')
+        expect(page).to have_content 'Account Status Active Subscription'
+        expect(page).to have_content 'Billing Interval Quarterly'
       end
 
       scenario 'Yearly GBP', js: true do
@@ -78,9 +81,9 @@ describe 'The student sign-up process', type: :feature do
           expect(page).to have_content 'Thanks for upgrading your subscription!'
         end
         visit_my_profile
-        click_on 'Subscription Info'
-        expect(page).to have_content 'Account Status: Valid Subscription'
-        expect(page).to have_content 'Billing Interval:   Yearly'
+        click_on I18n.t('views.users.show.tabs.subscriptions')
+        expect(page).to have_content 'Account Status Active Subscription'
+        expect(page).to have_content 'Billing Interval Yearly'
       end
     end
   end

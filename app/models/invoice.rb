@@ -83,14 +83,18 @@ class Invoice < ActiveRecord::Base
   # class methods
   def self.build_from_stripe_data(stripe_data_hash)
     inv = nil
+    #This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
       user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
       subscription = Subscription.find_by_stripe_guid(stripe_data_hash[:subscription])
+      currency = Currency.find_by_iso_code(stripe_data_hash[:currency].upcase)
+
       if user && subscription
         inv = Invoice.new(
           user_id: user.id,
           subscription_id: subscription.id,
-          currency_id: Currency.find_by_iso_code(stripe_data_hash[:currency].upcase).id,
+          number_of_users: 1,
+          currency_id: currency.id,
           issued_at: Time.at(stripe_data_hash[:date]),
           stripe_guid: stripe_data_hash[:id],
           sub_total: stripe_data_hash[:subtotal].to_i / 100.0,
@@ -111,10 +115,7 @@ class Invoice < ActiveRecord::Base
           subscription_guid: stripe_data_hash[:subscription],
           tax_percent: stripe_data_hash[:tax_percent],
           tax: stripe_data_hash[:tax].to_i / 100.0,
-          original_stripe_data: stripe_data_hash.to_hash,
-          # todo - these need further attention
-          subscription_transaction_id: nil,
-          number_of_users: 0
+          original_stripe_data: stripe_data_hash.to_hash
         )
         if inv.save
           begin
@@ -130,22 +131,35 @@ class Invoice < ActiveRecord::Base
           Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
         end
       else
-        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscritpion #{stripe_data_hash[:subscription]} do not exisr."
+        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscription #{stripe_data_hash[:subscription]} do not exist."
       end
     end
     inv
   end
 
-  def self.get_updates_for_user(stripe_customer_guid)
-    payload = Stripe::Invoice.all(limit: 10, customer: stripe_customer_guid).to_hash
-    if payload[:data].length > 0
-      known_invoice_guids = Invoice.where(stripe_customer_guid: stripe_customer_guid).pluck(:stripe_guid)
-      payload[:data].each do |incoming_inv|
-        unless known_invoice_guids.include?(incoming_inv[:id])
-          Invoice.build_from_stripe_data(incoming_inv)
-        end
+  def update_from_stripe(invoice_guid)
+    stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
+    if stripe_invoice
+      invoice = Invoice.find_by_stripe_guid(stripe_invoice[:id])
+      if invoice
+        invoice.update_attributes(
+            sub_total: stripe_invoice[:subtotal].to_i / 100.0,
+            total: stripe_invoice[:total].to_i / 100.0,
+            total_tax: stripe_invoice[:tax].to_i / 100.0,
+            payment_attempted: stripe_invoice[:attempted],
+            payment_closed: stripe_invoice[:closed],
+            forgiven: stripe_invoice[:forgiven],
+            paid: stripe_invoice[:paid],
+            livemode: stripe_invoice[:livemode],
+            attempt_count: stripe_invoice[:attempt_count],
+            amount_due: stripe_invoice[:amount_due],
+            next_payment_attempt_at: (stripe_invoice[:next_payment_attempt] ? Time.at(stripe_invoice[:next_payment_attempt]) : nil),
+            webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
+            charge_guid: stripe_invoice[:charge]
+        )
       end
     end
+
   end
 
   # instance methods
@@ -155,7 +169,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def status
-    if self.paid
+    if self.paid && self.payment_closed
       'Paid'
     elsif self.forgiven
       'Free'

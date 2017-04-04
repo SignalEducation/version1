@@ -18,19 +18,20 @@ describe 'User changing their password', type: :feature do
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
 
-      within('#personal-details') do
-        click_link I18n.t('views.users.show.change_your_password.link')
+      within('#modal-links') do
+        find('.change-pw-link').click
       end
       expect(page).to have_content I18n.t('views.users.show.change_your_password.h4')
-      within('#change_password_modal') do
+      within('#change-password-form') do
         fill_in I18n.t('views.users.form.current_password'), with: this_user.password
-        fill_in I18n.t('views.users.form.password_placeholder'), with: 'abcabc123'
+        fill_in I18n.t('views.users.form.new_password'), with: 'abcabc123'
         fill_in I18n.t('views.users.form.password_confirmation_placeholder'), with: 'abcabc123'
-        click_button I18n.t('views.general.save')
+        click_button I18n.t('views.general.actual_submit')
       end
+      expect(page).to have_content I18n.t('controllers.users.change_password.flash.success')
       sign_out
       print '>'
     end
   end
-  sleep(10)
+
 end

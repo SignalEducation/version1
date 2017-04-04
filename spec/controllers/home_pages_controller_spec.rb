@@ -27,7 +27,7 @@ describe HomePagesController, type: :controller do
   let!(:country_2) { FactoryGirl.create(:uk) }
   let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
-  let!(:home_page_2) { FactoryGirl.create(:cfa_home) }
+  let!(:home_page_2) { FactoryGirl.create(:cfa_home, group_id: course_group_2.id) }
   let!(:home_page_3) { FactoryGirl.create(:home) }
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
   let!(:sign_up_params) { { first_name: "Test", last_name: "Student",
@@ -82,7 +82,7 @@ describe HomePagesController, type: :controller do
       let!(:currency_2) { FactoryGirl.create(:gbp) }
 
       #Passes when run by itself
-      xit 'should see group' do
+      it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -104,14 +104,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -183,14 +183,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -262,14 +262,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -341,14 +341,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -420,14 +420,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -499,14 +499,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -578,14 +578,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
@@ -657,14 +657,14 @@ describe HomePagesController, type: :controller do
     describe "GET 'home'" do
       it 'should see home' do
         get :home
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 
     describe "GET 'group'" do
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
-        expect_bounce_as_signed_in
+        expect_bounce_to_dashboard_as_signed_in
       end
     end
 

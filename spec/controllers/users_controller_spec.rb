@@ -198,7 +198,10 @@ describe UsersController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: individual_student_user.id, user: {email: 'a'}
-        expect_update_error_with_model('user')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
       end
     end
 
@@ -206,17 +209,6 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "new_paid_subscription" do
-      it 'should respond OK and render new subscription page' do
-        get :new_subscription, user_id: upgrading_user.id
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:new_subscription)
-
       end
     end
 
@@ -301,7 +293,11 @@ describe UsersController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: comp_user.id, user: {email: 'a'}
-        expect_update_error_with_model('user')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
+
       end
     end
 
@@ -309,18 +305,6 @@ describe UsersController, type: :controller do
       it 'should redirect to root' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "new_paid_subscription" do
-      xit 'should respond OK and render upgrade page' do
-        get :new_paid_subscription, id: comp_user.id
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response).to render_template(:new_paid_subscription)
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:new_paid_subscription)
-
       end
     end
 
@@ -416,8 +400,10 @@ describe UsersController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: tutor_user.id, user: {email: 'a'}
-        expect_update_error_with_model('user')
-        expect(assigns(:user).id).to eq(tutor_user.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
       end
     end
 
@@ -519,8 +505,10 @@ describe UsersController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: blogger_user.id, user: {email: 'a'}
-        expect_update_error_with_model('user')
-        expect(assigns(:user).id).to eq(blogger_user.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
       end
     end
 
@@ -622,9 +610,10 @@ describe UsersController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: content_manager_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect_update_error_with_model('user')
-        expect(assigns(:user).id).to eq(content_manager_user.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
       end
     end
 
@@ -719,9 +708,10 @@ describe UsersController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: marketing_manager_user.id, user: {email: 'a'}
-        expect(response.status).to eq(200)
-        expect_update_error_with_model('user')
-        expect(assigns(:user).id).to eq(marketing_manager_user.id)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
       end
     end
 

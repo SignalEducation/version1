@@ -23,9 +23,14 @@ describe 'User changing their date of birth', type: :feature do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
-      within('#personal-details') do
+
+      within('#modal-links') do
+        find('.edit-details').click
+      end
+
+      within('#personal-details-form') do
         fill_in I18n.t('views.users.form.date_of_birth_placeholder'), with: '20-02-1990'
-        click_button(I18n.t('views.general.save'))
+        click_button(I18n.t('views.general.actual_submit'))
       end
       sign_out
       print '>'

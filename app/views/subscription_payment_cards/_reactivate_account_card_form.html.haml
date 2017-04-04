@@ -44,10 +44,8 @@
 
     .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
       .form-group.l-margin-top
-        -if current_user == @user
-          =f.submit t('views.users.upgrade_subscription.reactivate_account'), class: 'btn btn-red upgrade-sub'
-        -else
-          =link_to t('views.users.reactivate_account.upgrade_subscription'), '#', class: 'btn btn-red upgrade-sub'
+        =f.submit t('views.users.upgrade_subscription.reactivate_account'), class: 'btn btn-red upgrade-sub'
+
 
 
 
@@ -126,7 +124,6 @@
     });
 
     function stripeResponseHandler(status, response) {
-      //var $form = $('#new_user');
       var $form = $('.payment-errors').closest("form");
 
       if (response.error) {

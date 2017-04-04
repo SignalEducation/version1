@@ -38,7 +38,7 @@ class WhitePapersController < ApplicationController
     mock_exams = MockExam.all_in_order
     mock_exam_ids = mock_exams.map(&:id)
     ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : @user.country
+    @country = ip_country ? ip_country : current_user.country
     @currency_id = @country.currency_id
     @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 

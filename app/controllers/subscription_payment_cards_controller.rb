@@ -60,6 +60,16 @@ class SubscriptionPaymentCardsController < ApplicationController
     redirect_to account_url(anchor: 'payment-details')
   end
 
+  def destroy
+    @subscription_payment_card = SubscriptionPaymentCard.find_by_id(params[:id])
+    if @subscription_payment_card.destroy
+      flash[:success] = I18n.t('controllers.subscription_payment_cards.delete.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.subscription_payment_cards.delete.flash.error')
+    end
+    redirect_to account_url(anchor: 'payment-details')
+  end
+
   protected
 
   def create_params

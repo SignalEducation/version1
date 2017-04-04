@@ -60,9 +60,6 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required
-  before_action only: [:new_subscription, :create_subscription] do
-    ensure_user_is_of_type(%w(individual_student))
-  end
   before_action only: [:destroy, :create] do
     ensure_user_is_of_type(%w(admin))
   end
@@ -70,7 +67,7 @@ class UsersController < ApplicationController
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
 
-  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :new_subscription, :create_subscription, :reactivate_account, :reactivate_account_subscription, :personal_upgrade_complete, :reactivation_complete, :change_plan]
+  before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :reactivate_account, :reactivate_account_subscription, :reactivation_complete]
 
   #User account view for all users
   def account
@@ -79,6 +76,18 @@ class UsersController < ApplicationController
     @valid_order = @user.orders
     @orders = @user.orders
     @footer = true
+    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
+    if session[:user_update_errors] && session[:valid_params]
+      session[:user_update_errors].each do |k, v|
+        v.each { |err| @user.errors.add(k, err) }
+      end
+      @user.first_name = session[:valid_params][0]
+      @user.last_name = session[:valid_params][1]
+      @user.email = session[:valid_params][2]
+      @user.date_of_birth = session[:valid_params][3]
+      session.delete(:user_update_errors)
+      session.delete(:valid_params)
+    end
   end
 
   #Admin & CustomerSupport Manager views under dashboard tabs
@@ -150,10 +159,18 @@ class UsersController < ApplicationController
     @user = User.new(allowed_params.merge({password: password,
                                            password_confirmation: password,
                                            password_change_required: true}))
+
     @user.activate_user
     @user.generate_email_verification_code
     @user.locale = 'en'
+
     if @user.user_group.try(:site_admin) == false && @user.save
+      # Create the customer object on stripe
+      stripe_customer = Stripe::Customer.create(
+          email: @user.try(:email)
+      )
+      @user.update_attribute(:stripe_customer_id, stripe_customer.id)
+
       if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
@@ -176,7 +193,14 @@ class UsersController < ApplicationController
         redirect_to account_url
       end
     else
-      render action: :edit
+      if current_user.admin? || current_user.customer_support_manager?
+        render action: :edit
+      else
+        session[:user_update_errors] = @user.errors unless @user.errors.empty?
+        session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.date_of_birth] unless @user.errors.empty?
+
+        redirect_to account_url(anchor: 'personal-details-modal')
+      end
     end
   end
 
@@ -187,109 +211,6 @@ class UsersController < ApplicationController
       flash[:error] = I18n.t('controllers.users.destroy.flash.error')
     end
     redirect_to users_url
-  end
-
-  #Logged In actions to create subscriptions and associated objects(invoices, coupons)
-  def new_subscription
-    redirect_to account_url(anchor: :subscriptions) unless current_user.individual_student?
-    @navbar = false
-    @user = User.where(id: params[:user_id]).first
-    @user.subscriptions.build
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : @user.country
-    @currency_id = @country.currency_id
-    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
-  end
-
-  def create_subscription
-    ####  User creating their first subscription  #####
-
-    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
-    if current_user && current_user.individual_student?
-      if !current_user.subscriptions.any? &&
-          params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
-        user = User.find(params[:user_id])
-        subscription_params = params[:user][:subscriptions_attributes]["0"]
-        subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-        coupon_code = params[:coupon] unless params[:coupon].empty?
-        verified_coupon = verify_coupon(coupon_code) if coupon_code
-        if coupon_code && verified_coupon == 'bad_coupon'
-          redirect_to user_new_subscription_url(current_user.id)
-        else
-          stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-          stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
-          stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-          if stripe_customer && stripe_subscription
-            subscription = Subscription.new(
-                user_id: user.id,
-                subscription_plan_id: subscription_plan.id,
-                complimentary: false,
-                active: true,
-                livemode: stripe_subscription[:plan][:livemode],
-                current_status: stripe_subscription.status,
-            )
-            # mass-assign-protected attributes
-            subscription.stripe_guid = stripe_subscription.id
-            subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-            subscription.stripe_customer_id = stripe_customer.id
-            subscription.terms_and_conditions = subscription_params["terms_and_conditions"]
-            subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
-            upgrade = subscription.save(validate: false)
-          end
-
-          if upgrade
-            user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-            if !user.free_trial_ended_at.nil?
-              trial_ended_date = user.free_trial_ended_at
-            else
-              trial_ended_date = Proc.new{Time.now}.call
-            end
-            current_user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
-            redirect_to personal_upgrade_complete_url
-          else
-            redirect_to user_new_subscription_url(current_user.id)
-            flash[:error] = 'Sorry! Your card was declined. Please check that it is valid.'
-          end
-        end
-      else
-        redirect_to user_new_subscription_url(current_user.id)
-        flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
-      end
-
-    else
-      redirect_to account_url
-    end
-  end
-
-  def create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
-    begin
-      stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
-      return stripe_subscription
-    rescue Stripe::CardError => e
-      # Since it's a decline, Stripe::CardError will be caught
-      body = e.json_body
-      err  = body[:error]
-      puts "Status is: #{e.http_status}"
-      puts "Type is: #{err[:type]}"
-      puts "Code is: #{err[:code]}"
-      # param is '' in this case
-      puts "Param is: #{err[:param]}"
-      puts "Message is: #{err[:message]}"
-    rescue Stripe::RateLimitError => e
-      # Too many requests made to the API too quickly
-    rescue Stripe::InvalidRequestError => e
-      # Invalid parameters were supplied to Stripe's API
-    rescue Stripe::AuthenticationError => e
-      # Authentication with Stripe's API failed
-      # (maybe you changed API keys recently)
-    rescue Stripe::APIConnectionError => e
-      # Network communication with Stripe failed
-    rescue Stripe::StripeError => e
-      # Display a very generic error to the user, and maybe send
-      # yourself an email
-    rescue => e
-      # Something else happened, completely unrelated to Stripe
-    end
   end
 
   def reactivate_account
@@ -309,7 +230,7 @@ class UsersController < ApplicationController
     ####  User adding a subscription after previously canceling one  #####
     if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"] && params[:subscription]["terms_and_conditions"]
       coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code) if coupon_code
+      verified_coupon = verify_coupon(coupon_code, current_user.country.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_reactivate_account_url(current_user.id)
       else
@@ -322,39 +243,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def personal_upgrade_complete
-    @subscription = current_user.active_subscription
-  end
-
   def reactivation_complete
     @subscription = current_user.active_subscription
     @subject_course_user_logs = current_user.subject_course_user_logs
     @groups = Group.all_active.all_in_order
-  end
-
-  def change_plan
-    @current_subscription = @user.active_subscription
-  end
-
-  def verify_coupon(coupon)
-    @user_currency = @user.country.currency
-    verified_coupon = Stripe::Coupon.retrieve(coupon)
-    unless verified_coupon.valid
-      flash[:error] = 'Sorry! The coupon code you entered has expired'
-      verified_coupon = 'bad_coupon'
-      return verified_coupon
-    end
-    if verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
-      flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
-      verified_coupon = 'bad_coupon'
-      return verified_coupon
-    end
-    return verified_coupon
-  rescue => e
-    flash[:error] = 'The coupon code entered is not valid'
-    verified_coupon = 'bad_coupon'
-    Rails.logger.error("ERROR: UsersController#verify_coupon - failed to apply Stripe Coupon.  Details: #{e.inspect}")
-    return verified_coupon
   end
 
   def subscription_invoice
@@ -385,7 +277,6 @@ class UsersController < ApplicationController
     @user = current_user
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-      #Mailers::OperationalMailers::YourPasswordHasChangedWorker.perform_async(@user.id)
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
     end

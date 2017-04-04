@@ -32,7 +32,7 @@
                       %td=currency.trailing_symbol
                       %td=tick_or_cross(currency)
                       %td
-                        =link_to t('views.general.show'), currency_url(currency), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.show'), currency_url(currency), class: 'btn btn-red btn-small'
                         =link_to t('views.general.edit'), edit_currency_url(currency), class: 'btn btn-cyan btn-small'
                         -if currency.destroyable?
                           =link_to t('views.general.delete'), currency, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'

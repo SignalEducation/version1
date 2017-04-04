@@ -544,8 +544,15 @@ class User < ActiveRecord::Base
     visits
   end
 
-  #User reactivating their account by adding a new subscription and card
-  def resubscribe_account(user_id, new_plan_id, stripe_token, reactivate_account_url = nil, terms_and_conditions, coupon_code)
+
+  def create_on_discourse
+    if Rails.env.production?
+      username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
+      DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
+    end
+  end
+
+  def resubscribe_account(user_id, new_plan_id, stripe_token, terms_and_conditions, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = User.find_by_id(user_id)
     old_sub = user.active_subscription
@@ -611,13 +618,6 @@ class User < ActiveRecord::Base
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     false
 
-  end
-
-  def create_on_discourse
-    if Rails.env.production?
-      username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
-      DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
-    end
   end
 
   protected

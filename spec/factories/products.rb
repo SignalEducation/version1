@@ -18,7 +18,7 @@
 
 FactoryGirl.define do
   factory :product do
-    name "MyString"
+    name "Product 001"
     mock_exam_id 1
     active true
     stripe_guid "MyString"

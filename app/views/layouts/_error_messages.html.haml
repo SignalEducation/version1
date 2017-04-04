@@ -1,24 +1,19 @@
--#TODO this needs some serious styling attention
 -if thing.errors.any?
   -field_list = thing.errors.map {|x,y| x}.uniq
-  .panel.panel-danger
-    .panel-heading
-      =pluralize(field_list.count, t('views.layouts.error_messages.error'))
-      =message || t('views.layouts.error_messages.preface')
-
-    .panel-body
-      %ul
-        -field_list.each do |field|
-          %li
-            =field.to_s.humanize.gsub('Base','')
-            -if thing.errors[field].length > 1
-              =t('views.layouts.error_messages.is_invalid')
-            -else
-              =thing.errors[field].first
+  .col-sm-12
+    -field_list.uniq.each do |field|
+      .notice.error
+        .fa.fa-info-circle.icon
+        =field.to_s.humanize.gsub('Base','')
+        -if thing.errors[field].length > 1
+          =#t('views.layouts.error_messages.is_invalid')
+          =thing.errors[field].uniq.first
+        -else
+          =thing.errors[field].first
 
   %script
 
-    \$(document).on('ready page:load', function() {
+    \$(document).on('ready page:load', fu nction() {
     -field_list.each do |field_name|
       $('##{thing.class.name.underscore}_#{field_name}').parent().addClass('has-error');
     \})

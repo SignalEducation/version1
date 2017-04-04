@@ -17,6 +17,13 @@ def expect_bounce_as_signed_in
   expect(response).to redirect_to(root_url)
 end
 
+def expect_bounce_to_dashboard_as_signed_in
+  expect(flash[:success]).to be_nil
+  expect(flash[:error]).to be_nil
+  expect(response.status).to eq(302)
+  expect(response).to redirect_to(student_dashboard_url)
+end
+
 def expect_bounce_as_not_allowed
   expect(flash[:success]).to be_nil
   expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))

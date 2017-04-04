@@ -22,8 +22,8 @@ Rails.application.routes.draw do
 
     # users and authentication
     resources :users do
-      get 'new_subscription', to: 'users#new_subscription', as: :new_subscription
-      patch 'create_subscription', to: 'users#create_subscription', as: :create_subscription
+      get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
+      patch 'create_subscription', to: 'subscriptions#create_subscription', as: :create_subscription
 
       get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
       post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
@@ -42,7 +42,7 @@ Rails.application.routes.draw do
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
     get 'account', to: 'users#account', as: :account
-    get 'account/change_plan', to: 'users#change_plan', as: :account_change_plan
+    get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     post 'change_password', to: 'users#change_password', as: :change_password
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
@@ -54,7 +54,7 @@ Rails.application.routes.draw do
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
-    get 'personal_upgrade_complete', to: 'users#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
     get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
@@ -147,8 +147,8 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
-    resources :subscriptions, only: [:create, :update, :destroy]
-    resources :subscription_payment_cards, only: [:create, :update]
+    resources :subscriptions, only: [:update, :destroy]
+    resources :subscription_payment_cards, only: [:create, :update, :destroy]
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :subject_course_resources

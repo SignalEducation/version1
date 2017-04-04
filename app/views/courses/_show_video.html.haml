@@ -5,10 +5,11 @@
 
   -#Nav buttons below video
   .l-margin-bottom.l-margin-top.hidden-xs
-    .pull-left
-      =link_to course_special_link(cme.previous_element), class: 'btn btn-red text-bold' do
-        .glyphicon.glyphicon-arrow-left
-        =t('views.course_module_elements.show.previous_step')
+    -if cme.previous_element
+      .pull-left
+        =link_to course_special_link(cme.previous_element), class: 'btn btn-red text-bold' do
+          .glyphicon.glyphicon-arrow-left
+          =t('views.course_module_elements.show.previous_step')
     .pull-right
       -if cme.course_module.subject_course.is_cpd
         =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
@@ -21,9 +22,10 @@
 
   .l-margin-bottom.l-margin-top.hidden-lg.hidden-md.hidden-sm
     .col-sm-12.l-margin-bottom
-      =link_to course_special_link(cme.previous_element), class: 'btn btn-red btn-wide btn-lg-text' do
-        .glyphicon.glyphicon-arrow-left
-        =t('views.course_module_elements.show.previous_step')
+      -if cme.previous_element
+        =link_to course_special_link(cme.previous_element), class: 'btn btn-red btn-wide btn-lg-text' do
+          .glyphicon.glyphicon-arrow-left
+          =t('views.course_module_elements.show.previous_step')
     .col-sm-12
       -if cme.course_module.subject_course.is_cpd
         =link_to course_special_link(cme.next_element), class: 'btn btn-red btn-wide btn-lg-text' do
