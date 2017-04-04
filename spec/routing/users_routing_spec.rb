@@ -96,16 +96,12 @@ RSpec.describe UsersController, type: :routing do
       expect(get: '/account').to route_to('users#account')
     end
 
-    xit 'routes /sign_up to #new' do
-      expect(get: '/sign_up').to route_to('student_sign_ups#new')
-    end
-
     it 'routes /change_password to #change_password' do
       expect(post: '/change_password').to route_to('users#change_password')
     end
 
     it 'routes /new_subscription to #new_subscription' do
-      expect(get: '/users/1/new_subscription').to route_to('users#new_subscription', user_id: '1')
+      expect(get: '/users/1/new_subscription').to route_to('subscriptions#new_subscription', user_id: '1')
     end
   end
 end
