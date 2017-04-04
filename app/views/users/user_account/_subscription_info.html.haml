@@ -30,19 +30,20 @@
               =humanize_datetime(@user.active_subscription.updated_at)
 
 
-      .col-sm-12.col-md-6.l-margin-top
-        .h3
-          =t('views.users.show.your_next_payment_will_be_on')
-        .h6
-          =humanize_stripe_date(@current_subscription.next_renewal_date)
-
-
-      .col-sm-12.l-margin-top
-        -if @user.canceled_pending?
+      -if @current_subscription
+        .col-sm-12.col-md-6.l-margin-top
           .h3
-            =t('views.users.show.your_plan_will_expire_on')
+            =t('views.users.show.your_next_payment_will_be_on')
           .h6
-            =humanize_stripe_date(@current_subscription.next_renewal_date) + '.'
+            =humanize_stripe_date(@current_subscription.next_renewal_date)
+
+
+        .col-sm-12.l-margin-top
+          -if @user.canceled_pending?
+            .h3
+              =t('views.users.show.your_plan_will_expire_on')
+            .h6
+              =humanize_stripe_date(@current_subscription.next_renewal_date) + '.'
 
 
 
