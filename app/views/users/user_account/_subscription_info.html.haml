@@ -26,7 +26,7 @@
         .h3
           =t('views.users.show.your_next_payment_will_be_on')
         .h6
-          =@current_subscription.next_renewal_date
+          =humanize_stripe_date(@current_subscription.next_renewal_date)
 
 
 
@@ -43,7 +43,7 @@
             .h3
               =t('views.users.show.your_plan_will_expire_on')
             .h6
-              =@current_subscription.next_renewal_date.to_s + '.'
+              =humanize_stripe_date(@current_subscription.next_renewal_date.to_s) + '.'
 
 
   .col-sm-6.col-md-4
@@ -60,12 +60,12 @@
           =t('views.users.show.change_subscription_plan')
 
       -if @current_subscription.current_status == 'active'
-        =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"} do
+        =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
           .btn.btn-red.full-width.l-margin-bottom
             =t('views.users.show.cancel_your_subscription_plan')
 
       -elsif !@current_subscription.current_status.include?('canceled')
-        =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{@current_subscription.next_renewal_date.to_s}"} do
+        =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
           .btn.btn-red.full-width.l-margin-bottom
             =t('views.users.show.cancel_your_subscription_plan')
 
