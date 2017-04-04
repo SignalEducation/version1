@@ -22,6 +22,14 @@
             .h6
               =t("views.general.payment_frequency_in_months.a#{@current_subscription.subscription_plan.payment_frequency_in_months}")
 
+        -if @user.canceled_member?
+          -if @user.canceled_member?
+            .h3
+              =t('views.users.show.your_plan_expired_on')
+            .h6
+              =humanize_datetime(@user.active_subscription.updated_at)
+
+
       .col-sm-12.col-md-6.l-margin-top
         .h3
           =t('views.users.show.your_next_payment_will_be_on')
@@ -29,21 +37,13 @@
           =humanize_stripe_date(@current_subscription.next_renewal_date)
 
 
+      .col-sm-12.l-margin-top
+        -if @user.canceled_pending?
+          .h3
+            =t('views.users.show.your_plan_will_expire_on')
+          .h6
+            =humanize_stripe_date(@current_subscription.next_renewal_date) + '.'
 
-      -if @user.canceled_member? || @user.canceled_pending?
-        .col-sm-6.l-margin-top
-          -if @user.canceled_member?
-            .h3
-              =t('views.users.show.your_plan_expired_on')
-            .h6
-              =humanize_datetime(@user.active_subscription.updated_at)
-
-        .col-sm-6.l-margin-top
-          -if @user.canceled_pending?
-            .h3
-              =t('views.users.show.your_plan_will_expire_on')
-            .h6
-              =humanize_stripe_date(@current_subscription.next_renewal_date.to_s) + '.'
 
 
   .col-sm-6.col-md-4
