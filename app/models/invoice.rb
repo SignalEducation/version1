@@ -171,8 +171,8 @@ class Invoice < ActiveRecord::Base
   def status
     if self.paid && self.payment_closed
       'Paid'
-    elsif self.forgiven
-      'Free'
+    elsif !self.paid && !self.payment_closed && !self.payment_attempted
+      'Pending'
     elsif self.payment_attempted && self.next_payment_attempt_at.to_i > 0
       ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
               ' made to charge your card - next attempt at ' +
