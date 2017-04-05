@@ -92,8 +92,8 @@ class Subscription < ActiveRecord::Base
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&
       self.subscription_transactions.empty? &&
-      self.livemode == Invoice::STRIPE_LIVE_MODE &&
       self.referred_signup.nil?
+      #self.livemode == Invoice::STRIPE_LIVE_MODE &&
   end
 
   # setter method

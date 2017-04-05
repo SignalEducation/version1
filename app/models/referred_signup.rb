@@ -49,7 +49,7 @@ class ReferredSignup < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def referrer_user
