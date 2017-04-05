@@ -361,9 +361,9 @@ class User < ActiveRecord::Base
       if course.active && course.live
         if self.valid_free_member?
           true
-        elsif expired_free_member?
+        elsif self.expired_free_member?
           false
-        elsif self.active_subscription && ('active past_due canceled-pending').include?(self.active_subscription.current_status)
+        elsif self.active_subscription && %w(active past_due canceled-pending).include?(self.active_subscription.current_status)
           true
         else
           false
