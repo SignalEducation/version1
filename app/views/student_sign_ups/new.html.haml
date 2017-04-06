@@ -15,7 +15,6 @@
           .login-form.l-margin-top
             =form_for @user, url: create_student_url do |f|
               =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
-              =f.hidden_field :analytics_guid, value: nil
               =f.hidden_field :locale, value: (params[:locale] || 'en')
               .row
                 .col-md-12
@@ -84,8 +83,3 @@
 
   });
 
-
-  ga(function(tracker) {
-    var clientId = tracker.get('clientId');
-    $('#user[analytics_guid]').val(clientId);
-  });

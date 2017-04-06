@@ -2,7 +2,6 @@
 =form_for @user, url: create_student_url do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :topic_interest, value: @url_value
-  =f.hidden_field :analytics_guid, value: nil
   .col-sm-12
     %p.h5.h-white.l-margin-bottom
       ='7-day free trial (up to 200 minutes)'
@@ -60,10 +59,4 @@
       }
     });
 
-  });
-
-
-  ga(function(tracker) {
-    var clientId = tracker.get('clientId');
-    $('#user[analytics_guid]').val(clientId);
   });
