@@ -13,4 +13,7 @@
     free_trial_minutes_left: current_user.try(:minutes_left),
     email_verified: current_user.try(:email_verified),
     topic_interest: current_user.try(:topic_interest),
+    ga_id: "ga(function(tracker) {var clientId = tracker.get('clientId');});",
     }})
+
+
