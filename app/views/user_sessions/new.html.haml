@@ -14,7 +14,6 @@
           .login-form.l-margin-top#sign-in
             =form_for(@user_session) do |f|
               =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
-              =f.hidden_field :analytics_guid, value: nil
               .col-sm-12
                 .form-group
                   =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
@@ -33,9 +32,3 @@
           =link_to 'create account', new_student_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 =render partial: 'layouts/large_footer'
-
-:javascript
-  ga(function(tracker) {
-    var clientId = tracker.get('clientId');
-    $('#user_session[analytics_guid]').val(clientId);
-  });

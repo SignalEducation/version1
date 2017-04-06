@@ -58,8 +58,7 @@ class StudentSignUpsController < ApplicationController
           email: @user.try(:email)
       )
       @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-      analytics_guid = params[:user][:analytics_guid]
-      @user.update_attribute(:analytics_guid, analytics_guid) if analytics_guid.present?
+      @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
 
       # Send User Activation email through Mandrill
       MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
