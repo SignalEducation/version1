@@ -55,6 +55,7 @@
 #  date_of_birth                    :date
 #  description                      :text
 #  free_trial_ended_at              :datetime
+#  analytics_guid                   :string
 #
 
 class UsersController < ApplicationController

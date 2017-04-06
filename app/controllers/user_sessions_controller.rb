@@ -18,6 +18,8 @@ class UserSessionsController < ApplicationController
     if @user_session.save
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
       @user_session.user.update_attribute(:session_key, session[:session_id])
+      analytics_guid = params[:user_session][:analytics_guid]
+      @user_session.user.update_attribute(:analytics_guid, analytics_guid) if analytics_guid.present?
       set_current_visit
       flash[:error] = nil
       if session[:return_to]
