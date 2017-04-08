@@ -15,6 +15,10 @@
         %label
           =t('views.users.form.active')
           =f.check_box :active
+        %br/
+        =f.label :forum_username, t('views.users.form.username'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :forum_username, placeholder: t('views.users.form.username_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
 
       .col-md-6

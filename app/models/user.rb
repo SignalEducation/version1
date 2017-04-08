@@ -56,6 +56,7 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
+#  forum_username                   :string
 #
 
 class User < ActiveRecord::Base
@@ -80,7 +81,8 @@ class User < ActiveRecord::Base
                   :stripe_account_balance, :trial_limit_in_seconds,
                   :free_trial, :trial_limit_in_days,
                   :trial_ended_notification_sent_at, :terms_and_conditions,
-                  :date_of_birth, :description, :free_trial_ended_at
+                  :date_of_birth, :description, :free_trial_ended_at,
+                  :forum_username
 
   # Constants
   LOCALES = %w(en)
@@ -121,14 +123,16 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
   validates :country_id, presence: true, if: :individual_student?
+  validates :forum_username, presence: true, uniqueness: true
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
+  before_validation :add_username, on: :create
   before_create :add_guid
   after_create :set_trial_limit_in_days
-  after_create :create_free_trial_email_workers
+  after_create :create_free_trial_email_workers, :create_on_discourse
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -548,8 +552,7 @@ class User < ActiveRecord::Base
 
   def create_on_discourse
     if Rails.env.production?
-      username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
-      DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
+      DiscourseCreateUserWorker.perform_async(self.id, self.full_name, self.email, self.forum_username) if self.individual_student?
     end
   end
 
@@ -622,6 +625,10 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def add_username
+    self.forum_username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(5)
+  end
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
