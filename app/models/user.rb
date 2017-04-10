@@ -132,7 +132,8 @@ class User < ActiveRecord::Base
   before_validation :add_username, on: :create
   before_create :add_guid
   after_create :set_trial_limit_in_days
-  after_create :create_free_trial_email_workers, :create_on_discourse
+  after_create :create_free_trial_email_workers
+  after_create :create_on_discourse
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -549,11 +550,9 @@ class User < ActiveRecord::Base
     visits
   end
 
-
   def create_on_discourse
-    if Rails.env.production?
-      DiscourseCreateUserWorker.perform_async(self.id, self.full_name, self.email, self.forum_username) if self.individual_student?
-    end
+    DiscourseCreateUserWorker.perform_async(self.id, self.full_name, self.email, self.forum_username) if self.individual_student? && self.forum_username && !self.discourse_user
+    #DiscourseCreateUserWorker.perform_async(self.id, self.full_name, self.email, self.forum_username) if self.individual_student? && self.forum_username && Rails.env.production? && !self.discourse_user
   end
 
   def resubscribe_account(user_id, new_plan_id, stripe_token, terms_and_conditions, coupon_code)
