@@ -15,7 +15,7 @@ class DiscourseCreateUserWorker
     response = conn.post '/invites', payload
 
     if response.status == 200
-      user = User.find(user_id)
+      user = User.where(email: email).last
       user.update_attribute(:discourse_user, true)
     end
 
