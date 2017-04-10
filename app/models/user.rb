@@ -126,7 +126,6 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
-  before_validation :add_username, on: :create
   before_create :add_guid
   after_create :set_trial_limit_in_days
   after_create :create_free_trial_email_workers
