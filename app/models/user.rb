@@ -56,7 +56,6 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
-#  forum_username                   :string
 #
 
 class User < ActiveRecord::Base
@@ -81,8 +80,7 @@ class User < ActiveRecord::Base
                   :stripe_account_balance, :trial_limit_in_seconds,
                   :free_trial, :trial_limit_in_days,
                   :trial_ended_notification_sent_at, :terms_and_conditions,
-                  :date_of_birth, :description, :free_trial_ended_at,
-                  :forum_username
+                  :date_of_birth, :description, :free_trial_ended_at
 
   # Constants
   LOCALES = %w(en)
@@ -123,7 +121,6 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
   validates :country_id, presence: true, if: :individual_student?
-  validates :forum_username, presence: true, uniqueness: true
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
@@ -551,8 +548,7 @@ class User < ActiveRecord::Base
   end
 
   def create_on_discourse
-    DiscourseCreateUserWorker.perform_async(self.id, self.full_name, self.email, self.forum_username) if self.individual_student? && self.forum_username && !self.discourse_user
-    #DiscourseCreateUserWorker.perform_async(self.id, self.full_name, self.email, self.forum_username) if self.individual_student? && self.forum_username && Rails.env.production? && !self.discourse_user
+    DiscourseCreateUserWorker.perform_async(self.id, self.email) if self.individual_student? && !self.discourse_user
   end
 
   def resubscribe_account(user_id, new_plan_id, stripe_token, terms_and_conditions, coupon_code)
@@ -624,10 +620,6 @@ class User < ActiveRecord::Base
   end
 
   protected
-
-  def add_username
-    self.forum_username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(5)
-  end
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)

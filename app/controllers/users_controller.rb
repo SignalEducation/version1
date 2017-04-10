@@ -56,7 +56,6 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
-#  forum_username                   :string
 #
 
 class UsersController < ApplicationController
@@ -331,9 +330,9 @@ class UsersController < ApplicationController
 
   def allowed_params
     if current_user.admin?
-      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description, :forum_username)
+      params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description)
     else
-      params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions, :forum_username)
+      params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions)
     end
   end
 

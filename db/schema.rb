@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170408130745) do
+ActiveRecord::Schema.define(version: 20170406145543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -938,7 +938,6 @@ ActiveRecord::Schema.define(version: 20170408130745) do
     t.text     "description"
     t.datetime "free_trial_ended_at"
     t.string   "analytics_guid"
-    t.string   "forum_username"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

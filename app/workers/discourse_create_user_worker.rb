@@ -3,16 +3,16 @@ class DiscourseCreateUserWorker
 
   sidekiq_options queue: 'low'
 
-  def perform(user_id, name, email, username)
+  def perform(email)
     conn = Faraday.new(:url => 'https://community.learnsignal.com') do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
     end
 
-    payload = { name: name, username: username, email: email, active: true, approved: true, api_key: ENV['learnsignal_discourse_api_key'], api_username: ENV['learnsignal_discourse_api_username'] }
+    payload = { email: email, api_key: ENV['learnsignal_discourse_api_key'], api_username: ENV['learnsignal_discourse_api_username'] }
 
-    response = conn.post '/users', payload
+    response = conn.post '/invites', payload
 
     if response.status == 200
       user = User.find(user_id)

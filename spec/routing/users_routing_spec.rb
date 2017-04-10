@@ -56,7 +56,6 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
-#  forum_username                   :string
 #
 
 require 'rails_helper'
