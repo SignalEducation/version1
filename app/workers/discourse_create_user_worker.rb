@@ -3,7 +3,7 @@ class DiscourseCreateUserWorker
 
   sidekiq_options queue: 'low'
 
-  def perform(email)
+  def perform(user_id, email)
     conn = Faraday.new(:url => 'https://community.learnsignal.com') do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
@@ -15,8 +15,10 @@ class DiscourseCreateUserWorker
     response = conn.post '/invites', payload
 
     if response.status == 200
-      user = User.where(email: email).last
+      user = User.find(user_id)
       user.update_attribute(:discourse_user, true)
+    else
+      Rails.logger.error("ERROR: Discourse API- API invite post failed with status #{response.status}. Details: #{response}")
     end
 
   end
