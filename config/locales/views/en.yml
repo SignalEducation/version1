@@ -1050,6 +1050,8 @@ en:
         first_name: First name
         first_name_placeholder: John
         last_name: Last name
+        username: Community Username
+        username_placeholder: Username for LearnSignal Community Forum
         last_name_placeholder: Smith
         full_name: Name
         current_password: Current password

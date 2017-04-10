@@ -20,6 +20,7 @@
             =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
 
           .col-md-6
             =f.label :email, t('views.users.form.email'), class: 'control-label'
@@ -30,8 +31,6 @@
             .input-group.input-group-lg.full-width
               =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'dob', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
             %br/
-
-
 
         .col-sm-12.l-margin-top
           .col-md-12

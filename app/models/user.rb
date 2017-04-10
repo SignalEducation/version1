@@ -126,9 +126,11 @@ class User < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
+  before_validation :add_username, on: :create
   before_create :add_guid
   after_create :set_trial_limit_in_days
   after_create :create_free_trial_email_workers
+  after_create :create_on_discourse
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -545,12 +547,8 @@ class User < ActiveRecord::Base
     visits
   end
 
-
   def create_on_discourse
-    if Rails.env.production?
-      username = self.first_name.to_s.downcase << ApplicationController.generate_random_number(3)
-      DiscourseCreateUserWorker.perform_async(self.id, username, self.email, self.password) if self.individual_student?
-    end
+    DiscourseCreateUserWorker.perform_at(5.minute.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
   def resubscribe_account(user_id, new_plan_id, stripe_token, terms_and_conditions, coupon_code)
