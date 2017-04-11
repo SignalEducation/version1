@@ -73,8 +73,8 @@ class InvoiceDocument < Prawn::Document
     end
 
     summary_details = [
-        ['Subtotal', @invoice.sub_total],
-        ['Currency', @invoice.currency.name],
+        ['Subtotal', @invoice.currency.format_number(@invoice.sub_total)],
+        ['Discount', @invoice.currency.format_number((@invoice.sub_total - @invoice.total))],
         ['Total',    @invoice.currency.format_number(@invoice.total)]
     ]
     table(summary_details, column_widths: [480, 60], header: true,
@@ -86,6 +86,7 @@ class InvoiceDocument < Prawn::Document
 
     move_down 25
     stroke_horizontal_rule
+    footer
   end
 
   def recipient_name
@@ -93,6 +94,13 @@ class InvoiceDocument < Prawn::Document
   end
 
   def logo
+    logopath =  "#{Rails.root}/app/assets/images/logo_withtext+thin.png"
+    y_position = cursor
+    image logopath, width: 275, height: 40, at: [0, y_position]
+  end
+
+  def footer
+    stroke_horizontal_rule
     logopath =  "#{Rails.root}/app/assets/images/logo_withtext+thin.png"
     y_position = cursor
     image logopath, width: 275, height: 40, at: [0, y_position]
