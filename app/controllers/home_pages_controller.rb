@@ -41,6 +41,7 @@ class HomePagesController < ApplicationController
     @group = @course_object if @course_object
     # Displaying the monthly price
     @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
+    @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
 
     if @home_page
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)

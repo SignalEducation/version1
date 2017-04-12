@@ -14,11 +14,9 @@
               =@course_object.name
               revision courses online for a small monthly subscription
 
-            -country_count = '83 Countries'
             %p.h7
-              ='Learners in '
-              =link_to country_count, '#', class: 'no-link-style'
-              ='are using our platform to progress their careers'
+              ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
+              ='Start your 7-Day Free Trial'
 
           -unless current_user
             .col-sm-6.col-md-4.col-lg-4#sign-up-form
@@ -75,6 +73,34 @@
                   -if child.try(:short_description)
                     %p.p.course-panel-desc
                       =child.short_description.truncate(150)
+
+
+
+  -if @student_subscription_plans.any?
+    %section#diploma_courses
+      .l-wrap-home
+        .col-sm-12.text-center
+          %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+            Pricing
+
+        -@student_subscription_plans.each do |plan|
+          .col-sm-4
+            .plan{class: plan_interval_alt(plan.payment_frequency_in_months)}
+              .currency
+                .plan-header
+                  %h3.h4.plan-title
+                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                .plan-inner
+                  %h4.h3.plan-price
+                    =plan.currency.format_number(plan.price)
+                  %br/
+                  %p.plan-text
+                    =plan.unlimited_access
+                  %p.plan-text
+                    &middot;
+                  %p.plan-text
+                    =plan.cancel_anytime
+
 
 .start-trial
   %a.btn-block.btn-block-red{href: '#sign-up'}
