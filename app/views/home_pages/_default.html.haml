@@ -8,10 +8,10 @@
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
               Prepare for your
-              =@group.name
+              =@course_object.name
               exams with an online revision course
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              =@group.name
+              =@course_object.name
               revision courses online for a small monthly subscription
 
             -country_count = '83 Countries'
@@ -33,7 +33,7 @@
           .col-sm-12
             %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
               ='Features to support your'
-              =@group.name
+              =@course_object.name
               ='study'
         .row
           .col-sm-4
@@ -62,18 +62,19 @@
         .col-sm-12
           %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
             Access all
-            =@group.name
+            =@course_object.name
             Courses
       .course-list-wrap
         .row
           .col-sm-12.col-md-12
-            -@group.try(:active_children).all_in_order.each do |course|
+            -@course_object.try(:active_children).all_in_order.each do |child|
               .col-sm-6
-                =link_to library_special_link(course), class: 'course-panel course-panel-inner group-inner' do
+                =link_to library_special_link(child), class: 'course-panel course-panel-inner group-inner' do
                   %h3.h2.course-panel-title.text-center
-                    =course.name
-                  %p.p.course-panel-desc
-                    =course.short_description.truncate(150)
+                    =child.name
+                  -if child.try(:short_description)
+                    %p.p.course-panel-desc
+                      =child.short_description.truncate(150)
 
 .start-trial
   %a.btn-block.btn-block-red{href: '#sign-up'}

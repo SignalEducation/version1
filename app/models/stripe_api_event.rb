@@ -172,7 +172,7 @@ class StripeApiEvent < ActiveRecord::Base
         self.processed = true
         self.processed_at = Time.now
         subscription.update_attribute(:current_status, 'canceled')
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email', self.account_url) unless Rails.env.test?
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
       end
     else
       Rails.logger.error "ERROR: Payment Failed webhook couldn't find user with Stripe id #{stripe_customer_guid} OR subscription with id - #{subscription.try(:id)} OR invoice with id - #{invoice.try(:id)}."

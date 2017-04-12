@@ -53,6 +53,15 @@ class HomePage < ActiveRecord::Base
     HomePage.where(group_id: nil).where(subject_course: nil).where(subscription_plan_category_id: nil).where(public_url: '/').first
   end
 
+
+  def parent
+    if self.subject_course
+      self.subject_course
+    elsif self.group
+      self.group
+    end
+  end
+
   protected
 
   def check_dependencies
