@@ -17,7 +17,7 @@ class HomePagesController < ApplicationController
 
   before_action :logged_in_required, only: [:index, :new, :edit, :update, :create]
   before_action :check_logged_in_status, only: [:home, :group, :subscribe]
-  before_action except: [:landing, :home, :course, :group, :subscribe] do
+  before_action except: [:home, :group, :subscribe] do
     ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables, except: [:home]
