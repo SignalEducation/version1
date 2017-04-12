@@ -57,7 +57,6 @@ Rails.application.routes.draw do
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
-    get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
@@ -135,7 +134,6 @@ Rails.application.routes.draw do
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     resources :products
-    resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :subject_courses, concerns: :supports_reordering do
       get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors

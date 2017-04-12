@@ -68,7 +68,6 @@ class SubjectCourse < ActiveRecord::Base
   has_many :white_papers
   has_many :mock_exams
   has_one :exam_sitting
-  has_one :question_bank
 
 
   # validation
@@ -176,7 +175,6 @@ class SubjectCourse < ActiveRecord::Base
   def destroyable_children
     the_list = []
     the_list += self.course_modules.to_a
-    the_list << self.question_bank if self.question_bank
     the_list << self.groups if self.groups
     the_list
   end

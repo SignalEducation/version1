@@ -46,7 +46,6 @@ describe CourseModuleElementUserLog do
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
   it { should belong_to(:course_module_jumbo_quiz) }
-  it { should belong_to(:question_bank) }
   it { should have_many(:quiz_attempts) }
   it { should belong_to(:user) }
 

@@ -88,10 +88,6 @@
     .col-sm-10.col-sm-offset-1.content-area
       -if defined?(@results)
         =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-      -elsif @question_bank && paywall_checkpoint[:course_content][:view_all] == false
-        =render partial: 'courses/content_denied'
-      -elsif @question_bank
-        =render partial: 'courses/show_quiz'
       -else
         %h2 Course module element - type unknown
         -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."

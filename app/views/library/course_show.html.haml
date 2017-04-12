@@ -76,55 +76,11 @@
           -# Fourth Section for Final Quiz and Certificate
           -if current_user && @course.certificate && current_user.permission_to_see_content(@course)
             %br/
-            %p.h4.l-margin-bottom
-              =t('views.general.final_exam')
-            -if @course.question_bank && @course.question_bank.active?
-              -if @question_bank_passed
-                -if current_user
-                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      .question-bank-passed
-                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                        Passed
-                -else
-                  =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      .question-bank-passed
-                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                        Passed
-                -if @subject_course_user_log.completed
-                  %hr/
-                  -if current_user
-                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                      .box-topic-item
-                        Click here to download your completion certificate
-                  -else
-                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                      .box-topic-item
-                        Click here to download your completion certificate
-              -else
-                -if current_user
-                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      =@course.question_bank.number_of_questions.to_s + ' Questions'
-                -else
-                  =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      =@course.question_bank.number_of_questions.to_s + ' Questions'
-            -else
-              -if @subject_course_user_log && @subject_course_user_log.completed
-                %hr/
-                =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                  .box-topic-item
-                    Click here to download your completion certificate
+            -if @subject_course_user_log && @subject_course_user_log.completed
+              %hr/
+              =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                .box-topic-item
+                  Click here to download your completion certificate
 
 
 

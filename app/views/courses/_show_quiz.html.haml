@@ -1,8 +1,8 @@
--if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz || @question_bank
+-if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz
 
   .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 745px;'}
     %h2
-      =@course_module_element.try(:name).try(:html_safe) || @course_module_jumbo_quiz.try(:name) || @question_bank.try(:name)
+      =@course_module_element.try(:name).try(:html_safe) || @course_module_jumbo_quiz.try(:name)
     %p
       .l-margin-bottom-small.l-margin-top{style: 'font-size: small'}
         #question-count
@@ -19,7 +19,6 @@
       =f.text_field :course_module_id
       =f.text_field :course_module_element_id
       =f.text_field :course_module_jumbo_quiz_id
-      =f.text_field :question_bank_id
       =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
       =f.fields_for :quiz_attempts do |attempt|
         =attempt.text_field :user_id

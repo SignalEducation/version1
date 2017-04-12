@@ -702,7 +702,6 @@ en:
         videos: of Video
         course_module: Course Module
         course_module_element: Step
-        new_question_bank: Create a Custom Quiz
         table_of_contents: Table of contents
         description: Description
 
@@ -756,17 +755,6 @@ en:
 
       new:
         h1: New Product
-
-    question_banks:
-      form:
-        name: Name
-        name_placeholder: Give the quiz a name
-        active: Active
-        number_of_questions: No. of Questions
-        save: Save
-      new:
-        h1: Final Exam
-        edit: Edit Final Exam
 
     quiz_answer:
       form:

@@ -94,7 +94,6 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :subject_courses
   has_many :invoices
   has_many :quiz_attempts
-  has_many :question_banks
   has_many :orders
   has_many :subscriptions, -> { order(:id) }, inverse_of: :user
   has_many :subscription_payment_cards
