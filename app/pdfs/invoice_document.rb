@@ -11,6 +11,10 @@ class InvoiceDocument < Prawn::Document
     render_headers
     render_details
     render_summary
+    move_down 250
+    stroke_horizontal_rule
+    footer
+
   end
 
   def render_headers
@@ -73,8 +77,8 @@ class InvoiceDocument < Prawn::Document
     end
 
     summary_details = [
-        ['Subtotal', @invoice.sub_total],
-        ['Currency', @invoice.currency.name],
+        ['Subtotal', @invoice.currency.format_number(@invoice.sub_total)],
+        ['Discount', @invoice.currency.format_number((@invoice.sub_total - @invoice.total))],
         ['Total',    @invoice.currency.format_number(@invoice.total)]
     ]
     table(summary_details, column_widths: [480, 60], header: true,
@@ -85,7 +89,6 @@ class InvoiceDocument < Prawn::Document
     end
 
     move_down 25
-    stroke_horizontal_rule
   end
 
   def recipient_name
@@ -96,6 +99,14 @@ class InvoiceDocument < Prawn::Document
     logopath =  "#{Rails.root}/app/assets/images/logo_withtext+thin.png"
     y_position = cursor
     image logopath, width: 275, height: 40, at: [0, y_position]
+  end
+
+  def footer
+    stroke_horizontal_rule
+    move_down 25
+    text 'Signal Education Limited t/a LearnSignal, 18-20 Merrion Street Upper Dublin 2, Ireland', size: 10, align: :center
+    text 'email: info@learnsignal.com   phone: +353 1 4428581', size: 10, align: :center
+    text 'VAT Number: IE3313351FH', size: 10, align: :center
   end
 
 end
