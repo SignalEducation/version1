@@ -8,17 +8,15 @@
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
               Prepare for your
-              =@group.name
+              =@course_object.name
               exams with an online revision course
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              =@group.name
+              =@course_object.name
               revision courses online for a small monthly subscription
 
-            -country_count = '83 Countries'
             %p.h7
-              ='Learners in '
-              =link_to country_count, '#', class: 'no-link-style'
-              ='are using our platform to progress their careers'
+              ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
+              ='Start your 7-Day Free Trial'
 
           -unless current_user
             .col-sm-6.col-md-4.col-lg-4#sign-up-form
@@ -33,7 +31,7 @@
           .col-sm-12
             %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
               ='Features to support your'
-              =@group.name
+              =@course_object.name
               ='study'
         .row
           .col-sm-4
@@ -62,18 +60,47 @@
         .col-sm-12
           %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
             Access all
-            =@group.name
+            =@course_object.name
             Courses
       .course-list-wrap
         .row
           .col-sm-12.col-md-12
-            -@group.try(:active_children).all_in_order.each do |course|
+            -@course_object.try(:active_children).all_in_order.each do |child|
               .col-sm-6
-                =link_to library_special_link(course), class: 'course-panel course-panel-inner group-inner' do
+                =link_to library_special_link(child), class: 'course-panel course-panel-inner group-inner' do
                   %h3.h2.course-panel-title.text-center
-                    =course.name
-                  %p.p.course-panel-desc
-                    =course.short_description.truncate(150)
+                    =child.name
+                  -if child.try(:short_description)
+                    %p.p.course-panel-desc
+                      =child.short_description.truncate(150)
+
+
+
+  -if @student_subscription_plans.any?
+    %section#diploma_courses
+      .l-wrap-home
+        .col-sm-12.text-center
+          %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
+            Pricing
+
+        -@student_subscription_plans.each do |plan|
+          .col-sm-4
+            .plan{class: plan_interval_alt(plan.payment_frequency_in_months)}
+              .currency
+                .plan-header
+                  %h3.h4.plan-title
+                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                .plan-inner
+                  %h4.h3.plan-price
+                    =plan.currency.format_number(plan.price)
+                  %br/
+                  %p.plan-text
+                    =plan.unlimited_access
+                  %p.plan-text
+                    &middot;
+                  %p.plan-text
+                    =plan.cancel_anytime
+
 
 .start-trial
   %a.btn-block.btn-block-red{href: '#sign-up'}

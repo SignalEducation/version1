@@ -23,6 +23,7 @@ class HomePagesController < ApplicationController
   before_action :get_variables, except: [:home]
   before_action :layout_variables, only: [:home]
   before_action :create_user_object, only: [:home, :group]
+  before_action :get_course_object, only: [:group]
 
   def home
     #This is the main home_page
@@ -37,16 +38,10 @@ class HomePagesController < ApplicationController
   end
 
   def group
-    # Ensuring that the correct params are present for home_page with a valid group and url is present so that the right view file or the default view is loaded
-    @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
-    @default_element = params[:default] if params[:default]
-    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-    @group = @home_page.try(:group)
-    @url_value = @home_page.try(:public_url)
-    redirect_to root_url unless @group
-
+    @group = @course_object if @course_object
     # Displaying the monthly price
     @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
+    @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
 
     if @home_page
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
@@ -133,6 +128,19 @@ class HomePagesController < ApplicationController
     @group_home_page_urls = HomePage.for_groups.map(&:public_url)
     @groups = Group.all_active.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
+  end
+
+  def get_course_object
+    # Ensuring that the correct params are present for home_page with a valid group and url is present so that the right view file or the default view is loaded
+    @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
+    @default_element = params[:default] if params[:default]
+    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
+    if @home_page
+      @course_object = @home_page.parent
+      @url_value = @home_page.try(:public_url)
+    else
+      redirect_to root_url
+    end
   end
 
   def create_user_object
