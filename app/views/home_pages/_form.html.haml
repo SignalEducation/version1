@@ -10,10 +10,13 @@
       .input-group.input-group-lg.full-width
         =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
-      =f.label :subscription_plan_category_id, t('views.home_pages.form.subscription_plan_category_id'), class: 'control-label'
+      =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :full_name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
       %br/
+      %br/
+      %h4='Only choose a Group or Course. Do not choose both.'
       =f.label :group_id, t('views.home_pages.form.group_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
@@ -21,11 +24,6 @@
       =f.label :subject_course_id, t('views.home_pages.form.subject_course_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
-      -#if @home_page.new_record?
-      %br/
-      =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red'
