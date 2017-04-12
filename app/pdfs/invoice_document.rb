@@ -11,6 +11,10 @@ class InvoiceDocument < Prawn::Document
     render_headers
     render_details
     render_summary
+    move_down 250
+    stroke_horizontal_rule
+    footer
+
   end
 
   def render_headers
@@ -85,8 +89,6 @@ class InvoiceDocument < Prawn::Document
     end
 
     move_down 25
-    stroke_horizontal_rule
-    footer
   end
 
   def recipient_name
@@ -101,9 +103,10 @@ class InvoiceDocument < Prawn::Document
 
   def footer
     stroke_horizontal_rule
-    logopath =  "#{Rails.root}/app/assets/images/logo_withtext+thin.png"
-    y_position = cursor
-    image logopath, width: 275, height: 40, at: [0, y_position]
+    move_down 25
+    text 'Signal Education Limited t/a LearnSignal, 18-20 Merrion Street Upper Dublin 2, Ireland', size: 10, align: :center
+    text 'email: info@learnsignal.com   phone: +353 1 4428581', size: 10, align: :center
+    text 'VAT Number: IE3313351FH', size: 10, align: :center
   end
 
 end
