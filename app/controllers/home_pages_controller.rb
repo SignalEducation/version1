@@ -134,8 +134,12 @@ class HomePagesController < ApplicationController
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
     @default_element = params[:default] if params[:default]
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-    @course_object = @home_page.parent
-    @url_value = @home_page.try(:public_url)
+    if @home_page
+      @course_object = @home_page.parent
+      @url_value = @home_page.try(:public_url)
+    else
+      redirect_to root_url
+    end
   end
 
   def create_user_object
