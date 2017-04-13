@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170412160952) do
+ActiveRecord::Schema.define(version: 20170413080055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,8 +123,6 @@ ActiveRecord::Schema.define(version: 20170412160952) do
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
     t.integer  "seconds_watched",             default: 0
-    t.boolean  "is_question_bank",            default: false, null: false
-    t.integer  "question_bank_id"
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_questions_correct"
   end
