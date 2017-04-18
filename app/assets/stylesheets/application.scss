@@ -2563,7 +2563,8 @@ a.image-link {
   border-bottom: 2px solid darken($colour-12, 20%) ;
   &:hover, &:active {
     text-decoration: none;
-    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    color: $white;
+    @include box-shadow(0, 0, 12px, rgba(#000, .35));
     cursor: pointer;
   }
 }

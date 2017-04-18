@@ -239,7 +239,8 @@ en:
           product_required: You must first purchase this course to access it's content.
 
       show_results:
-        h1: 'Results:'
+        result: 'Result:'
+        score: 'Score:'
         summary: Summary
         q: Q
         answers: Possible Answers

@@ -2,7 +2,6 @@ class CoursesController < ApplicationController
 
   before_action :logged_in_required
   before_action :check_permission, only: :show
-  #skip_before_action :track_ahoy_visit, only: :video_watched_data
 
   def show
     @mathjax_required = true
@@ -54,6 +53,9 @@ class CoursesController < ApplicationController
         Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
         flash[:error] = I18n.t('controllers.courses.create.flash.error')
       end
+      pass_rate = @course_module_element.course_module.subject_course.cpd_pass_rate ? @course_module_element.course_module.subject_course.cpd_pass_rate : 65
+      percentage_score = (@course_module_element_user_log.quiz_attempts.where(correct: true).count)/(@course_module_element_user_log.quiz_attempts.count) * 100
+      @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
       if params[:demo_mode] == 'yes'
         redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
       elsif @course_module && (@course_module_element || @course_module_jumbo_quiz)
