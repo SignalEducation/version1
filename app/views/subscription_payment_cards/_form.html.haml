@@ -9,7 +9,7 @@
         .form-group.col-sm-4
           %label
             CVV
-          =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
+          =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 4, minlength: 3, required: true, data: {stripe: 'cvc'}
         .form-group.col-sm-4
           %label
             Expiry Month
