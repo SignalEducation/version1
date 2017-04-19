@@ -7,18 +7,12 @@
             .box-topic-item
               =truncate(child.name, length: 50)
             .time.hidden-xs
-              -if child.quiz_count.to_i > 0
-                -if child.quiz_count.to_i == 1
-                  =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
-                -elsif child.quiz_count.to_i > 1
-                  =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
-                -if child.video_count > 0
-                  |
-              -if child.video_count > 0
-                -if child.video_count == 1
-                  =child.video_count.to_s + ' ' + t('views.library.show.video')
-                -elsif child.video_count > 1
-                  =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+              -if child.cme_count.to_i == 1
+                =child.cme_count.to_s + ' ' + t('views.library.show.step')
+              -elsif child.cme_count.to_i > 1
+                =child.cme_count.to_s + ' ' + t('views.library.show.steps')
+              -else
+
       -else
         %li
           .box-item.lib-panel{style: "background-color: #{child.try(:highlight_colour)}"}

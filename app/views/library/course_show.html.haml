@@ -24,18 +24,19 @@
 
             -if current_user.subject_course_user_log_course_ids.include?(@course.id)
               =render partial: 'layouts/enrollment_notice', locals: {course: @course}
-
-
           -else
             %h3.h3.card-title.l-margin-bottom
               =@course.name
           .l-margin-top-huge
             =render partial: 'course_info'
 
-
-
       -else
-        =render partial: 'layouts/content_notice', locals: {course: @course}
+        .notice.warning
+        .fa.fa-info-circle.icon
+          An Account is required to access this content.
+          &#160;
+          =link_to new_student_url do
+            Claim your Free Trial?
         %h1.h1.h-separator.h-separator-left
           =@course.name
         =render partial: 'course_info'
