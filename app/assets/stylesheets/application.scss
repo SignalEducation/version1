@@ -471,7 +471,7 @@ label, .label {
     background: $colour-12;
     color: $white;
     &:hover {
-      background: shade($colour-12, 10%);
+      background: darken($colour-12, 15%);
     }
     &:active {
       background: ($colour-12);
@@ -1560,12 +1560,22 @@ a.list-group-item {
   margin-top:10px;
 }
 .box-item#quiz-contents {
-  padding-top: 35px;
+  padding-top: 25px;
   padding-left: 40px;
   padding-right: 40px;
   padding-bottom: 30px;
   margin-bottom: 3px;
 
+}
+.quiz-results {
+  font-size: 24px;
+  color: #00cc66;
+
+  .h4 {
+    font-size: 24px;
+    color: $text-color;
+
+  }
 }
 .progress {
   height: $gutter/2;
@@ -2560,10 +2570,11 @@ a.image-link {
   @include border-radius(4px);
   @include box-shadow(0, 0, 3px, darken($colour-3, 30%));
   @include transition(box-shadow .1s ease);
-  border-bottom: 2px solid darken($colour-12, 20%) ;
+  //border-bottom: 2px solid darken($colour-12, 20%) ;
   &:hover, &:active {
     text-decoration: none;
     color: $white;
+    background: darken($colour-12, 15%);
     @include box-shadow(0, 0, 12px, rgba(#000, .35));
     cursor: pointer;
   }

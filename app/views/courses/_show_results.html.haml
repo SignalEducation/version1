@@ -7,18 +7,29 @@
     #results
       .row.l-margin-top.l-margin-bottom-big
         .col-sm-8.col-md-offset-2
-          .col-sm-6
-            %h3.h4{style: 'font-size: 24px; '}
-              =t('views.courses.show_results.result')
-              &#160;
-              =@pass
-          .col-sm-6
-            %h3.h4{style: 'font-size: 24px'}
-              =t('views.courses.show_results.score')
-              &#160;
-              =@course_module_element_user_log.quiz_attempts.where(correct: true).count
-              &#47;
-              =@course_module_element_user_log.quiz_attempts.count
+          .col-sm-6.col-xs-12
+            .row
+              .col-sm-6
+                %h3.h4{style: 'font-size: 24px;'}
+                  ="Result: "
+              .col-sm-6
+                -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
+                %h3.h4{style: "font-size: 24px; color: #{result_colour}; text-transform: uppercase;"}
+                  =@pass
+
+
+
+          .col-sm-6.col-xs-12
+            .row
+              .col-sm-6
+                %h3.h4{style: 'font-size: 24px'}
+                  =t('views.courses.show_results.score')
+
+              .col-sm-6
+                %h3.h4{style: 'font-size: 24px;'}
+                  =@course_module_element_user_log.quiz_attempts.where(correct: true).count
+                  &#47;
+                  =@course_module_element_user_log.quiz_attempts.count
 
       -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
         .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}

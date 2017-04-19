@@ -6,12 +6,36 @@
   .l-section-courses.is-bg-asphalt
     .l-wrap
       .container-fluid{style: 'margin-bottom: 60px;'}
-        .row.l-margin-bottom-big
-          .col-sm-4.col-md-4
+        .row.l-margin-bottom-big.hidden-xs.visible-sm.visible-md.visible-lg
+          .col-sm-6.col-md-4
             =link_to library_special_link(@course_module.parent) do
               .btn.btn-red.btn-secondary
                 &#60;
                 ="Back To #{@course_module.try(:subject_course).try(:name)}"
+          .col-md-4
+          .col-sm-6.col-md-4
+            -if @course_module_element && @course_module_element.is_video?
+              =link_to course_special_link(@course_module_element.next_element), style: 'margin-left: 10px;' do
+                .btn.btn-red.btn-secondary.full-width
+                  =t('views.course_module_elements.show.next_step')
+                  &#62;
+
+        .row.l-margin-bottom-big.visible-xs.hidden-sm
+          .col-xs-12
+            =link_to library_special_link(@course_module.parent) do
+              .btn.btn-red.btn-secondary.full-width
+                &#60;
+                ="Back To #{@course_module.try(:subject_course).try(:name)}"
+          .col-xs-12.l-margin-top
+            -if @course_module_element && @course_module_element.is_video?
+              =link_to course_special_link(@course_module_element.next_element) do
+                .btn.btn-red.btn-secondary.full-width
+                  =t('views.course_module_elements.show.next_step')
+                  &#62;
+
+
+
+
         .row.l-margin-bottom-big
           -if defined?(@results)
             =render partial: 'courses/show_results', locals: {cme: @course_module_element}

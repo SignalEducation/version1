@@ -346,7 +346,9 @@ en:
         quiz_preview: Quiz Preview
         video_preview: Video Preview
         next: Next
-        next_step: Next Lesson
+        next_step: Next Step
+        skip_step: SkipStep
+        retake_quiz: Retake Quiz
         mark_complete: Mark as Complete
         previous: Previous
         previous_step: Previous Lesson

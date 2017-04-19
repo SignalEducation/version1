@@ -4,8 +4,9 @@
     %h2
       =@course_module_element.try(:name).try(:html_safe) || @course_module_jumbo_quiz.try(:name)
     .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
-      #question-count.p
-        Question 1 of 4
+      .quiz-heading.l-margin-bottom
+        #question-count.p
+          Question 1 of 4
       .progress.l-margin-bottom-huge
         .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
@@ -45,7 +46,7 @@
         //nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
         nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : 'allQuestions'}List,
         progressBar = $('.progress-bar'),
-        questionCount = $('.l-margin-bottom-small.l-margin-top'),
+        questionCount = $('.quiz-heading'),
         previousAnswerCorrect = true;
 
     function updateProgressBar() {
