@@ -11,7 +11,7 @@
             -complete_percent = @subject_course_user_log.try(:percentage_complete)
             %br/
             %p
-              ="#{complete_lesson} out of #{total_lesson} lessons completed"
+              ="#{complete_lesson} out of #{total_lesson} steps completed"
 
             .progress
               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }

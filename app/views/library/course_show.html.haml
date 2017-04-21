@@ -113,6 +113,12 @@
         .l-margin-top-huge
           =render partial: 'course_info'
 
+:javascript
+
+  $('.lib-panel').click(function(){
+    if($(this).is('.radius')){$(this).removeClass('radius'); return;}
+    $(this).addClass('radius').siblings().removeClass('radius');
+  });
 
 -if current_user && @subject_course_user_log && @subject_course_user_log.completed && @course.hotjar_guid
 
