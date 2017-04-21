@@ -1,24 +1,23 @@
 .row
-  .col-xs-1.col-sm-1
-    .left-side-meta
-      -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-        %h5.text-passed{style: 'margin-top: 0px; padding-tight: 0px;'}
-          %i.glyphicon.glyphicon-check{style: 'font-size: large'}
-      -else
-        %h5{style: 'margin-top: 0px; padding-tight: 0px;'}
-          %i.glyphicon.glyphicon-unchecked{style: 'font-size: large'}
-  .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
-    .pull-left
-      =grandchild.name
-  .col-xs-12.col-sm-4.hidden-xs
-    .side-meta
-      -if grandchild.is_video
-        -if grandchild.try(:course_module_element_video).try(:duration)
-          =humanize_time(grandchild.course_module_element_video.duration)
-        -elsif grandchild.try(:estimated_time_in_seconds)
-          =humanize_time(grandchild.try(:estimated_time_in_seconds))
-      -elsif grandchild.is_quiz
-        =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')
-      -else
-        ='Flash Card'
-
+  .col-xs-12
+    .col-xs-12
+      .col-xs-1.col-sm-1
+        .left-side-meta
+          -if grandchild.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+            =image_tag(grandchild.is_quiz? ? 'cm_green_tick.png' : 'cm_green_play.png')
+          -elsif grandchild.started_by_user_or_guid(current_user.try(:id), current_session_guid)
+            =image_tag(grandchild.is_quiz? ? 'cm_red_tick.png' : 'cm_red_play.png')
+          -else
+            =image_tag(grandchild.is_quiz? ? 'cm_grey_tick.png' : 'cm_grey_play.png')
+      .col-xs-8.col-sm-7{style: 'padding-left: 12px;'}
+        .pull-left
+          =grandchild.name
+      .col-xs-12.col-sm-4.hidden-xs
+        .side-meta
+          -if grandchild.is_video
+            -if grandchild.try(:course_module_element_video).try(:duration)
+              =humanize_time(grandchild.course_module_element_video.duration)
+            -elsif grandchild.try(:estimated_time_in_seconds)
+              =humanize_time(grandchild.try(:estimated_time_in_seconds))
+          -elsif grandchild.is_quiz
+            =grandchild.number_of_questions.to_s + ' ' + t('views.library.show.questions')

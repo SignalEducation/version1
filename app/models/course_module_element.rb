@@ -101,6 +101,13 @@ class CourseModuleElement < ActiveRecord::Base
     array.include? true
   end
 
+  def started_by_user_or_guid(user_id, session_guid)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    cmeuls.any?
+  end
+
   def destroyable?
     true
   end
