@@ -101,6 +101,36 @@ module ApplicationHelper
       "plan-yearly l-margin-top-big"
     end
   end
+
+  def sub_interval_alt(interval)
+    if interval == 1
+      "sub-monthly l-margin-top-big"
+    elsif interval == 3
+      "sub-quarterly l-margin-top-big"
+    elsif interval == 12
+      "sub-yearly l-margin-top-big"
+    end
+  end
+
+  def sub_interval_color(interval)
+    if interval == 1
+      "monthly-color"
+    elsif interval == 3
+      "quarterly-color"
+    elsif interval == 12
+      "yearly-color"
+    end
+  end
+
+  def sub_interval_btn_color(interval)
+    if interval == 1
+      "btn btn-cyan"
+    elsif interval == 3
+      "btn btn-red"
+    elsif interval == 12
+      "btn btn-purple"
+    end
+  end
 end
 
 class DanFormBuilder < ActionView::Helpers::FormBuilder
