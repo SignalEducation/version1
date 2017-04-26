@@ -34,7 +34,6 @@ class CoursesController < ApplicationController
         @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
       end
     end
-    #@paywall = paywall_checkpoint
   end
 
   def create
@@ -43,7 +42,7 @@ class CoursesController < ApplicationController
       @mathjax_required = true
       @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
       @course_module_element_user_log.session_guid = current_session_guid
-      @course_module_element_user_log.element_completed = true
+
       @course_module_element = @course_module_element_user_log.course_module_element
       @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
       @course_module = @course_module_element_user_log.course_module

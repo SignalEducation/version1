@@ -131,6 +131,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             self.course_module_jumbo_quiz.best_possible_score_first_attempt :
             self.course_module_jumbo_quiz.best_possible_score_retry
       end
+      course_pass_rate = self.course_module.subject_course.cpd_pass_rate ? self.course_module.subject_course.cpd_pass_rate : 75
+      percentage_score = (self.quiz_attempts.all_correct.count)/(self.quiz_attempts.count) * 100
+      self.element_completed = true if percentage_score >= course_pass_rate
       self.save(callbacks: false, validate: false)
     end
   end
