@@ -31,7 +31,7 @@ class CoursesController < ApplicationController
       elsif @course_module_jumbo_quiz
         set_up_jumbo_quiz
       elsif @course_module_element.try(:is_video)
-        @video_cme_user_log = create_a_cme_user_log if paywall_checkpoint
+        @video_cme_user_log = create_a_cme_user_log if current_user.permission_to_see_content(@course)
       end
     end
   end
