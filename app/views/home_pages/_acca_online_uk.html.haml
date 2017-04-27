@@ -1,5 +1,5 @@
 .home_page_layout
-  %header.acca-header
+  %header.acca-header.hidden-xs
     .l-wrap-acca
       .row.heading-logos
         .col-sm-6
@@ -20,6 +20,29 @@
       .row.heading-action.text-center
         =link_to 'Start Free 7-Day Trial', new_student_url, class: 'btn btn-red'
 
+  %header.acca-header.visible-xs
+    .l-wrap-acca
+      .row.heading-logos
+        .col-xs-12.text-center
+          =link_to home_url do
+            =image_tag('ls-logo-red.svg', alt: 'LearnSignal Logo', class: 'acca-logo-xs')
+
+      .row.heading-text
+        .col-sm-12
+          %h1.h1.h1-landing-page.h-white.l-margin-bottom-big
+            Want to sail through your ACCA UK exams?
+          %p.h7.h7-landing-page-xs.h-white
+            Get access to our 24/7, 365 ACCA courses, delivered by experts, on any device.
+          %p.h7.h-white.l-margin-bottom
+            You can study with us, an approved ACCA learning provider from as little as #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)}.
+
+      .row.heading-action-xs.text-center
+        =link_to 'Start Free 7-Day Trial', new_student_url, class: 'btn btn-red btn-big'
+      .row.heading-action-xs.text-center
+        .col-xs-12
+          =image_tag('ALP_LOGO_GOLD_REVERSED.png', alt: 'ACCA Gold Learning Provider', class: 'acca-gold-logo-xs')
+
+
 .acca-business
   .l-wrap
     .l-section
@@ -28,30 +51,59 @@
           .col-sm-12
             %h2.h1.h1-landing-page.l-margin-bottom-big
               What you get from us
-        .row.l-margin-bottom-huge
-          .col-sm-3.l-margin-bottom-huge
-            %h3.l-margin-bottom-big
-              =image_tag('landing-icon-1.png', class: 'features-img', alt: 'acca-approved-courses-icon')
-            %p.p
-              Courses from an ACCA approved learning provider
-          .col-sm-3
-            %h3.l-margin-bottom-big
-              =image_tag('landing-icon-2.png', class: 'features-img', alt: 'tools-to-achieve-your-goals-icon')
-            %p.p
-              The tools to achieve your 50% pass rate from experts
-          .col-sm-3
-            %h3.l-margin-bottom-big
-              =image_tag('landing-icon-3.png', class: 'features-img', alt: 'learn-on-any-device-24/7-icon')
-            %p.p
-              24/7, 365 online learning with any device
-          .col-sm-3
-            %h3.l-margin-bottom-big
-              =image_tag('landing-icon-4.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-            %p.p
-              ="Access online lectures, MCQ's & past papers"
+        .hidden-xs
+          .row.l-margin-bottom-huge
+            .col-sm-3.l-margin-bottom-huge
+              %h3.l-margin-bottom-big
+                =image_tag('landing-icon-1.png', class: 'features-img', alt: 'acca-approved-courses-icon')
+              %p.p
+                Courses from an ACCA approved learning provider
+            .col-sm-3
+              %h3.l-margin-bottom-big
+                =image_tag('landing-icon-2.png', class: 'features-img', alt: 'tools-to-achieve-your-goals-icon')
+              %p.p
+                The tools to achieve your 50% pass rate from experts
+            .col-sm-3
+              %h3.l-margin-bottom-big
+                =image_tag('landing-icon-3.png', class: 'features-img', alt: 'learn-on-any-device-24/7-icon')
+              %p.p
+                24/7, 365 online learning with any device
+            .col-sm-3
+              %h3.l-margin-bottom-big
+                =image_tag('landing-icon-4.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+              %p.p
+                ="Access online lectures, MCQ's & past papers"
 
-        .row.text-center.l-margin-top-huge.l-margin-bottom-huge
-          =link_to 'Get Started', new_student_url, class: 'btn btn-red '
+          .row.text-center.l-margin-top-huge.l-margin-bottom-huge
+            =link_to 'Get Started', new_student_url, class: 'btn btn-red '
+
+        .visible-xs
+          .row.l-margin-bottom-huge
+            .row
+              .col-xs-6.l-margin-bottom-huge
+                %h3.l-margin-bottom-big
+                  =image_tag('landing-icon-1.png', class: 'features-img', alt: 'acca-approved-courses-icon')
+                %p.p
+                  Courses from an ACCA approved learning provider
+              .col-xs-6
+                %h3.l-margin-bottom-big
+                  =image_tag('landing-icon-2.png', class: 'features-img', alt: 'tools-to-achieve-your-goals-icon')
+                %p.p
+                  The tools to achieve your 50% pass rate from experts
+            .row
+              .col-xs-6
+                %h3.l-margin-bottom-big
+                  =image_tag('landing-icon-3.png', class: 'features-img', alt: 'learn-on-any-device-24/7-icon')
+                %p.p
+                  24/7, 365 online learning with any device
+              .col-xs-6
+                %h3.l-margin-bottom-big
+                  =image_tag('landing-icon-4.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p
+                  ="Access online lectures, MCQ's & past papers"
+
+          .row.text-center.l-margin-top-huge.l-margin-bottom-huge
+            =link_to 'Get Started', new_student_url, class: 'btn btn-red btn-big'
 
 
 %section#trusted
@@ -73,96 +125,205 @@
   .l-wrap-acca
     .l-section
       .container-fluid
-        .row
-          .col-sm-12
-            %h2.h1.h1-landing-page.h-white.l-margin-bottom-big
-              Explore our ACCA courses
-          .col-sm-12
-            .col-sm-2.col-sm-offset-1
-              %h3.l-margin-bottom-big
-                =image_tag('f1-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Accountant in Business
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f2-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Management Accounting
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f3-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Financial Accounting
+        .row.hidden-xs
+          .row
+            .col-sm-12
+              %h2.h1.h1-landing-page.h-white.l-margin-bottom-big
+                Explore our ACCA courses
+            .col-sm-12
+              .col-sm-2.col-sm-offset-1
+                %h3.l-margin-bottom-big
+                  =image_tag('f1-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Accountant in Business
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f2-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Management Accounting
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f3-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Financial Accounting
 
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f4-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Corporate & Business
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f5-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Performance Management
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f4-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Corporate & Business
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f5-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Performance Management
 
-          .col-sm-12
-            .col-sm-2.col-sm-offset-1
-              %h3.l-margin-bottom-big
-                =image_tag('f6-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Taxation
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f7-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Financial Reporting
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f8-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Audit & Assurance
+            .col-sm-12
+              .col-sm-2.col-sm-offset-1
+                %h3.l-margin-bottom-big
+                  =image_tag('f6-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Taxation
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f7-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Financial Reporting
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f8-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Audit & Assurance
 
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('f9-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Financial Management
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('p1-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Governance, Risk and Ethics
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('f9-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Financial Management
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('p1-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Governance, Risk and Ethics
 
-          .col-sm-12
-            .col-sm-2.col-sm-offset-1
-              %h3.l-margin-bottom-big
-                =image_tag('p2-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Corporate Reporting
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('p3-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Business Analysis
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('p4-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
-              %p.p.white
-                Advanced Financial Management
+            .col-sm-12
+              .col-sm-2.col-sm-offset-1
+                %h3.l-margin-bottom-big
+                  =image_tag('p2-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Corporate Reporting
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('p3-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Business Analysis
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('p4-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                %p.p.white
+                  Advanced Financial Management
 
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('p5-icon.png', class: 'features-img', alt: 'acca-advanced-performance-management-icon')
-              %p.p.white
-                Advanced Performance Management
-            .col-sm-2
-              %h3.l-margin-bottom-big
-                =image_tag('p7-icon.png', class: 'features-img', alt: 'acca-advanced-audit-icon')
-              %p.p.white
-                Advanced Audit and Assurance
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('p5-icon.png', class: 'features-img', alt: 'acca-advanced-performance-management-icon')
+                %p.p.white
+                  Advanced Performance Management
+              .col-sm-2
+                %h3.l-margin-bottom-big
+                  =image_tag('p7-icon.png', class: 'features-img', alt: 'acca-advanced-audit-icon')
+                %p.p.white
+                  Advanced Audit and Assurance
 
-        .row.text-center.l-margin-top-huge
-          =link_to 'Get Started', new_student_url, class: 'btn btn-red '
+          .row.text-center.l-margin-top-huge
+            =link_to 'Get Started', new_student_url, class: 'btn btn-red '
+
+
+        .row.visible-xs
+          .row
+            .col-sm-12
+              %h2.h1.h1-landing-page.h-white.l-margin-bottom-big
+                Explore our ACCA courses
+            .col-sm-12
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f1-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Accountant in Business
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f2-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Management Accounting
+
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f3-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Financial Accounting
+
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f4-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Corporate & Business
+
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f5-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Performance Management
+
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f6-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Taxation
+
+
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f7-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Financial Reporting
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f8-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Audit & Assurance
+
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('f9-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Financial Management
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('p1-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Governance, Risk and Ethics
+
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('p2-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Corporate Reporting
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('p3-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Business Analysis
+
+
+              .row
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('p4-icon.png', class: 'features-img', alt: 'acca-online-lectures-icon')
+                  %p.p.white
+                    Advanced Financial Management
+
+                .col-xs-6
+                  %h3.l-margin-bottom-big
+                    =image_tag('p5-icon.png', class: 'features-img', alt: 'acca-advanced-performance-management-icon')
+                  %p.p.white
+                    Advanced Performance Management
+
+              .row
+                .col-xs-12
+                  %h3.l-margin-bottom-big
+                    =image_tag('p7-icon.png', class: 'features-img', alt: 'acca-advanced-audit-icon')
+                  %p.p.white
+                    Advanced Audit and Assurance
+
+          .row.text-center.l-margin-top-huge
+            =link_to 'Get Started', new_student_url, class: 'btn btn-red btn-big'
+
+
 
 -if @student_subscription_plans.any?
   %section#investing

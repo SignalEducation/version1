@@ -196,7 +196,11 @@ h1, .h1 {
     text-transform: uppercase;
   }
   &.h1-landing-page {
-    @include font-size(3.8);
+    @include font-size(2.8);
+    @include breakpoint(sm-min) {
+      @include font-size(3.8);
+    }
+
   }
 }
 .h1 {
@@ -266,6 +270,10 @@ h7, .h7 {
   }
   &.h7-landing-page {
    margin-bottom: $gutter/2;
+  }
+  &.h7-landing-page-xs {
+   margin-bottom: $gutter/2;
+  @include font-size(1.6);
   }
 }
 h8, .h8 {
@@ -2803,6 +2811,10 @@ ol.example li.placeholder:before {
     min-width: 300px;
   }
 }
+.acca-logo-xs {
+  padding-top: $gutter;
+  width: 80%;
+}
 .acca-gold-logo {
   float: right;
   padding-right: $gutter/2;
@@ -2810,6 +2822,11 @@ ol.example li.placeholder:before {
   @include breakpoint(sm-min) {
     min-width: 100px;
   }
+}
+.acca-gold-logo-xs {
+  padding-right: $gutter/2;
+  width: 50%;
+  max-width: 200px;
 }
 .profile-single {
   padding-bottom: $gutter*2;
@@ -4458,6 +4475,9 @@ footer nav ul li a{
 }
 .heading-action {
   margin: $gutter*3 0 $gutter*6 0;
+}
+.heading-action-xs {
+  margin: $gutter*3 0 $gutter*4 0;
 }
 
 #prefer{
