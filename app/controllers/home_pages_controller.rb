@@ -133,8 +133,10 @@ class HomePagesController < ApplicationController
   def get_course_object
     # Ensuring that the correct params are present for home_page with a valid group and url is present so that the right view file or the default view is loaded
     @first_element = params[:home_pages_public_url].to_s if params[:home_pages_public_url]
-    @default_element = params[:default] if params[:default]
     @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
+    @second_element = @first_element.gsub! '-', '_' if @first_element.include? '-'
+    @default_element = params[:default] if params[:default]
+
     if @home_page
       @course_object = @home_page.parent
       @url_value = @home_page.try(:public_url)
