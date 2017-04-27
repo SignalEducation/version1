@@ -865,13 +865,13 @@ en:
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
-        is_cpd: Is this a CPD course?
+        is_cpd: Use Custom Quiz Pass Rate
         certificate: Completion Cert
         cpd_hours: CPD Hours
         cpd_hours_placeholder: Required CPD Hours
         email_content: Welcome Email Content
-        cpd_pass_rate: Pass Rate for this course
-        cpd_pass_rate_placeholder: CPD Pass Rate
+        cpd_pass_rate: Custom Quiz Pass Rate
+        cpd_pass_rate_placeholder: Quiz Pass Rate
 
 
       index:
