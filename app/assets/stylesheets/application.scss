@@ -72,6 +72,7 @@ $colour-31: #e15258;
 $colour-32: #c25975;
 $colour-33: #f092b0;
 $colour-34: #cedbe4; // Modal background
+$colour-35: #35B9CF; // Landing Page background
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,6 +196,13 @@ h1, .h1 {
   &.bold {
     text-transform: uppercase;
   }
+  &.h1-landing-page {
+    @include font-size(2.8);
+    @include breakpoint(sm-min) {
+      @include font-size(3.8);
+    }
+
+  }
 }
 .h1 {
   @extend .animated;
@@ -261,6 +269,13 @@ h7, .h7 {
   @include breakpoint(md-min) {
     @include font-size(1.8);
   }
+  &.h7-landing-page {
+   margin-bottom: $gutter/2;
+  }
+  &.h7-landing-page-xs {
+   margin-bottom: $gutter/2;
+  @include font-size(1.6);
+  }
 }
 h8, .h8 {
   color: #7b8b8e;
@@ -283,6 +298,9 @@ p, .p, ol, .ol, ul, .ul, address, dl {
   }
   &.p-white {
     color: lighten($colour-7, 40%);
+  }
+  &.white {
+    color: $white;
   }
   &.big {
     font-size: large;
@@ -400,7 +418,7 @@ label, .label {
 }
 .login-form {
   padding: $gutter*2 $gutter/2;
-  background: $colour-2;
+  background: $white;
   -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
   text-align: left;
   color: #fff !important;
@@ -570,6 +588,13 @@ label, .label {
     width: 50%;
     height: 60px;
     line-height: 60px;
+  }
+  &.btn-big {
+    line-height: 60px;
+    height: 65px;
+    padding-right: $gutter*2;
+    padding-left: $gutter*2;
+    @include font-size(1.4);
   }
   &.btn-list {
     width: 95%;
@@ -920,6 +945,9 @@ $bs-height-xs:   (floor($font-size-small * 1.2) + $padding-small-vertical + 1);
 }
 .is-bg-asphalt {
   background: $colour-3;
+}
+.is-bg-blue {
+  background: $colour-35;
 }
 .is-bg-white-to-asphalt {
   @include gradient-vertical($white, $colour-3, 0%, 50%);
@@ -2795,6 +2823,31 @@ ol.example li.placeholder:before {
     max-width: 159px;
   }
 }
+.acca-logo {
+  float: left;
+  padding-top: $gutter;
+  max-width: 119px;
+  @include breakpoint(sm-min) {
+    min-width: 300px;
+  }
+}
+.acca-logo-xs {
+  padding-top: $gutter;
+  width: 80%;
+}
+.acca-gold-logo {
+  float: right;
+  padding-right: $gutter/2;
+  max-width: 95px;
+  @include breakpoint(sm-min) {
+    min-width: 100px;
+  }
+}
+.acca-gold-logo-xs {
+  padding-right: $gutter/2;
+  width: 50%;
+  max-width: 200px;
+}
 .profile-single {
   padding-bottom: $gutter*2;
 }
@@ -3212,6 +3265,11 @@ header{
   background-size: cover;
   padding: 20px 0 60px 0;
   color: #fff;
+  &.acca-header {
+    background-image: asset-url('acca-1.png');
+    padding: 20px 0 60px 0;
+    background-position: right;
+  }
 }
 .home-background {
   background-image: asset-url('cover_image_001.jpg');
@@ -3276,13 +3334,13 @@ header{
   padding-top: 100px;
   margin: 0 30px 0 0;
 }
-.acca{
-  display: inline-block;
-  vertical-align: top;
+//.acca{
+  //display: inline-block;
+  //vertical-align: top;
   //width: 75%;
-  padding-top: 100px;
-  margin: 0 30px 0 0;
-}
+  //padding-top: 100px;
+  //margin: 0 30px 0 0;
+//}
 .home{
   display: inline-block;
   vertical-align: top;
@@ -4402,4 +4460,153 @@ footer nav ul li a{
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
   }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ebow Landing Page Styles
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.l-wrap-acca {
+  padding: 0 $gutter/2;
+  @include breakpoint(sm-min) {
+    padding: 0 $gutter/2;
+  }
+  @include breakpoint(md-min) {
+    padding: 0 $gutter*2;
+    max-width: 1100px;
+  }
+
+}
+.acca {
+  display: inline-block;
+  vertical-align: top;
+  //width: 75%;
+  padding-top: 100px;
+  margin: 0 30px 0 0;
+}
+.heading-logos {
+  margin-bottom: $gutter*3;
+  padding: $gutter 0;
+}
+.heading-text {
+  margin-top: $gutter*2;
+  text-align: center;
+}
+.heading-action {
+  margin: $gutter*3 0 $gutter*6 0;
+}
+.heading-action-xs {
+  margin: $gutter*3 0 $gutter*4 0;
+}
+
+#prefer{
+  background-color: $white;
+  background-image: asset-url('acca-3.png');
+  background-size: cover;
+  text-align: center;
+  color: #fff;
+}
+
+#trusted{
+  background-color: $colour-35;
+  text-align: center;
+  color: #fff;
+}
+.trusted-bg-image {
+  background-image: asset-url('acca-2.png');
+  background-size: cover;
+  background-color: $white;
+}
+
+#investing {
+  background-color: $white;
+  text-align: center;
+}
+
+
+.subs {
+  margin-top: $gutter*2;
+}
+.sub {
+  text-align: center;
+  margin-bottom: $gutter*2;
+  @include border-radius(5px);
+  background: transparent;
+}
+.sub-monthly {
+  border: 2px solid $colour-13;
+}
+.sub-quarterly {
+  border: 2px solid $colour-12;
+
+}
+.sub-yearly {
+  border: 2px solid $colour-7;
+
+}
+
+.sub-header {
+  background: rgba(#000, .05);
+  padding: $gutter/2 $gutter;
+}
+.sub-popular {
+  background: $colour-15;
+  padding: $gutter/2 $gutter;
+  //border: 5px solid $yellow-2;
+}
+.sub-secondary-title, .sub-secondary-price {
+  margin: 0;
+}
+.sub-title, .sub-price {
+  margin: 0 0 $gutter*2 0 ;
+}
+.monthly-color {
+  color: $colour-13;
+}
+.quarterly-color {
+  color: $colour-12;
+}
+.yearly-color {
+  color: $colour-7;
+}
+.sub-price {
+  margin: $gutter*2 0 $gutter/2 0;
+}
+.sub-text {
+  margin: 0 0 $gutter 0 ;
+}
+.sub-inner {
+  padding: $gutter*2 $gutter;
+}
+.sub-secondary-inner {
+  padding: $gutter*2 $gutter;
+}
+.sub-option {
+  padding: $gutter/2 $gutter;
+  display: block;
+  color: $white;
+  font-weight: normal;
+  border-top: 1px solid rgba($white, .2);
+  @include transition(background-color .2s ease);
+  &:hover {
+    background: rgba(#000, 0.1);
+  }
+}
+.sub-footer {
+  background: rgba(#000, .15);
+  padding: $gutter/2 $gutter;
+  display: block;
+  color: $white;
+  font-weight: normal;
+  border-top: 1px solid rgba($white, .2);
+  @include transition(background-color .2s ease);
+  &:hover {
+    background: rgba(#000, 0.3);
+    color: $white;
+    text-decoration: none;
+  }
+}
+.sub-blue-border {
+  border: 1px solid $colour-15 ;
 }
