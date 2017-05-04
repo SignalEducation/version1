@@ -64,6 +64,10 @@ class Order < ActiveRecord::Base
     false
   end
 
+  def mock_exam
+    self.product.mock_exam
+  end
+
   # setter method
   def stripe_token=(t)
     @stripe_token = t

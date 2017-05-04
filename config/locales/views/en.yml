@@ -165,12 +165,20 @@ en:
       index:
         h1: Orders
         subject_course_id: Course
+        mock_exam_id: Mock
+        order: Order
         user_id: User
         current_status: Status
-        stripe_guid: Stripe Order ID
+
 
       show:
         h1: Order
+        product_id: Product
+        subject_course_id: Course
+        user_id: User
+        stripe_guid: Stripe Id
+        stripe_customer_id: Stripe Customer Id
+        current_status: Order Status
 
       new:
         h1: New Order
