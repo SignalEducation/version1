@@ -320,7 +320,7 @@ class ApplicationController < ActionController::Base
     user = User.find(user_id)
     if user.individual_student?
       if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
-        user_reactivate_account_url
+        user_reactivate_account_url(user_id)
       else
         user_new_subscription_url(user_id)
       end
