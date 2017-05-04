@@ -307,27 +307,27 @@ class User < ActiveRecord::Base
   end
 
   def free_member?
-    self.free_trial
+    self.individual_student? && self.free_trial
   end
 
   def valid_free_member?
-    self.free_trial && self.days_or_seconds_valid?
+    self.individual_student? && self.free_trial && self.days_or_seconds_valid?
   end
 
   def expired_free_member?
-    self.free_trial && !self.days_or_seconds_valid?
+    self.individual_student? && self.free_trial && !self.days_or_seconds_valid?
   end
 
   def canceled_member?
-    !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled'
+    self.individual_student? && !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled'
   end
 
   def canceled_pending?
-    !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled-pending'
+    self.individual_student? && !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled-pending'
   end
 
   def referred_user
-    self.referred_signup
+    self.individual_student? && self.referred_signup
   end
 
   def valid_subscription
