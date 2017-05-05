@@ -71,8 +71,8 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json {
         video_cme_user_log = CourseModuleElementUserLog.find_by_id(params[:course][:videoLogId])
-        cme = video_cme_user_log.course_module_element
         if video_cme_user_log
+          cme = video_cme_user_log.course_module_element
           video_cme_user_log.element_completed = true
           video_cme_user_log.time_taken_in_seconds = cme.try(:duration)
           video_cme_user_log.save
