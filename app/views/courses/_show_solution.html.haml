@@ -8,6 +8,9 @@
     -if attempt.try(:quiz_question).try(:quiz_contents)
       =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
 
+  -attempt.answers.each_with_index do |qa, counter2|
+    -correct_answer = counter2 if qa.correct
+    -your_answer = counter2 if qa.id == attempt.quiz_answer_id
 
   .answer.text-center.text-bold.l-margin-top-big.l-margin-bottom-big{class: attempt.correct ? 'answer-correct' : 'answer-failed', style: 'cursor: default;'}
     %p.text-inline
@@ -39,8 +42,6 @@
               .row
                 .col-md-1
                   %h2=('A'..'Z').to_a[counter2]
-                  -correct_answer = counter2 if qa.correct
-                  -your_answer = counter2 if qa.id == attempt.quiz_answer_id
                 .col-md-11
                   =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
 
