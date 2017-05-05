@@ -257,6 +257,7 @@ class UsersController < ApplicationController
     invoice = Invoice.where(id: params[:id]).first
     if invoice
       @invoice = invoice
+      @invoice_date = invoice.issued_at
       description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
       if @invoice.vat_rate
         vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
@@ -266,7 +267,7 @@ class UsersController < ApplicationController
       respond_to do |format|
         format.html
         format.pdf do
-          pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate)
+          pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate, @invoice_date)
           send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: "inline"
         end
       end

@@ -1,11 +1,12 @@
 class InvoiceDocument < Prawn::Document
 
-  def initialize(inv, view, description, vat_rate)
+  def initialize(inv, view, description, vat_rate, invoice_date)
     super(top_margin: 70)
     @invoice = inv
     @view = view
     @description = description
     @vat_rate = vat_rate
+    @invoice_date = invoice_date
     logo
     move_down 100
     render_headers
@@ -37,7 +38,7 @@ class InvoiceDocument < Prawn::Document
           row(0).column(0).style(font_style: :bold)
         end
 
-    invoice_date = @invoice.created_at.strftime('%e %b %Y')
+    invoice_date = @invoice_date.strftime('%e %b %Y')
     invoice_id   = @invoice.id.to_s
     invoice_details =
         make_table([ ['Invoice Date:', invoice_date], ['Invoice No:', invoice_id] ],
