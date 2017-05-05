@@ -165,6 +165,11 @@ en:
         flash:
           success: Home Page details have been updated successfully
 
+      destroy:
+        flash:
+          success: Home Page has been deleted
+          error: Home Page has not been deleted
+
       student_sign_up:
         flash:
           success: "Welcome aboard! Your sign-up was completed successfully"

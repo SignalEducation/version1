@@ -185,7 +185,7 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
-    resources :home_pages, only: [:index, :new, :edit, :update, :create]
+    resources :home_pages, only: [:index, :new, :edit, :update, :create, :destroy]
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
