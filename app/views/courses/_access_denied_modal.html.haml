@@ -1,5 +1,5 @@
 .remodal{"data-remodal-id" => "access-denied-modal"}
-  -if current_user.expired_free_member?
+  -if current_user && current_user.expired_free_member?
     .row
       .col-md-12
         %button.remodal-close{"data-remodal-action" => "close"}
@@ -23,7 +23,7 @@
             ='Upgrade Account'
 
 
-  -elsif current_user.canceled_member?
+  -elsif current_user && current_user.canceled_member?
 
     .row
       .col-md-12
