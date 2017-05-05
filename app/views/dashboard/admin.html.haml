@@ -18,7 +18,7 @@
           .stats-box
             .stats-box-inner
               .h3
-                =@users.count
+                =@new_users.count
               .h6
                 New Users
 
@@ -26,25 +26,25 @@
           .stats-box
             .stats-box-inner
               .h3
-                =@conversions.count
+                =@free_trial_users.count
               .h6
-                New Conversions
+                Active Free Trials
 
         .col-md-3.col-sm-3.col-xs-6
           .stats-box
             .stats-box-inner
               .h3
-                =@active_users.count
+                =@new_subscriptions.count
               .h6
-                Active Users
+                New Subscriptions
 
         .col-md-3.col-sm-3.col-xs-6
           .stats-box
             .stats-box-inner
               .h3
-                =@completed_cmes.count
+                =@all_subscriptions.count
               .h6
-                CMEs Completed
+                All Subscriptions
 
 
       .row.l-margin-top.l-margin-bottom-huge

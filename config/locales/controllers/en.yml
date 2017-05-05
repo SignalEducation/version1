@@ -165,6 +165,11 @@ en:
         flash:
           success: Home Page details have been updated successfully
 
+      destroy:
+        flash:
+          success: Home Page has been deleted
+          error: Home Page has not been deleted
+
       student_sign_up:
         flash:
           success: "Welcome aboard! Your sign-up was completed successfully"
@@ -221,21 +226,6 @@ en:
         flash:
           success: Product has been deleted
           error: Product was not deleted
-
-    question_banks:
-      create:
-        flash:
-          success: Final Exam has been created successfully
-          error: Please ensure that a value is set for at least one group of questions.
-      update:
-        flash:
-          success: Final Exam has been updated successfully
-          error: Please ensure that a value is set for at least one group of questions.
-      destroy:
-        flash:
-          success: Final Exam has been deleted
-          error: Final Exam was not deleted
-      at_least_one_question_set: You must assign a value for at least one set of questions
 
     quiz_questions:
       create:

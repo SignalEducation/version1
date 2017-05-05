@@ -37,7 +37,7 @@ class EnrollmentsController < ApplicationController
     elsif !params[:registered] && params[:not_registered]
       @enrollment = Enrollment.new(limited_params)
     end
-    @enrollment.user_id = @user.id
+    @enrollment.user_id = current_user.id
     @enrollment.subject_course_user_log_id = log.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true

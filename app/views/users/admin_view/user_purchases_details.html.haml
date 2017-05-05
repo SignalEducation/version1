@@ -34,7 +34,7 @@
                     -@orders.each do |order|
                       %tr
                         %td
-                          =order.mock_exam.name.to_s.truncate(20)
+                          =order.product.mock_exam.name.to_s.truncate(20)
                         %td
                           =humanize_datetime(order.created_at)
                         %td
@@ -42,6 +42,6 @@
                         %td
                           =number_in_local_currency(order.product.price, order.product.currency_id)
                         %td
-                          =link_to order.mock_exam.file.url, target: '_blank' do
+                          =link_to order.product.mock_exam.file.url, target: '_blank' do
                             .btn.btn-purple.btn-small.pull-right
                               View

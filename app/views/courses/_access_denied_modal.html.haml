@@ -1,0 +1,71 @@
+.remodal{"data-remodal-id" => "access-denied-modal"}
+  -if current_user && current_user.expired_free_member?
+    .row
+      .col-md-12
+        %button.remodal-close{"data-remodal-action" => "close"}
+        .col-md-12
+          %h2
+            ='Sorry! Your Free Trial has Expired'
+
+      .row
+        .col-sm-12
+          .col-sm-12.l-margin-top-big
+            %p
+              Your Free Trial has expired. You need a Valid Subscription to access this content.
+            %p
+              To upgrade your account to a paying subscription please follow the link below.
+
+
+      %br/
+      .col-sm-12#actions_btns
+        .col-sm-4.col-sm-offset-4
+          =link_to user_new_subscription_url(current_user), class: 'btn btn-red' do
+            ='Upgrade Account'
+
+
+  -elsif current_user && current_user.canceled_member?
+
+    .row
+      .col-md-12
+        %button.remodal-close{"data-remodal-action" => "close"}
+        .col-md-12
+          %h2
+            ='Sorry! Your Account is Canceled'
+
+      .row
+        .col-sm-12
+          .col-sm-12.l-margin-top-big
+            %p
+              Your Subscription is no longer valid. You need a Valid Subscription to access this content.
+            %p
+              To reactivate your account please follow the link below.
+
+
+      %br/
+      .col-sm-12#actions_btns
+        .col-sm-4.col-sm-offset-4
+          =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user), class: 'btn btn-red'
+
+  -elsif current_user
+    .row
+      .col-md-12
+        %button.remodal-close{"data-remodal-action" => "close"}
+        .col-md-12
+          %h2
+            ='Sorry! There is an issue with your account'
+
+      .row
+        .col-sm-12
+          .col-sm-12.l-margin-top-big
+            %p
+              Please review your account status by following the link below.
+            %p
+              If you are unable to resolve the issue please contact us!
+
+
+      %br/
+      .col-sm-12#actions_btns
+        .col-sm-6
+          =link_to 'Contact Us', contact_url, class: 'btn btn-red'
+        .col-sm-6
+          =link_to t('views.users.show.h1'), account_url, class: 'btn btn-red'

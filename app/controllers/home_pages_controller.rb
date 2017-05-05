@@ -117,6 +117,15 @@ class HomePagesController < ApplicationController
     end
   end
 
+  def destroy
+    if @home_page.destroy
+      flash[:success] = I18n.t('controllers.home_pages.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.home_pages.destroy.flash.error')
+    end
+    redirect_to home_pages_url
+  end
+
   protected
 
   def get_variables

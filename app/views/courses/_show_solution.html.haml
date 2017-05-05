@@ -1,29 +1,15 @@
 %div{id: "solutions_#{counter}", class: 'all_solutions'}
-  %h3.l-margin-top-big.l-margin-bottom
+  -correct_answer = 0; your_answer = 0
+  %h3.text-bold.l-margin-top-big.l-margin-bottom
     =t('views.courses.show_results.attempts_table.question')
     =counter + 1
-    ='Solution'
 
-  %h4.text-bold.l-margin-bottom-big
+  %h3.l-margin-bottom-big
     -if attempt.try(:quiz_question).try(:quiz_contents)
       =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
 
-  .panel.panel-default.border-same-backcolor
-    %ul.list-group
-      -correct_answer = 0; your_answer = 0
-      -if attempt.try(:quiz_question).try(:quiz_answers)
-        -attempt.answers.each_with_index do |qa, counter2|
-          %li.list-group-item.quiz-answer-clickable
-            .container-fluid
-              .row
-                .col-md-1
-                  %h2=('A'..'Z').to_a[counter2]
-                  -correct_answer = counter2 if qa.correct
-                  -your_answer = counter2 if qa.id == attempt.quiz_answer_id
-                .col-md-11
-                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
 
-  .answer.text-center.l-margin-top-big{class: attempt.correct ? 'answer-correct' : 'answer-failed', style: 'cursor: default;'}
+  .answer.text-center.text-bold.l-margin-top-big.l-margin-bottom-big{class: attempt.correct ? 'answer-correct' : 'answer-failed', style: 'cursor: default;'}
     %p.text-inline
       Correct Answer:
       &#160;
@@ -37,7 +23,24 @@
     %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
 
   -if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
-    %h3.l-margin-top-big.l-margin-bottom Explanation
+    %h3.l-margin-top-big.l-margin-bottom-big
+      ='Explanation'
+
     -if attempt.try(:quiz_question).try(:quiz_solutions)
       %p
         =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+
+  .panel.panel-default.border-same-backcolor
+    %ul.list-group
+      -if attempt.try(:quiz_question).try(:quiz_answers)
+        -attempt.answers.each_with_index do |qa, counter2|
+          %li.list-group-item.quiz-answer-clickable
+            .container-fluid
+              .row
+                .col-md-1
+                  %h2=('A'..'Z').to_a[counter2]
+                  -correct_answer = counter2 if qa.correct
+                  -your_answer = counter2 if qa.id == attempt.quiz_answer_id
+                .col-md-11
+                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+

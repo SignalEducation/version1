@@ -157,7 +157,7 @@ class StudentExamTrack < ActiveRecord::Base
     unique_quiz_ids = quiz_ids.uniq
     self.count_of_videos_taken = unique_video_ids.count
     self.count_of_quizzes_taken = unique_quiz_ids.count
-    self.count_of_cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
+    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count) + (self.jumbo_quiz_taken ? 1 : 0)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
 
     begin

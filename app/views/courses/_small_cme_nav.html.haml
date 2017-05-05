@@ -1,7 +1,10 @@
 .col-xs-12
-  .col-xs-6
-    =link_to course_special_link(cme.previous_element), class: 'btn btn-red' do
-      .glyphicon.glyphicon-arrow-left
-  .col-xs-6
-    =link_to course_special_link(cme.next_element), class: 'btn btn-red pull-right' do
-      .glyphicon.glyphicon-arrow-right
+  =link_to course_special_link(cme), class: 'btn btn-cyan full-width' do
+    =t('views.course_module_elements.show.retake_quiz')
+
+  .l-margin-top
+    =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width' do
+      -if @course_module_element_user_log && @course_module_element_user_log.element_completed
+        =t('views.course_module_elements.show.next_step')
+      -else
+        =t('views.course_module_elements.show.skip_step')

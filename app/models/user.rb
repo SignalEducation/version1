@@ -94,7 +94,6 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :subject_courses
   has_many :invoices
   has_many :quiz_attempts
-  has_many :question_banks
   has_many :orders
   has_many :subscriptions, -> { order(:id) }, inverse_of: :user
   has_many :subscription_payment_cards
@@ -141,6 +140,7 @@ class User < ActiveRecord::Base
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_students, -> { where(user_group_id: UserGroup.default_student_user_group.id) }
+  scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['free_trial_limit_in_seconds'].to_i}") }
 
   # class methods
   def self.all_admins
@@ -307,27 +307,27 @@ class User < ActiveRecord::Base
   end
 
   def free_member?
-    self.free_trial
+    self.individual_student? && self.free_trial
   end
 
   def valid_free_member?
-    self.free_trial && self.days_or_seconds_valid?
+    self.individual_student? && self.free_trial && self.days_or_seconds_valid?
   end
 
   def expired_free_member?
-    self.free_trial && !self.days_or_seconds_valid?
+    self.individual_student? && self.free_trial && !self.days_or_seconds_valid?
   end
 
   def canceled_member?
-    !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled'
+    self.individual_student? && !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled'
   end
 
   def canceled_pending?
-    !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled-pending'
+    self.individual_student? && !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled-pending'
   end
 
   def referred_user
-    self.referred_signup
+    self.individual_student? && self.referred_signup
   end
 
   def valid_subscription
@@ -493,7 +493,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_enrollments(options = {})
-    attributes = %w{first_name last_name email date_of_birth enrolled_courses}
+    attributes = %w{first_name last_name email date_of_birth enrolled_courses student_numbers}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -520,6 +520,14 @@ class User < ActiveRecord::Base
       course_names << enrollment.subject_course.name
     end
     course_names
+  end
+
+  def student_numbers
+    student_numbers = []
+    self.enrollments.each do |enrollment|
+      student_numbers << enrollment.student_number
+    end
+    student_numbers
   end
 
   def visit_campaigns

@@ -1,108 +1,109 @@
-.box-item.question-box.border-same-backcolor.width-bigger#quiz-contents
+.col-md-12
   %h2
-    =t('views.courses.show_results.h1')
-    =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name).try(:html_safe) || @course_module_element_user_log.question_bank.try(:name)
+    =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
+  .box-item.question-box.border-same-backcolor#quiz-contents
+    .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary{style: 'border: 2px solid #4ACF4D;'}
+      &#60; Back to Results
+    #results
+      .row.l-margin-top.l-margin-bottom-big
+        .col-sm-8.col-md-offset-2
+          .col-sm-6.col-xs-12
+            .row
+              .col-sm-6
+                %h3.h4{style: 'font-size: 24px;'}
+                  ="Result: "
+              .col-sm-6
+                -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
+                %h3.h4{style: "font-size: 24px; color: #{result_colour}; text-transform: uppercase;"}
+                  =@pass
 
-  .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary{style: 'border: 2px solid #4ACF4D;'}
-    &#60; Back to Results
-  #results
-    %h3.l-margin-top-big.l-margin-bottom-big
-      ='Score:'
-      &#160;
-      =@course_module_element_user_log.quiz_attempts.where(correct: true).count
-      &#47;
-      =@course_module_element_user_log.quiz_attempts.count
+
+
+          .col-sm-6.col-xs-12
+            .row
+              .col-sm-6
+                %h3.h4{style: 'font-size: 24px'}
+                  =t('views.courses.show_results.score')
+
+              .col-sm-6
+                %h3.h4{style: 'font-size: 24px;'}
+                  =@course_module_element_user_log.quiz_attempts.where(correct: true).count
+                  &#47;
+                  =@course_module_element_user_log.quiz_attempts.count
+
+      -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+        .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
+          %p.text-inline.text-bold Question #{counter + 1}
+          %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
+
+          %p.l-margin-top-small.l-margin-bottom-small
+            -correct_answer = 0; your_answer = 0
+            -attempt.answers.each_with_index do |qa, counter2|
+              -correct_answer = counter2 if qa.correct
+              -your_answer = counter2 if qa.id == attempt.quiz_answer_id
+            %p.text-inline
+              Correct Answer:
+              &#160;
+            %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+            %p.text-inline
+              &#160;
+              &bull;
+              &#160;
+              =' Your Answer:'
+              &#160;
+            %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
+
+
 
     -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
-        %p.text-inline.text-bold Question #{counter + 1}
-        %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
-        %p.l-margin-top-small.l-margin-bottom-small
-          -correct_answer = 0; your_answer = 0
-          -attempt.answers.each_with_index do |qa, counter2|
-            -correct_answer = counter2 if qa.correct
-            -your_answer = counter2 if qa.id == attempt.quiz_answer_id
-          %p.text-inline
-            Correct Answer:
-            &#160;
-          %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
-          %p.text-inline
-            &#160;
-            &bull;
-            &#160;
-            =' Your Answer:'
-            &#160;
-          %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
-          -#if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
-            %p.text-bold{style: 'margin-top: 15px; margin-bottom: 10px;'}
-              Explanation
-            -if attempt.try(:quiz_question).try(:quiz_solutions)
-              %p
-                =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+      -if attempt
+        =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 
-
-  -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-    -if attempt
-      =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
-  -#.l-margin-bottom.l-margin-top
-    .pull-left
-      %h6
-      .pull-left
-        -if !@course_module_element_user_log.is_question_bank
-          =link_to "Discuss #{@course_module_element_user_log.course_module_element.try(:name) || @course_module_element_user_log.course_module_jumbo_quiz.try(:name)} in the Forum", @course_module_element_user_log.course_module.parent.try(:forum_url), target: '_blank'
-
-
-
--if @course_module_element_user_log.is_jumbo_quiz
-  .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
-    .col-xs-4.text-left
-      =link_to course_special_link(@course_module), class: 'btn btn-red text-bold' do
-        .glyphicon.glyphicon-arrow-left
-        Restart Module
-    .col-xs-4.text-center
-      =link_to t('views.dashboard.index.h1'), dashboard_special_link, class: 'btn btn-red text-bold'
-    .col-xs-4.text-right
-      =link_to course_special_link(@course_module.next_module), class: 'btn btn-red text-bold' do
-        Next Module
-        .glyphicon.glyphicon-arrow-right
-
--if @course_module_element_user_log.is_question_bank
-  .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
-    .row.pull-left
-      =link_to library_special_link(@question_bank.subject_course), class: 'btn btn-red text-bold' do
-        .glyphicon.glyphicon-arrow-left
-        ='Return to '
-        =@question_bank.subject_course.name
+  -if @course_module_element_user_log.is_jumbo_quiz
+    .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
+      .col-xs-4.text-left
+        =link_to course_special_link(@course_module), class: 'btn btn-red text-bold' do
+          .glyphicon.glyphicon-arrow-left
+          Restart Module
+      .col-xs-4.text-center
+        =link_to t('views.dashboard.index.h1'), dashboard_special_link, class: 'btn btn-red text-bold'
+      .col-xs-4.text-right
+        =link_to course_special_link(@course_module.next_module), class: 'btn btn-red text-bold' do
+          Next Module
+          .glyphicon.glyphicon-arrow-right
 
 
--if @course_module_element
-  .box-item.question-box.border-same-backcolor.width-bigger{style: 'padding-right: 40px;'}
-    .cme-nav.hidden-xs
-      =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
-    .cme-nav.hidden-sm.hidden-md.hidden-lg
-      =render partial: 'courses/small_cme_nav', locals: {cme: @course_module_element}
+  -if @course_module_element
+    .cme-nav.box-item.question-box.border-same-backcolor{style: 'padding-right: 40px;'}
+      .cme-nav.hidden-xs
+        =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
+      .cme-nav.hidden-sm.hidden-md.hidden-lg
+        =render partial: 'courses/small_cme_nav', locals: {cme: @course_module_element}
 
-:javascript
+  :javascript
 
-  var allSolutions = $('.all_solutions'),
-      summaryButton = $('.btn.answer-correct');
+    var allSolutions = $('.all_solutions'),
+      summaryButton = $('.btn.answer-correct'),
+      cmeNav = $('.cme-nav');
 
-  $( document ).ready(function() {
-    allSolutions.hide();
-    summaryButton.hide();
-  });
+    $( document ).ready(function() {
+      allSolutions.hide();
+      summaryButton.hide();
+    });
 
-  function showSolution() {
-    var id = this.id;
-    $('#results').hide();
-    $("#solutions_" + id).show();
-    summaryButton.show();
-  }
+    function showSolution() {
+      var id = this.id;
+      $('#results').hide();
+      $("#solutions_" + id).show();
+      summaryButton.show();
+      cmeNav.hide();
+    }
 
-  summaryButton.click(function() {
-    allSolutions.hide();
-    summaryButton.hide();
-    $('#results').show();
-  });
+    summaryButton.click(function() {
+      allSolutions.hide();
+      summaryButton.hide();
+      cmeNav.show();
+      $('#results').show();
+    });
 

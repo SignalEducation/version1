@@ -18,24 +18,25 @@
         -if @course.enrolled_user_ids.include?(current_user.id)
           =render partial: 'enrollment_info'
         -else
-          -if current_user.permission_to_see_content(@course)
+          -if current_user && current_user.permission_to_see_content(@course)
             =render partial: 'enrollment_form'
             =render partial: 'course_enrollment_modal' if @course.exam_body && @course.exam_sitting
 
             -if current_user.subject_course_user_log_course_ids.include?(@course.id)
               =render partial: 'layouts/enrollment_notice', locals: {course: @course}
-
-
           -else
             %h3.h3.card-title.l-margin-bottom
               =@course.name
           .l-margin-top-huge
             =render partial: 'course_info'
 
-
-
       -else
-        =render partial: 'layouts/content_notice', locals: {course: @course}
+        .notice.warning
+        .fa.fa-info-circle.icon
+          An Account is required to access this content.
+          &#160;
+          =link_to new_student_url do
+            Claim your Free Trial?
         %h1.h1.h-separator.h-separator-left
           =@course.name
         =render partial: 'course_info'
@@ -76,55 +77,11 @@
           -# Fourth Section for Final Quiz and Certificate
           -if current_user && @course.certificate && current_user.permission_to_see_content(@course)
             %br/
-            %p.h4.l-margin-bottom
-              =t('views.general.final_exam')
-            -if @course.question_bank && @course.question_bank.active?
-              -if @question_bank_passed
-                -if current_user
-                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'final-quiz-box-item lib-panel', style: 'text-decoration: none;' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      .question-bank-passed
-                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                        Passed
-                -else
-                  =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      .question-bank-passed
-                        %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-                        Passed
-                -if @subject_course_user_log.completed
-                  %hr/
-                  -if current_user
-                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                      .box-topic-item
-                        Click here to download your completion certificate
-                  -else
-                    =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                      .box-topic-item
-                        Click here to download your completion certificate
-              -else
-                -if current_user
-                  =link_to course_question_bank_url(@course.name_url, @course.question_bank.id), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      =@course.question_bank.number_of_questions.to_s + ' Questions'
-                -else
-                  =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-                    .box-topic-item
-                      =@course.question_bank.name
-                    .time.hidden-xs
-                      =@course.question_bank.number_of_questions.to_s + ' Questions'
-            -else
-              -if @subject_course_user_log && @subject_course_user_log.completed
-                %hr/
-                =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                  .box-topic-item
-                    Click here to download your completion certificate
+            -if @subject_course_user_log && @subject_course_user_log.completed
+              %hr/
+              =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
+                .box-topic-item
+                  Click here to download your completion certificate
 
 
 
@@ -156,6 +113,13 @@
         .l-margin-top-huge
           =render partial: 'course_info'
 
+=render partial: 'courses/access_denied_modal'
+:javascript
+
+  $('.lib-panel').click(function(){
+    if($(this).is('.radius')){$(this).removeClass('radius'); return;}
+    $(this).addClass('radius').siblings().removeClass('radius');
+  });
 
 -if current_user && @subject_course_user_log && @subject_course_user_log.completed && @course.hotjar_guid
 

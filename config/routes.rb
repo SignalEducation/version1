@@ -57,7 +57,6 @@ Rails.application.routes.draw do
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
     get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
-    get 'courses/:subject_course_name_url/question_bank/:id', to: 'courses#show', as: :course_question_bank
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
@@ -128,14 +127,14 @@ Rails.application.routes.draw do
 
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
+    get 'group/:group_name_url', to: 'library#group_show'
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
     get 'library/:group_name_url/:subject_course_name_url/preview', to: 'library#preview_course', as: :preview_course
 
-    resources :mock_exams, except: [:show], concerns: :supports_reordering
+    resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     resources :products
-    resources :question_banks, only: [:new, :create, :edit, :update, :destroy]
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :subject_courses, concerns: :supports_reordering do
       get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors
@@ -186,7 +185,7 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
-    resources :home_pages, only: [:index, :new, :edit, :update, :create]
+    resources :home_pages, only: [:index, :new, :edit, :update, :create, :destroy]
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home

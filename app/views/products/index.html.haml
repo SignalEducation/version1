@@ -13,14 +13,16 @@
           =render partial: 'layouts/stats_navbar'
 
       .row.l-margin-top.l-margin-bottom
-        .col-md-6.col-sm-4.l-margin-top
+        .col-md-7.col-sm-4.l-margin-top
           =link_to 'New Product', new_product_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
-          =link_to 'View Mock Exams', mock_exams_url, class: 'btn btn-cyan', title: t('views.general.new_tooltip')
+          =link_to 'Mock Exams', mock_exams_url, class: 'btn btn-cyan', title: t('views.general.new_tooltip')
 
           =link_to 'New Mock Exam', new_mock_exam_url, class: 'btn btn-purple', title: t('views.general.new_tooltip')
 
-        .col-md-offset-2.col-md-4.l-margin-top
+          =link_to 'Orders', orders_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+        .col-md-offset-2.col-md-3.l-margin-top
           =form_tag(products_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
               =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')

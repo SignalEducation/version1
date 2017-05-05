@@ -6,37 +6,60 @@
   .l-section-courses.is-bg-asphalt
     .l-wrap
       .container-fluid{style: 'margin-bottom: 60px;'}
-        .row
-          .col-sm-4.col-md-4
+        .row.l-margin-bottom-big.hidden-xs.visible-sm.visible-md.visible-lg
+          .col-sm-6.col-md-4
             =link_to library_special_link(@course_module.parent) do
-              %p.text-left
+              .btn.btn-red.btn-secondary
                 &#60;
                 ="Back To #{@course_module.try(:subject_course).try(:name)}"
-        =render 'side_nav_xs'
+          .col-md-4
+          .col-sm-6.col-md-4
+            -if @course_module_element && @course_module_element.is_video?
+              =link_to course_special_link(@course_module_element.next_element), style: 'margin-left: 10px;' do
+                .btn.btn-red.btn-secondary.full-width
+                  =t('views.course_module_elements.show.next_step')
+                  &#62;
+
+        .row.l-margin-bottom-big.visible-xs.hidden-sm
+          .col-xs-12
+            =link_to library_special_link(@course_module.parent) do
+              .btn.btn-red.btn-secondary.full-width
+                &#60;
+                ="Back To #{@course_module.try(:subject_course).try(:name)}"
+          .col-xs-12.l-margin-top
+            -if @course_module_element && @course_module_element.is_video?
+              =link_to course_special_link(@course_module_element.next_element) do
+                .btn.btn-red.btn-secondary.full-width
+                  =t('views.course_module_elements.show.next_step')
+                  &#62;
+
+
+
+
         .row.l-margin-bottom-big
-          %div
-            =render 'side_nav_md'
-          .col-md-8.col-sm-8{style: 'margin-bottom: 150px;'}
-            -if defined?(@results)
-              =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-            -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
-              =render partial: 'courses/content_denied'
-            -elsif @course_module_jumbo_quiz && paywall_checkpoint[:course_content][:view_all] == false
-              =render partial: 'courses/content_denied'
-            -elsif @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
-              -if @course_module_element.try(:is_video)
-                =render partial: 'courses/show_video', locals: {cme: @course_module_element}
-              -elsif @course_module_element.try(:is_quiz)
-                =render partial: 'courses/show_quiz'
-              -else
-                %h2 Course module element - type unknown
-                -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
-            -elsif @course_module_jumbo_quiz
+          -if defined?(@results)
+            =render partial: 'courses/show_results', locals: {cme: @course_module_element}
+          -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
+            =render partial: 'courses/content_denied'
+          -elsif @course_module_jumbo_quiz && paywall_checkpoint[:course_content][:view_all] == false
+            =render partial: 'courses/content_denied'
+          -elsif @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
+            -if @course_module_element.try(:is_video)
+              =render partial: 'courses/show_video', locals: {cme: @course_module_element}
+            -elsif @course_module_element.try(:is_quiz)
               =render partial: 'courses/show_quiz'
-            -elsif @course_module
-              .well
-                %h3=t('views.general.coming_soon')
-                %p=t('views.courses.show.coming_soon')
+            -else
+              %h2 Course module element - type unknown
+              -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
+          -elsif @course_module_jumbo_quiz
+            =render partial: 'courses/show_quiz'
+          -elsif @course_module
+            .well
+              %h3=t('views.general.coming_soon')
+              %p=t('views.courses.show.coming_soon')
+
+
+
 
         -# Tabs for Question, Answer, Notes and Description
         -if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
@@ -60,9 +83,6 @@
                     -if @course_module_element.video_resource.notes || @course_module_element.course_module_element_resources.count > 0
                       %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                         =t('views.course_module_elements.show.tabs.notes')
-                    -if @course_module_element.course_module_element_resources.count > 0
-                      %a{href: '#resources', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                        =t('views.course_module_elements.show.tabs.resources')
                     -if @course_module.discourse_topic_id
                       %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                         Community
@@ -71,9 +91,6 @@
                     -if @course_module_element.description?
                       %a{href: '#description', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                         =t('views.course_module_elements.show.tabs.description')
-                    -if @course_module_element.course_module_element_resources.count > 0
-                      %a{href: '#resources', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                        =t('views.course_module_elements.show.tabs.resources')
                     -if @course_module.discourse_topic_id
                       %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                         Community
@@ -88,10 +105,6 @@
     .col-sm-10.col-sm-offset-1.content-area
       -if defined?(@results)
         =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-      -elsif @question_bank && paywall_checkpoint[:course_content][:view_all] == false
-        =render partial: 'courses/content_denied'
-      -elsif @question_bank
-        =render partial: 'courses/show_quiz'
       -else
         %h2 Course module element - type unknown
         -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."

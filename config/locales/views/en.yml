@@ -165,12 +165,20 @@ en:
       index:
         h1: Orders
         subject_course_id: Course
+        mock_exam_id: Mock
+        order: Order
         user_id: User
         current_status: Status
-        stripe_guid: Stripe Order ID
+
 
       show:
         h1: Order
+        product_id: Product
+        subject_course_id: Course
+        user_id: User
+        stripe_guid: Stripe Id
+        stripe_customer_id: Stripe Customer Id
+        current_status: Order Status
 
       new:
         h1: New Order
@@ -243,7 +251,8 @@ en:
           product_required: You must first purchase this course to access it's content.
 
       show_results:
-        h1: 'Results:'
+        result: 'Result:'
+        score: 'Score:'
         summary: Summary
         q: Q
         answers: Possible Answers
@@ -349,7 +358,9 @@ en:
         quiz_preview: Quiz Preview
         video_preview: Video Preview
         next: Next
-        next_step: Next Lesson
+        next_step: Next Step
+        skip_step: SkipStep
+        retake_quiz: Retake Quiz
         mark_complete: Mark as Complete
         previous: Previous
         previous_step: Previous Lesson
@@ -699,6 +710,8 @@ en:
         question: Question
         quiz: Quiz
         quizzes: MCQs
+        steps: Steps
+        step: Step
         mcq: MCQ
         mcqs: MCQs
         video: Video
@@ -706,7 +719,6 @@ en:
         videos: of Video
         course_module: Course Module
         course_module_element: Step
-        new_question_bank: Create a Custom Quiz
         table_of_contents: Table of contents
         description: Description
 
@@ -760,17 +772,6 @@ en:
 
       new:
         h1: New Product
-
-    question_banks:
-      form:
-        name: Name
-        name_placeholder: Give the quiz a name
-        active: Active
-        number_of_questions: No. of Questions
-        save: Save
-      new:
-        h1: Final Exam
-        edit: Edit Final Exam
 
     quiz_answer:
       form:
@@ -872,13 +873,13 @@ en:
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
-        is_cpd: Is this a CPD course?
+        is_cpd: Use Custom Quiz Pass Rate
         certificate: Completion Cert
         cpd_hours: CPD Hours
         cpd_hours_placeholder: Required CPD Hours
         email_content: Welcome Email Content
-        cpd_pass_rate: Pass Rate for this course
-        cpd_pass_rate_placeholder: CPD Pass Rate
+        cpd_pass_rate: Custom Quiz Pass Rate
+        cpd_pass_rate_placeholder: Quiz Pass Rate
 
 
       index:

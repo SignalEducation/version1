@@ -19,8 +19,6 @@
 #  course_module_jumbo_quiz_id :integer
 #  is_jumbo_quiz               :boolean          default(FALSE), not null
 #  seconds_watched             :integer          default(0)
-#  is_question_bank            :boolean          default(FALSE), not null
-#  question_bank_id            :integer
 #  count_of_questions_taken    :integer
 #  count_of_questions_correct  :integer
 #
@@ -46,7 +44,6 @@ describe CourseModuleElementUserLog do
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
   it { should belong_to(:course_module_jumbo_quiz) }
-  it { should belong_to(:question_bank) }
   it { should have_many(:quiz_attempts) }
   it { should belong_to(:user) }
 

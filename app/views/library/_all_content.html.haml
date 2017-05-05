@@ -4,37 +4,47 @@
       -if child.children.any?
         %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_all_content_#{counter}"}
           .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_all_content_#{counter}"}, style: "background-color: #{child.try(:highlight_colour)}"}
-            .box-topic-item
-              =truncate(child.name, length: 50)
-            .time.hidden-xs
-              -if child.quiz_count.to_i > 0
-                -if child.quiz_count.to_i == 1
-                  =child.quiz_count.to_s + ' ' + t('views.library.show.mcq')
-                -elsif child.quiz_count.to_i > 1
-                  =child.quiz_count.to_s + ' ' + t('views.library.show.mcqs')
-                -if child.video_count > 0
-                  |
-              -if child.video_count > 0
-                -if child.video_count == 1
-                  =child.video_count.to_s + ' ' + t('views.library.show.video')
-                -elsif child.video_count > 1
-                  =child.video_count.to_s + ' ' + t('views.library.show.number_of_videos')
+            .col-xs-1.col-sm-1
+              .left-side-meta
+                =image_tag(child.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+            .col-xs-9.xs-padding
+              .box-topic-item
+                =truncate(child.name, length: 50)
+            .col-xs-2
+              .time.hidden-xs
+                -if child.cme_count.to_i == 1
+                  =child.cme_count.to_s + ' ' + t('views.library.show.step')
+                -elsif child.cme_count.to_i > 1
+                  =child.cme_count.to_s + ' ' + t('views.library.show.steps')
+                -else
+
       -else
         %li
           .box-item.lib-panel{style: "background-color: #{child.try(:highlight_colour)}"}
-            .box-topic-item
-              =truncate(child.name, length: 50)
-            .time
-              %p{style: 'color: #EE5457;'}
-                ='Coming Soon!'
+            .col-xs-1.col-sm-1
+              .left-side-meta
+                .img-responsive
+                  =image_tag(child.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+            .col-xs-3.col-sm-3.hidden-xs{style: 'padding-top: 4px;'}
+              .box-topic-item
+                =truncate(child.name, length: 50)
+            .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
+              .time.pull-right
+                %p{style: 'color: #EE5457;'}
+                  ='Coming Soon!'
 
 
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_all_content_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
         -child.children.all_in_order.all_active.each do |grandchild|
 
           -if current_user
-            =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
-              =render partial: 'panel_content', locals: {grandchild: grandchild}
+            -if current_user && current_user.permission_to_see_content(@course)
+              =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+                =render partial: 'panel_content', locals: {grandchild: grandchild}
+            -else
+              %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'list-group-item link-purple box-topic-item'}
+                =render partial: 'panel_content', locals: {grandchild: grandchild}
+
 
           -else
             =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do

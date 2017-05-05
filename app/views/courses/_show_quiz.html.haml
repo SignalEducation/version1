@@ -1,106 +1,105 @@
--if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz || @question_bank
+.col-md-12
+  -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz
 
-  .box-item.question-box.border-same-backcolor.width-bigger#quiz-contents{style: 'min-height: 745px;'}
     %h2
-      =@course_module_element.try(:name).try(:html_safe) || @course_module_jumbo_quiz.try(:name) || @question_bank.try(:name)
-    %p
-      .l-margin-bottom-small.l-margin-top{style: 'font-size: small'}
-        #question-count
+      =@course_module_element.try(:name).try(:html_safe) || @course_module_jumbo_quiz.try(:name)
+    .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
+      .quiz-heading.l-margin-bottom
+        #question-count.p
           Question 1 of 4
-    .progress.l-margin-bottom-huge
-      .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+      .progress.l-margin-bottom-huge
+        .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
 
-    -@quiz_questions.each do |question|
-      =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
+      -@quiz_questions.each do |question|
+        =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
-    =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
-      =f.text_field :user_id
-      =f.text_field :course_module_id
-      =f.text_field :course_module_element_id
-      =f.text_field :course_module_jumbo_quiz_id
-      =f.text_field :question_bank_id
-      =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
-      =f.fields_for :quiz_attempts do |attempt|
-        =attempt.text_field :user_id
-        =attempt.text_field :quiz_question_id
-        =attempt.text_field :quiz_answer_id
-        =attempt.text_field :answer_array
+      =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
+        =f.text_field :user_id
+        =f.text_field :course_module_id
+        =f.text_field :course_module_element_id
+        =f.text_field :course_module_jumbo_quiz_id
+        =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
+        =f.fields_for :quiz_attempts do |attempt|
+          =attempt.text_field :user_id
+          =attempt.text_field :quiz_question_id
+          =attempt.text_field :quiz_answer_id
+          =attempt.text_field :answer_array
 
--else
-  .row
-    .col-sm-12
-      .well.well-lg
-        Sorry, there are not enough questions to present this quiz
+  -else
+    .row
+      .col-sm-12
+        .well.well-lg
+          Sorry, there are not enough questions to present this quiz
 
-:javascript
+  :javascript
 
-  var easyList = #{@easy_ids},
-      mediumList = #{@medium_ids},
-      difficultList = #{@difficult_ids},
-      allQuestionsList = #{@all_ids},
-      selectionStrategy = '#{@strategy}',
-      answers = [],
-      numberOfQuestions = #{@number_of_questions},
-      currentQuestion = 1,
-      nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
-      //nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
-      nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : 'allQuestions'}List,
-      progressBar = $('.progress-bar'),
-      questionCount = $('.l-margin-bottom-small.l-margin-top'),
-      previousAnswerCorrect = true;
+    var easyList = #{@easy_ids},
+        mediumList = #{@medium_ids},
+        difficultList = #{@difficult_ids},
+        allQuestionsList = #{@all_ids},
+        selectionStrategy = '#{@strategy}',
+        answers = [],
+        numberOfQuestions = #{@number_of_questions},
+        currentQuestion = 1,
+        nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
+        //nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
+        nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : 'allQuestions'}List,
+        progressBar = $('.progress-bar'),
+        questionCount = $('.quiz-heading'),
+        previousAnswerCorrect = true;
 
-  function updateProgressBar() {
-    var percentage = (currentQuestion / numberOfQuestions * 100);
-    progressBar.attr('aria-valuemax', numberOfQuestions);
-    progressBar.attr('aria-valuenow', currentQuestion);
-    progressBar.attr('style', 'width: ' + percentage + '%;');
-    progressBar.find('span').text(currentQuestion + ' of ' + numberOfQuestions);
-    questionCount.find('#question-count').text('Question ' + currentQuestion + ' of ' + numberOfQuestions);
-  }
-
-  function askQuestion(questionNumber) {
-    updateProgressBar();
-    $('.question').hide();
-    $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
-  }
-
-  function logAnswer(questionId, answerId, difficultyLevel, isCorrect, answerArray) {
-    answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
-    // log the answer in the form
-    $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
-    $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
-    $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
-
-
-    if (currentQuestion < numberOfQuestions) {
-      if (selectionStrategy == 'progressive') {
-        if (isCorrect == true && difficultyLevel == 'easy') {
-          nextQuestionLevel = 'medium';
-          nextQuestionArray = mediumList;
-        } else if (isCorrect == true && difficultyLevel == 'medium') {
-          nextQuestionLevel = 'difficult';
-          nextQuestionArray = difficultList;
-        } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
-          nextQuestionLevel = 'medium';
-          nextQuestionArray = mediumList;
-        } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
-          nextQuestionLevel = 'easy';
-          nextQuestionArray = easyList;
-        }
-      } else if (selectionStrategy == 'random') {
-        nextQuestionArray = allQuestionsList
-      }
-      currentQuestion++;
-      updateProgressBar();
-      askQuestion(currentQuestion);
-      previousAnswerCorrect = isCorrect;
-    } else {
-      $('#new_course_module_element_user_log').submit();
+    function updateProgressBar() {
+      var percentage = (currentQuestion / numberOfQuestions * 100);
+      progressBar.attr('aria-valuemax', numberOfQuestions);
+      progressBar.attr('aria-valuenow', currentQuestion);
+      progressBar.attr('style', 'width: ' + percentage + '%;');
+      progressBar.find('span').text(currentQuestion + ' of ' + numberOfQuestions);
+      questionCount.find('#question-count').text('Question ' + currentQuestion + ' of ' + numberOfQuestions);
     }
-  }
 
-  var numberOfCorrectAnswers = 0;
-  $(document).on('ready page:load', function() {
-    askQuestion(1); // 1 is the first question
-  });
+    function askQuestion(questionNumber) {
+      updateProgressBar();
+      $('.question').hide();
+      $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
+    }
+
+    function logAnswer(questionId, answerId, difficultyLevel, isCorrect, answerArray) {
+      answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
+      // log the answer in the form
+      $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
+      $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
+      $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
+
+
+      if (currentQuestion < numberOfQuestions) {
+        if (selectionStrategy == 'progressive') {
+          if (isCorrect == true && difficultyLevel == 'easy') {
+            nextQuestionLevel = 'medium';
+            nextQuestionArray = mediumList;
+          } else if (isCorrect == true && difficultyLevel == 'medium') {
+            nextQuestionLevel = 'difficult';
+            nextQuestionArray = difficultList;
+          } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
+            nextQuestionLevel = 'medium';
+            nextQuestionArray = mediumList;
+          } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
+            nextQuestionLevel = 'easy';
+            nextQuestionArray = easyList;
+          }
+        } else if (selectionStrategy == 'random') {
+          nextQuestionArray = allQuestionsList
+        }
+        currentQuestion++;
+        updateProgressBar();
+        askQuestion(currentQuestion);
+        previousAnswerCorrect = isCorrect;
+      } else {
+        $('#new_course_module_element_user_log').submit();
+      }
+    }
+
+    var numberOfCorrectAnswers = 0;
+    $(document).on('ready page:load', function() {
+      askQuestion(1); // 1 is the first question
+    });

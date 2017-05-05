@@ -81,15 +81,8 @@ class LibraryController < ApplicationController
         latest_set = user_course_sets.first
         @latest_element_id = latest_set.try(:latest_course_module_element_id)
         @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-        cmeuls = CourseModuleElementUserLog.for_user_or_session(current_user, current_session_guid).where(is_question_bank: true).where(question_bank_id: @course.try(:question_bank).try(:id))
-        scores = cmeuls.all.map(&:quiz_score_actual)
-        pass_rate = @course.cpd_pass_rate || 65
-        array = []
-        scores.each { |score| score >= pass_rate ? array << true : array << false }
-        array2 = array.uniq
-        @question_bank_passed = array2.include? true
+
         @cert = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).first
-        cme_ids = @course.course_module_elements.all_active.map(&:id)
       end
 
     elsif @course && @course.active && !@course.live

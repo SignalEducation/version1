@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170406145543) do
+ActiveRecord::Schema.define(version: 20170413080055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -123,8 +123,6 @@ ActiveRecord::Schema.define(version: 20170406145543) do
     t.integer  "course_module_jumbo_quiz_id"
     t.boolean  "is_jumbo_quiz",               default: false, null: false
     t.integer  "seconds_watched",             default: 0
-    t.boolean  "is_question_bank",            default: false, null: false
-    t.integer  "question_bank_id"
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_questions_correct"
   end
@@ -485,16 +483,6 @@ ActiveRecord::Schema.define(version: 20170406145543) do
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
-
-  create_table "question_banks", force: :cascade do |t|
-    t.string   "question_selection_strategy"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.integer  "subject_course_id"
-    t.integer  "number_of_questions"
-    t.string   "name"
-    t.boolean  "active",                      default: false
-  end
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"

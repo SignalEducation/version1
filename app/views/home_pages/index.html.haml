@@ -32,6 +32,8 @@
                       %td=home_page.public_url
                       %td
                         =link_to t('views.general.edit'), edit_home_page_url(home_page), class: 'btn btn-cyan btn-small'
+                        -if home_page.destroyable?
+                          =link_to t('views.general.delete'), home_page, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
     .row
       .col-sm-12
