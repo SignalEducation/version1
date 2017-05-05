@@ -167,7 +167,11 @@ class HomePagesController < ApplicationController
   end
 
   def check_logged_in_status
-    redirect_to student_dashboard_url if current_user
+    if params[:home_pages_public_url].to_s == '500-page'
+      render file: 'public/500.html', layout: nil, status: 500
+    elsif current_user
+      redirect_to student_dashboard_url
+    end
   end
 
   def layout_variables
