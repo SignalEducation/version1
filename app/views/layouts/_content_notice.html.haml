@@ -1,5 +1,5 @@
 -# Logged In User
--if current_user.individual_student? && current_user.free_member?
+-if current_user && current_user.individual_student? && current_user.free_member?
   -# Logged In Student
   .notice.warning
     .fa.fa-info-circle.icon
@@ -7,7 +7,7 @@
     =link_to user_new_subscription_url(current_user) do
       Upgrade Account?
 
--elsif current_user.canceled_member?
+-elsif current_user && current_user.canceled_member?
   .notice.warning
     .fa.fa-info-circle.icon
     Your Account is canceled.
