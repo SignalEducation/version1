@@ -75,7 +75,7 @@ class Product < ActiveRecord::Base
           currency: self.currency.iso_code,
           price: (self.price.to_f * 100).to_i,
           product: self.stripe_guid,
-          active: self.active,
+          active: true,
           inventory: {
               type: 'infinite'
           }
