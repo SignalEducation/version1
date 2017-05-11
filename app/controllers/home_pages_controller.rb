@@ -88,6 +88,7 @@ class HomePagesController < ApplicationController
   end
 
   def index
+    @navbar = nil
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
@@ -104,6 +105,7 @@ class HomePagesController < ApplicationController
       flash[:success] = I18n.t('controllers.home_pages.create.flash.success')
       redirect_to home_pages_url
     else
+      flash[:error] = I18n.t('controllers.home_pages.create.flash.error')
       render action: :new
     end
   end

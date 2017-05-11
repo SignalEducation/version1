@@ -16,27 +16,25 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
+require 'support/system_setup'
 require 'mandrill_client'
 
 describe HomePagesController, type: :controller do
 
   include_context 'course_content'
   include_context 'users_and_groups_setup'
+  include_context 'system_setup'
 
-  let!(:country_1) { FactoryGirl.create(:ireland) }
-  let!(:country_2) { FactoryGirl.create(:uk) }
-  let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
   let!(:home_page_2) { FactoryGirl.create(:cfa_home, group_id: course_group_2.id) }
-  let!(:home_page_3) { FactoryGirl.create(:home) }
+
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
-  let!(:sign_up_params) { { first_name: "Test", last_name: "Student",
-                            locale: 'en',
-                            email: "test.student@example.com", password: "dummy_pass",
-                            password_confirmation: "dummy_pass" } }
+
+  let!(:sign_up_params) { { first_name: 'Test', last_name: 'Student', locale: 'en',
+                            email: 'test.student@example.com', password: 'dummy_pass',
+                            password_confirmation: 'dummy_pass' } }
   let!(:default_plan) { FactoryGirl.create(:subscription_plan) }
-  let!(:student) { FactoryGirl.create(:individual_student_user) }
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
+  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: individual_student_user.id) }
 
   context 'Not logged in: ' do
 

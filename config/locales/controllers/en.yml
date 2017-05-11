@@ -161,6 +161,7 @@ en:
       create:
         flash:
           success: Home Page has been created successfully
+          error: Home Page was not created
       update:
         flash:
           success: Home Page details have been updated successfully

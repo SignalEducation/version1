@@ -1,17 +1,9 @@
 require 'rails_helper'
 require 'stripe_mock'
+require 'support/system_setup'
 
 shared_context 'subscription_plans_setup' do
 
-  # currencies
-  let!(:gbp) { FactoryGirl.create(:gbp) }
-  let!(:eur) { FactoryGirl.create(:euro) }
-  let!(:usd) { FactoryGirl.create(:usd) }
-
-  # countries
-  let!(:uk) { FactoryGirl.create(:uk, currency_id: gbp.id) }
-  let!(:ireland) { FactoryGirl.create(:ireland, currency_id: eur.id) }
-  let!(:usa) { FactoryGirl.create(:usa, currency_id: usd.id) }
 
   # load Stripe Mock helpers
   let!(:stripe_helper) { StripeMock.create_test_helper }
