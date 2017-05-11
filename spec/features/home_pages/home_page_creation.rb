@@ -137,7 +137,7 @@ describe 'Home Page Creation', type: :feature do
         select course_group_1.name, from: I18n.t('views.home_pages.form.group_id')
         click_button(I18n.t('views.general.save'))
       end
-      expect(page).to have_content(I18n.t('controllers.home_pages.create.flash.error'))
+      expect(page).to have_content('Seo title has already been taken')
       expect(page).to have_content(I18n.t('views.home_pages.new.h1'))
     end
 

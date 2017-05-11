@@ -77,9 +77,6 @@ describe HomePagesController, type: :controller do
     end
 
     describe "GET 'group'" do
-      let!(:currency_2) { FactoryGirl.create(:gbp) }
-
-      #Passes when run by itself
       it 'should see group' do
         get :group, home_pages_public_url: home_page_2.public_url
         expect(flash[:success]).to be_nil

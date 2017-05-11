@@ -105,7 +105,6 @@ class HomePagesController < ApplicationController
       flash[:success] = I18n.t('controllers.home_pages.create.flash.success')
       redirect_to home_pages_url
     else
-      flash[:error] = I18n.t('controllers.home_pages.create.flash.error')
       render action: :new
     end
   end
