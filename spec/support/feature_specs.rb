@@ -7,8 +7,7 @@
 #### Generic
 
 def maybe_upcase(thing)
-  thing
-  #Capybara.current_driver == Capybara.javascript_driver ? thing.upcase : thing
+  Capybara.current_driver == Capybara.javascript_driver ? thing.upcase : thing
 end
 
 
@@ -45,27 +44,17 @@ end
 
 #### Student sign_up process
 
-def student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
-  expect(page).to have_content '7-DAY FREE TRIAL (UP TO 200 MINUTES)'
-  enter_user_details(user_first_name, user_second_name, user_email, user_password)
-    page.all(:css, '#signUp').first.click
-  sleep 1
-  if expect_sign_up
-
-  else
-
-  end
-end
-
-def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email, user_password, expect_sign_up)
+def student_sign_up_as(user_first_name, user_second_name, user_email, user_password)
+  expect(page).to have_content(maybe_upcase '7-day free trial (up to 200 minutes)')
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
   page.all(:css, '#signUp').first.click
   sleep 1
-  if expect_sign_up
+end
 
-  else
-
-  end
+def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email, user_password)
+  enter_user_details(user_first_name, user_second_name, user_email, user_password)
+  page.all(:css, '#signUp').first.click
+  sleep 1
 end
 
 def enter_card_details(card, cvv, exp_month, exp_year)
@@ -120,7 +109,7 @@ def sign_up_and_upgrade_from_free_trial
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
-    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
   end
   sleep(2)
   expect(page).to have_content 'Thanks for Signing Up'
@@ -146,7 +135,7 @@ def sign_up_and_upgrade_from_free_trial_small_device
   visit root_path
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
-    student_sign_up_as('John', 'Smith', 'john@example.com', user_password, true)
+    student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
   end
   within('#thank-you-message') do
     expect(page).to have_content 'Final Step!'

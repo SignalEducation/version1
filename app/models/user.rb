@@ -113,8 +113,8 @@ class User < ActiveRecord::Base
 
   # validation
   validates :email, presence: true, uniqueness: true, length: {within: 7..50}
-  validates :first_name, presence: true, length: {minimum: 1, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 1, maximum: 30}
+  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
+  validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
