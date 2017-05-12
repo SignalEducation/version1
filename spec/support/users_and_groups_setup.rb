@@ -28,6 +28,8 @@ shared_context 'users_and_groups_setup' do
                                 user_group_id: blogger_user_group.id) }
   let(:comp_user) { FactoryGirl.create(:comp_user,
                                 user_group_id: complimentary_user_group.id) }
+  let(:unverified_comp_user) { FactoryGirl.create(:unverified_comp_user,
+                                user_group_id: complimentary_user_group.id) }
   let(:customer_support_manager_user) { FactoryGirl.create(:customer_support_manager_user,
                                 user_group_id: customer_support_user_group.id) }
   let(:marketing_manager_user) { FactoryGirl.create(:marketing_manager_user,

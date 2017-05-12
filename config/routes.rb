@@ -35,8 +35,6 @@ Rails.application.routes.draw do
         as: :user_verification
     get 'account_verified', to: 'student_sign_ups#account_verified',
         as: :account_verified
-    get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
-        as: :old_user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]

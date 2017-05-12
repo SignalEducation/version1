@@ -6,13 +6,12 @@ RSpec.describe UserVerificationsController, :type => :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:unverified_user) { FactoryGirl.create(:unverified_user) }
 
   context 'Non-verified user' do
     describe "Get 'update'" do
       it 'returns success when given a valid code' do
-        get :update, email_verification_code: unverified_user.email_verification_code
-        expect(controller.params[:email_verification_code]).to eq(unverified_user.email_verification_code)
+        get :update, email_verification_code: unverified_individual_student_user.email_verification_code
+        expect(controller.params[:email_verification_code]).to eq(unverified_individual_student_user.email_verification_code)
         expect(response.status).to eq(302)
         expect(response).to redirect_to(account_verified_path)
         expect(flash[:error]).to be_nil

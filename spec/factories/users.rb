@@ -160,6 +160,17 @@ FactoryGirl.define do
       stripe_customer_id                nil
     end
 
+    factory :unverified_comp_user do
+      sequence(:email)                { |n| "unverified-comp-user-#{n}@example.com" }
+      active                          true
+      account_activation_code         nil
+      account_activated_at            Time.now
+      email_verified                  false
+      email_verification_code         'abc123456'
+      email_verified_at               nil
+      password_change_required        true
+    end
+
     factory :customer_support_manager_user do
       sequence(:email)                  { |n| "customer_support_manager-#{n}@example.com" }
       active                            true
