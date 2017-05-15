@@ -266,28 +266,31 @@ class User < ActiveRecord::Base
   end
 
   def days_or_seconds_valid?
-    if free_trial_days_expired? || free_trial_minutes_expired?
-      false
-    else
-      true
-    end
-  end
-
-  def free_trial_days_expired?
-    #If the Number of days since the user was created is greater than the allowed free trial days then permission is denied
-    if (Time.now - self.created_at).to_i.abs / 1.day >= self.trial_limit_in_days
+    if free_trial_days_valid? || free_trial_minutes_valid?
       true
     else
       false
     end
   end
 
-  def free_trial_minutes_expired?
+  def free_trial_days_valid?
+    # 86400 is number of seconds in a day
+    trial_limit_in_seconds = self.trial_limit_in_days * 86400
+    current_date_time = Proc.new { Time.now }.call
+
+    if  current_date_time <= (self.created_at + trial_limit_in_seconds)
+      true
+    else
+      false
+    end
+  end
+
+  def free_trial_minutes_valid?
     #If the Number of seconds watched is less than the allowed free trial time limit then permission is allowed
     if self.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i
-      false
-    else
       true
+    else
+      false
     end
   end
 
@@ -307,15 +310,15 @@ class User < ActiveRecord::Base
   end
 
   def free_member?
-    self.individual_student? && self.free_trial
+    self.individual_student? && self.free_trial && !self.subscriptions.any?
   end
 
   def valid_free_member?
-    self.individual_student? && self.free_trial && self.days_or_seconds_valid?
+    self.free_member? && self.days_or_seconds_valid?
   end
 
   def expired_free_member?
-    self.individual_student? && self.free_trial && !self.days_or_seconds_valid?
+    self.free_member? && !self.days_or_seconds_valid?
   end
 
   def canceled_member?
