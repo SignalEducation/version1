@@ -60,14 +60,13 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/system_setup'
 
 describe UsersController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'system_setup'
 
-  let!(:country_1) { FactoryGirl.create(:uk) }
-  let!(:country_2) { FactoryGirl.create(:ireland) }
-  let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:upgrading_user) { FactoryGirl.create(:individual_student_user) }
   let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
@@ -902,7 +901,7 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "POST 'admin create'" do
+    describe "POST 'create'" do
       it 'should report OK for valid params' do
         referral_codes = ReferralCode.count
         post :create, user: valid_params
