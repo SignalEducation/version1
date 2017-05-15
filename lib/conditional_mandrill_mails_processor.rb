@@ -76,14 +76,11 @@ class ConditionalMandrillMailsProcessor
     free_trial_users = User.where(free_trial: true).where(
         user_group_id: individual_user_group.id)
 
-
-
     free_trial_users.each do |user|
       if !user.subscriptions.any? &&
          !user.days_or_seconds_valid? &&
          user.free_trial_ended_at.nil? &&
          user.active?
-
 
         user.update_attribute(:free_trial_ended_at, Time.now)
       end

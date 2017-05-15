@@ -226,11 +226,6 @@ class User < ActiveRecord::Base
     self.subscriptions.where(active: true).in_created_order.last
   end
 
-  def process_free_trial_limit_reached
-    #Called from a Cron Task and CMEUL
-    self.update_attributes(free_trial_ended_at: Time.now) unless days_or_seconds_valid?
-  end
-
   def user_subscription_status
     current_subscription = self.active_subscription
     if current_subscription
@@ -314,11 +309,11 @@ class User < ActiveRecord::Base
   end
 
   def valid_free_member?
-    self.free_member? && self.days_or_seconds_valid?
+    self.free_member? && self.days_or_seconds_valid? && !self.free_trial_ended_at
   end
 
   def expired_free_member?
-    self.free_member? && !self.days_or_seconds_valid?
+    self.free_member? && !self.days_or_seconds_valid? && self.free_trial_ended_at
   end
 
   def canceled_member?
