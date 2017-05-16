@@ -27,48 +27,6 @@ class SubscriptionsController < ApplicationController
   before_action :get_subscription
   before_action :check_subscriptions, only: [:new_subscription, :create_subscription]
 
-  def change_plan
-    @current_subscription = current_user.active_subscription
-  end
-
-  #Upgrading current sub to a new subscription plan
-  def update
-    if @subscription
-      @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
-      if @subscription && @subscription.errors.count == 0
-        flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
-      else
-        Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
-        flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
-      end
-      redirect_to account_url(anchor: 'subscriptions')
-    else
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-      redirect_to root_url
-    end
-  end
-
-  #Setting current sub to cancel at period end
-  def destroy
-    if @subscription
-      if @subscription.cancel
-        flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
-      else
-        Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
-        flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
-      end
-    else
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-    end
-
-    if current_user.individual_student?
-      redirect_to account_url(anchor: 'subscriptions')
-    else
-      redirect_to user_subscription_status_url(@subscription.user)
-    end
-
-  end
-
   def new_subscription
     @navbar = false
     @countries = Country.all_in_order
@@ -121,7 +79,7 @@ class SubscriptionsController < ApplicationController
 
         if subscription_saved
           user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-          if !user.free_trial_ended_at.nil?
+          if user.free_trial_ended_at
             trial_ended_date = user.free_trial_ended_at
           else
             trial_ended_date = Proc.new{Time.now}.call
@@ -136,6 +94,52 @@ class SubscriptionsController < ApplicationController
     else
       redirect_to user_new_subscription_url(current_user.id)
       flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
+    end
+
+  end
+
+  def personal_upgrade_complete
+    @subscription = current_user.active_subscription
+  end
+
+  def change_plan
+    @current_subscription = current_user.active_subscription
+  end
+
+  #Upgrading current sub to a new subscription plan
+  def update
+    if @subscription
+      @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
+      if @subscription && @subscription.errors.count == 0
+        flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
+      else
+        Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
+        flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
+      end
+      redirect_to account_url(anchor: 'subscriptions')
+    else
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to root_url
+    end
+  end
+
+  #Setting current sub to cancel at period end
+  def destroy
+    if @subscription
+      if @subscription.cancel
+        flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
+      else
+        Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
+        flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
+      end
+    else
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+    end
+
+    if current_user.individual_student?
+      redirect_to account_url(anchor: 'subscriptions')
+    else
+      redirect_to user_subscription_status_url(@subscription.user)
     end
 
   end
@@ -169,10 +173,6 @@ class SubscriptionsController < ApplicationController
     rescue => e
       # Something else happened, completely unrelated to Stripe
     end
-  end
-
-  def personal_upgrade_complete
-    @subscription = current_user.active_subscription
   end
 
   protected
