@@ -41,7 +41,6 @@
     -if Rails.env.production?
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/hotjar'
-    -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
   %body
@@ -50,7 +49,6 @@
     height: 0, width: 0, style: 'display:none;visibility:hidden'}
     -if Rails.env.production?
       =render partial: 'layouts/google_tag_manager'
-    -if Rails.env.production?
       =render partial: 'layouts/linkedin_pixel'
     -if controller_name == 'referral_codes' && action_name == 'show'
       =render partial: 'layouts/facebook_sdk'
