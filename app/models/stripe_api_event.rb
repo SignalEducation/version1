@@ -26,7 +26,7 @@ class StripeApiEvent < ActiveRecord::Base
   attr_accessible :guid, :api_version, :account_url
 
   # Constants
-  KNOWN_API_VERSIONS = %w(2015-02-18)
+  KNOWN_API_VERSIONS = %w(2015-02-18 2017-04-06)
   KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed)
 
   # relationships

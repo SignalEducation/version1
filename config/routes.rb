@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     post 'stripe_v01', to: 'stripe_v01#create'
+    post 'stripe_v02', to: 'stripe_v02#create'
   end
 
   # all standard, user-facing "resources" go inside this scope
