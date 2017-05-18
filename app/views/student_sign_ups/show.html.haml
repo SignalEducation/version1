@@ -30,4 +30,6 @@
                   =link_to 'click here', resend_verification_mail_url(@user.email_verification_code)
                   =" to resend it."
 
--# FAQ will be added here when static page changes are done
+:javascript
+  dataLayer.push({'user_id': "#{@user.id}"});
+
