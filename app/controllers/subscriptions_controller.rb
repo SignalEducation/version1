@@ -39,6 +39,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_subscription
+
     ####  User creating their first subscription  #####
 
     # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
@@ -55,8 +56,7 @@ class SubscriptionsController < ApplicationController
         redirect_to user_new_subscription_url(current_user.id)
       else
         #No coupon code or a valid coupon code so proceed to create subscription on stripe
-        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+        stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
         #Creation on stripe was successful so create our DB record of Subscription
         if stripe_customer && stripe_subscription
@@ -144,10 +144,18 @@ class SubscriptionsController < ApplicationController
 
   end
 
-  def create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+  def create_on_stripe(stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
     begin
-      stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
+      stripe_subscription = Stripe::Subscription.create(
+          customer: stripe_customer_id,
+          plan: subscription_plan.stripe_guid,
+          source: subscription_params["stripe_token"],
+          coupon: verified_coupon,
+          trial_end: 'now'
+      )
+
       return stripe_subscription
+
     rescue Stripe::CardError => e
       # Since it's a decline, Stripe::CardError will be caught
       body = e.json_body
