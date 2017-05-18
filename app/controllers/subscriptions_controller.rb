@@ -39,17 +39,13 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_subscription
+    user = User.find(params[:user_id])
+    subscription_params = params[:user][:subscriptions_attributes]["0"]
+    subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
+    #Check for a coupon code and if its valid
+    coupon_code = params[:coupon] unless params[:coupon].empty?
 
-    ####  User creating their first subscription  #####
-
-    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
-    if params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
-
-      user = User.find(params[:user_id])
-      subscription_params = params[:user][:subscriptions_attributes]["0"]
-      subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-      #Check for a coupon code and if its valid
-      coupon_code = params[:coupon] unless params[:coupon].empty?
+    if user && subscription_params && subscription_plan
       verified_coupon = verify_coupon(coupon_code, user.country.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         #Invalid coupon code so redirect back with errors
@@ -78,13 +74,9 @@ class SubscriptionsController < ApplicationController
         end
 
         if subscription_saved
+          trial_ended_date = user.free_trial_ended_at ? user.free_trial_ended_at : Proc.new{Time.now}.call
+          user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
           user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-          if user.free_trial_ended_at
-            trial_ended_date = user.free_trial_ended_at
-          else
-            trial_ended_date = Proc.new{Time.now}.call
-          end
-          current_user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
           redirect_to personal_upgrade_complete_url
         else
           redirect_to user_new_subscription_url(current_user.id)
