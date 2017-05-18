@@ -13,7 +13,6 @@ gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk-v1' # enables AWS functionality - use with AWS::...
 gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 #gem 'aws-s3' # grants timeout-able URLs
-gem 'basecrm' #GetBase API wrapper
 gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
@@ -49,7 +48,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
-gem 'stripe', '=1.51.0' #, git: 'https://github.com/stripe/stripe-ruby'
+gem 'stripe', '=2.8.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'summernote-rails'
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
@@ -100,7 +99,7 @@ group :test do
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
-  gem 'stripe-ruby-mock', '~> 2.3.1', require: 'stripe_mock'
+  #gem 'stripe-ruby-mock', '~> 2.3.1', require: 'stripe_mock'
   gem 'webrat' # Runs tests in a "headless" browser
 end
 
