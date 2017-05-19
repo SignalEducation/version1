@@ -1,12 +1,8 @@
 require 'rails_helper'
-require 'stripe_mock'
+require 'fake_stripe'
 require 'support/system_setup'
 
 shared_context 'subscription_plans_setup' do
-
-
-  # load Stripe Mock helpers
-  let!(:stripe_helper) { StripeMock.create_test_helper }
 
   # subscription plans - GBP - Mth / Qtr / Year
   let!(:subscription_plan_gbp_m) { FactoryGirl.create(:student_subscription_plan_m,
