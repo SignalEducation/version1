@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'fake_stripe'
 require 'support/system_setup'
 
 shared_context 'subscription_plans_setup' do

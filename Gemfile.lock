@@ -1,3 +1,12 @@
+GIT
+  remote: git@github.com:JamesMacRedmond/stripe-ruby-mock.git
+  revision: 8b99d86a606fe06b8c98dd00e55e00c2636250ed
+  specs:
+    stripe-ruby-mock (2.4.0)
+      dante (>= 0.2.0)
+      multi_json (~> 1.0)
+      stripe (~> 2.8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -134,9 +143,8 @@ GEM
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
-    crack (0.4.3)
-      safe_yaml (~> 1.0.0)
     daemons (1.2.3)
+    dante (0.2.0)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
@@ -152,10 +160,6 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    fake_stripe (0.0.12)
-      capybara
-      sinatra
-      webmock
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.10)
@@ -192,7 +196,6 @@ GEM
       haml (>= 4.0.6, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
-    hashdiff (0.3.4)
     hashie (3.4.6)
     hike (1.2.3)
     hirb (0.7.3)
@@ -364,7 +367,6 @@ GEM
     ruby_parser (3.7.2)
       sexp_processor (~> 4.1)
     rubyzip (1.2.0)
-    safe_yaml (1.0.4)
     sass (3.2.19)
     sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
@@ -442,10 +444,6 @@ GEM
     utf8-cleaner (0.2.1)
       activesupport
     uuidtools (2.1.5)
-    webmock (3.0.1)
-      addressable (>= 2.3.6)
-      crack (>= 0.3.2)
-      hashdiff
     webrat (0.7.3)
       nokogiri (>= 1.2.0)
       rack (>= 1.0)
@@ -501,7 +499,6 @@ DEPENDENCIES
   dynamic_sitemaps
   execjs
   factory_girl_rails
-  fake_stripe
   faraday (~> 0.9.2)
   figaro
   font-awesome-rails
@@ -547,6 +544,7 @@ DEPENDENCIES
   sinatra
   spring
   stripe (= 2.8.0)
+  stripe-ruby-mock!
   summernote-rails
   therubyracer
   thin

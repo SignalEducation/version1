@@ -17,7 +17,6 @@ require 'capybara/poltergeist'
 require 'database_cleaner'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'sidekiq/testing'
-require 'support/fake_stripe'
 Sidekiq::Testing.inline! # makes background jobs run immediately
 
 # Add additional requires below this line. Rails is not loaded until this point!

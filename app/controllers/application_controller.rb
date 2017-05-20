@@ -350,17 +350,18 @@ class ApplicationController < ActionController::Base
   def verify_coupon(coupon, currency_id)
     @user_currency = Currency.find(currency_id)
     verified_coupon = Stripe::Coupon.retrieve(coupon)
-    unless verified_coupon.valid
+    if !verified_coupon.valid
       flash[:error] = 'Sorry! The coupon code you entered has expired'
       verified_coupon = 'bad_coupon'
       return verified_coupon
-    end
-    if verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
+    elsif verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
       flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
       verified_coupon = 'bad_coupon'
       return verified_coupon
+    else
+      return verified_coupon.id
     end
-    return verified_coupon
+
   rescue => e
     flash[:error] = 'The coupon code entered is not valid'
     verified_coupon = 'bad_coupon'

@@ -22,7 +22,7 @@ class SubscriptionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin individual_student customer_support_manager))
+    ensure_user_is_of_type(%w(individual_student))
   end
   before_action :get_subscription
   before_action :check_subscriptions, only: [:new_subscription, :create_subscription]
@@ -39,18 +39,17 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_subscription
-
     user = User.find(params[:user_id])
     subscription_params = params[:user][:subscriptions_attributes]["0"]
     subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
     #Check for a coupon code and if its valid
     coupon_code = params[:coupon] unless params[:coupon].empty?
 
-    if user && subscription_params && subscription_plan
-      verified_coupon = verify_coupon(coupon_code, user.country.currency_id) if coupon_code
+    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] == true
+      verified_coupon = verify_coupon(coupon_code, subscription_plan.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         #Invalid coupon code so redirect back with errors
-        redirect_to user_new_subscription_url(current_user.id)
+        redirect_to user_new_subscription_url(user.id)
       else
         #No coupon code or a valid coupon code so proceed to create subscription on stripe
         stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
