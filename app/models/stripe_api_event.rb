@@ -124,34 +124,31 @@ class StripeApiEvent < ActiveRecord::Base
     #This updates the existing Invoice record using the webhook payload data. The related subscription may need to be updated also if it is in a 'past_due' state.
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
     subscription = Subscription.find_by_stripe_guid(stripe_subscription_guid)
-    invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
+    invoice = Invoice.find_by_stripe_guid(stripe_invoice_guid)
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
-      self.processed = true
-      self.processed_at = Time.now
-
-      if subscription.current_status == 'past_due'
-        #Update the subscription if it is in the past_due state
-        subscription.update_attribute(:current_status, 'active')
-        Rails.logger.debug "DEBUG: Subscription being updated from past_due to active as a result of successful invoice payment webhook. Sub id - #{subscription.id} Invoice id - #{invoice.id}"
-      end
-
-      #Sync stripe account balance
-      unless Rails.env.test?
+      if invoice.update_from_stripe(stripe_invoice_guid)
+        self.processed = true
+        self.processed_at = Time.now
+        if subscription.current_status == 'past_due'
+          #Update the subscription if it is in the past_due state
+          subscription.update_attribute(:current_status, 'active')
+          Rails.logger.debug "DEBUG: Subscription being updated from past_due to active as a result of successful invoice payment webhook. Sub id - #{subscription.id} Invoice id - #{invoice.id}"
+        end
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
         balance = stripe_customer.account_balance
         user.update_attributes(stripe_account_balance: balance)
+        #The subscription charge was successful so send successful payment email
+        invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
+        MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+
+        Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
+
+      else
+        set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error updating invoice")
       end
-
-      #The subscription charge was successful so send successful payment email
-      invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: 'www.learnsignal.com')
-      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
-
-      Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
-
     else
-      set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
+      set_process_error("Error finding User-#{user.try(:id)}, Invoice-#{invoice.try(:id)} or Subscription-#{subscription.try(:id)}. ")
     end
   end
 
