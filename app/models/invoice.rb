@@ -89,7 +89,7 @@ class Invoice < ActiveRecord::Base
       subscription = Subscription.find_by_stripe_guid(stripe_data_hash[:subscription])
       currency = Currency.find_by_iso_code(stripe_data_hash[:currency].upcase)
 
-      if user && subscription
+      if user && subscription && currency
         inv = Invoice.new(
           user_id: user.id,
           subscription_id: subscription.id,
