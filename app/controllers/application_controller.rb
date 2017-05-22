@@ -349,7 +349,9 @@ class ApplicationController < ActionController::Base
 
   def verify_coupon(coupon, currency_id)
     @user_currency = Currency.find(currency_id)
+    Rails.logger.debug "INFO: Started Coupon Verification Process with coupon #{coupon}"
     verified_coupon = Stripe::Coupon.retrieve(coupon)
+    Rails.logger.debug "INFO: Stripe returned #{verified_coupon}."
     if !verified_coupon.valid
       flash[:error] = 'Sorry! The coupon code you entered has expired'
       verified_coupon = 'bad_coupon'

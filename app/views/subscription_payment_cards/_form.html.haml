@@ -28,6 +28,14 @@
 
 :javascript
 
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
+  });
+
   var stripe = Stripe('#{ENV['learnsignal_v3_stripe_public_key']}');
   var elements = stripe.elements();
 

@@ -62,10 +62,9 @@ class SubscriptionTransaction < ActiveRecord::Base
   #Called as an after_create in Subscription model
   def self.create_from_stripe_data(subscription)
     stripe_sub_data = subscription.stripe_customer_data[:subscriptions][:data][0]
-    stripe_card_data = subscription.stripe_customer_data[:cards] ?
-            subscription.stripe_customer_data[:cards] :
-            subscription.stripe_customer_data[:sources]
-    default_card = SubscriptionPaymentCard.find_by_stripe_card_guid(subscription.stripe_customer_data[:default_card])
+    stripe_card_data = subscription.stripe_customer_data[:sources]
+    default_card_id = subscription.stripe_customer_data[:default_source]
+    default_card = SubscriptionPaymentCard.find_by_stripe_card_guid(default_card_id)
     if stripe_sub_data[:status] == 'active'
       tran_type = 'payment'
     else
@@ -74,7 +73,8 @@ class SubscriptionTransaction < ActiveRecord::Base
     if default_card
       card_id = default_card.try(:id)
     else
-      new_card_id = SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, (subscription.stripe_customer_data[:default_source] || subscription.stripe_customer_data[:default_card]))
+      new_card_id = SubscriptionPaymentCard.create_cards_from_stripe_array(stripe_card_data[:data], subscription.user_id, subscription.stripe_customer_data[:default_source])
+
       new_card = SubscriptionPaymentCard.find(new_card_id)
       card_id = new_card.try(:id)
     end

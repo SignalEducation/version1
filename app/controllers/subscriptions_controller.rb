@@ -45,7 +45,7 @@ class SubscriptionsController < ApplicationController
     #Check for a coupon code and if its valid
     coupon_code = params[:coupon] unless params[:coupon].empty?
 
-    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] == true
+    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] == 'true'
       verified_coupon = verify_coupon(coupon_code, subscription_plan.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         #Invalid coupon code so redirect back with errors
