@@ -148,7 +148,7 @@ class StripeApiEvent < ActiveRecord::Base
         set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error updating invoice")
       end
     else
-      set_process_error("Error finding User-#{user.try(:id)}, Invoice-#{invoice.try(:id)} or Subscription-#{subscription.try(:id)}. ")
+      set_process_error("Error finding User-#{user.try(:id)}, Invoice-#{invoice.try(:id)} or Subscription-#{subscription.try(:id)}. InvoicePaymentSucceeded Event")
     end
   end
 
@@ -159,9 +159,9 @@ class StripeApiEvent < ActiveRecord::Base
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
+      invoice.update_from_stripe(stripe_invoice_guid)
       if stripe_next_attempt
-        #One of the attempted charges within the Stripe retry 5 day window so mark the subscription as past_due, allowing access to course content until the retry window has expired.
+        #A NextPaymentAttempt Date value means that another payment attempt will be made
         self.processed = true
         self.processed_at = Time.now
         subscription.update_attribute(:current_status, 'past_due')
@@ -171,13 +171,23 @@ class StripeApiEvent < ActiveRecord::Base
         self.processed = true
         self.processed_at = Time.now
         subscription.update_attribute(:current_status, 'canceled')
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email')
       end
     else
-      Rails.logger.error "ERROR: Payment Failed webhook couldn't find user with Stripe id #{stripe_customer_guid} OR subscription with id - #{subscription.try(:id)} OR invoice with id - #{invoice.try(:id)}."
-      set_process_error "Could not find user with stripe id #{stripe_customer_guid}"
+      set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"
     end
 
+  end
+
+  def customer_subscription_deleted(payload)
+
+    if invoice && invoice.errors.count == 0
+      Rails.logger.debug "DEBUG: Invoice created with id - #{invoice.id}"
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
+    end
   end
 
   def set_default_values
