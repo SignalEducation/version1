@@ -67,7 +67,7 @@ class StripeApiEvent < ActiveRecord::Base
           when 'customer.subscription.deleted'
             process_customer_subscription_deleted(self.payload[:data][:object][:customer], self.payload[:data][:object][:id])
           else
-            set_process_error "Unknown event type"
+            set_process_error "Unknown event type - #{self.payload}"
         end
         self.save
       else

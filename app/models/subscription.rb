@@ -64,24 +64,26 @@ class Subscription < ActiveRecord::Base
 
   # instance methods
   def cancel
-    # call stripe and cancel the subscription
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    response = stripe_subscription.delete(at_period_end: true).to_hash
-    if response[:status] == 'active' && response[:cancel_at_period_end] == true
-      self.update_attribute(:current_status, 'canceled-pending')
-
-    elsif response[:status] == 'past_due' && response[:cancel_at_period_end] == true
-
-      self.update_attribute(:current_status, 'canceled')
-      #We don't send any email here!!
-      Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
+    if self.stripe_customer_id && self.stripe_guid
+      # call stripe and cancel the subscription
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+      response = stripe_subscription.delete(at_period_end: true).to_hash
+      if response[:status] == 'active' && response[:cancel_at_period_end] == true
+        self.update_attribute(:current_status, 'canceled-pending')
+      elsif response[:status] == 'past_due'
+        self.update_attribute(:current_status, 'canceled')
+        #We don't send any email here!!
+        Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
+      else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
+        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      end
+      # return true or false - if everything went well
+      errors.messages.count == 0
     else
-      Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end
-    # return true or false - if everything went well
-    errors.messages.count == 0
   end
 
   def destroyable?
