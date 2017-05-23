@@ -32,7 +32,7 @@ class StripeApiEvent < ActiveRecord::Base
   # relationships
 
   # validation
-  validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
+  #validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :api_version, inclusion: {in: KNOWN_API_VERSIONS}, length: { maximum: 255 }
   validates :payload, presence: true
 
@@ -54,8 +54,8 @@ class StripeApiEvent < ActiveRecord::Base
 
   def disseminate_payload
     if self.payload && self.payload.class == Hash && self.payload[:type]
-      Rails.logger.debug "DEBUG: Processing Stripe event #{payload[:type]}"
-      if Invoice::STRIPE_LIVE_MODE == payload[:livemode]
+      Rails.logger.debug "DEBUG: Processing Stripe event #{self.payload[:type]}"
+      if Invoice::STRIPE_LIVE_MODE == self.payload[:livemode]
         #If the payload livemode matches the environment variable livemode
         case self.payload[:type]
           when 'invoice.created'
@@ -65,7 +65,7 @@ class StripeApiEvent < ActiveRecord::Base
           when 'invoice.payment_failed'
             process_invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription], self.payload[:data][:object][:id])
           when 'customer.subscription.deleted'
-            #process_customer_subscription_deleted(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription], self.payload[:data][:object][:id])
+            process_customer_subscription_deleted(self.payload[:data][:object][:customer], self.payload[:data][:object][:id])
           else
             set_process_error "Unknown event type"
         end
@@ -179,12 +179,15 @@ class StripeApiEvent < ActiveRecord::Base
 
   end
 
-  def customer_subscription_deleted(payload)
+  def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid)
+    user = User.find_by_stripe_customer_id(stripe_customer_guid)
+    subscription = Subscription.find_by_stripe_guid(stripe_subscription_guid)
 
-    if invoice && invoice.errors.count == 0
-      Rails.logger.debug "DEBUG: Invoice created with id - #{invoice.id}"
+    if user && subscription
+      Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"
       self.processed = true
       self.processed_at = Time.now
+      subscription.update_attribute(:current_status, 'canceled')
     else
       set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
     end
