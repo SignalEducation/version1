@@ -105,13 +105,8 @@ class Subscription < ActiveRecord::Base
   end
 
   def reactivation_options
-    SubscriptionPlan
-      .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: true)
-      .where('price > 0.0')
-      .generally_available
-      .all_active
-      .all_in_order
+    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id,
+                           available_to_students: true).where('price > 0.0').generally_available.all_active.all_in_order
   end
 
   def upgrade_options
@@ -137,7 +132,7 @@ class Subscription < ActiveRecord::Base
       return self
     end
     # make sure the current subscription is in "good standing"
-    unless %w(active).include?(self.current_status)
+    unless %w(active past_due).include?(self.current_status)
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
       return self
     end
@@ -180,7 +175,7 @@ class Subscription < ActiveRecord::Base
         new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
         new_sub.save(validate: false)
 
-        self.update_attributes(current_status: 'canceled', active: false)
+        self.update_attributes(current_status: 'canceled')
 
         return new_sub
       end
