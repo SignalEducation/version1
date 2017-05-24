@@ -111,11 +111,11 @@ class Subscription < ActiveRecord::Base
 
   def upgrade_options
     SubscriptionPlan
-      .where(currency_id: self.subscription_plan.currency_id,
+        .where.not(id: self.id)
+        .where(currency_id: self.subscription_plan.currency_id,
              available_to_students: self.subscription_plan.available_to_students)
       .generally_available
       .all_active
-      .where('price > 0.0')
       .all_in_order
   end
 

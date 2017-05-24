@@ -218,10 +218,10 @@ class UsersController < ApplicationController
   end
 
   def reactivate_account
-    @user = User.where(id: params[:user_id]).first
+    @user = User.find(params[:user_id])
     @subscription = @user.active_subscription || @user.subscriptions.last
     redirect_to root_url unless @user.individual_student? && @subscription
-    redirect_to account_url(anchor: :subscriptions) unless @subscription.current_status == 'canceled'
+    redirect_to account_url(anchor: :subscriptions) unless %w(canceled).include?(@subscription.current_status)
     currency_id = @subscription.subscription_plan.currency_id
     @country = Country.where(currency_id: currency_id).first
     @subscription_plans = @subscription.reactivation_options
@@ -230,7 +230,6 @@ class UsersController < ApplicationController
   end
 
   def reactivate_account_subscription
-    redirect_to root_url unless current_user.individual_student?
     ####  User adding a subscription after previously canceling one  #####
     if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"] && params[:subscription]["terms_and_conditions"]
       coupon_code = params[:coupon] unless params[:coupon].empty?

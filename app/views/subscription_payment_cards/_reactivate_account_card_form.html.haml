@@ -1,30 +1,11 @@
 .l-margin-top-big.payment-errors
   .row
-    .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
-      .form-group
-        %label
-          Card Number
-        =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
-      .row
-        .form-group.col-sm-4
-          %label
-            CVV
-          =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
-        .form-group.col-sm-4
-          %label
-            Expiry Month
-          =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
-        .form-group.col-sm-4
-          %label
-            Expiry Year
-          =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
-      .row{style: "margin-bottom: 15px;"}
-        .col-sm-12
-          .col-sm-6{style: 'padding-left: 0px;'}
-            =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
-          .col-sm-6
-            %p.note{style: "text-align: left; margin-bottom: 0px; margin-top: 13px;"}
-              =t('views.users.upgrade_subscription.secure_server')
+    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
+      .form-row
+        #card-element
+
+        #card-errors{role: 'alert'}
+
 
 
 .l-margin-top.coupon-section
@@ -59,88 +40,38 @@
     }
   });
 
-  Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
+  var stripe = Stripe('pk_test_QNs2TrDsJ5o0IyesV7U2THq5');
+  var elements = stripe.elements();
 
-  function luhnCheckCardNumber(cardNo) {
-    var c = cardNo.replace(/[^\d]/g, '');
-    var cl = parseInt(c.substr(c.length - 1));
-    var c = c.slice(0,-1)
-    var c = c.split("").reverse().join("");
-    var c = c.split("");
-    var a = 2;
-    var cm = [];
-    for (var i = 0; i < c.length; i++) {
-      if (a%2 == 0) {var t = c[i]*2;
-        if (t > 9) {var t = (t -9);}
-        cm.push(t);
-      } else {
-        cm.push(parseInt(c[i]));
-      }
-      a++;
-    }
-    var f = 0;
-    for (var i = 0; i < cm.length; i++) {
-      f += cm[i];
-    }
-    f = f + cl;
-    return (f%10 == 0);
+  var card = elements.create('card', {hidePostalCode: true,});
+  card.mount('#card-element');
+
+
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('reactivate-form');
+    $('#subscription_stripe_token').val(token.id);
+
+    // Submit the form
+    form.submit();
   }
 
-  $(document).on('ready', function() {
-    $('.creditCardNumber').keyup(function() {
-      $(this).val(function(i, v) {
-        var v = v.replace(/[^\d]/g, '').match(/.{1,4}/g);
-        return v ? v.join(' ') : '';
-      });
-    });
-
-    $('.creditCardNumber').blur(function() {
-      $(this).parent().removeClass('has-success has-error');
-      if (luhnCheckCardNumber( $(this).val() ) ) {
-        $(this).parent().addClass('has-success');
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
       } else {
-        $(this).parent().addClass('has-error');
-      }
-    })
-
-    //$('#new_user').submit(function(event) {
-    $('.payment-errors').closest("form").submit(function(event) {
-      var $form = $(this);
-      console.log($form);
-      // If we're in the student-signups page, make sure we have a subscription plan chosen
-      if ((window.location.pathname == '/en/student_sign_ups' || window.location.pathname == '/en/student_sign_up') && isNaN(parseInt($('#user_subscriptions_attributes_0_subscription_plan_id').val()))) {
-        alert('Please choose a subscription plan');
-
-        return false;
-      } else {
-
-        // Disable the submit button to prevent repeated clicks
-        $form.find('input:submit').prop('disabled', true);
-        // Create the token
-        Stripe.card.createToken($form, stripeResponseHandler);
-        // Prevent the form from submitting with the default action
-        return false;
+        // Send the token to your server
+        stripeTokenHandler(result.token);
       }
     });
+  };
 
-    function stripeResponseHandler(status, response) {
-      var $form = $('.payment-errors').closest("form");
-
-      if (response.error) {
-        // Show the errors on the form
-        $form.find('.payment-errors').addClass('alert alert-danger text-center').text(response.error.message);
-        $form.find('input:submit').prop('disabled', false);
-      } else {
-        // response contains id and card, which contains additional card details
-        var token = response.id;
-        // Insert the token into the form so it gets submitted to the server
-        $('#subscription_stripe_token').val(token);
-        $('#subscription_payment_card_stripe_token').val(token);
-        // Kill the credit card details
-        $form.find('[data-stripe]').remove();
-        $form.find('.payment-errors').remove();
-        // and submit the form
-        $form.get(0).submit();
-      }
-    };
-  })
+  // Create a token when the form is submitted.
+  var form = document.getElementById('reactivate-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    createToken();
+  });
