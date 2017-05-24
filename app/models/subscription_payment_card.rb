@@ -278,7 +278,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
       SubscriptionPaymentCard.where(user_id: self.user_id, status: 'card-live').update_all(status: 'not-live', is_default_card: false)
       # mark the target card as live / default
       self.update_columns(status: 'card-live', is_default_card: true)
-      # tell Stripe this is the live card.
+      # Update the stripe customers default source to be this card
       stripe_customer = Stripe::Customer.retrieve(self.customer_guid)
       stripe_customer.default_source = self.stripe_card_guid
       stripe_customer.save
