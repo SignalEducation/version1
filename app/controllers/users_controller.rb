@@ -238,7 +238,7 @@ class UsersController < ApplicationController
         redirect_to user_reactivate_account_url(current_user.id)
       else
         #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
-        @user.resubscribe_account(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i, params[:subscription]["stripe_token"], params[:subscription]["terms_and_conditions"], coupon_code)
+        @user.resubscribe_account(params[:subscription]["subscription_plan_id"].to_i, params[:subscription]["stripe_token"], params[:subscription]["terms_and_conditions"], coupon_code)
         redirect_to reactivation_complete_url
       end
     else

@@ -175,7 +175,7 @@ class Subscription < ActiveRecord::Base
         new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
         new_sub.save(validate: false)
 
-        self.update_attributes(current_status: 'canceled')
+        self.update_attributes(current_status: 'canceled', active: false)
 
         return new_sub
       end

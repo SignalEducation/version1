@@ -95,11 +95,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # class methods
   def self.build_from_stripe_data(stripe_card_data, user_id=nil)
     if stripe_card_data[:object] == 'card'
-      user = User.where(stripe_customer_id: stripe_card_data[:customer]).first.try(:id)
-      user_id ||= user.try(:id)
+      user = User.find(user_id)
       country_id = Country.find_by_iso_code(stripe_card_data[:country].to_s.upcase).try(:id) || user.try(:country_id)
       x = SubscriptionPaymentCard.new(
-              user_id: user_id,
+              user_id: user.id,
               stripe_card_guid: stripe_card_data[:id],
               brand: stripe_card_data[:brand],
               last_4: stripe_card_data[:last4],

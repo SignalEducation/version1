@@ -556,9 +556,9 @@ class User < ActiveRecord::Base
     DiscourseCreateUserWorker.perform_at(5.minute.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
-  def resubscribe_account(user_id, new_plan_id, stripe_token, terms_and_conditions, coupon_code)
+  def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions, coupon_code)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    user = User.find_by_id(user_id)
+    user = self
     old_sub = user.active_subscription
 
     # compare the currencies of the old and new plans,

@@ -15,9 +15,7 @@
 #upgrade-subscription
   =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {id: 'reactivate-form', role: 'form'} do |f|
     =f.hidden_field :subscription_plan_id
-    =f.hidden_field :user_id, value: @user.id
     =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-    =f.hidden_field :stripe_customer_id, value: @user.stripe_customer_id
     =f.hidden_field :stripe_token
     =render partial: 'layouts/error_messages', locals: {thing: @new_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
     .l-wrap
