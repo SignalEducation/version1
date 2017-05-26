@@ -20,7 +20,6 @@ class DashboardController < ApplicationController
     end
     @new_subscriptions = Subscription.this_week.all_active.all_of_status('active')
     @all_subscriptions = Subscription.all_active.all_of_status('active')
-
   end
 
   def export_users
@@ -40,6 +39,16 @@ class DashboardController < ApplicationController
       format.html
       format.csv { send_data @users.to_csv() }
       format.xls { send_data @users.to_csv(col_sep: "\t", headers: true), filename: "monthly-users-#{Date.today}.xls" }
+    end
+  end
+
+  def export_enrollments
+    @enrollments = Enrollment.all_in_order.all_active
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @enrollments.to_csv() }
+      format.xls { send_data @enrollments.to_csv(col_sep: "\t", headers: true), filename: "enrolments-#{Date.today}.xls" }
     end
   end
 

@@ -61,6 +61,53 @@ class Enrollment < ActiveRecord::Base
     self.student_number = nil if self.student_number && self.student_number.empty?
   end
 
+  def self.to_csv(options = {})
+    attributes = %w{id course_name user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def course_name
+    self.subject_course.name
+  end
+
+  def user_email
+    self.user.email
+  end
+
+  def date_of_birth
+    self.user.try(:date_of_birth)
+  end
+
+  def percentage_complete
+    course_log = self.subject_course_user_log
+    if course_log
+      percentage = course_log.percentage_complete
+      percentage.to_s << ' %' if percentage
+    end
+  end
+
+  def elements_complete_count
+    course_log = self.subject_course_user_log
+    if course_log
+      percentage = course_log.count_of_cmes_completed
+      percentage
+    end
+  end
+
+  def course_elements_count
+    course_log = self.subject_course_user_log
+    if course_log
+      course_log.elements_total
+    end
+  end
+
+
   protected
 
   def check_dependencies
