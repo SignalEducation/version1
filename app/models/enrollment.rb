@@ -87,8 +87,8 @@ class Enrollment < ActiveRecord::Base
   def percentage_complete
     course_log = self.subject_course_user_log
     if course_log
-      percentage = course_log.percentage_complete.try(:to_s)
-      percentage << ' %'
+      percentage = course_log.percentage_complete
+      percentage.to_s << ' %' if percentage
     end
   end
 
