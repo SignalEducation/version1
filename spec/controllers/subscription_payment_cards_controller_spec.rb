@@ -41,10 +41,12 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup'
+  include_context 'system_setup'
 
   before { StripeMock.start }
   after { StripeMock.stop }
 
+  let(:stripe_helper) { StripeMock.create_test_helper }
   let(:card_params) { { last4: '4242', exp_mth: 12, exp_year: 2019 } }
   let(:bad_card_params) { { last4: '4241', exp_mth: 12, exp_year: 2012 } }
   let(:stripe_card_token) { stripe_helper.generate_card_token(card_params) }
@@ -103,7 +105,9 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should be OK with redirect' do
+        user_card_count = individual_student_user.subscription_payment_cards.count
         post :create, subscription_payment_card: create_params.merge(user_id: individual_student_user.id)
+        expect(individual_student_user.subscription_payment_cards.count).to eq(user_card_count + 1)
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
