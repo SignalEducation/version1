@@ -6,8 +6,6 @@
 
         #card-errors{role: 'alert'}
 
-
-
 .l-margin-top.coupon-section
   .row
     .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
@@ -23,10 +21,9 @@
               %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
                 =t('views.general.terms_and_conditions')
 
-    .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
+    .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2.l-margin-top-huge
       .form-group.l-margin-top
-        =f.submit t('views.users.upgrade_subscription.reactivate_account'), class: 'btn btn-red upgrade-sub'
-
+        %input{type: 'submit', class: 'btn btn-red', value: t('views.users.upgrade_subscription.reactivate_account')}
 
 
 

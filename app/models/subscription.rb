@@ -175,6 +175,7 @@ class Subscription < ActiveRecord::Base
         new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
         new_sub.save(validate: false)
 
+        #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
         self.update_attributes(current_status: 'canceled', active: false)
 
         return new_sub

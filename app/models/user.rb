@@ -557,6 +557,7 @@ class User < ActiveRecord::Base
   end
 
   def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions, coupon_code)
+
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = self
     old_sub = user.active_subscription
@@ -591,7 +592,7 @@ class User < ActiveRecord::Base
     #### Now we need to create a new Subscription in our DB.
     ActiveRecord::Base.transaction do
       new_sub = Subscription.new(
-          user_id: user_id,
+          user_id: user.id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
           active: true,
