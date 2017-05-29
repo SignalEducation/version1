@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
          (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
          (the_user_group.customer_support    && permitted_thing == 'customer_support_manager') ||
          (the_user_group.marketing_support    && permitted_thing == 'marketing_manager') ||
-         (the_user_group.site_admin)
+         (the_user_group.site_admin           && permitted_thing == 'admin')
         permission_granted = true
       end
     end

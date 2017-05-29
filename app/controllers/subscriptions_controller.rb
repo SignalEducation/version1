@@ -98,7 +98,7 @@ class SubscriptionsController < ApplicationController
     @current_subscription = current_user.active_subscription
   end
 
-  #Upgrading current sub to a new subscription plan
+  #Upgrading current subscription to a new subscription plan
   def update
     if @subscription
       @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
@@ -115,7 +115,7 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  #Setting current sub to cancel at period end
+  #Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
   def destroy
     if @subscription
       if @subscription.cancel
@@ -133,7 +133,6 @@ class SubscriptionsController < ApplicationController
     else
       redirect_to user_subscription_status_url(@subscription.user)
     end
-
   end
 
   def create_on_stripe(stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
