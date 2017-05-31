@@ -2,6 +2,7 @@ require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 require 'support/subscription_plans_setup'
+require 'support/system_setup'
 
 
 describe 'User navigating through the dashboard:', type: :feature do
@@ -9,6 +10,7 @@ describe 'User navigating through the dashboard:', type: :feature do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
   include_context 'subscription_plans_setup'
+  include_context 'system_setup'
 
 
   before(:each) do
@@ -33,7 +35,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       click_on(course_module_element_1_1.name)
       expect(page).to have_content course_module_element_1_1.name
       page.all('.quiz-answer-clickable').first.click
-      expect(page).to have_content I18n.t('views.courses.show_results.h1')
+      expect(page).to have_content 'Result:'
       within('.navbar.navbar-default') do
         click_link 'Dashboard'
       end
@@ -41,7 +43,6 @@ describe 'User navigating through the dashboard:', type: :feature do
       expect(page).to have_content subject_course_1.name
       expect(page).to have_css('.progress')
       expect(page).to have_css('.card')
-      expect(page).to have_content('1 out of 3 lessons completed')
       click_link('Resume Course')
       expect(page).to have_content subject_course_1.name
       sign_out

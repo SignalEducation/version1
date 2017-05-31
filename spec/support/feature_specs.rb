@@ -109,6 +109,7 @@ end
 
 def sign_up_and_upgrade_from_free_trial
   visit root_path
+  sleep(2)
   user_password = ApplicationController.generate_random_code(10)
   within('#sign-up-form') do
     student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
@@ -124,7 +125,7 @@ def sign_up_and_upgrade_from_free_trial
   student_picks_a_subscription_plan(gbp, 1)
   enter_credit_card_details('valid')
   check I18n.t('views.general.terms_and_conditions')
-  find('.upgrade-sub').click
+  click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
   sleep(10)
   expect(page).to have_content 'Thanks for upgrading your subscription!'
   visit_my_profile
@@ -150,7 +151,7 @@ def sign_up_and_upgrade_from_free_trial_small_device
   sleep(5)
   student_picks_a_subscription_plan(usd, 1)
   enter_credit_card_details('valid')
-  find('.upgrade-sub').click
+  click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
   sleep(5)
   within('#thank-you-message') do
     expect(page).to have_content 'Thanks for upgrading your subscription!'
