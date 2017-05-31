@@ -54,7 +54,7 @@ class Product < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    self.orders.empty?
   end
 
   def self.search(search)
