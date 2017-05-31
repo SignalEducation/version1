@@ -58,10 +58,12 @@ def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email
 end
 
 def enter_card_details(card, cvv, exp_month, exp_year)
-  fill_in('card_number', with: card)
-  fill_in('cvv_number', with: cvv)
-  select exp_month, from: 'expiry_month'
-  select exp_year, from: 'expiry_year'
+  stripe_iframe = all('iframe[name=__privateStripeFrame4]').last
+  Capybara.within_frame stripe_iframe do
+    find_field('cardnumber').send_keys(card)
+    find_field('exp-date').send_keys(exp_month, exp_year)
+    find_field('cvc').send_keys(cvv)
+  end
 end
 
 def enter_credit_card_details(card_type='valid')
