@@ -199,6 +199,7 @@ describe Api::StripeV02Controller, type: :controller do
       end
 
       describe 'invoice with invalid data' do
+        #TODO should add more tests for bad data, payment_failed and subscription_deleted are not tested
         before(:each) do
           SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
         end
@@ -232,7 +233,7 @@ describe Api::StripeV02Controller, type: :controller do
         end
 
         it 'should not process invoice.created event if subscription plan from invoice line item with given GUID does not exist' do
-          post :create, invoice_created_event.to_json
+          post :create, invoice_created_event_1.to_json
 
           # Following test should pass because transaction is rolled back. However,
           # it seems that database_cleaner messes up transactions and our transaction
@@ -258,7 +259,6 @@ describe Api::StripeV02Controller, type: :controller do
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Could not find user with stripe id #{evt.data.object.customer}")
         end
       end
 
