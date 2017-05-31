@@ -1,126 +1,69 @@
-.payment-errors
-  .col-md-10.col-md-offset-1
-    .form-group{style: 'width: 97%;'}
-      %label
-        Card Number
-      =text_field_tag :card_number, nil, placeholder: t('views.general.credit_card_number_placeholder'), class: 'form-control creditCardNumber', maxlength: 23, minlength: 16, required: true, data: {stripe: 'number'}
-    .row.l-margin-top-big
-      .col-md-4
-        .form-group{style: 'width: 90%;'}
+.l-margin-top-big.payment-errors
+  .row
+    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
+      .form-row
+        #card-element
+
+        #card-errors{role: 'alert'}
+
+.l-margin-top-big.coupon-section
+  .row
+    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
+      .form-group
+        .checkbox
           %label
-            CVV
-          =text_field_tag :cvv_number, nil, placeholder: 'CVV', class: 'form-control', maxlength: 3, minlength: 3, required: true, data: {stripe: 'cvc'}
-      .col-md-4
-        .form-group{style: 'width: 90%;'}
-          %label
-            Expiry Month
-          =select_tag :expiry_month, options_for_select((1..12).to_a), class: 'form-control', prompt: t('views.general.expiry_month_prompt'), required: true, data: {stripe: 'exp-month'}
-      .col-md-4
-        .form-group{style: 'width: 90%;'}
-          %label
-            Expiry Year
-          =select_tag :expiry_year, options_for_select((Time.now.year..(Time.now.year + 10)).to_a), prompt: t('views.general.expiry_year_prompt'), class: 'form-control', required: true, data: {stripe: 'exp-year'}
-    .row{style: "margin-bottom: 15px;"}
-      .col-sm-8.l-margin-top-big
-        .form-group
-          .checkbox
-            %label
-              %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
-                =t('views.general.terms_and_conditions')
-      .col-sm-4.l-margin-top
-        =link_to image_tag('stripe-logo-outline.png', style: 'margin: 10px 0 0 0;', alt: t('views.users.upgrade_subscription.stripe_com_logo')), 'https://stripe.com/', class: 'img img-responsive', target: '_blank'
-        %p.note{style: "text-align: left; margin-bottom: 0px; margin-top: 13px;"}
-          =t('views.users.upgrade_subscription.secure_server')
+            %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
+              =t('views.general.terms_and_conditions')
+
+
+    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3.l-margin-top-big
+      .form-group.l-margin-top.text-center
+        %input{type: 'submit', class: 'btn btn-red', value: 'Purchase Mock Exam'}
 
 
 
-  :javascript
+:javascript
 
-    $('input[type="checkbox"]').on('change', function() {
-      if($('#terms_and_conditions').prop('checked') == true) {
-        $("#hidden_term_and_conditions").val('true');
-      } else if($('#terms_and_conditions').prop('checked') == false) {
-        $("#hidden_term_and_conditions").val('false');
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
+  });
+
+  var stripe = Stripe('pk_test_QNs2TrDsJ5o0IyesV7U2THq5');
+  var elements = stripe.elements();
+  var card = elements.create('card', {hidePostalCode: true,});
+  card.mount('#card-element');
+
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('orders-form');
+    $('#order_stripe_token').val(token.id);
+
+    // Submit the form
+    form.submit();
+  }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+      } else {
+        // Send the token to your server
+        stripeTokenHandler(result.token);
       }
     });
+  };
 
-    Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
 
-    function luhnCheckCardNumber(cardNo) {
-      var c = cardNo.replace(/[^\d]/g, '');
-      var cl = parseInt(c.substr(c.length - 1));
-      var c = c.slice(0,-1)
-      var c = c.split("").reverse().join("");
-      var c = c.split("");
-      var a = 2;
-      var cm = [];
-      for (var i = 0; i < c.length; i++) {
-        if (a%2 == 0) {var t = c[i]*2;
-          if (t > 9) {var t = (t -9);}
-          cm.push(t);
-        } else {
-          cm.push(parseInt(c[i]));
-        }
-        a++;
-      }
-      var f = 0;
-      for (var i = 0; i < cm.length; i++) {
-        f += cm[i];
-      }
-      f = f + cl;
-      return (f%10 == 0);
-    }
+  // Create a token when the form is submitted.
+  var form = document.getElementById('orders-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    createToken();
+  });
 
-    $(document).on('ready', function() {
-      $(".spinner").hide();
-      $('.creditCardNumber').keyup(function() {
-        $(this).val(function(i, v) {
-          var v = v.replace(/[^\d]/g, '').match(/.{1,4}/g);
-          return v ? v.join(' ') : '';
-        });
-      });
-
-      $('.creditCardNumber').blur(function() {
-        $(this).parent().removeClass('has-success has-error');
-        if (luhnCheckCardNumber( $(this).val() ) ) {
-          $(this).parent().addClass('has-success');
-        } else {
-          $(this).parent().addClass('has-error');
-        }
-      })
-
-      //$('#new_order').submit(function(event) {
-      $('.payment-errors').closest("form").submit(function(event) {
-        var $form = $(this);
-
-        // Disable the submit button to prevent repeated clicks
-        $form.find('input:submit').prop('disabled', true);
-        // Create the token
-        Stripe.card.createToken($form, stripeResponseHandler);
-        // Prevent the form from submitting with the default action
-        return false;
-      });
-
-      function stripeResponseHandler(status, response) {
-        var $form = $('.payment-errors').closest("form");
-
-        if (response.error) {
-          // Show the errors on the form
-          $form.find('.payment-errors').addClass('alert alert-danger text-center').text(response.error.message);
-          $form.find('input:submit').prop('disabled', false);
-        } else {
-          // response contains id and card, which contains additional card details
-          var token = response.id;
-          // Insert the token into the form so it gets submitted to the server
-          $('#order_stripe_token').val(token);
-          $('#subscription_payment_card_stripe_token').val(token);
-          // Kill the credit card details
-          $form.find('[data-stripe]').remove();
-          $form.find('.payment-errors').remove();
-          $('.payment-heading').hide();
-          $(".spinner").show();
-          // and submit the form
-          $form.get(0).submit();
-        }
-      };
-    })
