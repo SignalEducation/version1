@@ -37,10 +37,7 @@ describe 'User navigating through the library:', type: :feature do
       parent = page.find('.course-topics-list li:first-child')
       parent.click
       click_on(course_module_element_1_1.name)
-      expect(page).to have_content(course_module_1.name)
       expect(page).to have_content course_module_element_1_1.name
-      expect(page).to have_content course_module_element_1_2.name
-      expect(page).to have_content course_module_element_1_3.name
       sign_out
       print '>'
     end
