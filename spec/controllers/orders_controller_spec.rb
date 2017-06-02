@@ -22,17 +22,21 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
+require 'support/system_setup'
 
 describe OrdersController, type: :controller do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
+  include_context 'system_setup'
 
   let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
-  let!(:product_1) { FactoryGirl.create(:product, mock_exam_id: mock_exam_1.id) }
+  let!(:product_1) { FactoryGirl.create(:product, currency_id: gbp.id, mock_exam_id: mock_exam_1.id, price: '99.9') }
+  let!(:product_2) { FactoryGirl.create(:product, currency_id: gbp.id) }
   let!(:order_1) { FactoryGirl.create(:order, product_id: product_1.id) }
   let!(:order_2) { FactoryGirl.create(:order) }
   let!(:valid_params) { FactoryGirl.attributes_for(:order) }
+
 
   context 'Not logged in: ' do
 
@@ -94,7 +98,7 @@ describe OrdersController, type: :controller do
     end
 
     describe "GET 'new'" do
-      xit 'should respond OK' do
+      it 'should respond OK' do
         get :new, product_id: product_1.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -104,12 +108,12 @@ describe OrdersController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, order: valid_params
         expect_create_success_with_model('order', orders_url)
       end
 
-      xit 'should report error for invalid params' do
+      it 'should report error for invalid params' do
         post :create, order: {valid_params.keys.first => ''}
         expect_create_error_with_model('order')
       end
