@@ -120,7 +120,7 @@
         .option
           %p.key Payment Options:
           %p.value
-            ='7-day Free Trial with 200 minutes of content'
+            ="7-day Free Trial with #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of content"
 
         =link_to new_student_url, class: 'enroll_now' do
           Claim your Free Trial?
