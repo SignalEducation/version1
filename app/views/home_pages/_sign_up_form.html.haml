@@ -4,7 +4,7 @@
   =f.hidden_field :topic_interest, value: @url_value
   .col-sm-12
     %p.h5.h-white.l-margin-bottom
-      ='7-day free trial (up to 200 minutes)'
+      ="7-day free trial (up to #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes)"
 
   .col-sm-6
     .form-group
