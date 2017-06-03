@@ -37,6 +37,10 @@
       }
     });
 
+-elsif (controller_name == 'student_sign_ups' && action_name == 'show') && @user
+  :javascript
+    dataLayer.push({'user_id': "#{@user.id}"});
+
 -elsif current_user
   :javascript
     dataLayer.push({'user_id': "#{current_user.id}"});

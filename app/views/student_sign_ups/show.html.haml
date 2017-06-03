@@ -30,6 +30,3 @@
                   =link_to 'click here', resend_verification_mail_url(@user.email_verification_code)
                   =" to resend it."
 
-:javascript
-  dataLayer.push({'user_id': "#{@user.id}"});
-
