@@ -194,6 +194,28 @@ class Subscription < ActiveRecord::Base
     false
   end
 
+  def update_from_stripe
+    if self.stripe_guid && self.stripe_customer_id
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+
+      if stripe_customer
+        stripe_subscription = stripe_customer.subscriptions.retrieve(sub.stripe_guid)
+        if stripe_subscription
+          subscription = Subscription.find_by_stripe_guid(stripe_subscription.id)
+          subscription.update_attributes(
+              next_renewal_date: Time.at(stripe_subscription.current_period_end),
+              current_status: stripe_subscription.status,
+              stripe_customer_data: stripe_customer.to_hash.deep_dup,
+              livemode: stripe_subscription[:plan][:livemode]
+          )
+        else
+          subscription.update_attribute(:current_status, 'canceled')
+        end
+
+      end
+    end
+  end
+
   protected
 
   #This also creates the SubscriptionPaymentCard
