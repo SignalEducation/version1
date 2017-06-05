@@ -199,15 +199,17 @@ class Subscription < ActiveRecord::Base
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
       if stripe_customer
-        stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-        if stripe_subscription
+        begin
+          stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+
           subscription = Subscription.find_by_stripe_guid(stripe_subscription.id)
           subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
           subscription.current_status = stripe_subscription.status
           subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
           subscription.livemode = stripe_subscription[:plan][:livemode]
           subscription.save(validate: false)
-        else
+
+        rescue Stripe::InvalidRequestError => e
           subscription.update_attribute(:current_status, 'canceled')
         end
 
