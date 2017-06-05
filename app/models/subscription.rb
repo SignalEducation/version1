@@ -199,7 +199,7 @@ class Subscription < ActiveRecord::Base
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
       if stripe_customer
-        stripe_subscription = stripe_customer.subscriptions.retrieve(sub.stripe_guid)
+        stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
         if stripe_subscription
           subscription = Subscription.find_by_stripe_guid(stripe_subscription.id)
           subscription.update_attributes(
