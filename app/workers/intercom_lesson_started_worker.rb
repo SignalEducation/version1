@@ -12,7 +12,7 @@ class IntercomLessonStartedWorker
       )
 
       begin
-        intercom_user = intercom.users.find(email: user.email)
+        intercom_user = intercom.users.find(user_id: user_id)
       rescue Intercom::ResourceNotFound
         intercom_user = nil
       end
