@@ -57,6 +57,7 @@ gem 'utf8-cleaner' # removes illegal characters from inbound requests
 gem 'will_paginate' # manage long web pages
 gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
 gem 'wistia-api' #Video player data api gem, allows retrieval of data on videos and projects
+gem 'vimeo_me2', :git => 'https://github.com/bo-oz/vimeo_me2.git'
 gem 'font-awesome-rails' # Font Awesome with lot of useful icons
 gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
 gem 'zendesk_api'

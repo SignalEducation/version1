@@ -5,37 +5,7 @@
   =cme_video.hidden_field :thumbnail
 
 
-  -if @course_module_element.course_module_element_video.thumbnail
-    =label_tag 'Current Video File:'
-    =image_tag cme_video.object.thumbnail, class: 'img-responsive', style: 'margin-top: 12px;'
-    %br/
-    =label_tag 'Replace Video File:'
-  -else
-    =label_tag 'Video File:'
-
-  %script{:async => "", :src => "//fast.wistia.com/assets/external/api.js"}
-  %link{:href => "//fast.wistia.com/assets/external/uploader.css", :rel => "stylesheet"}/
-
-  #wistia_upload_drop_zone.wistia_upload_drop_zone{:style => "height:200px;width:90%;"}
-    #wistia_upload_preview.wistia_upload_preview
-    .wistia_upload_text{:style => "visibility:hidden;"} Drag and drop a file or
-    .wistia_upload_drop_zone_hover
-    #wistia_upload_button{:alt => "Upload Video"}
-
-  :javascript
-    window._wapiq = window._wapiq || [];
-    _wapiq.push(function(W) {
-      window.wistiaUploader = new W.Uploader({
-        accessToken: "#{ENV['learnsignal_wistia_api_key']}",
-        button: "wistia_upload_button",
-        dropZone: "wistia_upload_drop_zone",
-        projectId: "#{@course_module_element.parent.parent.wistia_guid.to_s}"
-      });
-      wistiaUploader.bind('uploadsuccess', function(file, media) {
-        $('#course_module_element_course_module_element_video_attributes_video_id').val(media.id)
-        $('#course_module_element_course_module_element_video_attributes_duration').val(media.duration)
-        $('#course_module_element_course_module_element_video_attributes_thumbnail').val(media.thumbnail.https_url)
-        $('input[type="submit"]').prop('disabled', false);
-      });
-
-    });
+  %br/
+  =f.label :video_file, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+  .input-group.input-group-lg
+    =f.file_field :video_file, class: 'form-control', style: 'border-radius: 6px;'
