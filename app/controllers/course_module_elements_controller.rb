@@ -74,11 +74,10 @@ class CourseModuleElementsController < ApplicationController
       @course_module_element.build_video_resource
 
       if params[:video_uri]
-
-        @video_id = params[:video_uri].split("/").last.to_i
+        @video_guid = params[:video_uri].split("/").last.to_s
       else
-        ticket = build_vimeo_ticket(cm.id)
-        @ticket_url = ticket.upload_link_secure
+        @ticket = build_vimeo_ticket(cm.id)
+        @ticket_url = @ticket.upload_link_secure
       end
 
     elsif params[:type] == 'quiz'
@@ -112,6 +111,9 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element = CourseModuleElement.new(allowed_params)
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
+
+    #@vimeo_upload_ticket = @course_module_element.course_module_element_video.vimeo_upload_ticket
+    #verify_upload(@vimeo_upload_ticket.upload_link_secure, @vimeo_upload_ticket.uri)
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -215,52 +217,33 @@ class CourseModuleElementsController < ApplicationController
   end
 
 
-  def post_video_to_vimeo(video)
+  def verify_upload(ticket_upload_link, ticket_uri)
 
     require 'net/http'
     require 'net/http/post/multipart'
-    uri = URI('https://api.vimeo.com/')
 
     http = Net::HTTP.new('api.vimeo.com', 443)
     http.use_ssl = true
 
-
     http.start do |session|
 
-      # Generate an upload ticket
-      request = Net::HTTP::Post.new('/me/videos')
-      request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
-      request.form_data = {'type' => 'streaming'}
-      response = session.request(request)
-      ticket = OpenStruct.new(JSON.parse(response.body))
-
-      # Upload your video
-      request = Net::HTTP::Put.new(ticket.upload_link_secure)
-      request.content_type   = video.content_type
-      request.content_length = video.size
-      request.body_stream    = File.open(video.path)
-      response = session.request(request)
       binding.pry
-      if response.code == 501
-        # error
-      end
-
       # Verify the upload
-      request = Net::HTTP::Put.new(ticket.upload_link_secure)
+      request = Net::HTTP::Put.new(ticket_upload_link)
       request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
       request.add_field('Content-Range', 'bytes */*')
+      request.add_field('Name', @course_module_element.name)
       response = session.request(request)
       if response.code == 308
         range = response.range
       end
 
       # Complete the upload
-      request = Net::HTTP::Delete.new(ticket.complete_uri)
+      request = Net::HTTP::Delete.new(ticket_uri)
       request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
       response = session.request(request)
       response['Location']
 
-      binding.pry
     end
 
   end
@@ -290,7 +273,6 @@ class CourseModuleElementsController < ApplicationController
         :seo_description,
         :seo_no_index,
         :number_of_questions,
-        :video_file,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
@@ -298,6 +280,7 @@ class CourseModuleElementsController < ApplicationController
             :duration,
             :transcript,
             :thumbnail,
+            :vimeo_guid,
             :video_id],
         course_module_element_quiz_attributes: [
             :id,

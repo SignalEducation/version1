@@ -9,11 +9,11 @@
   .row.l-margin-top
     .col-sm-12.l-margin-top
       %form{enctype: 'multipart/form-data', :action => @ticket_url, :method => "post"}
-        .col-md-12.text-center
-          =label_tag :subject, 'Video File'
-          =file_field_tag :video_file
+        .col-md-12.text-left
+          =label_tag :file_data, 'Video File'
+          =file_field_tag :file_data
           %br/
-        .col-sm-12.l-margin-top
+        .col-sm-12.l-margin-top-big
           =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
 
 :javascript
