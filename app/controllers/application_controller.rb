@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_mcapi
 
   def authenticate_if_staging
-    if Rails.env.staging? && controller_name != 'StripeV02Controller'
+    if Rails.env.staging? && controller_name != 'stripe_v02'
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
         name == 'signal' && password == '27(South!)'
       end
