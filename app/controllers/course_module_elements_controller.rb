@@ -67,10 +67,20 @@ class CourseModuleElementsController < ApplicationController
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
     if params[:type] == 'video'
+
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
       @course_module_element.course_module_element_resources.build
       @course_module_element.build_video_resource
+
+      if params[:video_uri]
+
+        @video_id = params[:video_uri].split("/").last.to_i
+      else
+        ticket = build_vimeo_ticket(cm.id)
+        @ticket_url = ticket.upload_link_secure
+      end
+
     elsif params[:type] == 'quiz'
       spawn_quiz_children
     end
@@ -103,11 +113,6 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
-    upload_io = params[:course_module_element][:video_file]
-    response = post_video_to_vimeo(upload_io)
-    vimeo_data = response
-
-    @course_module_element.course_module_element_video.video_id = vimeo_data
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
@@ -192,20 +197,21 @@ class CourseModuleElementsController < ApplicationController
   end
 
 
-  def upload_to_vimeo(video)
+  def build_vimeo_ticket(cm_id)
+    require 'net/http'
+    require 'net/http/post/multipart'
+    http = Net::HTTP.new('api.vimeo.com', 443)
+    http.use_ssl = true
 
-    # connect to Vimeo as your own user, this requires upload scope
-    # in your OAuth2 token
-    vimeo_client = VimeoMe2::User.new('35603226b42d2a1232de37bf180af7b2')
-    # upload the video by passing the ActionDispatch::Http::UploadedFile
-    # to the upload_video() method. The data_url in this model, stores
-    # the location of the uploaded video on Vimeo.
-    binding.pry
-    response = vimeo_client.upload_video(video)
-    return true
-  rescue VimeoMe2::RequestFailed => e
-    errors.add(:video_file, e.message)
-    return false
+    http.start do |session|
+      request = Net::HTTP::Post.new('/me/videos')
+      request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
+      request.form_data = {'redirect_url' => new_course_module_element_url(type: 'video', cm_id: cm_id)}
+      response = session.request(request)
+      ticket = OpenStruct.new(JSON.parse(response.body))
+      return ticket
+    end
+
   end
 
 

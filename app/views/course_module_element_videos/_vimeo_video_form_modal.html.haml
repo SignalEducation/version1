@@ -1,0 +1,24 @@
+.remodal{"data-remodal-id" => "vimeo-upload-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          ='Upload Video File'
+        %hr/
+  .row.l-margin-top
+    .col-sm-12.l-margin-top
+      %form{enctype: 'multipart/form-data', :action => @ticket_url, :method => "post"}
+        .col-md-12.text-center
+          =label_tag :subject, 'Video File'
+          =file_field_tag :video_file
+          %br/
+        .col-sm-12.l-margin-top
+          =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
+:javascript
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['vimeo_upload_form'].submit();
+  });
+
+
