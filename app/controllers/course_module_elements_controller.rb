@@ -112,8 +112,7 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
-    #@vimeo_upload_ticket = @course_module_element.course_module_element_video.vimeo_upload_ticket
-    #verify_upload(@vimeo_upload_ticket.upload_link_secure, @vimeo_upload_ticket.uri)
+    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name)
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -207,7 +206,7 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Post.new('/me/videos')
-      request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
+      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
       request.form_data = {'redirect_url' => new_course_module_element_url(type: 'video', cm_id: cm_id)}
       response = session.request(request)
       ticket = OpenStruct.new(JSON.parse(response.body))
@@ -217,35 +216,21 @@ class CourseModuleElementsController < ApplicationController
   end
 
 
-  def verify_upload(ticket_upload_link, ticket_uri)
-
+  def verify_upload(video_uri, cme_name)
     require 'net/http'
     require 'net/http/post/multipart'
-
     http = Net::HTTP.new('api.vimeo.com', 443)
     http.use_ssl = true
 
     http.start do |session|
-
-      binding.pry
-      # Verify the upload
-      request = Net::HTTP::Put.new(ticket_upload_link)
-      request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
-      request.add_field('Content-Range', 'bytes */*')
-      request.add_field('Name', @course_module_element.name)
+      request = Net::HTTP::Patch.new("/videos/#{video_uri}")
+      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request.form_data = {'name' => cme_name}
       response = session.request(request)
       if response.code == 308
         range = response.range
       end
-
-      # Complete the upload
-      request = Net::HTTP::Delete.new(ticket_uri)
-      request['authorization'] = 'Bearer 35603226b42d2a1232de37bf180af7b2'
-      response = session.request(request)
-      response['Location']
-
     end
-
   end
 
 
@@ -281,6 +266,7 @@ class CourseModuleElementsController < ApplicationController
             :transcript,
             :thumbnail,
             :vimeo_guid,
+            :vimeo_upload_ticket_id,
             :video_id],
         course_module_element_quiz_attributes: [
             :id,
