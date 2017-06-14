@@ -23,7 +23,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration, :thumbnail, :vimeo_guid
+  attr_accessible :course_module_element_id, :tags, :difficulty_level, :transcript, :video_id, :duration, :vimeo_guid
 
   # Constants
 
@@ -35,7 +35,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   validates :vimeo_guid, presence: true, length: {maximum: 255}, on: :create
   validates :tags, allow_nil: true, length: {maximum: 255}
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: {maximum: 255}
-  #validates :thumbnail, presence: true
 
   # callbacks
   before_validation { squish_fields(:tags) }

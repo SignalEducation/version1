@@ -2,8 +2,19 @@
   =cme_video.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first
   =cme_video.hidden_field :vimeo_guid, value: @video_guid ? @video_guid : ''
   =cme_video.hidden_field :duration
-  =cme_video.hidden_field :thumbnail
 
-  .l-margin-top
-    %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-cyan'}
-      ='Video File'
+  -if @course_module_element.new_record?
+    -if params[:video_uri]
+      .l-margin-top.l-margin-bottom-big
+        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-green'}
+          ='Upload Successful - Click to Replace File'
+    -else
+      .l-margin-top.l-margin-bottom-big
+        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-orange'}
+          ='Upload Video File'
+
+  -else @course_module_element.course_module_element_video && @course_module_element.course_module_element_video.vimeo_guid
+    -#TODO needs work
+    .l-margin-top.l-margin-bottom-big
+      %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-red'}
+        ='Replace Video File'

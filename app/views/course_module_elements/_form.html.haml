@@ -6,6 +6,22 @@
     =f.hidden_field :is_quiz
     =f.hidden_field :is_video
 
+
+    .col-md-6
+      -# Extra CourseModuleElement Fields unique for Videos or Quizzes
+      -if @course_module_element.course_module_element_video
+        =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
+      -elsif @course_module_element.course_module_element_quiz
+        =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+
+      -# Dropdown list of other CourseModules in the SubjectCourse
+      =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %br/
+
+
+
     .col-md-6
       =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
@@ -29,18 +45,6 @@
         %br/
         =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_module_element), class: 'btn btn-red'
 
-    .col-md-6
-      -# Dropdown list of other CourseModules in the SubjectCourse
-      =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      %br/
-
-      -# Extra CourseModuleElement Fields unique for Videos or Quizzes
-      -if @course_module_element.course_module_element_video
-        =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
-      -elsif @course_module_element.course_module_element_quiz
-        =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
 
 
   -if @course_module_element.course_module_element_quiz
