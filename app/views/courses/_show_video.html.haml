@@ -1,9 +1,12 @@
 .col-md-8.col-sm-12
   %h2
     =cme.name.html_safe
-  -#%div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
+  -if cme.course_module_element_video.vimeo_guid
+    .vimeo-player-window
+      %iframe{src: "https://player.vimeo.com/video/#{cme.course_module_element_video.vimeo_guid}", frameborder: '0', webkitAllowFullScreen: true, mozallowfullscreen: true, allowFullScreen: true}
 
-  %iframe{src: "https://player.vimeo.com/video/#{cme.course_module_element_video.vimeo_guid}", width: "640", height: "360", frameborder: "0", webkitallowfullscreen: true, mozallowfullscreen: true, allowfullscreen: true}
+  -else
+    %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
 
 
   -#Nav buttons below video

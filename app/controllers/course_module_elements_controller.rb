@@ -76,7 +76,7 @@ class CourseModuleElementsController < ApplicationController
       if params[:video_uri]
         @video_guid = params[:video_uri].split("/").last.to_s
       else
-        @ticket = build_vimeo_ticket(new_course_module_element_url(type: 'video', cm_id: cm_id))
+        @ticket = build_vimeo_ticket(new_course_module_element_url(type: 'video', cm_id: cm.id))
         @ticket_url = @ticket.upload_link_secure
       end
 
@@ -234,10 +234,7 @@ class CourseModuleElementsController < ApplicationController
       request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
       request.form_data = {'name' => cme_name}
       response = session.request(request)
-      if response.code == 308
-        range = response.range
-      end
-      binding.pry
+      return response
     end
   end
 
