@@ -15,8 +15,9 @@ class Api::StripeV02Controller < Api::BaseController
                                              account_url)
 
       render text: nil, status: 204
+    else
+      render text: nil, status: 404 # Let Stripe try again to send data
     end
-    render text: nil, status: 404 # Let Stripe try again to send data
   rescue => e
     Rails.logger.error "ERROR: Api/StripeV02#Create: Error: #{e.inspect}\nRaw event: #{raw_json}"
     render text: nil, status: 404 # Let Stripe try again to send data
