@@ -300,8 +300,9 @@ class User < ActiveRecord::Base
   end
 
   def minutes_left
-    free_trial_minutes = ENV['free_trial_limit_in_seconds'].to_i
-    free_trial_minutes - self.trial_limit_in_seconds
+    free_trial_seconds = ENV['free_trial_limit_in_seconds'].to_i
+    seconds_left = free_trial_seconds - self.trial_limit_in_seconds
+    minutes_left = (seconds_left/60)
   end
 
   def free_member?
