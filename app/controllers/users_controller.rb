@@ -64,8 +64,11 @@ class UsersController < ApplicationController
   before_action only: [:destroy, :create] do
     ensure_user_is_of_type(%w(admin))
   end
-  before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details] do
+  before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status] do
     ensure_user_is_of_type(%w(admin customer_support_manager))
+  end
+  before_action only: [:reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
+    ensure_user_is_of_type(%w(individual_student admin customer_support_manager))
   end
 
   before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :reactivate_account, :reactivate_account_subscription, :reactivation_complete]
@@ -218,28 +221,35 @@ class UsersController < ApplicationController
   end
 
   def reactivate_account
-    @user = User.where(id: params[:user_id]).first
-    @subscription = @user.active_subscription || @user.subscriptions.last
-    redirect_to root_url unless @user.individual_student? && @subscription
-    redirect_to account_url(anchor: :subscriptions) unless @subscription.current_status == 'canceled'
-    currency_id = @subscription.subscription_plan.currency_id
-    @country = Country.where(currency_id: currency_id).first
-    @subscription_plans = @subscription.reactivation_options
-    @new_subscription = Subscription.new
-    @navbar = nil
+    @user = User.find(params[:user_id])
+    if @user && @user.individual_student?
+      @subscription = @user.active_subscription ? @user.active_subscription : @user.subscriptions.last
+      if @subscription && %w(canceled).include?(@subscription.current_status)
+        currency_id = @subscription.subscription_plan.currency_id
+        @country = Country.where(currency_id: currency_id).first
+        @subscription_plans = @subscription.reactivation_options
+        @new_subscription = Subscription.new
+        @navbar = nil
+      else
+        redirect_to account_url(anchor: :subscriptions)
+      end
+    else
+      redirect_to root_url
+    end
   end
 
   def reactivate_account_subscription
-    redirect_to root_url unless current_user.individual_student?
-    ####  User adding a subscription after previously canceling one  #####
-    if params[:subscription] && params[:subscription]["subscription_plan_id"] && params[:subscription]["stripe_token"] && params[:subscription]["terms_and_conditions"]
+    subscription_id = params[:subscription]["subscription_plan_id"]
+    stripe_token_guid = params[:subscription]["stripe_token"]
+    @user = User.find(params[:user_id])
+    if subscription_id && stripe_token_guid && params[:subscription]["terms_and_conditions"]
       coupon_code = params[:coupon] unless params[:coupon].empty?
       verified_coupon = verify_coupon(coupon_code, current_user.country.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         redirect_to user_reactivate_account_url(current_user.id)
       else
         #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
-        @user.resubscribe_account(params[:subscription]["user_id"], params[:subscription]["subscription_plan_id"].to_i, params[:subscription]["stripe_token"], params[:subscription]["terms_and_conditions"], coupon_code)
+        @user.resubscribe_account(subscription_id, stripe_token_guid, params[:subscription]["terms_and_conditions"], coupon_code)
         redirect_to reactivation_complete_url
       end
     else

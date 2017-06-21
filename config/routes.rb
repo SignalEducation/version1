@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     post 'stripe_v01', to: 'stripe_v01#create'
+    post 'stripe_v02', to: 'stripe_v02#create'
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -35,8 +36,6 @@ Rails.application.routes.draw do
         as: :user_verification
     get 'account_verified', to: 'student_sign_ups#account_verified',
         as: :account_verified
-    get 'user_activate/:activation_code', to: 'user_verifications#old_mail_activation',
-        as: :old_user_activation
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]

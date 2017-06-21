@@ -37,7 +37,7 @@ describe HomePage do
   # validation
   it { should validate_presence_of(:seo_title) }
 
-  it { should_not validate_presence_of(:seo_description) }
+  it { should validate_presence_of(:seo_description) }
 
   it { should validate_presence_of(:public_url) }
 

@@ -482,6 +482,9 @@ en:
       index:
         h1: Dashboard
 
+      student:
+        h1: Dashboard
+
       individual_student:
         in-progress: In-progress
         completed: Completed

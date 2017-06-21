@@ -88,6 +88,7 @@ class HomePagesController < ApplicationController
   end
 
   def index
+    @navbar = nil
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 

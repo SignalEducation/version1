@@ -95,11 +95,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # class methods
   def self.build_from_stripe_data(stripe_card_data, user_id=nil)
     if stripe_card_data[:object] == 'card'
-      user = User.where(stripe_customer_id: stripe_card_data[:customer]).first.try(:id)
-      user_id ||= user.try(:id)
+      user = User.find(user_id)
       country_id = Country.find_by_iso_code(stripe_card_data[:country].to_s.upcase).try(:id) || user.try(:country_id)
       x = SubscriptionPaymentCard.new(
-              user_id: user_id,
+              user_id: user.id,
               stripe_card_guid: stripe_card_data[:id],
               brand: stripe_card_data[:brand],
               last_4: stripe_card_data[:last4],
@@ -167,12 +166,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   # instance methods
 
   def create_on_stripe_using_token
-    if self.stripe_token.to_s.length > 0 && self.user.try(:stripe_customer_id) && self.stripe_card_guid.blank?
+    if self.stripe_token.to_s.length > 0 && self.user.stripe_customer_id && self.stripe_card_guid.blank?
       stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
-      new_card_hash = stripe_customer.try(:sources) ?
-              stripe_customer.sources.create({source: self.stripe_token}).to_hash :
-              stripe_customer.cards.create({card: self.stripe_token}).to_hash
-      if new_card_hash
+      new_card_hash = stripe_customer.sources.create({source: self.stripe_token}).to_hash
+      if stripe_customer && new_card_hash
         self.stripe_card_guid = new_card_hash[:id]
         self.status = (new_card_hash[:cvc_check] == 'pass' && self.make_default_card) ? 'card-live' : 'not-live'
         self.brand = new_card_hash[:brand]
@@ -186,7 +183,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
         self.address_zip = new_card_hash[:address_zip]
         self.address_country = new_card_hash[:address_country]
         self.account_country = new_card_hash[:country]
-        self.account_country_id = Country.find_by_iso_code(new_card_hash[:country].upcase)
+        self.account_country_id = Country.find_by_iso_code(new_card_hash[:country].upcase).id
         self.stripe_object_name = new_card_hash[:object]
         self.funding = new_card_hash[:funding]
         self.cardholder_name = new_card_hash[:name]
@@ -197,7 +194,11 @@ class SubscriptionPaymentCard < ActiveRecord::Base
         self.dynamic_last4 = new_card_hash[:dynamic_last4]
         self.customer_guid = new_card_hash[:customer]
         self.is_default_card = self.make_default_card
+      else
+        Rails.logger.error "ERROR: Could not find Stripe Customer with-#{self.user.stripe_customer_id}. OR Stripe Create card failed with response-#{new_card_hash}."
       end
+    else
+      Rails.logger.error "ERROR: Could not find Stripe Token-#{self.stripe_token} OR a customer id in the User-#{self.user.stripe_customer_id}"
     end
 
   rescue => e
@@ -276,7 +277,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
       SubscriptionPaymentCard.where(user_id: self.user_id, status: 'card-live').update_all(status: 'not-live', is_default_card: false)
       # mark the target card as live / default
       self.update_columns(status: 'card-live', is_default_card: true)
-      # tell Stripe this is the live card.
+      # Update the stripe customers default source to be this card
       stripe_customer = Stripe::Customer.retrieve(self.customer_guid)
       stripe_customer.default_source = self.stripe_card_guid
       stripe_customer.save

@@ -587,24 +587,21 @@ RSpec.describe DashboardController, :type => :controller do
     describe "GET content_manager" do
       it "bounces user as not allowed" do
         get :content_manager
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template(:content_manager)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET marketing_manager" do
       it "bounces user as not allowed" do
         get :marketing_manager
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template(:marketing_manager)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET customer_support_manager" do
       it "bounces user as not allowed" do
         get :customer_support_manager
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template(:customer_support_manager)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -619,10 +616,7 @@ RSpec.describe DashboardController, :type => :controller do
     describe "GET tutor" do
       it "bounces user as not allowed" do
         get :tutor
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template(:tutor)
-
-
+        expect_bounce_as_not_allowed
       end
     end
   end

@@ -1,12 +1,14 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/subscription_plans_setup'
+require 'support/system_setup'
 require 'support/course_content'
 
 describe 'The sign in process.', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup'
+  include_context 'system_setup'
   include_context 'course_content'
 
   before(:each) do
@@ -26,7 +28,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -37,7 +39,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -48,7 +50,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -59,7 +61,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'as a non-verified user' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: unverified_individual_student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: unverified_individual_student_user.password
         click_button I18n.t('views.general.sign_in')
@@ -70,7 +72,7 @@ describe 'The sign in process.', type: :feature do
     context 'with correct details and then sign out' do
       scenario 'with free_trial user details' do
         visit sign_in_path
-        within('.login-form') do
+        within('#sign-in') do
           fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
           fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
           click_button I18n.t('views.general.sign_in')
@@ -82,7 +84,7 @@ describe 'The sign in process.', type: :feature do
 
       scenario 'with subscription_student user details' do
         visit sign_in_path
-        within('.login-form') do
+        within('#sign-in') do
           fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
           fill_in I18n.t('views.user_sessions.form.password'), with: individual_student_user.password
           click_button I18n.t('views.general.sign_in')
@@ -105,7 +107,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -116,7 +118,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -127,7 +129,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -138,7 +140,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: tutor_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: tutor_user.password
         click_button I18n.t('views.general.sign_in')
@@ -158,7 +160,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -169,7 +171,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -180,7 +182,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -191,7 +193,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: content_manager_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: content_manager_user.password
         click_button I18n.t('views.general.sign_in')
@@ -212,7 +214,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -223,7 +225,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -234,7 +236,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -267,7 +269,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: ''
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -278,7 +280,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with bad details' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abcabcabc'
         click_button I18n.t('views.general.sign_in')
@@ -289,7 +291,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with no password' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: 'user@work.com'
         fill_in I18n.t('views.user_sessions.form.password'), with: ''
         click_button I18n.t('views.general.sign_in')
@@ -300,7 +302,7 @@ describe 'The sign in process.', type: :feature do
 
     scenario 'with correct details and then sign out' do
       visit sign_in_path
-      within('.login-form') do
+      within('#sign-in') do
         fill_in I18n.t('views.user_sessions.form.email'), with: admin_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: admin_user.password
         click_button I18n.t('views.general.sign_in')

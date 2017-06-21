@@ -13,12 +13,10 @@
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 #upgrade-subscription
-  =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {role: 'form'} do |f|
+  =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {id: 'reactivate-form', role: 'form'} do |f|
     =f.hidden_field :subscription_plan_id
-    =f.hidden_field :user_id, value: @user.id
-    =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-    =f.hidden_field :stripe_customer_id, value: @user.stripe_customer_id
     =f.hidden_field :stripe_token
+    =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
     =render partial: 'layouts/error_messages', locals: {thing: @new_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
     .l-wrap
       .l-section
@@ -69,30 +67,16 @@
 
 :javascript
 
-  var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
-
   function choosePlan(theThing) {
     $('.option[type="radio"]:checked').prop('checked', false);
+
     $(theThing).find('.option[type="radio"]').prop('checked', true);
     $('#subscription_subscription_plan_id')
       .val($(theThing).parent().attr('data-plan-id'));
   }
 
-  function showPlans() {
-    //var country_id = $('#user_country_id').val();
-    var country_id = #{@country.id};
-    var currency = 'EUR';
-    $('.currency').addClass('hide');
-    for (var i = 0; i < countries.length; i++) {
-      if (countries[i][0] == country_id) {
-        currency = countries[i][1];
-      }
-    }
-    choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[1]);
-  }
-
   $(document).on('ready', function() {
-    showPlans();
+    choosePlan($('.plan-option')[1]);
     $('.option').bind('click', function(event) {
       event.stopPropagation();
       choosePlan(this.parentElement);

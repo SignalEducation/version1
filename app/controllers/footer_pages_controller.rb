@@ -108,7 +108,7 @@ class FooterPagesController < ApplicationController
   def contact_us_zendesk
     options = {:subject => "Basic Contact Us", :comment => { :value => params[:question] }, :requester => { :email => params[:email_address], :name => params[:full_name] }}
     request = ZendeskAPI::Ticket.create(@client, options)
-    if request && request.created_at
+    if request && request.try(:created_at)
       flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     else
       flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'

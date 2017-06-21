@@ -12,18 +12,18 @@
         .col-md-12
           .col-md-6
             =label_tag :full_name, 'Name'
-            =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name'
+            =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name', required: true
             %br/
           .col-md-6
             =label_tag :email, 'Email'
-            =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address'
+            =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address', required: true
 
           .col-md-12
             =label_tag :subject, 'Subject'
-            =text_field_tag :subject, nil, class: 'form-control', placeholder: 'What is the issue'
+            =text_field_tag :subject, nil, class: 'form-control', placeholder: 'What is the issue', required: true
             %br/
             =label_tag :body, 'Please Describe Your Issue'
-            =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue'
+            =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue', required: true
 
         .col-sm-12.l-margin-top
           .col-sm-12

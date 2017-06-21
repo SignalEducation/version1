@@ -74,7 +74,7 @@ class CoursesController < ApplicationController
         if video_cme_user_log
           cme = video_cme_user_log.course_module_element
           video_cme_user_log.element_completed = true
-          video_cme_user_log.time_taken_in_seconds = cme.try(:duration)
+          video_cme_user_log.time_taken_in_seconds = cme.duration.to_i if cme.duration
           video_cme_user_log.save
           #Triggers Update Callbacks
         end

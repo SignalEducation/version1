@@ -372,7 +372,7 @@
               Prefer to try us out first?
           .col-sm-10.col-sm-offset-1
             %p.h7.h-white.l-margin-bottom-huge
-              No problem! We’re so confident you’ll love our training, we want to give you access to 200 minutes of completely FREE online revision. No credit card details are required, and if you feel our courses aren’t a good fit for you, you’ve no obligation to sign up for an unlimited access plan. So why not give it a try and sign up for your 7-day trial below?
+              ="No problem! We’re so confident you’ll love our training, we want to give you access to #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of completely FREE online revision. No credit card details are required, and if you feel our courses aren’t a good fit for you, you’ve no obligation to sign up for an unlimited access plan. So why not give it a try and sign up for your 7-day trial below?"
         .row
           .col-sm-12
             =link_to 'Start Free 7-Day Trial', new_student_url, class: 'btn btn-red'

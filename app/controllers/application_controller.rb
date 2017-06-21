@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_mcapi
 
   def authenticate_if_staging
-    if Rails.env.staging? && params[:first_element] != 'api'
+    if Rails.env.staging? && controller_name != 'stripe_v02'
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
         name == 'signal' && password == '27(South!)'
       end
@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
          (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
          (the_user_group.customer_support    && permitted_thing == 'customer_support_manager') ||
          (the_user_group.marketing_support    && permitted_thing == 'marketing_manager') ||
-         (the_user_group.site_admin)
+         (the_user_group.site_admin           && permitted_thing == 'admin')
         permission_granted = true
       end
     end
@@ -349,18 +349,21 @@ class ApplicationController < ActionController::Base
 
   def verify_coupon(coupon, currency_id)
     @user_currency = Currency.find(currency_id)
+    Rails.logger.debug "INFO: Started Coupon Verification Process with coupon #{coupon}"
     verified_coupon = Stripe::Coupon.retrieve(coupon)
-    unless verified_coupon.valid
+    Rails.logger.debug "INFO: Stripe returned #{verified_coupon}."
+    if !verified_coupon.valid
       flash[:error] = 'Sorry! The coupon code you entered has expired'
       verified_coupon = 'bad_coupon'
       return verified_coupon
-    end
-    if verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
+    elsif verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
       flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
       verified_coupon = 'bad_coupon'
       return verified_coupon
+    else
+      return verified_coupon.id
     end
-    return verified_coupon
+
   rescue => e
     flash[:error] = 'The coupon code entered is not valid'
     verified_coupon = 'bad_coupon'

@@ -15,12 +15,9 @@
 
 FactoryGirl.define do
   factory :home_page do
-    seo_title 'MyString'
-    seo_description 'MyString'
-    subscription_plan_category_id 1
-    group_id 1
-    subject_course_id 1
-    sequence(:public_url)           { |n| "abc#{n}" }
+    sequence(:seo_title)           { |n| "title-#{n}" }
+    seo_description                'Seo Description'
+    sequence(:public_url)          { |n| "abc#{n}" }
 
     factory :home do
       public_url '/'
@@ -34,9 +31,6 @@ FactoryGirl.define do
       public_url 'cfa'
     end
 
-    factory :product_1_home do
-      public_url 'product_1'
-    end
 
   end
 

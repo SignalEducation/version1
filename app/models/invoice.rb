@@ -89,7 +89,7 @@ class Invoice < ActiveRecord::Base
       subscription = Subscription.find_by_stripe_guid(stripe_data_hash[:subscription])
       currency = Currency.find_by_iso_code(stripe_data_hash[:currency].upcase)
 
-      if user && subscription
+      if user && subscription && currency
         inv = Invoice.new(
           user_id: user.id,
           subscription_id: subscription.id,
@@ -123,15 +123,15 @@ class Invoice < ActiveRecord::Base
               InvoiceLineItem.build_from_stripe_data(inv.id, line_item, inv.subscription_id)
             end
           rescue NoMethodError => err
-            Rails.logger.error "ERROR: Invoice with id #{inv.id} should be rolled back due to the error in creating invoice line items."
+            Rails.logger.error "ERROR: Invoice with id #{inv.id} was be rolledback due to the error in creating invoice line items."
             inv = nil
             raise ActiveRecord::Rollback
           end
         else
-          Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
+          Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
         end
       else
-        Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to build an invoice. Either user #{stripe_data_hash[:customer]} or subscription #{stripe_data_hash[:subscription]} do not exist."
+        Rails.logger.error "ERROR: Invoice#build_from_stripe_data find User-#{stripe_data_hash[:customer]}, Subscription-#{stripe_data_hash[:subscription]} OR Currency-#{stripe_data_hash[:currency].upcase}"
       end
     end
     inv
@@ -157,15 +157,18 @@ class Invoice < ActiveRecord::Base
             webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
             charge_guid: stripe_invoice[:charge]
         )
+      else
+        Rails.logger.debug "Error: Invoice#update_from_stripe failed to find an Invoice #{stripe_invoice[:id]}"
       end
+    else
+      Rails.logger.debug "Error: Invoice#update_from_stripe failed to find a Stripe Invoice-#{invoice_guid}."
     end
 
   end
 
   # instance methods
   def destroyable?
-    #!Rails.env.production? && self.invoice_line_items.empty?
-    true
+    self.invoice_line_items.empty?
   end
 
   def status

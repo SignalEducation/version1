@@ -1,21 +1,17 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/system_setup'
 
 RSpec.describe StudentSignUpsController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'system_setup'
 
-  let!(:country_1) { FactoryGirl.create(:uk) }
-  let!(:country_2) { FactoryGirl.create(:ireland) }
-  let!(:country_3) { FactoryGirl.create(:usa) }
   let!(:unverified_user) { FactoryGirl.create(:individual_student_user, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
   let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
 
   let!(:sign_up_params) { { first_name: "Test", last_name: "Student", country_id: Country.first.id, locale: 'en', email: "test.student@example.com", password: "dummy_pass", password_confirmation: "dummy_pass" } }
-  let!(:student) { FactoryGirl.create(:individual_student_user) }
-  let!(:currency) { FactoryGirl.create(:usd) }
-  let!(:currency_2) { FactoryGirl.create(:gbp) }
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
+  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: individual_student_user.id) }
 
 
   context 'Not logged in...' do
@@ -51,7 +47,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
         it 'does not subscribe user if user with same email already exists' do
           request.env['HTTP_REFERER'] = '/en/student_new'
-          post :create, user: sign_up_params.merge(email: student.email)
+          post :create, user: sign_up_params.merge(email: individual_student_user.email)
           expect(response.status).to eq(302)
           expect(response).to redirect_to(:new_student)
         end
@@ -118,7 +114,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -157,7 +153,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -196,7 +192,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -235,7 +231,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -274,7 +270,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -313,7 +309,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -352,7 +348,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
@@ -391,7 +387,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
     describe "GET 'account_verified'" do
       it 'returns http success' do
-        get :account_verified, email_verification_code: student.email_verification_code
+        get :account_verified, email_verification_code: individual_student_user.email_verification_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
       end
