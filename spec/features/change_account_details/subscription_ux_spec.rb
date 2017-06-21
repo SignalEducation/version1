@@ -2,13 +2,16 @@ require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/subscription_plans_setup'
 require 'support/course_content'
+require 'support/system_setup'
 
 describe 'Subscription UX:', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
-  include_context 'subscription_plans_setup' # starts StripeMock up for us.
+  include_context 'subscription_plans_setup'
+  include_context 'system_setup'
 
+  let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:individual_student_user_2) { FactoryGirl.create(:individual_student_user,
                                                       user_group_id: individual_student_user_group.id) }
 
@@ -33,7 +36,7 @@ describe 'Subscription UX:', type: :feature do
     activate_authlogic
   end
 
-  scenario 'user can upgrade a subscription', js: true do
+  scenario 'user can change their subscription plan', js: true do
     sign_up_and_upgrade_from_free_trial
     visit_my_profile
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
@@ -43,14 +46,16 @@ describe 'Subscription UX:', type: :feature do
     parent = page.find('.plans:first-child')
     parent.click
 
-    click_button(I18n.t('views.general.save'))
+    btn = page.find('#upgrade-submit')
+    btn.click
+
     # page should reload
     expect(page).to have_content(I18n.t('controllers.subscriptions.update.flash.success'))
     expect(page).to have_content 'Billing Interval Quarterly'
     sign_out
   end
 
-  xit scenario 'user can cancel and reactivate a subscription', js: true do
+  scenario 'user can cancel a subscription', js: true do
     sign_up_and_upgrade_from_free_trial
     visit_my_profile
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
@@ -59,15 +64,6 @@ describe 'Subscription UX:', type: :feature do
     page.driver.browser.switch_to.alert.accept
 
     expect(page).to have_content 'Your Subscription has been cancelled'
-    visit user_reactivate_account_path(user_id: User.last.id)
-
-
-    student_picks_a_subscription_plan(eur, 12)
-    enter_credit_card_details('valid')
-    check I18n.t('views.general.terms_and_conditions')
-    find('.upgrade-sub').click
-    sleep(10)
-    expect(page).to have_content 'Thanks for upgrading your subscription!'
     visit_my_profile
     click_on I18n.t('views.users.show.tabs.subscriptions')
 
@@ -82,7 +78,7 @@ describe 'Subscription UX:', type: :feature do
     expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
     click_link(I18n.t('views.users.show.tabs.subscriptions'))
 
-    expect(page).to have_content maybe_upcase I18n.t('views.users.show.your_invoices')
+    expect(page).to have_content I18n.t('views.users.show.your_invoices')
 
     sign_out
   end
@@ -101,26 +97,13 @@ describe 'Subscription UX:', type: :feature do
     within('#new-subscription-payment-card-form') do
       %w(valid_visa_debit ).each do |this_card|
         sleep 2
-        #click_link(I18n.t('views.users.show.tabs.payments'))
-        # new card modal
-        #sleep 2
         enter_credit_card_details(this_card)
         click_button(I18n.t('views.general.save'))
-        sleep 2
-
-        # back at the subscriptions page
-        if this_card.include?('valid')
-          sleep(1)
-          expect(page).to have_content I18n.t('controllers.subscription_payment_cards.create.flash.success')
-          expect(page).not_to have_content I18n.t('controllers.subscription_payment_cards.create.flash.error')
-        else
-          expect(page).not_to have_content I18n.t('controllers.subscription_payment_cards.create.flash.success')
-          expect(page).to have_content I18n.t('controllers.subscription_payment_cards.create.flash.error')
-        end
       end
-
     end
-
+    sleep 5
+    expect(page).to have_content I18n.t('controllers.subscription_payment_cards.create.flash.success')
+    expect(page).not_to have_content I18n.t('controllers.subscription_payment_cards.create.flash.error')
 
     sign_out
   end

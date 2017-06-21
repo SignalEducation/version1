@@ -22,52 +22,10 @@ class SubscriptionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin individual_student customer_support_manager))
+    ensure_user_is_of_type(%w(individual_student))
   end
   before_action :get_subscription
   before_action :check_subscriptions, only: [:new_subscription, :create_subscription]
-
-  def change_plan
-    @current_subscription = current_user.active_subscription
-  end
-
-  #Upgrading current sub to a new subscription plan
-  def update
-    if @subscription
-      @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
-      if @subscription && @subscription.errors.count == 0
-        flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
-      else
-        Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
-        flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
-      end
-      redirect_to account_url(anchor: 'subscriptions')
-    else
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-      redirect_to root_url
-    end
-  end
-
-  #Setting current sub to cancel at period end
-  def destroy
-    if @subscription
-      if @subscription.cancel
-        flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
-      else
-        Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
-        flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
-      end
-    else
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-    end
-
-    if current_user.individual_student?
-      redirect_to account_url(anchor: 'subscriptions')
-    else
-      redirect_to user_subscription_status_url(@subscription.user)
-    end
-
-  end
 
   def new_subscription
     @navbar = false
@@ -81,24 +39,20 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_subscription
-    ####  User creating their first subscription  #####
+    user = User.find(params[:user_id])
+    subscription_params = params[:user][:subscriptions_attributes]["0"]
+    subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
+    #Check for a coupon code and if its valid
+    coupon_code = params[:coupon] unless params[:coupon].empty?
 
-    # Checks that all necessary params are present, then calls the upgrade_from_free_plan method in the Subscription Model
-    if params[:user] && params[:user][:subscriptions_attributes] && params[:user][:subscriptions_attributes]["0"] && params[:user][:subscriptions_attributes]["0"]["subscription_plan_id"] && params[:user][:subscriptions_attributes]["0"]["stripe_token"]
-
-      user = User.find(params[:user_id])
-      subscription_params = params[:user][:subscriptions_attributes]["0"]
-      subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-      #Check for a coupon code and if its valid
-      coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code, user.country.currency_id) if coupon_code
+    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] == 'true'
+      verified_coupon = verify_coupon(coupon_code, subscription_plan.currency_id) if coupon_code
       if coupon_code && verified_coupon == 'bad_coupon'
         #Invalid coupon code so redirect back with errors
-        redirect_to user_new_subscription_url(current_user.id)
+        redirect_to user_new_subscription_url(user.id)
       else
         #No coupon code or a valid coupon code so proceed to create subscription on stripe
-        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        stripe_subscription = create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+        stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
         stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
         #Creation on stripe was successful so create our DB record of Subscription
         if stripe_customer && stripe_subscription
@@ -120,13 +74,9 @@ class SubscriptionsController < ApplicationController
         end
 
         if subscription_saved
+          trial_ended_date = user.free_trial_ended_at ? user.free_trial_ended_at : Proc.new{Time.now}.call
+          user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
           user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-          if !user.free_trial_ended_at.nil?
-            trial_ended_date = user.free_trial_ended_at
-          else
-            trial_ended_date = Proc.new{Time.now}.call
-          end
-          current_user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
           redirect_to personal_upgrade_complete_url
         else
           redirect_to user_new_subscription_url(current_user.id)
@@ -140,10 +90,63 @@ class SubscriptionsController < ApplicationController
 
   end
 
-  def create_on_stripe(stripe_customer, subscription_plan, verified_coupon, subscription_params)
+  def personal_upgrade_complete
+    @subscription = current_user.active_subscription
+  end
+
+  def change_plan
+    @current_subscription = current_user.active_subscription
+  end
+
+  #Upgrading current subscription to a new subscription plan
+  def update
+    if @subscription
+      @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
+      if @subscription && @subscription.errors.count == 0
+        flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
+      else
+        Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
+        flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
+      end
+      redirect_to account_url(anchor: 'subscriptions')
+    else
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to root_url
+    end
+  end
+
+  #Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
+  def destroy
+    if @subscription
+      if @subscription.cancel
+        flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
+      else
+        Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
+        flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
+      end
+    else
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+    end
+
+    if current_user.individual_student?
+      redirect_to account_url(anchor: 'subscriptions')
+    else
+      redirect_to user_subscription_status_url(@subscription.user)
+    end
+  end
+
+  def create_on_stripe(stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
     begin
-      stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan.stripe_guid, coupon: verified_coupon, trial_end: 'now', source: subscription_params["stripe_token"])
+      stripe_subscription = Stripe::Subscription.create(
+          customer: stripe_customer_id,
+          plan: subscription_plan.stripe_guid,
+          source: subscription_params["stripe_token"],
+          coupon: verified_coupon,
+          trial_end: 'now'
+      )
+
       return stripe_subscription
+
     rescue Stripe::CardError => e
       # Since it's a decline, Stripe::CardError will be caught
       body = e.json_body
@@ -169,10 +172,6 @@ class SubscriptionsController < ApplicationController
     rescue => e
       # Something else happened, completely unrelated to Stripe
     end
-  end
-
-  def personal_upgrade_complete
-    @subscription = current_user.active_subscription
   end
 
   protected

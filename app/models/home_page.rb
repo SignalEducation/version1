@@ -29,8 +29,8 @@ class HomePage < ActiveRecord::Base
   belongs_to :subject_course
 
   # validation
-  validates :seo_title, presence: true, length: {maximum: 255}
-  validates :seo_description, allow_nil: true, length: {maximum: 255}
+  validates :seo_title, presence: true, length: {maximum: 255}, uniqueness: true
+  validates :seo_description, presence: true, length: {maximum: 255}
   validates :public_url, presence: true, length: {maximum: 255},
             uniqueness: true
 

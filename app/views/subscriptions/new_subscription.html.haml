@@ -14,8 +14,7 @@
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 #upgrade-subscription
-  =form_for @user, url: user_create_subscription_url(@user.id), html: {role: 'form'} do |f|
-    -#This hidden field is necessary for the JS that shows the Sub Plans
+  =form_for @user, url: user_create_subscription_url(@user.id), html: { id: 'upgrade-form', role: 'form'} do |f|
     =f.hidden_field :country_id, value: @country.id
     =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
     .l-wrap
@@ -70,7 +69,7 @@
                 Payment details
           =render partial: 'subscription_payment_cards/form', locals: {f: f}
 
-        .container-fluid
+        -#.container-fluid
           .col-md-12
             .col-md-4.col-sm-offset-4.text-center
               .spinner
@@ -80,8 +79,6 @@
 
 :javascript
 
-  var countries = #{@countries.map {|c| [c.id, c.currency.iso_code]} };
-
   function choosePlan(theThing) {
     $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
@@ -89,20 +86,8 @@
       .val($(theThing).parent().attr('data-plan-id'));
   }
 
-  function showPlans() {
-    var country_id = $('#user_country_id').val();
-    var currency = 'EUR';
-    $('.currency').addClass('hide');
-    for (var i = 0; i < countries.length; i++) {
-      if (countries[i][0] == country_id) {
-        currency = countries[i][1];
-      }
-    }
-    choosePlan($('.' + currency).removeClass('hide').find('.plan-option')[1]);
-  }
-
   $(document).on('ready', function() {
-    showPlans();
+    choosePlan($('.plan-option')[1]);
     $('.option').bind('click', function(event) {
       event.stopPropagation();
       choosePlan(this.parentElement);

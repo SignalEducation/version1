@@ -64,28 +64,26 @@ class Subscription < ActiveRecord::Base
 
   # instance methods
   def cancel
-    # call stripe and cancel the subscription
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    response = stripe_subscription.delete(at_period_end: true).to_hash
-    if response[:status] == 'active' && response[:cancel_at_period_end] == true
-      self.update_attribute(:current_status, 'canceled-pending')
-
-      SubscriptionDeferredCancellerWorker.perform_at((self.next_renewal_date.to_time.utc + 12.hours), self.id) unless Rails.env.test?
-      Rails.logger.info "INFO: Subscription#cancel has scheduled a deferred cancellation status update for subscription ##{self.id} to be executed at midday GMT on #{self.next_renewal_date.to_s}."
-
-    elsif response[:status] == 'past_due' && response[:cancel_at_period_end] == true
-
-      self.update_attribute(:current_status, 'canceled')
-      #We don't send any email here!!
-
-      Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
+    if self.stripe_customer_id && self.stripe_guid
+      # call stripe and cancel the subscription
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+      response = stripe_subscription.delete(at_period_end: true).to_hash
+      if response[:status] == 'active' && response[:cancel_at_period_end] == true
+        self.update_attribute(:current_status, 'canceled-pending')
+      elsif response[:status] == 'past_due'
+        self.update_attribute(:current_status, 'canceled')
+        #We don't send any email here!!
+        Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
+      else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
+        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      end
+      # return true or false - if everything went well
+      errors.messages.count == 0
     else
-      Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end
-    # return true or false - if everything went well
-    errors.messages.count == 0
   end
 
   def destroyable?
@@ -107,22 +105,17 @@ class Subscription < ActiveRecord::Base
   end
 
   def reactivation_options
-    SubscriptionPlan
-      .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: true)
-      .where('price > 0.0')
-      .generally_available
-      .all_active
-      .all_in_order
+    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id,
+                           available_to_students: true).where('price > 0.0').generally_available.all_active.all_in_order
   end
 
   def upgrade_options
     SubscriptionPlan
-      .where(currency_id: self.subscription_plan.currency_id,
+        .where.not(id: self.id)
+        .where(currency_id: self.subscription_plan.currency_id,
              available_to_students: self.subscription_plan.available_to_students)
       .generally_available
       .all_active
-      .where('price > 0.0')
       .all_in_order
   end
 
@@ -139,7 +132,7 @@ class Subscription < ActiveRecord::Base
       return self
     end
     # make sure the current subscription is in "good standing"
-    unless %w(active).include?(self.current_status)
+    unless %w(active past_due).include?(self.current_status)
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
       return self
     end
@@ -182,6 +175,7 @@ class Subscription < ActiveRecord::Base
         new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
         new_sub.save(validate: false)
 
+        #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
         self.update_attributes(current_status: 'canceled', active: false)
 
         return new_sub
@@ -198,6 +192,33 @@ class Subscription < ActiveRecord::Base
     Rails.logger.error("ERROR: Subscription#upgrade_plan - failed to update Subscription at Stripe.  Details: #{e.inspect}")
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     false
+  end
+
+  def update_from_stripe
+    if self.stripe_guid && self.stripe_customer_id
+      begin
+        stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+
+        if stripe_customer
+          begin
+            stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+
+            subscription = Subscription.find_by_stripe_guid(stripe_subscription.id)
+            subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+            subscription.current_status = stripe_subscription.status
+            subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
+            subscription.livemode = stripe_subscription[:plan][:livemode]
+            subscription.save(validate: false)
+
+          rescue Stripe::InvalidRequestError => e
+            subscription.update_attribute(:current_status, 'canceled')
+          end
+
+        end
+      rescue Stripe::InvalidRequestError => e
+
+      end
+    end
   end
 
   protected

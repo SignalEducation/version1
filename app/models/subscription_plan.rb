@@ -131,15 +131,15 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    if self.stripe_guid.nil? # would be !nil while importing from website v2
+    if self.stripe_guid.nil?
       stripe_plan = Stripe::Plan.create(
               amount: (self.price.to_f * 100).to_i,
+              currency: self.currency.try(:iso_code).try(:downcase),
               interval: 'month',
               interval_count: self.payment_frequency_in_months.to_i,
               trial_period_days: self.trial_period_in_days.to_i,
               name: 'LearnSignal ' + self.name.to_s,
               statement_descriptor: 'LearnSignal',
-              currency: self.currency.try(:iso_code).try(:downcase),
               id: Rails.env + '-' + ApplicationController::generate_random_code(20)
       )
       self.stripe_guid = stripe_plan.id

@@ -18,7 +18,7 @@
 
 FactoryGirl.define do
   factory :product do
-    name "Product 001"
+    sequence(:name)      { |n| "Product-00#{n}" }
     mock_exam_id 1
     active true
     stripe_guid "MyString"

@@ -21,7 +21,7 @@
 
 class MockExam < ActiveRecord::Base
 
-  #TODO product_id field should be removed since relationships have changed
+  #TODO product_id field should be removed since relationship has changed
 
   include LearnSignalModelExtras
 

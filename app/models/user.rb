@@ -113,8 +113,8 @@ class User < ActiveRecord::Base
 
   # validation
   validates :email, presence: true, uniqueness: true, length: {within: 7..50}
-  validates :first_name, presence: true, length: {minimum: 1, maximum: 20}
-  validates :last_name, presence: true, length: {minimum: 1, maximum: 30}
+  validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
+  validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
@@ -226,11 +226,6 @@ class User < ActiveRecord::Base
     self.subscriptions.where(active: true).in_created_order.last
   end
 
-  def process_free_trial_limit_reached
-    #Called from a Cron Task and CMEUL
-    self.update_attributes(free_trial_ended_at: Time.now) unless days_or_seconds_valid?
-  end
-
   def user_subscription_status
     current_subscription = self.active_subscription
     if current_subscription
@@ -266,28 +261,31 @@ class User < ActiveRecord::Base
   end
 
   def days_or_seconds_valid?
-    if free_trial_days_expired? || free_trial_minutes_expired?
-      false
-    else
-      true
-    end
-  end
-
-  def free_trial_days_expired?
-    #If the Number of days since the user was created is greater than the allowed free trial days then permission is denied
-    if (Time.now - self.created_at).to_i.abs / 1.day >= self.trial_limit_in_days
+    if free_trial_days_valid? || free_trial_minutes_valid?
       true
     else
       false
     end
   end
 
-  def free_trial_minutes_expired?
+  def free_trial_days_valid?
+    # 86400 is number of seconds in a day
+    trial_limit_in_seconds = self.trial_limit_in_days * 86400
+    current_date_time = Proc.new { Time.now }.call
+
+    if  current_date_time <= (self.created_at + trial_limit_in_seconds)
+      true
+    else
+      false
+    end
+  end
+
+  def free_trial_minutes_valid?
     #If the Number of seconds watched is less than the allowed free trial time limit then permission is allowed
     if self.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i
-      false
-    else
       true
+    else
+      false
     end
   end
 
@@ -302,20 +300,21 @@ class User < ActiveRecord::Base
   end
 
   def minutes_left
-    free_trial_minutes = ENV['free_trial_limit_in_seconds'].to_i
-    free_trial_minutes - self.trial_limit_in_seconds
+    free_trial_seconds = ENV['free_trial_limit_in_seconds'].to_i
+    seconds_left = free_trial_seconds - self.trial_limit_in_seconds
+    minutes_left = (seconds_left/60)
   end
 
   def free_member?
-    self.individual_student? && self.free_trial
+    self.individual_student? && self.free_trial && !self.subscriptions.any?
   end
 
   def valid_free_member?
-    self.individual_student? && self.free_trial && self.days_or_seconds_valid?
+    self.free_member? && self.days_or_seconds_valid? && !self.free_trial_ended_at
   end
 
   def expired_free_member?
-    self.individual_student? && self.free_trial && !self.days_or_seconds_valid?
+    self.free_member? && !self.days_or_seconds_valid? && self.free_trial_ended_at
   end
 
   def canceled_member?
@@ -558,9 +557,10 @@ class User < ActiveRecord::Base
     DiscourseCreateUserWorker.perform_at(5.minute.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
-  def resubscribe_account(user_id, new_plan_id, stripe_token, terms_and_conditions, coupon_code)
+  def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions, coupon_code)
+
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    user = User.find_by_id(user_id)
+    user = self
     old_sub = user.active_subscription
 
     # compare the currencies of the old and new plans,
@@ -593,7 +593,7 @@ class User < ActiveRecord::Base
     #### Now we need to create a new Subscription in our DB.
     ActiveRecord::Base.transaction do
       new_sub = Subscription.new(
-          user_id: user_id,
+          user_id: user.id,
           subscription_plan_id: new_subscription_plan.id,
           complimentary: false,
           active: true,
