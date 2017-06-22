@@ -2,8 +2,7 @@
   %h2
     =cme.name.html_safe
   -if cme.course_module_element_video.vimeo_guid
-    .vimeo-player-window
-      %iframe{src: "https://player.vimeo.com/video/#{cme.course_module_element_video.vimeo_guid}", frameborder: '0', webkitAllowFullScreen: true, mozallowfullscreen: true, allowFullScreen: true}
+    #vimeo-player-window.vimeo-player-window
 
   -else
     %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
@@ -49,8 +48,38 @@
               .glyphicon.glyphicon-download{style: 'top: 3px;'}
 
 
--# If the Course is a CPD remove the ability to 'Mark as Completed' the CMEUL - only mark complete when 75% is watched
--if cme.course_module.subject_course.is_cpd
+-if cme.course_module_element_video.vimeo_guid
+
+  :javascript
+
+    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+    var options = {
+      id: "#{cme.course_module_element_video.vimeo_guid}",
+      frameborder: 0,
+      webkitAllowFullScreen: true,
+      mozallowfullscreen: true,
+      allowFullScreen: true
+    };
+
+    var player = new Vimeo.Player('vimeo-player-window', options);
+
+    player.on('timeupdate', function(event) {
+
+      if (event.percent === 0.75) {
+        $.ajax({
+          url: '#{video_watched_data_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'videoLogId': videoCmeUserLog}),
+          method: 'PATCH',
+          contentType: "application/json; charset=utf-8"
+        });
+      }
+
+    });
+
+
+
+-else
 
   :javascript
     var videoCmeUserLog = #{@video_cme_user_log.id || 0};
@@ -73,11 +102,3 @@
         });
       }
     })
-
-
--else
-
-  :javascript
-
-    var iframe = document.querySelector('iframe');
-    var player = new Vimeo.Player(iframe);
