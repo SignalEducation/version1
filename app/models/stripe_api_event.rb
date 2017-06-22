@@ -189,7 +189,7 @@ class StripeApiEvent < ActiveRecord::Base
       self.processed_at = Time.now
       subscription.update_attribute(:current_status, 'canceled')
     else
-      set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
+      set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end
   end
 
