@@ -1,7 +1,11 @@
 .col-md-8.col-sm-12
   %h2
     =cme.name.html_safe
-  %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
+  -if cme.course_module_element_video.vimeo_guid
+    #vimeo-player-window.vimeo-player-window
+
+  -else
+    %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
 
 
   -#Nav buttons below video
@@ -44,21 +48,24 @@
               .glyphicon.glyphicon-download{style: 'top: 3px;'}
 
 
--# If the Course is a CPD remove the ability to 'Mark as Completed' the CMEUL - only mark complete when 75% is watched
--if cme.course_module.subject_course.is_cpd
+-if cme.course_module_element_video.vimeo_guid
 
   :javascript
+
     var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+    var options = {
+      id: "#{cme.course_module_element_video.vimeo_guid}",
+      frameborder: 0,
+      webkitAllowFullScreen: true,
+      mozallowfullscreen: true,
+      allowFullScreen: true
+    };
 
-    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
-      videoFoam: true,
-      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
-    });
+    var player = new Vimeo.Player('vimeo-player-window', options);
 
-    wistiaEmbed.bind("secondchange", function() {
-      var time1 = (wistiaEmbed.duration()/100*75);
-      var time2 = time1 + 2;
-      if (wistiaEmbed.secondsWatched() > time1 && wistiaEmbed.secondsWatched() < time2) {
+    player.on('timeupdate', function(event) {
+
+      if (event.percent === 0.75) {
         $.ajax({
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',
@@ -67,7 +74,9 @@
           contentType: "application/json; charset=utf-8"
         });
       }
-    })
+
+    });
+
 
 
 -else
@@ -75,16 +84,6 @@
   :javascript
     var videoCmeUserLog = #{@video_cme_user_log.id || 0};
 
-    $(document).on('click', '.mark-as-complete', function(ajax) {
-      $.ajax({
-        url: '#{video_watched_data_courses_path}',
-        dataType: 'json',
-        data: JSON.stringify({'videoLogId': videoCmeUserLog}),
-        method: 'PATCH',
-        contentType: "application/json; charset=utf-8"
-      });
-    });
-
     wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
       videoFoam: true,
       stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
@@ -103,4 +102,3 @@
         });
       }
     })
-

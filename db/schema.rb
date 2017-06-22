@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170413080055) do
+ActiveRecord::Schema.define(version: 20170612134201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(version: 20170413080055) do
     t.string   "video_id"
     t.float    "duration"
     t.text     "thumbnail"
+    t.string   "vimeo_guid"
   end
 
   add_index "course_module_element_videos", ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id", using: :btree

@@ -14,6 +14,7 @@
 #  video_id                     :string
 #  duration                     :float
 #  thumbnail                    :text
+#  vimeo_guid                   :string
 #
 
 require 'rails_helper'

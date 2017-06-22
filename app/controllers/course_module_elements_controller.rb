@@ -67,10 +67,19 @@ class CourseModuleElementsController < ApplicationController
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
     if params[:type] == 'video'
+
       @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
       @course_module_element.course_module_element_resources.build
       @course_module_element.build_video_resource
+
+      if params[:video_uri]
+        @video_guid = params[:video_uri].split("/").last.to_s
+      else
+        @ticket = build_vimeo_ticket(new_course_module_element_url(type: 'video', cm_id: cm.id))
+        @ticket_url = @ticket.upload_link_secure
+      end
+
     elsif params[:type] == 'quiz'
       spawn_quiz_children
     end
@@ -79,6 +88,7 @@ class CourseModuleElementsController < ApplicationController
 
   def edit
     if @course_module_element
+      cm = @course_module_element.parent
       if @course_module_element.is_quiz
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
@@ -86,8 +96,13 @@ class CourseModuleElementsController < ApplicationController
         if !@course_module_element.video_resource
           @course_module_element.build_video_resource
         end
+        if params[:video_uri]
+          @video_guid = params[:video_uri].split("/").last.to_s
+        else
+          @ticket = build_vimeo_ticket(edit_course_module_element_url(type: 'video', cm_id: cm.id, course_module_element_id: @course_module_element.id))
+          @ticket_url = @ticket.upload_link_secure
+        end
       end
-      cm = @course_module_element.parent
       @course_modules = cm.parent.active_children
       set_related_cmes
     else
@@ -102,6 +117,9 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element = CourseModuleElement.new(allowed_params)
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
+
+    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name)
+
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
@@ -135,6 +153,7 @@ class CourseModuleElementsController < ApplicationController
     cm = @course_module_element.parent
     @course_modules = cm.parent.active_children
 
+    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name)
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
@@ -185,6 +204,41 @@ class CourseModuleElementsController < ApplicationController
     @mathjax_required = true
   end
 
+
+  def build_vimeo_ticket(url)
+    require 'net/http'
+    require 'net/http/post/multipart'
+    http = Net::HTTP.new('api.vimeo.com', 443)
+    http.use_ssl = true
+
+    http.start do |session|
+      request = Net::HTTP::Post.new('/me/videos')
+      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request.form_data = {'redirect_url' => url}
+      response = session.request(request)
+      ticket = OpenStruct.new(JSON.parse(response.body))
+      return ticket
+    end
+
+  end
+
+
+  def verify_upload(video_uri, cme_name)
+    require 'net/http'
+    require 'net/http/post/multipart'
+    http = Net::HTTP.new('api.vimeo.com', 443)
+    http.use_ssl = true
+
+    http.start do |session|
+      request = Net::HTTP::Patch.new("/videos/#{video_uri}")
+      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request.form_data = {'name' => cme_name}
+      response = session.request(request)
+      return response
+    end
+  end
+
+
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
       @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
@@ -216,6 +270,8 @@ class CourseModuleElementsController < ApplicationController
             :duration,
             :transcript,
             :thumbnail,
+            :vimeo_guid,
+            :vimeo_upload_ticket_id,
             :video_id],
         course_module_element_quiz_attributes: [
             :id,
