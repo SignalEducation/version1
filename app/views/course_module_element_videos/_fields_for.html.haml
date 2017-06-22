@@ -6,17 +6,21 @@
     -if params[:video_uri]
       .l-margin-top.l-margin-bottom-big
         %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-green'}
-          ='Upload Successful - Click to Replace File'
+          ='Upload Successful'
     -else
       .l-margin-top.l-margin-bottom-big
         %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-orange'}
           ='Upload Video File'
 
-  -else @course_module_element.course_module_element_video && @course_module_element.course_module_element_video.vimeo_guid
-    -#TODO needs work
-    .l-margin-top.l-margin-bottom-big
-      %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-red'}
-        ='Replace Video File'
+  -else
+    -if params[:video_uri]
+      .l-margin-top.l-margin-bottom-big
+        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-green'}
+          ='Upload Successful'
+    -else
+      .l-margin-top.l-margin-bottom-big
+        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-orange'}
+          ='Replace Video File'
 
 
   =cme_video.label :duration, t('views.course_module_element_videos.form.duration'), class: 'control-label'

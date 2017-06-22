@@ -426,7 +426,7 @@ en:
         transcript: Transcript
         transcript_placeholder: This is optional
         video_file: Video File
-        duration: Duration of Video File
+        duration: Video Duration in seconds
         duration_placeholder: Duration in Seconds
         video_id: Video ID
         video_id_placeholder: Wistia ID
