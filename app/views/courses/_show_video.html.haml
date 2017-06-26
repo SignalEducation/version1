@@ -52,7 +52,7 @@
 
   :javascript
 
-    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+    var videoCmeUserLog = #{@video_cme_user_log ? @video_cme_user_log.id : 0};
     var options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
       frameborder: 0,
@@ -82,7 +82,7 @@
 -else
 
   :javascript
-    var videoCmeUserLog = #{@video_cme_user_log.id || 0};
+    var videoCmeUserLog = #{@video_cme_user_log ? @video_cme_user_log.id : 0};
 
     wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
       videoFoam: true,
