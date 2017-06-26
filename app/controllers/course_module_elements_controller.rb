@@ -118,7 +118,7 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
-    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name)
+    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name) if @course_module_element.is_video?
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -153,7 +153,7 @@ class CourseModuleElementsController < ApplicationController
     cm = @course_module_element.parent
     @course_modules = cm.parent.active_children
 
-    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name)
+    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name) if @course_module_element.is_video?
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
