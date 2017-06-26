@@ -72,7 +72,7 @@ class TutorApplicationsController < ApplicationController
     options = {:subject => 'Tutor Application', :description => full_description, :requester => { :email => email, :name => "#{first_name} #{last_name}" }}
 
     request = ZendeskAPI::Ticket.create(@client, options)
-    if request.created_at
+    if request && request.created_at
       flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     else
       flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'

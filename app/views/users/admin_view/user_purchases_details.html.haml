@@ -34,7 +34,8 @@
                     -@orders.each do |order|
                       %tr
                         %td
-                          =order.product.mock_exam.name.to_s.truncate(20)
+                          -if order.product && order.product.mock_exam
+                            =order.product.mock_exam.name.to_s.truncate(20)
                         %td
                           =humanize_datetime(order.created_at)
                         %td

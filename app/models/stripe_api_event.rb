@@ -147,7 +147,7 @@ class StripeApiEvent < ActiveRecord::Base
       Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
 
     else
-      set_process_error("Error finding User-#{user.try(:id)}, Invoice-#{invoice.try(:id)} or Subscription-#{subscription.try(:id)}. InvoicePaymentSucceeded Event")
+      set_process_error("Error finding User by - #{stripe_customer_guid}, Invoice by - #{stripe_invoice_guid} or Subscription by - #{stripe_subscription_guid}. InvoicePaymentSucceeded Event")
     end
   end
 

@@ -49,5 +49,5 @@
                             .col-md-6.col-xs-6.text-right
                               -if course.total_video_duration > 0
                                 %h6
-                                  =simple_time(course.total_video_duration)
+                                  =simple_hour_time(course.total_video_duration.round)
 

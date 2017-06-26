@@ -18,7 +18,8 @@
                     %td.col-sm-8=@order.product.name
                   %tr
                     %td.col-sm-4=t('views.orders.show.subject_course_id')
-                    %td.col-sm-8=@order.subject_course.name
+                    -if @order.subject_course
+                      %td.col-sm-8=@order.subject_course.name
                   %tr
                     %td.col-sm-4=t('views.orders.show.user_id')
                     %td.col-sm-8=@order.user.full_name

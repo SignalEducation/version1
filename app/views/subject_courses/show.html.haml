@@ -52,7 +52,7 @@
                           -course_module.children.all_in_order.each do |cme|
                             %tr{id: cme.id, data: {parent: course_module.id, destination: course_module_elements_url}}
                               %td
-                                =cme.name.to_s.html_safe.truncate(30)
+                                =cme.name.to_s
                               %td
                                 =tick_or_cross(cme.active)
                               %td
