@@ -261,7 +261,7 @@ class User < ActiveRecord::Base
   end
 
   def days_or_seconds_valid?
-    if free_trial_days_valid? || free_trial_minutes_valid?
+    if free_trial_days_valid? && free_trial_minutes_valid?
       true
     else
       false
@@ -314,7 +314,7 @@ class User < ActiveRecord::Base
   end
 
   def expired_free_member?
-    self.free_member? && !self.days_or_seconds_valid? && self.free_trial_ended_at
+    self.free_member? && !self.days_or_seconds_valid?
   end
 
   def canceled_member?
