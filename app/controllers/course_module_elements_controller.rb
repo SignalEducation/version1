@@ -271,7 +271,6 @@ class CourseModuleElementsController < ApplicationController
             :transcript,
             :thumbnail,
             :vimeo_guid,
-            :vimeo_upload_ticket_id,
             :video_id],
         course_module_element_quiz_attributes: [
             :id,

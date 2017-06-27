@@ -24,9 +24,9 @@ FactoryGirl.define do
     difficulty_level 'easy'
     estimated_study_time_seconds 1
     transcript "MyText"
-    video_id 'abc123'
     thumbnail 'abc123'
     duration 1
+    sequence(:vimeo_guid)             { |n| "vimeo-#{n}" }
   end
 
 end

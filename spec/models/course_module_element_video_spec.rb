@@ -22,7 +22,7 @@ require 'rails_helper'
 describe CourseModuleElementVideo do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at)
+  black_list = %w(id created_at updated_at estimated_study_time_seconds destroyed_at thumbnail)
   CourseModuleElementVideo.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -43,8 +43,8 @@ describe CourseModuleElementVideo do
   it { should_not validate_presence_of(:tags) }
   it { should validate_length_of(:tags).is_at_most(255) }
 
-  it { should validate_presence_of(:video_id) }
-  it { should validate_length_of(:video_id).is_at_most(255) }
+  it { should validate_presence_of(:vimeo_guid) }
+  it { should validate_length_of(:vimeo_guid).is_at_most(255) }
 
   it { should validate_inclusion_of(:difficulty_level).in_array(ApplicationController::DIFFICULTY_LEVEL_NAMES) }
   it { should validate_length_of(:difficulty_level).is_at_most(255) }
