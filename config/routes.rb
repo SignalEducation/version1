@@ -120,14 +120,9 @@ Rails.application.routes.draw do
     post '/contact_us_zendesk', to: 'footer_pages#contact_us_zendesk'
 
     # Library Structure
-    # Catch old library urls
-    get 'subscription_groups', to: 'library#index'
-    get 'subscription_group/:group_name_url', to: 'library#group_show'
-    get 'subscription_course/:subject_course_name_url', to: 'library#index'
 
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
-    get 'group/:group_name_url', to: 'library#group_show'
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
     get 'library/:group_name_url/:subject_course_name_url/preview', to: 'library#preview_course', as: :preview_course
 
