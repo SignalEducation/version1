@@ -21,8 +21,12 @@
                   %li
                     %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
                       Activity
-          .col-sm-9
+                -if @cfa_logs.any?
+                  %li
+                    %a{href: '#cfa', role: 'tab', data: {toggle: 'tab'}}
+                      CFA
 
+          .col-sm-9
             .account-tab-content
               .tab.account-tab#enrollments
                 =render partial: 'enrollments'
@@ -30,6 +34,28 @@
               -if @non_enrollment_logs.any?
                 .tab.account-tab#activity
                   =render partial: 'activity'
+
+              -if @cfa_logs.any?
+                .tab.account-tab#cfa
+                  -@cfa_courses.each do |course|
+                    -if course.active_children.any?
+                      .col-sm-4.col-md-6
+                        =link_to library_special_link(course), class: 'card card-course' do
+                          .card-outer
+                            .card-inner
+                              %h3.h3.card-title.l-margin-bottom{style: 'color: black;'}
+                                =course.name
+                              %p.card-desc
+                                =course.try(:short_description).truncate(185)
+                          .card-label
+                            .row
+                              .col-md-12.col-xs-12
+                                .col-md-6.col-xs-6
+                                  %h6
+                                    =t('views.general.browse')
+                                .col-md-6.col-xs-6.text-right
+
+
 
 -else
 
@@ -48,21 +74,22 @@
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap
           .row
-            -@groups.each_with_index do |group|
-              -if group.active_children.any?
-                .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
-                  =link_to library_special_link(group), class: 'box box-course' do
-                    .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
-                    .box-inner
-                      .l-margin-top-xl
-                        %h2{style: 'margin-bottom: 5px;'}
-                          =group.name
-                        %p.p
-                          =group.description
-
-                    .box-label
-                      %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                        Browse Courses
+            -@acca_group.subject_courses.each_with_index do |course|
+              .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
+                =link_to library_special_link(course), class: 'card card-course' do
+                  .card-outer
+                    .card-inner
+                      %h3.h3.card-title.l-margin-bottom{style: 'color: black;'}
+                        =course.name
+                      %p.card-desc
+                        =course.try(:short_description).truncate(185)
+                  .card-label
+                    .row
+                      .col-md-12.col-xs-12
+                        .col-md-6.col-xs-6
+                          %h6
+                            =t('views.general.browse')
+                        .col-md-6.col-xs-6.text-right
 
 
 :javascript
