@@ -74,7 +74,7 @@
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap
           .row
-            -@acca_group.subject_courses.each_with_index do |course|
+            -@acca_group.subject_courses.all_in_order.each do |course|
               .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
                 =link_to library_special_link(course), class: 'card card-course' do
                   .card-outer
