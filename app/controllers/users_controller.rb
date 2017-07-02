@@ -61,10 +61,10 @@
 class UsersController < ApplicationController
 
   before_action :logged_in_required
-  before_action only: [:destroy, :create] do
+  before_action only: [:destroy] do
     ensure_user_is_of_type(%w(admin))
   end
-  before_action only: [:index, :new, :edit, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status] do
+  before_action only: [:index, :new, :edit, :create, :update, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status] do
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
   before_action only: [:reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
@@ -340,7 +340,7 @@ class UsersController < ApplicationController
   end
 
   def allowed_params
-    if current_user.admin?
+    if current_user.admin? || current_user.customer_support_manager?
       params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description)
     else
       params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions)
