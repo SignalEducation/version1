@@ -33,12 +33,12 @@ class CourseModule < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description,
-                  :sorting_order, :estimated_time_in_seconds,
-                  :active, :cme_count, :seo_description, :seo_no_index,
-                  :number_of_questions, :subject_course_id, :highlight_colour,
-                  :tuition, :test, :revision, :discourse_topic_id, :quiz_count,
-                  :video_duration, :video_count
+  attr_accessible :name, :name_url, :description, :sorting_order,
+                  :estimated_time_in_seconds, :active, :cme_count,
+                  :seo_description, :seo_no_index, :number_of_questions,
+                  :subject_course_id, :highlight_colour, :tuition, :test,
+                  :revision, :discourse_topic_id, :quiz_count, :video_duration,
+                  :video_count
 
   # Constants
 

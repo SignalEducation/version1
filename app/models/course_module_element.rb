@@ -9,8 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
@@ -29,11 +27,8 @@ class CourseModuleElement < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description,
-                  :estimated_time_in_seconds, :active,
-                  :course_module_id, :sorting_order,
-                  :related_quiz_id,
-                  :related_video_id, :is_video, :is_quiz,
+  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
+                  :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
@@ -52,10 +47,6 @@ class CourseModuleElement < ActiveRecord::Base
   has_one :course_module_element_video
   has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :quiz_questions
-  belongs_to :related_quiz, class_name: 'CourseModuleElement',
-             foreign_key: :related_quiz_id
-  belongs_to :related_video, class_name: 'CourseModuleElement',
-             foreign_key: :related_video_id
   has_many :student_exam_tracks, class_name: 'StudentExamTrack',
            foreign_key: :latest_course_module_element_id
 
@@ -191,12 +182,12 @@ class CourseModuleElement < ActiveRecord::Base
 
   def log_count_fields
     if self.is_video
-      self.duration = self.course_module_element_video.try(:duration) unless Rails.env.test?
-      self.estimated_time_in_seconds = self.course_module_element_video.duration.round if !Rails.env.test? && self.course_module_element_video.duration
+      self.duration = self.course_module_element_video.try(:duration)
+      self.estimated_time_in_seconds = self.course_module_element_video.duration.round if self.course_module_element_video.duration
     elsif self.is_quiz
-        #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
-        self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
-        self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?
+      #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
+      self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
+      self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?
     else
       true
     end

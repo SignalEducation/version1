@@ -9,8 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null

@@ -9,8 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
@@ -256,8 +254,6 @@ class CourseModuleElementsController < ApplicationController
         :course_module_id,
         :sorting_order,
         :active,
-        :related_quiz_id,
-        :related_video_id,
         :is_video,
         :is_quiz,
         :seo_description,

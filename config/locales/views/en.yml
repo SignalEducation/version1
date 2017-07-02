@@ -327,8 +327,6 @@ en:
         course_module_element_quiz_id: Course module element quiz id
         sorting_order: Sorting order
         forum_topic_id: Forum topic
-        related_quiz_id: Related quiz
-        related_video_id: Related video
         created_at: Created at
         updated_at: Updated_at
         new_video: New video

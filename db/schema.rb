@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702170152) do
+ActiveRecord::Schema.define(version: 20170702172921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -138,8 +138,6 @@ ActiveRecord::Schema.define(version: 20170702170152) do
     t.integer  "estimated_time_in_seconds"
     t.integer  "course_module_id"
     t.integer  "sorting_order"
-    t.integer  "related_quiz_id"
-    t.integer  "related_video_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_video",                  default: false, null: false
@@ -154,8 +152,6 @@ ActiveRecord::Schema.define(version: 20170702170152) do
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
   add_index "course_module_elements", ["name_url"], name: "index_course_module_elements_on_name_url", using: :btree
-  add_index "course_module_elements", ["related_quiz_id"], name: "index_course_module_elements_on_related_quiz_id", using: :btree
-  add_index "course_module_elements", ["related_video_id"], name: "index_course_module_elements_on_related_video_id", using: :btree
 
   create_table "course_modules", force: :cascade do |t|
     t.string   "name"
