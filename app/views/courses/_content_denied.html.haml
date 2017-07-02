@@ -1,5 +1,5 @@
 .box-item.question-box.border-same-backcolor.width-bigger.no-content-well#quiz-contents{style: 'min-height: 645px;'}
-  %h2=@course_module_element.try(:name) || @course_module_jumbo_quiz.try(:name) || 'Custom Quiz'
+  %h2=@course_module_element.try(:name)
 
   -if @course
     .l-section.is-bg-purple

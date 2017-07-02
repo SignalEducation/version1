@@ -8,10 +8,9 @@ class CoursesController < ApplicationController
     @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
 
     if @course_module
-      #Find CourseModuleElement or CourseModuleElementJumboQuiz
+      #Find CourseModuleElement
       @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_jumbo_quiz = @course_module.course_module_jumbo_quiz if @course_module && @course_module.course_module_jumbo_quiz.try(:name_url) == params[:course_module_element_name_url] && @course_module.course_module_jumbo_quiz.try(:active)
-      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first) unless @course_module_jumbo_quiz
+      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first)
 
       #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
@@ -28,8 +27,6 @@ class CoursesController < ApplicationController
 
       if @course_module_element.try(:is_quiz)
         set_up_quiz
-      elsif @course_module_jumbo_quiz
-        set_up_jumbo_quiz
       elsif @course_module_element.try(:is_video)
         @video_cme_user_log = create_a_cme_user_log if current_user.permission_to_see_content(@course)
       end
@@ -44,7 +41,6 @@ class CoursesController < ApplicationController
       @course_module_element_user_log.session_guid = current_session_guid
 
       @course_module_element = @course_module_element_user_log.course_module_element
-      @course_module_jumbo_quiz = @course_module_element_user_log.course_module_jumbo_quiz
       @course_module = @course_module_element_user_log.course_module
       @results = true
       unless @course_module_element_user_log.save
@@ -52,12 +48,12 @@ class CoursesController < ApplicationController
         Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
         flash[:error] = I18n.t('controllers.courses.create.flash.error')
       end
-      pass_rate = @course_module_element.course_module.subject_course.cpd_pass_rate ? @course_module_element.course_module.subject_course.cpd_pass_rate : 65
+      pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
       percentage_score = (@course_module_element_user_log.quiz_attempts.all_correct.count.to_f)/(@course_module_element_user_log.quiz_attempts.count.to_f) * 100.0
       @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
       if params[:demo_mode] == 'yes'
         redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-      elsif @course_module && (@course_module_element || @course_module_jumbo_quiz)
+      elsif @course_module && @course_module_element
         render :show
       else
         redirect_to library_url
@@ -89,7 +85,6 @@ class CoursesController < ApplicationController
     params.require(:course_module_element_user_log).permit(
             :course_module_id,
             :course_module_element_id,
-            :course_module_jumbo_quiz_id,
             :user_id,
             :time_taken_in_seconds,
             quiz_attempts_attributes: [
@@ -115,9 +110,7 @@ class CoursesController < ApplicationController
             quiz_score_potential: nil,
             is_video: true,
             is_quiz: false,
-            course_module_id: @course_module_element.course_module_id,
-            course_module_jumbo_quiz_id: nil,
-            is_jumbo_quiz: false
+            course_module_id: @course_module_element.course_module_id
     )
   end
 
@@ -158,36 +151,6 @@ class CoursesController < ApplicationController
     end
 
     @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
-  end
-
-  def set_up_jumbo_quiz
-    @course_module_element_user_log = CourseModuleElementUserLog.new(
-            session_guid: current_session_guid,
-            course_module_id: @course_module.id,
-            course_module_element_id: nil,
-            course_module_jumbo_quiz_id: @course_module_jumbo_quiz.id,
-            is_jumbo_quiz: true,
-            user_id: current_user.try(:id))
-
-    @number_of_questions = @course_module_jumbo_quiz.total_number_of_questions
-
-    @number_of_questions.times do
-      @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
-    end
-
-    @strategy = @course_module_jumbo_quiz.course_module.course_module_elements.all_quizzes.first.course_module_element_quiz.question_selection_strategy
-
-    all_questions = QuizQuestion.where(course_module_element_id: @course_module.course_module_elements.all.ids)
-    all_easy_ids = all_questions.all_easy.map(&:id)
-    all_medium_ids = all_questions.all_medium.map(&:id)
-    all_difficult_ids = all_questions.all_difficult.map(&:id)
-    @easy_ids = all_easy_ids.sample(@number_of_questions)
-    @medium_ids = all_medium_ids.sample(@number_of_questions)
-    @difficult_ids = all_difficult_ids.sample(@number_of_questions)
-    @all_ids = @easy_ids + @medium_ids + @difficult_ids
-    @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
-    Rails.logger.debug "DEBUG: recent_attempts=#{@course_module_element_user_log.recent_attempts.length}"
-    @first_attempt = @course_module_element_user_log.recent_attempts.length == 0
   end
 
   protected

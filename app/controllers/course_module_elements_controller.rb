@@ -32,6 +32,7 @@ class CourseModuleElementsController < ApplicationController
   before_action :get_variables
 
   def show
+    #Previewing a Quiz as Content Manager or Amin
     @course_module_element = CourseModuleElement.find(params[:id])
     if @course_module_element.is_quiz
       @course_module_element_user_log = CourseModuleElementUserLog.new(
@@ -222,7 +223,6 @@ class CourseModuleElementsController < ApplicationController
 
   end
 
-
   def verify_upload(video_uri, cme_name)
     require 'net/http'
     require 'net/http/post/multipart'
@@ -277,7 +277,6 @@ class CourseModuleElementsController < ApplicationController
             :course_module_element_id,
             :number_of_questions,
             :question_selection_strategy,
-            :is_final_quiz,
             quiz_questions_attributes: [
                 :id,
                 :course_module_element_quiz_id,

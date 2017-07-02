@@ -28,9 +28,6 @@
           %a{href: '#enrollments', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.users.show.tabs.enrollments')
 
-          %a{href: '#completion-certs', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-            =t('views.users.show.tabs.certificates')
-
 
 
       .tab-content
@@ -68,13 +65,6 @@
             .content-box.content-box-outer.l-margin-bottom-huge
               .content-box-inner
                 =render partial: 'users/user_account/enrollments'
-
-        .tab-pane.fade#completion-certs{role: 'tabpanel'}
-          .col-md-12
-            .content-box.content-box-outer.l-margin-bottom-huge
-              .content-box-inner
-                =render partial: 'users/user_account/completion_certificates'
-
 
 
 

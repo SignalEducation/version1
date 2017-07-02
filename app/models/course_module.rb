@@ -49,7 +49,6 @@ class CourseModule < ActiveRecord::Base
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_many :student_exam_tracks
-  has_one :course_module_jumbo_quiz
 
   # validation
   validates :subject_course_id, presence: true
@@ -103,7 +102,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def children_available_count
-    self.children.all_active.count + (self.course_module_jumbo_quiz.try(:active) ? 1 : 0)
+    self.children.all_active.count
   end
 
   def completed_by_user_or_guid(user_id, session_guid)
@@ -120,7 +119,6 @@ class CourseModule < ActiveRecord::Base
     # - self.student_exam_tracks.empty?
     the_list = []
     the_list += self.course_module_elements.to_a
-    the_list << self.course_module_jumbo_quiz if self.course_module_jumbo_quiz
     the_list
   end
 

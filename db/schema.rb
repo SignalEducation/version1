@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702121027) do
+ActiveRecord::Schema.define(version: 20170702170152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,18 +27,6 @@ ActiveRecord::Schema.define(version: 20170702121027) do
   add_index "ahoy_events", ["time"], name: "index_ahoy_events_on_time", using: :btree
   add_index "ahoy_events", ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
   add_index "ahoy_events", ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
-
-  create_table "completion_certificates", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "subject_course_user_log_id"
-    t.string   "guid"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  add_index "completion_certificates", ["guid"], name: "index_completion_certificates_on_guid", using: :btree
-  add_index "completion_certificates", ["subject_course_user_log_id"], name: "index_completion_certificates_on_subject_course_user_log_id", using: :btree
-  add_index "completion_certificates", ["user_id"], name: "index_completion_certificates_on_user_id", using: :btree
 
   create_table "corporate_requests", force: :cascade do |t|
     t.string   "name"
@@ -80,15 +68,12 @@ ActiveRecord::Schema.define(version: 20170702121027) do
     t.string   "question_selection_strategy"
     t.integer  "best_possible_score_first_attempt"
     t.integer  "best_possible_score_retry"
-    t.integer  "course_module_jumbo_quiz_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
-    t.boolean  "is_final_quiz",                     default: false
   end
 
   add_index "course_module_element_quizzes", ["course_module_element_id"], name: "cme_quiz_cme_id", using: :btree
-  add_index "course_module_element_quizzes", ["course_module_jumbo_quiz_id"], name: "cme_quiz_cme_jumbo_quiz_id", using: :btree
 
   create_table "course_module_element_resources", force: :cascade do |t|
     t.integer  "course_module_element_id"
@@ -110,19 +95,17 @@ ActiveRecord::Schema.define(version: 20170702121027) do
     t.integer  "course_module_element_id"
     t.integer  "user_id"
     t.string   "session_guid"
-    t.boolean  "element_completed",           default: false, null: false
+    t.boolean  "element_completed",          default: false, null: false
     t.integer  "time_taken_in_seconds"
     t.integer  "quiz_score_actual"
     t.integer  "quiz_score_potential"
-    t.boolean  "is_video",                    default: false, null: false
-    t.boolean  "is_quiz",                     default: false, null: false
+    t.boolean  "is_video",                   default: false, null: false
+    t.boolean  "is_quiz",                    default: false, null: false
     t.integer  "course_module_id"
-    t.boolean  "latest_attempt",              default: true,  null: false
+    t.boolean  "latest_attempt",             default: true,  null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "course_module_jumbo_quiz_id"
-    t.boolean  "is_jumbo_quiz",               default: false, null: false
-    t.integer  "seconds_watched",             default: 0
+    t.integer  "seconds_watched",            default: 0
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_questions_correct"
   end
@@ -173,23 +156,6 @@ ActiveRecord::Schema.define(version: 20170702121027) do
   add_index "course_module_elements", ["name_url"], name: "index_course_module_elements_on_name_url", using: :btree
   add_index "course_module_elements", ["related_quiz_id"], name: "index_course_module_elements_on_related_quiz_id", using: :btree
   add_index "course_module_elements", ["related_video_id"], name: "index_course_module_elements_on_related_video_id", using: :btree
-
-  create_table "course_module_jumbo_quizzes", force: :cascade do |t|
-    t.integer  "course_module_id"
-    t.string   "name"
-    t.integer  "minimum_question_count_per_quiz"
-    t.integer  "maximum_question_count_per_quiz"
-    t.integer  "total_number_of_questions"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name_url"
-    t.integer  "best_possible_score_first_attempt", default: 0
-    t.integer  "best_possible_score_retry",         default: 0
-    t.datetime "destroyed_at"
-    t.boolean  "active",                            default: false, null: false
-  end
-
-  add_index "course_module_jumbo_quizzes", ["course_module_id"], name: "index_course_module_jumbo_quizzes_on_course_module_id", using: :btree
 
   create_table "course_modules", force: :cascade do |t|
     t.string   "name"
@@ -602,7 +568,6 @@ ActiveRecord::Schema.define(version: 20170702121027) do
     t.datetime "updated_at"
     t.string   "session_guid"
     t.integer  "course_module_id"
-    t.boolean  "jumbo_quiz_taken",                default: false
     t.float    "percentage_complete",             default: 0.0
     t.integer  "count_of_cmes_completed",         default: 0
     t.integer  "subject_course_id"

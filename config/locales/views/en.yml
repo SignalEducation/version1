@@ -383,7 +383,6 @@ en:
         question_selection_strategy_placeholder: 1
         best_possible_score_first_attempt: "Max Score (1st. Go)"
         best_possible_score_retry: "Max Score (Retry)"
-        is_final_quiz: Use these questions for Final Quiz
         advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
@@ -430,28 +429,6 @@ en:
         duration_placeholder: Duration in Seconds
         video_id: Video ID
         video_id_placeholder: Wistia ID
-
-    course_module_jumbo_quiz:
-      form:
-        name: Name
-        name_placeholder: Final Quiz
-        name_url: Name URL
-        name_url_placeholder: intro-to-economics-jumbo-quiz
-        minimum_question_count_per_quiz: Min Questions from each Quiz
-        maximum_question_count_per_quiz: Max Questions from each Quiz
-        total_number_of_questions: Total Number of Questions
-        course_module_id: Course Module
-        active: Active
-
-      edit:
-        h1: Edit Final Quiz
-
-      new:
-        h1: New Final Quiz
-
-      show:
-        h1: Final Quiz
-        no_jumbo_quizzes_yet: "Sorry, there is no Final Quiz for this Course Module. Why not create one now !"
 
     currencies:
       form:
@@ -710,7 +687,6 @@ en:
         h1: Library
         item: item
         items: items
-        jumbo_quiz: Jumbo quiz
         questions: Questions
         question: Question
         quiz: Quiz
@@ -1134,7 +1110,6 @@ en:
           subscriptions: Account Info
           orders: Purchase History
           payments: Payment Info
-          certificates: Certificates
           enrollments: Enrolments
           exam_sittings: Exam Sittings
           notifications: Notifications

@@ -272,7 +272,7 @@ class ApplicationController < ActionController::Base
       library_special_link(
               the_thing.subject_course
       )
-    elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
+    elsif the_thing.class == CourseModuleElement
       course_url(
               the_thing.course_module.subject_course.name_url,
               the_thing.course_module.name_url,

@@ -41,8 +41,6 @@
             =render partial: 'courses/show_results', locals: {cme: @course_module_element}
           -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
             =render partial: 'courses/content_denied'
-          -elsif @course_module_jumbo_quiz && paywall_checkpoint[:course_content][:view_all] == false
-            =render partial: 'courses/content_denied'
           -elsif @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
             -if @course_module_element.try(:is_video)
               =render partial: 'courses/show_video', locals: {cme: @course_module_element}
@@ -51,8 +49,6 @@
             -else
               %h2 Course module element - type unknown
               -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
-          -elsif @course_module_jumbo_quiz
-            =render partial: 'courses/show_quiz'
           -elsif @course_module
             .well
               %h3=t('views.general.coming_soon')

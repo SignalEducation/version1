@@ -334,7 +334,6 @@ class UsersController < ApplicationController
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
-    @certs = SubjectCourseUserLog.for_user_or_session(@user.try(:id), current_session_guid).where(completed: true)
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end

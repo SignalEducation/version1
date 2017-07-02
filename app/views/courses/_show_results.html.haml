@@ -1,6 +1,6 @@
 .col-md-12
   %h2
-    =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
+    =@course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
   .box-item.question-box.border-same-backcolor#quiz-contents
     .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary{style: 'border: 2px solid #4ACF4D;'}
       &#60; Back to Results
@@ -59,19 +59,6 @@
       -if attempt
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
-
-  -if @course_module_element_user_log.is_jumbo_quiz
-    .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
-      .col-xs-4.text-left
-        =link_to course_special_link(@course_module), class: 'btn btn-red text-bold' do
-          .glyphicon.glyphicon-arrow-left
-          Restart Module
-      .col-xs-4.text-center
-        =link_to t('views.dashboard.index.h1'), dashboard_special_link, class: 'btn btn-red text-bold'
-      .col-xs-4.text-right
-        =link_to course_special_link(@course_module.next_module), class: 'btn btn-red text-bold' do
-          Next Module
-          .glyphicon.glyphicon-arrow-right
 
 
   -if @course_module_element

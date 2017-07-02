@@ -10,7 +10,6 @@
 #  updated_at                      :datetime
 #  session_guid                    :string
 #  course_module_id                :integer
-#  jumbo_quiz_taken                :boolean          default(FALSE)
 #  percentage_complete             :float            default(0.0)
 #  count_of_cmes_completed         :integer          default(0)
 #  subject_course_id               :integer
@@ -27,8 +26,8 @@ class StudentExamTrack < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :latest_course_module_element_id,
-                  :session_guid, :course_module_id, :jumbo_quiz_taken,
-                  :percentage_complete, :count_of_cmes_completed, :subject_course_id
+                  :session_guid, :course_module_id, :percentage_complete,
+                  :count_of_cmes_completed, :subject_course_id
 
   # Constants
 
@@ -72,8 +71,7 @@ class StudentExamTrack < ActiveRecord::Base
               session_guid: the_session_guid,
               subject_course_id: duplicate_sets.last.subject_course_id,
               latest_course_module_element_id: duplicate_sets.last.latest_course_module_element_id,
-              course_module_id: duplicate_cm_id,
-              jumbo_quiz_taken: duplicate_sets.map(&:jumbo_quiz_taken).any?,
+              course_module_id: duplicate_cm_id
       )
       new_one.calculate_completeness # includes a 'save'
       # delete the previous SETs
@@ -115,7 +113,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def elements_complete
-    self.latest_cme_user_logs.all_completed.with_elements_active.count + (self.jumbo_quiz_taken ? 1 : 0)
+    self.latest_cme_user_logs.all_completed.with_elements_active.count
   end
 
   def latest_cme_user_logs
@@ -127,7 +125,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def calculate_completeness
-    self.count_of_cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
+    self.count_of_cmes_completed = self.unique_logs.count
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     self.save!
   end
@@ -142,7 +140,7 @@ class StudentExamTrack < ActiveRecord::Base
     unique_quiz_ids = quiz_ids.uniq
     videos_taken = unique_video_ids.count
     quizzes_taken = unique_quiz_ids.count
-    cmes_completed = self.unique_logs.count + (self.jumbo_quiz_taken ? 1 : 0)
+    cmes_completed = self.unique_logs.count
     percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
   end
@@ -157,7 +155,7 @@ class StudentExamTrack < ActiveRecord::Base
     unique_quiz_ids = quiz_ids.uniq
     self.count_of_videos_taken = unique_video_ids.count
     self.count_of_quizzes_taken = unique_quiz_ids.count
-    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count) + (self.jumbo_quiz_taken ? 1 : 0)
+    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
 
     begin

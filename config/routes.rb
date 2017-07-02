@@ -78,9 +78,7 @@ Rails.application.routes.draw do
         as: :course_modules_for_subject_course
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
-    resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
-    get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
 
     get '/dashboard/export_users', to: 'dashboard#export_users', as: :export_users

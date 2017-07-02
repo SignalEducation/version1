@@ -1,7 +1,5 @@
 class LibraryController < ApplicationController
 
-  before_action :logged_in_required, only: [:cert]
-
   def index
     @groups = Group.all_active.all_in_order
     if @groups.count == 1

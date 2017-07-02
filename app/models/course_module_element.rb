@@ -129,8 +129,6 @@ class CourseModuleElement < ActiveRecord::Base
   def next_element
     if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
-    elsif self.course_module.course_module_jumbo_quiz && self.course_module.course_module_jumbo_quiz.active
-      self.course_module.course_module_jumbo_quiz
     elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
       if self.course_module.next_module && self.course_module.next_module.try(:course_module_elements).try(:all_active).any?
         #End of CourseModule continue on to first CME of next CourseModule
@@ -156,8 +154,6 @@ class CourseModuleElement < ActiveRecord::Base
   def previous_element
     if self.my_position_among_siblings && self.my_position_among_siblings > 0
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings - 1])
-    elsif self.course_module.previous_module.try(:course_module_jumbo_quiz)
-      self.course_module.previous_module.course_module_jumbo_quiz
     else
       prev_id = self.course_module.previous_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:last).try(:id)
       CourseModuleElement.find(prev_id) if prev_id

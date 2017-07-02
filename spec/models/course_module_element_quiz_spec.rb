@@ -8,11 +8,9 @@
 #  question_selection_strategy       :string
 #  best_possible_score_first_attempt :integer
 #  best_possible_score_retry         :integer
-#  course_module_jumbo_quiz_id       :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  destroyed_at                      :datetime
-#  is_final_quiz                     :boolean          default(FALSE)
 #
 
 require 'rails_helper'

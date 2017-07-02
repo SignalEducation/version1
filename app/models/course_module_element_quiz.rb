@@ -8,11 +8,9 @@
 #  question_selection_strategy       :string
 #  best_possible_score_first_attempt :integer
 #  best_possible_score_retry         :integer
-#  course_module_jumbo_quiz_id       :integer
 #  created_at                        :datetime
 #  updated_at                        :datetime
 #  destroyed_at                      :datetime
-#  is_final_quiz                     :boolean          default(FALSE)
 #
 
 class CourseModuleElementQuiz < ActiveRecord::Base
@@ -26,13 +24,12 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_id,
                   :number_of_questions, :quiz_questions_attributes,
-                  :question_selection_strategy, :is_final_quiz
+                  :question_selection_strategy
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
-  belongs_to :course_module_jumbo_quiz
   has_many :quiz_questions
 
   accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }
@@ -43,13 +40,11 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
   # callbacks
-  before_save :set_jumbo_quiz_id
   before_update :set_high_score_fields
   after_commit :set_ancestors_best_scores
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
-  scope :all_for_final_quiz, -> { where(is_final_quiz: true) }
 
   # class methods
 
@@ -121,10 +116,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     ApplicationController::DIFFICULTY_LEVELS.each do |level|
       self.best_possible_score_first_attempt -= (max_score - level[:score])
     end
-  end
-
-  def set_jumbo_quiz_id
-    self.course_module_jumbo_quiz_id ||= self.course_module_element.try(:course_module).try(:course_module_jumbo_quiz).try(:id)
   end
 
   def self.quiz_question_fields_blank?(the_attributes)
