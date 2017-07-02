@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702172921) do
+ActiveRecord::Schema.define(version: 20170702173918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,16 +116,12 @@ ActiveRecord::Schema.define(version: 20170702172921) do
 
   create_table "course_module_element_videos", force: :cascade do |t|
     t.integer  "course_module_element_id"
-    t.string   "tags"
-    t.string   "difficulty_level"
     t.integer  "estimated_study_time_seconds"
-    t.text     "transcript"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
     t.string   "video_id"
     t.float    "duration"
-    t.text     "thumbnail"
     t.string   "vimeo_guid"
   end
 

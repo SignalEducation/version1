@@ -71,10 +71,7 @@
     .col-md-12
       %br/
       %br/
-      -if @course_module_element.course_module_element_video && !@course_module_element.course_module_element_video.thumbnail
-        -#if @course_module_element.new_record?
-          =f.submit t('views.general.save'), class: 'btn btn-red', disabled: true
-        -#else
+      -if @course_module_element.course_module_element_video
         =f.submit t('views.general.save'), class: 'btn btn-red', disabled: false
       -else
         =f.submit t('views.general.save'), class: 'btn btn-red clear-question'

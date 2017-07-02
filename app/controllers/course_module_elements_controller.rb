@@ -262,10 +262,6 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
-            :difficulty_level,
-            :duration,
-            :transcript,
-            :thumbnail,
             :vimeo_guid,
             :video_id],
         course_module_element_quiz_attributes: [

@@ -415,13 +415,8 @@ en:
 
     course_module_element_videos:
       form:
-        tags: "Tags (separate with commas)"
-        tags_placeholder: "economics, macro-economics"
-        difficulty_level: Difficulty Level
         estimated_study_time_seconds: Estimated Time in Seconds
         estimated_study_time_seconds_placeholder: 100
-        transcript: Transcript
-        transcript_placeholder: This is optional
         video_file: Video File
         duration: Video Duration in seconds
         duration_placeholder: Duration in Seconds

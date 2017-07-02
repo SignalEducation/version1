@@ -4,16 +4,12 @@
 #
 #  id                           :integer          not null, primary key
 #  course_module_element_id     :integer
-#  tags                         :string
-#  difficulty_level             :string
 #  estimated_study_time_seconds :integer
-#  transcript                   :text
 #  created_at                   :datetime
 #  updated_at                   :datetime
 #  destroyed_at                 :datetime
 #  video_id                     :string
 #  duration                     :float
-#  thumbnail                    :text
 #  vimeo_guid                   :string
 #
 
