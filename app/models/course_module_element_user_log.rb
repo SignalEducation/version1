@@ -116,9 +116,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def calculate_score
     if self.is_quiz
       self.quiz_score_actual = (((self.quiz_attempts.all_correct.count).to_f/(self.quiz_attempts.count).to_f)*100).to_i
-      self.quiz_score_potential = self.recent_attempts.count == 0 ?
-          self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
-          self.course_module_element.course_module_element_quiz.best_possible_score_retry
+      self.quiz_score_potential = self.quiz_attempts.count
       course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
       percentage_score = (self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0
       self.element_completed = true if percentage_score >= course_pass_rate

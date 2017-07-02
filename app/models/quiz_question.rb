@@ -6,7 +6,6 @@
 #  course_module_element_quiz_id :integer
 #  course_module_element_id      :integer
 #  difficulty_level              :string
-#  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
@@ -20,8 +19,7 @@ class QuizQuestion < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_quiz_id,
-                  :difficulty_level, :hints,
+  attr_accessible :course_module_element_quiz_id, :difficulty_level,
                   :quiz_answers_attributes, :quiz_contents_attributes,
                   :quiz_solutions_attributes, :subject_course_id, :sorting_order
 
@@ -43,7 +41,6 @@ class QuizQuestion < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true, on: :update
   validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: { maximum: 255}
-  validates :hints, allow_nil: true, length: {maximum: 65535}
 
   # callbacks
   before_validation :set_course_module_element

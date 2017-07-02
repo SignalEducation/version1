@@ -2,15 +2,13 @@
 #
 # Table name: course_module_element_quizzes
 #
-#  id                                :integer          not null, primary key
-#  course_module_element_id          :integer
-#  number_of_questions               :integer
-#  question_selection_strategy       :string
-#  best_possible_score_first_attempt :integer
-#  best_possible_score_retry         :integer
-#  created_at                        :datetime
-#  updated_at                        :datetime
-#  destroyed_at                      :datetime
+#  id                          :integer          not null, primary key
+#  course_module_element_id    :integer
+#  number_of_questions         :integer
+#  question_selection_strategy :string
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  destroyed_at                :datetime
 #
 
 class CourseModuleElementQuiz < ActiveRecord::Base
@@ -22,9 +20,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   STRATEGIES = %w(random ordered)
 
   # attr-accessible
-  attr_accessible :course_module_element_id,
-                  :number_of_questions, :quiz_questions_attributes,
-                  :question_selection_strategy
+  attr_accessible :course_module_element_id, :number_of_questions,
+                  :quiz_questions_attributes, :question_selection_strategy
 
   # Constants
 
@@ -40,8 +37,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   validates :question_selection_strategy, inclusion: {in: STRATEGIES}, length: {maximum: 255}
 
   # callbacks
-  before_update :set_high_score_fields
-  after_commit :set_ancestors_best_scores
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id).where(destroyed_at: nil) }
@@ -98,25 +93,6 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   end
 
   protected
-
-  def set_ancestors_best_scores
-    changes = self.previous_changes[:best_possible_score_first_attempt] # [prev,new]
-    if changes && changes[0] != changes[1]
-      self.course_module_element.course_module.subject_course.try(:save)
-    end
-    true
-  end
-
-  def set_high_score_fields
-    max_score = ApplicationController::DIFFICULTY_LEVELS.last[:score]
-    self.best_possible_score_retry = self.number_of_questions.to_i * max_score
-    # The best possible score for first attempt assumes the first question is easy,
-    # the next question is medium, and all other questions are hard.
-    self.best_possible_score_first_attempt = self.best_possible_score_retry
-    ApplicationController::DIFFICULTY_LEVELS.each do |level|
-      self.best_possible_score_first_attempt -= (max_score - level[:score])
-    end
-  end
 
   def self.quiz_question_fields_blank?(the_attributes)
     (the_attributes['id'].to_i > 0 && the_attributes['quiz_contents_attributes'].blank?) ||

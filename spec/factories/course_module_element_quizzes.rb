@@ -2,15 +2,13 @@
 #
 # Table name: course_module_element_quizzes
 #
-#  id                                :integer          not null, primary key
-#  course_module_element_id          :integer
-#  number_of_questions               :integer
-#  question_selection_strategy       :string
-#  best_possible_score_first_attempt :integer
-#  best_possible_score_retry         :integer
-#  created_at                        :datetime
-#  updated_at                        :datetime
-#  destroyed_at                      :datetime
+#  id                          :integer          not null, primary key
+#  course_module_element_id    :integer
+#  number_of_questions         :integer
+#  question_selection_strategy :string
+#  created_at                  :datetime
+#  updated_at                  :datetime
+#  destroyed_at                :datetime
 #
 
 FactoryGirl.define do

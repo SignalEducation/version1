@@ -217,7 +217,6 @@ class SubjectCourse < ActiveRecord::Base
     set_question_count
     recalculate_video_count
     set_total_video_duration
-    calculate_best_possible_score
   end
 
   def update_all_course_sets
@@ -244,10 +243,6 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   protected
-
-  def calculate_best_possible_score
-    self.best_possible_first_attempt_score = self.course_module_element_quizzes.sum(:best_possible_score_first_attempt)
-  end
 
   def recalculate_cme_count
     self.cme_count = self.active_children.sum(:cme_count)
