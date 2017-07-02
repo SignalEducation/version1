@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702175659) do
+ActiveRecord::Schema.define(version: 20170702180151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -442,10 +442,8 @@ ActiveRecord::Schema.define(version: 20170702175659) do
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
-    t.boolean  "correct",                       default: false, null: false
+    t.boolean  "correct",             default: false, null: false
     t.string   "degree_of_wrongness"
-    t.text     "wrong_answer_explanation_text"
-    t.integer  "wrong_answer_video_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
@@ -453,7 +451,6 @@ ActiveRecord::Schema.define(version: 20170702175659) do
 
   add_index "quiz_answers", ["degree_of_wrongness"], name: "index_quiz_answers_on_degree_of_wrongness", using: :btree
   add_index "quiz_answers", ["quiz_question_id"], name: "index_quiz_answers_on_quiz_question_id", using: :btree
-  add_index "quiz_answers", ["wrong_answer_video_id"], name: "index_quiz_answers_on_wrong_answer_video_id", using: :btree
 
   create_table "quiz_attempts", force: :cascade do |t|
     t.integer  "user_id"
@@ -476,8 +473,6 @@ ActiveRecord::Schema.define(version: 20170702175659) do
     t.integer  "quiz_question_id"
     t.integer  "quiz_answer_id"
     t.text     "text_content"
-    t.boolean  "contains_mathjax",   default: false, null: false
-    t.boolean  "contains_image",     default: false, null: false
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"

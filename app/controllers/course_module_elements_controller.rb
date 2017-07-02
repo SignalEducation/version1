@@ -292,8 +292,6 @@ class CourseModuleElementsController < ApplicationController
                     :id,
                     :quiz_question_id,
                     :degree_of_wrongness,
-                    :wrong_answer_explanation_text,
-                    :wrong_answer_video_id,
                     :_destroy,
                     quiz_contents_attributes: [
                         :id,
@@ -305,7 +303,6 @@ class CourseModuleElementsController < ApplicationController
                         :image_content_type,
                         :image_file_size,
                         :image_updated_at,
-                        :content_type,
                         :sorting_order]
                 ],
                 quiz_contents_attributes: [
@@ -318,7 +315,6 @@ class CourseModuleElementsController < ApplicationController
                     :image_content_type,
                     :image_file_size,
                     :image_updated_at,
-                    :content_type,
                     :sorting_order]
             ]
         ],

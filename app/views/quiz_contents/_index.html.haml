@@ -1,10 +1,3 @@
 -contents.each do |content|
-  -if content.content_type == 'text'
-    =content.text_content.html_safe
-    %br/
-  -elsif content.content_type == 'mathjax'
-    .mathjax=sanitizer content.text_content
-    %br/
-  -elsif content.content_type == 'image'
-    .image
-      =image_tag content.image.url, class: 'img-responsive'
+  =content.text_content.html_safe
+  %br/

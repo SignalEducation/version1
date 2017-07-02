@@ -11,7 +11,6 @@
           =question.fields_for :quiz_contents do |content|
             =content.hidden_field :id, class: 'qc-id'
             =content.hidden_field :sorting_order, class: 'qc-sorting-order'
-            =content.hidden_field :content_type, class: 'content-type'
             .quiz-question
               =content.text_area :text_content, placeholder: t('views.quiz_questions.form.text_content_placeholder'), class: 'form-control', rows: 8
             %br/
@@ -28,13 +27,11 @@
               .col-sm-1
                 =@letters[counter]
               .col-sm-10
-                =answer.hidden_field :wrong_answer_video_id, class: 'related_video'
                 =answer.hidden_field :id, class: 'answer-id'
                 =answer.hidden_field :_destroy, class: 'answer-destroy'
                 =answer.fields_for :quiz_contents do |content|
                   =content.hidden_field :id, class: 'answer-qc-id'
                   =content.hidden_field :sorting_order, class: 'answer-sorting-order'
-                  =content.hidden_field :content_type, class: 'answer-content-type'
                   .form-group
                     .col-sm-12.quiz-answer-text
                       =content.text_area :text_content, placeholder: t('views.quiz_answer.form.answer_content_placeholder'), class: 'form-control flash_quiz_field', rows: 3

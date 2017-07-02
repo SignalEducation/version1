@@ -44,7 +44,6 @@ class CourseModuleElement < ActiveRecord::Base
   has_one :course_module_element_video
   has_one :video_resource, inverse_of: :course_module_element
   has_many :quiz_questions
-  has_many :quiz_answers, foreign_key: :wrong_answer_video_id
   has_many :course_module_element_resources
   has_many :course_module_element_user_logs
   has_many :student_exam_tracks, class_name: 'StudentExamTrack',

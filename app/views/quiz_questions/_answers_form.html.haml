@@ -15,8 +15,4 @@
       .form-group
         =qa.label :degree_of_wrongness, t('views.quiz_questions.form.degree_of_wrongness'), class: 'control-label col-sm-2'
         .col-sm-10
-          =qa.select :degree_of_wrongness, options_for_select(QuizAnswer::WRONGNESS, qa.object.degree_of_wrongness), {include_blank: t('views.general.select')}, {class: 'form-control', onchange: "if ($(this).val() == 'correct') { $(this).parent().parent().parent().find('.wrongness-explanation').hide(); } else { $(this).parent().parent().parent().find('.wrongness-explanation').show(); }"}
-      .form-group.wrongness-explanation{style: (qa.object.degree_of_wrongness == 'correct' ? 'display: none;' : '')}
-        =qa.label :wrong_answer_explanation_text, class: 'control-label col-sm-2'
-        .col-sm-10
-          =qa.text_area :wrong_answer_explanation_text, as: :summernote, class: 'form-control', rows: 6, id: "explanation#{qa.options[:child_index]}"
+          =qa.select :degree_of_wrongness, options_for_select(QuizAnswer::WRONGNESS, qa.object.degree_of_wrongness), {include_blank: t('views.general.select')}, {class: 'form-control'}

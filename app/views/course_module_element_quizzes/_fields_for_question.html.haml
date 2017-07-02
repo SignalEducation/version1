@@ -7,10 +7,7 @@
           ="##{question.object.id}" || "(#{t('views.general.new')})"
         .row
           .col-sm-8
-            -if question.object.quiz_contents.first.content_type == 'image'
-              %p=question.object.quiz_contents.first.image_file_name
-            -else
-              %p=truncate(question.object.quiz_contents.first.text_content, length: 80)
+            %p=truncate(question.object.quiz_contents.first.text_content, length: 80)
           .col-sm-4.text-right
             =link_to t('views.course_module_elements.show.preview'), question.object, class: 'btn btn-info'
             -if question.object.id.to_i > 0

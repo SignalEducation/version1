@@ -6,8 +6,6 @@
 #  quiz_question_id   :integer
 #  quiz_answer_id     :integer
 #  text_content       :text
-#  contains_mathjax   :boolean          default(FALSE), not null
-#  contains_image     :boolean          default(FALSE), not null
 #  sorting_order      :integer
 #  created_at         :datetime
 #  updated_at         :datetime
@@ -26,12 +24,10 @@ class QuizContent < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
-                  :text_content, :sorting_order, :content_type, :image,
-                  :image_file_name, :image_content_type,
-                  :image_file_size, :image_updated_at
+                  :text_content, :sorting_order, :image, :image_file_name,
+                  :image_content_type, :image_file_size, :image_updated_at
 
   # Constants
-  CONTENT_TYPES = %w(text image mathjax)
 
   # relationships
   belongs_to :quiz_answer
@@ -41,66 +37,26 @@ class QuizContent < ActiveRecord::Base
 
   # validation
   validate  :one_parent_only, on: :update
-  validates :text_content, presence: true,
-            unless: Proc.new{|qc| qc.content_type == 'image' }
+  validates :text_content, presence: true
   validates :sorting_order, presence: true
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation { squish_fields(:text_content) }
   after_initialize :set_default_values
-  before_validation :check_data_consistency
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :quiz_question_id).where(destroyed_at: nil) }
-  scope :all_images, -> { where(contains_image: true) }
-  scope :all_mathjaxes, -> { where(contains_mathjax: true) }
 
   # class methods
 
   # instance methods
-
-  # Setter
-  def content_type=(ct)
-    @content_type = ct
-    if CONTENT_TYPES.include?(ct)
-      if ct == 'image'
-        self.contains_image = true
-        self.contains_mathjax = false
-      elsif ct == 'mathjax'
-        self.contains_image = false
-        self.contains_mathjax = true
-      else
-        self.contains_image = false
-        self.contains_mathjax = false
-      end
-      true
-    else
-      false
-    end
-  end
-
-  # Getter
-  def content_type
-    if self.contains_image
-      'image'
-    elsif self.contains_mathjax
-      'mathjax'
-    else
-      'text'
-    end
-  end
 
   def destroyable?
     true
   end
 
   protected
-
-  def check_data_consistency
-    #self.content_type == 'image' ? self.text_content = nil : self.image = nil
-    true
-  end
 
   def one_parent_only
     test_list = [self.quiz_question_id, self.quiz_answer_id, self.quiz_solution_id].compact # gets rid of "nil"s
@@ -115,8 +71,6 @@ class QuizContent < ActiveRecord::Base
 
   def set_default_values
     self.sorting_order ||= 1
-    self.contains_mathjax ||= false
-    self.contains_image ||= false
   end
 
 end

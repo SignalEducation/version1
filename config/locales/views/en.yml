@@ -751,7 +751,6 @@ en:
         answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
         answer_text: Answer
         answer_text_placeholder: Fill in the Answer Here
-        wrong_answer_video_id: Related Video
 
     quiz_contents:
       form:
@@ -775,8 +774,6 @@ en:
         degree_of_wrongness: "Right/Wrong"
         text_content_placeholder: Question Text
         solution_to_the_question_placeholder: Solution Text
-        wrong_answer_explanation_text: "Why this answer is wrong?"
-        wrong_answer_explanation_text_placeholder: Explain why this answer is incorrect
 
       edit:
         h1: "Edit Quiz Question - Advanced"
