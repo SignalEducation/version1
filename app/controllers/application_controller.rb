@@ -250,17 +250,10 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
-      if the_thing.live
-        library_course_url(
-            the_thing.parent.name_url,
-            the_thing.name_url
-        )
-      else
-        preview_course_url(
-            the_thing.parent.name_url,
-            the_thing.name_url
-        )
-      end
+      library_course_url(
+          the_thing.parent.name_url,
+          the_thing.name_url
+      )
     elsif the_thing.class == CourseModule
       the_thing = the_thing
       library_course_url(

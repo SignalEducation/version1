@@ -24,18 +24,9 @@
                     .card-inner
                       %h3.h3.card-title.l-margin-bottom
                         =course.try(:name)
-                      %p.card-desc
-                        =course.try(:short_description).truncate(185)
-                    .card-info
-                      .col-md-6.col-xs-6
-                        -if course.try(:live_date)
-                          .days-left
-                            .h8.text-center
-                              =humanize_datetime(course.live_date)
-                      .col-md-6.col-xs-6
-                        -if course.total_video_duration.to_i > 0
-                          %h6.pull-right
-                            =simple_hour_time(course.total_video_duration.round)
+                      -if course.short_description
+                        %p.card-desc
+                          =course.short_description.truncate(185)
 
                   .card-label
                     .row
@@ -44,4 +35,7 @@
                           %h6
                             =t('views.general.browse')
                         .col-md-6.col-xs-6.text-right
+                          -if course.total_video_duration.to_i > 0
+                            %h6.pull-right
+                              =simple_hour_time(course.total_video_duration.round)
 

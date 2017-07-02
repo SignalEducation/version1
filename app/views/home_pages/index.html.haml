@@ -1,39 +1,34 @@
 =render partial: 'layouts/navbar'
 .margin-top
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.home_pages.index.h1')
-          -if flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+  .container-fluid.l-padding-side-3x
+    .row.l-margin-bottom.l-margin-top
+      .col-md-12.col-sm-12.col-xs-12.text-center
+        %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+          =t('views.home_pages.index.h1')
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          .no-image-box-item.table-box
-            .table-responsive
-              =will_paginate @home_pages, renderer: BootstrapPagination::Rails
-              %table.table.table-bordered.l-margin-top
-                %thead
+      .col-md-12.l-margin-top-big
+        .corporate-box-item.table-box
+          .table-responsive
+            %table.table.sorted_table{style: 'font-size: 18px;'}
+              %thead
+                %tr
+                  %th=t('views.home_pages.form.seo_title')
+                  %th=t('views.home_pages.form.public_url')
+                  %th=t('views.home_pages.form.custom_file_name')
+                  %th
+              %tbody
+                -@home_pages.each do |home_page|
                   %tr
-                    %th=t('views.home_pages.form.seo_title')
-                    %th=t('views.home_pages.form.seo_description')
-                    %th=t('views.home_pages.form.subscription_plan_category_id')
-                    %th=t('views.home_pages.form.public_url')
-                    %th
-                %tbody
-                  -@home_pages.each do |home_page|
-                    %tr{id: home_page.id}
-                      %td=home_page.seo_title
-                      %td=home_page.seo_description
-                      %td=home_page.subscription_plan_category.try(:name)
-                      %td=home_page.public_url
-                      %td
-                        =link_to t('views.general.edit'), edit_home_page_url(home_page), class: 'btn btn-cyan btn-small'
-                        -if home_page.destroyable?
-                          =link_to t('views.general.delete'), home_page, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                    %td=home_page.seo_title
+                    %td=home_page.public_url
+                    %td=home_page.custom_file_name
+                    %td
+                      =link_to t('views.general.edit'), edit_home_page_url(home_page), class: 'btn btn-cyan btn-small'
+                      -if home_page.destroyable?
+                        =link_to t('views.general.delete'), home_page, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 
     .row
       .col-sm-12

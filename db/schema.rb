@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170612134201) do
+ActiveRecord::Schema.define(version: 20170702121027) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,7 +283,6 @@ ActiveRecord::Schema.define(version: 20170612134201) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-    t.string   "background_colour"
     t.string   "background_image_file_name"
     t.string   "background_image_content_type"
     t.integer  "background_image_file_size"
@@ -308,8 +307,8 @@ ActiveRecord::Schema.define(version: 20170612134201) do
     t.string   "public_url"
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
-    t.integer  "group_id"
     t.integer  "subject_course_id"
+    t.string   "custom_file_name"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
@@ -658,36 +657,28 @@ ActiveRecord::Schema.define(version: 20170612134201) do
     t.string   "name_url"
     t.integer  "sorting_order"
     t.boolean  "active",                                  default: false, null: false
-    t.boolean  "live",                                    default: false, null: false
-    t.string   "wistia_guid"
     t.integer  "cme_count"
     t.integer  "video_count"
     t.integer  "quiz_count"
     t.integer  "question_count"
     t.text     "description"
     t.string   "short_description"
-    t.string   "mailchimp_guid"
     t.datetime "created_at",                                              null: false
     t.datetime "updated_at",                                              null: false
     t.float    "best_possible_first_attempt_score"
     t.integer  "default_number_of_possible_exam_answers"
     t.float    "total_video_duration",                    default: 0.0
     t.datetime "destroyed_at"
-    t.boolean  "is_cpd",                                  default: false
-    t.float    "cpd_hours"
-    t.integer  "cpd_pass_rate"
-    t.datetime "live_date"
-    t.boolean  "certificate",                             default: false, null: false
-    t.string   "hotjar_guid"
     t.text     "email_content"
     t.string   "external_url_name"
     t.string   "external_url"
     t.integer  "exam_body_id"
     t.string   "survey_url"
+    t.integer  "group_id"
+    t.integer  "quiz_pass_rate"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
-  add_index "subject_courses", ["wistia_guid"], name: "index_subject_courses_on_wistia_guid", using: :btree
 
   create_table "subject_courses_users", id: false, force: :cascade do |t|
     t.integer "subject_course_id", null: false

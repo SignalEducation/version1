@@ -1,29 +1,29 @@
 =form_for(@home_page, html: {class: 'form-horizontal', role: 'form'}) do |f|
   .row
-    .col-md-8.col-md-offset-2
+    .col-md-12
       =render partial: '/layouts/error_messages', locals: {thing: @home_page, message: nil}
-      =f.label :seo_title, t('views.home_pages.form.seo_title'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :seo_title, placeholder: t('views.home_pages.form.seo_title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      =f.label :seo_description, t('views.home_pages.form.seo_description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      .col-md-6
+        =f.label :seo_title, t('views.home_pages.form.seo_title'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :seo_title, placeholder: t('views.home_pages.form.seo_title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+        %br/
+        =f.label :seo_description, t('views.home_pages.form.seo_description'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-      %br/
-      %br/
-      %h4='Only choose a Group or Course. Do not choose both.'
-      =f.label :group_id, t('views.home_pages.form.group_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
-      %br/
-      =f.label :subject_course_id, t('views.home_pages.form.subject_course_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      .col-md-6
+        =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :custom_file_name, t('views.home_pages.form.custom_file_name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :custom_file_name, placeholder: t('views.home_pages.form.custom_file_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+        %br/
+        =f.label :subject_course_id, t('views.home_pages.form.subject_course_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red'

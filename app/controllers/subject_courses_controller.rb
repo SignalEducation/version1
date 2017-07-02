@@ -7,32 +7,25 @@
 #  name_url                                :string
 #  sorting_order                           :integer
 #  active                                  :boolean          default(FALSE), not null
-#  live                                    :boolean          default(FALSE), not null
-#  wistia_guid                             :string
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
 #  question_count                          :integer
 #  description                             :text
 #  short_description                       :string
-#  mailchimp_guid                          :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
-#  is_cpd                                  :boolean          default(FALSE)
-#  cpd_hours                               :float
-#  cpd_pass_rate                           :integer
-#  live_date                               :datetime
-#  certificate                             :boolean          default(FALSE), not null
-#  hotjar_guid                             :string
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
 #  exam_body_id                            :integer
 #  survey_url                              :string
+#  group_id                                :integer
+#  quiz_pass_rate                          :integer
 #
 
 class SubjectCoursesController < ApplicationController
@@ -62,19 +55,12 @@ class SubjectCoursesController < ApplicationController
 
   def create
     @subject_course = SubjectCourse.new(allowed_params)
-    wistia_response = create_wistia_project(@subject_course.name) unless Rails.env.test?
-    @subject_course.wistia_guid = wistia_response.hashedId unless Rails.env.test?
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url
     else
       render action: :new
     end
-  end
-
-  def create_wistia_project(name)
-    wistia_response = Wistia::Project.create(name: name)
-    return wistia_response
   end
 
   def update
@@ -172,15 +158,22 @@ class SubjectCoursesController < ApplicationController
     @groups = Group.all_active.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
-    @footer = nil
+    @footer = true
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :email_content, :external_url, :external_url_name, :exam_body_id, :survey_url)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order,
+                                           :active, :tutor_id, :description,
+                                           :short_description,
+                                           :default_number_of_possible_exam_answers,
+                                           :email_content, :external_url,
+                                           :external_url_name, :exam_body_id,
+                                           :survey_url)
   end
 
   def resource_allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description, :file_upload)
+    params.require(:subject_course_resource).permit(:name, :subject_course_id,
+                                                    :description, :file_upload)
   end
 
 end

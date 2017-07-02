@@ -359,7 +359,7 @@ class User < ActiveRecord::Base
 
   def permission_to_see_content(course)
     if self.individual_student?
-      if course.active && course.live
+      if course.active
         if self.valid_free_member?
           true
         elsif self.expired_free_member?

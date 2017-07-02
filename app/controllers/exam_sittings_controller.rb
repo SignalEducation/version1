@@ -68,7 +68,7 @@ class ExamSittingsController < ApplicationController
     if params[:id].to_i > 0
       @exam_sitting = ExamSitting.where(id: params[:id]).first
     end
-    @subject_courses = SubjectCourse.all_active.all_live.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_in_order
     @exam_bodies = ExamBody.all_in_order
   end
 

@@ -16,7 +16,6 @@
 #  image_content_type            :string
 #  image_file_size               :integer
 #  image_updated_at              :datetime
-#  background_colour             :string
 #  background_image_file_name    :string
 #  background_image_content_type :string
 #  background_image_file_size    :integer
@@ -29,13 +28,13 @@ class Group < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_image
+  attr_accessible :name, :name_url, :active, :sorting_order, :description,
+                  :subject_id, :image, :background_image
 
   # Constants
 
   # relationships
-  has_and_belongs_to_many :subject_courses
-  has_many :home_pages
+  has_many :subject_courses
   has_attached_file :image, default_url: "missing_corporate_logo.png"
   has_attached_file :background_image, default_url: "missing_corporate_logo.png"
 
@@ -61,10 +60,6 @@ class Group < ActiveRecord::Base
     children.try(:all_active)
   end
 
-  def live_children
-    children.try(:all_live)
-  end
-
   def children
     self.try(:subject_courses)
   end
@@ -74,9 +69,6 @@ class Group < ActiveRecord::Base
   end
 
   def destroyable_children
-    # not destroyable:
-    # - self.course_module_element_user_logs
-    # - self.student_exam_tracks.empty?
     the_list = []
     the_list += self.subject_courses.to_a
     the_list

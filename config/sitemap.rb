@@ -51,7 +51,7 @@ sitemap :site do
   Group.all_active.each do |group|
     url library_special_link(group), last_mod: group.updated_at, change_freq: 'weekly', priority: 1.0
   end
-  SubjectCourse.all_active.all_live.all_not_restricted.each do |course|
+  SubjectCourse.all_active.all_not_restricted.each do |course|
     url library_special_link(course), last_mod: course.updated_at, change_freq: 'weekly', priority: 1.0
   end
   #Sign In, Forgot Password

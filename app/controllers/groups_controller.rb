@@ -16,7 +16,6 @@
 #  image_content_type            :string
 #  image_file_size               :integer
 #  image_updated_at              :datetime
-#  background_colour             :string
 #  background_image_file_name    :string
 #  background_image_content_type :string
 #  background_image_file_size    :integer
@@ -33,11 +32,11 @@ class GroupsController < ApplicationController
 
   def index
     @groups = Group.paginate(per_page: 50, page: params[:page])
-    @footer = nil
+    @footer = true
   end
 
-  def admin_show
-    @group = Group.where(id: params[:group_id]).first
+  def show
+    @group = Group.find(params[:id])
     @courses = @group.try(:active_children)
   end
 
@@ -47,16 +46,6 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    @footer = nil
-  end
-
-  def edit_courses
-    @group = Group.find(params[:group_id]) rescue nil
-    @subject_courses = SubjectCourse.all_active.all_in_order
-    unless @group
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-      redirect_to groups_url
-    end
     @footer = nil
   end
 
@@ -76,22 +65,6 @@ class GroupsController < ApplicationController
       redirect_to groups_url
     else
       render action: :edit
-    end
-  end
-
-  def update_courses
-    @group = Group.find(params[:group_id]) rescue nil
-    if @group
-      if params[:group]
-        @group.subject_course_ids = params[:group][:subject_course_ids]
-      else
-        @group.subject_course_ids = []
-      end
-
-      flash[:success] = I18n.t('controllers.groups.update_subjects.flash.success')
-      redirect_to groups_url
-    else
-      render action: :edit_courses
     end
   end
 
