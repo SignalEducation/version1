@@ -28,7 +28,7 @@
                       =link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-cyan btn-small'
                       =link_to t('views.general.show'), group, class: 'btn btn-purple btn-small'
                       -if group.destroyable?
-                        =link_to t('views.general.delete'), group, method: :delete, data: {conform: t('views.general.delete_confirmation')}, class: 'btn btn-red btn-small'
+                        =link_to t('views.general.delete'), group, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-red btn-small'
 
                     %td
                       %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
