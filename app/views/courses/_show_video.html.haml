@@ -41,8 +41,8 @@
 -if cme.course_module_element_video.vimeo_guid
 
   :javascript
-
-    var videoCmeUserLog = #{@video_cme_user_log ? @video_cme_user_log.id : 0};
+    var video_cme_id = #{@course_module_element.id};
+    var logId = '';
     var options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
       frameborder: 0,
@@ -53,19 +53,42 @@
 
     var player = new Vimeo.Player('vimeo-player-window', options);
 
-    player.on('timeupdate', function(event) {
-
-      if (event.percent === 0.75) {
+    var timeUpdate = function(data) {
+      if (data.percent >= 0.15) {
         $.ajax({
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',
-          data: JSON.stringify({'videoLogId': videoCmeUserLog}),
+          data: JSON.stringify({'videoLogId': logId}),
           method: 'PATCH',
           contentType: "application/json; charset=utf-8"
         });
+        player.off('timeupdate', timeUpdate);
       }
+    };
 
-    });
+    //When the player starts send JSON request to create CMEUL
+    var onPlay = function(data) {
+      if (logId === '') {
+        $.ajax({
+          url: '#{create_video_user_log_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'cmeId': video_cme_id}),
+          method: 'POST',
+          contentType: "application/json; charset=utf-8",
+          success: function(data,status,xhr){
+            logId = data.video_log_id;
+          },
+          error: function(xhr,status,error){
+            console.log(xhr);
+            alert(error);
+          }
+        });
+      }
+    };
+
+    player.on('play', onPlay);
+    player.on('timeupdate', timeUpdate);
+
 
 
 

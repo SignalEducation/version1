@@ -27,8 +27,6 @@ class CoursesController < ApplicationController
 
       if @course_module_element.try(:is_quiz)
         set_up_quiz
-      elsif @course_module_element.try(:is_video)
-        @video_cme_user_log = create_a_cme_user_log if current_user.permission_to_see_content(@course)
       end
     end
   end
@@ -79,6 +77,33 @@ class CoursesController < ApplicationController
     end
   end
 
+  def create_video_user_log
+    #Create Video Log upon vimeo player play event sent by JSON, later updated by another JSON request to video_watched_data method
+    respond_to do |format|
+      format.json {
+        course_module_element = CourseModuleElement.find(params[:course][:cmeId])
+        if course_module_element
+          @video_cme_user_log = CourseModuleElementUserLog.create!(
+              course_module_element_id: course_module_element.id,
+              user_id: current_user.try(:id),
+              session_guid: current_session_guid,
+              element_completed: false,
+              time_taken_in_seconds: 0,
+              quiz_score_actual: nil,
+              quiz_score_potential: nil,
+              is_video: true,
+              is_quiz: false,
+              course_module_id: course_module_element.course_module_id
+          )
+        end
+        data = {video_log_id: @video_cme_user_log.id}
+        render json: data, status: :ok
+      }
+    end
+
+  end
+
+
   private
 
   def allowed_params
@@ -94,23 +119,6 @@ class CoursesController < ApplicationController
                     :quiz_answer_id,
                     :answer_array
             ]
-    )
-  end
-
-  def create_a_cme_user_log
-    #Creating Video Log upon loading video page, later updated by JSON request to video_watched_data method
-
-    CourseModuleElementUserLog.create!(
-            course_module_element_id: @course_module_element.id,
-            user_id: current_user.try(:id),
-            session_guid: current_session_guid,
-            element_completed: false,
-            time_taken_in_seconds: 0,
-            quiz_score_actual: nil,
-            quiz_score_potential: nil,
-            is_video: true,
-            is_quiz: false,
-            course_module_id: @course_module_element.course_module_id
     )
   end
 

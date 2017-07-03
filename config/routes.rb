@@ -64,6 +64,7 @@ Rails.application.routes.draw do
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
+      match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
