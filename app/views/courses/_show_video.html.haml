@@ -11,25 +11,15 @@
   -#Nav buttons below video
   .l-margin-bottom.l-margin-top.hidden-xs
     .pull-right
-      -if cme.course_module.subject_course.is_cpd
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
-      -else
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold mark-as-complete' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
+      =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
+        =t('views.course_module_elements.show.next_step')
+        .glyphicon.glyphicon-arrow-right
 
   .l-margin-bottom-huge.l-margin-top.hidden-lg.hidden-md.hidden-sm
     .col-sm-12
-      -if cme.course_module.subject_course.is_cpd
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
-      -else
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width mark-as-complete' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
+      =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width' do
+        =t('views.course_module_elements.show.next_step')
+        .glyphicon.glyphicon-arrow-right
 
 .col-md-4.col-sm-12
   -if @course_module_element.course_module_element_resources.count > 0

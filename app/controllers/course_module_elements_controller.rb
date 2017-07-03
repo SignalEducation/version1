@@ -184,6 +184,7 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def destroy
+    delete_on_vimeo(@course_module_element.course_module_element_video.vimeo_guid) if @course_module_element.is_video?
     if @course_module_element.destroy
       flash[:success] = I18n.t('controllers.course_module_elements.destroy.flash.success')
     else
@@ -212,13 +213,12 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Post.new('/me/videos')
-      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
       request.form_data = {'redirect_url' => url}
       response = session.request(request)
       ticket = OpenStruct.new(JSON.parse(response.body))
       return ticket
     end
-
   end
 
   def verify_upload(video_uri, cme_name)
@@ -229,8 +229,22 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Patch.new("/videos/#{video_uri}")
-      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
       request.form_data = {'name' => cme_name}
+      response = session.request(request)
+      return response
+    end
+  end
+
+  def delete_on_vimeo(video_guid)
+    require 'net/http'
+    require 'net/http/post/multipart'
+    http = Net::HTTP.new('api.vimeo.com', 443)
+    http.use_ssl = true
+
+    http.start do |session|
+      request = Net::HTTP::Delete.new("/videos/#{video_guid}")
+      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
       response = session.request(request)
       return response
     end
@@ -262,6 +276,7 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
+            :duration,
             :vimeo_guid,
             :video_id],
         course_module_element_quiz_attributes: [

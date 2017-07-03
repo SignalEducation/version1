@@ -107,7 +107,6 @@ class CourseModuleElement < ActiveRecord::Base
     the_list << self.course_module_element_video if self.course_module_element_video
     the_list << self.course_module_element_quiz if self.course_module_element_quiz
     the_list += self.course_module_element_resources.to_a
-    the_list += self.quiz_answers.to_a
     the_list += self.quiz_questions.to_a
     the_list
   end
