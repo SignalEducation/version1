@@ -37,14 +37,24 @@
           %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
 
           %p.l-margin-top-small.l-margin-bottom-small
-            -correct_answer = 0; your_answer = 0
+            -correct_answers = []; your_answer = 0
             -attempt.answers.each_with_index do |qa, counter2|
-              -correct_answer = counter2 if qa.correct
+              -correct_answers << counter2 if qa.correct
               -your_answer = counter2 if qa.id == attempt.quiz_answer_id
-            %p.text-inline
-              Correct Answer:
-              &#160;
-            %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+            -if correct_answers.count > 1
+              %p.text-inline
+                Correct Answers:
+                &#160;
+              -correct_answers.each_with_index do |correct_answer, counter3|
+                -if counter3 == (correct_answers.count - 1)
+                  %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+                -else
+                  %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s + ' &')
+            -else
+              %p.text-inline
+                Correct Answer:
+                &#160;
+              %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answers.first].to_s)
             %p.text-inline
               &#160;
               &bull;

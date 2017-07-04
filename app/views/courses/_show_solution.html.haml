@@ -8,15 +8,27 @@
     -if attempt.try(:quiz_question).try(:quiz_contents)
       =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
 
+  -correct_answers = []; your_answer = 0
   -attempt.answers.each_with_index do |qa, counter2|
-    -correct_answer = counter2 if qa.correct
+    -correct_answers << counter2 if qa.correct
     -your_answer = counter2 if qa.id == attempt.quiz_answer_id
 
   .answer.text-center.text-bold.l-margin-top-big.l-margin-bottom-big{class: attempt.correct ? 'answer-correct' : 'answer-failed', style: 'cursor: default;'}
-    %p.text-inline
-      Correct Answer:
-      &#160;
-    %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+    -if correct_answers.count > 1
+      %p.text-inline
+        Correct Answers:
+        &#160;
+      -correct_answers.each_with_index do |correct_answer, counter4|
+        -if counter4 == (correct_answers.count - 1)
+          %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+        -else
+          %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s + ' &')
+
+    -else
+      %p.text-inline
+        Correct Answer:
+        &#160;
+      %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answers.first].to_s)
     %p.text-inline
       &#160;
       &bull;
