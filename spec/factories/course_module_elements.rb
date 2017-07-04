@@ -29,8 +29,6 @@ FactoryGirl.define do
     estimated_time_in_seconds   1
     course_module_id            1
     sorting_order               1
-    related_quiz_id             nil
-    related_video_id            1
     active                      true
     seo_description             'Lorem Ipsum'
     seo_no_index                false

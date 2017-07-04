@@ -36,19 +36,15 @@ describe CourseModuleElementUserLog do
   end
 
   # Constants
-  #it { expect()CourseModuleElementUserLog.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:course_module_jumbo_quiz) }
   it { should have_many(:quiz_attempts) }
   it { should belong_to(:user) }
 
   # validation
   it { should_not validate_presence_of(:course_module_element_id) }
-
-  it { should_not validate_presence_of(:course_module_jumbo_quiz_id) }
 
   it { should_not validate_presence_of(:user_id) }
 
@@ -81,11 +77,9 @@ describe CourseModuleElementUserLog do
   it { expect(CourseModuleElementUserLog).to respond_to(:for_unknown_users) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module_element) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:for_jumbo_quiz) }
   it { expect(CourseModuleElementUserLog).to respond_to(:latest_only) }
   it { expect(CourseModuleElementUserLog).to respond_to(:quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:videos) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:jumbo_quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:with_elements_active) }
   it { expect(CourseModuleElementUserLog).to respond_to(:this_week) }
   it { expect(CourseModuleElementUserLog).to respond_to(:this_month) }

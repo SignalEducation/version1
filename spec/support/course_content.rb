@@ -5,7 +5,7 @@ shared_context 'course_content' do
 
   #Courses first set
   let!(:course_group_1) { FactoryGirl.create(:group) }
-  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course, groups: [course_group_1]) }
+  let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course, group_id: course_group_1.id) }
   let!(:subject_course_1_home_page)  { FactoryGirl.create(:home_page, subject_course_id: subject_course_1.id) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
                            subject_course_id: subject_course_1.id) }
@@ -26,7 +26,7 @@ shared_context 'course_content' do
 
   #Courses Second set
   let!(:course_group_2) { FactoryGirl.create(:group) }
-  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, groups: [course_group_2]) }
+  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, group_id: course_group_2.id) }
 
   let!(:course_module_2) { FactoryGirl.create(:active_course_module,
                                               subject_course_id: subject_course_2.id) }

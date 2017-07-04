@@ -6,20 +6,6 @@ require 'csv'
 
 class ApplicationController < ActionController::Base
 
-  # This array must be in ascending score order.
-  DIFFICULTY_LEVELS = [
-      {name: 'easy', score: 3, run_time_multiplier: 1},
-      {name: 'medium', score: 5, run_time_multiplier: 1.5},
-      {name: 'difficult', score: 10, run_time_multiplier: 2.5}
-  ]
-
-  DIFFICULTY_LEVEL_NAMES = DIFFICULTY_LEVELS.map { |x| x[:name] }
-
-  def self.find_multiplier_for_difficulty_level(the_name)
-    DIFFICULTY_LEVEL_NAMES.include?(the_name) ?
-        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
-  end
-
   before_action :authenticate_if_staging
   before_action :setup_mcapi
 

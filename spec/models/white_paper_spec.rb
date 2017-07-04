@@ -34,6 +34,8 @@ describe WhitePaper do
     end
   end
 
+  subject { FactoryGirl.build(:white_paper) }
+
   # relationships
   it { should have_many(:white_paper_requests) }
 
@@ -41,7 +43,7 @@ describe WhitePaper do
   it { should validate_presence_of(:name) }
 
   it { should validate_presence_of(:name_url) }
-  xit { should validate_uniqueness_of(:name_url) }
+  it { should validate_uniqueness_of(:name_url) }
 
   it { should validate_presence_of(:description) }
 

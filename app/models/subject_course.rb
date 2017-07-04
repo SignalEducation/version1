@@ -70,13 +70,11 @@ class SubjectCourse < ActiveRecord::Base
   validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
-  validates :default_number_of_possible_exam_answers, presence: true
   validates :email_content, presence: true, on: :update
 
 
   # callbacks
   before_validation { squish_fields(:name, :name_url) }
-  before_validation :ensure_both_descriptions
   before_save :sanitize_name_url, :set_count_fields
   before_destroy :check_dependencies
   after_create :update_sitemap
@@ -112,10 +110,6 @@ class SubjectCourse < ActiveRecord::Base
 
 
   # instance methods
-  def home_page
-    self.home_pages.all_in_order.first
-  end
-
   def active_children
     self.children.all_active.all_in_order
   end
@@ -126,6 +120,37 @@ class SubjectCourse < ActiveRecord::Base
 
   def children
     self.course_modules.all
+  end
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def destroyable?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list += self.course_modules.to_a
+    the_list << self.groups if self.groups
+    the_list
+  end
+
+  def enrolled_user_ids
+    self.enrollments.map(&:user_id)
+  end
+
+  def estimated_time_in_seconds
+    self.children.sum(:estimated_time_in_seconds)
+  end
+
+  def first_active_cme
+    self.active_children.first.try(:first_active_cme)
+  end
+
+  def home_page
+    self.home_pages.all_in_order.first
   end
 
   def tuition_children?
@@ -146,35 +171,8 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
-  end
-
   def started_by_user_or_guid(user_id, session_guid)
     self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
-  end
-
-  def enrolled_user_ids
-    self.enrollments.map(&:user_id)
-  end
-
-  def destroyable?
-    true
-  end
-
-  def destroyable_children
-    the_list = []
-    the_list += self.course_modules.to_a
-    the_list << self.groups if self.groups
-    the_list
-  end
-
-  def estimated_time_in_seconds
-    self.children.sum(:estimated_time_in_seconds)
-  end
-
-  def first_active_cme
-    self.active_children.first.try(:first_active_cme)
   end
 
   def number_complete_by_user_or_guid(user_id, session_guid)
@@ -275,12 +273,6 @@ class SubjectCourse < ActiveRecord::Base
 
   def update_course_logs
     SubjectCourseUserLogWorker.perform_async(self.id)
-  end
-
-  def ensure_both_descriptions
-    if self.short_description && self.description.blank?
-      self.description = self.short_description
-    end
   end
 
 end

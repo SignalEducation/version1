@@ -76,12 +76,6 @@ class QuizAttempt < ActiveRecord::Base
     self.score = self.correct ? 1: 0
   end
 
-  #def calculate_score
-    #self.correct = self.quiz_answer.try(:correct) || false
-    #self.score = self.correct ?
-    #        ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
-  #end
-
   def serialize_the_array
     self.answer_array = self.answer_array.to_s.split(',') if self.answer_array.to_s.split(',').length > 1
   end

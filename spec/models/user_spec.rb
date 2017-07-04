@@ -61,8 +61,6 @@
 require 'rails_helper'
 
 describe User do
-  #Makes test - user_spec.rb:102 # User should validate that :email is case-insensitively unique pass but causes test - user_spec.rb:114 # User should validate that :password cannot be empty/falsy to fail cause it's populating the passwrd field overriding the test pre-populations
-  subject { FactoryGirl.build(:individual_student_user) }
 
   # attr-accessible
   black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number discourse_user name_url analytics_guid)
@@ -96,8 +94,13 @@ describe User do
   it { should have_and_belong_to_many(:subject_courses) }
 
   # validation
+  context 'test uniqueness validation' do
+    subject { FactoryGirl.build(:individual_student_user) }
+    it { should validate_uniqueness_of(:email).case_insensitive }
+  end
+
   it { should validate_presence_of(:email) }
-  it { should validate_uniqueness_of(:email).case_insensitive }
+
   it { should validate_length_of(:email).is_at_least(7).is_at_most(50) }
 
   it { should validate_presence_of(:first_name) }
@@ -108,7 +111,7 @@ describe User do
 
   it { should_not validate_presence_of(:topic_interest) }
 
-  xit { should validate_presence_of(:password).on(:create) }
+  it { should validate_presence_of(:password).on(:create) }
   it { should validate_confirmation_of(:password).on(:create) }
   it { should validate_length_of(:password).is_at_least(6).is_at_most(255) }
 

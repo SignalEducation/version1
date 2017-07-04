@@ -1,6 +1,5 @@
 =form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
   =f.hidden_field :course_module_element_quiz_id
-  =f.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first
   .row
     =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
     .col-sm-12

@@ -16,8 +16,7 @@ require 'rails_helper'
 describe CourseModuleElementQuiz do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at
-                 best_possible_score_first_attempt best_possible_score_retry course_module_jumbo_quiz_id destroyed_at)
+  black_list = %w(id created_at updated_at destroyed_at)
   CourseModuleElementQuiz.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -31,7 +30,6 @@ describe CourseModuleElementQuiz do
 
   # relationships
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:course_module_jumbo_quiz) }
   it { should have_many(:quiz_questions) }
 
   # validation
@@ -39,16 +37,11 @@ describe CourseModuleElementQuiz do
 
   it { should validate_presence_of(:number_of_questions).on(:update) }
 
-  it { should_not validate_presence_of(:course_module_jumbo_quiz_id).on(:update) }
-
   it { should validate_inclusion_of(:question_selection_strategy).in_array(CourseModuleElementQuiz::STRATEGIES) }
   it { should validate_length_of(:question_selection_strategy).is_at_most(255) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:set_jumbo_quiz_id).before(:save) }
-  it { should callback(:set_high_score_fields).before(:update) }
-  it { should callback(:set_ancestors_best_scores).after(:commit) }
 
   # scopes
   it { expect(CourseModuleElementQuiz).to respond_to(:all_in_order) }
@@ -60,9 +53,8 @@ describe CourseModuleElementQuiz do
   it { should respond_to(:add_an_empty_question) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
-  it { should respond_to(:difficult_ids) }
-  it { should respond_to(:easy_ids) }
+  it { should respond_to(:all_ids_random) }
+  it { should respond_to(:all_ids_ordered) }
   it { should respond_to(:enough_questions?) }
-  it { should respond_to(:medium_ids) }
 
 end

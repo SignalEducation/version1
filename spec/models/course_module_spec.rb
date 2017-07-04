@@ -52,7 +52,6 @@ describe CourseModule do
   it { should have_many(:course_module_element_quizzes) }
   it { should have_many(:course_module_element_videos) }
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_one(:course_module_jumbo_quiz) }
   it { should have_many(:student_exam_tracks) }
 
 
@@ -69,7 +68,6 @@ describe CourseModule do
   it { should validate_length_of(:name_url).is_at_most(255) }
 
   it { should validate_presence_of(:sorting_order) }
-
 
   it { should_not validate_presence_of(:highlight_colour) }
 

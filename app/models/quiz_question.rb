@@ -44,7 +44,6 @@ class QuizQuestion < ActiveRecord::Base
   # callbacks
   before_validation :set_course_module_element
   before_save :set_subject_course_id
-  before_update :set_subject_course_id
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }

@@ -26,7 +26,7 @@ require 'rails_helper'
 describe CourseModuleElement do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at forum_topic_id forum_topic_id duration)
+  black_list = %w(id created_at updated_at destroyed_at duration)
   CourseModuleElement.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -42,13 +42,11 @@ describe CourseModuleElement do
   # relationships
   it { should belong_to(:course_module) }
   it { should have_one(:course_module_element_quiz) }
+  it { should have_one(:course_module_element_video) }
+  it { should have_one(:video_resource) }
+  it { should have_many(:quiz_questions) }
   it { should have_many(:course_module_element_resources)}
   it { should have_many(:course_module_element_user_logs) }
-  it { should have_one(:course_module_element_video) }
-  it { should have_many(:quiz_answers) }
-  it { should have_many(:quiz_questions) }
-  it { should belong_to(:related_quiz) }
-  it { should belong_to(:related_video) }
   it { should have_many(:student_exam_tracks) }
 
   # validation
@@ -60,15 +58,14 @@ describe CourseModuleElement do
   it { should validate_uniqueness_of(:name_url) }
   it { should validate_length_of(:name_url).is_at_most(255) }
 
-  # it { should validate_presence_of(:description) }
+  context 'if cme_is_video?' do
+    before { allow(subject).to receive(:cme_is_video?).and_return(true) }
+    it { should validate_presence_of(:description) }
+  end
 
   it { should validate_presence_of(:course_module_id) }
 
   it { should validate_presence_of(:sorting_order) }
-
-  it { should_not validate_presence_of(:related_quiz_id) }
-
-  it { should_not validate_presence_of(:related_video_id) }
 
   it { should validate_length_of(:seo_description).is_at_most(255) }
 

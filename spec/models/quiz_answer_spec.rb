@@ -33,7 +33,6 @@ describe QuizAnswer do
   it { should have_many(:quiz_attempts) }
   it { should have_many(:quiz_contents) }
   it { should belong_to(:quiz_question) }
-  it { should belong_to(:wrong_answer_video) }
 
   # validation
   it { should validate_presence_of(:quiz_question_id).on(:update) }
@@ -44,7 +43,6 @@ describe QuizAnswer do
   # callbacks
   it { should callback(:set_the_field_correct).before(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
-  xit { should callback(:set_wrong_answer_video_id).before(:update) }
 
   # scopes
   it { expect(QuizAnswer).to respond_to(:all_in_order) }

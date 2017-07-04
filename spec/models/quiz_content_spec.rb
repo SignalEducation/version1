@@ -22,7 +22,7 @@ require 'rails_helper'
 describe QuizContent do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at contains_mathjax contains_image destroyed_at)
+  black_list = %w(id created_at updated_at destroyed_at)
   QuizContent.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -32,20 +32,18 @@ describe QuizContent do
   end
 
   # Constants
-  it { expect(QuizContent.const_defined?(:CONTENT_TYPES)).to eq(true) }
 
   # relationships
-  it { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_answer) }
+  it { should belong_to(:quiz_question) }
   it { should belong_to(:quiz_solution) }
 
   # validation
-  # tests for custom-validator 'question_or_answer_only'
+  # tests for custom-validator 'one_parent_only'
   context 'if both values set...' do
     before :each do
-      allow(subject).to receive_messages(quiz_question_id: 1,
-                                         content_type: 'text',
-                                         quiz_answer_id: 1, text_content: 'ABC', sorting_order: 1)
+      allow(subject).to receive_messages(quiz_question_id: 1, quiz_answer_id: 1,
+                                         text_content: 'ABC', sorting_order: 1)
       subject.save!
       subject.sorting_order = 2
       subject.valid?
@@ -56,10 +54,8 @@ describe QuizContent do
 
   context 'if neither value set...' do
     before :each do
-      allow(subject).to receive_messages(quiz_question_id: nil,
-                                         quiz_answer_id: nil,
-                                         content_type: 'text',
-                        text_content: 'ABC', sorting_order: 1)
+      allow(subject).to receive_messages(quiz_question_id: nil, quiz_answer_id: nil,
+                                         text_content: 'ABC', sorting_order: 1)
       subject.save!
       subject.sorting_order = 2
       subject.valid?
@@ -68,19 +64,14 @@ describe QuizContent do
   end
 
   it { should_not validate_presence_of(:quiz_question_id) }
-
   it { should_not validate_presence_of(:quiz_answer_id) }
-
   it { should_not validate_presence_of(:quiz_solution_id) }
-
   it { should validate_presence_of(:text_content) }
-
   it { should validate_presence_of(:sorting_order) }
 
   # callbacks
   it { should callback(:set_default_values).after(:initialize) }
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:check_data_consistency).before(:validation) }
 
   # scopes
   it { expect(QuizContent).to respond_to(:all_in_order) }
@@ -90,7 +81,5 @@ describe QuizContent do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:content_type=) }
-  it { should respond_to(:content_type) }
 
 end
