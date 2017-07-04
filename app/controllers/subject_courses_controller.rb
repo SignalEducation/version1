@@ -168,7 +168,7 @@ class SubjectCoursesController < ApplicationController
                                            :default_number_of_possible_exam_answers,
                                            :email_content, :external_url,
                                            :external_url_name, :exam_body_id,
-                                           :survey_url)
+                                           :survey_url, :quiz_pass_rate)
   end
 
   def resource_allowed_params
