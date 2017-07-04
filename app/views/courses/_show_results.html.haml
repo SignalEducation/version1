@@ -16,22 +16,21 @@
                 -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
                 %h3.h4{style: "font-size: 24px; color: #{result_colour}; text-transform: uppercase;"}
                   =@pass
-
-
-
           .col-sm-6.col-xs-12
             .row
               .col-sm-6
                 %h3.h4{style: 'font-size: 24px'}
                   =t('views.courses.show_results.score')
-
               .col-sm-6
                 %h3.h4{style: 'font-size: 24px;'}
                   =@course_module_element_user_log.quiz_attempts.where(correct: true).count
                   &#47;
                   =@course_module_element_user_log.quiz_attempts.count
 
-      -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+
+
+
+      -@course_module_element_user_log.quiz_attempts.reverse.each_with_index do |attempt, counter|
         .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
           %p.text-inline.text-bold Question #{counter + 1}
           %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
@@ -65,7 +64,7 @@
 
 
 
-    -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+    -@course_module_element_user_log.quiz_attempts.reverse.each_with_index do |attempt, counter|
       -if attempt
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 

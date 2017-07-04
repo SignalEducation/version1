@@ -33,17 +33,11 @@
 
   :javascript
 
-    var easyList = #{@easy_ids},
-        mediumList = #{@medium_ids},
-        difficultList = #{@difficult_ids},
-        allQuestionsList = #{@all_ids},
+    var allQuestionsList = #{@all_ids},
         selectionStrategy = '#{@strategy}',
         answers = [],
         numberOfQuestions = #{@number_of_questions},
         currentQuestion = 1,
-        nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
-        //nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
-        nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : 'allQuestions'}List,
         progressBar = $('.progress-bar'),
         questionCount = $('.quiz-heading'),
         previousAnswerCorrect = true;
@@ -60,9 +54,10 @@
     function askQuestion(questionNumber) {
       updateProgressBar();
       $('.question').hide();
-      $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
+      $('#question_' + allQuestionsList[questionNumber - 1]).fadeIn();
     }
 
+    //Triggered by onclick event in page
     function logAnswer(questionId, answerId, difficultyLevel, isCorrect, answerArray) {
       answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
       // log the answer in the form
@@ -72,23 +67,7 @@
 
 
       if (currentQuestion < numberOfQuestions) {
-        if (selectionStrategy == 'progressive') {
-          if (isCorrect == true && difficultyLevel == 'easy') {
-            nextQuestionLevel = 'medium';
-            nextQuestionArray = mediumList;
-          } else if (isCorrect == true && difficultyLevel == 'medium') {
-            nextQuestionLevel = 'difficult';
-            nextQuestionArray = difficultList;
-          } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
-            nextQuestionLevel = 'medium';
-            nextQuestionArray = mediumList;
-          } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
-            nextQuestionLevel = 'easy';
-            nextQuestionArray = easyList;
-          }
-        } else if (selectionStrategy == 'random') {
-          nextQuestionArray = allQuestionsList
-        }
+        allQuestionsList
         currentQuestion++;
         updateProgressBar();
         askQuestion(currentQuestion);

@@ -7,7 +7,6 @@
           =question.hidden_field :course_module_element_quiz_id
           =question.hidden_field :id, class: 'question_id'
           =question.hidden_field :_destroy, value: false, class: 'destroy_field'
-          =question.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first, class: 'difficulty-level'
           =question.fields_for :quiz_contents do |content|
             =content.hidden_field :id, class: 'qc-id'
             =content.hidden_field :sorting_order, class: 'qc-sorting-order'

@@ -137,27 +137,17 @@ class CoursesController < ApplicationController
       @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
     end
 
-    all_easy_ids = @course_module_element.course_module_element_quiz.easy_ids
-    all_medium_ids = @course_module_element.course_module_element_quiz.medium_ids
-    all_difficult_ids = @course_module_element.course_module_element_quiz.difficult_ids
-    all_ids = @course_module_element.course_module_element_quiz.all_ids_ordered
+    all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
+    all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
     @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
+
     if @strategy == 'random'
-      @easy_ids = all_easy_ids.sample(@number_of_questions)
-      @medium_ids = all_medium_ids.sample(@number_of_questions)
-      @difficult_ids = all_difficult_ids.sample(@number_of_questions)
-      @all_ids = @easy_ids + @medium_ids + @difficult_ids
-      @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@easy_ids + @medium_ids + @difficult_ids)
-
-    else
-      @easy_ids = []
-      @medium_ids = []
-      @difficult_ids = []
-      @all_ids = all_ids[0..@number_of_questions]
+      @all_ids = all_ids_random.sample(@number_of_questions)
       @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
-
+    else
+      @all_ids = all_ids_ordered[0..@number_of_questions]
+      @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
     end
-
     @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
   end
 

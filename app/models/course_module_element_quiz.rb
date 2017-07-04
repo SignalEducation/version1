@@ -68,24 +68,14 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   def enough_questions?
     if self.question_selection_strategy == 'random'
       lowest_number_of_questions = self.quiz_questions.count
-    elsif self.question_selection_strategy == 'progressive'
-      lowest_number_of_questions = [self.easy_ids.length, self.medium_ids.length, self.difficult_ids.length].min
     else
-      lowest_number_of_questions = 0
+      lowest_number_of_questions = 1
     end
     lowest_number_of_questions >= self.number_of_questions
   end
 
-  def easy_ids
-    self.quiz_questions.all_easy.map(&:id)
-  end
-
-  def medium_ids
-    self.quiz_questions.all_medium.map(&:id)
-  end
-
-  def difficult_ids
-    self.quiz_questions.all_difficult.map(&:id)
+  def all_ids_random
+    self.quiz_questions.map(&:id)
   end
 
   def all_ids_ordered

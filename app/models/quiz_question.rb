@@ -40,7 +40,6 @@ class QuizQuestion < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
-  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: { maximum: 255}
 
   # callbacks
   before_validation :set_course_module_element
@@ -49,9 +48,6 @@ class QuizQuestion < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
-  scope :all_easy, -> { where(difficulty_level: 'easy') }
-  scope :all_medium, -> { where(difficulty_level: 'medium') }
-  scope :all_difficult, -> { where(difficulty_level: 'difficult') }
 
   # class methods
 
