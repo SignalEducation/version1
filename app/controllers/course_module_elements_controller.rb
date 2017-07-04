@@ -30,7 +30,7 @@ class CourseModuleElementsController < ApplicationController
   before_action :get_variables
 
   def show
-    #Previewing a Quiz as Content Manager or Amin
+    #Previewing a Quiz as Content Manager or Admin
     @course_module_element = CourseModuleElement.find(params[:id])
     if @course_module_element.is_quiz
       @course_module_element_user_log = CourseModuleElementUserLog.new(
@@ -43,16 +43,17 @@ class CourseModuleElementsController < ApplicationController
       @number_of_questions.times do
         @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
       end
-      all_questions = @course_module_element.course_module_element_quiz.quiz_questions
-      all_easy_ids = all_questions.all_easy.map(&:id)
-      all_medium_ids = all_questions.all_medium.map(&:id)
-      all_difficult_ids = all_questions.all_difficult.map(&:id)
-      @easy_ids = all_easy_ids.sample(@number_of_questions)
-      @medium_ids = all_medium_ids.sample(@number_of_questions)
-      @difficult_ids = all_difficult_ids.sample(@number_of_questions)
-      @all_ids = @easy_ids + @medium_ids + @difficult_ids
-      @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+      all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
+      all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
       @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
+
+      if @strategy == 'random'
+        @all_ids = all_ids_random.sample(@number_of_questions)
+        @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
+      else
+        @all_ids = all_ids_ordered[0..@number_of_questions]
+        @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
+      end
       @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
     end
     @demo_mode = true

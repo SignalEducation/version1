@@ -1,18 +1,23 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    .page-header
-      %h1=t('views.quiz_questions.show.h1')
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-courses.is-bg-asphalt
+  .l-wrap
+    .container-fluid{style: 'margin-bottom: 60px;'}
+      .row.l-margin-bottom-big.hidden-xs.visible-sm.visible-md.visible-lg
+        .col-sm-12.text-center
+          %h1=t('views.quiz_questions.show.h1')
 
-.row
-  .col-sm-8.col-sm-offset-2
-    =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
+      .row.l-margin-bottom-big
+        .col-sm-8.col-sm-offset-2.margin-top
+          =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
 
-.row
-  .col-sm-8.col-sm-offset-2
-    %h3=t('views.quiz_questions.form.solution_to_the_question')
-    .well.well-sm.quiz-well
-      =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+      .row.l-margin-bottom-big
+        .col-sm-8.col-sm-offset-2.margin-top
+          %h3=t('views.quiz_questions.form.solution_to_the_question')
+          .well.well-sm.quiz-well
+            =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
 
-.row
-  .col-sm-8.col-sm-offset-2
-    =link_to sanitize('&larr; ' + t('views.course_module_elements.show.h1')), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
+      .row.l-margin-bottom-big
+        .col-sm-8.col-sm-offset-2.margin-top
+          =link_to sanitize('&larr; ' + t('views.course_module_elements.show.h1')), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
