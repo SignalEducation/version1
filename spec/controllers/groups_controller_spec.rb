@@ -33,8 +33,6 @@ describe GroupsController, type: :controller do
 
   let!(:group_1) { FactoryGirl.create(:group) }
   let!(:group_2) { FactoryGirl.create(:group) }
-  let!(:group_1_subject_course) { [ FactoryGirl.create(:active_subject_course),
-                                    FactoryGirl.create(:active_subject_course) ] }
   let!(:valid_params) { FactoryGirl.attributes_for(:group) }
 
   context 'Not logged in: ' do

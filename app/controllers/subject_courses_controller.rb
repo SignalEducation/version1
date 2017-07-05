@@ -55,6 +55,7 @@ class SubjectCoursesController < ApplicationController
 
   def create
     @subject_course = SubjectCourse.new(allowed_params)
+
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url
@@ -168,7 +169,7 @@ class SubjectCoursesController < ApplicationController
                                            :default_number_of_possible_exam_answers,
                                            :email_content, :external_url,
                                            :external_url_name, :exam_body_id,
-                                           :survey_url, :quiz_pass_rate)
+                                           :survey_url, :quiz_pass_rate, :group_id)
   end
 
   def resource_allowed_params

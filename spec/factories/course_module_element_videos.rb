@@ -16,11 +16,7 @@
 FactoryGirl.define do
   factory :course_module_element_video do
     course_module_element_id 1
-    tags "MyString"
-    difficulty_level 'easy'
     estimated_study_time_seconds 1
-    transcript "MyText"
-    thumbnail 'abc123'
     duration 1
     sequence(:vimeo_guid)             { |n| "vimeo-#{n}" }
   end

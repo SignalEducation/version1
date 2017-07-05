@@ -26,10 +26,9 @@ FactoryGirl.define do
   factory :group do
     sequence(:name)           { |n| "Group #{n}" }
     sequence(:name_url)           { |n| "group-#{n}" }
+    description 'MyText'
     active true
     sorting_order 1
-    description 'MyText'
-    subject_id nil
   end
 
 end

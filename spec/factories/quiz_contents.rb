@@ -20,7 +20,6 @@
 FactoryGirl.define do
   factory :quiz_content do
     text_content 'MyText'
-    content_type 'text'
     sorting_order 1
 
     factory :quiz_content_for_question do

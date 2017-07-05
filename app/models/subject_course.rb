@@ -133,7 +133,6 @@ class SubjectCourse < ActiveRecord::Base
   def destroyable_children
     the_list = []
     the_list += self.course_modules.to_a
-    the_list << self.groups if self.groups
     the_list
   end
 

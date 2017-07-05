@@ -59,15 +59,13 @@ class CourseModuleElement < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
   validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
-  validates :estimated_time_in_seconds, presence: true
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_validation :log_count_fields
   before_save :sanitize_name_url
-  after_save :update_parent
+  after_save :update_parent, :log_count_fields
   after_destroy :update_parent
 
   # scopes
@@ -179,10 +177,10 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def log_count_fields
-    if self.is_video
-      self.duration = self.course_module_element_video.try(:duration)
-      self.estimated_time_in_seconds = self.course_module_element_video.duration.round if self.course_module_element_video.duration
-    elsif self.is_quiz
+    if self.is_video && course_module_element_video
+      self.duration = self.course_module_element_video.duration
+      self.estimated_time_in_seconds = self.duration.round
+    elsif self.is_quiz && course_module_element_quiz
       #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
       self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
       self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?

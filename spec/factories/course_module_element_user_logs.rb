@@ -34,8 +34,6 @@ FactoryGirl.define do
     is_quiz false
     course_module_id 1
     latest_attempt false
-    course_module_jumbo_quiz_id 1
-    is_jumbo_quiz false
   end
 
 end
