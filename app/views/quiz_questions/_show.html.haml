@@ -1,9 +1,12 @@
 .question{style: hide_me ? 'display: none;' : '', id: "question_#{question.id}"}
-  %h4.text-bold.l-margin-bottom-big
-    =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
+  .l-margin-bottom
+    -if question.custom_styles
+      =render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
+    -else
+      %h4=render partial: 'quiz_contents/index', locals: {contents: question.quiz_contents}
 
   .panel.panel-default.border-same-backcolor.answerpanel
-    %ul.list-group
+    .list-group
       -answers = question.quiz_answers.sample(question.quiz_answers.size)
       -answers.each_with_index do |qa, counter|
         .list-group-item.quiz-answer.quiz-answer-clickable{onclick: "logAnswer(#{question.id},#{qa.id},'#{question.difficulty_level}', #{qa.degree_of_wrongness == 'correct'}, [#{answers.map(&:id)}]); return false;", style: 'cursor:pointer'}
@@ -11,8 +14,11 @@
             .row
               .col-md-1
                 %h2=('A'..'Z').to_a[counter]
-              .col-md-11.text
-                %p=render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+              .col-md-11
+                -if question.custom_styles
+                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+                -else
+                  %p=render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
 
   %small
     %small.text-muted

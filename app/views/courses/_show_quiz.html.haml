@@ -1,5 +1,5 @@
 .col-md-12
-  -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?)
+  -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?)|| current_user.try(:content_manager?)
 
     %h2
       =@course_module_element.try(:name).try(:html_safe)

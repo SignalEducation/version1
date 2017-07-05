@@ -11,6 +11,7 @@
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #  sorting_order                 :integer
+#  custom_styles                 :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

@@ -11,6 +11,7 @@
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #  sorting_order                 :integer
+#  custom_styles                 :boolean          default(FALSE)
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -21,7 +22,8 @@ class QuizQuestion < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_quiz_id, :difficulty_level,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :subject_course_id, :sorting_order
+                  :quiz_solutions_attributes, :subject_course_id, :sorting_order,
+                  :custom_styles
 
   # Constants
 
@@ -47,15 +49,11 @@ class QuizQuestion < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
+  scope :in_created_order, -> { order(:id) }
 
   # class methods
 
   # instance methods
-
-  def complex_question?
-    answer_ids = self.quiz_answer_ids
-    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil).count > 4
-  end
 
   def destroyable?
     true

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702180151) do
+ActiveRecord::Schema.define(version: 20170705153749) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -496,6 +496,7 @@ ActiveRecord::Schema.define(version: 20170702180151) do
     t.datetime "destroyed_at"
     t.integer  "subject_course_id"
     t.integer  "sorting_order"
+    t.boolean  "custom_styles",                 default: false
   end
 
   add_index "quiz_questions", ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id", using: :btree

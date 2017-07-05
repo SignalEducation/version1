@@ -41,11 +41,12 @@
         -counter += 1
 
   .row
-    .col-sm-6.text-left
-      -if question.object.id.nil?
-        =link_to t('views.general.delete_block'), '#', onclick: "{$('#the_new_question').remove()}; return false;", class: 'btn btn-cyan'
-      -elsif question.object.destroyable?
-        =link_to t('views.general.delete_block'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-cyan'
+    .col-sm-6
+      .form-group
+        .checkbox
+          %label
+            =question.check_box :custom_styles
+            =t('views.quiz_questions.form.custom_styles')
 
     .col-sm-6.text-right
       -if parent.object.id.nil?

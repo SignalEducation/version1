@@ -29,5 +29,8 @@
             .quiz-heading.l-margin-bottom
               %h3=t('views.quiz_questions.form.solution_to_the_question')
 
-            =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+            -if @quiz_question.custom_styles
+              =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+            -else
+              %p=render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
 

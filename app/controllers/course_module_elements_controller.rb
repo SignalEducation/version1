@@ -289,7 +289,7 @@ class CourseModuleElementsController < ApplicationController
                 :id,
                 :course_module_element_quiz_id,
                 :difficulty_level,
-                :hints,
+                :custom_styles,
                 quiz_solutions_attributes: [
                     :id,
                     :quiz_question_id,

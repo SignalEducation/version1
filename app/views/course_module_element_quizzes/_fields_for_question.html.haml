@@ -1,22 +1,3 @@
 =f.fields_for :course_module_element_quiz do |cme_quiz|
-  =cme_quiz.fields_for :quiz_questions do |question|
-    -if question.object.complex_question?
-      .well.well-sm
-        %h3
-          Advanced Question
-          ="##{question.object.id}" || "(#{t('views.general.new')})"
-        .row
-          .col-sm-8
-            %p=truncate(question.object.quiz_contents.first.text_content, length: 80)
-          .col-sm-4.text-right
-            =link_to t('views.course_module_elements.show.preview'), question.object, class: 'btn btn-info'
-            -if question.object.id.to_i > 0
-              =link_to t('views.general.edit'), edit_quiz_question_url(id: question.object.id, cme_quiz_id: cme_quiz.object.id), class: 'btn btn-info'
-            -if question.object.destroyable?
-              -if question.object.id.nil?
-                =link_to t('views.general.delete'), '#', onclick: "if(confirm('" +t('views.general.delete_confirmation') + "')) {$('#the_new_question').remove()}; return false;", class: 'btn btn-danger'
-              -else
-                =link_to t('views.general.delete'), question.object, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-danger'
-
-    -else
-      =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: cme_quiz, mode: 'full'}
+  =cme_quiz.fields_for :quiz_questions, cme_quiz.object.quiz_questions.in_created_order do |question|
+    =render partial: 'course_module_element_quizzes/fields_for_standard_question', locals: {f: f, question: question, parent: cme_quiz, mode: 'full'}

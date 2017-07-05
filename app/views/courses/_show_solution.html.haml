@@ -4,9 +4,13 @@
     =t('views.courses.show_results.attempts_table.question')
     =counter + 1
 
-  %h3.l-margin-bottom-big
-    -if attempt.try(:quiz_question).try(:quiz_contents)
+  -if attempt.quiz_question && attempt.quiz_question.custom_styles
+    .l-margin-bottom-big
       =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
+  -else
+    %h3.l-margin-bottom-big
+      =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_contents}
+
 
   -correct_answers = []; your_answer = 0
   -attempt.answers.each_with_index do |qa, counter2|
@@ -42,11 +46,14 @@
       ='Explanation'
 
     -if attempt.try(:quiz_question).try(:quiz_solutions)
-      %p
-        =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+      .l-margin-bottom
+        -if attempt.quiz_question && attempt.quiz_question.custom_styles
+          =render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
+        -else
+          %p=render partial: 'quiz_contents/index', locals: {contents: attempt.quiz_question.quiz_solutions}
 
   .panel.panel-default.border-same-backcolor
-    %ul.list-group
+    .list-group
       -if attempt.try(:quiz_question).try(:quiz_answers)
         -attempt.answers.each_with_index do |qa, counter2|
           %li.list-group-item.quiz-answer-clickable
@@ -55,5 +62,8 @@
                 .col-md-1
                   %h2=('A'..'Z').to_a[counter2]
                 .col-md-11
-                  =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+                  -if attempt.quiz_question && attempt.quiz_question.custom_styles
+                    =render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
+                  -else
+                    %p=render partial: 'quiz_contents/index', locals: {contents: qa.quiz_contents}
 
