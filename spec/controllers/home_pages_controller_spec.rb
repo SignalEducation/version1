@@ -26,7 +26,7 @@ describe HomePagesController, type: :controller do
   include_context 'system_setup'
 
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
-  let!(:home_page_2) { FactoryGirl.create(:cfa_home, group_id: course_group_2.id) }
+  let!(:home_page_2) { FactoryGirl.create(:acca_home) }
 
   let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
 
@@ -76,13 +76,13 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
-        expect(response).to render_template(:group)
+        expect(response).to render_template(:show)
       end
     end
 
@@ -103,9 +103,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -182,9 +182,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -261,9 +261,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -340,9 +340,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -419,9 +419,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -498,9 +498,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -577,9 +577,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end
@@ -656,9 +656,9 @@ describe HomePagesController, type: :controller do
       end
     end
 
-    describe "GET 'group'" do
-      it 'should see group' do
-        get :group, home_pages_public_url: home_page_2.public_url
+    describe "GET 'show'" do
+      it 'should see show' do
+        get :show, home_pages_public_url: home_page_2.public_url
         expect_bounce_to_dashboard_as_signed_in
       end
     end

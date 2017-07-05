@@ -27,11 +27,6 @@ FactoryGirl.define do
       public_url 'acca'
     end
 
-    factory :cfa_home do
-      public_url 'cfa'
-    end
-
-
   end
 
 end
