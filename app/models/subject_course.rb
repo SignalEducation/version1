@@ -97,7 +97,9 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
+  ## Structures data in CSV format for Excel downloads ##
   def self.to_csv(options = {})
+    #attributes are either model attributes or data generate in methods below
     attributes = %w{name subject_area new_enrollments total_enrollments paused_enrollments completed_enrollments}
     CSV.generate(options) do |csv|
       csv << attributes
@@ -110,6 +112,16 @@ class SubjectCourse < ActiveRecord::Base
 
 
   # instance methods
+
+  ## Parent & Child associations ##
+  def parent
+    self.group
+  end
+
+  def children
+    self.course_modules.all
+  end
+
   def active_children
     self.children.all_active.all_in_order
   end
@@ -118,14 +130,25 @@ class SubjectCourse < ActiveRecord::Base
     self.active_children.first
   end
 
-  def children
-    self.course_modules.all
+  def first_active_cme
+    self.active_children.first.try(:first_active_cme)
   end
 
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  def tuition_children?
+    self.active_children.all_tuition.count >= 1
   end
 
+  def test_children?
+    self.active_children.all_test.count >= 1
+  end
+
+  def revision_children?
+    self.active_children.all_revision.count >= 1
+  end
+
+  #######################################################################
+
+  ## Archivable ability ##
   def destroyable?
     true
   end
@@ -136,66 +159,13 @@ class SubjectCourse < ActiveRecord::Base
     the_list
   end
 
-  def enrolled_user_ids
-    self.enrollments.map(&:user_id)
-  end
-
-  def estimated_time_in_seconds
-    self.children.sum(:estimated_time_in_seconds)
-  end
-
-  def first_active_cme
-    self.active_children.first.try(:first_active_cme)
-  end
+  ########################################################################
 
   def home_page
     self.home_pages.all_in_order.first
   end
 
-  def tuition_children?
-    if self.active_children.all_tuition.count >= 1
-      return true
-    end
-  end
-
-  def test_children?
-    if self.active_children.all_test.count >= 1
-      return true
-    end
-  end
-
-  def revision_children?
-    if self.active_children.all_revision.count >= 1
-      return true
-    end
-  end
-
-  def started_by_user_or_guid(user_id, session_guid)
-    self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
-  end
-
-  def number_complete_by_user_or_guid(user_id, session_guid)
-    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
-    log.try(:count_of_cmes_completed)
-  end
-
-  def parent
-    self.group
-  end
-
-  def percentage_complete_by_user_or_guid(user_id, session_guid)
-    if cme_count.nil?
-      0
-    else
-      if self.cme_count > 0
-        (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
-      else
-        0
-      end
-
-    end
-  end
-
+  ## Keeping Model Count Attributes Up-to-date ##
   def recalculate_fields
     cme_count = self.active_children.sum(:cme_count)
     quiz_count = self.active_children.sum(:quiz_count)
@@ -216,6 +186,43 @@ class SubjectCourse < ActiveRecord::Base
     set_total_video_duration
   end
 
+  def estimated_time_in_seconds
+    self.children.sum(:estimated_time_in_seconds)
+  end
+
+  ########################################################################
+
+  ## User Course Tracking ##
+  def enrolled_user_ids
+    self.enrollments.map(&:user_id)
+  end
+
+  def started_by_user_or_guid(user_id, session_guid)
+    self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+  end
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    if cme_count.nil?
+      0
+    else
+      if self.cme_count > 0
+        (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
+      else
+        0
+      end
+
+    end
+  end
+
+  def number_complete_by_user_or_guid(user_id, session_guid)
+    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+    log.try(:count_of_cmes_completed)
+  end
+
   def update_all_course_sets
     self.student_exam_tracks.each do |set|
       StudentExamTracksWorker.perform_async(set.id)
@@ -223,6 +230,9 @@ class SubjectCourse < ActiveRecord::Base
     SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
   end
 
+  ########################################################################
+
+  ## Used by self.to_csv above ##
   def new_enrollments
     self.enrollments.this_week.count
   end
@@ -239,8 +249,12 @@ class SubjectCourse < ActiveRecord::Base
     self.enrollments.count
   end
 
+  ########################################################################
+
+
   protected
 
+  ## Used by set_count_fields callback above ##
   def recalculate_cme_count
     self.cme_count = self.active_children.sum(:cme_count)
   end
@@ -270,6 +284,7 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
+  #TODO Why is this not called from anywhere? CRON??
   def update_course_logs
     SubjectCourseUserLogWorker.perform_async(self.id)
   end
