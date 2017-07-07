@@ -5,6 +5,11 @@
       .row
         .col-md-6
           =f.hidden_field :default_number_of_possible_exam_answers, value: 4
+          =f.label :group_id, t('views.subject_courses.form.group_id'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
+          %br/
+
           =f.label :name, t('views.subject_courses.form.name'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :name, placeholder: t('views.subject_courses.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'

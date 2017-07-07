@@ -27,8 +27,7 @@ shared_context 'course_content' do
                                                                 vimeo_guid: '123abc') }
 
   #Courses Second set
-  let!(:course_group_2) { FactoryGirl.create(:group) }
-  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, group_id: course_group_2.id) }
+  let!(:subject_course_2)    { FactoryGirl.create(:active_subject_course, group_id: course_group_1.id) }
 
   let!(:course_module_2) { FactoryGirl.create(:active_course_module,
                                               subject_course_id: subject_course_2.id) }

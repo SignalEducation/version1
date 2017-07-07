@@ -40,10 +40,13 @@
                       %td=tick_or_cross(subject_course.active)
                       %td
                         =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
+                      -if subject_course.destroyable?
+                        %td
+                          =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-small btn-red'
                       %td
                         =link_to t('views.subject_courses.index.edit_tutors'), subject_course_edit_course_tutors_url(subject_course), class: 'btn btn-small btn-cyan'
                       %td
-                        =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-red'
+                        =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-orange'
               =will_paginate @subject_courses, renderer: BootstrapPagination::Rails
 
 

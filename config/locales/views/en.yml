@@ -844,7 +844,7 @@ en:
       index:
         h1: Courses
         your_courses: Courses
-        my_courses: My Courses
+        manager_courses: Course Content
         add_course: Add Course
         edit_content: Edit Content
         edit_tutors: Edit Tutors
