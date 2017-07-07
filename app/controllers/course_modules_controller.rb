@@ -35,6 +35,7 @@ class CourseModulesController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def show
     redirect_to subject_course_url
   end
@@ -53,9 +54,6 @@ class CourseModulesController < ApplicationController
     end
   end
 
-  def edit
-  end
-
   def create
     @course_module = CourseModule.new(allowed_params)
     if @course_module.save
@@ -64,6 +62,9 @@ class CourseModulesController < ApplicationController
     else
       render action: :new
     end
+  end
+
+  def edit
   end
 
   def update

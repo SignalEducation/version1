@@ -77,57 +77,30 @@ class CourseModule < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def array_of_sibling_ids
-    self.parent.course_modules.all_active.all_in_order.map(&:id)
-  end
 
-  def active_children
-    self.children.all_active.all_in_order
-  end
-
-  def category
-    if self.revision
-      'Revision'
-    elsif self.tuition
-      'Tuition'
-    elsif self.test
-      'Test'
-    else
-      ''
-    end
+  ## Parent & Child associations ##
+  def parent
+    self.subject_course
   end
 
   def children
     self.course_module_elements.all
   end
 
-  def children_available_count
-    self.children.all_active.count
-  end
-
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
-  end
-
-  def destroyable?
-    true
-  end
-
-  def destroyable_children
-    # not destroyable:
-    # - self.course_module_element_user_logs
-    # - self.student_exam_tracks.empty?
-    the_list = []
-    the_list += self.course_module_elements.to_a
-    the_list
+  def active_children
+    self.children.all_active.all_in_order
   end
 
   def first_active_cme
     self.active_children.first
   end
 
-  def full_name
-    self.parent.name + ' > ' + self.name
+  #######################################################################
+
+  ## Methods allow for navigation from one CM to the next ##
+
+  def array_of_sibling_ids
+    self.parent.course_modules.all_active.all_in_order.map(&:id)
   end
 
   def my_position_among_siblings
@@ -146,17 +119,6 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
-  def parent
-    self.subject_course
-  end
-
-  def percentage_complete_by_user_or_guid(user_id, session_guid)
-    set = user_id ?
-            self.student_exam_tracks.where(user_id: user_id).first :
-            self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
-    set.try(:percentage_complete) || 0
-  end
-
   def previous_module
     CourseModule.find_by_id(self.previous_module_id) || nil
   end
@@ -167,6 +129,33 @@ class CourseModule < ActiveRecord::Base
     else
       nil
     end
+  end
+
+
+  #######################################################################
+
+  ## Archivable ability ##
+
+  def destroyable?
+    true
+  end
+
+  def destroyable_children
+    # not destroyable:
+    # - self.course_module_element_user_logs
+    # - self.student_exam_tracks.empty?
+    the_list = []
+    the_list += self.course_module_elements.to_a
+    the_list
+  end
+
+
+  #######################################################################
+
+  ## Keeping Model Count Attributes Up-to-date ##
+
+  def children_available_count
+    self.children.all_active.count
   end
 
   def update_video_and_quiz_counts
@@ -182,6 +171,44 @@ class CourseModule < ActiveRecord::Base
     total_seconds = CourseModuleElementUserLog.where(course_module_id: self.id).sum(:seconds_watched)
     @time_watched ||= { hours: total_seconds / 3600, minutes: (total_seconds / 60) % 60, seconds: total_seconds % 60 }
   end
+
+
+  ########################################################################
+
+  ## User Course Tracking ##
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    set = user_id ?
+        self.student_exam_tracks.where(user_id: user_id).first :
+        self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
+    set.try(:percentage_complete) || 0
+  end
+
+
+  ########################################################################
+
+  ## Model info for Views ##
+
+  def category
+    if self.revision
+      'Revision'
+    elsif self.tuition
+      'Tuition'
+    elsif self.test
+      'Test'
+    else
+      ''
+    end
+  end
+
+  def full_name
+    self.parent.name + ' > ' + self.name
+  end
+
 
   protected
 
