@@ -539,7 +539,6 @@ en:
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100
-        subject_id: Subject
         course_count: No. of Courses
 
       index:

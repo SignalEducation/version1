@@ -8,7 +8,6 @@
 #  active                        :boolean          default(FALSE), not null
 #  sorting_order                 :integer
 #  description                   :text
-#  subject_id                    :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  destroyed_at                  :datetime
@@ -26,7 +25,7 @@ class GroupsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables
 
@@ -92,7 +91,7 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :subject_id, :image, :background_image)
+    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :image, :background_image)
   end
 
 end

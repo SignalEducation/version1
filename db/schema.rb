@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170705153749) do
+ActiveRecord::Schema.define(version: 20170706125028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -231,7 +231,6 @@ ActiveRecord::Schema.define(version: 20170705153749) do
     t.boolean  "active",                        default: false, null: false
     t.integer  "sorting_order"
     t.text     "description"
-    t.integer  "subject_id"
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
     t.datetime "destroyed_at"
@@ -246,7 +245,6 @@ ActiveRecord::Schema.define(version: 20170705153749) do
   end
 
   add_index "groups", ["name"], name: "index_groups_on_name", using: :btree
-  add_index "groups", ["subject_id"], name: "index_groups_on_subject_id", using: :btree
 
   create_table "groups_subject_courses", id: false, force: :cascade do |t|
     t.integer "group_id",          null: false

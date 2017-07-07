@@ -1,6 +1,6 @@
 =f.fields_for :course_module_element_video do |cme_video|
-  =cme_video.hidden_field :difficulty_level, value: ApplicationController::DIFFICULTY_LEVEL_NAMES.first
-  =cme_video.hidden_field :vimeo_guid, value: @video_guid ? @video_guid : ''
+  -if @video_guid
+    =cme_video.hidden_field :vimeo_guid, value: @video_guid
 
   -if @course_module_element.new_record?
     -if params[:video_uri]

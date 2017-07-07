@@ -8,7 +8,6 @@
 #  active                        :boolean          default(FALSE), not null
 #  sorting_order                 :integer
 #  description                   :text
-#  subject_id                    :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  destroyed_at                  :datetime
@@ -29,7 +28,7 @@ class Group < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :active, :sorting_order, :description,
-                  :subject_id, :image, :background_image
+                  :image, :background_image
 
   # Constants
 

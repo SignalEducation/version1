@@ -8,7 +8,6 @@
 #  active                        :boolean          default(FALSE), not null
 #  sorting_order                 :integer
 #  description                   :text
-#  subject_id                    :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  destroyed_at                  :datetime
