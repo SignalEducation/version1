@@ -64,8 +64,8 @@ class CourseModuleElement < ActiveRecord::Base
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_save :sanitize_name_url
-  after_save :update_parent, :log_count_fields
+  before_save :sanitize_name_url, :log_count_fields
+  after_save :update_parent
   after_destroy :update_parent
 
   # scopes
@@ -77,36 +77,21 @@ class CourseModuleElement < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  ## Parent & Child associations ##
+
+  def parent
+    self.course_module
+  end
+
+
+  #######################################################################
+
+  ## Methods allow for navigation from one CME to the next ##
+
+
   def array_of_sibling_ids
     self.course_module.course_module_elements.all_active.all_in_order.map(&:id)
-  end
-
-  def completed_by_user_or_guid(user_id, session_guid)
-    cmeuls = user_id ?
-            self.course_module_element_user_logs.where(user_id: user_id) :
-            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
-    array = cmeuls.all.map(&:element_completed)
-    array.include? true
-  end
-
-  def started_by_user_or_guid(user_id, session_guid)
-    cmeuls = user_id ?
-            self.course_module_element_user_logs.where(user_id: user_id) :
-            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
-    cmeuls.any?
-  end
-
-  def destroyable?
-    true
-  end
-
-  def destroyable_children
-    the_list = []
-    the_list << self.course_module_element_video if self.course_module_element_video
-    the_list << self.course_module_element_quiz if self.course_module_element_quiz
-    the_list += self.course_module_element_resources.to_a
-    the_list += self.quiz_questions.to_a
-    the_list
   end
 
   def my_position_among_siblings
@@ -134,10 +119,6 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
-  def parent
-    self.course_module
-  end
-
   def previous_element
     if self.my_position_among_siblings && self.my_position_among_siblings > 0
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings - 1])
@@ -146,6 +127,49 @@ class CourseModuleElement < ActiveRecord::Base
       CourseModuleElement.find(prev_id) if prev_id
     end
   end
+
+
+  #######################################################################
+
+  ## Archivable ability ##
+
+  def destroyable?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list << self.course_module_element_video if self.course_module_element_video
+    the_list << self.course_module_element_quiz if self.course_module_element_quiz
+    the_list += self.course_module_element_resources.to_a
+    the_list += self.quiz_questions.to_a
+    the_list
+  end
+
+
+  #######################################################################
+
+  ## User Course Tracking ##
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    array = cmeuls.all.map(&:element_completed)
+    array.include? true
+  end
+
+  def started_by_user_or_guid(user_id, session_guid)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    cmeuls.any?
+  end
+
+
+  ########################################################################
+
+  ## Model info for Views ##
 
   def type_name
     if is_quiz

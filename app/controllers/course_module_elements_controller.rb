@@ -29,6 +29,7 @@ class CourseModuleElementsController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def show
     #Previewing a Quiz as Content Manager or Admin
     @course_module_element = CourseModuleElement.find(params[:id])
@@ -68,10 +69,10 @@ class CourseModuleElementsController < ApplicationController
     @course_modules = cm.parent.active_children
     if params[:type] == 'video'
 
-      @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
-      @course_module_element.course_module_element_resources.build
+      @course_module_element.build_course_module_element_video
       @course_module_element.build_video_resource
+      @course_module_element.course_module_element_resources.build
 
       if params[:video_uri]
         @video_guid = params[:video_uri].split("/").last.to_s
@@ -172,10 +173,6 @@ class CourseModuleElementsController < ApplicationController
     end
   end
 
-  def quiz_questions_order
-    @quiz_questions = @course_module_element.course_module_element_quiz.quiz_questions
-  end
-
   def reorder
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|
@@ -194,6 +191,11 @@ class CourseModuleElementsController < ApplicationController
     redirect_to course_module_special_link(@course_module_element.course_module)
   end
 
+  # Reordering of Questions if CMEQ selection_strategy is not random #
+  def quiz_questions_order
+    @quiz_questions = @course_module_element.course_module_element_quiz.quiz_questions
+  end
+
   protected
 
   def get_variables
@@ -205,7 +207,7 @@ class CourseModuleElementsController < ApplicationController
     @mathjax_required = true
   end
 
-
+  ## Vimeo Video Actions ##
   def build_vimeo_ticket(url)
     require 'net/http'
     require 'net/http/post/multipart'
@@ -251,6 +253,12 @@ class CourseModuleElementsController < ApplicationController
     end
   end
 
+  def spawn_quiz_children
+    @course_module_element.is_quiz = true
+    @course_module_element.build_course_module_element_quiz
+    @course_module_element.course_module_element_quiz.add_an_empty_question
+    @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
+  end
 
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
@@ -356,13 +364,6 @@ class CourseModuleElementsController < ApplicationController
             :transcript,
         ]
     )
-  end
-
-  def spawn_quiz_children
-    @course_module_element.is_quiz = true
-    @course_module_element.build_course_module_element_quiz
-    @course_module_element.course_module_element_quiz.add_an_empty_question
-    @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
   end
 
 end

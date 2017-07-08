@@ -70,7 +70,7 @@ describe CourseModuleElement do
   it { should validate_length_of(:seo_description).is_at_most(255) }
 
   # callbacks
-  it { should callback(:log_count_fields).before(:validation) }
+  it { should callback(:log_count_fields).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:update_parent).after(:save) }
   it { should callback(:update_parent).after(:destroy) }
