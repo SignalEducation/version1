@@ -44,6 +44,22 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  ## Checks for num. of Questions created is more than the num. to be asked ##
+
+  def enough_questions?
+    if self.question_selection_strategy == 'random'
+      lowest_number_of_questions = self.quiz_questions.count
+    else
+      lowest_number_of_questions = 1
+    end
+    lowest_number_of_questions >= self.number_of_questions
+  end
+
+  #######################################################################
+
+  ## Builds complex nested attributes ##
+
   def add_an_empty_question
     self.quiz_questions.build
     self.quiz_questions.last.course_module_element_quiz_id = self.id
@@ -55,6 +71,24 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     end
   end
 
+
+  #######################################################################
+
+  ## Groups all nested QuizQuestions in a random or ordered array ##
+
+  def all_ids_random
+    self.quiz_questions.map(&:id)
+  end
+
+  def all_ids_ordered
+    self.quiz_questions.all_in_order.map(&:id)
+  end
+
+
+  #######################################################################
+
+  ## Archivable ability ##
+
   def destroyable?
     true
   end
@@ -65,25 +99,10 @@ class CourseModuleElementQuiz < ActiveRecord::Base
     the_list
   end
 
-  def enough_questions?
-    if self.question_selection_strategy == 'random'
-      lowest_number_of_questions = self.quiz_questions.count
-    else
-      lowest_number_of_questions = 1
-    end
-    lowest_number_of_questions >= self.number_of_questions
-  end
-
-  def all_ids_random
-    self.quiz_questions.map(&:id)
-  end
-
-  def all_ids_ordered
-    self.quiz_questions.all_in_order.map(&:id)
-  end
-
   protected
 
+  ### TODO research this
+  ## Nested Attributes lambda check ##
   def self.quiz_question_fields_blank?(the_attributes)
     (the_attributes['id'].to_i > 0 && the_attributes['quiz_contents_attributes'].blank?) ||
       ( the_attributes['course_module_element_quiz_id'].to_i > 0 &&
