@@ -51,6 +51,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :quiz_questions
   has_many :enrollments
   has_many :home_pages
   has_many :student_exam_tracks

@@ -44,6 +44,8 @@ class QuizAnswer < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  ## Archivable methods ##
   def destroyable?
     true
   end

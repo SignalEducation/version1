@@ -28,6 +28,7 @@ class QuizQuestion < ActiveRecord::Base
   # Constants
 
   # relationships
+  belongs_to :subject_course
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts
@@ -55,6 +56,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # instance methods
 
+  ## Archivable methods ##
   def destroyable?
     true
   end
