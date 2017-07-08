@@ -38,12 +38,18 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def destroyable?
-    true
-  end
 
+  ## Parent & Child associations ##
   def parent
     self.course_module_element
+  end
+
+  #######################################################################
+
+  ## Archivable ability ##
+
+  def destroyable?
+    true
   end
 
   protected
