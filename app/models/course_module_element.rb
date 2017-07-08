@@ -87,7 +87,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   #######################################################################
 
-  ## Methods allow for navigation from one CME to the next ##
+  ## Methods allow for navigation from one CME to the next #
 
 
   def array_of_sibling_ids

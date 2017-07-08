@@ -29,6 +29,7 @@ class GroupsController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def index
     @groups = Group.paginate(per_page: 50, page: params[:page])
     @footer = true

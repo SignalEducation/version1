@@ -55,6 +55,8 @@ class Group < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  ## Parent & Child associations ##
   def active_children
     children.try(:all_active)
   end
@@ -62,6 +64,11 @@ class Group < ActiveRecord::Base
   def children
     self.try(:subject_courses)
   end
+
+
+  #######################################################################
+
+  ## Archivable ability ##
 
   def destroyable?
     true
