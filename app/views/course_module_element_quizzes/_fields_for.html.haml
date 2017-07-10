@@ -1,4 +1,4 @@
-=cme.fields_for :course_module_element_quiz do |cme_quiz|
+=f.fields_for :course_module_element_quiz do |cme_quiz|
   =cme_quiz.label :number_of_questions, t('views.course_module_element_quizzes.form.number_of_questions'), class: 'control-label'
   .input-group.input-group-lg.full-width
     =cme_quiz.select :number_of_questions, options_for_select([1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75], cme_quiz.object.number_of_questions || 5), {}, {class: 'form-control', style: 'border-radius: 6px;'}
@@ -7,9 +7,9 @@
   .input-group.input-group-lg.full-width
     =cme_quiz.select :question_selection_strategy, options_for_select(CourseModuleElementQuiz::STRATEGIES, cme_quiz.object.question_selection_strategy), {}, {class: 'form-control', style: 'border-radius: 6px;'}
   %br/
-  =cme.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
+  =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
   .input-group.input-group-lg.full-width
-    =cme.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
     %p
       =t('views.course_module_elements.form.estimated_time_in_seconds_tag')
 

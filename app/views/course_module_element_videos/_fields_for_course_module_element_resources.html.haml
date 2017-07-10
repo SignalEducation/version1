@@ -3,7 +3,7 @@
 %h3.l-margin-bottom
   =t('views.course_module_element_resources.index.h1')
 
-=cme.fields_for :course_module_element_resources do |cme_resource|
+=f.fields_for :course_module_element_resources do |cme_resource|
   .file-upload-box
     -if cme_resource.object.upload_file_name
       %h4

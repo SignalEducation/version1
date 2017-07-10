@@ -1,43 +1,43 @@
-=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |cme|
+=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |f|
   .row
     =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
-    =cme.hidden_field :sorting_order
-    =cme.hidden_field :course_module_id
-    =cme.hidden_field :is_quiz
-    =cme.hidden_field :is_video
+    =f.hidden_field :sorting_order
+    =f.hidden_field :course_module_id
+    =f.hidden_field :is_quiz
+    =f.hidden_field :is_video
 
 
     .col-md-6
       -# Extra CourseModuleElement Fields unique for Videos or Quizzes
       -if @course_module_element.course_module_element_video
-        =render partial: 'course_module_element_videos/fields_for', locals: {cme: cme}
+        =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
       -elsif @course_module_element.course_module_element_quiz
-        =render partial: 'course_module_element_quizzes/fields_for', locals: {cme: cme}
+        =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
 
       -# Dropdown list of other CourseModules in the SubjectCourse
-      =cme.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
+      =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =cme.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
       %br/
 
 
 
     .col-md-6
-      =cme.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
+      =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =cme.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
+        =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
       %br/
-      =cme.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
+      =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
       -#TODO onscreen validation stops the form submission but summernote blocks why
       .input-group.input-group-lg.full-width
-        =cme.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+        =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
       %br/
       %br/
       .form-group
         .col-sm-8.col-sm-offset-1
           .checkbox
             %label
-              =cme.check_box :active, default: true
+              =f.check_box :active, default: true
               =t('views.course_modules.form.active')
 
       -if @course_module_element.is_quiz? && !@course_module_element.new_record?
@@ -51,20 +51,20 @@
     -# CourseModuleElementQuiz Partial
     %hr/
     %h2.h3=t('views.course_module_elements.form.questions')
-    =render partial: 'course_module_element_quizzes/fields_for_question', locals: {cme: cme}
+    =render partial: 'course_module_element_quizzes/fields_for_question', locals: {f: f}
 
   -elsif @course_module_element.course_module_element_video
     -# CourseModuleElementVideo Partial
     %br/
-    =cme.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
+    =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
     .input-group.input-group-lg.full-width
-      =cme.text_area :description, required: true, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
+      =f.text_area :description, required: true, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
     %br/
     %hr/
     %br/
-    =render partial: 'course_module_element_videos/fields_for_video_resources', locals: {cme: cme}
+    =render partial: 'course_module_element_videos/fields_for_video_resources', locals: {f: f}
     -if @course_module_element.course_module_element_resources.size > 0
-      =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {cme: cme}
+      =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
 
   .row
@@ -72,12 +72,12 @@
       %br/
       %br/
       -if @course_module_element.course_module_element_video
-        =cme.submit t('views.general.save'), class: 'btn btn-red', disabled: false
+        =f.submit t('views.general.save'), class: 'btn btn-red', disabled: false
       -else
-        =cme.submit t('views.general.save'), class: 'btn btn-red clear-question'
-      -if cme.object.course_module_element_quiz
+        =f.submit t('views.general.save'), class: 'btn btn-red clear-question'
+      -if f.object.course_module_element_quiz
         =t('views.general.or')
-        =cme.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
+        =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
       =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module), class: 'btn btn-cyan'
 
 

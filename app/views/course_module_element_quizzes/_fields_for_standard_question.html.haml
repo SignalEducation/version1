@@ -51,11 +51,11 @@
     .col-sm-6.text-right
       -if parent.object.id.nil?
         -# new parent
-        =cme.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
-        =cme.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-cyan'
+        =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
+        =f.submit t('views.course_module_element_quizzes.form.advanced_setup_link'), class: 'btn btn-cyan'
       -elsif question.object.id.nil?
         -# new question
-        =cme.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
+        =f.submit t('views.course_module_element_quizzes.form.preview_button'), class: 'btn btn-cyan'
         =link_to t('views.course_module_element_quizzes.form.advanced_setup_link'), new_quiz_question_url(cme_quiz_id: parent.object.id), class: 'btn btn-cyan'
       -else
         -# edit question of existing quiz
