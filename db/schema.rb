@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170706125028) do
+ActiveRecord::Schema.define(version: 20170710103643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,7 +76,6 @@ ActiveRecord::Schema.define(version: 20170706125028) do
   create_table "course_module_element_resources", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.string   "name"
-    t.text     "description"
     t.string   "web_url"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -114,7 +113,6 @@ ActiveRecord::Schema.define(version: 20170706125028) do
 
   create_table "course_module_element_videos", force: :cascade do |t|
     t.integer  "course_module_element_id"
-    t.integer  "estimated_study_time_seconds"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
@@ -624,6 +622,7 @@ ActiveRecord::Schema.define(version: 20170706125028) do
     t.string   "survey_url"
     t.integer  "group_id"
     t.integer  "quiz_pass_rate"
+    t.integer  "total_estimated_time_in_seconds"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

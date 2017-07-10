@@ -2,15 +2,14 @@
 #
 # Table name: course_module_element_videos
 #
-#  id                           :integer          not null, primary key
-#  course_module_element_id     :integer
-#  estimated_study_time_seconds :integer
-#  created_at                   :datetime
-#  updated_at                   :datetime
-#  destroyed_at                 :datetime
-#  video_id                     :string
-#  duration                     :float
-#  vimeo_guid                   :string
+#  id                       :integer          not null, primary key
+#  course_module_element_id :integer
+#  created_at               :datetime
+#  updated_at               :datetime
+#  destroyed_at             :datetime
+#  video_id                 :string
+#  duration                 :float
+#  vimeo_guid               :string
 #
 
 class CourseModuleElementVideo < ActiveRecord::Base
@@ -29,6 +28,7 @@ class CourseModuleElementVideo < ActiveRecord::Base
   # validation
   validates :course_module_element_id, presence: true, on: :update
   validates :vimeo_guid, presence: true, length: {maximum: 255}, on: :create
+  validates :duration, presence: true, numericality: true
 
   # callbacks
 

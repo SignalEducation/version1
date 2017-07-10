@@ -26,6 +26,7 @@
 #  survey_url                              :string
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
+#  total_estimated_time_in_seconds         :integer
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -40,7 +41,7 @@ class SubjectCourse < ActiveRecord::Base
                   :email_content, :external_url, :external_url_name,
                   :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url,
-                  :group_id, :quiz_pass_rate
+                  :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds
 
   # Constants
 
@@ -162,34 +163,31 @@ class SubjectCourse < ActiveRecord::Base
 
   ########################################################################
 
-  def home_page
-    self.home_pages.all_in_order.first
-  end
 
   ## Keeping Model Count Attributes Up-to-date ##
+
+  ### Triggered by Child Model ###
   def recalculate_fields
     cme_count = self.active_children.sum(:cme_count)
     quiz_count = self.active_children.sum(:quiz_count)
     question_count = self.active_children.sum(:number_of_questions)
     video_count = self.active_children.sum(:video_count)
     video_duration = self.active_children.sum(:video_duration)
-    quiz_duration = self.active_children.sum(:estimated_time_in_seconds)
-    total_video_duration = video_duration + quiz_duration
+    total_estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, question_count: question_count, video_count: video_count, total_video_duration: total_video_duration)
+    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, question_count: question_count, video_count: video_count, total_video_duration: video_duration, total_estimated_time_in_seconds: total_estimated_time_in_seconds)
   end
 
+  ### Callback before_save ###
   def set_count_fields
-    recalculate_cme_count
-    recalculate_quiz_count
-    set_question_count
-    recalculate_video_count
-    set_total_video_duration
+    self.cme_count = self.active_children.sum(:cme_count)
+    self.quiz_count = self.active_children.sum(:quiz_count)
+    self.question_count = self.active_children.sum(:number_of_questions)
+    self.video_count = self.active_children.sum(:video_count)
+    self.total_video_duration = self.active_children.sum(:video_duration)
+    self.total_estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
   end
 
-  def estimated_time_in_seconds
-    self.children.sum(:estimated_time_in_seconds)
-  end
 
   ########################################################################
 
@@ -252,31 +250,14 @@ class SubjectCourse < ActiveRecord::Base
 
   ########################################################################
 
+  ## Misc. ##
+
+  def home_page
+    self.home_pages.all_in_order.first
+  end
+
 
   protected
-
-  ## Used by set_count_fields callback above ##
-  def recalculate_cme_count
-    self.cme_count = self.active_children.sum(:cme_count)
-  end
-
-  def recalculate_quiz_count
-    self.quiz_count = self.active_children.sum(:quiz_count)
-  end
-
-  def recalculate_video_count
-    self.video_count = self.active_children.sum(:video_count)
-  end
-
-  def set_question_count
-    self.question_count = self.active_children.sum(:number_of_questions)
-  end
-
-  def set_total_video_duration
-    video_duration = self.active_children.sum(:video_duration)
-    quiz_duration = self.active_children.sum(:estimated_time_in_seconds)
-    self.total_video_duration = video_duration + quiz_duration
-  end
 
   def check_dependencies
     unless self.destroyable?

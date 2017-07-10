@@ -106,6 +106,5 @@ describe CourseModule do
   it { should respond_to(:previous_module) }
   it { should respond_to(:previous_module_id) }
   it { should respond_to(:update_video_and_quiz_counts) }
-  it { should respond_to(:total_time_watched_videos) }
 
 end

@@ -5,7 +5,6 @@
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
 #  name                     :string
-#  description              :text
 #  web_url                  :string
 #  created_at               :datetime
 #  updated_at               :datetime
@@ -21,7 +20,7 @@ require 'rails_helper'
 describe CourseModuleElementResource do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at destroyed_at web_url description)
+  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at destroyed_at web_url)
   CourseModuleElementResource.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

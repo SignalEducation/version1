@@ -95,6 +95,10 @@ class CourseModule < ActiveRecord::Base
     self.active_children.first
   end
 
+  def children_available_count
+    self.children.all_active.count
+  end
+
   #######################################################################
 
   ## Methods allow for navigation from one CM to the next ##
@@ -152,11 +156,7 @@ class CourseModule < ActiveRecord::Base
 
   #######################################################################
 
-  ## Keeping Model Count Attributes Up-to-date ##
-
-  def children_available_count
-    self.children.all_active.count
-  end
+  ## Keeping Model Count Attributes Up-to-Date ##
 
   def update_video_and_quiz_counts
     estimated_time = self.course_module_elements.sum(:estimated_time_in_seconds)
@@ -164,12 +164,8 @@ class CourseModule < ActiveRecord::Base
     quiz_count = self.course_module_elements.all_active.all_quizzes.count
     duration = self.course_module_elements.sum(:duration)
     video_count = self.course_module_elements.all_active.all_videos.count
-    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, quiz_count: quiz_count, video_duration: duration, video_count: video_count)
-  end
 
-  def total_time_watched_videos
-    total_seconds = CourseModuleElementUserLog.where(course_module_id: self.id).sum(:seconds_watched)
-    @time_watched ||= { hours: total_seconds / 3600, minutes: (total_seconds / 60) % 60, seconds: total_seconds % 60 }
+    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, quiz_count: quiz_count, video_duration: duration, video_count: video_count)
   end
 
 

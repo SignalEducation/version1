@@ -26,6 +26,7 @@
 #  survey_url                              :string
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
+#  total_estimated_time_in_seconds         :integer
 #
 
 require 'rails_helper'

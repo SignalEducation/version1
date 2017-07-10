@@ -207,6 +207,7 @@ class CourseModuleElement < ActiveRecord::Base
     elsif self.is_quiz && course_module_element_quiz
       #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
       self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
+      #Note: It no value is set in the form for estimated_time_in_seconds set it to 60 seconds for each question asked
       self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?
     else
       true

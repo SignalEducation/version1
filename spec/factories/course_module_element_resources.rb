@@ -5,7 +5,6 @@
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
 #  name                     :string
-#  description              :text
 #  web_url                  :string
 #  created_at               :datetime
 #  updated_at               :datetime
@@ -20,7 +19,6 @@ FactoryGirl.define do
   factory :course_module_element_resource do
     course_module_element_id 1
     name 'MyString'
-    description 'MyText'
     web_url 'https://linkedin.com'
   end
 

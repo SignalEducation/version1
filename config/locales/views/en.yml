@@ -414,8 +414,6 @@ en:
 
     course_module_element_videos:
       form:
-        estimated_study_time_seconds: Estimated Time in Seconds
-        estimated_study_time_seconds_placeholder: 100
         video_file: Video File
         duration: Video Duration in seconds
         duration_placeholder: Duration in Seconds
