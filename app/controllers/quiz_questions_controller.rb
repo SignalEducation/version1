@@ -98,7 +98,6 @@ class QuizQuestionsController < ApplicationController
         :course_module_element_quiz_id,
         :difficulty_level,
         :sorting_order,
-        :hints,
         quiz_solutions_attributes: [
             :id,
             :quiz_question_id,
@@ -131,7 +130,6 @@ class QuizQuestionsController < ApplicationController
             :text_content,
             :sorting_order,
             :_destroy,
-            :content_type,
             :image
         ]
     )

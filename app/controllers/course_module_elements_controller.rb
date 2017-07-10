@@ -309,7 +309,6 @@ class CourseModuleElementsController < ApplicationController
                     :image_content_type,
                     :image_file_size,
                     :image_updated_at,
-                    :content_type,
                     :sorting_order
                 ],
                 quiz_answers_attributes: [
