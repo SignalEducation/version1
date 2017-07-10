@@ -96,7 +96,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def children_available_count
-    self.children.all_active.count
+    self.active_children.all_active.count
   end
 
   #######################################################################
@@ -158,12 +158,13 @@ class CourseModule < ActiveRecord::Base
 
   ## Keeping Model Count Attributes Up-to-Date ##
 
+  ### Triggered by child CME after_save callback ###
   def update_video_and_quiz_counts
-    estimated_time = self.course_module_elements.sum(:estimated_time_in_seconds)
-    num_questions = self.course_module_elements.sum(:number_of_questions)
-    quiz_count = self.course_module_elements.all_active.all_quizzes.count
-    duration = self.course_module_elements.sum(:duration)
-    video_count = self.course_module_elements.all_active.all_videos.count
+    estimated_time = self.active_children.sum(:estimated_time_in_seconds)
+    num_questions = self.active_children.sum(:number_of_questions)
+    quiz_count = self.active_children.all_active.all_quizzes.count
+    duration = self.active_children.sum(:duration)
+    video_count = self.active_children.all_active.all_videos.count
 
     self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, quiz_count: quiz_count, video_duration: duration, video_count: video_count)
   end
@@ -209,11 +210,11 @@ class CourseModule < ActiveRecord::Base
   protected
 
   def set_count_fields
-    self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
-    self.number_of_questions = self.course_module_elements.sum(:number_of_questions)
-    self.quiz_count = self.course_module_elements.all_active.all_quizzes.count
-    self.video_count = self.course_module_elements.all_active.all_videos.count
-    self.video_duration = self.course_module_elements.sum(:duration)
+    self.estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
+    self.number_of_questions = self.active_children.sum(:number_of_questions)
+    self.quiz_count = self.active_children.all_active.all_quizzes.count
+    self.video_count = self.active_children.all_active.all_videos.count
+    self.video_duration = self.active_children.sum(:duration)
     self.cme_count = children_available_count
   end
 
