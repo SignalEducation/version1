@@ -54,7 +54,6 @@ describe QuizQuestion do
   # class methods
 
   # instance methods
-  it { should respond_to(:complex_question?) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
 
