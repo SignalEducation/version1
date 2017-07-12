@@ -181,7 +181,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid)
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.all_active.where(stripe_guid: stripe_subscription_guid).last
+    subscription = Subscription.all_active.find_by_stripe_guid(stripe_subscription_guid)
 
     if user && subscription
       Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"
