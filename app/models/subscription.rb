@@ -169,7 +169,10 @@ class Subscription < ActiveRecord::Base
             current_status: result[:status],
         )
         # mass-assign-protected attributes
+
+        ## This means it will have the same stripe_guid as the old Subscription ##
         new_sub.stripe_guid = result[:id]
+
         new_sub.next_renewal_date = Time.at(result[:current_period_end])
         new_sub.stripe_customer_id = self.stripe_customer_id
         new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash

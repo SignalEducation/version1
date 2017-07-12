@@ -123,7 +123,7 @@ class StripeApiEvent < ActiveRecord::Base
   def process_invoice_payment_success(stripe_customer_guid, stripe_invoice_guid, stripe_subscription_guid)
     #This updates the existing Invoice record using the webhook payload data. The related subscription may need to be updated also if it is in a 'past_due' state.
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.find_by_stripe_guid(stripe_subscription_guid)
+    subscription = Subscription.all_active.find_by_stripe_guid(stripe_subscription_guid)
     invoice = Invoice.find_by_stripe_guid(stripe_invoice_guid)
 
     if user && invoice && subscription
@@ -154,7 +154,7 @@ class StripeApiEvent < ActiveRecord::Base
   def process_invoice_payment_failed(stripe_customer_guid, stripe_next_attempt, stripe_subscription_guid, stripe_invoice_guid)
     #Latest attempt to charge a user has failed
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.find_by_stripe_guid(stripe_subscription_guid)
+    subscription = Subscription.all_active.find_by_stripe_guid(stripe_subscription_guid)
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
@@ -181,7 +181,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid)
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.find_by_stripe_guid(stripe_subscription_guid)
+    subscription = Subscription.all_active.where(stripe_guid: stripe_subscription_guid).last
 
     if user && subscription
       Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"
