@@ -63,8 +63,7 @@ class CourseModuleElementsController < ApplicationController
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i, active: false)
-    @course_module_element.active = true
+        course_module_id: params[:cm_id].to_i, active: true)
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
     if params[:type] == 'video'
@@ -146,11 +145,7 @@ class CourseModuleElementsController < ApplicationController
   def update
     old_cm = @course_module_element.parent
     set_related_cmes
-    Rails.logger.debug "STARTING...."
     @course_module_element.assign_attributes(allowed_params)
-    Rails.logger.debug "CONTINUING..."
-    @course_module_element.valid?
-    Rails.logger.debug "DEBUG: course_module_elements_controller#update about to save. Errors:#{@course_module_element.errors.inspect}."
     cm = @course_module_element.parent
     @course_modules = cm.parent.active_children
 
@@ -164,8 +159,8 @@ class CourseModuleElementsController < ApplicationController
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
-      if old_cm.id != cm.id
-        old_cm.save!
+      unless old_cm.id == cm.id
+        old_cm.update_video_and_quiz_counts
       end
     else
       Rails.logger.debug "DEBUG: course_module_elements_controller#update failed. Errors:#{@course_module_element.errors.inspect}."
