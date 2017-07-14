@@ -162,11 +162,11 @@ class CourseModule < ActiveRecord::Base
   def update_video_and_quiz_counts
     estimated_time = self.active_children.sum(:estimated_time_in_seconds)
     num_questions = self.active_children.sum(:number_of_questions)
-    quiz_count = self.active_children.all_active.all_quizzes.count
     duration = self.active_children.sum(:duration)
+    quiz_count = self.active_children.all_active.all_quizzes.count
     video_count = self.active_children.all_active.all_videos.count
 
-    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, quiz_count: quiz_count, video_duration: duration, video_count: video_count)
+    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, video_duration: duration, quiz_count: quiz_count, video_count: video_count, cme_count: quiz_count + video_count)
   end
 
 

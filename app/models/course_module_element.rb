@@ -66,7 +66,6 @@ class CourseModuleElement < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url, :description) }
   before_save :sanitize_name_url, :log_count_fields
   after_save :update_parent
-  after_destroy :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
