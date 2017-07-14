@@ -1,4 +1,4 @@
-=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |f|
+=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form', id: 'course_module_element_form'}, multipart: true) do |f|
   .row
     =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
     =f.hidden_field :sorting_order
@@ -25,12 +25,12 @@
     .col-md-6
       =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;', required: true
+        =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
       %br/
       =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
       -#TODO onscreen validation stops the form submission but summernote blocks why
       .input-group.input-group-lg.full-width
-        =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+        =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       %br/
       %br/
       .form-group
@@ -83,6 +83,17 @@
 
 -if @course_module_element.is_video
   =render partial: 'course_module_element_videos/vimeo_video_form_modal'
+
+-if @course_module_element.is_quiz && !@course_module_element.new_record?
+  :javascript
+    $(document).on('ready', function() {
+      $('.clear-question').bind('click', function() {
+        if ($('#the_new_question').find('input[type=text],textarea,select').filter(':visible:first').val() == "") {
+          $('#the_new_question').remove();;
+        }
+      });
+    })
+
 :javascript
 
   $('#description').summernote({
@@ -90,11 +101,3 @@
   });
 
     onclick: " return false;"
-
-  $(document).on('ready', function() {
-    $('.clear-question').bind('click', function() {
-      if ($('#the_new_question').find('input[type=text],textarea,select').filter(':visible:first').val() == "") {
-        $('#the_new_question').remove();;
-      }
-    });
-  })

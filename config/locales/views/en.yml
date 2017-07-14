@@ -302,6 +302,7 @@ en:
 
       index:
         h1: Course Modules
+        delete: Delete Course Module
 
       new:
         h1: New Course Module

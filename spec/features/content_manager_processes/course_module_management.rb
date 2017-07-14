@@ -63,16 +63,14 @@ describe 'Course Module management by admin/content_manager: ', type: :feature d
       within('.table-responsive') do
         page.find('tr', :text => subject_course_1.name).click_link('Edit Content')
       end
-
-      page.find_by_id('edit_cm_button').first
-
-      click_link(I18n.t('views.course_modules.new.h1'))
+      within('.table-responsive', text: course_module_1.name) do
+        click_link(I18n.t('views.course_modules.edit.h1'))
+      end
       within('#course_module_form') do
         fill_in I18n.t('views.course_modules.form.description'), with: 'Edited - Course Module Description'
         click_button(I18n.t('views.general.save'))
       end
-      expect(page).to have_content(I18n.t('controllers.course_modules.create.flash.success'))
-
+      expect(page).to have_content(I18n.t('controllers.course_modules.update.flash.success'))
 
     end
   end
@@ -80,19 +78,17 @@ describe 'Course Module management by admin/content_manager: ', type: :feature d
   describe 'fails to edit' do
     scenario 'a CourseModule', js: true do
       within('.table-responsive') do
-        page.find('tr', :text => subject_course_1.name).click_link('Edit')
+        page.find('tr', :text => subject_course_1.name).click_link('Edit Content')
       end
-
-      expect(page).to have_content(I18n.t('views.subject_courses.edit.h1'))
-      course_name = 'Course 001 - edited'
-      within("#edit_subject_course_#{subject_course_1.id}") do
-        fill_in I18n.t('views.subject_courses.form.name'), with: ''
-        find('div[contenteditable]').send_keys('Course Description')
+      within('.table-responsive', text: course_module_1.name) do
+        click_link(I18n.t('views.course_modules.edit.h1'))
+      end
+      within('#course_module_form') do
+        fill_in I18n.t('views.course_modules.form.name'), with: ''
         click_button(I18n.t('views.general.save'))
       end
-
       expect(page).to have_content("Name can't be blank")
-      expect(page).to_not have_content(I18n.t('controllers.subject_courses.update.flash.success'))
+      expect(page).to_not have_content(I18n.t('controllers.course_modules.create.flash.success'))
 
     end
   end
@@ -100,16 +96,15 @@ describe 'Course Module management by admin/content_manager: ', type: :feature d
   describe 'successfully deletes' do
     scenario 'a CourseModule', js: true do
       within('.table-responsive') do
-        page.find('tr', :text => subject_course_1.name).click_link('Delete')
+        page.find('tr', :text => subject_course_1.name).click_link('Edit Content')
+      end
+      within('.table-responsive', text: course_module_1.name) do
+        click_link(I18n.t('views.course_modules.index.delete'))
       end
 
       page.driver.browser.switch_to.alert.accept
-      expect(page).to have_content(I18n.t('controllers.subject_courses.destroy.flash.success'))
-      expect(page).to have_content(I18n.t('views.subject_courses.index.h1'))
-      within('.navbar.navbar-default') do
-        click_link('Courses')
-      end
-      expect(page).to_not have_content subject_course_1.name
+      expect(page).to have_content(I18n.t('controllers.course_modules.destroy.flash.success'))
+      expect(page).to have_content(subject_course_1.name)
     end
 
 

@@ -42,7 +42,7 @@ FactoryGirl.define do
     description "MyText"
     short_description "MyString"
     email_content "MyString"
-    default_number_of_possible_exam_answers 1
+    default_number_of_possible_exam_answers 4
     quiz_pass_rate 10
     group_id 1
 
