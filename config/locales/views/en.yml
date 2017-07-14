@@ -293,6 +293,9 @@ en:
         is_past_paper: Past Paper Module
         highlight_colour: "Highlight Colour (Default Color is #FFFFFF)"
         colour_placeholder: "eg. #fff"
+        tuition: Tuition
+        test: Test
+        revision: Revision
 
       edit:
         h1: Edit Course Module

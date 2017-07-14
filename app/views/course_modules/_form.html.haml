@@ -1,4 +1,4 @@
-=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_frm'}) do |f|
+=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_form'}) do |f|
   .row
     .col-md-6
       =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
@@ -35,9 +35,9 @@
           %table.col-sm-12
             %thead
               %tr
-                %th='Tuition'
-                %th='Test'
-                %th='Revision'
+                %th=t('views.course_modules.form.tuition')
+                %th=t('views.course_modules.form.test')
+                %th=t('views.course_modules.form.revision')
                 %th
             %tbody
               %tr
