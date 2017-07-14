@@ -35,7 +35,7 @@
                           %h6
                             =t('views.general.browse')
                         .col-md-6.col-xs-6.text-right
-                          -if course.total_video_duration.to_i > 0
+                          -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
                             %h6.pull-right
-                              =simple_hour_time(course.total_video_duration.round)
+                              =simple_hour_time(course.total_estimated_time_in_seconds)
 

@@ -27,9 +27,7 @@ class LibraryController < ApplicationController
       @tuition_course_modules = @course_modules.all_tuition
       @test_course_modules = @course_modules.all_test
       @revision_course_modules = @course_modules.all_revision
-      #TODO user new total_est
-      @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
-      tag_manager_data_layer(@course.try(:name))
+      tag_manager_data_layer(@course.name)
 
       #Enrollment and SubjectCourseUserLog
       if current_user && !@course.enrolled_user_ids.include?(current_user.id)
