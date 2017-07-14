@@ -16,7 +16,7 @@ class LibraryController < ApplicationController
       seo_title_maker(@group.name, @group.description, nil)
       tag_manager_data_layer(@group.try(:name))
     else
-      redirect_to library_url
+      redirect_to root_url
     end
   end
 
@@ -27,6 +27,7 @@ class LibraryController < ApplicationController
       @tuition_course_modules = @course_modules.all_tuition
       @test_course_modules = @course_modules.all_test
       @revision_course_modules = @course_modules.all_revision
+      #TODO user new total_est
       @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
       tag_manager_data_layer(@course.try(:name))
 
@@ -45,6 +46,7 @@ class LibraryController < ApplicationController
         if current_user && current_user.permission_to_see_content(@course)
           @subject_course_resources = @course.subject_course_resources
         end
+        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
 
       elsif current_user && @course.enrolled_user_ids.include?(current_user.id)
         #Get existing enrollment and try find an associated SCUL
@@ -56,13 +58,6 @@ class LibraryController < ApplicationController
         if current_user && current_user.permission_to_see_content(@course)
           @subject_course_resources = @course.subject_course_resources
         end
-
-        @course_modules = @course.children.all_active.all_in_order
-        @tuition_course_modules = @course_modules.all_tuition
-        @test_course_modules = @course_modules.all_test
-        @revision_course_modules = @course_modules.all_revision
-        tag_manager_data_layer(@course.try(:name))
-        @duration = @course.try(:total_video_duration) + @course.try(:estimated_time_in_seconds)
 
       else
         #As a backup try find a related SCUL

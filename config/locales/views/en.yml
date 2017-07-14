@@ -882,7 +882,7 @@ en:
 
       show:
         h1: Course Resource
-        h2: Course Resource
+        h2: Course Resources
         description: Description
         name: Name
         subject_course_id: Course

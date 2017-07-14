@@ -1,2 +1,11 @@
 -contents.each do |content|
-  =content.text_content.html_safe
+  -if content.image_file_name
+    .image
+      =image_tag content.image.url, class: 'img-responsive'
+  -else
+    =content.text_content.html_safe
+
+
+  -#elsif content.content_type == 'mathjax'
+    .mathjax=sanitizer content.text_content
+    %br/

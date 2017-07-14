@@ -36,6 +36,7 @@ class QuizQuestionsController < ApplicationController
   end
 
   def edit
+    @quiz_question = QuizQuestion.find(params[:id])
   end
 
   def create
@@ -78,6 +79,7 @@ class QuizQuestionsController < ApplicationController
   def get_variables
     @mathjax_required = true
     if params[:id].to_i > 0
+      ## Finds the qq record ##
       @quiz_question = QuizQuestion.find(params[:id])
     elsif params[:cme_quiz_id].to_i > 0
       @quiz_question = QuizQuestion.new(course_module_element_quiz_id: params[:cme_quiz_id])
@@ -85,11 +87,6 @@ class QuizQuestionsController < ApplicationController
       @quiz_question = QuizQuestion.new(allowed_params)
     end
     @quiz_questions = QuizQuestion.all_in_order
-    if @quiz_question.id.nil?
-      @cme_videos = CourseModuleElement.all_videos.all_in_order
-    else
-      @cme_videos = CourseModuleElement.where(course_module_id: @quiz_question.course_module_element_quiz.course_module_element.course_module_id).all_videos.all_in_order
-    end
     seo_title_maker("Quiz Questions #{@quiz_question.try(:id)}", '', true)
   end
 

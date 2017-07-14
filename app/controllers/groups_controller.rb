@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find(params[:id])
-    @courses = @group.try(:active_children)
+    @courses = @group.children
   end
 
   def new
