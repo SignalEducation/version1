@@ -5,7 +5,7 @@
     #vimeo-player-window.vimeo-player-window
 
   -else
-    %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
+    %div{id: "wistia_#{cme.course_module_element_video.video_id}",class: 'wistia_embed', style: 'height:360px;width:640px'}
 
 
   -#Nav buttons below video
@@ -54,7 +54,7 @@
     var player = new Vimeo.Player('vimeo-player-window', options);
 
     var timeUpdate = function(data) {
-      if (data.percent >= 0.15) {
+      if (data.percent >= 0.75) {
         $.ajax({
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',

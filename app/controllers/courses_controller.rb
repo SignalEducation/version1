@@ -4,30 +4,33 @@ class CoursesController < ApplicationController
   before_action :check_permission, only: :show
 
   def show
-    @mathjax_required = true
     @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
-
-    if @course_module
-      #Find CourseModuleElement
-      @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_element ||= @course_module.try(:course_module_elements).try(:all_in_order).try(:all_active).try(:first)
+    if @course_module && @course_module.active_children
+      @course_module_element = @course_module.active_children.find_by(name_url: params[:course_module_element_name_url])
+      @course_module_element ||= @course_module.active_children.all_in_order.first
 
       #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
-    end
 
-    if @course_module_element.nil? && @course_module.nil?
-      # The URL is out of date or wrong.
+      if @course_module_element.is_quiz
+        set_up_quiz
+      elsif @course_module_element.is_video && !@course_module_element.course_module_element_video.vimeo_guid
+        @video_cme_user_log = CourseModuleElementUserLog.create!(
+            course_module_element_id: @course_module_element.id,
+            user_id: current_user.try(:id),
+            session_guid: current_session_guid,
+            element_completed: false,
+            time_taken_in_seconds: 0,
+            is_video: true,
+            is_quiz: false,
+            course_module_id: course_module_element.course_module_id
+        )
+      end
+    else
+      ## The URL params are wrong ##
       flash[:warning] = t('controllers.courses.show.warning')
       Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
       redirect_to library_special_link(@course)
-    else
-      # The URL worked out Okay
-      reset_post_sign_up_redirect_path(library_special_link(@course_module.subject_course)) unless current_user
-
-      if @course_module_element.try(:is_quiz)
-        set_up_quiz
-      end
     end
   end
 
@@ -89,8 +92,6 @@ class CoursesController < ApplicationController
               session_guid: current_session_guid,
               element_completed: false,
               time_taken_in_seconds: 0,
-              quiz_score_actual: nil,
-              quiz_score_potential: nil,
               is_video: true,
               is_quiz: false,
               course_module_id: course_module_element.course_module_id
@@ -149,22 +150,27 @@ class CoursesController < ApplicationController
       @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
     end
     @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
+    @mathjax_required = true
   end
 
   protected
 
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    if @course && current_user && !current_user.permission_to_see_content(@course)
-
+    unless @course && current_user && current_user.permission_to_see_content(@course)
       if current_user.expired_free_member?
-        flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue learning'
+        flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue'
+        redirect_to user_new_subscription_url(current_user.id)
+      elsif current_user.active_subscription && current_user.canceled_member?
+        flash[:warning] = 'Sorry, your Subscription is no longer valid. Please Upgrade to a valid subscription to continue'
         redirect_to user_new_subscription_url(current_user.id)
       else
         flash[:warning] = 'Sorry, you are not permitted to access that content.'
         redirect_to root_url
       end
     end
+
+    ## Continue to load the Video or Quiz ##
 
   end
 
