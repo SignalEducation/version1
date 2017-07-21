@@ -143,10 +143,11 @@ class StudentExamTrack < ActiveRecord::Base
     cmes_completed = self.unique_logs.count
     percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
+    ## TODO See Sidekiq Github wiki FAQ may be race condition issue ##
   end
 
   def recalculate_completeness
-    #This can only be called externally from CMEUL model
+    #This is the only way an SET can be created; and can only be called externally from CMEUL callback
     self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
     self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
     video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
@@ -156,7 +157,7 @@ class StudentExamTrack < ActiveRecord::Base
     self.count_of_videos_taken = unique_video_ids.count
     self.count_of_quizzes_taken = unique_quiz_ids.count
     self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
 
     begin
       self.save!
@@ -167,6 +168,7 @@ class StudentExamTrack < ActiveRecord::Base
 
       raise e
     end
+    ## TODO See Sidekiq Github wiki FAQ may be race condition issue ##
   end
 
   def subject_course_user_log

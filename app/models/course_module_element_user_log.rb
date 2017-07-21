@@ -48,10 +48,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
-  after_save :calculate_score
-  after_create :check_for_enrollment_email_conditions
-  after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
-  after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
+  after_save :calculate_score, :add_to_user_trial_limit, :create_or_update_student_exam_track
+  after_create :check_for_enrollment_email_conditions, :create_lesson_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -161,7 +159,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_lesson_intercom_event
-    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct))
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct)) if Rails.env.production? || Rails.env.staging?
   end
 
   def check_for_enrollment_email_conditions
