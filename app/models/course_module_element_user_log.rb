@@ -48,11 +48,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
-  before_save :set_count_of_questions_taken_and_correct
-  after_create :calculate_score, :check_for_enrollment_email_conditions
+  before_save :calculate_score
+  after_create :check_for_enrollment_email_conditions
   after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
-  after_update :create_or_update_student_exam_track
-  after_commit :add_to_user_trial_limit
+  after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -115,12 +114,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def calculate_score
     if self.is_quiz
-      self.quiz_score_actual = (((self.quiz_attempts.all_correct.count).to_f/(self.quiz_attempts.count).to_f)*100).to_i
-      self.quiz_score_potential = self.quiz_attempts.count
       course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
-      percentage_score = (self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0
+      percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
+
+      self.count_of_questions_taken = self.quiz_attempts.count
+      self.count_of_questions_correct = self.quiz_attempts.all_correct.count
+      self.quiz_score_actual = percentage_score
+      self.quiz_score_potential = self.count_of_questions_taken
       self.element_completed = true if percentage_score >= course_pass_rate
-      self.save(callbacks: false, validate: false)
     end
   end
 
@@ -150,11 +151,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       self.is_video = true
     end
     true
-  end
-
-  def set_count_of_questions_taken_and_correct
-    self.count_of_questions_taken = self.quiz_attempts.count
-    self.count_of_questions_correct = self.quiz_attempts.all_correct.count
   end
 
   def set_latest_attempt
