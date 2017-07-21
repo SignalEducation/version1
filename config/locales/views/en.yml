@@ -776,7 +776,8 @@ en:
         degree_of_wrongness: "Right/Wrong"
         text_content_placeholder: Question Text
         solution_to_the_question_placeholder: Solution Text
-        custom_styles: Apply Custom Styles
+        #custom_styles: Apply Custom Styles
+        custom_styles: Remove Standard Styles
 
       edit:
         h1: "Edit Quiz Question - Advanced"
