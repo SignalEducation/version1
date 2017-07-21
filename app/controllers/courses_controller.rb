@@ -37,7 +37,6 @@ class CoursesController < ApplicationController
   def create
     # Create course_module_element_user_log for QUIZ from params sent in from previously initiated CMEUL record that was not saved
     if current_user
-      @mathjax_required = true
       @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
       @course_module_element_user_log.session_guid = current_session_guid
 
@@ -59,6 +58,7 @@ class CoursesController < ApplicationController
       else
         redirect_to library_url
       end
+      @mathjax_required = true
     else
       redirect_to library_url
     end
@@ -138,18 +138,17 @@ class CoursesController < ApplicationController
       @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
     end
 
-    all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
-    all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
     @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
 
     if @strategy == 'random'
+      all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
       @all_ids = all_ids_random.sample(@number_of_questions)
       @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
     else
+      all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
       @all_ids = all_ids_ordered[0..@number_of_questions]
       @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
     end
-    @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
     @mathjax_required = true
   end
 

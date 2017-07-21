@@ -55,7 +55,6 @@ class CourseModuleElementsController < ApplicationController
         @all_ids = all_ids_ordered[0..@number_of_questions]
         @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
       end
-      @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
     end
     @demo_mode = true
   end

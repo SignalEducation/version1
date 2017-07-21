@@ -77,7 +77,7 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   ## Groups all nested QuizQuestions in a random or ordered array ##
 
   def all_ids_random
-    self.quiz_questions.map(&:id)
+    self.quiz_questions.map(&:id).shuffle
   end
 
   def all_ids_ordered

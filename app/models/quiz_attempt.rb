@@ -69,7 +69,7 @@ class QuizAttempt < ActiveRecord::Base
 
   def calculate_score
     self.correct = self.quiz_answer.try(:correct) || false
-    self.score = self.correct ? 1: 0
+    self.score = self.correct ? 1 : 0
   end
 
   def serialize_the_array

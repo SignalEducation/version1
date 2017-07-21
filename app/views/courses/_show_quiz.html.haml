@@ -35,12 +35,10 @@
 
     var allQuestionsList = #{@all_ids},
         selectionStrategy = '#{@strategy}',
-        answers = [],
         numberOfQuestions = #{@number_of_questions},
         currentQuestion = 1,
         progressBar = $('.progress-bar'),
-        questionCount = $('.quiz-heading'),
-        previousAnswerCorrect = true;
+        questionCount = $('.quiz-heading');
 
     function updateProgressBar() {
       var percentage = (currentQuestion / numberOfQuestions * 100);
@@ -58,9 +56,8 @@
     }
 
     //Triggered by onclick event in page
-    function logAnswer(questionId, answerId, difficultyLevel, isCorrect, answerArray) {
-      answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
-      // log the answer in the form
+    function logAnswer(questionId, answerId, answerArray) {
+      // log the answer in the form fields_for
       $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
       $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
       $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
@@ -71,13 +68,11 @@
         currentQuestion++;
         updateProgressBar();
         askQuestion(currentQuestion);
-        previousAnswerCorrect = isCorrect;
       } else {
         $('#new_course_module_element_user_log').submit();
       }
     }
 
-    var numberOfCorrectAnswers = 0;
     $(document).on('ready page:load', function() {
       askQuestion(1); // 1 is the first question
     });
