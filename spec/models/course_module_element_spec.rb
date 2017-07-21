@@ -73,7 +73,6 @@ describe CourseModuleElement do
   it { should callback(:log_count_fields).before(:save) }
   it { should callback(:sanitize_name_url).before(:save) }
   it { should callback(:update_parent).after(:save) }
-  it { should callback(:update_parent).after(:destroy) }
 
   # scopes
   it { expect(CourseModuleElement).to respond_to(:all_in_order) }

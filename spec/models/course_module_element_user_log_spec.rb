@@ -64,10 +64,9 @@ describe CourseModuleElementUserLog do
   # callbacks
   it { should callback(:set_latest_attempt).before(:create) }
   it { should callback(:set_booleans).before(:create) }
-  it { should callback(:calculate_score).after(:create) }
-  it { should callback(:set_count_of_questions_taken_and_correct).before(:save) }
-  it { should callback(:create_or_update_student_exam_track).after(:update) }
-  it { should callback(:add_to_user_trial_limit).after(:commit) }
+  it { should callback(:calculate_score).after(:save) }
+  it { should callback(:create_or_update_student_exam_track).after(:save) }
+  it { should callback(:add_to_user_trial_limit).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
