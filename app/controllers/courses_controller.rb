@@ -43,22 +43,26 @@ class CoursesController < ApplicationController
       @course_module_element = @course_module_element_user_log.course_module_element
       @course_module = @course_module_element_user_log.course_module
       @results = true
-      unless @course_module_element_user_log.save
+      if @course_module_element_user_log.save
+        pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
+        percentage_score = @course_module_element_user_log.quiz_score_actual
+        @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
+
+        if params[:demo_mode] == 'yes'
+          redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
+        elsif @course_module && @course_module_element && @course_module_element_user_log
+          render :show
+        else
+          redirect_to library_url
+        end
+        @mathjax_required = true
+
+      else
         # it did not save
         Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
         flash[:error] = I18n.t('controllers.courses.create.flash.error')
       end
-      pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
-      percentage_score = (@course_module_element_user_log.quiz_attempts.all_correct.count.to_f)/(@course_module_element_user_log.quiz_attempts.count.to_f) * 100.0
-      @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
-      if params[:demo_mode] == 'yes'
-        redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-      elsif @course_module && @course_module_element
-        render :show
-      else
-        redirect_to library_url
-      end
-      @mathjax_required = true
+
     else
       redirect_to library_url
     end
