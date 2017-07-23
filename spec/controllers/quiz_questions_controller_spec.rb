@@ -24,7 +24,6 @@ describe QuizQuestionsController, type: :controller do
   include_context 'course_content'
 
   let!(:valid_params) { quiz_question_1.attributes }
-  #let!(:valid_params) { FactoryGirl.attributes_for(:quiz_question_1) }
 
   context 'Not logged in: ' do
 
