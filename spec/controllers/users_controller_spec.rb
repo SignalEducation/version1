@@ -1319,13 +1319,16 @@ describe UsersController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
+        referral_codes = ReferralCode.count
         post :create, user: valid_params
-        expect_bounce_as_not_allowed
+        expect_create_success_with_model('user', users_url)
+        expect(assigns(:user).password_change_required).to eq(true)
+        expect(ReferralCode.count).to eq(referral_codes + 1)
       end
 
       it 'should report error for invalid params' do
         post :create, user: {email: 'abc'}
-        expect_bounce_as_not_allowed
+        expect_create_error_with_model('user')
       end
     end
 

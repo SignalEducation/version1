@@ -34,6 +34,8 @@ FactoryGirl.define do
     is_quiz false
     course_module_id 1
     latest_attempt false
+    count_of_questions_taken 1
+    count_of_questions_correct 1
   end
 
 end

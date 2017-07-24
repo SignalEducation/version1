@@ -67,7 +67,7 @@ class UsersController < ApplicationController
   before_action only: [:index, :new, :edit, :create, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status] do
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
-  before_action only: [:reactivate_account, :reactivate_account_subscription, :reactivation_complete, :udpate] do
+  before_action only: [:reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
     ensure_user_is_of_type(%w(individual_student admin customer_support_manager))
   end
 

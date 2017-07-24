@@ -753,6 +753,7 @@ en:
         answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
         answer_text: Answer
         answer_text_placeholder: Fill in the Answer Here
+        degree_of_wrongness: Select Correct/Incorrect
 
     quiz_contents:
       form:

@@ -45,7 +45,8 @@ class CoursesController < ApplicationController
       @results = true
       if @course_module_element_user_log.save
         pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
-        percentage_score = @course_module_element_user_log.quiz_score_actual
+        percentage_score = @course_module_element_user_log.quiz_score_actual || 0
+
         @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
 
         if params[:demo_mode] == 'yes'
