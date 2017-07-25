@@ -5,7 +5,6 @@
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
 #  name                     :string
-#  description              :text
 #  web_url                  :string
 #  created_at               :datetime
 #  updated_at               :datetime

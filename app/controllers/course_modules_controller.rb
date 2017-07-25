@@ -35,25 +35,20 @@ class CourseModulesController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def show
     redirect_to subject_course_url
   end
 
   def new
     @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
-    if @subject_course
-      if @subject_course.children.count > 0
-        @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id)
-      else
-        @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id)
-      end
+    if @subject_course && @subject_course.children.count > 0
+      @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id)
+    elsif @subject_course
+      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id)
     else
-      course = SubjectCourse.all_active.all_in_order.last
-      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: course.id)
+      redirect_to root_url
     end
-  end
-
-  def edit
   end
 
   def create
@@ -64,6 +59,9 @@ class CourseModulesController < ApplicationController
     else
       render action: :new
     end
+  end
+
+  def edit
   end
 
   def update

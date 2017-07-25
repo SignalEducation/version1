@@ -131,6 +131,6 @@ class StudentSignUpsController < ApplicationController
   end
 
   def get_variables
-    @courses = SubjectCourse.all_active.all_live.all_in_order
+    @courses = SubjectCourse.all_active.all_in_order
   end
 end

@@ -361,7 +361,7 @@ describe CourseModulesController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, subject_course_name_url: subject_course.name_url
         expect_new_success_with_model('course_module')
       end
     end
@@ -562,7 +562,7 @@ describe CourseModulesController, type: :controller do
 
     describe "GET 'new'" do
       it 'should respond OK' do
-        get :new
+        get :new, subject_course_name_url: subject_course.name_url
         expect_new_success_with_model('course_module')
       end
     end

@@ -1,4 +1,4 @@
-=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_frm'}) do |f|
+=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_form'}) do |f|
   .row
     .col-md-6
       =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
@@ -35,9 +35,9 @@
           %table.col-sm-12
             %thead
               %tr
-                %th='Tuition'
-                %th='Test'
-                %th='Revision'
+                %th=t('views.course_modules.form.tuition')
+                %th=t('views.course_modules.form.test')
+                %th=t('views.course_modules.form.revision')
                 %th
             %tbody
               %tr
@@ -49,22 +49,19 @@
                   =f.check_box :revision
                 %td
                   =link_to('Clear', '#', class: 'check clear')
-        %br/
-        =f.label :discourse_topic_id, t('views.subject_courses.form.discourse_topic_id'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_field :discourse_topic_id, placeholder: t('views.subject_courses.form.discourse_topic_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :discourse_topic_id, t('views.subject_courses.form.discourse_topic_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :discourse_topic_id, placeholder: t('views.subject_courses.form.discourse_topic_id_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
 
-        %br/
-        %br/
-        %br/
-        %br/
-        =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-        -if f.object.new_record?
-          :javascript
-            document.querySelector('input[type="color"]').value = '#FFFFFF'
+      %br/
+      =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      -if f.object.new_record?
+        :javascript
+          document.querySelector('input[type="color"]').value = '#FFFFFF'
 
   %br/
   %br/

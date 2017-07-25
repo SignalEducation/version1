@@ -92,20 +92,6 @@ en:
           success: Course Module Element has been deleted
           error: Course Module Element was not deleted
 
-    course_module_jumbo_quizzes:
-      create:
-        flash:
-          success: Jumbo Quiz has been created successfully
-          error: Jumbo Quiz was not created successfully
-      update:
-        flash:
-          success: Jumbo Quiz details have been updated successfully
-          error: Jumbo Quiz details were not updated successfully
-      destroy:
-        flash:
-          success: Jumbo Quiz has been deleted
-          error: Jumbo Quiz was not deleted
-
     currencies:
       create:
         flash:

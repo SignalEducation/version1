@@ -28,30 +28,3 @@
                 %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
                 Start
 
-
-
-      -if @course_module.course_module_jumbo_quiz && @course_module.course_module_jumbo_quiz.active
-        -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
-          .list-group-item.sidenav-section.current-cme
-            %P
-              =@course_module.course_module_jumbo_quiz.name
-            %h5.text-active.text-bold
-              %i.glyphicon.glyphicon-circle-arrow-right{style: 'font-size: large'}
-              Active
-
-
-        -elsif @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-          =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item sidenav-section' do
-            %p
-              =@course_module.course_module_jumbo_quiz.name
-            %h5.text-passed.text-bold
-              %i.glyphicon.glyphicon-ok-circle{style: 'font-size: large'}
-              Completed
-
-        -else
-          =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item sidenav-section' do
-            %p
-              =@course_module.course_module_jumbo_quiz.name
-            %h5.text-failed.text-bold
-              %i.glyphicon.glyphicon-play-circle{style: 'font-size: large'}
-              Start

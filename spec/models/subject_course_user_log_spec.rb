@@ -52,7 +52,6 @@ describe SubjectCourseUserLog do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
-  xit { should callback(:create_intercom_event).after(:create) }
 
   # scopes
   it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }

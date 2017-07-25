@@ -9,8 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
@@ -31,7 +29,9 @@ class CourseModuleElementsController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def show
+    #Previewing a Quiz as Content Manager or Admin
     @course_module_element = CourseModuleElement.find(params[:id])
     if @course_module_element.is_quiz
       @course_module_element_user_log = CourseModuleElementUserLog.new(
@@ -44,17 +44,17 @@ class CourseModuleElementsController < ApplicationController
       @number_of_questions.times do
         @course_module_element_user_log.quiz_attempts.build(user_id: current_user.try(:id))
       end
-      all_questions = @course_module_element.course_module_element_quiz.quiz_questions
-      all_easy_ids = all_questions.all_easy.map(&:id)
-      all_medium_ids = all_questions.all_medium.map(&:id)
-      all_difficult_ids = all_questions.all_difficult.map(&:id)
-      @easy_ids = all_easy_ids.sample(@number_of_questions)
-      @medium_ids = all_medium_ids.sample(@number_of_questions)
-      @difficult_ids = all_difficult_ids.sample(@number_of_questions)
-      @all_ids = @easy_ids + @medium_ids + @difficult_ids
-      @quiz_questions = QuizQuestion.find(@easy_ids + @medium_ids + @difficult_ids)
+      all_ids_random = @course_module_element.course_module_element_quiz.all_ids_random
+      all_ids_ordered = @course_module_element.course_module_element_quiz.all_ids_ordered
       @strategy = @course_module_element.course_module_element_quiz.question_selection_strategy
-      @first_attempt = @course_module_element_user_log.recent_attempts.count == 0
+
+      if @strategy == 'random'
+        @all_ids = all_ids_random.sample(@number_of_questions)
+        @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
+      else
+        @all_ids = all_ids_ordered[0..@number_of_questions]
+        @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
+      end
     end
     @demo_mode = true
   end
@@ -62,16 +62,15 @@ class CourseModuleElementsController < ApplicationController
   def new
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i, active: false)
-    @course_module_element.active = true
+        course_module_id: params[:cm_id].to_i, active: true)
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
     if params[:type] == 'video'
 
-      @course_module_element.build_course_module_element_video
       @course_module_element.is_video = true
-      @course_module_element.course_module_element_resources.build
+      @course_module_element.build_course_module_element_video
       @course_module_element.build_video_resource
+      @course_module_element.course_module_element_resources.build
 
       if params[:video_uri]
         @video_guid = params[:video_uri].split("/").last.to_s
@@ -93,7 +92,7 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
         @course_module_element.course_module_element_resources.build
-        if !@course_module_element.video_resource
+        unless @course_module_element.video_resource
           @course_module_element.build_video_resource
         end
         if params[:video_uri]
@@ -145,11 +144,7 @@ class CourseModuleElementsController < ApplicationController
   def update
     old_cm = @course_module_element.parent
     set_related_cmes
-    Rails.logger.debug "STARTING...."
     @course_module_element.assign_attributes(allowed_params)
-    Rails.logger.debug "CONTINUING..."
-    @course_module_element.valid?
-    Rails.logger.debug "DEBUG: course_module_elements_controller#update about to save. Errors:#{@course_module_element.errors.inspect}."
     cm = @course_module_element.parent
     @course_modules = cm.parent.active_children
 
@@ -163,17 +158,13 @@ class CourseModuleElementsController < ApplicationController
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
-      if old_cm.id != cm.id
-        old_cm.save!
+      unless old_cm.id == cm.id
+        old_cm.update_video_and_quiz_counts
       end
     else
       Rails.logger.debug "DEBUG: course_module_elements_controller#update failed. Errors:#{@course_module_element.errors.inspect}."
       render action: :edit
     end
-  end
-
-  def quiz_questions_order
-    @quiz_questions = @course_module_element.course_module_element_quiz.quiz_questions
   end
 
   def reorder
@@ -185,12 +176,18 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def destroy
+    delete_on_vimeo(@course_module_element.course_module_element_video.vimeo_guid) if @course_module_element.is_video?
     if @course_module_element.destroy
       flash[:success] = I18n.t('controllers.course_module_elements.destroy.flash.success')
     else
       flash[:error] = I18n.t('controllers.course_module_elements.destroy.flash.error')
     end
     redirect_to course_module_special_link(@course_module_element.course_module)
+  end
+
+  # Reordering of Questions if CMEQ selection_strategy is not random #
+  def quiz_questions_order
+    @quiz_questions = @course_module_element.course_module_element_quiz.quiz_questions
   end
 
   protected
@@ -204,7 +201,7 @@ class CourseModuleElementsController < ApplicationController
     @mathjax_required = true
   end
 
-
+  ## Vimeo Video Actions ##
   def build_vimeo_ticket(url)
     require 'net/http'
     require 'net/http/post/multipart'
@@ -213,15 +210,13 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Post.new('/me/videos')
-      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
       request.form_data = {'redirect_url' => url}
       response = session.request(request)
       ticket = OpenStruct.new(JSON.parse(response.body))
       return ticket
     end
-
   end
-
 
   def verify_upload(video_uri, cme_name)
     require 'net/http'
@@ -231,13 +226,33 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Patch.new("/videos/#{video_uri}")
-      request['authorization'] = 'Bearer a3b067f4c5605adb58d0fc1f599d76a6'
+      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
       request.form_data = {'name' => cme_name}
       response = session.request(request)
       return response
     end
   end
 
+  def delete_on_vimeo(video_guid)
+    require 'net/http'
+    require 'net/http/post/multipart'
+    http = Net::HTTP.new('api.vimeo.com', 443)
+    http.use_ssl = true
+
+    http.start do |session|
+      request = Net::HTTP::Delete.new("/videos/#{video_guid}")
+      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
+      response = session.request(request)
+      return response
+    end
+  end
+
+  def spawn_quiz_children
+    @course_module_element.is_quiz = true
+    @course_module_element.build_course_module_element_quiz
+    @course_module_element.course_module_element_quiz.add_an_empty_question
+    @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
+  end
 
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
@@ -256,8 +271,6 @@ class CourseModuleElementsController < ApplicationController
         :course_module_id,
         :sorting_order,
         :active,
-        :related_quiz_id,
-        :related_video_id,
         :is_video,
         :is_quiz,
         :seo_description,
@@ -266,10 +279,7 @@ class CourseModuleElementsController < ApplicationController
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
-            :difficulty_level,
             :duration,
-            :transcript,
-            :thumbnail,
             :vimeo_guid,
             :video_id],
         course_module_element_quiz_attributes: [
@@ -277,12 +287,11 @@ class CourseModuleElementsController < ApplicationController
             :course_module_element_id,
             :number_of_questions,
             :question_selection_strategy,
-            :is_final_quiz,
             quiz_questions_attributes: [
                 :id,
                 :course_module_element_quiz_id,
                 :difficulty_level,
-                :hints,
+                :custom_styles,
                 quiz_solutions_attributes: [
                     :id,
                     :quiz_question_id,
@@ -294,15 +303,12 @@ class CourseModuleElementsController < ApplicationController
                     :image_content_type,
                     :image_file_size,
                     :image_updated_at,
-                    :content_type,
                     :sorting_order
                 ],
                 quiz_answers_attributes: [
                     :id,
                     :quiz_question_id,
                     :degree_of_wrongness,
-                    :wrong_answer_explanation_text,
-                    :wrong_answer_video_id,
                     :_destroy,
                     quiz_contents_attributes: [
                         :id,
@@ -314,7 +320,6 @@ class CourseModuleElementsController < ApplicationController
                         :image_content_type,
                         :image_file_size,
                         :image_updated_at,
-                        :content_type,
                         :sorting_order]
                 ],
                 quiz_contents_attributes: [
@@ -327,7 +332,6 @@ class CourseModuleElementsController < ApplicationController
                     :image_content_type,
                     :image_file_size,
                     :image_updated_at,
-                    :content_type,
                     :sorting_order]
             ]
         ],
@@ -353,13 +357,6 @@ class CourseModuleElementsController < ApplicationController
             :transcript,
         ]
     )
-  end
-
-  def spawn_quiz_children
-    @course_module_element.is_quiz = true
-    @course_module_element.build_course_module_element_quiz
-    @course_module_element.course_module_element_quiz.add_an_empty_question
-    @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
   end
 
 end

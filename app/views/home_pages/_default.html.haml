@@ -7,12 +7,9 @@
         .row
           .col-sm-6.col-md-8.col-lg-8
             %p.h5.h-white.l-margin-bottom-huge
-              Prepare for your
-              =@course_object.name
-              exams with an online revision course
+              Prepare for your ACCA exams with an online revision course
             %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              =@course_object.name
-              revision courses online for a small monthly subscription
+              ACCA revision courses online for a small monthly subscription
 
             %p.h7
               ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
@@ -30,9 +27,8 @@
         .row
           .col-sm-12
             %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-              ='Features to support your'
-              =@course_object.name
-              ='study'
+              ='Features to support your ACCA study'
+
         .row
           .col-sm-4
             %h3.l-margin-bottom-big
@@ -53,26 +49,25 @@
             %p.p
               Learn from the best with training designed and developed by industry experts.
 
-.l-section.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row
-        .col-sm-12
-          %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
-            Access all
-            =@course_object.name
-            Courses
-      .course-list-wrap
+-if @course_object
+  .l-section.is-bg-asphalt
+    .l-wrap
+      .container-fluid
         .row
-          .col-sm-12.col-md-12
-            -@course_object.try(:active_children).all_in_order.each do |child|
-              .col-sm-6
-                =link_to library_special_link(child), class: 'course-panel course-panel-inner group-inner' do
-                  %h3.h2.course-panel-title.text-center
-                    =child.name
-                  -if child.try(:short_description)
-                    %p.p.course-panel-desc
-                      =child.short_description.truncate(150)
+          .col-sm-12
+            %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
+              Access all ACCA Courses
+        .course-list-wrap
+          .row
+            .col-sm-12.col-md-12
+              -@course_object.try(:active_children).all_in_order.each do |child|
+                .col-sm-6
+                  =link_to library_special_link(child), class: 'course-panel course-panel-inner group-inner' do
+                    %h3.h2.course-panel-title.text-center
+                      =child.name
+                    -if child.try(:short_description)
+                      %p.p.course-panel-desc
+                        =child.short_description.truncate(150)
 
 
 

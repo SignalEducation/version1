@@ -8,7 +8,6 @@
 #  active                        :boolean          default(FALSE), not null
 #  sorting_order                 :integer
 #  description                   :text
-#  subject_id                    :integer
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
 #  destroyed_at                  :datetime
@@ -16,7 +15,6 @@
 #  image_content_type            :string
 #  image_file_size               :integer
 #  image_updated_at              :datetime
-#  background_colour             :string
 #  background_image_file_name    :string
 #  background_image_content_type :string
 #  background_image_file_size    :integer
@@ -28,7 +26,7 @@ require 'rails_helper'
 describe Group do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at background_colour image_content_type image_file_size image_updated_at image_file_name background_image_content_type background_image_file_size background_image_updated_at background_image_file_name)
+  black_list = %w(id created_at updated_at destroyed_at image_content_type image_file_size image_updated_at image_file_name background_image_content_type background_image_file_size background_image_updated_at background_image_file_name)
   Group.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -42,8 +40,7 @@ describe Group do
   # Constants
 
   # relationships
-  it { should have_and_belong_to_many(:subject_courses) }
-  it { should have_many(:home_pages) }
+  it { should have_many(:subject_courses) }
 
   # validation
   it { should validate_presence_of(:name) }
@@ -71,7 +68,6 @@ describe Group do
   # instance methods
   it { should respond_to(:active_children) }
   it { should respond_to(:children) }
-  it { should respond_to(:live_children) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
 

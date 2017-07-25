@@ -64,7 +64,7 @@ class UsersController < ApplicationController
   before_action only: [:destroy] do
     ensure_user_is_of_type(%w(admin))
   end
-  before_action only: [:index, :new, :edit, :create, :update, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status] do
+  before_action only: [:index, :new, :edit, :create, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status] do
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
   before_action only: [:reactivate_account, :reactivate_account_subscription, :reactivation_complete] do
@@ -334,7 +334,6 @@ class UsersController < ApplicationController
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
-    @certs = SubjectCourseUserLog.for_user_or_session(@user.try(:id), current_session_guid).where(completed: true)
     @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end

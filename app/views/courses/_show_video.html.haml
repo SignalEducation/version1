@@ -5,31 +5,21 @@
     #vimeo-player-window.vimeo-player-window
 
   -else
-    %div{id: "wistia_#{cme.course_module_element_video.try(:video_id)}",class: 'wistia_embed', style: 'height:360px;width:640px'}
+    %div{id: "wistia_#{cme.course_module_element_video.video_id}",class: 'wistia_embed', style: 'height:360px;width:640px'}
 
 
   -#Nav buttons below video
   .l-margin-bottom.l-margin-top.hidden-xs
     .pull-right
-      -if cme.course_module.subject_course.is_cpd
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
-      -else
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold mark-as-complete' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
+      =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
+        =t('views.course_module_elements.show.next_step')
+        .glyphicon.glyphicon-arrow-right
 
   .l-margin-bottom-huge.l-margin-top.hidden-lg.hidden-md.hidden-sm
     .col-sm-12
-      -if cme.course_module.subject_course.is_cpd
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
-      -else
-        =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width mark-as-complete' do
-          =t('views.course_module_elements.show.next_step')
-          .glyphicon.glyphicon-arrow-right
+      =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width' do
+        =t('views.course_module_elements.show.next_step')
+        .glyphicon.glyphicon-arrow-right
 
 .col-md-4.col-sm-12
   -if @course_module_element.course_module_element_resources.count > 0
@@ -51,8 +41,8 @@
 -if cme.course_module_element_video.vimeo_guid
 
   :javascript
-
-    var videoCmeUserLog = #{@video_cme_user_log ? @video_cme_user_log.id : 0};
+    var video_cme_id = #{@course_module_element.id};
+    var logId = '';
     var options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
       frameborder: 0,
@@ -63,19 +53,42 @@
 
     var player = new Vimeo.Player('vimeo-player-window', options);
 
-    player.on('timeupdate', function(event) {
-
-      if (event.percent === 0.75) {
+    var timeUpdate = function(data) {
+      if (data.percent >= 0.75) {
         $.ajax({
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',
-          data: JSON.stringify({'videoLogId': videoCmeUserLog}),
+          data: JSON.stringify({'videoLogId': logId}),
           method: 'PATCH',
           contentType: "application/json; charset=utf-8"
         });
+        player.off('timeupdate', timeUpdate);
       }
+    };
 
-    });
+    //When the player starts send JSON request to create CMEUL
+    var onPlay = function(data) {
+      if (logId === '') {
+        $.ajax({
+          url: '#{create_video_user_log_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'cmeId': video_cme_id}),
+          method: 'POST',
+          contentType: "application/json; charset=utf-8",
+          success: function(data,status,xhr){
+            logId = data.video_log_id;
+          },
+          error: function(xhr,status,error){
+            console.log(xhr);
+            alert(error);
+          }
+        });
+      }
+    };
+
+    player.on('play', onPlay);
+    player.on('timeupdate', timeUpdate);
+
 
 
 

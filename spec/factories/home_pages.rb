@@ -9,8 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  group_id                      :integer
 #  subject_course_id             :integer
+#  custom_file_name              :string
 #
 
 FactoryGirl.define do
@@ -26,11 +26,6 @@ FactoryGirl.define do
     factory :acca_home do
       public_url 'acca'
     end
-
-    factory :cfa_home do
-      public_url 'cfa'
-    end
-
 
   end
 

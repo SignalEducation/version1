@@ -23,8 +23,8 @@ describe Api::StripeV02Controller, type: :controller do
   let!(:card_token_1)   { Stripe::Token.create(card: card_details_1) }
   let!(:card_token_2)   { Stripe::Token.create(card: card_details_2) }
 
-  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id) }
-  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: student_2.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id) }
+  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id, active: true) }
+  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: student_2.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id, active: true) }
   let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: reactivating_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
   let!(:subscription_4) { FactoryGirl.create(:subscription, user_id: canceled_pending_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'canceled-pending', active: true) }
 

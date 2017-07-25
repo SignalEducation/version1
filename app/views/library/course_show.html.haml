@@ -74,16 +74,6 @@
             =render partial: 'library/all_content'
 
 
-          -# Fourth Section for Final Quiz and Certificate
-          -if current_user && @course.certificate && current_user.permission_to_see_content(@course)
-            %br/
-            -if @subject_course_user_log && @subject_course_user_log.completed
-              %hr/
-              =link_to completion_certs_url(@cert.id, format: 'pdf'), class: 'cert-box-item lib-panel', style: 'text-decoration: none;' do
-                .box-topic-item
-                  Click here to download your completion certificate
-
-
 
 
         .col-md-4
@@ -120,8 +110,3 @@
     if($(this).is('.radius')){$(this).removeClass('radius'); return;}
     $(this).addClass('radius').siblings().removeClass('radius');
   });
-
--if current_user && @subject_course_user_log && @subject_course_user_log.completed && @course.hotjar_guid
-
-  :javascript
-    hj('trigger', "#{@course.hotjar_guid}");

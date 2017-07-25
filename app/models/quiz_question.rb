@@ -6,12 +6,12 @@
 #  course_module_element_quiz_id :integer
 #  course_module_element_id      :integer
 #  difficulty_level              :string
-#  hints                         :text
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #  sorting_order                 :integer
+#  custom_styles                 :boolean          default(FALSE)
 #
 
 class QuizQuestion < ActiveRecord::Base
@@ -20,14 +20,15 @@ class QuizQuestion < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :course_module_element_quiz_id,
-                  :difficulty_level, :hints,
+  attr_accessible :course_module_element_quiz_id, :difficulty_level,
                   :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :subject_course_id, :sorting_order
+                  :quiz_solutions_attributes, :subject_course_id, :sorting_order,
+                  :custom_styles
 
   # Constants
 
   # relationships
+  belongs_to :subject_course
   belongs_to :course_module_element
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts
@@ -42,29 +43,20 @@ class QuizQuestion < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
-  validates :difficulty_level, inclusion: {in: ApplicationController::DIFFICULTY_LEVEL_NAMES}, length: { maximum: 255}
-  validates :hints, allow_nil: true, length: {maximum: 65535}
 
   # callbacks
   before_validation :set_course_module_element
   before_save :set_subject_course_id
-  before_update :set_subject_course_id
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
-  scope :all_easy, -> { where(difficulty_level: 'easy') }
-  scope :all_medium, -> { where(difficulty_level: 'medium') }
-  scope :all_difficult, -> { where(difficulty_level: 'difficult') }
+  scope :in_created_order, -> { order(:id) }
 
   # class methods
 
   # instance methods
 
-  def complex_question?
-    answer_ids = self.quiz_answer_ids
-    self.quiz_contents.count > 1 || self.quiz_solutions.count > 1 || self.quiz_contents.all_images.count > 0 || self.quiz_contents.all_mathjaxes.count > 0 || QuizContent.where(quiz_answer_id: answer_ids, quiz_question_id: nil, quiz_solution_id: nil).count > 4
-  end
-
+  ## Archivable methods ##
   def destroyable?
     true
   end

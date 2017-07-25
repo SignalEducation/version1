@@ -5,11 +5,11 @@
         =render partial: '/layouts/error_messages', locals: {thing: @group, message: nil}
         =f.label :name, t('views.groups.form.name'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.text_field :name, class: 'form-control update-my-url', style: 'border-radius: 6px;'
+          =f.text_field :name, placeholder: t('views.groups.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
         %br/
         =f.label :name_url, t('views.groups.form.name_url'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.text_field :name_url, class: 'form-control', style: 'border-radius: 6px;'
+          =f.text_field :name_url, placeholder: t('views.groups.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
         .col-sm-2
           .checkbox
@@ -17,9 +17,9 @@
               =f.check_box :active
               =t('views.groups.form.active')
       .col-md-6
-        =f.label :description, t('views.groups.form.description'), class: 'control-label'
+        =f.label :description, t('views.groups.form.description'),  class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.text_area :description, rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+          =f.text_area :description, rows: 5, placeholder: t('views.groups.form.description_placeholder'),class: 'form-control', style: 'border-radius: 6px;'
         .col-md-12.l-margin-top-big
           .col-md-6
             %p Icon

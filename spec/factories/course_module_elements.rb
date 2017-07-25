@@ -9,8 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
@@ -31,8 +29,6 @@ FactoryGirl.define do
     estimated_time_in_seconds   1
     course_module_id            1
     sorting_order               1
-    related_quiz_id             nil
-    related_video_id            1
     active                      true
     seo_description             'Lorem Ipsum'
     seo_no_index                false

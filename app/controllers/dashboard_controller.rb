@@ -63,7 +63,7 @@ class DashboardController < ApplicationController
   end
 
   def export_courses
-    @courses = SubjectCourse.all_active.all_live.all_in_order
+    @courses = SubjectCourse.all_active.all_in_order
 
     respond_to do |format|
       format.html
@@ -110,7 +110,7 @@ class DashboardController < ApplicationController
     @non_enrollment_log_ids = log_ids - enrollment_ids
     @non_enrollment_logs = SubjectCourseUserLog.where(id: @non_enrollment_log_ids)
     @acca_group = Group.all_active.all_in_order.first
-    @cfa_group = Group.where(name_url: 'cfa-revision').first
+    @cfa_group = Group.all_active.all_in_order.where(name_url: 'cfa-revision').first
     if @cfa_group
       @cfa_courses = @cfa_group.subject_courses
       cfa_course_ids = @cfa_courses.map(&:id)
@@ -125,7 +125,7 @@ class DashboardController < ApplicationController
   protected
 
   def get_variables
-    @courses = SubjectCourse.all_active.all_live.all_in_order
+    @courses = SubjectCourse.all_active.all_in_order
     logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
     @all_active_logs = logs.where('percentage_complete < ?', 100)
     @first_active_log = @all_active_logs.first

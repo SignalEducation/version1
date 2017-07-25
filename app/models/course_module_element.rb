@@ -9,8 +9,6 @@
 #  estimated_time_in_seconds :integer
 #  course_module_id          :integer
 #  sorting_order             :integer
-#  related_quiz_id           :integer
-#  related_video_id          :integer
 #  created_at                :datetime
 #  updated_at                :datetime
 #  is_video                  :boolean          default(FALSE), not null
@@ -29,11 +27,8 @@ class CourseModuleElement < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description,
-                  :estimated_time_in_seconds, :active,
-                  :course_module_id, :sorting_order,
-                  :related_quiz_id,
-                  :related_video_id, :is_video, :is_quiz,
+  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
+                  :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
@@ -46,16 +41,11 @@ class CourseModuleElement < ActiveRecord::Base
   # relationships
   belongs_to :course_module
   has_one :course_module_element_quiz
-  has_many :course_module_element_resources
-  has_one :video_resource, inverse_of: :course_module_element
-  has_many :course_module_element_user_logs
   has_one :course_module_element_video
-  has_many :quiz_answers, foreign_key: :wrong_answer_video_id
+  has_one :video_resource, inverse_of: :course_module_element
   has_many :quiz_questions
-  belongs_to :related_quiz, class_name: 'CourseModuleElement',
-             foreign_key: :related_quiz_id
-  belongs_to :related_video, class_name: 'CourseModuleElement',
-             foreign_key: :related_video_id
+  has_many :course_module_element_resources
+  has_many :course_module_element_user_logs
   has_many :student_exam_tracks, class_name: 'StudentExamTrack',
            foreign_key: :latest_course_module_element_id
 
@@ -69,16 +59,13 @@ class CourseModuleElement < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
   validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
-  validates :estimated_time_in_seconds, presence: true
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
-  before_validation :log_count_fields
-  before_save :sanitize_name_url
+  before_save :sanitize_name_url, :log_count_fields
   after_save :update_parent
-  after_destroy :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name).where(destroyed_at: nil) }
@@ -89,37 +76,21 @@ class CourseModuleElement < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  ## Parent & Child associations ##
+
+  def parent
+    self.course_module
+  end
+
+
+  #######################################################################
+
+  ## Methods allow for navigation from one CME to the next #
+
+
   def array_of_sibling_ids
     self.course_module.course_module_elements.all_active.all_in_order.map(&:id)
-  end
-
-  def completed_by_user_or_guid(user_id, session_guid)
-    cmeuls = user_id ?
-            self.course_module_element_user_logs.where(user_id: user_id) :
-            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
-    array = cmeuls.all.map(&:element_completed)
-    array.include? true
-  end
-
-  def started_by_user_or_guid(user_id, session_guid)
-    cmeuls = user_id ?
-            self.course_module_element_user_logs.where(user_id: user_id) :
-            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
-    cmeuls.any?
-  end
-
-  def destroyable?
-    true
-  end
-
-  def destroyable_children
-    the_list = []
-    the_list << self.course_module_element_video if self.course_module_element_video
-    the_list << self.course_module_element_quiz if self.course_module_element_quiz
-    the_list += self.course_module_element_resources.to_a
-    the_list += self.quiz_answers.to_a
-    the_list += self.quiz_questions.to_a
-    the_list
   end
 
   def my_position_among_siblings
@@ -129,8 +100,6 @@ class CourseModuleElement < ActiveRecord::Base
   def next_element
     if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
-    elsif self.course_module.course_module_jumbo_quiz && self.course_module.course_module_jumbo_quiz.active
-      self.course_module.course_module_jumbo_quiz
     elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
       if self.course_module.next_module && self.course_module.next_module.try(:course_module_elements).try(:all_active).any?
         #End of CourseModule continue on to first CME of next CourseModule
@@ -149,20 +118,57 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
-  def parent
-    self.course_module
-  end
-
   def previous_element
     if self.my_position_among_siblings && self.my_position_among_siblings > 0
       CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings - 1])
-    elsif self.course_module.previous_module.try(:course_module_jumbo_quiz)
-      self.course_module.previous_module.course_module_jumbo_quiz
     else
       prev_id = self.course_module.previous_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:last).try(:id)
       CourseModuleElement.find(prev_id) if prev_id
     end
   end
+
+
+  #######################################################################
+
+  ## Archivable ability ##
+
+  def destroyable?
+    true
+  end
+
+  def destroyable_children
+    the_list = []
+    the_list << self.course_module_element_video if self.course_module_element_video
+    the_list << self.course_module_element_quiz if self.course_module_element_quiz
+    the_list += self.course_module_element_resources.to_a
+    the_list += self.quiz_questions.to_a
+    the_list
+  end
+
+
+  #######################################################################
+
+  ## User Course Tracking ##
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    array = cmeuls.all.map(&:element_completed)
+    array.include? true
+  end
+
+  def started_by_user_or_guid(user_id, session_guid)
+    cmeuls = user_id ?
+            self.course_module_element_user_logs.where(user_id: user_id) :
+            self.course_module_element_user_logs.where(user_id: nil, session_guid: session_guid)
+    cmeuls.any?
+  end
+
+
+  ########################################################################
+
+  ## Model info for Views ##
 
   def type_name
     if is_quiz
@@ -194,13 +200,14 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def log_count_fields
-    if self.is_video
-      self.duration = self.course_module_element_video.try(:duration) unless Rails.env.test?
-      self.estimated_time_in_seconds = self.course_module_element_video.duration.round if !Rails.env.test? && self.course_module_element_video.duration
-    elsif self.is_quiz
-        #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
-        self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
-        self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?
+    if self.is_video && course_module_element_video
+      self.duration = self.course_module_element_video.duration
+      self.estimated_time_in_seconds = self.duration.round
+    elsif self.is_quiz && course_module_element_quiz
+      #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
+      self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
+      #Note: It no value is set in the form for estimated_time_in_seconds set it to 60 seconds for each question asked
+      self.estimated_time_in_seconds = (self.number_of_questions * 60) if self.estimated_time_in_seconds.nil?
     else
       true
     end

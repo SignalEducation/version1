@@ -9,8 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  group_id                      :integer
 #  subject_course_id             :integer
+#  custom_file_name              :string
 #
 
 require 'rails_helper'
@@ -22,8 +22,8 @@ RSpec.describe HomePagesController, type: :routing do
       expect(get: '/').to route_to('home_pages#home')
     end
 
-    it 'routes to #group' do
-      expect(get: '/group/group_1').to route_to('home_pages#group', home_pages_public_url: 'group_1')
+    it 'routes to #show' do
+      expect(get: '/course_1').to route_to('home_pages#show', home_pages_public_url: 'course_1')
     end
 
     it 'routes to #home_page_subscribe' do

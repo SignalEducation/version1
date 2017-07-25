@@ -6,8 +6,6 @@
 #  quiz_question_id   :integer
 #  quiz_answer_id     :integer
 #  text_content       :text
-#  contains_mathjax   :boolean          default(FALSE), not null
-#  contains_image     :boolean          default(FALSE), not null
 #  sorting_order      :integer
 #  created_at         :datetime
 #  updated_at         :datetime
@@ -22,7 +20,6 @@
 FactoryGirl.define do
   factory :quiz_content do
     text_content 'MyText'
-    content_type 'text'
     sorting_order 1
 
     factory :quiz_content_for_question do

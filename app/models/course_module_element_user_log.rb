@@ -2,25 +2,23 @@
 #
 # Table name: course_module_element_user_logs
 #
-#  id                          :integer          not null, primary key
-#  course_module_element_id    :integer
-#  user_id                     :integer
-#  session_guid                :string
-#  element_completed           :boolean          default(FALSE), not null
-#  time_taken_in_seconds       :integer
-#  quiz_score_actual           :integer
-#  quiz_score_potential        :integer
-#  is_video                    :boolean          default(FALSE), not null
-#  is_quiz                     :boolean          default(FALSE), not null
-#  course_module_id            :integer
-#  latest_attempt              :boolean          default(TRUE), not null
-#  created_at                  :datetime
-#  updated_at                  :datetime
-#  course_module_jumbo_quiz_id :integer
-#  is_jumbo_quiz               :boolean          default(FALSE), not null
-#  seconds_watched             :integer          default(0)
-#  count_of_questions_taken    :integer
-#  count_of_questions_correct  :integer
+#  id                         :integer          not null, primary key
+#  course_module_element_id   :integer
+#  user_id                    :integer
+#  session_guid               :string
+#  element_completed          :boolean          default(FALSE), not null
+#  time_taken_in_seconds      :integer
+#  quiz_score_actual          :integer
+#  quiz_score_potential       :integer
+#  is_video                   :boolean          default(FALSE), not null
+#  is_quiz                    :boolean          default(FALSE), not null
+#  course_module_id           :integer
+#  latest_attempt             :boolean          default(TRUE), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  seconds_watched            :integer          default(0)
+#  count_of_questions_taken   :integer
+#  count_of_questions_correct :integer
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -31,16 +29,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   attr_accessible :course_module_element_id, :user_id, :session_guid,
                   :element_completed, :time_taken_in_seconds,
                   :quiz_score_actual, :quiz_score_potential,
-                  :is_video, :is_quiz, :is_jumbo_quiz, :course_module_id,
-                  :course_module_jumbo_quiz_id, :quiz_attempts_attributes,
-                  :seconds_watched
+                  :is_video, :is_quiz, :course_module_id,
+                  :quiz_attempts_attributes, :seconds_watched
 
   # Constants
 
   # relationships
   belongs_to :course_module
   belongs_to :course_module_element
-  belongs_to :course_module_jumbo_quiz
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   belongs_to :user
   accepts_nested_attributes_for :quiz_attempts
@@ -52,11 +48,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
-  before_save :set_count_of_questions_taken_and_correct
-  after_create :calculate_score, :check_for_enrollment_email_conditions
-  after_create :create_lesson_intercom_event if Rails.env.production? || Rails.env.staging?
-  after_update :create_or_update_student_exam_track
-  after_commit :add_to_user_trial_limit
+  after_save :calculate_score, :add_to_user_trial_limit, :create_or_update_student_exam_track
+  after_create :check_for_enrollment_email_conditions, :create_lesson_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -65,11 +58,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
-  scope :for_jumbo_quiz, lambda { |element_id| where(course_module_jumbo_quiz_id: element_id) }
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
-  scope :jumbo_quizzes, -> { where(is_jumbo_quiz: true) }
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
@@ -110,7 +101,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def recent_attempts
-    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
   def student_exam_track
@@ -120,21 +111,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   protected
 
   def calculate_score
-    if self.is_quiz || self.is_jumbo_quiz
-      self.quiz_score_actual = (((self.quiz_attempts.all_correct.count).to_f/(self.quiz_attempts.count).to_f)*100).to_i
-      if self.is_quiz
-        self.quiz_score_potential = self.recent_attempts.count == 0 ?
-            self.course_module_element.course_module_element_quiz.best_possible_score_first_attempt :
-            self.course_module_element.course_module_element_quiz.best_possible_score_retry
-      elsif self.is_jumbo_quiz
-        self.quiz_score_potential = self.recent_attempts.count == 0 ?
-            self.course_module_jumbo_quiz.best_possible_score_first_attempt :
-            self.course_module_jumbo_quiz.best_possible_score_retry
-      end
-      course_pass_rate = self.course_module.subject_course.cpd_pass_rate ? self.course_module.subject_course.cpd_pass_rate : 75
-      percentage_score = (self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0
+    if self.is_quiz
+      course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
+      percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
+
+      self.count_of_questions_taken = self.quiz_attempts.count
+      self.count_of_questions_correct = self.quiz_attempts.all_correct.count
+      self.quiz_score_actual = percentage_score
+      self.quiz_score_potential = self.count_of_questions_taken
       self.element_completed = true if percentage_score >= course_pass_rate
-      self.save(callbacks: false, validate: false)
     end
   end
 
@@ -142,7 +127,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
     set.subject_course_id ||= self.course_module.subject_course.id
     set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    set.jumbo_quiz_taken = true if self.is_jumbo_quiz
     set.recalculate_completeness # Includes a save!
   end
 
@@ -159,9 +143,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def set_booleans
-    if self.course_module_jumbo_quiz
-      self.is_jumbo_quiz = true
-    elsif self.course_module_element.course_module_element_quiz
+    if self.course_module_element.course_module_element_quiz
       self.is_quiz = true
     else
       self.is_video = true
@@ -169,20 +151,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     true
   end
 
-  def set_count_of_questions_taken_and_correct
-    self.count_of_questions_taken = self.quiz_attempts.count
-    self.count_of_questions_correct = self.quiz_attempts.all_correct.count
-  end
-
   def set_latest_attempt
     self.latest_attempt = true
-    others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, course_module_jumbo_quiz_id: self.course_module_jumbo_quiz_id).latest_only
+    others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id).latest_only
     others.update_all(latest_attempt: false)
     true
   end
 
   def create_lesson_intercom_event
-    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct))
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct)) if Rails.env.production? || Rails.env.staging?
   end
 
   def check_for_enrollment_email_conditions

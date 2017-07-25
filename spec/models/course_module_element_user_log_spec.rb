@@ -2,25 +2,23 @@
 #
 # Table name: course_module_element_user_logs
 #
-#  id                          :integer          not null, primary key
-#  course_module_element_id    :integer
-#  user_id                     :integer
-#  session_guid                :string
-#  element_completed           :boolean          default(FALSE), not null
-#  time_taken_in_seconds       :integer
-#  quiz_score_actual           :integer
-#  quiz_score_potential        :integer
-#  is_video                    :boolean          default(FALSE), not null
-#  is_quiz                     :boolean          default(FALSE), not null
-#  course_module_id            :integer
-#  latest_attempt              :boolean          default(TRUE), not null
-#  created_at                  :datetime
-#  updated_at                  :datetime
-#  course_module_jumbo_quiz_id :integer
-#  is_jumbo_quiz               :boolean          default(FALSE), not null
-#  seconds_watched             :integer          default(0)
-#  count_of_questions_taken    :integer
-#  count_of_questions_correct  :integer
+#  id                         :integer          not null, primary key
+#  course_module_element_id   :integer
+#  user_id                    :integer
+#  session_guid               :string
+#  element_completed          :boolean          default(FALSE), not null
+#  time_taken_in_seconds      :integer
+#  quiz_score_actual          :integer
+#  quiz_score_potential       :integer
+#  is_video                   :boolean          default(FALSE), not null
+#  is_quiz                    :boolean          default(FALSE), not null
+#  course_module_id           :integer
+#  latest_attempt             :boolean          default(TRUE), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  seconds_watched            :integer          default(0)
+#  count_of_questions_taken   :integer
+#  count_of_questions_correct :integer
 #
 
 require 'rails_helper'
@@ -38,19 +36,15 @@ describe CourseModuleElementUserLog do
   end
 
   # Constants
-  #it { expect()CourseModuleElementUserLog.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
-  it { should belong_to(:course_module_jumbo_quiz) }
   it { should have_many(:quiz_attempts) }
   it { should belong_to(:user) }
 
   # validation
   it { should_not validate_presence_of(:course_module_element_id) }
-
-  it { should_not validate_presence_of(:course_module_jumbo_quiz_id) }
 
   it { should_not validate_presence_of(:user_id) }
 
@@ -70,10 +64,9 @@ describe CourseModuleElementUserLog do
   # callbacks
   it { should callback(:set_latest_attempt).before(:create) }
   it { should callback(:set_booleans).before(:create) }
-  it { should callback(:calculate_score).after(:create) }
-  it { should callback(:set_count_of_questions_taken_and_correct).before(:save) }
-  it { should callback(:create_or_update_student_exam_track).after(:update) }
-  it { should callback(:add_to_user_trial_limit).after(:commit) }
+  it { should callback(:calculate_score).after(:save) }
+  it { should callback(:create_or_update_student_exam_track).after(:save) }
+  it { should callback(:add_to_user_trial_limit).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -83,11 +76,9 @@ describe CourseModuleElementUserLog do
   it { expect(CourseModuleElementUserLog).to respond_to(:for_unknown_users) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module_element) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:for_jumbo_quiz) }
   it { expect(CourseModuleElementUserLog).to respond_to(:latest_only) }
   it { expect(CourseModuleElementUserLog).to respond_to(:quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:videos) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:jumbo_quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:with_elements_active) }
   it { expect(CourseModuleElementUserLog).to respond_to(:this_week) }
   it { expect(CourseModuleElementUserLog).to respond_to(:this_month) }

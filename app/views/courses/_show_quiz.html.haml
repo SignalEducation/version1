@@ -1,8 +1,8 @@
 .col-md-12
-  -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?) || @course_module_jumbo_quiz
+  -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?) || current_user.try(:admin?)|| current_user.try(:content_manager?)
 
     %h2
-      =@course_module_element.try(:name).try(:html_safe) || @course_module_jumbo_quiz.try(:name)
+      =@course_module_element.try(:name).try(:html_safe)
     .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
       .quiz-heading.l-margin-bottom
         #question-count.p
@@ -18,7 +18,6 @@
         =f.text_field :user_id
         =f.text_field :course_module_id
         =f.text_field :course_module_element_id
-        =f.text_field :course_module_jumbo_quiz_id
         =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
         =f.fields_for :quiz_attempts do |attempt|
           =attempt.text_field :user_id
@@ -34,20 +33,12 @@
 
   :javascript
 
-    var easyList = #{@easy_ids},
-        mediumList = #{@medium_ids},
-        difficultList = #{@difficult_ids},
-        allQuestionsList = #{@all_ids},
+    var allQuestionsList = #{@all_ids},
         selectionStrategy = '#{@strategy}',
-        answers = [],
         numberOfQuestions = #{@number_of_questions},
         currentQuestion = 1,
-        nextQuestionLevel = '#{@first_attempt ? 'easy' : 'difficult'}',
-        //nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : (@first_attempt ? 'easy' : 'difficult')}List,
-        nextQuestionArray = #{@strategy == 'random' ? 'allQuestions' : 'allQuestions'}List,
         progressBar = $('.progress-bar'),
-        questionCount = $('.quiz-heading'),
-        previousAnswerCorrect = true;
+        questionCount = $('.quiz-heading');
 
     function updateProgressBar() {
       var percentage = (currentQuestion / numberOfQuestions * 100);
@@ -61,45 +52,27 @@
     function askQuestion(questionNumber) {
       updateProgressBar();
       $('.question').hide();
-      $('#question_' + nextQuestionArray[questionNumber - 1]).fadeIn();
+      $('#question_' + allQuestionsList[questionNumber - 1]).fadeIn();
     }
 
-    function logAnswer(questionId, answerId, difficultyLevel, isCorrect, answerArray) {
-      answers[currentQuestion] = [questionId, answerId, difficultyLevel, isCorrect];
-      // log the answer in the form
+    //Triggered by onclick event in page
+    function logAnswer(questionId, answerId, answerArray) {
+      // log the answer in the form fields_for
       $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_question_id').val(questionId);
       $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_quiz_answer_id').val(answerId);
       $('#course_module_element_user_log_quiz_attempts_attributes_' + (currentQuestion - 1) + '_answer_array').val(answerArray);
 
 
       if (currentQuestion < numberOfQuestions) {
-        if (selectionStrategy == 'progressive') {
-          if (isCorrect == true && difficultyLevel == 'easy') {
-            nextQuestionLevel = 'medium';
-            nextQuestionArray = mediumList;
-          } else if (isCorrect == true && difficultyLevel == 'medium') {
-            nextQuestionLevel = 'difficult';
-            nextQuestionArray = difficultList;
-          } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'difficult') {
-            nextQuestionLevel = 'medium';
-            nextQuestionArray = mediumList;
-          } else if (isCorrect == false && previousAnswerCorrect == false && difficultyLevel == 'medium') {
-            nextQuestionLevel = 'easy';
-            nextQuestionArray = easyList;
-          }
-        } else if (selectionStrategy == 'random') {
-          nextQuestionArray = allQuestionsList
-        }
+        allQuestionsList
         currentQuestion++;
         updateProgressBar();
         askQuestion(currentQuestion);
-        previousAnswerCorrect = isCorrect;
       } else {
         $('#new_course_module_element_user_log').submit();
       }
     }
 
-    var numberOfCorrectAnswers = 0;
     $(document).on('ready page:load', function() {
       askQuestion(1); // 1 is the first question
     });

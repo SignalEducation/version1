@@ -54,7 +54,7 @@
               %span.caret
             %ul#menu.dropdown-menu
               -if current_user.content_manager?
-                %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
+                %li=link_to t('views.subject_courses.index.manager_courses'), subject_courses_url
               -if current_user.admin?
                 %li=link_to t('views.users.index.h1'), users_url
                 %li=link_to t('views.user_groups.index.h1'), user_groups_url

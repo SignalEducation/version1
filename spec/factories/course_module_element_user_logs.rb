@@ -2,25 +2,23 @@
 #
 # Table name: course_module_element_user_logs
 #
-#  id                          :integer          not null, primary key
-#  course_module_element_id    :integer
-#  user_id                     :integer
-#  session_guid                :string
-#  element_completed           :boolean          default(FALSE), not null
-#  time_taken_in_seconds       :integer
-#  quiz_score_actual           :integer
-#  quiz_score_potential        :integer
-#  is_video                    :boolean          default(FALSE), not null
-#  is_quiz                     :boolean          default(FALSE), not null
-#  course_module_id            :integer
-#  latest_attempt              :boolean          default(TRUE), not null
-#  created_at                  :datetime
-#  updated_at                  :datetime
-#  course_module_jumbo_quiz_id :integer
-#  is_jumbo_quiz               :boolean          default(FALSE), not null
-#  seconds_watched             :integer          default(0)
-#  count_of_questions_taken    :integer
-#  count_of_questions_correct  :integer
+#  id                         :integer          not null, primary key
+#  course_module_element_id   :integer
+#  user_id                    :integer
+#  session_guid               :string
+#  element_completed          :boolean          default(FALSE), not null
+#  time_taken_in_seconds      :integer
+#  quiz_score_actual          :integer
+#  quiz_score_potential       :integer
+#  is_video                   :boolean          default(FALSE), not null
+#  is_quiz                    :boolean          default(FALSE), not null
+#  course_module_id           :integer
+#  latest_attempt             :boolean          default(TRUE), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  seconds_watched            :integer          default(0)
+#  count_of_questions_taken   :integer
+#  count_of_questions_correct :integer
 #
 
 FactoryGirl.define do
@@ -36,8 +34,8 @@ FactoryGirl.define do
     is_quiz false
     course_module_id 1
     latest_attempt false
-    course_module_jumbo_quiz_id 1
-    is_jumbo_quiz false
+    count_of_questions_taken 1
+    count_of_questions_correct 1
   end
 
 end

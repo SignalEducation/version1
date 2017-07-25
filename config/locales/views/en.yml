@@ -56,6 +56,7 @@ en:
       ok: ok
       or: or
       review: Review
+      return: Return
       save: Save
       continue: Continue
       download: Download Now
@@ -292,12 +293,16 @@ en:
         is_past_paper: Past Paper Module
         highlight_colour: "Highlight Colour (Default Color is #FFFFFF)"
         colour_placeholder: "eg. #fff"
+        tuition: Tuition
+        test: Test
+        revision: Revision
 
       edit:
         h1: Edit Course Module
 
       index:
         h1: Course Modules
+        delete: Delete Course Module
 
       new:
         h1: New Course Module
@@ -319,7 +324,7 @@ en:
         delete: Delete File
         description: Description
         description_placeholder: Description (This is optional)
-        estimated_time_in_seconds: Estimated overall time in seconds
+        estimated_time_in_seconds: Estimated time in seconds
         estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
         estimated_time_in_seconds_placeholder: 180
         course_module_id: Course module
@@ -327,8 +332,6 @@ en:
         course_module_element_quiz_id: Course module element quiz id
         sorting_order: Sorting order
         forum_topic_id: Forum topic
-        related_quiz_id: Related quiz
-        related_video_id: Related video
         created_at: Created at
         updated_at: Updated_at
         new_video: New video
@@ -381,9 +384,6 @@ en:
         number_of_questions_placeholder: 10
         question_selection_strategy: Question Selection Strategy
         question_selection_strategy_placeholder: 1
-        best_possible_score_first_attempt: "Max Score (1st. Go)"
-        best_possible_score_retry: "Max Score (Retry)"
-        is_final_quiz: Use these questions for Final Quiz
         advanced_setup_link: Advanced
         preview_button: Save and View
         video: Video
@@ -418,40 +418,11 @@ en:
 
     course_module_element_videos:
       form:
-        tags: "Tags (separate with commas)"
-        tags_placeholder: "economics, macro-economics"
-        difficulty_level: Difficulty Level
-        estimated_study_time_seconds: Estimated Time in Seconds
-        estimated_study_time_seconds_placeholder: 100
-        transcript: Transcript
-        transcript_placeholder: This is optional
         video_file: Video File
         duration: Video Duration in seconds
         duration_placeholder: Duration in Seconds
         video_id: Video ID
         video_id_placeholder: Wistia ID
-
-    course_module_jumbo_quiz:
-      form:
-        name: Name
-        name_placeholder: Final Quiz
-        name_url: Name URL
-        name_url_placeholder: intro-to-economics-jumbo-quiz
-        minimum_question_count_per_quiz: Min Questions from each Quiz
-        maximum_question_count_per_quiz: Max Questions from each Quiz
-        total_number_of_questions: Total Number of Questions
-        course_module_id: Course Module
-        active: Active
-
-      edit:
-        h1: Edit Final Quiz
-
-      new:
-        h1: New Final Quiz
-
-      show:
-        h1: Final Quiz
-        no_jumbo_quizzes_yet: "Sorry, there is no Final Quiz for this Course Module. Why not create one now !"
 
     currencies:
       form:
@@ -567,15 +538,13 @@ en:
         name_url_placeholder: Name URL
         description: Description
         description_placeholder: Description goes here!
-        background_colour: Background Colour
         active: Active
         sorting_order: Sorting order
         sorting_order_placeholder: 100
-        subject_id: Subject
         course_count: No. of Courses
 
       index:
-        h1: Subject Areas
+        h1: Groups
 
       show:
         h1: Course Group
@@ -599,9 +568,11 @@ en:
         seo_description_placeholder: SEO Description Placeholder
         subscription_plan_category_id: Subscription Plan Category
         group_id: Group
-        subject_course_id: Course
+        subject_course_id: Related Course
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
+        custom_file_name: View File Name
+        custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
 
       index:
         h1: Landing Pages
@@ -709,7 +680,6 @@ en:
         h1: Library
         item: item
         items: items
-        jumbo_quiz: Jumbo quiz
         questions: Questions
         question: Question
         quiz: Quiz
@@ -783,7 +753,7 @@ en:
         answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
         answer_text: Answer
         answer_text_placeholder: Fill in the Answer Here
-        wrong_answer_video_id: Related Video
+        degree_of_wrongness: Select Correct/Incorrect
 
     quiz_contents:
       form:
@@ -807,8 +777,8 @@ en:
         degree_of_wrongness: "Right/Wrong"
         text_content_placeholder: Question Text
         solution_to_the_question_placeholder: Solution Text
-        wrong_answer_explanation_text: "Why this answer is wrong?"
-        wrong_answer_explanation_text_placeholder: Explain why this answer is incorrect
+        #custom_styles: Apply Custom Styles
+        custom_styles: Remove Standard Styles
 
       edit:
         h1: "Edit Quiz Question - Advanced"
@@ -818,6 +788,7 @@ en:
 
       show:
         h1: Quiz Question Preview
+        preview_mode: Preview Mode
         choose_an_answer: Choose an Answer
 
     shared:
@@ -850,46 +821,34 @@ en:
         name_url: Name URL
         name_url_placeholder: Name URL
         active: Active
-        restricted: "Restricted (Check this to allow only your students to see this course)"
-        live: Live
-        wistia_guid: Wistia Project ID
-        wistia_guid_placeholder: Wistia Project ID
-        live_date: "Live Date(Optional)"
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
         description_placeholder: Course Description
-        short_description: "Plain Description (Description without any text formatting)"
-        short_description_placeholder: Description
-        mailchimp_guid: MailChimp List ID
-        mailchimp_guid_placeholder: MailChimp ID
-        external_url_name: Name of Exam Body
-        external_url_name_placeholder: ACCA or CFA
+        short_description: Short Description - without any text formatting
+        short_description_placeholder: Plain Description - without any text formatting or HTML tags
         survey_url: Completion Survey URL
         survey_url_placeholder: Survey Monkey URL
-        external_url: URL of Exam Body Site
-        external_url_placeholder: acca.com, cfa.com
+        external_url_name: Name of External Link
+        external_url_name_placeholder: Name of External Link to appear on Course Page
+        external_url: External Link
+        external_url_placeholder: External Link URL for Course Page
         discourse_topic_id: Community Topic ID
         discourse_topic_id_placeholder: Discourse ID for topic - in URL
-        hotjar_guid: HotJar JS Code
-        hotjar_guid_placeholder: Hotjar Javascript Trigger
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
-        is_cpd: Use Custom Quiz Pass Rate
-        certificate: Completion Cert
-        cpd_hours: CPD Hours
-        cpd_hours_placeholder: Required CPD Hours
+        quiz_pass_rate: Quiz Pass Rate
+        quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         email_content: Welcome Email Content
-        cpd_pass_rate: Custom Quiz Pass Rate
-        cpd_pass_rate_placeholder: Quiz Pass Rate
+        email_content_placeholder: Content for Enrollment Welcome Email
 
 
       index:
         h1: Courses
         your_courses: Courses
-        my_courses: My Courses
+        manager_courses: Course Content
         add_course: Add Course
         edit_content: Edit Content
         edit_tutors: Edit Tutors
@@ -929,7 +888,7 @@ en:
 
       show:
         h1: Course Resource
-        h2: Course Resource
+        h2: Course Resources
         description: Description
         name: Name
         subject_course_id: Course
@@ -1145,7 +1104,6 @@ en:
           subscriptions: Account Info
           orders: Purchase History
           payments: Payment Info
-          certificates: Certificates
           enrollments: Enrolments
           exam_sittings: Exam Sittings
           notifications: Notifications

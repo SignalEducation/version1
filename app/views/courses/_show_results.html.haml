@@ -1,6 +1,6 @@
 .col-md-12
   %h2
-    =@course_module_element_user_log.course_module_jumbo_quiz.try(:name) || @course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
+    =@course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
   .box-item.question-box.border-same-backcolor#quiz-contents
     .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary{style: 'border: 2px solid #4ACF4D;'}
       &#60; Back to Results
@@ -16,35 +16,44 @@
                 -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
                 %h3.h4{style: "font-size: 24px; color: #{result_colour}; text-transform: uppercase;"}
                   =@pass
-
-
-
           .col-sm-6.col-xs-12
             .row
               .col-sm-6
                 %h3.h4{style: 'font-size: 24px'}
                   =t('views.courses.show_results.score')
-
               .col-sm-6
                 %h3.h4{style: 'font-size: 24px;'}
                   =@course_module_element_user_log.quiz_attempts.where(correct: true).count
                   &#47;
                   =@course_module_element_user_log.quiz_attempts.count
 
-      -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+
+
+
+      -@course_module_element_user_log.quiz_attempts.reverse.each_with_index do |attempt, counter|
         .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
           %p.text-inline.text-bold Question #{counter + 1}
           %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
 
           %p.l-margin-top-small.l-margin-bottom-small
-            -correct_answer = 0; your_answer = 0
+            -correct_answers = []; your_answer = 0
             -attempt.answers.each_with_index do |qa, counter2|
-              -correct_answer = counter2 if qa.correct
+              -correct_answers << counter2 if qa.correct
               -your_answer = counter2 if qa.id == attempt.quiz_answer_id
-            %p.text-inline
-              Correct Answer:
-              &#160;
-            %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+            -if correct_answers.count > 1
+              %p.text-inline
+                Correct Answers:
+                &#160;
+              -correct_answers.each_with_index do |correct_answer, counter3|
+                -if counter3 == (correct_answers.count - 1)
+                  %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+                -else
+                  %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s + ' &')
+            -else
+              %p.text-inline
+                Correct Answer:
+                &#160;
+              %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answers.first].to_s)
             %p.text-inline
               &#160;
               &bull;
@@ -55,23 +64,10 @@
 
 
 
-    -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+    -@course_module_element_user_log.quiz_attempts.reverse.each_with_index do |attempt, counter|
       -if attempt
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
-
-  -if @course_module_element_user_log.is_jumbo_quiz
-    .box-item.question-box.border-same-backcolor.width-bigger.text-right{style: 'padding-right: 40px;'}
-      .col-xs-4.text-left
-        =link_to course_special_link(@course_module), class: 'btn btn-red text-bold' do
-          .glyphicon.glyphicon-arrow-left
-          Restart Module
-      .col-xs-4.text-center
-        =link_to t('views.dashboard.index.h1'), dashboard_special_link, class: 'btn btn-red text-bold'
-      .col-xs-4.text-right
-        =link_to course_special_link(@course_module.next_module), class: 'btn btn-red text-bold' do
-          Next Module
-          .glyphicon.glyphicon-arrow-right
 
 
   -if @course_module_element

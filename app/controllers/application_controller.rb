@@ -6,20 +6,6 @@ require 'csv'
 
 class ApplicationController < ActionController::Base
 
-  # This array must be in ascending score order.
-  DIFFICULTY_LEVELS = [
-      {name: 'easy', score: 3, run_time_multiplier: 1},
-      {name: 'medium', score: 5, run_time_multiplier: 1.5},
-      {name: 'difficult', score: 10, run_time_multiplier: 2.5}
-  ]
-
-  DIFFICULTY_LEVEL_NAMES = DIFFICULTY_LEVELS.map { |x| x[:name] }
-
-  def self.find_multiplier_for_difficulty_level(the_name)
-    DIFFICULTY_LEVEL_NAMES.include?(the_name) ?
-        DIFFICULTY_LEVELS.find { |x| x[:name] == the_name }[:run_time_multiplier] : 0
-  end
-
   before_action :authenticate_if_staging
   before_action :setup_mcapi
 
@@ -250,17 +236,10 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
-      if the_thing.live
-        library_course_url(
-            the_thing.parent.name_url,
-            the_thing.name_url
-        )
-      else
-        preview_course_url(
-            the_thing.parent.name_url,
-            the_thing.name_url
-        )
-      end
+      library_course_url(
+          the_thing.parent.name_url,
+          the_thing.name_url
+      )
     elsif the_thing.class == CourseModule
       the_thing = the_thing
       library_course_url(
@@ -279,7 +258,7 @@ class ApplicationController < ActionController::Base
       library_special_link(
               the_thing.subject_course
       )
-    elsif the_thing.class == CourseModuleElement || the_thing.class == CourseModuleJumboQuiz
+    elsif the_thing.class == CourseModuleElement
       course_url(
               the_thing.course_module.subject_course.name_url,
               the_thing.course_module.name_url,

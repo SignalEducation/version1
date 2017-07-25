@@ -81,8 +81,9 @@
                     .card-inner
                       %h3.h3.card-title.l-margin-bottom{style: 'color: black;'}
                         =course.name
-                      %p.card-desc
-                        =course.try(:short_description).truncate(185)
+                      -if course.short_description
+                        %p.card-desc
+                          =course.try(:short_description).truncate(185)
                   .card-label
                     .row
                       .col-md-12.col-xs-12

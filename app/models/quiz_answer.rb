@@ -2,15 +2,13 @@
 #
 # Table name: quiz_answers
 #
-#  id                            :integer          not null, primary key
-#  quiz_question_id              :integer
-#  correct                       :boolean          default(FALSE), not null
-#  degree_of_wrongness           :string
-#  wrong_answer_explanation_text :text
-#  wrong_answer_video_id         :integer
-#  created_at                    :datetime
-#  updated_at                    :datetime
-#  destroyed_at                  :datetime
+#  id                  :integer          not null, primary key
+#  quiz_question_id    :integer
+#  correct             :boolean          default(FALSE), not null
+#  degree_of_wrongness :string
+#  created_at          :datetime
+#  updated_at          :datetime
+#  destroyed_at        :datetime
 #
 
 class QuizAnswer < ActiveRecord::Base
@@ -19,16 +17,15 @@ class QuizAnswer < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :quiz_question_id, :degree_of_wrongness, :wrong_answer_explanation_text, :wrong_answer_video_id, :quiz_contents_attributes
+  attr_accessible :quiz_question_id, :degree_of_wrongness, :quiz_contents_attributes
 
   # Constants
-  WRONGNESS = ['correct', 'incorrect']
+  WRONGNESS = %w(correct incorrect)
 
   # relationships
   has_many :quiz_attempts
   has_many :quiz_contents, -> { order(:sorting_order) }, dependent: :destroy
   belongs_to :quiz_question
-  belongs_to :wrong_answer_video, class_name: 'CourseModuleElement', foreign_key: :wrong_answer_video_id
 
   accepts_nested_attributes_for :quiz_contents, allow_destroy: true
 
@@ -37,7 +34,6 @@ class QuizAnswer < ActiveRecord::Base
   validates :degree_of_wrongness, inclusion: {in: WRONGNESS}, length: {maximum: 255}
 
   # callbacks
-  before_validation { squish_fields(:wrong_answer_explanation_text) }
   before_save :set_the_field_correct
 
   # scopes
@@ -46,11 +42,10 @@ class QuizAnswer < ActiveRecord::Base
   scope :correct, -> { where(correct: true) }
 
   # class methods
-  # def self.ids_in_specific_order(array_of_ids)
-  #   where(id: array_of_ids).order("CASE #{array_of_ids.map.with_index{|x,c| "WHEN id= #{x} THEN #{c} " }.join } END")
-  # end ##### now I'm a scope!
 
   # instance methods
+
+  ## Archivable methods ##
   def destroyable?
     true
   end

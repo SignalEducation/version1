@@ -27,16 +27,3 @@
               =link_to course_special_link(course_module_element), class: 'list-group-item text-center', title: t('views.courses.show.h1') do
                 .glyphicon.glyphicon-record
                 =course_module_element.name
-        -if @course_module.course_module_jumbo_quiz
-          .jumbo-quiz.text-center
-            -if @course_module.course_module_jumbo_quiz.name_url == params[:course_module_element_name_url]
-              .glyphicon.glyphicon-chevron-right.blue
-              =@course_module.course_module_jumbo_quiz.name
-            -elsif @course_module.course_module_jumbo_quiz.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
-              =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
-                .glyphicon.glyphicon-ok-sign
-                =@course_module.course_module_jumbo_quiz.name
-            -else
-              =link_to course_special_link(@course_module.course_module_jumbo_quiz), class: 'list-group-item' do
-                .glyphicon.glyphicon-record
-                =@course_module.course_module_jumbo_quiz.name

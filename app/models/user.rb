@@ -88,7 +88,6 @@ class User < ActiveRecord::Base
 
   # relationships
   belongs_to :country
-  has_many :completion_certificates
   has_many :course_module_element_user_logs
   has_many :enrollments
   has_and_belongs_to_many :subject_courses
@@ -359,7 +358,7 @@ class User < ActiveRecord::Base
 
   def permission_to_see_content(course)
     if self.individual_student?
-      if course.active && course.live
+      if course.active
         if self.valid_free_member?
           true
         elsif self.expired_free_member?

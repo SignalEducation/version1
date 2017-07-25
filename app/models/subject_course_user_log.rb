@@ -31,7 +31,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
-  has_many :completion_certificates
   has_one :enrollment
 
 
@@ -125,7 +124,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.count_of_quizzes_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_quizzes_taken)
     unless self.percentage_complete.nil?
       self.completed = true if (self.percentage_complete > 99)
-      self.completed = false if (self.percentage_complete < 100)
     end
     self.save
   end

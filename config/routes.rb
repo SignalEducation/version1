@@ -64,6 +64,7 @@ Rails.application.routes.draw do
     get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
+      match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
@@ -78,9 +79,7 @@ Rails.application.routes.draw do
         as: :course_modules_for_subject_course
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering
-    resources :course_module_jumbo_quizzes, only: [:new, :edit, :create, :update]
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
-    get 'completion_cert/:id', to: 'library#cert', as: :completion_certs
     resources :currencies, concerns: :supports_reordering
 
     get '/dashboard/export_users', to: 'dashboard#export_users', as: :export_users
@@ -99,12 +98,6 @@ Rails.application.routes.draw do
     resources :exam_bodies
     resources :exam_sittings
     resources :groups, concerns: :supports_reordering
-    resources :groups do
-      get 'edit_courses', action: :edit_courses
-      get 'admin_show', action: :admin_show
-      patch 'update_courses', action: :update_courses
-      put 'update_courses', action: :update_courses
-    end
 
     #Sign Up Actions
     get '/student_new', to: 'student_sign_ups#new', as: :new_student
@@ -124,7 +117,6 @@ Rails.application.routes.draw do
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
-    get 'library/:group_name_url/:subject_course_name_url/preview', to: 'library#preview_course', as: :preview_course
 
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
@@ -184,14 +176,14 @@ Rails.application.routes.draw do
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
-    get 'group/:home_pages_public_url', to: 'home_pages#group', as: :group_landing
+    get 'group/:home_pages_public_url', to: 'home_pages#show', as: :group_landing
 
     root 'home_pages#home'
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     #Catch Old URL
-    get '/:home_pages_public_url', to: 'home_pages#group'
+    get '/:home_pages_public_url', to: 'home_pages#show'
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

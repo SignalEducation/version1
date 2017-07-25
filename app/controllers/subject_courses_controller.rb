@@ -7,42 +7,39 @@
 #  name_url                                :string
 #  sorting_order                           :integer
 #  active                                  :boolean          default(FALSE), not null
-#  live                                    :boolean          default(FALSE), not null
-#  wistia_guid                             :string
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
 #  question_count                          :integer
 #  description                             :text
 #  short_description                       :string
-#  mailchimp_guid                          :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
-#  is_cpd                                  :boolean          default(FALSE)
-#  cpd_hours                               :float
-#  cpd_pass_rate                           :integer
-#  live_date                               :datetime
-#  certificate                             :boolean          default(FALSE), not null
-#  hotjar_guid                             :string
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
 #  exam_body_id                            :integer
 #  survey_url                              :string
+#  group_id                                :integer
+#  quiz_pass_rate                          :integer
+#  total_estimated_time_in_seconds         :integer
 #
 
 class SubjectCoursesController < ApplicationController
 
+  # Before Actions #
   before_action :logged_in_required
   before_action do
     ensure_user_is_of_type(%w(admin content_manager))
   end
   before_action :get_variables
 
+
+  # Standard Actions #
   def index
     @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
     @courses = params[:search].to_s.blank? ?
@@ -57,13 +54,8 @@ class SubjectCoursesController < ApplicationController
     @subject_course = SubjectCourse.new(sorting_order: 1)
   end
 
-  def edit
-  end
-
   def create
     @subject_course = SubjectCourse.new(allowed_params)
-    wistia_response = create_wistia_project(@subject_course.name) unless Rails.env.test?
-    @subject_course.wistia_guid = wistia_response.hashedId unless Rails.env.test?
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url
@@ -72,9 +64,7 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
-  def create_wistia_project(name)
-    wistia_response = Wistia::Project.create(name: name)
-    return wistia_response
+  def edit
   end
 
   def update
@@ -86,10 +76,27 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
-  def course_modules_order
-    @course_modules = @subject_course.children
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      SubjectCourse.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
   end
 
+  def destroy
+    if @subject_course.destroy
+      flash[:success] = I18n.t('controllers.subject_courses.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.subject_courses.destroy.flash.error')
+    end
+    redirect_to subject_courses_url
+  end
+
+
+  # Non-standard Actions #
+
+  ## Index, New & Create Actions for SubjectCourseResources that belong_to this SubjectCourse ##
   def subject_course_resources
     @subject_course = SubjectCourse.find(params[:id])
     @subject_course_resources = @subject_course.subject_course_resources
@@ -112,6 +119,8 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
+
+  ## Edit & Update Actions for Tutor Users associated with this SubjectCourse ##
   def edit_tutors
     @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
     @tutors = User.where(user_group_id: UserGroup.default_tutor_user_group.id).all_in_order
@@ -140,28 +149,21 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
+
+  ## Misc Actions ##
+
+  ### Creates list of the Course's CourseModules for Drag&Drop reordering (posted to CourseModules#reorder) ###
+  def course_modules_order
+    @course_modules = @subject_course.children
+  end
+
+  ### Triggered by a CronTask ###
   def update_student_exam_tracks
     subject_course = SubjectCourse.where(id: params[:id]).first
     subject_course.update_all_course_sets
     redirect_to subject_course_url(subject_course)
   end
 
-  def reorder
-    array_of_ids = params[:array_of_ids]
-    array_of_ids.each_with_index do |the_id, counter|
-      SubjectCourse.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
-    end
-    render json: {}, status: 200
-  end
-
-  def destroy
-    if @subject_course.destroy
-      flash[:success] = I18n.t('controllers.subject_courses.destroy.flash.success')
-    else
-      flash[:error] = I18n.t('controllers.subject_courses.destroy.flash.error')
-    end
-    redirect_to subject_courses_url
-  end
 
   protected
 
@@ -172,15 +174,22 @@ class SubjectCoursesController < ApplicationController
     @groups = Group.all_active.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
-    @footer = nil
+    @footer = true
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order, :active, :live, :wistia_guid, :tutor_id, :description, :short_description, :mailchimp_guid, :default_number_of_possible_exam_answers, :restricted, :is_cpd, :cpd_hours, :cpd_pass_rate, :live_date, :certificate, :hotjar_guid, :email_content, :external_url, :external_url_name, :exam_body_id, :survey_url)
+    params.require(:subject_course).permit(:name, :name_url, :sorting_order,
+                                           :active, :tutor_id, :description,
+                                           :short_description,
+                                           :default_number_of_possible_exam_answers,
+                                           :email_content, :external_url,
+                                           :external_url_name, :exam_body_id,
+                                           :survey_url, :quiz_pass_rate, :group_id)
   end
 
   def resource_allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description, :file_upload)
+    params.require(:subject_course_resource).permit(:name, :subject_course_id,
+                                                    :description, :file_upload)
   end
 
 end

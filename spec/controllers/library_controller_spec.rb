@@ -2,21 +2,13 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
+require 'support/system_setup'
 
 RSpec.describe LibraryController, type: :controller do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
-
-  # currencies
-  let!(:gbp) { FactoryGirl.create(:gbp) }
-  let!(:eur) { FactoryGirl.create(:euro) }
-  let!(:usd) { FactoryGirl.create(:usd) }
-
-  # countries
-  let!(:uk) { FactoryGirl.create(:uk, currency_id: gbp.id) }
-  let!(:ireland) { FactoryGirl.create(:ireland, currency_id: eur.id) }
-  let!(:usa) { FactoryGirl.create(:usa, currency_id: usd.id) }
+  include_context 'system_setup'
 
 
   let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
@@ -27,12 +19,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -44,7 +35,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -57,7 +48,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -74,12 +65,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -91,7 +81,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -104,7 +94,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -121,12 +111,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -138,7 +127,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -151,7 +140,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -168,12 +157,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -185,7 +173,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -198,7 +186,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -215,12 +203,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -232,7 +219,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -245,7 +232,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -262,12 +249,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -279,7 +265,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -292,7 +278,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -309,12 +295,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -326,7 +311,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -339,7 +324,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -356,12 +341,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -373,7 +357,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -386,7 +370,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -403,12 +387,11 @@ RSpec.describe LibraryController, type: :controller do
     describe "GET index" do
       it "returns http success" do
         get :index
-        expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:index)
-        expect(Group.count).to eq(2)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
+        expect(Group.count).to eq(1)
       end
     end
 
@@ -420,7 +403,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end
@@ -433,7 +416,7 @@ RSpec.describe LibraryController, type: :controller do
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(2)
+        expect(Group.count).to eq(1)
         expect(SubjectCourse.count).to eq(2)
       end
     end

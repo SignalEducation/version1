@@ -9,8 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  group_id                      :integer
 #  subject_course_id             :integer
+#  custom_file_name              :string
 #
 
 require 'rails_helper'
@@ -30,7 +30,6 @@ describe HomePage do
   # Constants
 
   # relationships
-  it { should belong_to(:group) }
   it { should belong_to(:subject_course) }
   it { should belong_to(:subscription_plan_category) }
 
@@ -41,13 +40,14 @@ describe HomePage do
 
   it { should validate_presence_of(:public_url) }
 
+  it { should_not validate_presence_of(:custom_file_name) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(HomePage).to respond_to(:all_in_order) }
-  it { expect(HomePage).to respond_to(:for_groups) }
   it { expect(HomePage).to respond_to(:for_courses) }
 
   # class methods

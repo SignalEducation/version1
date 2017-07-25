@@ -33,12 +33,12 @@ class CourseModule < ActiveRecord::Base
   include Archivable
 
   # attr-accessible
-  attr_accessible :name, :name_url, :description,
-                  :sorting_order, :estimated_time_in_seconds,
-                  :active, :cme_count, :seo_description, :seo_no_index,
-                  :number_of_questions, :subject_course_id, :highlight_colour,
-                  :tuition, :test, :revision, :discourse_topic_id, :quiz_count,
-                  :video_duration, :video_count
+  attr_accessible :name, :name_url, :description, :sorting_order,
+                  :estimated_time_in_seconds, :active, :cme_count,
+                  :seo_description, :seo_no_index, :number_of_questions,
+                  :subject_course_id, :highlight_colour, :tuition, :test,
+                  :revision, :discourse_topic_id, :quiz_count, :video_duration,
+                  :video_count
 
   # Constants
 
@@ -49,7 +49,6 @@ class CourseModule < ActiveRecord::Base
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_many :student_exam_tracks
-  has_one :course_module_jumbo_quiz
 
   # validation
   validates :subject_course_id, presence: true
@@ -78,58 +77,34 @@ class CourseModule < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def array_of_sibling_ids
-    self.parent.course_modules.all_active.all_in_order.map(&:id)
-  end
 
-  def active_children
-    self.children.all_active.all_in_order
-  end
-
-  def category
-    if self.revision
-      'Revision'
-    elsif self.tuition
-      'Tuition'
-    elsif self.test
-      'Test'
-    else
-      ''
-    end
+  ## Parent & Child associations ##
+  def parent
+    self.subject_course
   end
 
   def children
     self.course_module_elements.all
   end
 
-  def children_available_count
-    self.children.all_active.count + (self.course_module_jumbo_quiz.try(:active) ? 1 : 0)
-  end
-
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
-  end
-
-  def destroyable?
-    true
-  end
-
-  def destroyable_children
-    # not destroyable:
-    # - self.course_module_element_user_logs
-    # - self.student_exam_tracks.empty?
-    the_list = []
-    the_list += self.course_module_elements.to_a
-    the_list << self.course_module_jumbo_quiz if self.course_module_jumbo_quiz
-    the_list
+  def active_children
+    self.children.all_active.all_in_order
   end
 
   def first_active_cme
     self.active_children.first
   end
 
-  def full_name
-    self.parent.name + ' > ' + self.name
+  def children_available_count
+    self.active_children.all_active.count
+  end
+
+  #######################################################################
+
+  ## Methods allow for navigation from one CM to the next ##
+
+  def array_of_sibling_ids
+    self.parent.course_modules.all_active.all_in_order.map(&:id)
   end
 
   def my_position_among_siblings
@@ -148,17 +123,6 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
-  def parent
-    self.subject_course
-  end
-
-  def percentage_complete_by_user_or_guid(user_id, session_guid)
-    set = user_id ?
-            self.student_exam_tracks.where(user_id: user_id).first :
-            self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
-    set.try(:percentage_complete) || 0
-  end
-
   def previous_module
     CourseModule.find_by_id(self.previous_module_id) || nil
   end
@@ -171,28 +135,86 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
-  def update_video_and_quiz_counts
-    estimated_time = self.course_module_elements.sum(:estimated_time_in_seconds)
-    num_questions = self.course_module_elements.sum(:number_of_questions)
-    quiz_count = self.course_module_elements.all_active.all_quizzes.count
-    duration = self.course_module_elements.sum(:duration)
-    video_count = self.course_module_elements.all_active.all_videos.count
-    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, quiz_count: quiz_count, video_duration: duration, video_count: video_count)
+
+  #######################################################################
+
+  ## Archivable ability ##
+
+  def destroyable?
+    true
   end
 
-  def total_time_watched_videos
-    total_seconds = CourseModuleElementUserLog.where(course_module_id: self.id).sum(:seconds_watched)
-    @time_watched ||= { hours: total_seconds / 3600, minutes: (total_seconds / 60) % 60, seconds: total_seconds % 60 }
+  def destroyable_children
+    # not destroyable:
+    # - self.course_module_element_user_logs
+    # - self.student_exam_tracks.empty?
+    the_list = []
+    the_list += self.course_module_elements.to_a
+    the_list
   end
+
+
+  #######################################################################
+
+  ## Keeping Model Count Attributes Up-to-Date ##
+
+  ### Triggered by child CME after_save callback ###
+  def update_video_and_quiz_counts
+    estimated_time = self.active_children.sum(:estimated_time_in_seconds)
+    num_questions = self.active_children.sum(:number_of_questions)
+    duration = self.active_children.sum(:duration)
+    quiz_count = self.active_children.all_active.all_quizzes.count
+    video_count = self.active_children.all_active.all_videos.count
+
+    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, video_duration: duration, quiz_count: quiz_count, video_count: video_count, cme_count: quiz_count + video_count)
+  end
+
+
+  ########################################################################
+
+  ## User Course Tracking ##
+
+  def completed_by_user_or_guid(user_id, session_guid)
+    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  end
+
+  def percentage_complete_by_user_or_guid(user_id, session_guid)
+    set = user_id ?
+        self.student_exam_tracks.where(user_id: user_id).first :
+        self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
+    set.try(:percentage_complete) || 0
+  end
+
+
+  ########################################################################
+
+  ## Model info for Views ##
+
+  def category
+    if self.revision
+      'Revision'
+    elsif self.tuition
+      'Tuition'
+    elsif self.test
+      'Test'
+    else
+      ''
+    end
+  end
+
+  def full_name
+    self.parent.name + ' > ' + self.name
+  end
+
 
   protected
 
   def set_count_fields
-    self.estimated_time_in_seconds = self.course_module_elements.sum(:estimated_time_in_seconds)
-    self.number_of_questions = self.course_module_elements.sum(:number_of_questions)
-    self.quiz_count = self.course_module_elements.all_active.all_quizzes.count
-    self.video_count = self.course_module_elements.all_active.all_videos.count
-    self.video_duration = self.course_module_elements.sum(:duration)
+    self.estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
+    self.number_of_questions = self.active_children.sum(:number_of_questions)
+    self.quiz_count = self.active_children.all_active.all_quizzes.count
+    self.video_count = self.active_children.all_active.all_videos.count
+    self.video_duration = self.active_children.sum(:duration)
     self.cme_count = children_available_count
   end
 

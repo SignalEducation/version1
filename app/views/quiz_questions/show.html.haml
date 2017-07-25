@@ -1,18 +1,36 @@
-.row
-  .col-sm-8.col-sm-offset-2
-    .page-header
-      %h1=t('views.quiz_questions.show.h1')
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  .l-section-courses.is-bg-asphalt
+    .l-wrap
+      .container-fluid{style: 'margin-bottom: 60px;'}
+        .row.l-margin-bottom-big
+          .col-sm-4
+            %h1=@quiz_question.course_module_element.try(:name).try(:html_safe)
+          .col-sm-4
+            %h2.h1.preview-mode=t('views.quiz_questions.show.preview_mode')
+          .col-sm-4
+            =link_to edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id) do
+              .btn.btn-red.btn-secondary.full-width
+                &#60;
+                =t('views.general.return')
 
-.row
-  .col-sm-8.col-sm-offset-2
-    =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
+        .row.l-margin-bottom-big
+          .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
+            .quiz-heading.l-margin-bottom
+              #question-count.p
+                Question 1 of 4
+            .progress.l-margin-bottom-huge
+              .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
-.row
-  .col-sm-8.col-sm-offset-2
-    %h3=t('views.quiz_questions.form.solution_to_the_question')
-    .well.well-sm.quiz-well
-      =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+            =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
 
-.row
-  .col-sm-8.col-sm-offset-2
-    =link_to sanitize('&larr; ' + t('views.course_module_elements.show.h1')), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id)
+          .box-item.question-box.border-same-backcolor#quiz-contents
+            .quiz-heading.l-margin-bottom
+              %h3=t('views.quiz_questions.form.solution_to_the_question')
+
+            -if @quiz_question.custom_styles
+              =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+            -else
+              %p=render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+

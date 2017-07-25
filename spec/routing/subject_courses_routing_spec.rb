@@ -7,32 +7,26 @@
 #  name_url                                :string
 #  sorting_order                           :integer
 #  active                                  :boolean          default(FALSE), not null
-#  live                                    :boolean          default(FALSE), not null
-#  wistia_guid                             :string
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
 #  question_count                          :integer
 #  description                             :text
 #  short_description                       :string
-#  mailchimp_guid                          :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
 #  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
 #  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
-#  is_cpd                                  :boolean          default(FALSE)
-#  cpd_hours                               :float
-#  cpd_pass_rate                           :integer
-#  live_date                               :datetime
-#  certificate                             :boolean          default(FALSE), not null
-#  hotjar_guid                             :string
 #  email_content                           :text
 #  external_url_name                       :string
 #  external_url                            :string
 #  exam_body_id                            :integer
 #  survey_url                              :string
+#  group_id                                :integer
+#  quiz_pass_rate                          :integer
+#  total_estimated_time_in_seconds         :integer
 #
 
 require 'rails_helper'

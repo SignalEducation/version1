@@ -47,17 +47,13 @@ class QuizAttempt < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id) }
   scope :all_correct, -> { where(correct: true) }
   scope :all_incorrect, -> { where(correct: false) }
-  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
-  scope :one_month_ago, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
-  scope :two_months_ago, -> { where(created_at: 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
-  scope :three_months_ago, -> { where(created_at: 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
-  scope :four_months_ago, -> { where(created_at: 4.month.ago.beginning_of_month..4.month.ago.end_of_month) }
-  scope :five_months_ago, -> { where(created_at: 5.month.ago.beginning_of_month..5.month.ago.end_of_month) }
 
 
   # class methods
 
   # instance methods
+
+  ## Misc. ##
 
   def answers
     self.answer_array ?
@@ -73,14 +69,8 @@ class QuizAttempt < ActiveRecord::Base
 
   def calculate_score
     self.correct = self.quiz_answer.try(:correct) || false
-    self.score = self.correct ? 1: 0
+    self.score = self.correct ? 1 : 0
   end
-
-  #def calculate_score
-    #self.correct = self.quiz_answer.try(:correct) || false
-    #self.score = self.correct ?
-    #        ApplicationController::DIFFICULTY_LEVELS.find {|x| x[:name] == self.quiz_answer.quiz_question.difficulty_level}[:score] : 0
-  #end
 
   def serialize_the_array
     self.answer_array = self.answer_array.to_s.split(',') if self.answer_array.to_s.split(',').length > 1

@@ -9,8 +9,8 @@
 #  public_url                    :string
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
-#  group_id                      :integer
 #  subject_course_id             :integer
+#  custom_file_name              :string
 #
 
 class HomePage < ActiveRecord::Base
@@ -19,13 +19,12 @@ class HomePage < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
-                  :public_url, :group_id, :subject_course_id
+                  :public_url, :subject_course_id, :custom_file_name
 
   # Constants
 
   # relationships
   belongs_to :subscription_plan_category
-  belongs_to :group
   belongs_to :subject_course
 
   # validation
@@ -39,7 +38,6 @@ class HomePage < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:seo_title) }
-  scope :for_groups, -> { where.not(group_id: nil) }
   scope :for_courses, -> { where.not(subject_course_id: nil) }
 
   # class methods
@@ -50,16 +48,11 @@ class HomePage < ActiveRecord::Base
   end
 
   def default_home_page
-    HomePage.where(group_id: nil).where(subject_course: nil).where(subscription_plan_category_id: nil).where(public_url: '/').first
+    HomePage.where(subject_course: nil).where(subscription_plan_category_id: nil).where(public_url: '/').first
   end
 
-
-  def parent
-    if self.subject_course
-      self.subject_course
-    elsif self.group
-      self.group
-    end
+  def course
+    self.subject_course
   end
 
   protected

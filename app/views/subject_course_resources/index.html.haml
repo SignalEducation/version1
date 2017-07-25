@@ -21,7 +21,8 @@
                   -@subject_course_resources.each do |subject_course_resource|
                     %tr
                       %td=subject_course_resource.name
-                      %td=subject_course_resource.subject_course.name
+                      -if subject_course_resource.subject_course
+                        %td=subject_course_resource.subject_course.name
                       %td
                         =link_to t('views.general.view'), subject_course_resource.file_upload.url, target: '_blank', class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_subject_course_resource_url(subject_course_resource), class: 'btn btn-cyan btn-small'
