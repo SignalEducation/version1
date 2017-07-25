@@ -23,7 +23,7 @@ class CoursesController < ApplicationController
             time_taken_in_seconds: 0,
             is_video: true,
             is_quiz: false,
-            course_module_id: course_module_element.course_module_id
+            course_module_id: @course_module_element.course_module_id
         )
       end
     else
