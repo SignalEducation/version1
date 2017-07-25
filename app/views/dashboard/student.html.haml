@@ -17,11 +17,11 @@
                 %li
                   %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
                     Enrollments
-                -if @non_enrollment_logs.any?
+                -if @non_enrollment_logs
                   %li
                     %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
                       Activity
-                -if @cfa_logs.any?
+                -if @cfa_logs
                   %li
                     %a{href: '#cfa', role: 'tab', data: {toggle: 'tab'}}
                       CFA
@@ -31,11 +31,11 @@
               .tab.account-tab#enrollments
                 =render partial: 'enrollments'
 
-              -if @non_enrollment_logs.any?
+              -if @non_enrollment_logs
                 .tab.account-tab#activity
                   =render partial: 'activity'
 
-              -if @cfa_logs.any?
+              -if @cfa_logs
                 .tab.account-tab#cfa
                   -@cfa_courses.each do |course|
                     -if course.active_children.any?
