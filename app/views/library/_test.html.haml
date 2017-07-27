@@ -35,7 +35,7 @@
 
 
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_test_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
-        -child.children.all_in_order.all_active.each do |grandchild|
+        -child.active_children.each do |grandchild|
 
           -if current_user
             -if current_user && current_user.permission_to_see_content(@course)

@@ -82,7 +82,7 @@ class SubjectCourse < ActiveRecord::Base
   after_create :update_sitemap
 
   # scopes
-  scope :all_active, -> { where(active: true) }
+  scope :all_active, -> { where(active: true).includes(:course_modules).where(course_modules: {active: true}) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
