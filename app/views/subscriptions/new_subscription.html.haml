@@ -61,15 +61,15 @@
     .l-section.is-bg-asphalt
       .l-wrap
         .container-fluid
-          .row
-            .col-sm-12.col-md-6.col-md-offset-3.payment-heading
+          .row.payment-heading
+            .col-sm-12.col-md-6.col-md-offset-3
               %h2.h3.text-center
                 %span.number
                   2
                 Payment details
-          =render partial: 'subscription_payment_cards/form', locals: {f: f}
+            =render partial: 'subscription_payment_cards/form', locals: {f: f}
 
-        -#.container-fluid
+        .container-fluid
           .col-md-12
             .col-md-4.col-sm-offset-4.text-center
               .spinner
@@ -97,4 +97,5 @@
       event.preventDefault();
       choosePlan(this);
     });
+    $(".spinner").hide();
   })

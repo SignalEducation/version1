@@ -64,6 +64,11 @@ Rails.application.configure do
           secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
       }
   }
+
+  #Enable bullet in your application
+  Bullet.enable = true
+  Bullet.console = true
+
 end
 
 # Required by LogEntries

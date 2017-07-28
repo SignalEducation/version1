@@ -116,7 +116,7 @@ class StripeApiEvent < ActiveRecord::Base
       self.processed = true
       self.processed_at = Time.now
     else
-      set_process_error(invoice ? invoice.errors.full_messages.inspect : "Error creating invoice")
+      set_process_error(invoice ? invoice.errors.full_messages.inspect : 'Error creating invoice')
     end
   end
 

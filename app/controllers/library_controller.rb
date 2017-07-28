@@ -23,7 +23,7 @@ class LibraryController < ApplicationController
   def course_show
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     if @course && @course.active
-      @course_modules = @course.children.all_active.all_in_order
+      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id)
       @tuition_course_modules = @course_modules.all_tuition
       @test_course_modules = @course_modules.all_test
       @revision_course_modules = @course_modules.all_revision
@@ -68,7 +68,7 @@ class LibraryController < ApplicationController
         ip_country = IpAddress.get_country(request.remote_ip)
         @country = ip_country ? ip_country : current_user.country
         @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-        @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+        @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
 
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
