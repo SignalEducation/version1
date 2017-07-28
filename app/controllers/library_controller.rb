@@ -23,10 +23,10 @@ class LibraryController < ApplicationController
   def course_show
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     if @course && @course.active
-      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id)
-      @tuition_course_modules = @course_modules.all_tuition
-      @test_course_modules = @course_modules.all_test
-      @revision_course_modules = @course_modules.all_revision
+      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_in_order
+      @tuition_course_modules = @course_modules.all_tuition.all_in_order
+      @test_course_modules = @course_modules.all_test.all_in_order
+      @revision_course_modules = @course_modules.all_revision.all_in_order
       tag_manager_data_layer(@course.name)
 
       #Enrollment and SubjectCourseUserLog

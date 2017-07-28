@@ -625,6 +625,14 @@ class User < ActiveRecord::Base
 
   end
 
+
+  def completed_course_module_element(cme_id)
+    cmeuls = self.course_module_element_user_logs.where(course_module_element_id: cme_id)
+    array = cmeuls.all.map(&:element_completed)
+    array.include? true
+  end
+
+
   protected
 
   def add_guid
