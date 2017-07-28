@@ -632,6 +632,11 @@ class User < ActiveRecord::Base
     array.include? true
   end
 
+  def started_course_module_element(cme_id)
+    cmeuls = self.course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls.any?
+  end
+
 
   protected
 
