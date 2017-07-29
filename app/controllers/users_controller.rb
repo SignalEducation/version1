@@ -265,7 +265,7 @@ class UsersController < ApplicationController
 
   def subscription_invoice
     invoice = Invoice.where(id: params[:id]).first
-    if invoice
+    if invoice && invoice.user_id == current_user.id
       @invoice = invoice
       @invoice_date = invoice.issued_at
       description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
@@ -281,6 +281,8 @@ class UsersController < ApplicationController
           send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: "inline"
         end
       end
+    else
+      redirect_to account_url
     end
   end
 
