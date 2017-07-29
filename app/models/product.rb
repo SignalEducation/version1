@@ -66,30 +66,34 @@ class Product < ActiveRecord::Base
   end
 
   def create_on_stripe
-    stripe_product = Stripe::Product.create(name: self.name,
-                                            shippable: false,
-                                            active: self.active)
-    self.live_mode = stripe_product.livemode
-    self.stripe_guid = stripe_product.id
+    unless Rails.env.test?
+      stripe_product = Stripe::Product.create(name: self.name,
+                                              shippable: false,
+                                              active: self.active)
+      self.live_mode = stripe_product.livemode
+      self.stripe_guid = stripe_product.id
 
-    stripe_sku = Stripe::SKU.create(
-        product: stripe_product.id,
-        currency: self.currency.iso_code,
-        price: (self.price.to_f * 100).to_i,
-        active: true,
-        inventory: {
-            type: 'infinite'
-        }
-    )
-    self.stripe_sku_guid = stripe_sku.id
-    self.save!
+      stripe_sku = Stripe::SKU.create(
+          product: stripe_product.id,
+          currency: self.currency.iso_code,
+          price: (self.price.to_f * 100).to_i,
+          active: true,
+          inventory: {
+              type: 'infinite'
+          }
+      )
+      self.stripe_sku_guid = stripe_sku.id
+      self.save!
+    end
   end
 
   def update_on_stripe
-    stripe_product = Stripe::Product.retrieve(id: self.stripe_guid)
-    stripe_product.name = self.name
-    stripe_product.active = self.active
-    stripe_product.save
+    unless Rails.env.test?
+      stripe_product = Stripe::Product.retrieve(id: self.stripe_guid)
+      stripe_product.name = self.name
+      stripe_product.active = self.active
+      stripe_product.save
+    end
   rescue => e
     errors.add(:stripe, e.message)
     false
