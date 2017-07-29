@@ -56,6 +56,7 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
+#  student_number                   :string
 #
 
 class User < ActiveRecord::Base
@@ -80,7 +81,8 @@ class User < ActiveRecord::Base
                   :stripe_account_balance, :trial_limit_in_seconds,
                   :free_trial, :trial_limit_in_days,
                   :trial_ended_notification_sent_at, :terms_and_conditions,
-                  :date_of_birth, :description, :free_trial_ended_at
+                  :date_of_birth, :description, :free_trial_ended_at,
+                  :student_number
 
   # Constants
   LOCALES = %w(en)

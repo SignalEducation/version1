@@ -24,28 +24,22 @@ class EnrollmentsController < ApplicationController
     @course = SubjectCourse.find(params[:enrollment][:subject_course_id])
     @exam_body = @course.exam_body if @course.exam_body_id
     log = create_subject_course_user_log
-    if params[:registered] && !params[:not_registered]
-      @enrollment = Enrollment.new(allowed_params)
-      @enrollment.registered = true
-      dob = params[:date_of_birth] if params[:date_of_birth] && params[:date_of_birth].present?
-      if params[:custom_exam_date].present? && !params[:exam_date].present?
-        date = params[:custom_exam_date]
-      elsif !params[:custom_exam_date].present? && params[:exam_date].present?
-        date = params[:exam_date]
-      end
-      @enrollment.exam_date = date
-    elsif !params[:registered] && params[:not_registered]
-      @enrollment = Enrollment.new(limited_params)
+    @enrollment = Enrollment.new(allowed_params)
+    if params[:custom_exam_date].present? && !params[:exam_date].present?
+      date = params[:custom_exam_date]
+    elsif !params[:custom_exam_date].present? && params[:exam_date].present?
+      date = params[:exam_date]
     end
+    @enrollment.exam_date = date
     @enrollment.user_id = current_user.id
     @enrollment.subject_course_user_log_id = log.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true
 
     if @enrollment.save
-      @user.update_attribute(:date_of_birth, dob) if params[:date_of_birth]
       send_welcome_email(@course.id)
-      redirect_to course_special_link(@course.first_active_cme)
+      redirect_to library_special_link(@course)
+      flash[:success] = 'Thank you for your Enrolment'
     else
       flash[:error] = 'The data entered for the enrolment was not valid. Please try again!'
       redirect_to library_special_link(@course)
@@ -70,10 +64,8 @@ class EnrollmentsController < ApplicationController
       date = params[:exam_date]
     end
     @enrollment.exam_date = date
-    @enrollment.student_number = params[:enrollment][:student_number]
 
     if @enrollment.save
-
       redirect_to account_url(anchor: :enrollments)
     else
       redirect_to account_url(anchor: :enrollments)
@@ -88,8 +80,7 @@ class EnrollmentsController < ApplicationController
     else
       content = @course.short_description
     end
-    url = library_special_link(@course)
-    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, url, contact_url)
+    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, content, account_url, contact_url)
   end
 
   def basic_create
