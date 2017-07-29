@@ -50,6 +50,6 @@ en:
       existing_emails: Email already exists in system
       not_valid_email: Not a valid email format
       duplicated_emails: Duplicate Email
-      invalid_field_count: File must have 3 columns
+      invalid_field_count: File must have 4 columns
       preview_csv: Preview Users
       import_csv: Imported Users

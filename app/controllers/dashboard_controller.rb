@@ -137,6 +137,8 @@ class DashboardController < ApplicationController
       @users.each do |user|
         if user.save
           #MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
+          stripe_customer = Stripe::Customer.create(email: user.email)
+          user.update_attribute(:stripe_customer_id, stripe_customer.id)
         end
       end
     else

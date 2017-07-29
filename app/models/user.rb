@@ -703,8 +703,10 @@ class User < ActiveRecord::Base
           password = SecureRandom.hex(5)
           verification_code = ApplicationController::generate_random_code(20)
           time_now = Proc.new{Time.now}.call
-          user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name'], user_group_id: v['user_group_id']).first_or_create
-          user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
+          user_group = UserGroup.where(individual_student: true, name: 'Individual students').first
+          user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
+
+          user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
           if used_emails.include?(v['email']) || !user.valid?
             users = []
             raise ActiveRecord::Rollback

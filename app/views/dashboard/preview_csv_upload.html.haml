@@ -25,8 +25,6 @@
                         %th
                           Last Name
                         %th
-                          User Group Id
-                        %th
                           Errors
                     %tbody
                       -@csv_data.each_with_index do |csd, idx|
@@ -34,15 +32,12 @@
                           =hidden_field_tag "csvdata[#{idx}][email]", csd[:values][0]
                           =hidden_field_tag "csvdata[#{idx}][first_name]", csd[:values][1]
                           =hidden_field_tag "csvdata[#{idx}][last_name]", csd[:values][2]
-                          =hidden_field_tag "csvdata[#{idx}][user_group_id]", csd[:values][3]
                           %td
                             =csd[:values][0]
                           %td
                             =csd[:values][1]
                           %td
                             =csd[:values][2]
-                          %td
-                            =csd[:values][3]
                           %td=csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
 
                 .row
