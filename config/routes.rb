@@ -158,6 +158,10 @@ Rails.application.routes.draw do
       get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
       patch  '/update_courses', action: :update_courses, as: :update_courses
     end
+
+    post :preview_csv_upload, to: 'dashboard#preview_csv_upload'
+    post :import_csv_upload, to: 'dashboard#import_csv_upload'
+
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
     get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show

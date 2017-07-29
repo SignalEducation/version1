@@ -640,6 +640,85 @@ class User < ActiveRecord::Base
   end
 
 
+  def self.parse_csv(csv_content)
+    csv_data = []
+    duplicate_emails = []
+    has_errors = false
+    if csv_content.lines.count == 1 && csv_content.include?("\r")
+      csv_content.strip.split("\r").each do |line|
+        line.to_s.strip.split(',').tap do |fields|
+          error_msgs = []
+          if fields.length == 3
+            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+            error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
+            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+            duplicate_emails << fields[0]
+          else
+            error_msgs << I18n.t('models.users.invalid_field_count')
+          end
+          has_errors = true unless error_msgs.empty?
+          csv_data << { values: fields, error_messages: error_msgs }
+        end
+      end
+    else
+      if csv_content.respond_to?(:each_line)
+        csv_content.each_line do |line|
+          line.strip.split(',').tap do |fields|
+            error_msgs = []
+            if fields.length == 3
+              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+              error_msgs << I18n.t('models.users.existing_emails') if User.where(email: fields[0].strip).count > 0
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+              duplicate_emails << fields[0]
+            else
+              error_msgs << I18n.t('models.users.invalid_field_count')
+            end
+            has_errors = true unless error_msgs.empty?
+            csv_data << { values: fields, error_messages: error_msgs }
+          end
+        end
+      else
+        has_errors = true
+      end
+
+    end
+    has_errors = true if csv_data.empty?
+    return csv_data, has_errors
+  end
+
+  def self.bulk_create(csv_data)
+    users = []
+    used_emails = []
+    if csv_data.is_a?(Hash)
+      self.transaction do
+        csv_data.each do |k,v|
+          user = User.where(email: v['email']).first
+          if user || v['email'].empty?
+            users = []
+            raise ActiveRecord::Rollback
+          end
+          country = Country.where(name: 'United Kingdom').last
+          password = SecureRandom.hex(5)
+          verification_code = ApplicationController::generate_random_code(20)
+          time_now = Proc.new{Time.now}.call
+          user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name'], user_group_id: v['user_group_id']).first_or_create
+          user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code)
+          if used_emails.include?(v['email']) || !user.valid?
+            users = []
+            raise ActiveRecord::Rollback
+          end
+          users << user
+          used_emails << user.email
+        end
+      end
+    end
+    users
+  end
+
+
+
   protected
 
   def add_guid

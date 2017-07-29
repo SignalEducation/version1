@@ -104,6 +104,14 @@ en:
           success: Currency has been deleted
           error: Currency was not deleted
 
+    dashboard:
+      preview_csv:
+        flash:
+          error: There was an issue with your upload file, please ensure it meets the requirements
+      import_csv:
+        flash:
+          error: There was an issue with your upload file, please ensure it meets the requirements
+
     exam_bodies:
       create:
         flash:
