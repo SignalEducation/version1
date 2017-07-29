@@ -130,22 +130,19 @@ class StripeApiEvent < ActiveRecord::Base
       invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
       self.processed = true
       self.processed_at = Time.now
-      if subscription.current_status == 'past_due'
-        #Update the subscription if it is in the past_due state
-        subscription.update_attribute(:current_status, 'active')
-        Rails.logger.debug "DEBUG: Subscription being updated from past_due to active as a result of successful invoice payment webhook. Sub id - #{subscription.id} Invoice id - #{invoice.id}"
-      end
-      unless Rails.env.test?
-        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        balance = stripe_customer.account_balance
-        user.update_attributes(stripe_account_balance: balance)
-      end
-      #The subscription charge was successful so send successful payment email
-      url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
-      invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: url_host)
-      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+      #Update the subscription if it is in the past_due state
+      if subscription.update_from_stripe
 
-      Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
+        #The subscription charge was successful so send successful payment email
+        url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
+        invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: url_host)
+        MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+
+        Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
+      
+      else
+        set_process_error("Error updating subscription from stripe - subscription.update_from_stripe. SubID-#{subscription.id}, InvID-#{invoice.id}, UserID-#{user.id}, InvoicePaymentSucceeded Event ")
+      end
 
     else
       set_process_error("Error finding User by - #{stripe_customer_guid}, Invoice by - #{stripe_invoice_guid} or Subscription by - #{stripe_subscription_guid}. InvoicePaymentSucceeded Event")
@@ -160,18 +157,12 @@ class StripeApiEvent < ActiveRecord::Base
 
     if user && invoice && subscription
       invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
+      subscription.update_from_stripe
       if stripe_next_attempt
         #A NextPaymentAttempt Date value means that another payment attempt will be made
-        self.processed = true
-        self.processed_at = Time.now
-        subscription.update_attribute(:current_status, 'past_due')
-
         MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
       else
         #Final payment attempt has failed on stripe so we cancel the current subscription
-        self.processed = true
-        self.processed_at = Time.now
-        subscription.update_attribute(:current_status, 'canceled')
         MandrillWorker.perform_async(user.id, 'send_account_suspended_email')
       end
     else
@@ -188,7 +179,7 @@ class StripeApiEvent < ActiveRecord::Base
       Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"
       self.processed = true
       self.processed_at = Time.now
-      subscription.update_attribute(:current_status, 'canceled')
+      subscription.update_from_stripe
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end
