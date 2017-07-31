@@ -556,7 +556,7 @@ class User < ActiveRecord::Base
     DiscourseCreateUserWorker.perform_at(5.minute.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
-  def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions, coupon_code)
+  def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)
 
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = self
@@ -584,7 +584,6 @@ class User < ActiveRecord::Base
     stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid, source: stripe_token)
 
     stripe_subscription.prorate = true
-    stripe_subscription.coupon = coupon_code if coupon_code
     stripe_subscription.trial_end = 'now'
     result = stripe_subscription.save # saves it on stripe
 

@@ -26,7 +26,7 @@ require 'rails_helper'
 describe CourseModuleElementUserLog do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at latest_attempt count_of_questions_correct count_of_questions_taken)
+  black_list = %w(id created_at updated_at latest_attempt)
   CourseModuleElementUserLog.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -64,7 +64,7 @@ describe CourseModuleElementUserLog do
   # callbacks
   it { should callback(:set_latest_attempt).before(:create) }
   it { should callback(:set_booleans).before(:create) }
-  it { should callback(:calculate_score).after(:save) }
+  it { should callback(:calculate_score).after(:create) }
   it { should callback(:create_or_update_student_exam_track).after(:save) }
   it { should callback(:add_to_user_trial_limit).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
