@@ -102,6 +102,12 @@ class MandrillClient
     send_template('free-trial-ending-20-02-17', msg)
   end
 
+  def send_free_trial_over_email(new_subscription_url)
+    msg = message_stub.merge({"subject" => "Free Trial Expired"})
+    msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
+    send_template('free-trial-expired-20-02-17', msg)
+  end
+
 
   #Other Emails
   def send_survey_email(url)

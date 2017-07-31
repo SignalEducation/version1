@@ -19,11 +19,18 @@
                   %th
                     First name
                   %th
-                    last Name
+                    Last Name
+                  %th
+                    Email Type
               %tbody
                 -@users.each do |user|
+                  -type = user.expired_free_member? ? 'Upgrade' : 'Invite'
                   %tr{id: user.id}
                     %td=user.email
                     %td=user.first_name
                     %td=user.last_name
+                    %td=type
 
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          =link_to 'Return to Dashboard', dashboard_special_link(current_user), class: 'btn btn-cyan'

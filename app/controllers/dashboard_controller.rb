@@ -135,7 +135,7 @@ class DashboardController < ApplicationController
     if params[:csvdata]
       @users = User.bulk_create(params[:csvdata])
       @users.each do |user|
-        if user.save
+        if user.save && !user.stripe_customer_id
           #MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
           stripe_customer = Stripe::Customer.create(email: user.email)
           user.update_attribute(:stripe_customer_id, stripe_customer.id)
