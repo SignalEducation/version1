@@ -243,15 +243,9 @@ class UsersController < ApplicationController
     stripe_token_guid = params[:subscription]["stripe_token"]
     @user = User.find(params[:user_id])
     if subscription_id && stripe_token_guid && params[:subscription]["terms_and_conditions"]
-      coupon_code = params[:coupon] unless params[:coupon].empty?
-      verified_coupon = verify_coupon(coupon_code, current_user.country.currency_id) if coupon_code
-      if coupon_code && verified_coupon == 'bad_coupon'
-        redirect_to user_reactivate_account_url(current_user.id)
-      else
-        #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
-        @user.resubscribe_account(subscription_id, stripe_token_guid, params[:subscription]["terms_and_conditions"], coupon_code)
-        redirect_to reactivation_complete_url
-      end
+      #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
+      @user.resubscribe_account(subscription_id, stripe_token_guid, params[:subscription]["terms_and_conditions"])
+      redirect_to reactivation_complete_url
     else
       redirect_to account_url
     end

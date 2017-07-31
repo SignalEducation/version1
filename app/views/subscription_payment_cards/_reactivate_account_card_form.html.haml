@@ -8,20 +8,15 @@
 
 .l-margin-top.coupon-section
   .row
-    .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2
-      .col-sm-6{style: 'padding-left: 0;'}
-        .form-group
-          %label
-            Coupon Code
-          =text_field_tag :coupon, nil, placeholder: 'Valid Coupon Code', class: 'form-control', default: nil
-      .col-sm-6{style: 'padding-right: 0;'}
+    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
+      .col-sm-10{style: 'padding-right: 0;'}
         .form-group
           .checkbox
             %label
               %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
                 =t('views.general.terms_and_conditions')
 
-    .col-sm-10.col-sm-offset-1.col-md-8.col-md-offset-2.l-margin-top-huge
+    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3.l-margin-top-big
       .form-group.l-margin-top
         %input{type: 'submit', class: 'btn btn-red', value: t('views.users.upgrade_subscription.reactivate_account')}
 
