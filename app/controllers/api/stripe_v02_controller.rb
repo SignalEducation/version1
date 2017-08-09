@@ -10,7 +10,7 @@ class Api::StripeV02Controller < Api::BaseController
 
     if event_json && StripeApiEvent::KNOWN_PAYLOAD_TYPES.include?(event_json["type"]) && StripeApiEvent::KNOWN_API_VERSIONS.include?(event_json["api_version"])
 
-      StripeApiProcessorWorker.perform_async(event_json["id"],
+      StripeApiProcessorWorker.perform_at(5.minutes, event_json["id"],
                                              event_json["api_version"],
                                              account_url)
 

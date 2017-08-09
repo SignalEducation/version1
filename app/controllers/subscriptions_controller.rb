@@ -42,47 +42,39 @@ class SubscriptionsController < ApplicationController
     user = User.find(params[:user_id])
     subscription_params = params[:user][:subscriptions_attributes]["0"]
     subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
-    #Check for a coupon code and if its valid
-    coupon_code = params[:coupon] unless params[:coupon].empty?
 
     if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] == 'true'
-      verified_coupon = verify_coupon(coupon_code, subscription_plan.currency_id) if coupon_code
-      if coupon_code && verified_coupon == 'bad_coupon'
-        #Invalid coupon code so redirect back with errors
-        redirect_to user_new_subscription_url(user.id)
-      else
-        #No coupon code or a valid coupon code so proceed to create subscription on stripe
-        stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
-        stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-        #Creation on stripe was successful so create our DB record of Subscription
-        if stripe_customer && stripe_subscription
-          subscription = Subscription.new(
-              user_id: user.id,
-              subscription_plan_id: subscription_plan.id,
-              complimentary: false,
-              active: true,
-              livemode: stripe_subscription[:plan][:livemode],
-              current_status: stripe_subscription.status,
-          )
-          # mass-assign-protected attributes
-          subscription.stripe_guid = stripe_subscription.id
-          subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-          subscription.stripe_customer_id = stripe_customer.id
-          subscription.terms_and_conditions = subscription_params["terms_and_conditions"]
-          subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
-          subscription_saved = subscription.save(validate: false)
-        end
-
-        if subscription_saved
-          trial_ended_date = user.free_trial_ended_at ? user.free_trial_ended_at : Proc.new{Time.now}.call
-          user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
-          user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
-          redirect_to personal_upgrade_complete_url
-        else
-          redirect_to user_new_subscription_url(current_user.id)
-          flash[:error] = "Your card was declined! Please check that it's valid and the details you entered are correct."
-        end
+      stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, subscription_params)
+      stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+      #Creation on stripe was successful so create our DB record of Subscription
+      if stripe_customer && stripe_subscription
+        subscription = Subscription.new(
+            user_id: user.id,
+            subscription_plan_id: subscription_plan.id,
+            complimentary: false,
+            active: true,
+            livemode: stripe_subscription[:plan][:livemode],
+            current_status: stripe_subscription.status,
+        )
+        # mass-assign-protected attributes
+        subscription.stripe_guid = stripe_subscription.id
+        subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+        subscription.stripe_customer_id = stripe_customer.id
+        subscription.terms_and_conditions = subscription_params["terms_and_conditions"]
+        subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
+        subscription_saved = subscription.save(validate: false)
       end
+
+      if subscription_saved
+        trial_ended_date = user.free_trial_ended_at ? user.free_trial_ended_at : Proc.new{Time.now}.call
+        user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
+        user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+        redirect_to personal_upgrade_complete_url
+      else
+        redirect_to user_new_subscription_url(current_user.id)
+        flash[:error] = "Your card was declined! Please check that it's valid and the details you entered are correct."
+      end
+
     else
       redirect_to user_new_subscription_url(current_user.id)
       flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
@@ -135,13 +127,12 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  def create_on_stripe(stripe_customer_id, subscription_plan, verified_coupon, subscription_params)
+  def create_on_stripe(stripe_customer_id, subscription_plan, subscription_params)
     begin
       stripe_subscription = Stripe::Subscription.create(
           customer: stripe_customer_id,
           plan: subscription_plan.stripe_guid,
           source: subscription_params["stripe_token"],
-          coupon: verified_coupon,
           trial_end: 'now'
       )
 

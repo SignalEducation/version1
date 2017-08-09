@@ -101,7 +101,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def completed_cme_user_logs
-    cme_user_logs.all_completed
+    cme_user_logs.all_completed.with_elements_active
   end
 
   def destroyable?

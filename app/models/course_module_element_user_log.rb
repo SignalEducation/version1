@@ -30,7 +30,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :element_completed, :time_taken_in_seconds,
                   :quiz_score_actual, :quiz_score_potential,
                   :is_video, :is_quiz, :course_module_id,
-                  :quiz_attempts_attributes, :seconds_watched
+                  :quiz_attempts_attributes, :seconds_watched,
+                  :count_of_questions_taken, :count_of_questions_correct
 
   # Constants
 
@@ -48,7 +49,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
-  after_save :calculate_score, :add_to_user_trial_limit, :create_or_update_student_exam_track
+  after_create :calculate_score
+  after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
   after_create :check_for_enrollment_email_conditions, :create_lesson_intercom_event
 
   # scopes
@@ -114,12 +116,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     if self.is_quiz
       course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
       percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
-
-      self.count_of_questions_taken = self.quiz_attempts.count
-      self.count_of_questions_correct = self.quiz_attempts.all_correct.count
-      self.quiz_score_actual = percentage_score
-      self.quiz_score_potential = self.count_of_questions_taken
-      self.element_completed = true if percentage_score >= course_pass_rate
+      passed = percentage_score >= course_pass_rate ? true : false
+      self.update_attributes(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count,quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
     end
   end
 

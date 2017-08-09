@@ -120,10 +120,11 @@
 
                 .col-sm-9.l-margin-top-big
                   .col-sm-6
-                    .h3
-                      Valid Payment Card
-                    .h6
-                      =@default_card.status ? 'True' : 'False'
+                    -if @default_card
+                      .h3
+                        Valid Payment Card
+                      .h6
+                        =@default_card.status ? 'True' : 'False'
                   .col-sm-6
                     .h3
                       Subscription Set To Cancel At
