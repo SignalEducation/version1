@@ -122,6 +122,37 @@ class DashboardController < ApplicationController
     ensure_user_is_of_type(['tutor'])
   end
 
+  def preview_csv_upload
+    if params[:upload] && params[:upload].respond_to?(:read)
+      @csv_data, @has_errors = User.parse_csv(params[:upload].read)
+    else
+      flash[:error] = t('controllers.dashboard.preview_csv.flash.error')
+      redirect_to admin_dashboard_url
+    end
+  end
+
+  def import_csv_upload
+    if params[:csvdata]
+      @users = User.bulk_create(params[:csvdata])
+      @users.each do |user|
+        if user.save
+          if user.valid_free_member? && !user.stripe_customer_id
+            MandrillWorker.perform_async(user.id, 'admin_invite', user_verification_url(email_verification_code: user.email_verification_code))
+            stripe_customer = Stripe::Customer.create(email: user.email)
+            user.update_attribute(:stripe_customer_id, stripe_customer.id)
+          elsif !user.valid_free_member? && user.stripe_customer_id
+            MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', user_new_subscription_url(user.id))
+          end
+        end
+      end
+      flash[:success] = t('controllers.dashboard.import_csv.flash.success')
+    else
+      flash[:error] = t('controllers.dashboard.import_csv.flash.error')
+      redirect_to admin_dashboard_url
+    end
+  end
+
+
   protected
 
   def get_variables

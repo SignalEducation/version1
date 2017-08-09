@@ -2,17 +2,13 @@
   .row
     .col-sm-12
       .table-box
-        %h3.h-dark
-          =t('views.users.show.tabs.enrollments')
         %table.table{style: 'font-size: 18px;'}
           %thead
             %tr
               %th
-                Course
+                Enrolment Course
               %th
                 Exam Sitting
-              %th
-                Student No.
               %th
           %tbody
             -@enrollments.all_in_order.each do |enrollment|
@@ -22,9 +18,6 @@
                 %td
                   -if enrollment.exam_date
                     =exam_sitting_date(enrollment.exam_date)
-                %td
-                  -if enrollment.student_number
-                    =enrollment.student_number
                 %td
                   =link_to edit_enrollment_url(enrollment) do
                     .btn.btn-purple.btn-small.pull-right

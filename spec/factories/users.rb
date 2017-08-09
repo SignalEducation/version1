@@ -56,6 +56,7 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
+#  student_number                   :string
 #
 
 FactoryGirl.define do

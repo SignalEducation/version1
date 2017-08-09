@@ -1,0 +1,38 @@
+.remodal{"data-remodal-id" => "csv-upload-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          Upload CSV File
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top.text-left
+      =form_tag(preview_csv_upload_path, authenticity_token: true, id: 'csv_upload_modal_form', role: 'form', multipart: true, data: {type: 'csv'}, class: 'form-horizontal') do
+
+        .row
+          .col-md-12.l-margin-top
+            %h4=t('views.dashboard.admin.csv_upload_modal.h1')
+        .row.l-margin-top
+          .col-md-12
+            %p
+              The file must be in CSV format (.csv). It must have 3 columns in each row.
+            %p
+              The first column is for Email.
+            %p
+              The second column is for First Name.
+            %p
+              The third column is for Last Name.
+            %label.control-label{for: :upload}=t('views.dashboard.admin.csv_upload_modal.file')
+            .input-group.input-group-lg.full-width
+              =file_field_tag :upload, class: 'form-control', style: 'border-radius: 6px;', required: true
+            %br/
+
+        %button{type: 'button', class: 'btn btn-cyan', data: {dismiss: 'modal'}}
+          =t('views.general.cancel')
+        =submit_tag t('views.general.upload'), class: 'btn btn-red'
+
+:javascript
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['csv_upload_modal_form'].submit();
+  });

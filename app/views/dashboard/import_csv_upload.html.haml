@@ -1,0 +1,36 @@
+.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+            =t('models.users.import_csv')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .col-sm-12
+            %table.table.table-striped.table-bordered
+              %thead
+                %tr
+                  %th
+                    Email
+                  %th
+                    First name
+                  %th
+                    Last Name
+                  %th
+                    Email Type
+              %tbody
+                -@users.each do |user|
+                  -type = user.this_hour ? 'Upgrade' : 'Invite'
+                  %tr{id: user.id}
+                    %td=user.email
+                    %td=user.first_name
+                    %td=user.last_name
+                    %td=type
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          =link_to 'Return to Dashboard', dashboard_special_link(current_user), class: 'btn btn-cyan'

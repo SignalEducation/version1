@@ -482,6 +482,16 @@ en:
         user_groups: User Groups
         course_content_data: Courses Data
 
+        csv_upload_modal:
+          h1: Upload CSV File
+          file: Upload CSV File
+
+        preview_csv:
+          h1: Upload Preview
+
+        preview_csv:
+          h1: Upload Preview
+
       content_manager:
         edited_in_last_3_days: Edited in the last 3 days
         expired_in_last_3_days: Expired in the last 3 days
@@ -1060,6 +1070,8 @@ en:
         date_of_birth_placeholder: D.O.B
         description: Description
         description_placeholder: Tutor Info
+        student_number: Student Number
+        student_number_placeholder: Student Number
 
       edit:
         h1: Edit Account

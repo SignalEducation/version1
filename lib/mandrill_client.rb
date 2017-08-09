@@ -68,13 +68,12 @@ class MandrillClient
 
 
   # Enrollments Emails (Unsubscribe possible)
-  def send_enrollment_welcome_email(course_name, text, url, contact_link)
+  def send_enrollment_welcome_email(course_name, url, contact_link)
     msg = message_stub.merge({"subject" => "Welcome to #{course_name}"})
     msg["global_merge_vars"] << { "name" => "NAME", "content" => course_name }
-    msg["global_merge_vars"] << { "name" => "TEXT", "content" => text }
     msg["global_merge_vars"] << { "name" => "LINK", "content" => url }
     msg["global_merge_vars"] << { "name" => "CONTACTLINK", "content" => contact_link }
-    send_template('enrolment-welcome-20-02-17', msg)
+    send_template('enrolment-welcome-09-08-17', msg)
   end
 
   def send_we_havent_seen_you_in_a_while_email(url, course_name, days)
@@ -100,6 +99,12 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "DAYSLEFT", "content" => days_left }
     msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
     send_template('free-trial-ending-20-02-17', msg)
+  end
+
+  def send_free_trial_over_email(new_subscription_url)
+    msg = message_stub.merge({"subject" => "Free Trial Expired"})
+    msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
+    send_template('free-trial-expired-09-08-17', msg)
   end
 
 

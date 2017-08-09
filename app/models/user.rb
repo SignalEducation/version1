@@ -56,6 +56,7 @@
 #  description                      :text
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
+#  student_number                   :string
 #
 
 class User < ActiveRecord::Base
@@ -80,7 +81,8 @@ class User < ActiveRecord::Base
                   :stripe_account_balance, :trial_limit_in_seconds,
                   :free_trial, :trial_limit_in_days,
                   :trial_ended_notification_sent_at, :terms_and_conditions,
-                  :date_of_birth, :description, :free_trial_ended_at
+                  :date_of_birth, :description, :free_trial_ended_at,
+                  :student_number
 
   # Constants
   LOCALES = %w(en)
@@ -463,6 +465,10 @@ class User < ActiveRecord::Base
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
+  def this_hour
+    self.created_at > Time.now.beginning_of_hour
+  end
+
   def individual_student?
     self.user_group.try(:individual_student)
   end
@@ -635,6 +641,88 @@ class User < ActiveRecord::Base
     cmeuls = self.course_module_element_user_logs.where(course_module_element_id: cme_id)
     cmeuls.any?
   end
+
+
+  def self.parse_csv(csv_content)
+    csv_data = []
+    duplicate_emails = []
+    has_errors = false
+    if csv_content.lines.count == 1 && csv_content.include?("\r")
+      csv_content.strip.split("\r").each do |line|
+        line.to_s.strip.split(',').tap do |fields|
+          error_msgs = []
+          if fields.length == 3
+            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+            duplicate_emails << fields[0]
+          else
+            error_msgs << I18n.t('models.users.invalid_field_count')
+          end
+          has_errors = true unless error_msgs.empty?
+          csv_data << { values: fields, error_messages: error_msgs }
+        end
+      end
+    else
+      if csv_content.respond_to?(:each_line)
+        csv_content.each_line do |line|
+          line.strip.split(',').tap do |fields|
+            error_msgs = []
+            if fields.length == 3
+              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+              duplicate_emails << fields[0]
+            else
+              error_msgs << I18n.t('models.users.invalid_field_count')
+            end
+            has_errors = true unless error_msgs.empty?
+            csv_data << { values: fields, error_messages: error_msgs }
+          end
+        end
+      else
+        has_errors = true
+      end
+
+    end
+    has_errors = true if csv_data.empty?
+    return csv_data, has_errors
+  end
+
+  def self.bulk_create(csv_data)
+    users = []
+    used_emails = []
+    if csv_data.is_a?(Hash)
+      self.transaction do
+        csv_data.each do |k,v|
+          user = User.where(email: v['email']).first
+          if user && v['email'].empty?
+            users = []
+            raise ActiveRecord::Rollback
+          elsif user && user.expired_free_member?
+            users << user
+          else
+            country = Country.find(78) || Country.find(name: 'United Kingdom').last
+            password = SecureRandom.hex(5)
+            verification_code = ApplicationController::generate_random_code(20)
+            time_now = Proc.new{Time.now}.call
+            user_group = UserGroup.where(individual_student: true, name: 'Individual students').first
+            user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
+
+            user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
+            if used_emails.include?(v['email']) || !user.valid?
+              users = []
+              raise ActiveRecord::Rollback
+            end
+            users << user
+            used_emails << user.email
+          end
+        end
+      end
+    end
+    users
+  end
+
 
 
   protected

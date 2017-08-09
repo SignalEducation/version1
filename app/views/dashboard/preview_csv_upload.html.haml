@@ -1,0 +1,52 @@
+.main-content.margin-top
+  -if flash[:success] || flash[:error] || flash[:warning]
+    =render partial: 'layouts/flash_messages'
+  .l-section-small.is-bg-asphalt
+    .l-wrap
+      .container-fluid
+        .row.l-margin-bottom
+          .col-md-12.text-center
+            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
+              =t('views.dashboard.admin.preview_csv.h1')
+            %p
+              Please check that the data below is correct and then click Submit
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            =form_tag(import_csv_upload_path, authenticity_token: true, id: 'import_csv_corporate_students_form', role: 'form', class: 'form-horizontal') do
+              .corporate-box-item.table-box
+                .table-responsive
+                  %table.table{style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th
+                          Email
+                        %th
+                          First Name
+                        %th
+                          Last Name
+                        %th
+                          Errors
+                        %th
+                          Email Type
+                    %tbody
+                      -@csv_data.each_with_index do |csd, idx|
+                        -user = User.where(email: csd[:values][0]).first
+                        -email_type = user ? 'Upgrade' : 'Invite'
+                        %tr{id: "csvdata-#{idx}"}
+                          =hidden_field_tag "csvdata[#{idx}][email]", csd[:values][0]
+                          =hidden_field_tag "csvdata[#{idx}][first_name]", csd[:values][1]
+                          =hidden_field_tag "csvdata[#{idx}][last_name]", csd[:values][2]
+                          %td
+                            =csd[:values][0]
+                          %td
+                            =csd[:values][1]
+                          %td
+                            =csd[:values][2]
+                          %td=csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
+                          %td=email_type
+
+                .row
+                  .col-sm-12
+                    -unless @has_errors
+                      =submit_tag 'Submit', class: 'btn btn-red'
+                    =link_to t('views.general.cancel'), admin_dashboard_url, class: 'btn btn-cyan'

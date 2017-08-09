@@ -6,9 +6,11 @@
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
-        .col-md-12.text-center
+        .col-md-8.col-md-offset-2.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            ='Start Free 7-Day Trial'
+            Welcome to your 7-day Free Trial
+          %p.h5.text-center
+            We’re offering you 45 minutes of complimentary access over the next 7 days.  Let us show you how we will help you pass your exams.
   .l-wrap
     .row
       -if flash[:success] || flash[:error] || flash[:warning]
