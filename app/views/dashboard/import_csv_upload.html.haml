@@ -24,7 +24,7 @@
                     Email Type
               %tbody
                 -@users.each do |user|
-                  -type = user.expired_free_member? ? 'Upgrade' : 'Invite'
+                  -type = user.this_hour ? 'Upgrade' : 'Invite'
                   %tr{id: user.id}
                     %td=user.email
                     %td=user.first_name

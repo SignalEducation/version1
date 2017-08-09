@@ -465,6 +465,10 @@ class User < ActiveRecord::Base
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
   end
 
+  def this_hour
+    self.created_at > Time.now.beginning_of_hour
+  end
+
   def individual_student?
     self.user_group.try(:individual_student)
   end
@@ -697,9 +701,8 @@ class User < ActiveRecord::Base
             raise ActiveRecord::Rollback
           elsif user && user.expired_free_member?
             users << user
-            MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', user_new_subscription_url(user.id))
           else
-            country = Country.where(name: 'United Kingdom').last
+            country = Country.find(78) || Country.find(name: 'United Kingdom').last
             password = SecureRandom.hex(5)
             verification_code = ApplicationController::generate_random_code(20)
             time_now = Proc.new{Time.now}.call
