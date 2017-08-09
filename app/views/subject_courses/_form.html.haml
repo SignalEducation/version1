@@ -20,13 +20,9 @@
           %br/
           =f.label :short_description, t('views.subject_courses.form.short_description'), class: 'control-label'
           .input-group.input-group-lg.full-width
-            =f.text_area :short_description, placeholder: t('views.subject_courses.form.short_description_placeholder'),class: 'form-control', style: 'border-radius: 6px;'
+            =f.text_area :short_description, placeholder: t('views.subject_courses.form.short_description_placeholder'),class: 'form-control', style: 'border-radius: 6px;', rows: 5
           %br/
 
-          =f.label :survey_url, t('views.subject_courses.form.survey_url'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :survey_url, placeholder: t('views.subject_courses.form.survey_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-          %br/
 
 
         .col-md-6
@@ -38,10 +34,6 @@
           .input-group.input-group-lg.full-width
             =f.collection_select :exam_body_id, @exam_bodies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px'}
           %br/
-          =f.label :email_content, t('views.subject_courses.form.email_content'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_area :email_content, placeholder: t('views.subject_courses.form.email_content_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-          %br/
 
           =f.label :external_url, t('views.subject_courses.form.external_url'), class: 'control-label'
           .input-group.input-group-lg.full-width
@@ -50,7 +42,11 @@
           =f.label :external_url_name, t('views.subject_courses.form.external_url_name'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =f.text_field :external_url_name, placeholder: t('views.subject_courses.form.external_url_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          %br/
 
+          =f.label :survey_url, t('views.subject_courses.form.survey_url'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :survey_url, placeholder: t('views.subject_courses.form.survey_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
         .col-md-12
           .col-sm-6
@@ -59,7 +55,7 @@
                 =f.check_box :active
                 =t('views.subject_courses.form.active')
 
-        .col-md-12
+        .col-md-12.l-margin-top
           %br/
           =f.label :description, t('views.subject_courses.form.description'), class: 'control-label'
           .input-group.input-group-lg.full-width

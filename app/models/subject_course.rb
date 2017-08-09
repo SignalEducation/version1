@@ -72,7 +72,6 @@ class SubjectCourse < ActiveRecord::Base
   validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
-  validates :email_content, presence: true, on: :update
 
 
   # callbacks
