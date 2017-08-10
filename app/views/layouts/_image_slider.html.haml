@@ -1,0 +1,49 @@
+.container
+  .row
+    .col-md-8.col-md-offset-2
+      %h1.title1
+        Don’t just take our word for it.
+
+  .slide-base
+    .slides.cycle-slideshow{"data-cycle-auto-height" => "calc", "data-cycle-fx" => "scrollHorz", "data-cycle-next" => "#reviews .next", "data-cycle-prev" => "#reviews .prev", "data-cycle-slides" => "> .slide", "data-cycle-speed" => "600", "data-cycle-swipe" => "true", "data-cycle-timeout" => "8000"}
+      .slide
+        .row
+          .col-md-8.col-md-offset-2
+            .inner
+              .review
+                %span.q.q1
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem
+                %span.q.q2
+              .name Nancy Baker. Quebec, Canada
+
+      .slide
+        .row
+          .col-md-8.col-md-offset-2
+            .inner
+              .review
+                %span.q.q1
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autemlobortis nisl ut aliquip ex ea commodo consequat. Duis autem
+                %span.q.q2
+              .name Nancy Baker. Porto Alegre, Brazil
+
+      .slide
+        .row
+          .col-md-8.col-md-offset-2
+            .inner
+              .review
+                %span.q.q1
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit.
+                %span.q.q2
+              .name Nancy Baker. Quebec, Canada
+
+    .setas
+      .seta.prev
+        %i.fa.fa-chevron-left
+      .seta.next
+        %i.fa.fa-chevron-right
+
+.bgslides.cycle-slideshow{"data-cycle-fx" => "fade", "data-cycle-slides" => "> .slide", "data-cycle-speed" => "600", "data-cycle-timeout" => "0"}
+  .slide{:style => "background-image:url(assets/nancy.jpg);"}
+  .slide{:style => "background-image:url(http://placehold.it/1920x1080);"}
+  .slide{:style => "background-image:url(http://placehold.it/1920x1080/ddd);"}
+

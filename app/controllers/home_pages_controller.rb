@@ -26,15 +26,14 @@ class HomePagesController < ApplicationController
   before_action :set_view_objects, only: [:show]
 
   def home
-    #This is the main home_page
-    @groups = Group.all_active.all_in_order
-    # Displaying the monthly price at top of page
-    @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
-    #To show each pricing plan on the page; not involved in the sign up process
+    # To show each pricing plan on the page; not involved in the sign up process
     @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
-    @groups = Group.all_active.all_in_order
 
-    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+    @group = Group.all_active.all_in_order.first
+
+    seo_title_maker('ACCA: Professional Accountancy Courses Online| LearnSignal', 'On-demand training library to study for ACCA courses and qualifications. Learn
+the skills you need anytime, anywhere, on any device.', false)
+    
   end
 
   def show

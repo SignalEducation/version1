@@ -309,10 +309,8 @@ class ApplicationController < ActionController::Base
   end
   helper_method :subscription_special_link
 
-  def seo_title_maker(last_element, seo_description, seo_no_index)
-    @seo_title = last_element ?
-            "#{last_element.to_s.truncate(65)}" :
-            'Business Training Library | LearnSignal'
+  def seo_title_maker(seo_title, seo_description, seo_no_index)
+    @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
     @seo_description = seo_description.to_s.truncate(156)
     @seo_no_index = seo_no_index
   end

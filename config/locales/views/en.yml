@@ -598,7 +598,7 @@ en:
 
       sign_up_form:
         confirm_password: Confirm Password
-        submit: Sign up now
+        submit: Get free course access
         sign_up_for_free_trial: Sign up for your 7-day free trial
         no_credit_card_needed: No credit card needed
         error_panel_caption: "prevented your Sign-Up from being completed:"
@@ -1020,20 +1020,24 @@ en:
     users:
       form:
         email: Email
+        your_email: Your email address
         email_placeholder: user@example.com
         phone_number: Phone Number
         interest: Topic
         topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
         first_name: First name
+        your_first_name: Your first name
         first_name_placeholder: John
         last_name: Last name
+        your_last_name: Your last name
         username: Community Username
         username_placeholder: Username for LearnSignal Community Forum
         last_name_placeholder: Smith
         full_name: Name
         current_password: Current password
         current_password_placeholder: Current password
+        create_password: Create a password
         password: Password
         password_placeholder: Password
         new_password: New Password
