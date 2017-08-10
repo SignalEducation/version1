@@ -1,6 +1,6 @@
 #wrapper
-  -#loading
-  .header#header
+  #loading
+  %header#header
     =render 'layouts/transparent_navbar'
 
   %section#free.diag-r-down
@@ -26,7 +26,7 @@
       %h2.subtitle
         Taking your accounting skills to the next level.
       .row
-        -@group.active_children.each do |course|
+        -@group.active_children.all_in_order.each do |course|
           .col-md-4.col-sm-6
             =link_to library_special_link(course) do
               .course

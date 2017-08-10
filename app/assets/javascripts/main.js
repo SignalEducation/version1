@@ -15,7 +15,7 @@ $(document).ready(function(){
 
 
     //header form
-    // Added code to open form if any error messages exist for @user
+    // Added code to open form i
     $("#free .s-get").click(function(){
         var $a = $(this);
         if ($a.hasClass("form-open")) {

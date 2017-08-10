@@ -141,8 +141,13 @@ the skills you need anytime, anywhere, on any device.', false)
     if params[:home_pages_public_url]
       @public_url = params[:home_pages_public_url].to_s
       @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
+      @group = Group.all_active.all_in_order.first
       if @home_page
-        @course_object = @home_page.course if @home_page.course
+        if @home_page.course
+          @course_object = @home_page.course
+        else
+          @course_object = @group
+        end
       else
         redirect_to root_url
       end
