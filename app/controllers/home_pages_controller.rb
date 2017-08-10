@@ -33,7 +33,7 @@ class HomePagesController < ApplicationController
 
     seo_title_maker('ACCA: Professional Accountancy Courses Online| LearnSignal', 'On-demand training library to study for ACCA courses and qualifications. Learn
 the skills you need anytime, anywhere, on any device.', false)
-    
+
   end
 
   def show
