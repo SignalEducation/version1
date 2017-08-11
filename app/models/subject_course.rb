@@ -69,7 +69,7 @@ class SubjectCourse < ActiveRecord::Base
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :description, presence: true
-  validates :group_id, presence: true
+  #validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
 

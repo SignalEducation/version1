@@ -9,8 +9,4 @@
           -if @course.exam_body && @course.exam_sitting
             %a{data: {remodal: {target: 'modal'}}, class: 'btn btn-cyan full-width'}
               Enrol Now
-          -else
-            =link_to enrollment_basic_create_url(@course.name_url) do
-              .btn.btn-wide.btn-cyan
-                Enrol Now
 
