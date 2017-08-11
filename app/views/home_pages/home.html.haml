@@ -138,11 +138,11 @@
               %ul.stats
                 %li
                   %span
-                    %img{:src => "img/icon_post_views.png"}/
+                    =image_tag('icon_post_views.png')
                   %span 102 views
                 %li
                   %span
-                    %img{:src => "img/icon_post_comments.png"}/
+                    =image_tag('icon_post_comments.png')
                   %span 2 comments
           .col-sm-6
             .post
@@ -153,11 +153,11 @@
               %ul.stats
                 %li
                   %span
-                    %img{:src => "img/icon_post_views.png"}/
+                    =image_tag('icon_post_views.png')
                   %span 102 views
                 %li
                   %span
-                    %img{:src => "img/icon_post_comments.png"}/
+                    =image_tag('icon_post_comments.png')
                   %span 2 comments
 
 
@@ -312,7 +312,7 @@
           %h1.title1 We’re here to guide you through.
           %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
           .lsbtn-base
-            %a.lsbtn.v3{:href => "#"} Chat our experts
+            =link_to 'Chat our experts', contact_url, class: 'lsbtn v3'
 
 
 

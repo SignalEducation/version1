@@ -17,13 +17,14 @@
                 %h1.title1 Want to pass your ACCA exams first time?
                 %h2.subtitle Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.
                 .lsbtn-base
-                  %a.lsbtn.s-get{:href => "#"}
-                    Get free course access
-                    %i.fa.fa-chevron-right
+                  =link_to new_student_url do
+                    .lsbtn.s-get
+                      Get free course access
+                      %i.fa.fa-chevron-right
                 .obs-nocc No credit card details needed!
               .col-md-2
                 .approved
-                  %img{src: 'acca_approved.png'}
+                  =image_tag('acca_approved.png')
 
 
     %section#tips
@@ -106,11 +107,11 @@
                 %ul.stats
                   %li
                     %span
-                      %img{:src => "img/icon_post_views.png"}/
+                      =image_tag('icon_post_views.png')
                     %span 102 views
                   %li
                     %span
-                      %img{:src => "img/icon_post_comments.png"}/
+                      =image_tag('icon_post_comments.png')
                     %span 2 comments
 
             .col-sm-6
@@ -122,18 +123,18 @@
                 %ul.stats
                   %li
                     %span
-                      %img{:src => "img/icon_post_views.png"}/
+                      =image_tag('icon_post_views.png')
                     %span 102 views
                   %li
                     %span
-                      %img{:src => "img/icon_post_comments.png"}/
+                      =image_tag('icon_post_comments.png')
                     %span 2 comments
 
         .row.btnset
           .col-lg-4.col-lg-offset-2.col-md-5.col-md-offset-1.col-sm-6
-            %a.lsbtn.v4{:href => "#"} Visit our blog
+            %a.lsbtn.v4{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
           .col-lg-4.col-md-5.col-sm-6
-            %a.lsbtn.v3{:href => "#"} Visit the community
+            %a.lsbtn.v3{href: 'https://community.learnsignal.com/', target: '_blank'} Visit the community
 
 
     %section#what
@@ -161,7 +162,7 @@
               =image_tag('what4.png')
             .desc Tutor support
         .lsbtn-base
-          %a.lsbtn{:href => "#"} Get free access
+          =link_to 'Get free access', new_student_url, class: 'lsbtn'
 
 
     %section#trusted
@@ -170,7 +171,7 @@
           %h1.title1 Trusted by learners all over the world.
           %p The days of in-person training have become impractical. Issues with memory retention, data overload and poor quality trainers have made in-person training ineffective. That’s why we’ve created our adaptive learning platform, so you can access your learning anywhere and anytime that you need it.
         .lsbtn-base
-          %a.lsbtn{:href => "#"} Try us out for free
+          =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
         .obs-nocc No credit card details needed!
 
 
@@ -336,7 +337,7 @@
             %h1.title1 Prefer to try us out first?
             %p No problem! We’re so confident you’ll love our courses, we want to give you access to 45 minutes of completely FREE online revision. No credit card details are required, and if you feel our courses aren’t a good fit for you, you’ve no obligation to sign up for an unlimited access plan. So why not give it a try and sign up for your 7-day trial below?
             .lsbtn-base
-              %a.lsbtn{:href => "#"} Get free course access
+              =link_to 'Get free course access', new_student_url, class: 'lsbtn'
             .obs-nocc No credit card details needed!
 
 
@@ -347,6 +348,6 @@
             %h1.title1 We’re here to guide you through.
             %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
             .lsbtn-base
-              %a.lsbtn.v3{:href => "#"} Chat our experts
+              =link_to 'Chat our experts', contact_url, class: 'lsbtn v3'
 
 
