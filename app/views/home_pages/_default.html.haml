@@ -16,12 +16,13 @@
               .col-md-10
                 %h1.title1 Want to pass your ACCA exams first time?
                 %h2.subtitle Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.
+
                 .lsbtn-base
-                  =link_to new_student_url do
-                    .lsbtn.s-get
-                      Get free course access
-                      %i.fa.fa-chevron-right
+                  =link_to new_student_url, class: 'lsbtn' do
+                    Get free course access
+                    %i.fa.fa-chevron-right
                 .obs-nocc No credit card details needed!
+
               .col-md-2
                 .approved
                   =image_tag('acca_approved.png')
