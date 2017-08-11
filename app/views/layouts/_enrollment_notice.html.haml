@@ -3,7 +3,7 @@
   Students who enroll in courses perform better in exams.
   -if @course.exam_body
     %a{data: {remodal: {target: 'modal'}}}
-      Please Enroll
+      Please Enrol
   -else
     =link_to enrollment_basic_create_url(@course.name_url) do
-      Please enroll
+      Please Enrol

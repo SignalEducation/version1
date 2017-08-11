@@ -3,8 +3,10 @@
     .col-md-12
       %button.remodal-close{"data-remodal-action" => "close"}
       .col-md-12
-        %h2
-          ="Enroll in #{@course.try(:name)}"
+        %h3
+          ="Welcome to the #{@course.try(:name)}."
+        %h3
+          ='To continue your studies please enrol.'
 
   =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
     =f.hidden_field :subject_course_id, value: @course.id
@@ -23,10 +25,16 @@
 
 
     %br/
+    .col-sm-12
+      %p.p
+        ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help for your exam."
+
+
+    %br/
     .col-sm-12#actions_btns
       .col-sm-4.col-sm-offset-8
         .btn.btn-cyan#enroll_now{"data-remodal-action" => "confirm"}
-          Enroll Now
+          Enrol Now
 
 
 
