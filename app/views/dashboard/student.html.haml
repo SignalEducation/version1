@@ -1,7 +1,4 @@
 -if @first_active_log
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-
   .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
@@ -10,7 +7,7 @@
 
         .row.tabs
           .col-sm-3
-            .account-tabs
+            .dashboard-tabs
               %ul
                 %li
                   %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
@@ -25,16 +22,16 @@
                       CFA
 
           .col-sm-9
-            .account-tab-content
-              .tab.account-tab#enrollments
+            .dashboard-tab-content
+              .tab.dashboard-tab#enrollments
                 =render partial: 'enrollments'
 
               -if @non_enrollment_logs
-                .tab.account-tab#activity
+                .tab.dashboard-tab#activity
                   =render partial: 'activity'
 
               -if @cfa_logs
-                .tab.account-tab#cfa
+                .tab.dashboard-tab#cfa
                   -@cfa_courses.each do |course|
                     -if course.active_children.any?
                       .col-sm-4.col-md-6
@@ -56,9 +53,6 @@
 
 
 -else
-
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
 
   .l-section-small.is-bg-asphalt
     .l-wrap

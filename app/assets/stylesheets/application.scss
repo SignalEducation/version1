@@ -1353,5 +1353,138 @@ a.list-group-item {
 
 
 
+
+
+
+
+
+
+
+
+// Dashboard
+
+
+.dashboard-tab {
+  display: none;
+  //max-width: 60%;
+  margin: auto 0 5px auto;
+  //float: left;
+}
+.dashboard-tab-content {
+  //width: 60%;
+  margin: 0;
+
+}
+@media (max-width: 768px) {
+  .dashboard-tab-content {
+    width: 100%;
+    margin-top: 0;
+
+  }
+}
+.dashboard-tabs{
+  margin: $gutter 0 0;
+}
+.dashboard-tabs ul {
+  margin-right: 0;
+  padding-left: 0;
+  background-color: darken(#F9FAFB, 6%);
+  //width: 30%;
+}
+.dashboard-tabs ul > li {
+  list-style: none;
+}
+.dashboard-tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: $colour-7;
+  font-size: 18px;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.dashboard-tabs ul > li:first-child a {
+  //border-top: 1px solid #71738c;
+}
+.dashboard-tabs ul > li a:hover {
+  background-color: #FFFFFF;
+}
+.dashboard-tabs ul > li a.active {
+  //background-color: #373854;
+  background-color: #FFFFFF;
+  font-weight: bold;
+
+}
+.dashboard-tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.dashboard-tab h3{
+  font-size: 26px;
+  //line-height: 1.5;
+  color: $white;
+}
+.dashboard-tab p{
+  line-height: 1.45;
+  color: $colour-7;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.dashboard-tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .dashboard-tabs ul{
+    margin-right: 65px;
+    width: 100%;
+  }
+  .dashboard-tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .dashboard-tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .dashboard-tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .dashboard-tabs {
+    padding: 0 0 45px 0;
+  }
+  .dashboard-tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .dashboard-tabs ul > li a {
+    font-size: 18px;
+  }
+  .dashboard-tabs ul > li a br{ display: block; }
+  .dashboard-tab h3 { font-size: 27px;}
+  .dashboard-tab p{ font-size: 16px }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 @import "nav_and_footer.scss";
 @import "extras.scss";
