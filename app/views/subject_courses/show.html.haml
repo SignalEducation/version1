@@ -1,6 +1,3 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -29,7 +26,7 @@
             .ol.sortable-area
               -@subject_course.children.all_in_order.each do |course_module|
                 .li.l-margin-bottom-big
-                  .no-image-box-item.table-box
+                  .table-box
                     .table-responsive
                       .col-md-9.l-margin-bottom
                         %h2=course_module.name.to_s.truncate(50)

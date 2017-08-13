@@ -57,7 +57,11 @@
         =render partial: 'layouts/transparent_navbar'
       -else
         =render partial: 'layouts/navbar'
+
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
     =yield
+
     -if @footer
       =render partial: 'layouts/large_footer'
 
