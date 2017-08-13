@@ -1,5 +1,5 @@
 #wrapper
-  #loading
+  -#loading
   %header#header
     =render 'layouts/transparent_navbar'
 
@@ -209,7 +209,7 @@
       %h1.title1 Study whenever and wherever you want
       %h2.subtitle With 24/7, 365 learning on any device, the days of inflexible classroom study are over.
       .lsbtn-base
-        %a.lsbtn{:href => "#"} Get free course access
+        =link_to 'Get free course access', new_student_url, class: 'lsbtn'
       .obs-nocc No credit card details needed!
 
 
