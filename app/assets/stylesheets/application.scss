@@ -1255,11 +1255,100 @@ a.list-group-item {
 }
 
 
+// Quiz Uploading
+.question-box-item {
+  display: block;
+  background: darken($white, 5);
+  position: relative;
+  margin: 0 0 $gutter/2 0;
+  color: $colour-7;
+  padding: $gutter/1.5 $gutter $gutter/1.5 $gutter*2.5;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  &:before {
+    position: absolute;
+    background: 0;
+    background-size: contain;
+    top: 50%;
+    margin-top: -11px;
+    left: $gutter/1.5;
+    content: "";
+    height: 22px;
+    width: 22px;
+  }
+  @include breakpoint(sm-min) {
+    padding: $gutter/1.25 $gutter $gutter/1.5 $gutter*2.5;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+  &.upcoming {
+    &:before {
+      @include opacity(0.4);
+    }
+  }
+  &.box-topic-item {
+
+  }
+}
+.question{ margin: 29px 0 0;}
 
 
 
+.remodal {
+  background: $colour-34;
 
+  .inline-field input,
+  .inline-field label {
+    display: inline-block;
+    //margin-bottom: 0; /* I added this after I posted my reply */
+    vertical-align: middle; /* Fixes any weird issues in Firefox and IE */
+  }
 
+  hr {
+    border-color: #979797;
+    margin: $gutter 0;
+  }
+
+}
+
+.faq-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: left;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+    cursor: pointer;
+  }
+}
+.faq-inner {
+  padding: $gutter/1.5 $gutter/1.5;
+}
+.narrow {
+  height: 100px;
+}
+
+.faq-title {
+  &.h6 {
+    margin-top: 2px;
+  }
+}
+.closed {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 
 

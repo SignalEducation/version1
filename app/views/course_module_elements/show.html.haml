@@ -1,10 +1,7 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-courses.is-bg-asphalt
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .row
+      .row.l-margin-bottom
         .col-sm-12.text-center
           %h1
             -if @course_module_element.is_video

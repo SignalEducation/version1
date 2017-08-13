@@ -1,6 +1,3 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -13,7 +10,7 @@
           .no-image-box-item.table-box
             .table-responsive
               =will_paginate @currencies, renderer: BootstrapPagination::Rails
-              %table.table.table-bordered.sorted_table{data: {destination: currencies_url}}
+              %table.table.sorted_table{data: {destination: currencies_url}}
                 %thead
                   %tr
                     %th=t('views.currencies.form.iso_code')
