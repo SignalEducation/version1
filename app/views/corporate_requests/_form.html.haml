@@ -1,35 +1,36 @@
 =form_for(@corporate_request, html: {class: 'form-horizontal', role: 'form'}) do |f|
   =render partial: '/layouts/error_messages', locals: {thing: @corporate_request, message: nil}
   .row
-    .col-md-8.col-md-offset-2
-      =f.label :name, t('views.corporate_requests.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.corporate_requests.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      =f.label :title, t('views.corporate_requests.form.title'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :title, placeholder: t('views.corporate_requests.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :company, t('views.corporate_requests.form.company'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :company, placeholder: t('views.corporate_requests.form.company_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :email, t('views.corporate_requests.form.email'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :email, placeholder: t('views.corporate_requests.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :phone_number, t('views.corporate_requests.form.phone_number'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :phone_number, placeholder: t('views.corporate_requests.form.phone_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :website, t('views.corporate_requests.form.website'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :website, placeholder: t('views.corporate_requests.form.website_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :personal_message, t('views.corporate_requests.form.personal_message'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :personal_message, placeholder: t('views.corporate_requests.form.personal_message_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+    .col-md-12
+      .col-md-6
+        =f.label :name, t('views.corporate_requests.form.name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, placeholder: t('views.corporate_requests.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+        %br/
+        =f.label :title, t('views.corporate_requests.form.title'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :title, placeholder: t('views.corporate_requests.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :company, t('views.corporate_requests.form.company'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :company, placeholder: t('views.corporate_requests.form.company_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :email, t('views.corporate_requests.form.email'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :email, placeholder: t('views.corporate_requests.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      .col-md-6
+        =f.label :phone_number, t('views.corporate_requests.form.phone_number'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :phone_number, placeholder: t('views.corporate_requests.form.phone_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :website, t('views.corporate_requests.form.website'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :website, placeholder: t('views.corporate_requests.form.website_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :personal_message, t('views.corporate_requests.form.personal_message'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :personal_message, placeholder: t('views.corporate_requests.form.personal_message_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
 
-  .row
+  .row.l-margin-top-huge
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), corporate_requests_path

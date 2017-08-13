@@ -1,4 +1,4 @@
-.header.header-dark.navbar-fixed-top{role: 'banner'}
+.nav-header{role: 'banner'}
   .l-wrap
     .container-fluid
       %nav.navbar.navbar-default
@@ -30,7 +30,7 @@
                   %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                     Admin
                     %span.caret
-                  %ul#menu.dropdown-menu
+                  %ul.dropdown-menu
                     %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                     %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
                     %li=link_to t('views.products.index.h1'), products_url
@@ -59,6 +59,7 @@
                     %li=link_to t('views.exam_bodies.index.h1'), exam_bodies_url
                     %li=link_to t('views.exam_sittings.index.h1'), exam_sittings_url
                     %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
+                    %li=link_to t('views.corporate_requests.index.h1'), corporate_requests_url
                     %li=link_to t('views.currencies.index.h1'), currencies_url
                     %li=link_to t('views.countries.index.h1'), countries_url
                     %li=link_to t('views.vat_codes.index.h1'), vat_codes_url

@@ -1,16 +1,15 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.l-section-small
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center
             =t('views.corporate_requests.index.h1')
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             =will_paginate @corporate_requests, renderer: BootstrapPagination::Rails
             .table-responsive
               %table.table.sorted_table{data: {destination: subject_courses_url}, style: 'font-size: 18px;'}
@@ -18,22 +17,16 @@
                   %tr
                     %th=t('views.corporate_requests.form.name')
                     %th=t('views.corporate_requests.form.title')
-                    %th=t('views.corporate_requests.form.company')
                     %th=t('views.corporate_requests.form.email')
                     %th=t('views.corporate_requests.form.phone_number')
-                    %th=t('views.corporate_requests.form.website')
-                    %th=t('views.corporate_requests.form.personal_message')
                     %th
                 %tbody
                   -@corporate_requests.each do |corporate_request|
                     %tr{id: corporate_request.id}
                       %td=corporate_request.name
                       %td=corporate_request.title
-                      %td=corporate_request.company
                       %td=corporate_request.email
                       %td=corporate_request.phone_number
-                      %td=corporate_request.website
-                      %td=corporate_request.personal_message
                       %td
                         =link_to t('views.general.show'), corporate_request_url(corporate_request), class: 'btn btn-cyan btn-small'
                         =link_to t('views.general.edit'), edit_corporate_request_url(corporate_request), class: 'btn btn-cyan btn-small'

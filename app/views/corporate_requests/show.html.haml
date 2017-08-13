@@ -1,6 +1,5 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -12,7 +11,7 @@
             =@corporate_request.id
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               %table.table.table-bordered.l-margin-top
                 %tr
