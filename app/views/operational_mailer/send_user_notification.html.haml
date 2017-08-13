@@ -1,7 +1,0 @@
-%h1=t('mailers.operational.send_user_notification.subject_line')
-%p=t('mailers.general.salutation', fname: @user_notification.user.first_name) + ','
-%p=t('mailers.operational.send_user_notification.paragraph_1')
-%p=link_to @user_notification.subject_line, "#{@url}en/user_notifications/#{@user_notification.id}"
-%p=t('mailers.general.closing')
-%br/
-%p=t('mailers.general.signature')
