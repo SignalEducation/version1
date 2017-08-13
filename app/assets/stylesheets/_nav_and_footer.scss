@@ -37,7 +37,7 @@
   text-decoration: none;
   @include font-size(1.3);
   &:hover, &:active {
-    color: rgba($white, 1);
+    color: $red1;
   }
   @include breakpoint(sm-min) {
     margin: 0;
