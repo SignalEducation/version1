@@ -93,7 +93,7 @@ body {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 2. Text Classes
+// 2. Standard Text Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 img{ max-width: 100%;}
@@ -260,9 +260,11 @@ hr {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 3. Form Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Form Classes
 .form-group {
   margin: 0 0 20px 0;
 }
@@ -296,11 +298,12 @@ label, .label {
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
 }
-
+// Makes input fields fill entire with of the form div
 .full-width {
   width: 100%;
 }
 
+// TODO Find what these do
 .change-password {
   margin-top: 27px;
 }
@@ -312,7 +315,10 @@ label, .label {
   color: $white;
 }
 
-// Flash Messages
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 4. Flash Messages
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 .alert.success {
   background: $colour-17;
   margin-bottom: 0;
@@ -337,7 +343,7 @@ label, .label {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 3. Buttons and Links
+// 5. Standard Button and Link Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 .btn {
@@ -498,7 +504,6 @@ label, .label {
 }
 
 
-
 // Landing Page BTNs
 .lsbtn-base {
   text-align: center;
@@ -570,9 +575,8 @@ label, .label {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 4. Page Layouts and Spacing
+// 6. Page Layouts and Spacing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 
 .l-section {
@@ -659,12 +663,11 @@ label, .label {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 7. Standard Container Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
+// Used for all white content boxes that contain index tables or show tables
 .table-box {
   display: block;
   background: $white;
@@ -696,16 +699,13 @@ label, .label {
 }
 
 
-
-//Table Sorting CSS
+// Drag & Drop Table Sorting CSS
 
 /* For use with table_sorting.js */
-
 /* line 1, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
 body.dragging, body.dragging * {
   cursor: move !important;
 }
-
 /* line 4, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
 .dragged {
   position: absolute;
@@ -713,7 +713,6 @@ body.dragging, body.dragging * {
   opacity: 0.5;
   z-index: 2000;
 }
-
 /* line 10, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
 ol.vertical {
   margin: 0 0 9px 0;
@@ -748,7 +747,6 @@ ol.vertical li.placeholder:before {
   border-left-color: red;
   border-right: none;
 }
-
 /* line 32, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
 ol {
   list-style-type: none;
@@ -812,9 +810,11 @@ ol.example li.placeholder:before {
 
 
 
-// Library
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 8. Library Pages Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+// Used on library#index to display each Group in a box as a link
 a.box {
   text-decoration: none;
   &:link {
@@ -903,7 +903,9 @@ a.box {
   }
 }
 
-//Dashboard Panels & Library GroupShow Boxes
+
+// Used on library#group_show to display each Course in a box as a link
+// Used on dashboard#student to display each Course in a panel as a link
 a.card {
   text-decoration: none;
   &:link {
@@ -1031,15 +1033,132 @@ a.card {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 9. Dashboard Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Dashboard
+
+
+.dashboard-tab {
+  display: none;
+  //max-width: 60%;
+  margin: auto 0 5px auto;
+  //float: left;
+}
+.dashboard-tab-content {
+  //width: 60%;
+  margin: 0;
+
+}
+@media (max-width: 768px) {
+  .dashboard-tab-content {
+    width: 100%;
+    margin-top: 0;
+
+  }
+}
+.dashboard-tabs{
+  margin: $gutter 0 0;
+}
+.dashboard-tabs ul {
+  margin-right: 0;
+  padding-left: 0;
+  background-color: darken(#F9FAFB, 6%);
+  //width: 30%;
+}
+.dashboard-tabs ul > li {
+  list-style: none;
+}
+.dashboard-tabs ul > li a {
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #71738c;
+  color: $colour-7;
+  font-size: 18px;
+  padding: 17px 0 17px 22px;
+  -webkit-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -o-transition: all .2s linear;
+  transition: all .2s linear;
+}
+.dashboard-tabs ul > li:first-child a {
+  //border-top: 1px solid #71738c;
+}
+.dashboard-tabs ul > li a:hover {
+  background-color: #FFFFFF;
+}
+.dashboard-tabs ul > li a.active {
+  //background-color: #373854;
+  background-color: #FFFFFF;
+  font-weight: bold;
+
+}
+.dashboard-tabs ul > li a.active:after{
+  content: '';
+  float: right;
+  width: 6px;
+  height: 12px;
+  margin: 5px 25px 0 0;
+}
+.dashboard-tab h3{
+  font-size: 26px;
+  //line-height: 1.5;
+  color: $white;
+}
+.dashboard-tab p{
+  line-height: 1.45;
+  color: $colour-7;
+  margin: 13px 0 52px 0;
+  font-size: 18.5px;
+}
+.dashboard-tab a{
+  margin: 0;
+}
+@media (max-width: 965px){
+  .dashboard-tabs ul{
+    margin-right: 65px;
+    width: 100%;
+  }
+  .dashboard-tabs ul > li a{ font-size: 21px; }
+}
+@media (max-width: 768px){
+  .dashboard-tabs ul {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  .dashboard-tab {
+    max-width: 100%;
+    margin: 0;
+  }
+  .dashboard-tabs {
+    padding: 0 0 45px 0;
+  }
+  .dashboard-tabs ul > li a br{ display: none; }
+}
+@media (max-width: 500px){
+  #will_learn h2{
+    text-align: center;
+    font-size: 36px;
+  }
+  .dashboard-tabs ul > li a {
+    font-size: 18px;
+  }
+  .dashboard-tabs ul > li a br{ display: block; }
+  .dashboard-tab h3 { font-size: 27px;}
+  .dashboard-tab p{ font-size: 16px }
+}
 
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 8. Videos & Quizzes
+// 10. User Videos Proccess & User Quiz Process Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Quizzes
+// Quiz Classes
 .box-item.question-box {
   box-shadow: 0 0 0;
   &:before {
@@ -1240,6 +1359,8 @@ a.list-group-item {
   }
 }
 
+
+// Video Classes
 .vimeo-player-window {
   position: relative;
   padding-bottom: 56.25%;
@@ -1254,6 +1375,11 @@ a.list-group-item {
   height: 100%;
 }
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 11. SubjectCourse, CourseModule, CMEQuiz & CMEVideo Creation Process Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Quiz Uploading
 .question-box-item {
@@ -1297,22 +1423,11 @@ a.list-group-item {
 
 
 
-.remodal {
-  background: $colour-34;
 
-  .inline-field input,
-  .inline-field label {
-    display: inline-block;
-    //margin-bottom: 0; /* I added this after I posted my reply */
-    vertical-align: middle; /* Fixes any weird issues in Firefox and IE */
-  }
 
-  hr {
-    border-color: #979797;
-    margin: $gutter 0;
-  }
-
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 12. Footer Pages Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 .faq-box {
   display: block;
@@ -1353,125 +1468,25 @@ a.list-group-item {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 13. Site-Wide Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+.remodal {
+  background: $colour-34;
 
-
-
-
-
-
-
-// Dashboard
-
-
-.dashboard-tab {
-  display: none;
-  //max-width: 60%;
-  margin: auto 0 5px auto;
-  //float: left;
-}
-.dashboard-tab-content {
-  //width: 60%;
-  margin: 0;
-
-}
-@media (max-width: 768px) {
-  .dashboard-tab-content {
-    width: 100%;
-    margin-top: 0;
-
+  .inline-field input,
+  .inline-field label {
+    display: inline-block;
+    //margin-bottom: 0; /* I added this after I posted my reply */
+    vertical-align: middle; /* Fixes any weird issues in Firefox and IE */
   }
-}
-.dashboard-tabs{
-  margin: $gutter 0 0;
-}
-.dashboard-tabs ul {
-  margin-right: 0;
-  padding-left: 0;
-  background-color: darken(#F9FAFB, 6%);
-  //width: 30%;
-}
-.dashboard-tabs ul > li {
-  list-style: none;
-}
-.dashboard-tabs ul > li a {
-  text-decoration: none;
-  display: block;
-  border-bottom: 1px solid #71738c;
-  color: $colour-7;
-  font-size: 18px;
-  padding: 17px 0 17px 22px;
-  -webkit-transition: all .2s linear;
-  -moz-transition: all .2s linear;
-  -o-transition: all .2s linear;
-  transition: all .2s linear;
-}
-.dashboard-tabs ul > li:first-child a {
-  //border-top: 1px solid #71738c;
-}
-.dashboard-tabs ul > li a:hover {
-  background-color: #FFFFFF;
-}
-.dashboard-tabs ul > li a.active {
-  //background-color: #373854;
-  background-color: #FFFFFF;
-  font-weight: bold;
 
-}
-.dashboard-tabs ul > li a.active:after{
-  content: '';
-  float: right;
-  width: 6px;
-  height: 12px;
-  margin: 5px 25px 0 0;
-}
-.dashboard-tab h3{
-  font-size: 26px;
-  //line-height: 1.5;
-  color: $white;
-}
-.dashboard-tab p{
-  line-height: 1.45;
-  color: $colour-7;
-  margin: 13px 0 52px 0;
-  font-size: 18.5px;
-}
-.dashboard-tab a{
-  margin: 0;
-}
-@media (max-width: 965px){
-  .dashboard-tabs ul{
-    margin-right: 65px;
-    width: 100%;
+  hr {
+    border-color: #979797;
+    margin: $gutter 0;
   }
-  .dashboard-tabs ul > li a{ font-size: 21px; }
-}
-@media (max-width: 768px){
-  .dashboard-tabs ul {
-    margin-right: 0;
-    margin-bottom: 15px;
-    width: 100%;
-  }
-  .dashboard-tab {
-    max-width: 100%;
-    margin: 0;
-  }
-  .dashboard-tabs {
-    padding: 0 0 45px 0;
-  }
-  .dashboard-tabs ul > li a br{ display: none; }
-}
-@media (max-width: 500px){
-  #will_learn h2{
-    text-align: center;
-    font-size: 36px;
-  }
-  .dashboard-tabs ul > li a {
-    font-size: 18px;
-  }
-  .dashboard-tabs ul > li a br{ display: block; }
-  .dashboard-tab h3 { font-size: 27px;}
-  .dashboard-tab p{ font-size: 16px }
+
 }
 
 
@@ -1484,6 +1499,18 @@ a.list-group-item {
 
 
 
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 22. CSS Partials that depend on existing classes in this file so must be imported last
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 @import "nav_and_footer.scss";
