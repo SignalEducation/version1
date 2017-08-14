@@ -6,9 +6,10 @@
       .row.l-margin-bottom
         .col-sm-6
           .l-margin-bottom
-            =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
-              .fa.fa-arrow-left
-              =@course.parent.name
+            -if @course.parent
+              =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
+                .fa.fa-arrow-left
+                =@course.parent.name
 
 
       -if current_user
