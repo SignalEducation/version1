@@ -31,8 +31,8 @@ class FooterPagesController < ApplicationController
   def profile
     #/profile/id
     @tutor = User.all_tutors.where(id: params[:id]).first
-    if @tutor
-      @courses = @tutor.subject_courses
+    if @tutor && @tutor.subject_courses.all_active.any?
+      @courses = @tutor.subject_courses.all_active.all_in_order
       seo_title_maker(@tutor.full_name, @tutor.description, nil)
     else
       redirect_to tutors_url
