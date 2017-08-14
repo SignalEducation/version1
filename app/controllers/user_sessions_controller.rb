@@ -6,8 +6,6 @@ class UserSessionsController < ApplicationController
   before_filter :check_email_verification, only: [:create]
 
   def new
-    @navbar = nil
-    @footer = nil
     @user_session = UserSession.new
   end
 

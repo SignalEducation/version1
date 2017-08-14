@@ -1,33 +1,35 @@
-.row
-  .col-sm-12
-    .page-header
-      %h1
-        =t('views.vat_codes.show.h1')
-        \#
-        =@vat_code.id
-.row
-  .col-sm-12
-    %table.table.table-bordered
-      %tr
-        %td.col-sm-4=t('views.vat_codes.form.country_id')
-        %td.col-sm-8=# todo @vat_code.country.name
-      %tr
-        %td.col-sm-4=t('views.vat_codes.form.name')
-        %td.col-sm-8=@vat_code.name
-      %tr
-        %td.col-sm-4=t('views.vat_codes.form.label')
-        %td.col-sm-8=@vat_code.label
-      %tr
-        %td.col-sm-4=t('views.vat_codes.form.wiki_url')
-        %td.col-sm-8=@vat_code.wiki_url
-      %tr
-        %td.col-sm-4=t('views.vat_codes.form.vat_rates')
-        %td
-          -@vat_code.vat_rates.each do |rate|
-            =rate.effective_from.to_s(:standard)
-            \-
-            =rate.percentage_rate.to_s + '%'
-    %p
-      =link_to sanitize('&larr; ' + t('views.vat_codes.index.h1')), vat_codes_url
-      |
-      =link_to t('views.general.edit'), edit_vat_code_url(id: @vat_code.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.vat_codes.show.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.vat_codes.form.country_id')
+                  %td.col-sm-8=# todo @vat_code.country.name
+                %tr
+                  %td.col-sm-4=t('views.vat_codes.form.name')
+                  %td.col-sm-8=@vat_code.name
+                %tr
+                  %td.col-sm-4=t('views.vat_codes.form.label')
+                  %td.col-sm-8=@vat_code.label
+                %tr
+                  %td.col-sm-4=t('views.vat_codes.form.wiki_url')
+                  %td.col-sm-8=@vat_code.wiki_url
+                %tr
+                  %td.col-sm-4=t('views.vat_codes.form.vat_rates')
+                  %td
+                    -@vat_code.vat_rates.each do |rate|
+                      =rate.effective_from.to_s(:standard)
+                      \-
+                      =rate.percentage_rate.to_s + '%'
+              %p
+                =link_to sanitize('&larr; ' + t('views.vat_codes.index.h1')), vat_codes_url
+                |
+                =link_to t('views.general.edit'), edit_vat_code_url(id: @vat_code.id), title: t('views.general.edit_tooltip')

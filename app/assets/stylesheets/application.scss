@@ -1370,6 +1370,31 @@ a.list-group-item {
   width: 100%;
   height: 100%;
 }
+// Paperclip File Rendering
+.resource-box {
+  display: inline-block;
+  background: $colour-12;
+  color: $white;
+  margin: $gutter*.5 $gutter $gutter 0;
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+  @include border-radius(4px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 30%));
+  @include transition(box-shadow .1s ease);
+  //border-bottom: 2px solid darken($colour-12, 20%) ;
+  &:hover, &:active {
+    text-decoration: none;
+    color: $white;
+    background: darken($colour-12, 15%);
+    @include box-shadow(0, 0, 12px, rgba(#000, .35));
+    cursor: pointer;
+  }
+}
+.resource-box-inner {
+  padding: $gutter/2 $gutter;
+}
 
 
 
@@ -1420,7 +1445,6 @@ a.list-group-item {
 
 
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 12. Footer Pages Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1465,7 +1489,67 @@ a.list-group-item {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 13. Site-Wide Classes
+// 13. Account Page Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+.signal-tabs {
+  padding: 8px;
+  padding-left:0px;
+  border-bottom: 2px solid lighten($colour-7, 65%);
+  a {
+    color: $colour-1;
+    //margin-bottom: $gutter;
+    letter-spacing: .1rem;
+    @include font-size(1.4);
+    @include breakpoint(md-min) {
+      @include font-size(1.6);
+    }
+    text-decoration: initial;
+  }
+}
+.signal-tabs .underline {
+  background: lighten($colour-7, 65%);
+  border-top: 4px solid;
+  border-radius: 2px;
+  box-sizing: content-box;
+  color: $colour-7;
+  font-weight: bold;
+}
+.signal-tab {
+  background: $white;
+  padding: $gutter/2;
+  display: inherit;
+  @include breakpoint(sm-min) {
+    display: inline;
+
+  }
+
+}
+
+.content-box {
+  display: block;
+  background: $white;
+  position: relative;
+  text-align: left;
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+}
+.content-box-outer {
+  min-height: 300px;
+}
+.content-box-inner {
+  padding: $gutter*2;
+}
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 14. Site-Wide Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 .remodal {
@@ -1486,6 +1570,91 @@ a.list-group-item {
 }
 
 
+// Iubenda
+#iubenda {
+  background-color: #eee;
+}
+.center {
+  margin-top: 100px;
+}
+
+/* cookie banner related styles below */
+
+/***************************************************************************
+// * Iubenda Cookie Solution                                               *
+// *                                                                       *
+// * (c) 2015 Iubenda srl <info@iubenda.com>                               *
+// * All Rights Reserved.                                                  *
+// *                                                                       *
+// *************************************************************************
+//
+// CHANGELOG
+// 0.0.1
+// - first implementation of customizable css
+*/
+
+/*  GENERAL CLASS */
+#iubenda-cs-banner{
+  /* ------ IMPORTANT NOTICE: don't change these values as
+          they may prevent the banner from properly showing. Some of these lines,
+          moreover (like z-index) will overwrite the configuration initialized
+          by the script you paste in your pages. To show the banner at the bottom
+          you can switch to "bottom: 0px !important;". Don't forget to put "slideDown"
+          to "false".
+   */
+  bottom: 0px !important;
+  left: 0px !important;
+  position: fixed !important;
+  width: 100% !important;
+  z-index: 99999998 !important;
+  background-color: black;
+  /* ----------------- */
+}
+
+/*  CONTENT CLASS */
+.iubenda-cs-content{
+  display:block;
+  margin:0 auto;
+  padding: 20px;
+  width:auto;
+  font-family: $sans-font,Arial,FreeSans,sans-serif;
+  font-size: 14px;
+  background: #000;
+  color: #fff;
+}
+.iubenda-banner-content{
+
+}
+
+.iubenda-cs-rationale{
+  max-width: 1250px; position:relative; margin: 0 auto;
+}
+
+/*   STYLE FOR TEXT INTERNAL BANNER */
+.iubenda-banner-content > p {
+  font-family: $sans-font,Arial,FreeSans,sans-serif;
+  line-height: 1.5;
+}
+
+/*  CLOSE BUTTON. NOTICE: IMAGE FOR BUTTON NOT IMPLEMENTED YET */
+.iubenda-cs-close-btn{
+  margin:0;
+  color: #fff;
+  text-decoration:none;
+  font-size:14px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+}
+
+/*  STYLE FOR TEXT LINK TO PRIVACY POLICY */
+.iubenda-cs-cookie-policy-lnk{
+  text-decoration: underline;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+}
 
 
 

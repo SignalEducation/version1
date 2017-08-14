@@ -1,96 +1,93 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.text-center
-            %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              =@user.full_name
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12
-            =render partial: 'user_tabs'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'user_tabs'
 
-        .row.l-margin-top-huge.l-margin-bottom-huge
+      .row.l-margin-top-huge.l-margin-bottom-huge
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@user_sessions_count
+              .h6
+                Sessions
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@enrollments.count
+              .h6
+                Enrollments
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =humanize_datetime(@user.created_at)
+              .h6
+                Signed Up
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                -if @user.last_login_at
+                  =humanize_datetime(@user.last_login_at)
+                -else
+                  ='-'
+              .h6
+                Last Active
+
+      .row.l-margin-top.l-margin-bottom-huge
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =tick_or_cross(@user.active_subscription)
+              .h6
+                Active Subscription
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                =@user.id
+              .h6
+                User ID
+
+        .col-md-3.col-sm-3.col-xs-6
+          .stats-box
+            .stats-box-inner
+              .h3
+                -if @user.enrollments.any?
+                  =@user.enrollments.first.student_number
+                -else
+                  ='-'
+              .h6
+                Student Number
+
+
+      .row.l-margin-top.l-margin-bottom-huge
+        -if !@user.email_verified && @user.email_verification_code
           .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  =@user_sessions_count
-                .h6
-                  Sessions
+            =link_to 'Resend Verification Email', admin_resend_verification_mail_url(@user.email_verification_code), class: 'btn btn-purple '
 
+        -if @user.destroyable?
           .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  =@enrollments.count
-                .h6
-                  Enrollments
+            =link_to 'Delete User', @user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
 
+        -if @user.visits.any?
           .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  =humanize_datetime(@user.created_at)
-                .h6
-                  Signed Up
+            =link_to 'User Visits', user_visits_url(@user), class: 'btn btn-cyan'
 
-          .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  -if @user.last_login_at
-                    =humanize_datetime(@user.last_login_at)
-                  -else
-                    ='-'
-                .h6
-                  Last Active
-
-        .row.l-margin-top.l-margin-bottom-huge
-          .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  =tick_or_cross(@user.active_subscription)
-                .h6
-                  Active Subscription
-
-          .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  =@user.id
-                .h6
-                  User ID
-
-          .col-md-3.col-sm-3.col-xs-6
-            .stats-box
-              .stats-box-inner
-                .h3
-                  -if @user.enrollments.any?
-                    =@user.enrollments.first.student_number
-                  -else
-                    ='-'
-                .h6
-                  Student Number
-
-
-        .row.l-margin-top.l-margin-bottom-huge
-          -if !@user.email_verified && @user.email_verification_code
-            .col-md-3.col-sm-3.col-xs-6
-              =link_to 'Resend Verification Email', admin_resend_verification_mail_url(@user.email_verification_code), class: 'btn btn-purple '
-
-          -if @user.destroyable?
-            .col-md-3.col-sm-3.col-xs-6
-              =link_to 'Delete User', @user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
-
-          -if @user.visits.any?
-            .col-md-3.col-sm-3.col-xs-6
-              =link_to 'User Visits', user_visits_url(@user), class: 'btn btn-cyan'
-
-          .col-md-3.col-sm-3.col-xs-6
-          .col-md-3.col-sm-3.col-xs-6
+        .col-md-3.col-sm-3.col-xs-6
+        .col-md-3.col-sm-3.col-xs-6
 
 
