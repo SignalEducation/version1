@@ -39,10 +39,11 @@
 
           -if current_user
             -if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
+              -# Enrolment Modal
               %a{data: {remodal: {target: 'modal'}}, class: 'list-group-item link-purple box-topic-item'}
                 =render partial: 'panel_content', locals: {grandchild: grandchild}
 
-            -elsif current_user && current_user.permission_to_see_content(@course)
+            -elsif current_user && current_user.permission_to_see_content(@course) && @course.enrolled_user_ids.include?(current_user.id)
               =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
                 =render partial: 'panel_content', locals: {grandchild: grandchild}
 
