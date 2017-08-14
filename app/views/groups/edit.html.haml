@@ -1,7 +1,4 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt.margin-top
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
@@ -9,4 +6,3 @@
           %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.groups.edit.h1')
       =render partial: 'form'
-=render 'layouts/large_footer'
