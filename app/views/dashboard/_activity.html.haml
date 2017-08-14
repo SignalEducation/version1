@@ -1,5 +1,5 @@
 -@non_enrollment_logs.each do |log|
-  -if log.subject_course
+  -if log.subject_course && log.subject_course.active
     .card.card-dashboard
       .card-dashboard-outer-cover{style: 'height: 175px;'}
         .card-inner
