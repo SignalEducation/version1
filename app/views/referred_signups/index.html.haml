@@ -1,6 +1,3 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -14,7 +11,7 @@
           =render partial: 'shared/filter_panel', locals: {controller_name: 'referred_signups',
         parameters: [{name: :payed, collection: [{value: 0, show: 'Not Payed'}, {value: 1, show: 'Payed'}],
         show_attr: :show, value_attr: :value}]}
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               =will_paginate @referred_signups, renderer: BootstrapPagination::Rails
               %table.table.table-striped.table-bordered.sorted_table{data: {destination: referred_signups_url}}

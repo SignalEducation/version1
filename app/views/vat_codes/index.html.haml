@@ -11,7 +11,7 @@
 
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               =will_paginate @vat_codes, renderer: BootstrapPagination::Rails
               %table.table.table-striped.table-bordered.sorted_table{data: {destination: vat_codes_url}}

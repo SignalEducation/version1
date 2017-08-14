@@ -22,8 +22,7 @@ class StudentSignUpsController < ApplicationController
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
     end
-    @navbar = false
-    @footer = false
+    @navbar = true
   end
 
   def create

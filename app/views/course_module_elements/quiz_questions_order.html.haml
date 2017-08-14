@@ -10,7 +10,7 @@
         .pull-right
           =link_to t('views.subject_courses.course_modules_order.return'), edit_course_module_element_url(@course_module_element), class: 'btn btn-red'
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               %table.table.sorted_table{data: {destination: quiz_questions_url}, id: @course_module_element, style: 'font-size: 18px;'}
                 %thead

@@ -167,6 +167,7 @@ en:
         h1: Orders
         subject_course_id: Course
         mock_exam_id: Mock
+        product_id: Product
         order: Order
         user_id: User
         current_status: Status

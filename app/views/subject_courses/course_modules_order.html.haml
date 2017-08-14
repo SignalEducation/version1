@@ -10,7 +10,7 @@
         .pull-right
           =link_to t('views.subject_courses.course_modules_order.return'), subject_course_url(@subject_course), class: 'btn btn-red'
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               %table.table.sorted_table{data: {destination: course_modules_url}, id: @subject_course.id, style: 'font-size: 18px;'}
                 %thead

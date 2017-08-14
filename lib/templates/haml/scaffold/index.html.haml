@@ -7,7 +7,7 @@
             =t('views.<%= table_name %>.index.h1')
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               =will_paginate @<%= table_name %>, renderer: BootstrapPagination::Rails
               %table.table.table-striped.table-bordered<%= if attributes.map(&:name).include?('sorting_order'); '.sorted_table{data: {destination: #{table_name}_url}}' end %>
