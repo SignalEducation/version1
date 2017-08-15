@@ -75,7 +75,7 @@ class EnrollmentsController < ApplicationController
 
   def send_welcome_email(course_id)
     @course = SubjectCourse.find(course_id)
-    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, account_url, contact_url)
+    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, account_url)
   end
 
   def basic_create
