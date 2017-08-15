@@ -9,7 +9,7 @@ class MandrillClient
   def send_verification_email(verification_url)
     msg = message_stub.merge({"subject" => "LearnSignal Account Verification"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('email-verification-20-02-17', msg)
+    send_template('email_verification_170811', msg)
   end
 
   def admin_invite(verification_url)
@@ -55,7 +55,7 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
     msg["global_merge_vars"] << { "name" => "GUID", "content" => guid }
-    send_template('mock-exam-purchase-20-02-17', msg)
+    send_template('mock_exam_purchase_170811', msg)
   end
 
   def send_white_paper_request_email(name, title, url)
@@ -68,12 +68,11 @@ class MandrillClient
 
 
   # Enrollments Emails (Unsubscribe possible)
-  def send_enrollment_welcome_email(course_name, url, contact_link)
+  def send_enrollment_welcome_email(course_name, url)
     msg = message_stub.merge({"subject" => "Welcome to #{course_name}"})
     msg["global_merge_vars"] << { "name" => "NAME", "content" => course_name }
     msg["global_merge_vars"] << { "name" => "LINK", "content" => url }
-    msg["global_merge_vars"] << { "name" => "CONTACTLINK", "content" => contact_link }
-    send_template('enrolment-welcome-09-08-17', msg)
+    send_template('enrolment_welcome_170811', msg)
   end
 
   def send_we_havent_seen_you_in_a_while_email(url, course_name, days)
@@ -81,30 +80,24 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
     msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
     msg["global_merge_vars"] << { "name" => "DAYS_SINCE_LAST_SEEN", "content" => days }
-    send_template('we-have-t-seen-you-in-a-while-20-02-17', msg)
+    send_template('we_havent_seen_you_in_a_while_170811', msg)
   end
 
   def send_study_streak_email(url, course_name)
     msg = message_stub.merge({"subject" => "#{course_name} Study"})
     msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
     msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
-    send_template('study-streak-20-02-17', msg)
+    send_template('study_streak_170811', msg)
   end
 
 
 
   #Free Trial Emails
-  def send_free_trial_ending_email(new_subscription_url, days_left)
-    msg = message_stub.merge({"subject" => "Free Trial Status"})
-    msg["global_merge_vars"] << { "name" => "DAYSLEFT", "content" => days_left }
-    msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
-    send_template('free-trial-ending-20-02-17', msg)
-  end
 
   def send_free_trial_over_email(new_subscription_url)
     msg = message_stub.merge({"subject" => "Free Trial Expired"})
     msg["global_merge_vars"] << { "name" => "NEWSUBSCRIPTIONURL", "content" => new_subscription_url }
-    send_template('free-trial-expired-09-08-17', msg)
+    send_template('free_trial_expired_170811', msg)
   end
 
 
