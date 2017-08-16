@@ -133,5 +133,8 @@ class FooterPagesController < ApplicationController
 
   def get_variables
     @navbar = false
+    @top_margin = false
+    @footer = true
   end
+
 end

@@ -65,6 +65,18 @@ $colour-34: #cedbe4; // Modal background
 
 html {
   background: $white;
+  .margin-top {                   // These Ensure content is not hidden behind Navbar
+    @include breakpoint(xs-min) {
+      margin-top: 40px;
+    }
+    @include breakpoint(sm-min) {
+      margin-top: 60px;
+    }
+    @include breakpoint(lg-min) {
+      margin-top: 60px;
+    }
+  }
+
 }
 
 body {
@@ -1594,7 +1606,25 @@ a.list-group-item {
 }
 
 
-// Iubenda
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 15. Footer Pages Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+.hero-library {
+  background: $colour-8 asset-url('bg-library.jpg') 50% 0 no-repeat;
+  @include breakpoint(md-min) {
+    background: $colour-8 asset-url('bg-library.jpg') no-repeat;
+    background-size: cover;
+  }
+}
+
+
+
+// Iubenda serves the Privacy Policy banner and page content
 #iubenda {
   background-color: #eee;
 }
@@ -1602,22 +1632,6 @@ a.list-group-item {
   margin-top: 100px;
 }
 
-/* cookie banner related styles below */
-
-/***************************************************************************
-// * Iubenda Cookie Solution                                               *
-// *                                                                       *
-// * (c) 2015 Iubenda srl <info@iubenda.com>                               *
-// * All Rights Reserved.                                                  *
-// *                                                                       *
-// *************************************************************************
-//
-// CHANGELOG
-// 0.0.1
-// - first implementation of customizable css
-*/
-
-/*  GENERAL CLASS */
 #iubenda-cs-banner{
   /* ------ IMPORTANT NOTICE: don't change these values as
           they may prevent the banner from properly showing. Some of these lines,
@@ -1679,13 +1693,6 @@ a.list-group-item {
   font-size: 14px;
   font-weight: 900;
 }
-
-
-
-
-
-
-
 
 
 

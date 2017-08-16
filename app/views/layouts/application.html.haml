@@ -55,6 +55,8 @@
       -else
         =render partial: 'layouts/navbar'
 
+    -if @top_margin
+      .margin-top
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
     =yield

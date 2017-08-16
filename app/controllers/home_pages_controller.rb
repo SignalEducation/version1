@@ -21,7 +21,7 @@ class HomePagesController < ApplicationController
     ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables, except: [:home]
-  before_action :layout_variables, only: [:home]
+  before_action :layout_variables, only: [:home, :show]
   before_action :create_user_object, only: [:home, :show]
   before_action :set_view_objects, only: [:show]
 
@@ -33,7 +33,7 @@ class HomePagesController < ApplicationController
 
     seo_title_maker('ACCA: Professional Accountancy Courses Online| LearnSignal', 'On-demand training library to study for ACCA courses and qualifications. Learn
 the skills you need anytime, anywhere, on any device.', false)
-
+    @top_margin = false
   end
 
   def show
@@ -48,7 +48,6 @@ the skills you need anytime, anywhere, on any device.', false)
     else
       seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
     end
-    @navbar = nil
   end
 
   def subscribe
@@ -184,7 +183,8 @@ the skills you need anytime, anywhere, on any device.', false)
   end
 
   def layout_variables
-    @navbar = nil
+    @navbar = false
+    @top_margin = false
     @footer = true
   end
 

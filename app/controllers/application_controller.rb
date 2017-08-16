@@ -53,6 +53,7 @@ class ApplicationController < ActionController::Base
 
   def set_navbar_and_footer
     @navbar = 'standard'
+    @top_margin = true
     @footer = 'standard'
     @groups = Group.all_active.all_in_order
   end
