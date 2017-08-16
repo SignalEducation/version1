@@ -97,10 +97,10 @@ en:
       expiry_month_prompt: "Exp Mth"
       expiry_year_prompt: "Exp Year"
       payment_frequency_in_months:
-        a1: Monthly
-        a3: Quarterly
+        a1: Pay monthly
+        a3: Pay quarterly
         a6: Half-yearly
-        a12: Yearly
+        a12: Pay yearly
       payment_intervals:
         a1: Month
         a3: Quarter
@@ -120,6 +120,10 @@ en:
         a1: Pay Monthly
         a3: Pay Quarterly
         a12: Pay Yearly
+      subscription_ideal_line:
+        a1: Ideal for Revision
+        a3: Ideal for a full sitting
+        a12: Ideal for corporates
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"

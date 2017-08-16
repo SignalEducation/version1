@@ -29,13 +29,14 @@ class SubscriptionsController < ApplicationController
 
   def new_subscription
     @navbar = false
+    @top_margin = false
     @countries = Country.all_in_order
     @user = User.where(id: params[:user_id]).first
     @user.subscriptions.build
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : @user.country
     @currency_id = @country.currency_id
-    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order.limit(3)
   end
 
   def create_subscription

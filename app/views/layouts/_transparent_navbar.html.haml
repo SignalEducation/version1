@@ -7,7 +7,18 @@
     .mobile
       %i.fa.fa-bars
     -if current_user
-      -# Add links for logged in users, not admin dropdowns
+      %ul
+        %li
+          %a{:href => "#"} Dashboard
+        %li
+          %a{:href => "#"} Courses
+        %li
+          %a.getu{:href => "#"} Get unlimited access
+        %li
+          %a{:href => "#"}
+            Hi [Name]
+            %i.fa.fa-chevron-down
+
     -else
       %ul
         %li
