@@ -170,7 +170,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
           new_log_ids << log.id if log.updated_at > (time - 1.day) && log != self
         end
       end
-      if new_log_ids.empty? && scul.last_element.next_element
+      if new_log_ids.empty? && scul.last_element && scul.last_element.next_element
         EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email')
       end
     end

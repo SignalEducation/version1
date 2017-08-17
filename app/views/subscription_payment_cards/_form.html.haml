@@ -7,16 +7,46 @@
 
       #card-errors{role: 'alert'}
 
--#.l-margin-top-big.coupon-section
-  .col-sm-10{style: 'padding-right: 0;'}
-    .form-group
-      .checkbox
-        %label
-          %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
-            =t('views.general.terms_and_conditions')
+  .form-group.l-margin-top
+    %label.check
+      %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+        %span
+          %i.fa.fa-check
+        =t('views.general.terms_and_conditions')
 
-    .form-group.l-margin-top.text-center
-      %input{type: 'submit', class: 'btn btn-red', value: t('views.users.upgrade_subscription.upgrade_subscription')}
+  .form-group.l-margin-top
+    .tot-get
+      .price
+        %span.total Total:
+        %span.value £69.99
+      %div
+        = f.button :submit, class: 'lsbtn', id: 'card_submit' do
+          %i.fa.fa-lock
+          =t('views.users.upgrade_subscription.upgrade_subscription')
+
+        .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+          .sk-circle1.sk-child
+          .sk-circle2.sk-child
+          .sk-circle3.sk-child
+          .sk-circle4.sk-child
+          .sk-circle5.sk-child
+          .sk-circle6.sk-child
+          .sk-circle7.sk-child
+          .sk-circle8.sk-child
+          .sk-circle9.sk-child
+          .sk-circle10.sk-child
+          .sk-circle11.sk-child
+          .sk-circle12.sk-child
+
+
+
+    .obs
+      ="Your next recurring payment will be on 01 Jan 1980."
+      %br
+      Remember, you can cancel at anytime
+
+
+
 
 
 :javascript
@@ -34,10 +64,10 @@
     base: {
       fontWeight: 300,
       fontFamily: 'Rubik',
-      fontSize: '16px',
+      fontSize: '20px',
       lineHeight: '24px'
     }
-  }
+  };
 
   var stripe = Stripe('#{ENV['learnsignal_v3_stripe_public_key']}');
   var elements = stripe.elements();
@@ -54,8 +84,8 @@
     // Submit the form
     form.submit();
     //Replace with spinning JS
-    $('.payment-heading').hide();
-    $(".spinner").show();
+    $('#card_submit').hide();
+    $(".sk-circle").show();
   }
 
   function createToken() {

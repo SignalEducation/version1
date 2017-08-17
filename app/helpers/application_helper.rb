@@ -66,6 +66,10 @@ module ApplicationHelper
     date.utc.strftime('%d %b %y')
   end
 
+  def timer_datetime(date)  # Used for upgrade page timer
+    date.utc.strftime('%Y/%m/%d %H:%M:%S')
+  end
+
   def humanize_date_and_month(date)  # Used in the library UI
     date.utc.strftime('%d %b')
   end

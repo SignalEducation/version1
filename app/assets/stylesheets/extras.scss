@@ -198,7 +198,8 @@
 #plans .plans .plan .base .box .promo .line1 { font-weight: bold; font-size: 1.111em; line-height: 1.1em; }
 #plans .plans .plan .base .lsbtn-base { position: relative; z-index: 200; }
 #plans .plans .plan .base .lsbtn { display: block; padding-left: 0; padding-right: 0; width: 100%; }
-.hasMouse #plans .plans .plan .base .lsbtn { opacity: 0; }
+// This line stops the plan button being hidden without hover
+//.hasMouse #plans .plans .plan .base .lsbtn { opacity: 0; }
 
 #plans .plans .plan.paym .box { border-color: #35B9D0; color: #35B8CF; }
 #plans .plans .plan.paym .base .box .promo,

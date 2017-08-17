@@ -1154,7 +1154,7 @@ en:
         error_panel_caption: "prevented your subscription upgrade from being completed"
         stripe_com_logo: "Stripe.com logo"
         secure_server: "Secure server"
-        upgrade_subscription: Upgrade Subscription
+        upgrade_subscription: Get unlimited access
         reactivate_account: Reactivate Account
         h2:
           subscription: Choose your subscription plan
