@@ -67,7 +67,7 @@ class CourseModule < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
-  scope :all_active, -> { where(active: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true}) }
+  scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_tuition, -> { where(tuition: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
   scope :all_revision, -> { where(revision: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
   scope :all_test, -> { where(test: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
