@@ -11,6 +11,8 @@
 #  updated_at                    :datetime         not null
 #  subject_course_id             :integer
 #  custom_file_name              :string
+#  group_id                      :integer
+#  name                          :string
 #
 
 class HomePage < ActiveRecord::Base
@@ -20,22 +22,27 @@ class HomePage < ActiveRecord::Base
   # attr-accessible
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
                   :public_url, :subject_course_id, :custom_file_name,
-                  :blog_posts_attributes
+                  :blog_posts_attributes, :group_id, :name
 
   # Constants
 
   # relationships
   belongs_to :subscription_plan_category
+  belongs_to :group
   belongs_to :subject_course
   has_many :blog_posts
 
   accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
+  validates :name, presence: true, length: {maximum: 255}, uniqueness: true
   validates :seo_title, presence: true, length: {maximum: 255}, uniqueness: true
   validates :seo_description, presence: true, length: {maximum: 255}
   validates :public_url, presence: true, length: {maximum: 255},
             uniqueness: true
+
+  validate :group_xor_course
+
 
   # callbacks
   before_destroy :check_dependencies
@@ -43,16 +50,17 @@ class HomePage < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:seo_title) }
   scope :for_courses, -> { where.not(subject_course_id: nil) }
+  scope :for_groups, -> { where.not(group_id: nil) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    true
+    true unless public_url == '/'
   end
 
   def default_home_page
-    HomePage.where(subject_course: nil).where(subscription_plan_category_id: nil).where(public_url: '/').first
+    HomePage.where(subject_course: nil).where(subscription_plan_category_id: nil).where(public_url: '/').where(custom_file_name: 'home').first
   end
 
   def course
@@ -72,6 +80,12 @@ class HomePage < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def group_xor_course
+    unless group_id.blank? ^ subject_course_id.blank?
+      errors.add(:base, 'Select a Group or a Course, not both')
     end
   end
 

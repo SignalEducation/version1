@@ -34,6 +34,7 @@ class Group < ActiveRecord::Base
 
   # relationships
   has_many :subject_courses
+  has_many :home_pages
   has_attached_file :image, default_url: "missing_corporate_logo.png"
   has_attached_file :background_image, default_url: "missing_corporate_logo.png"
 

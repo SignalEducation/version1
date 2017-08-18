@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170818133324) do
+ActiveRecord::Schema.define(version: 20170818164129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -277,6 +277,8 @@ ActiveRecord::Schema.define(version: 20170818133324) do
     t.datetime "updated_at",                    null: false
     t.integer  "subject_course_id"
     t.string   "custom_file_name"
+    t.integer  "group_id"
+    t.string   "name"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree

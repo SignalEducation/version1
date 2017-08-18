@@ -13,16 +13,18 @@
             %table.table.sorted_table{style: 'font-size: 18px;'}
               %thead
                 %tr
-                  %th=t('views.home_pages.form.seo_title')
+                  %th=t('views.home_pages.form.name')
                   %th=t('views.home_pages.form.public_url')
-                  %th=t('views.home_pages.form.custom_file_name')
+                  %th=t('views.home_pages.form.blog_posts')
                   %th
               %tbody
                 -@home_pages.each do |home_page|
                   %tr
-                    %td=home_page.seo_title
+                    %td=home_page.name
                     %td=home_page.public_url
-                    %td=home_page.custom_file_name
+                    %td
+                      -if home_page.blog_posts.any?
+                        =home_page.blog_posts.count
                     %td
                       =link_to t('views.general.edit'), edit_home_page_url(home_page), class: 'btn btn-cyan btn-small'
                       -if home_page.destroyable?

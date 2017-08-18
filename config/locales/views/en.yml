@@ -594,17 +594,20 @@ en:
 
     home_pages:
       form:
+        name: Name
+        name_placeholder: Name for Landing Page
         seo_title: SEO Title
-        seo_title_placeholder: SEO Title Placeholder
-        seo_description: SEO Description
+        seo_title_placeholder: SEO Title or Meta Title
+        seo_description: SEO Description or Meta description
         seo_description_placeholder: SEO Description Placeholder
         subscription_plan_category_id: Subscription Plan Category
-        group_id: Group
+        group_id: Related Group
         subject_course_id: Related Course
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
+        blog_posts: Blog Posts
 
       index:
         h1: Landing Pages

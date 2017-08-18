@@ -11,6 +11,8 @@
 #  updated_at                    :datetime         not null
 #  subject_course_id             :integer
 #  custom_file_name              :string
+#  group_id                      :integer
+#  name                          :string
 #
 
 class HomePagesController < ApplicationController
@@ -27,14 +29,14 @@ class HomePagesController < ApplicationController
 
   def home
     @home_page = HomePage.where(custom_file_name: 'home').where(public_url: '/').first
-    # To show each pricing plan on the page; not involved in the sign up process
+    if @home_page
+      @group = @home_page.group
+    else
+      @group = Group.all_active.all_in_order.first
+    end
+    #TODO Remove limit(3)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
 
-    @group = Group.all_active.all_in_order.first
-
-    seo_title_maker('ACCA: Professional Accountancy Courses Online| LearnSignal', 'On-demand training library to study for ACCA courses and qualifications. Learn
-the skills you need anytime, anywhere, on any device.', false)
-    @top_margin = false
   end
 
   def show
@@ -138,6 +140,7 @@ the skills you need anytime, anywhere, on any device.', false)
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @subject_courses = SubjectCourse.all_active.all_in_order
+    @groups = Group.all_active.all_in_order
   end
 
   def set_view_objects
@@ -196,6 +199,7 @@ the skills you need anytime, anywhere, on any device.', false)
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
                                       :subject_course_id, :custom_file_name,
+                                      :name, :group_id,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

@@ -11,6 +11,8 @@
 #  updated_at                    :datetime         not null
 #  subject_course_id             :integer
 #  custom_file_name              :string
+#  group_id                      :integer
+#  name                          :string
 #
 
 require 'rails_helper'
