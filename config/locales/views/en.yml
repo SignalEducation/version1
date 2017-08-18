@@ -198,10 +198,12 @@ en:
         description_placeholder: Description of your resource
         url: URL
         url_placeholder: Blog Post URL
+        image: Image
         iamge_file_name: Image file name
         image_content_type: Image content type
         image_file_size: Image file size
         image_updated_at: Image updated at
+        replace: Replace Image
 
 
     corporate_requests:

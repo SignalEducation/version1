@@ -197,7 +197,12 @@ the skills you need anytime, anywhere, on any device.', false)
                                       :subject_course_id, :custom_file_name,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
-                                                              :url, :_destroy]
+                                                              :url, :_destroy,
+                                                              :image, :image_file_name,
+                                                              :image_content_type,
+                                                              :image_file_size,
+                                                              :image_updated_at
+                                      ]
     )
 
   end
