@@ -19,13 +19,17 @@ class HomePage < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
-                  :public_url, :subject_course_id, :custom_file_name
+                  :public_url, :subject_course_id, :custom_file_name,
+                  :blog_posts_attributes
 
   # Constants
 
   # relationships
   belongs_to :subscription_plan_category
   belongs_to :subject_course
+  has_many :blog_posts
+
+  accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :seo_title, presence: true, length: {maximum: 255}, uniqueness: true
@@ -56,6 +60,13 @@ class HomePage < ActiveRecord::Base
   end
 
   protected
+
+  def self.nested_resource_is_blank?(attributes)
+    attributes['title'].blank? &&
+        attributes['description'].blank? &&
+        attributes['image'].blank? &&
+        attributes['url'].blank?
+  end
 
   def check_dependencies
     unless self.destroyable?

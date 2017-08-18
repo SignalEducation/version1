@@ -189,6 +189,21 @@ en:
       new:
         h1: New Order
 
+    blog_posts:
+      form:
+        home_page_id: Landing page
+        title: Title
+        title_placeholder: Title of Blog Post
+        description: Description Text
+        description_placeholder: Description of your resource
+        url: URL
+        url_placeholder: Blog Post URL
+        iamge_file_name: Image file name
+        image_content_type: Image content type
+        image_file_size: Image file size
+        image_updated_at: Image updated at
+
+
     corporate_requests:
       form:
         name: Name

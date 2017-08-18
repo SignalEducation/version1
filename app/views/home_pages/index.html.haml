@@ -5,8 +5,6 @@
       .col-md-12.col-sm-12.col-xs-12.text-center
         %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
           =t('views.home_pages.index.h1')
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
 
       .col-md-12.l-margin-top-big
         .corporate-box-item.table-box

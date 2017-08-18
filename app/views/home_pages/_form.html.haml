@@ -25,6 +25,11 @@
         .input-group.input-group-lg.full-width
           =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
-  .row.l-margin-top-big
+
+  .row.l-margin-top
+    =render partial: 'fields_for_blog_posts', locals: {f: f}
+
+
+  .row.l-margin-top-huge
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), home_pages_path, class: 'btn btn-cyan'

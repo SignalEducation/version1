@@ -92,9 +92,11 @@ the skills you need anytime, anywhere, on any device.', false)
 
   def new
     @home_page = HomePage.new
+    @home_page.blog_posts.build
   end
 
   def edit
+    @home_page.blog_posts.build
   end
 
   def create
@@ -104,6 +106,7 @@ the skills you need anytime, anywhere, on any device.', false)
       redirect_to home_pages_url
     else
       render action: :new
+      @home_page.blog_posts.build
     end
   end
 
@@ -191,7 +194,12 @@ the skills you need anytime, anywhere, on any device.', false)
   def allowed_params
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
-                                      :subject_course_id, :custom_file_name)
+                                      :subject_course_id, :custom_file_name,
+                                      blog_posts_attributes: [:id, :home_page_id,
+                                                              :title, :description,
+                                                              :url, :_destroy]
+    )
+
   end
 
 end

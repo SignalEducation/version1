@@ -1,0 +1,55 @@
+=f.fields_for :blog_posts do |blog_post|
+  .question-box-item.l-margin-top
+    .file-upload-box
+      -if blog_post.object.new_record?
+        %h4
+          New Blog Post
+      -else
+        %h4
+          Edit Blog Post
+      .col-sm-6
+        =blog_post.label :title, t('views.blog_posts.form.title'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =blog_post.text_field :title, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br
+        =blog_post.label :description, t('views.blog_posts.form.description'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =blog_post.text_area :description, placeholder: t('views.blog_posts.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br
+
+      .col-sm-6
+        =blog_post.label :url, t('views.blog_posts.form.url'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =blog_post.text_field :url, placeholder: t('views.blog_posts.form.url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+        -if blog_post.object.destroyable?
+          %br/
+          %br/
+          .checkbox.l-margin-top
+            %label
+              =blog_post.check_box :_destroy
+              Remove
+
+    -#.col-md-6
+      =blog_post.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+      -if blog_post.object.upload_file_name
+        .form-control-static
+          =link_to blog_post.object.upload_file_name, blog_post.object.upload.url, target: '_blank'
+          =number_to_human_size(blog_post.object.upload_file_size)
+          %br/
+          %br/
+
+        Upload a replacement file or delete the file
+        .input-group.input-group-lg.form-control
+          =blog_post.label :upload, t('views.course_module_element_resources.form.replace')
+          =blog_post.file_field :upload, style: 'border-radius: 6px;'
+          %p{style: 'margin: 10px 0;'}
+            OR
+          .checkbox
+            %label
+              =blog_post.check_box :_destroy
+              =t('views.course_module_elements.form.delete')
+      -else
+        .input-group.input-group-lg
+          =blog_post.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
+
