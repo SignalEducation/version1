@@ -48,54 +48,26 @@
         %h1.title1 Access our latest free advice
         .posts.first
           .row
-            .col-md-4.col-sm-6
-              .post
-                .photo
-                  %a{:href => "#"}
-                    .img{:style => "background-image:url(assets/post.jpg);"}
-                .cat
-                  %a.hu{:href => "#"} Blog
-                .title
-                  %a.hu{:href => "#"} Prepare for the Strategic Business Leader Exam with these 3 tips
-                .excerpt
-                  %a.hu{:href => "#"} This is part 3 of our three-part series covering the new Strategic Business Leader exam, live from September next year. Find...
+            -@home_page.blog_posts.each do |blog_post|
+              .col-md-4.col-sm-6
+                .post
+                  .photo
+                    =link_to blog_post.url, target: '_blank' do
+                      =image_tag(blog_post.image.url)
 
-            .col-md-4.col-sm-6
-              .post
-                .photo
-                  %a{:href => "#"}
-                    .img{:style => "background-image:url(assets/post.jpg);"}
-                .cat
-                  %a.hu{:href => "#"} Blog
-                .title
-                  %a.hu{:href => "#"} Becoming a chartered accountant: how to pass the ACCA .
-                .excerpt
-                  %a.hu{:href => "#"} If you’re serious about your career in finance, the ACCA qualification is the natural place to start. In this piece, we explore the ins and...
+                  .cat
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        Blog
+                  .title
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        =blog_post.title
+                  .excerpt
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        =blog_post.description
 
-            .col-md-4.col-sm-6
-              .post
-                .photo
-                  %a{:href => "#"}
-                    .img{:style => "background-image:url(assets/post.jpg);"}
-                .cat
-                  %a.hu{:href => "#"} Blog
-                .title
-                  %a.hu{:href => "#"} Our tutor Wojtek Lyjak tells you how to pass your ACCA P4.
-                .excerpt
-                  %a.hu{:href => "#"} You probably remember us talking to experienced financial trainer Wojtek Lyjak just before Christmas, about ACCA F7...
-
-            .col-md-4.col-sm-6.hidden-lg.hidden-md.hidden-xs
-              / I added a fourth post here just fill the 2 columns on the SM size. alternatively you can hide the third post at SM
-              .post
-                .photo
-                  %a{:href => "#"}
-                    .img{:style => "background-image:url(assets/post.jpg);"}
-                .cat
-                  %a.hu{:href => "#"} Blog
-                .title
-                  %a.hu{:href => "#"} Our tutor Wojtek Lyjak tells you how to pass your ACCA P4.
-                .excerpt
-                  %a.hu{:href => "#"} You probably remember us talking to experienced financial trainer Wojtek Lyjak just before Christmas, about ACCA F7...
 
         .posts
           .row

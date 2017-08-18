@@ -40,10 +40,9 @@
             %br/
             %br/
 
-          Upload a replacement Image
-          .input-group.input-group-lg.form-control
+          .input-group.input-group-lg
             =blog_post.label :image, t('views.blog_posts.form.replace')
-            =blog_post.file_field :image, style: 'border-radius: 6px;'
+            =blog_post.file_field :image, class: 'form-control', style: 'border-radius: 6px;'
 
         -else
           .input-group.input-group-lg
