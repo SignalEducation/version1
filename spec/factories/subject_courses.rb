@@ -27,6 +27,10 @@
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
 #  total_estimated_time_in_seconds         :integer
+#  background_image_file_name              :string
+#  background_image_content_type           :string
+#  background_image_file_size              :integer
+#  background_image_updated_at             :datetime
 #
 
 FactoryGirl.define do

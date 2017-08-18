@@ -281,7 +281,6 @@ label, .label {
     @include font-size(1.6);
   }
 }
-
 .form-control {
   display: block;
   background: #fff;
@@ -310,6 +309,18 @@ label, .label {
 .selected {
   background: $colour-17;
   color: $white;
+}
+.image-label {
+  font-weight: bold;
+  color: $colour-7;
+  cursor: pointer;
+  margin-bottom: $gutter/2;
+  padding: 0;
+  @include font-size(1.4);
+  @include breakpoint(md-min) {
+    @include font-size(1.6);
+  }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
