@@ -171,23 +171,47 @@
 
 
 
-    %section#explore
-      .container
-        %h1.title1 Explore our ACCA courses
-        %h2.subtitle Taking your accounting skills to the next level.
-        .row
-          -@group.active_children.all_in_order.each do |course|
-            .col-md-4.col-sm-6
-              =link_to library_special_link(course) do
-                .course
-                  .tmain
-                    .tbase
-                      =course.name
-                  .bg{style: "background: url(#{course.background_image.url});"}
+    -if @group
+      %section#explore
+        .container
+          %h1.title1
+            ="Explore our #{@group.name} courses"
+          %h2.subtitle
+            Taking your accounting skills to the next level.
+          .row
+            -@group.active_children.all_in_order.each do |course|
+              .col-md-4.col-sm-6
+                =link_to library_special_link(course) do
+                  .course
+                    .tmain
+                      .tbase
+                        =course.name
+                    .bg{style: "background: url(#{course.background_image.url});"}
 
 
-        .btn-base
-          =link_to 'Get started', new_student_url, class: 'lsbtn'
+          .btn-base
+            =link_to 'Get started', new_student_url, class: 'lsbtn'
+
+    -elsif @subject_course
+      %section#explore
+        .container
+          %h1.title1
+            ="Explore our #{@subject_course.name} modules"
+          %h2.subtitle
+            Taking your skills to the next level.
+          .row
+            -@subject_course.active_children.all_in_order.each do |course_module|
+              .col-md-4.col-sm-6
+                =link_to library_special_link(@subject_course) do
+                  .course
+                    .tmain
+                      .tbase
+                        =course_module.name
+                    .bg{style: "background: #35B8CF;"}
+
+
+          .btn-base
+            =link_to 'Get started', new_student_url, class: 'lsbtn'
 
 
 

@@ -25,7 +25,6 @@ class HomePagesController < ApplicationController
   before_action :get_variables, except: [:home]
   before_action :layout_variables, only: [:home, :show]
   before_action :create_user_object, only: [:home, :show]
-  before_action :set_view_objects, only: [:show]
 
   def home
     @home_page = HomePage.where(custom_file_name: 'home').where(public_url: '/').first
@@ -40,16 +39,20 @@ class HomePagesController < ApplicationController
   end
 
   def show
-    @group = @course_object if @course_object
-    # Displaying the monthly price
-    @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
-    @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
-
+    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     if @home_page
+      @group = @home_page.group
+      @subject_course = @home_page.subject_course
+
+      #TODO Remove limit(3)
+      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+
+      # This is for sticky sub plans
       cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
     else
-      seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+      redirect_to root_url
     end
   end
 
@@ -89,7 +92,6 @@ class HomePagesController < ApplicationController
   end
 
   def index
-    @navbar = nil
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
@@ -138,26 +140,8 @@ class HomePagesController < ApplicationController
       @home_page = HomePage.where(id: params[:id]).first
     end
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @subject_courses = SubjectCourse.all_active.all_in_order
     @groups = Group.all_active.all_in_order
-  end
-
-  def set_view_objects
-    if params[:home_pages_public_url]
-      @public_url = params[:home_pages_public_url].to_s
-      @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-      @group = Group.all_active.all_in_order.first
-      if @home_page
-        if @home_page.course
-          @course_object = @home_page.course
-        else
-          @course_object = @group
-        end
-      else
-        redirect_to root_url
-      end
-    end
   end
 
   def create_user_object
