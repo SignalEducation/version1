@@ -26,6 +26,7 @@ class HomePagesController < ApplicationController
   before_action :set_view_objects, only: [:show]
 
   def home
+    @home_page = HomePage.where(custom_file_name: 'home').where(public_url: '/').first
     # To show each pricing plan on the page; not involved in the sign up process
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
 
