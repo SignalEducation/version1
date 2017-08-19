@@ -9,7 +9,6 @@ class StudentSignUpsController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
-    @topic_interests = Group.all_active.all_in_order
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|

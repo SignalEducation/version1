@@ -1,19 +1,15 @@
 .l-section-small.is-bg-asphalt
   .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-8.col-md-offset-2.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Welcome to your 7-day Free Trial
-          %p.h5.text-center
-            We’re offering you 45 minutes of complimentary access over the next 7 days.  Let us show you how we will help you pass your exams.
-  .l-wrap
-    .row
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      .col-md-12
-        .col-sm-8.col-sm-offset-2.l-margin-top
+    .container
+      .row
+        .col-lg-10.col-lg-offset-1
+          %h1.title1
+            ="Welcome to your #{ENV['free_trial_days']}-day Free Trial"
+          %h2.subtitle1
+            ="We’re offering you #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of complimentary access over the next #{ENV['free_trial_days']} days.  Let us show you how we will help you pass your exams."
 
+      .row.l-margin-top
+        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
           .l-margin-top
             =form_for @user, url: create_student_url do |f|
               =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
@@ -32,10 +28,6 @@
                     .form-group
                       =f.label :email, t('views.users.form.email'), class: 'control-label'
                       =f.email_field :email, class: 'form-control', required: true, id: 'user_email'
-                  .col-sm-12
-                    .form-group
-                      =f.label :topic_interest, t('views.users.form.interest'), class: 'control-label'
-                      =f.collection_select :topic_interest, @topic_interests, :name, :name, {include_blank: t('views.users.form.topic_interest')}, class: 'form-control', style: 'border-radius: 6px;', id: 'topic'
                   .col-sm-12
                     .form-group
                       =f.label :password, t('views.users.form.password'), class: 'control-label'
@@ -64,8 +56,10 @@
                       .sk-circle11.sk-child
                       .sk-circle12.sk-child
 
-        .col-sm-8.col-sm-offset-2.text-center.l-margin-bottom-big.l-margin-top-big
-          =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
+      .row.l-margin-top-huge
+        .col-sm-12
+          .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+            =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 
 

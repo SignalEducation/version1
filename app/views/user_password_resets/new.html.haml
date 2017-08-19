@@ -1,18 +1,20 @@
 .l-section-small.is-bg-asphalt
   .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+    .container
+      .row
+        .col-lg-10.col-lg-offset-1
+          %h1.title1
             =t('views.user_password_resets.new.h1')
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          .forgot-password-modal
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              %p
-                =t('views.user_password_resets.new.paragraph_1')
+
+      .row.l-margin-top
+        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+          .l-margin-top
             =form_tag(user_password_resets_url, {class: 'form', role: 'form'}) do
-              .col-md-8.col-md-offset-2.l-margin-top-small
-                = label_tag :email, 'E-mail'
+              .col-sm-12
+                %p
+                  =t('views.user_password_resets.new.paragraph_1')
+
+                =label_tag :email, 'E-mail'
                 %br/
                 %div#validation-div
                   =email_field_tag :email_address, nil, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', id: '#email-field'
