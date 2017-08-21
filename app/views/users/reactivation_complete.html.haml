@@ -27,19 +27,20 @@
           .row
             -if @subject_course_user_logs.any?
               -@subject_course_user_logs.each do |log|
-                .col-sm-6.col-md-4
-                  =link_to library_special_link(log.subject_course), class: 'box box-course' do
-                    .box-inner
-                      .l-margin-top-xl
-                        %h2{style: 'margin-bottom: 5px;'}
-                          =log.subject_course.try(:name)
-                        %p.p
-                          -if log.subject_course.short_description
-                            =log.subject_course.try(:short_description).to_s.truncate(30)
-                          -else
-                            =log.subject_course.description.to_s.truncate(30)
-                    .box-label
-                      =t('views.general.continue')
+                -if log.subject_course
+                  .col-sm-6.col-md-4
+                    =link_to library_special_link(log.subject_course), class: 'box box-course' do
+                      .box-inner
+                        .l-margin-top-xl
+                          %h2{style: 'margin-bottom: 5px;'}
+                            =log.subject_course.try(:name)
+                          %p.p
+                            -if log.subject_course.short_description
+                              =log.subject_course.try(:short_description).to_s.truncate(30)
+                            -else
+                              =log.subject_course.description.to_s.truncate(30)
+                      .box-label
+                        =t('views.general.continue')
 
             -else
               -@groups.each do |group|

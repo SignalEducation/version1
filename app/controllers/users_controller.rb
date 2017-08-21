@@ -222,15 +222,15 @@ class UsersController < ApplicationController
   end
 
   def reactivate_account
+    @navbar = false
     @user = User.find(params[:user_id])
     if @user && @user.individual_student?
       @subscription = @user.active_subscription ? @user.active_subscription : @user.subscriptions.last
       if @subscription && %w(canceled).include?(@subscription.current_status)
         currency_id = @subscription.subscription_plan.currency_id
         @country = Country.where(currency_id: currency_id).first
-        @subscription_plans = @subscription.reactivation_options
+        @subscription_plans = @subscription.reactivation_options.limit(3)
         @new_subscription = Subscription.new
-        @navbar = nil
       else
         redirect_to account_url(anchor: :subscriptions)
       end

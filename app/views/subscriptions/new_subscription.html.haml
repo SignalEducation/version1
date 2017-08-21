@@ -28,7 +28,8 @@
       .bottom-arrow
 
 
-
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
     #upgrade-subscription
       =form_for @user, url: user_create_subscription_url(@user.id), html: { id: 'upgrade-form', role: 'form'} do |f|
         =f.hidden_field :country_id, value: @country.id
