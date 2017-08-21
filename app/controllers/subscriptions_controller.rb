@@ -89,6 +89,7 @@ class SubscriptionsController < ApplicationController
 
   def change_plan
     @current_subscription = current_user.active_subscription
+    @subscription_plans = @current_subscription.upgrade_options
   end
 
   #Upgrading current subscription to a new subscription plan
