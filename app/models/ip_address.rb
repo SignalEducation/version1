@@ -17,9 +17,9 @@ class IpAddress < ActiveRecord::Base
   geocoded_by :ip_address
   reverse_geocoded_by :latitude, :longitude do |obj,results|
     if geo = results.first
-      obj.country_id = Country.find_by_iso_code(geo.country_code).try(:id) || 105
+      obj.country_id = Country.find_by_iso_code(geo.country_code).try(:id) || 78
     else
-      obj.country_id = 105 # Ireland
+      obj.country_id = 78 # UK
     end
   end
 
