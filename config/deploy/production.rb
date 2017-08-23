@@ -19,6 +19,10 @@ server 'production6.learnsignal.com', user: 'ec2-user', roles: %w{app web db},
        ssh_options: {keys: %w(~/.ssh/production3-eu-key.pem),
                      auth_methods: %w(publickey)}
 
+server 'production7.learnsignal.com', user: 'ec2-user', roles: %w{app web db},
+       ssh_options: {keys: %w(~/.ssh/production3-eu-key.pem),
+                     auth_methods: %w(publickey)}
+
 
 # role-based syntax
 # ==================
