@@ -18,6 +18,12 @@ class MandrillClient
     send_template('admin-invite-20-02-17', msg)
   end
 
+  def csv_webinar_invite(verification_url)
+    msg = message_stub.merge({"subject" => "Your ACCA Webinar with LearnSignal. Let’s get started..."})
+    msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
+    send_template('webinar_invite_170824', msg)
+  end
+
   def password_reset_email(password_reset_url)
     msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }

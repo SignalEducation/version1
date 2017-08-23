@@ -137,7 +137,7 @@ class DashboardController < ApplicationController
       @users.each do |user|
         if user.save
           if user.valid_free_member? && !user.stripe_customer_id
-            MandrillWorker.perform_async(user.id, 'admin_invite', user_verification_url(email_verification_code: user.email_verification_code))
+            MandrillWorker.perform_async(user.id, 'csv_webinar_invite', user_verification_url(email_verification_code: user.email_verification_code))
             stripe_customer = Stripe::Customer.create(email: user.email)
             user.update_attribute(:stripe_customer_id, stripe_customer.id)
           elsif !user.valid_free_member? && user.stripe_customer_id
