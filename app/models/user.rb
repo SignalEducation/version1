@@ -711,6 +711,7 @@ class User < ActiveRecord::Base
             user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
             if used_emails.include?(v['email']) || !user.valid?
               users = []
+              Rails.logger.error "ERROR: Dashboard#import_csv_upload - failed to save a csv user. Error:#{user.errors.inspect}. Count of used emails: #{used_emails.count}"
               raise ActiveRecord::Rollback
             end
             users << user
