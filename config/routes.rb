@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     get '/dashboard/export_enrollments', to: 'dashboard#export_enrollments', as: :export_enrollments
     get '/dashboard', to: 'dashboard#student', as: :student_dashboard
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
+    get '/dashboard/reports', to: 'dashboard#reports', as: :reports_dashboard
     get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
     get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
     get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard

@@ -30,6 +30,7 @@ class Subscription < ActiveRecord::Base
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
+  VALID_STATES = %w(active past_due canceled-pending)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
@@ -58,6 +59,7 @@ class Subscription < ActiveRecord::Base
   scope :in_created_order, -> { order(:created_at) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
   scope :all_active, -> { where(active: true) }
+  scope :all_valid, -> { where(current_status: VALID_STATES) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   # class methods

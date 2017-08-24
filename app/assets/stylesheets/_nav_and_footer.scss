@@ -404,8 +404,8 @@
     margin-right: 2%;
     @include breakpoint(sm-min) {
       padding: $gutter/2;
-      margin-left: 7%;
-      margin-right: 7%;
+      margin-left: 5%;
+      margin-right: 5%;
     }
   }
   & a {
