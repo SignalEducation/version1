@@ -558,7 +558,7 @@ class User < ActiveRecord::Base
   end
 
   def create_on_discourse
-    DiscourseCreateUserWorker.perform_at(5.minute.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
+    DiscourseCreateUserWorker.perform_at(24.hours.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
   def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)
