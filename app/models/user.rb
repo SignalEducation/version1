@@ -698,7 +698,7 @@ class User < ActiveRecord::Base
           if user && v['email'].empty?
             users = []
             raise ActiveRecord::Rollback
-          elsif user && user.expired_free_member?
+          elsif user
             users << user
           else
             country = Country.find(78) || Country.find(name: 'United Kingdom').last
