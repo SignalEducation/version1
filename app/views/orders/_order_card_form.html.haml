@@ -1,29 +1,52 @@
-.l-margin-top-big.payment-errors
-  .row
-    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
-      .form-row
-        #card-element
+.col-sm-12{style: 'padding-left: 0;'}
+  .payment-errors
+    .col-sm-10
+      .form-group.cc
+        %label
+          Credit or debit card
+        .clearfix
+          #card-element
 
-        #card-errors{role: 'alert'}
+          #card-errors{role: 'alert'}
 
-.l-margin-top-big.coupon-section
-  .row
-    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
-      .form-group
-        .checkbox
-          %label
-            %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
-              =t('views.general.terms_and_conditions')
+      .form-group.l-margin-top
+        %label.check
+          %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+            %span
+              %i.fa.fa-check
+            =t('views.general.terms_and_conditions')
 
+      .form-group.l-margin-top
+        .tot-get
+          .price
+            %span.total Total:
+            %span.value
+              =number_in_local_currency(@product.price, @product.currency_id)
+          %div.l-margin-top
+            = f.button :submit, class: 'lsbtn', id: 'card_submit' do
+              %i.fa.fa-lock
+              ='Purchase Mock Exam'
 
-    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3.l-margin-top-big
-      .form-group.l-margin-top.text-center
-        %input{type: 'submit', class: 'btn btn-red', value: 'Purchase Mock Exam'}
+            .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+              .sk-circle1.sk-child
+              .sk-circle2.sk-child
+              .sk-circle3.sk-child
+              .sk-circle4.sk-child
+              .sk-circle5.sk-child
+              .sk-circle6.sk-child
+              .sk-circle7.sk-child
+              .sk-circle8.sk-child
+              .sk-circle9.sk-child
+              .sk-circle10.sk-child
+              .sk-circle11.sk-child
+              .sk-circle12.sk-child
+
 
 
 
 :javascript
 
+  $(".sk-circle").hide();
   $('input[type="checkbox"]').on('change', function() {
     if($('#terms_and_conditions').prop('checked') == true) {
       $("#hidden_term_and_conditions").val('true');
@@ -44,6 +67,9 @@
 
     // Submit the form
     form.submit();
+    $('#card_submit').hide();
+    $(".sk-circle").show();
+
   }
 
   function createToken() {
