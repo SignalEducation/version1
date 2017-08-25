@@ -8,7 +8,7 @@
 
   .row.l-margin-top
     .col-sm-12.l-margin-top.text-left
-      =form_tag(complaints_zendesk_url, {class: 'form', role: 'form', name: 'complaints_zendesk_form'}) do
+      =form_tag(complaints_intercom_url, {class: 'form', role: 'form', name: 'complaints_zendesk_form'}) do
         .col-md-12
           .col-md-6
             =label_tag :full_name, 'Name'
@@ -19,9 +19,6 @@
             =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address', required: true
 
           .col-md-12
-            =label_tag :subject, 'Subject'
-            =text_field_tag :subject, nil, class: 'form-control', placeholder: 'What is the issue', required: true
-            %br/
             =label_tag :body, 'Please Describe Your Issue'
             =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue', required: true
 

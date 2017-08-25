@@ -8,7 +8,8 @@
 
   .row.l-margin-top
     .col-sm-12.l-margin-top.text-left
-      =form_tag(contact_us_zendesk_url, {class: 'form', role: 'form', name: 'contact_user_zendesk_form'}) do
+      =form_tag(contact_us_intercom_url, {class: 'form', role: 'form', name: 'contact_user_zendesk_form'}) do
+        =hidden_field_tag :type, @form_type
         .col-md-12
           .col-md-6
             =label_tag :full_name, 'Name'

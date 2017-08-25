@@ -305,6 +305,9 @@
             %h1.title1 We’re here to guide you through.
             %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
             .lsbtn-base
-              =link_to 'Chat our experts', contact_url, class: 'lsbtn v3'
+              %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
+                ='Chat our experts'
 
 
+
+=render partial: 'footer_pages/contact_us_form_modal'

@@ -21,6 +21,7 @@ class FooterPagesController < ApplicationController
   end
 
   def contact
+    @form_type = 'Contact Us'
     seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
   end
 
@@ -94,42 +95,21 @@ class FooterPagesController < ApplicationController
     end
   end
 
-  def complaints_zendesk
-    options = {:subject => params[:subject], :comment => { :value => params[:body] }, :requester => { :email => params[:email_address], :name => params[:full_name] }}
-    request = ZendeskAPI::Ticket.create(@client, options)
-    if request && request.created_at
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    else
-      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
-    end
+  def complaints_intercom
+    user_id = current_user ? current_user.id : nil
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:body], 'Complaints Form')
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to contact_url
   end
 
-  def contact_us_zendesk
-    options = {:subject => "Basic Contact Us", :comment => { :value => params[:question] }, :requester => { :email => params[:email_address], :name => params[:full_name] }}
-    request = ZendeskAPI::Ticket.create(@client, options)
-    if request && request.try(:created_at)
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    else
-      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
-    end
-    redirect_to contact_url
+  def contact_us_intercom
+    user_id = current_user ? current_user.id : nil
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    redirect_to request.referrer
   end
 
   protected
-
-  def get_zendesk
-    require 'zendesk_api'
-    @client = ZendeskAPI::Client.new do |config|
-      config.url = "https://learnsignal.zendesk.com/api/v2"
-      config.username = "james@learnsignal.com/token"
-      config.token = ENV['learnsignal_zendesk_api_key'].to_s
-      config.retry = true
-      require 'logger'
-      config.logger = Logger.new(STDOUT)
-    end
-
-  end
 
   def get_variables
     @navbar = false
