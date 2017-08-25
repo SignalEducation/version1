@@ -89,7 +89,24 @@ class Enrollment < ActiveRecord::Base
     course_log = self.subject_course_user_log
     if course_log
       percentage = course_log.percentage_complete
-      percentage.to_s << ' %' if percentage
+      percentage.to_s << '%' if percentage
+    end
+  end
+
+  def rounded_percentage_complete
+    course_log = self.subject_course_user_log
+    if course_log
+      percentage = course_log.percentage_complete
+      percentage.between?(25,50)
+      if percentage && (percentage.between?(25,49))
+        '25%'
+      elsif percentage && (percentage.between?(50,74))
+        '50%'
+      elsif percentage && (percentage.between?(75,99))
+        '75%'
+      elsif percentage && (percentage == 100)
+        '100%'
+      end
     end
   end
 
