@@ -1,10 +1,10 @@
 class FooterPagesController < ApplicationController
 
   before_action :get_variables, except: [:missing_page]
-  before_action :get_zendesk, only: [:complaints_zendesk, :contact_us_zendesk]
 
   def business
     @groups = Group.all_active.all_in_order
+    @form_type = 'Corporate Request'
     seo_title_maker('Business Training Solutions', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
   end
 

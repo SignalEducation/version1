@@ -29,9 +29,6 @@ class CorporateRequestsController < ApplicationController
   def show
   end
 
-  def submission_complete
-  end
-
   def new
     @corporate_request = CorporateRequest.new
   end
@@ -42,9 +39,12 @@ class CorporateRequestsController < ApplicationController
   def create
     @corporate_request = CorporateRequest.new(allowed_params)
     if @corporate_request.save
-      redirect_to submission_complete_url
-      get_zendesk
-      create_ticket = corporate_request_zendesk(@corporate_request.name, @corporate_request.company, @corporate_request.email, @corporate_request.phone_number) unless Rails.env.test?
+      content = "Company: #{@corporate_request.company}, PhoneNumber: #{@corporate_request.phone_number}"
+
+      user_id = current_user ? current_user.id : nil
+      IntercomCreateMessageWorker.perform_async(user_id, @corporate_request.email, @corporate_request.name, content, params[:type])
+      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+      redirect_to request.referrer
     else
       redirect_to request.referrer
     end
@@ -69,16 +69,6 @@ class CorporateRequestsController < ApplicationController
     redirect_to corporate_requests_url
   end
 
-  def corporate_request_zendesk(name, company, email, phone_number)
-    options = {:subject => 'Corporate Enquiry', :description => "Name: #{name} Company Name: #{company} - Phone Number: #{phone_number}", :requester => { :email => email, :name => name }}
-    request = ZendeskAPI::Ticket.create(@client, options)
-    if request.created_at
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    else
-      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
-    end
-  end
-
   protected
 
   def get_variables
@@ -88,19 +78,7 @@ class CorporateRequestsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:corporate_request).permit(:name, :title, :company, :email, :phone_number, :website, :personal_message)
-  end
-
-  def get_zendesk
-    require 'zendesk_api'
-    @client = ZendeskAPI::Client.new do |config|
-      config.url = "https://learnsignal.zendesk.com/api/v2"
-      config.username = "james@learnsignal.com/token"
-      config.token = ENV['learnsignal_zendesk_api_key'].to_s
-      config.retry = true
-      require 'logger'
-      config.logger = Logger.new(STDOUT)
-    end
+    params.require(:corporate_request).permit(:name, :title, :company, :email, :phone_number, :website, :personal_message, :type)
   end
 
 end

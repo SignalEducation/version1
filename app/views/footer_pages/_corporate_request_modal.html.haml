@@ -10,6 +10,7 @@
   .row.l-margin-top
     .col-sm-12.l-margin-top.text-left
       =form_for(:corporate_request, url: corporate_requests_path, method: 'POST', html: {class: 'form-horizontal', role: 'form'}, name: 'corporate_request_form') do |f|
+        =hidden_field_tag :type, @form_type
         .col-md-12
           .col-md-6
             =f.label :name, t('views.corporate_requests.form.name'), class: 'control-label'
