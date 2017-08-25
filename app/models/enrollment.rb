@@ -39,6 +39,7 @@ class Enrollment < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   before_validation :set_empty_strings_to_nil
+  after_create :course_enrollment_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
@@ -115,6 +116,11 @@ class Enrollment < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def course_enrollment_intercom_event
+    IntercomCourseEnrolledEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
+    IntercomExamSittingEventWorker.perform_async(self.try(:user_id), self.exam_date, self.exam_body.name)
   end
 
 end

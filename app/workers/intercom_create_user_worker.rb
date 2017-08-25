@@ -23,7 +23,9 @@ class IntercomCreateUserWorker
                                           free_trial_days_left: user.days_left,
                                           free_trial_minutes_left: user.minutes_left,
                                           email_verified: user.email_verified,
-                                          topic_interest: user.topic_interest,
+                                          ga_id: user.analytics_guid,
+                                          student_number: user.student_number,
+                                          date_of_birth: user.date_of_birth,
                             })
     end
   end
