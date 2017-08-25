@@ -29,6 +29,7 @@ class TutorApplicationsController < ApplicationController
 
   def new
     @tutor_application = TutorApplication.new
+    @form_type = 'Tutor Application'
     seo_title_maker('Teach', 'As a dedicated training resource we are always on the lookout for talent. If you possess the required qualifications along with extensive experience in finance, IT or business, and are passionate about teaching, we’d love to hear from you.', nil)
   end
 
@@ -39,11 +40,14 @@ class TutorApplicationsController < ApplicationController
     @tutor_application = TutorApplication.new(allowed_params)
     if @tutor_application.save
       flash[:success] = I18n.t('controllers.tutor_applications.create.flash.success')
-      redirect_to action: :new
-      get_zendesk
-      full_description = "First Name: #{@tutor_application.first_name} Last Name #{@tutor_application.last_name} - Email: #{@tutor_application.email} - Info: #{@tutor_application.info} - Description #{@tutor_application.description}"
+      full_name = "#{@tutor_application.first_name} #{@tutor_application.last_name}"
+      content = "Info: #{@tutor_application.info} - Description: #{@tutor_application.description}"
 
-      create_ticket = tutor_application_zendesk(@tutor_application.first_name, @tutor_application.last_name, @tutor_application.email, full_description) unless Rails.env.test?
+
+      user_id = current_user ? current_user.id : nil
+      IntercomCreateMessageWorker.perform_async(user_id, @tutor_application.email, full_name, content, params[:type])
+      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+      redirect_to action: :new
     else
       render action: :new
     end
@@ -67,18 +71,6 @@ class TutorApplicationsController < ApplicationController
     redirect_to tutor_applications_url
   end
 
-  def tutor_application_zendesk(first_name, last_name, email, full_description)
-
-    options = {:subject => 'Tutor Application', :description => full_description, :requester => { :email => email, :name => "#{first_name} #{last_name}" }}
-
-    request = ZendeskAPI::Ticket.create(@client, options)
-    if request && request.created_at
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    else
-      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
-    end
-  end
-
 
   protected
 
@@ -92,18 +84,5 @@ class TutorApplicationsController < ApplicationController
   def allowed_params
     params.require(:tutor_application).permit(:first_name, :last_name, :email, :info, :description)
   end
-
-  def get_zendesk
-    require 'zendesk_api'
-    @client = ZendeskAPI::Client.new do |config|
-      config.url = "https://learnsignal.zendesk.com/api/v2"
-      config.username = "james@learnsignal.com/token"
-      config.token = ENV['learnsignal_zendesk_api_key'].to_s
-      config.retry = true
-      require 'logger'
-      config.logger = Logger.new(STDOUT)
-    end
-  end
-
 
 end

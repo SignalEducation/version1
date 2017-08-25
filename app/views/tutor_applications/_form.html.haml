@@ -2,6 +2,7 @@
   .col-md-12.l-margin-top
     =form_for(@tutor_application, html: {role: 'form'}) do |f|
       =render partial: '/layouts/error_messages', locals: {thing: @tutor_application, message: nil}
+      =hidden_field_tag :type, @form_type
       .row
         .col-md-6
           =f.label :first_name, t('views.tutor_applications.form.first_name'), class: 'control-label'
