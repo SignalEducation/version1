@@ -30,6 +30,11 @@
     max-width: 159px;
   }
 }
+.nav-logo {
+  padding: $gutter 0;
+  float: left;
+  max-width: 180px;
+}
 .navbar-default .navbar-nav > li > a {
   color: rgba($white, .8);
   text-transform: uppercase;
