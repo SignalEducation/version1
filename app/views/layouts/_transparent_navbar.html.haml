@@ -9,11 +9,11 @@
     -if current_user
       %ul
         %li
-          %a{:href => "#"} Dashboard
+          =link_to 'Dashboard', student_dashboard_url
         %li
-          %a{:href => "#"} Courses
+          =link_to 'Courses', library_url
         %li
-          %a.getu{:href => "#"} Get unlimited access
+          =link_to 'Get unlimited access', new_student_url, class: 'getu'
         %li
           %a{:href => "#"}
             Hi [Name]

@@ -1,5 +1,3 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -32,11 +30,12 @@
 
       -else
         .notice.warning
-          .fa.fa-info-circle.icon
-          An Account is required to access this content.
-          &#160;
-          =link_to new_student_url do
-            Claim your Free Trial?
+          .p
+            .fa.fa-info-circle.icon
+            A Valid Account is required to access this content.
+            &#160;
+            =link_to new_student_url do
+              Claim your Free Trial?
         %h1.h1.h-separator.h-separator-left
           =@course.name
         =render partial: 'course_info'
