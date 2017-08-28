@@ -91,6 +91,10 @@ class User < ActiveRecord::Base
   # relationships
   belongs_to :country
   has_many :course_module_element_user_logs
+  has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
+           class_name: 'CourseModuleElementUserLog'
+  has_many :incomplete_course_module_element_user_logs, -> {where(element_completed: false)},
+           class_name: 'CourseModuleElementUserLog'
   has_many :enrollments
   has_and_belongs_to_many :subject_courses
   has_many :invoices
@@ -632,13 +636,12 @@ class User < ActiveRecord::Base
 
 
   def completed_course_module_element(cme_id)
-    cmeuls = self.course_module_element_user_logs.where(course_module_element_id: cme_id)
-    array = cmeuls.all.map(&:element_completed)
-    array.include? true
+    cmeuls = self.completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls.any?
   end
 
   def started_course_module_element(cme_id)
-    cmeuls = self.course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls = self.incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
     cmeuls.any?
   end
 
