@@ -60,10 +60,13 @@ class HomePagesController < ApplicationController
 
   def subscribe
     email = params[:email][:address]
-    list_id = 'a716c282e2'
+    name = params[:first_name][:address]
+    #list_id = '866fa91d62' # Dev List
+    list_id = 'a716c282e2' # Production List
     if !email.blank?
       begin
-        @mc.lists.subscribe(list_id, {'email' => email})
+        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+
         respond_to do |format|
           format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
         end
