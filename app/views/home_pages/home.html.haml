@@ -1,5 +1,5 @@
 #wrapper
-  #loading
+  -#loading
   %header#header
     =render 'layouts/transparent_navbar'
 
@@ -262,57 +262,6 @@
               ='Chat our experts'
 
 
-
-
--#%footer#footer
-  .container
-    .row
-      .col-md-3
-        .logo
-          %a{:href => "#"}
-            %img{:src => "img/logo.png"}/
-        .col-md-2.col-sm-3.col-xs-6
-          %ul.fmenu
-            %li
-              %a{:href => "#"} Acca
-            %li
-              %a{:href => "#"} Acca Info
-        .col-md-2.col-sm-3.col-xs-6
-          %ul.fmenu
-            %li
-              %a{:href => "#"} blog
-            %li
-              %a{:href => "#"} community
-            %li
-              %a{:href => "#"} lecturers
-            %li
-              %a{:href => "#"} media
-        .clearfix.visible-xs-block
-        .col-md-2.col-sm-3.col-xs-6
-          %ul.fmenu
-            %li
-              %a{:href => "#"} contact
-            %li
-              %a{:href => "#"} careers
-            %li
-              %a{:href => "#"} privacy policy
-            %li
-              %a{:href => "#"} terms  conditions
-        .col-md-2.col-sm-3.col-xs-6
-          %ul.fmenu
-            %li follow us
-            %li
-              %a{:href => "#"}
-                %i.fa.fa-facebook.fa-fw
-                facebook
-            %li
-              %a{:href => "#"}
-                %i.fa.fa-twitter.fa-fw
-                twitter
-        .clearfix.visible-sm-block.visible-xs-block
-        .col-md-1
-          %a.chat{:href => "#"}
-            %img{:src => "img/chat.png"}/
 
 
 =render partial: 'footer_pages/contact_us_form_modal'
