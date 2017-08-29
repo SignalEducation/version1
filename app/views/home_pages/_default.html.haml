@@ -33,13 +33,8 @@
         %h1.title1 Get Jamie’s 3 free tips on passing your ACCA.
         .video
           .play
-            %a.lb-video{:href => "https://www.youtube.com/watch?v=9bZkp7q19f0"}
-              .tmain
-                .tbase
-                  .playbtn
-                    %i.fa.fa-play
-                    %span Play
-              .img{:style => "background-image:url(assets/video.jpg);"}
+            #vimeo-player.vimeo-player
+
           .about Meet course tutor Jamie. He’s helped learners all over the world pass their ACCA.
 
 
@@ -304,6 +299,7 @@
               %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
                 ='Chat our experts'
 
-
-
 =render partial: 'footer_pages/contact_us_form_modal'
+:javascript
+  var player = new Vimeo.Player('vimeo-player', {id: '224044673'});
+

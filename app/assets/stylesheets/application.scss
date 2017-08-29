@@ -1552,8 +1552,23 @@ a.list-group-item {
 .vimeo-player-window {
   position: relative;
   padding-bottom: 56.25%;
-  height: 0; overflow: hidden;
+  height: 0;
+  overflow: hidden;
   max-width: 100%;
+}
+.vimeo-player {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+.vimeo-player iframe, .vimeo-player object, .vimeo-player embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 .vimeo-player-window iframe, .vimeo-player-window object, .vimeo-player-window embed {
   position: absolute;

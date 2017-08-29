@@ -149,7 +149,7 @@
 #tips .title1 { margin: 0 0 1.625em 0; color: #35B8CF; }
 #tips .video { width: 100%; padding: 66px 0 0 50%; position: relative; }
 #tips .video .about { background: #35B8CE; color: #fff; font-size: 2em; line-height: 1.333em; font-weight: inherit; padding: 2.278em 1.944em 2.056em 3.722em; position: relative; z-index: 2; }
-#tips .video .play { position: absolute; left: 0; top: 0; width: 57%; height: 84%; background: #000; z-index: 4; }
+#tips .video .play { position: absolute; left: 0; top: 0; width: 57%; height: 80%; background: #000; z-index: 4; }
 #tips .video .play:after { content: ""; position: absolute; display: block; height: 7%; width: 35%; z-index: 3; background: #3D3D5B; right: 0; bottom: -13%; }
 #tips .video .play a { display: block; width: 100%; height: 100%; position: relative; overflow: hidden; }
 #tips .video .play a .img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: center center no-repeat; background-size: cover; z-index: 2; opacity: 0.9; transition: all 0.3s; }
