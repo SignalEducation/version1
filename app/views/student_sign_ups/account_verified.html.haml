@@ -6,19 +6,18 @@
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Verification Complete
         .col-md-10.col-md-offset-1.l-margin-bottom-6x
-          .corporate-box-item
-            .container-fluid
-              .row
-                .col-sm-6.col-sm-offset-3
-                  .text-center
-                    %h4.h3.l-margin-bottom
-                      Your account is now active
-                    %p.p
-                      ="Your Free Trial is valid until #{humanize_date_and_month(current_user.created_at + 7.days)} or you reach #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of course content"
+          .box-item
+            .row
+              .col-sm-6.col-sm-offset-3
+                .text-center
+                  %h4.h3.l-margin-bottom
+                    Your account is now active
+                  %p.p
+                    ="Your Free Trial is valid until #{humanize_date_and_month(current_user.created_at + 7.days)} or you reach #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of course content"
 
 
-      .text-center.l-margin-top-huge.l-margin-bottom-huge
-        %h2
+      .l-margin-top-huge.l-margin-bottom-huge
+        %h2.text-center
           What courses are you interested in ?
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap

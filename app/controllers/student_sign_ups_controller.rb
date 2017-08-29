@@ -80,7 +80,7 @@ class StudentSignUpsController < ApplicationController
     end
   end
 
-  #This is the post sign-up landing page.
+  #This is the post sign-up landing page - personal_sign_up_complete
   def show
     @user = User.get_and_activate(params[:account_activation_code])
     redirect_to root_url unless @user
