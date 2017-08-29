@@ -14,6 +14,12 @@
           %i.fa.fa-check
         =t('views.general.terms_and_conditions')
 
+  -if params[:coupon]
+    .form-group.cc
+      %label
+        Coupon Code
+      %input{type: "text_field", id: 'coupon_code', class: 'form-control', placeholder: 'Valid Coupon Code'}
+
   .form-group.l-margin-top
     .tot-get
       .price
@@ -80,6 +86,7 @@
     // Insert the token ID into the form so it gets submitted to the server
     var form = document.getElementById('upgrade-form');
     $('#user_subscriptions_attributes_0_stripe_token').val(token.id);
+    $('#hidden_coupon_code').val($('#coupon_code').val());
 
     // Submit the form
     form.submit();

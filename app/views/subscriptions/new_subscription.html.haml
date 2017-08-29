@@ -2,7 +2,7 @@
 .upgrade
   #wrapper
     -#loading
-    %header#header
+
 
     %section#free
       .tmain
@@ -40,6 +40,8 @@
           =sub.hidden_field :subscription_plan_id
           =sub.hidden_field :stripe_token
           =sub.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+          -if params[:coupon]
+            =hidden_field_tag :hidden_coupon_code
 
 
         %section#plans

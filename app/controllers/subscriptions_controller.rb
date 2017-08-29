@@ -46,8 +46,22 @@ class SubscriptionsController < ApplicationController
     subscription_params = params[:user][:subscriptions_attributes]["0"]
     subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
 
-    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] == 'true'
-      stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, subscription_params)
+    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"]
+      # Coupon Code Param Check
+      if params["hidden_coupon_code"] && params["hidden_coupon_code"].present?
+        # Coupon Code Verification
+        verified_coupon = verify_coupon(params["hidden_coupon_code"], subscription_plan.currency_id)
+
+        if verified_coupon == 'bad_coupon'
+          redirect_to user_new_subscription_url(current_user.id, coupon: true)
+          return
+        else
+          stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, subscription_params, verified_coupon)
+        end
+      else
+        stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, subscription_params, nil)
+      end
+
       stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
       #Creation on stripe was successful so create our DB record of Subscription
       if stripe_customer && stripe_subscription
@@ -131,12 +145,13 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  def create_on_stripe(stripe_customer_id, subscription_plan, subscription_params)
+  def create_on_stripe(stripe_customer_id, subscription_plan, subscription_params, coupon_code)
     begin
       stripe_subscription = Stripe::Subscription.create(
           customer: stripe_customer_id,
           plan: subscription_plan.stripe_guid,
           source: subscription_params["stripe_token"],
+          coupon: coupon_code,
           trial_end: 'now'
       )
 
