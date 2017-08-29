@@ -13,6 +13,7 @@
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
+#  discourse_ids                 :string
 #
 
 class HomePagesController < ApplicationController
@@ -35,7 +36,10 @@ class HomePagesController < ApplicationController
     end
     #TODO Remove limit(3)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
-
+    if @home_page.discourse_ids
+      ids = @home_page.discourse_ids.split(",")
+      @topics = get_discourse_topics(ids)
+    end
     @form_type = 'Home Page Contact'
   end
 
@@ -52,9 +56,15 @@ class HomePagesController < ApplicationController
 
       # This is for sticky sub plans
       cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+      if @home_page.discourse_ids
+        ids = @home_page.discourse_ids.split(",")
+        @topics = get_discourse_topics(ids)
+      end
+
     else
       redirect_to root_url
     end
+
     @form_type = 'Landing Page Contact'
   end
 
@@ -184,11 +194,24 @@ class HomePagesController < ApplicationController
     @footer = true
   end
 
+  def get_discourse_topics(topic_ids)
+    @client = DiscourseApi::Client.new(ENV['learnsignal_discourse_api_host'])
+    @client.api_key = ENV['learnsignal_discourse_api_key']
+    @client.api_username = ENV['learnsignal_discourse_api_username']
+    topics = []
+    topic_ids.each do |topic_id|
+      topic = @client.topic(topic_id)
+      object = OpenStruct.new(topic)
+      topics << object
+    end
+    topics
+  end
+
   def allowed_params
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
                                       :subject_course_id, :custom_file_name,
-                                      :name, :group_id,
+                                      :name, :group_id, :discourse_ids,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

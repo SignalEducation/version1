@@ -14,6 +14,10 @@
         =f.label :seo_description, t('views.home_pages.form.seo_description'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :discourse_ids, t('views.home_pages.form.discourse_ids'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :discourse_ids, placeholder: t('views.home_pages.form.discourse_ids_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
       .col-md-6
         =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'

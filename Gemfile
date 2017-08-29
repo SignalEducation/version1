@@ -18,6 +18,7 @@ gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
 gem 'chart-js-rails' #Graphs
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
+gem 'discourse_api'
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.9.2'
 gem 'figaro' # management of ENV vars

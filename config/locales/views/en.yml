@@ -608,6 +608,8 @@ en:
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
         blog_posts: Blog Posts
+        discourse_ids: Community Topic IDs - (comma seperated no spaces)
+        discourse_ids_placeholder: Topic ID seperate by comma - (23,43,54)
 
       index:
         h1: Landing Pages

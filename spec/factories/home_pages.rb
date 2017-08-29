@@ -13,6 +13,7 @@
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
+#  discourse_ids                 :string
 #
 
 FactoryGirl.define do

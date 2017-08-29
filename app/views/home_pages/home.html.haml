@@ -104,38 +104,35 @@
                         =blog_post.description
 
 
-      .posts
-        .row
-          .col-sm-6
-            .post
-              .cat
-                %a.hu{:href => "#"} Community
-              .title
-                %a.hu{:href => "#"} How long take does it take to complete ACCA home study?
-              %ul.stats
-                %li
-                  %span
-                    =image_tag('icon_post_views.png')
-                  %span 102 views
-                %li
-                  %span
-                    =image_tag('icon_post_comments.png')
-                  %span 2 comments
-          .col-sm-6
-            .post
-              .cat
-                %a.hu{:href => "#"} Community
-              .title
-                %a.hu{:href => "#"} Relevant reading before ACCA P7 - Advanced Audit and Assurance
-              %ul.stats
-                %li
-                  %span
-                    =image_tag('icon_post_views.png')
-                  %span 102 views
-                %li
-                  %span
-                    =image_tag('icon_post_comments.png')
-                  %span 2 comments
+      -if @home_page.discourse_ids && @topics
+        .posts
+          .row
+            -@topics.each do |topic|
+              -url = @client.host + "t/#{topic.slug.to_s}" + "/#{topic.id.to_s}"
+              -if url
+                .col-sm-6
+                  .post
+                    .cat
+                      =link_to url, target: '_blank' do
+                        .hu
+                          Community
+                    .title
+                      =link_to url, target: '_blank' do
+                        .hu
+                          =topic.title
+                    %ul.stats
+                      %li
+                        %span
+                          =image_tag('icon_post_views.png')
+                        %span
+                          =topic.views
+                          Views
+                      %li
+                        %span
+                          =image_tag('icon_post_comments.png')
+                        %span
+                          =(topic.posts_count - 1)
+                          Comments
 
 
   %section#subscribe.diag-l-up.bg-gradient1
