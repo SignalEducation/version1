@@ -157,7 +157,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_lesson_intercom_event
-    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct)) if Rails.env.production? || Rails.env.staging?
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct))
   end
 
   def check_for_enrollment_email_conditions

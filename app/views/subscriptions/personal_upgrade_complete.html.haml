@@ -6,18 +6,19 @@
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Thanks for upgrading your subscription!
         .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          .col-md-8.col-md-offset-2.l-margin-top.text-center
-            =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sendmailimage.png', class: 'l-margin-bottom-big')
-            %p{style: 'letter-spacing: 0.5px;'}
-              ="An email containing your first invoice will be sent to #{current_user.email}"
-          .col-md-10.col-md-offset-1.l-margin-top.text-center
-            %p{style: 'letter-spacing: 0.5px;'}
-              ="You are now subscribed to our #{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan. Visit the"
-              =link_to 'account page', account_url(anchor: 'subscriptions')
-              ="to view your subscription details."
+          .box-item
+            .col-md-8.col-md-offset-2.l-margin-top.text-center
+              =image_tag('https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/sendmailimage.png', class: 'l-margin-bottom-big')
+              %p{style: 'letter-spacing: 0.5px;'}
+                ="An email containing your first invoice will be sent to #{current_user.email}"
+            .col-md-10.col-md-offset-1.l-margin-top.text-center
+              %p{style: 'letter-spacing: 0.5px;'}
+                ="You are now subscribed to our #{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan. Visit the"
+                =link_to 'account page', account_url(anchor: 'subscriptions')
+                ="to view your subscription details."
 
-            %br/
-            .l-margin-top
-              =link_to dashboard_special_link do
-                .btn.btn-red.btn-wide
-                  ='Continue Learning'
+          %br/
+          .l-margin-top
+            =link_to dashboard_special_link do
+              .btn.btn-red.btn-wide
+                ='Continue Learning'
