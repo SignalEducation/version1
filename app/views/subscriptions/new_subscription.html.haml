@@ -78,8 +78,7 @@
 
                       .price
                         =plan.currency.format_number(plan.price)
-                        -#€34,99
-                      -unless plan.payment_frequency_in_months == 1
+                      -#unless plan.payment_frequency_in_months == 1
                         -# TODO change this display actual discount and saving values
                         .promo
                           .line1
