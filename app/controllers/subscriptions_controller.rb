@@ -42,6 +42,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def create_subscription
+    #TODO Reconfigure to use allowed_params
     user = User.find(params[:user_id])
     subscription_params = params[:user][:subscriptions_attributes]["0"]
     subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)

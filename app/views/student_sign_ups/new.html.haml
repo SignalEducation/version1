@@ -10,10 +10,11 @@
 
       .row.l-margin-top
         .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-          .l-margin-top
+          #sign_up.l-margin-top
             =form_for @user, url: create_student_url do |f|
               =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
               =f.hidden_field :locale, value: (params[:locale] || 'en')
+              =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
               .row
                 .col-md-12
                   .col-sm-6
@@ -34,11 +35,12 @@
                       =f.password_field :password, required: true, class: 'form-control', id: 'user_password'
                   .col-sm-12
                     .form-group.l-margin-top
-                      %label.h5{style: 'color: #3E3F5B;'}
-                        =f.check_box :terms_and_conditions, required: true
-                        I Agree to LearnSignal
-                        =link_to 'Terms & Conditions', terms_and_conditions_url, style: 'color: #EE5457;'
-
+                      %label.check
+                        %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+                          %span
+                            %i.fa.fa-check
+                          ='I Agree to LearnSignal'
+                          =link_to 'Terms & Conditions', terms_and_conditions_url
 
                   .col-sm-12.l-margin-top
                     =f.submit t('views.general.sign_up_now'), class: 'btn btn-red btn-wide btn-lg-text', id: 'signUp'
@@ -64,6 +66,15 @@
 
 
 :javascript
+
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
+  });
+
 
   $(document).on('ready', function() {
     $(".sk-circle").hide();
