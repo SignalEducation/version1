@@ -60,8 +60,6 @@ Rails.application.routes.draw do
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
-    resources :corporate_requests
-    get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
@@ -139,14 +137,11 @@ Rails.application.routes.draw do
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :subject_course_resources
-    resources :tutor_applications
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
-    get 'business', to: 'footer_pages#business', as: :business
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
-    get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     get 'profile/:id', to: 'footer_pages#profile', as: :profile
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
 

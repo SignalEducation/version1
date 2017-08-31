@@ -22,8 +22,6 @@
     -else
       %ul
         %li
-          =link_to 'Stories', why_learn_signal_url
-        %li
           =link_to 'Courses', library_url
         %li
           =link_to 'Pricing', pricing_url
@@ -99,7 +97,6 @@
                 %li=link_to t('views.user_groups.index.h1'), user_groups_url
                 %li=link_to t('views.exam_bodies.index.h1'), exam_bodies_url
                 %li=link_to t('views.exam_sittings.index.h1'), exam_sittings_url
-                %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
                 %li=link_to t('views.currencies.index.h1'), currencies_url
                 %li=link_to t('views.countries.index.h1'), countries_url
                 %li.divider
@@ -112,10 +109,6 @@
                 =link_to t('views.general.sign_out'), sign_out_url
 
         -else
-          %li
-            =link_to 'Why LearnSignal', why_learn_signal_url
-          %li
-            =link_to 'Business', business_url
           %li
             =link_to 'Courses', library_url
           %li

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170829102412) do
+ActiveRecord::Schema.define(version: 20170831115031) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,23 +43,6 @@ ActiveRecord::Schema.define(version: 20170829102412) do
   end
 
   add_index "blog_posts", ["home_page_id"], name: "index_blog_posts_on_home_page_id", using: :btree
-
-  create_table "corporate_requests", force: :cascade do |t|
-    t.string   "name"
-    t.string   "title"
-    t.string   "company"
-    t.string   "email"
-    t.string   "phone_number"
-    t.string   "website"
-    t.text     "personal_message"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
-
-  add_index "corporate_requests", ["company"], name: "index_corporate_requests_on_company", using: :btree
-  add_index "corporate_requests", ["email"], name: "index_corporate_requests_on_email", using: :btree
-  add_index "corporate_requests", ["name"], name: "index_corporate_requests_on_name", using: :btree
-  add_index "corporate_requests", ["phone_number"], name: "index_corporate_requests_on_phone_number", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"
@@ -785,18 +768,6 @@ ActiveRecord::Schema.define(version: 20170829102412) do
   add_index "system_defaults", ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id", using: :btree
   add_index "system_defaults", ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id", using: :btree
   add_index "system_defaults", ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id", using: :btree
-
-  create_table "tutor_applications", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "email"
-    t.text     "info"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "tutor_applications", ["email"], name: "index_tutor_applications_on_email", using: :btree
 
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
