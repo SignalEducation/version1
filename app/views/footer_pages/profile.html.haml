@@ -29,7 +29,7 @@
             .course-list-wrap
               .row
                 -@courses.each do |course|
-                  -if course.parent && course.parent.active
+                  -if course.parent && course.parent.active && course.active_children
                     .col-sm-6.col-md-4
                       =link_to library_special_link(course), class: 'card card-course' do
                         .card-outer
