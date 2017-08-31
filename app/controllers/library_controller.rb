@@ -63,6 +63,7 @@ class LibraryController < ApplicationController
       end
 
       if current_user
+        @form_type = 'Course Tutor Question'
         mock_exams = @course.mock_exams
         mock_exam_ids = mock_exams.map(&:id)
         ip_country = IpAddress.get_country(request.remote_ip)
@@ -82,6 +83,13 @@ class LibraryController < ApplicationController
     else
       redirect_to library_url
     end
+  end
+
+  def tutor_contact_form
+    user_id = current_user ? current_user.id : nil
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    redirect_to request.referrer
   end
 
 end

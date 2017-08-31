@@ -110,6 +110,7 @@ Rails.application.routes.draw do
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
     post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
     post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
+    post '/tutor_contact_form', to: 'library#tutor_contact_form'
 
     # Library Structure
 

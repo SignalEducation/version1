@@ -8,7 +8,7 @@
 
   .row.l-margin-top
     .col-sm-12.l-margin-top.text-left
-      =form_tag(complaints_intercom_url, {class: 'form', role: 'form', name: 'complaints_zendesk_form'}) do
+      =form_tag(complaints_intercom_url, {class: 'form', role: 'form', name: 'complaints_intercom_form'}) do
         .col-md-12
           .col-md-6
             =label_tag :full_name, 'Name'
@@ -29,5 +29,5 @@
 :javascript
 
   $(document).on('confirmation', '.remodal', function () {
-    document.forms['complaints_zendesk_form'].submit();
+    document.forms['complaints_intercom_form'].submit();
   });
