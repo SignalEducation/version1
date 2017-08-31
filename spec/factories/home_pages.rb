@@ -18,16 +18,21 @@
 
 FactoryGirl.define do
   factory :home_page do
+    sequence(:name)                { |n| "homepage-#{n}" }
     sequence(:seo_title)           { |n| "title-#{n}" }
     seo_description                'Seo Description'
+    group_id                       1
+    subject_course_id              nil
     sequence(:public_url)          { |n| "abc#{n}" }
 
     factory :home do
       public_url '/'
+      name 'home'
     end
 
     factory :acca_home do
       public_url 'acca'
+      name 'acca_home'
     end
 
   end

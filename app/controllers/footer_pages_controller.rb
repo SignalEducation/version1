@@ -21,7 +21,7 @@ class FooterPagesController < ApplicationController
 
   def profile
     #/profile/id
-    @tutor = User.all_tutors.all_active.where(id: params[:id]).first
+    @tutor = User.all_tutors.where(id: params[:id]).first
     if @tutor && @tutor.subject_courses.all_active.any?
       @courses = @tutor.subject_courses.all_active.all_in_order
       seo_title_maker(@tutor.full_name, @tutor.description, nil)
@@ -29,6 +29,7 @@ class FooterPagesController < ApplicationController
       redirect_to tutors_url
     end
     @navbar = true
+    @top_margin = true
   end
 
   def profile_index
@@ -36,6 +37,7 @@ class FooterPagesController < ApplicationController
     @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
     seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
     @navbar = true
+    @top_margin = true
   end
 
   def missing_page

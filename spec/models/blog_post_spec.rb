@@ -21,7 +21,7 @@ require 'rails_helper'
 describe BlogPost do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at image_content_type image_file_name image_file_size image_updated_at)
   BlogPost.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -31,16 +31,12 @@ describe BlogPost do
   end
 
   # Constants
-  #it { expect(BlogPost.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:home_page) }
 
   # validation
-  it { should validate_presence_of(:home_page_id) }
-  it { should validate_numericality_of(:home_page_id) }
-
-  it { should validate_presence_of(:sorting_order) }
+  it { should validate_presence_of(:home_page_id).on(:update) }
 
   it { should validate_presence_of(:title) }
 

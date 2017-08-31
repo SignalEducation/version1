@@ -1,7 +1,4 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-profile.is-bg-asphalt{style: 'padding-bottom: 0px;'}
+.l-section-small.is-bg-asphalt{style: 'padding-bottom: 0px;'}
   .l-wrap
     .container-fluid
       .profile-single
@@ -18,7 +15,7 @@
                 %p
                   =@tutor.description.html_safe
 
-.l-section-profile.is-bg-asphalt
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row

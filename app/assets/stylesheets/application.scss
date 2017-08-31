@@ -1168,7 +1168,131 @@ a.link-purple {
 
 
 
+.profile-single {
+  padding-bottom: $gutter*2;
+}
+.profile-text {
+  margin-top: $gutter*2;
+}
+.profile-pic {
+  display: block;
+  max-width: 120px;
+  margin: 0 auto $gutter auto;
+  @include border-radius(100%);
+  &.profile-pic-big {
+    max-width: 170px;
+  }
+}
+.email-pic-padding {
+  padding-bottom: $gutter/2;
+}
+.email-pic {
+  display: block;
+  max-width: 75px;
+  margin: 0 auto $gutter auto;
+  @include border-radius(100%);
+}
+.second-profile-pic {
+  display: block;
+  max-width: 120px;
+  margin: 0 auto $gutter auto;
+  @include border-radius(100%);
+  &.profile-pic-big {
+    max-width: 170px;
+  }
+}
 
+a.tutor-box {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    //@include box-shadow(0, 0, 12px, darken($colour-3, 20%));
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .tutor-box-title {
+      //color: $colour-12;
+    }
+    .tutor-box-label {
+      background: shade($colour-12, 10%);
+    }
+  }
+}
+.tutor-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  &.tutor-box-course {
+    text-align: center;
+    margin-top: $gutter;
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: "";
+      height: 30px;
+      width: 30px;
+      margin-left: -15px;
+      margin-top: -15px;
+      background: url("https://s3-eu-west-1.amazonaws.com/learnsignal3-production/public/ico-course.png") repeat-x 50% 0;
+      background-size: contain;
+    }
+    & .tutor-box-inner {
+      padding-top: $gutter*2;
+    }
+  }
+}
+.tutor-box-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  margin: 0 auto;
+}
+.tutor-box-inner {
+  padding: $gutter $gutter/2;
+  position: relative;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+.tutor-box-pic {
+  max-height: 60%;
+  max-width: 60%;
+  fill: #3E3F5B;
+  background-position: center;
+  margin-top: 20px;
+}
+.box-desc {
+  margin: $gutter/2 0 0 0;
+}
+.tutor-box-label {
+  background: $colour-12;
+  color: $white;
+  padding: $gutter/1.45;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+  @include transition(background-color .2s ease);
+  @include border-bottom-radius(4px);
+  @include font-size(1.1);
+  @include breakpoint(sm-min) {
+    @include font-size(1.2);
+  }
+}
+a.image-link {
+  color: $white;
+
+}
 
 
 

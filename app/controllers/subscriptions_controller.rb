@@ -38,7 +38,7 @@ class SubscriptionsController < ApplicationController
     @currency_id = @country.currency_id
     @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
 
-    IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name)
+    IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name) unless Rails.env.test?
   end
 
   def create_subscription
