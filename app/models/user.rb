@@ -562,8 +562,7 @@ class User < ActiveRecord::Base
   end
 
   def create_on_discourse
-    DiscourseCreateUserWorker.perform_at(5.minute.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
-    IntercomCreateUserWorker.perform_async(self.id)
+    DiscourseCreateUserWorker.perform_at(24.hours.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
   def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)
@@ -702,7 +701,7 @@ class User < ActiveRecord::Base
           if user && v['email'].empty?
             users = []
             raise ActiveRecord::Rollback
-          elsif user && user.expired_free_member?
+          elsif user
             users << user
           else
             country = Country.find(78) || Country.find(name: 'United Kingdom').last
@@ -715,6 +714,7 @@ class User < ActiveRecord::Base
             user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
             if used_emails.include?(v['email']) || !user.valid?
               users = []
+              Rails.logger.error "ERROR: Dashboard#import_csv_upload - failed to save a csv user. Error:#{user.errors.inspect}. Count of used emails: #{used_emails.count}"
               raise ActiveRecord::Rollback
             end
             users << user
