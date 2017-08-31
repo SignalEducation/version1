@@ -161,7 +161,7 @@ a.hu:hover { text-decoration: underline; }
 h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
   position: relative;
   margin: 0;
-  padding: 0;
+  padding: 0 0 5px 0;
   display: block;
   font-weight: normal;
   &.h-white {
@@ -596,6 +596,12 @@ label, .label {
 }
 .l-section-small {
   background: $colour-3;
+  padding: 3rem 0;
+  @include breakpoint(md-min) {
+    padding: 4rem 0;
+  }
+}
+.l-section-footer-pages {
   padding: 3rem 0;
   @include breakpoint(md-min) {
     padding: 4rem 0;
@@ -2168,6 +2174,14 @@ spinner {
   }
 }
 
+.hero-library {
+  background: $colour-8 asset-url('bg-library.jpg') 50% 0 no-repeat;
+  color: $white;
+  @include breakpoint(md-min) {
+    background: $colour-8 asset-url('bg-library.jpg') no-repeat;
+    background-size: cover;
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

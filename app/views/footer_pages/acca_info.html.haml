@@ -1,8 +1,7 @@
 .hero-library
   .l-wrap-small
     =render partial: 'layouts/transparent_navbar'
-  .l-section
-    .l-wrap
+    .l-section-footer-pages
       .container-fluid
         .row
           .col-md-8.col-md-offset-2
@@ -13,147 +12,148 @@
 
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
-.is-bg-asphalt
-  .l-wrap
-    .l-section-small
-      .container-fluid
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %p
-              ACCA (Association of Chartered Certified Accountants) is the global professional accounting body offering the Chartered Certified Accountant qualification (ACCA). The ACCA website
-              %a{href: 'https://www.accaglobal.com', target: '_blank'}
-                ="(www.accaglobal.com)"
-              is the main ACCA exams resource with all the important information you need to know in order to pass the exams. It has the most up-to-date information and we highly recommend that you use it as your main resource during your studies.
-            %p
-              In this guideline, we will provide a quick overview about the ACCA exams, ACCA progression rules, exam entry, exemptions and ethics module with direct links to more detailed information on the ACCA website.
+.l-section-small.is-bg-asphalt
+  .is-bg-asphalt
+    .l-wrap
+      .l-section-small
+        .container-fluid
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %p
+                ACCA (Association of Chartered Certified Accountants) is the global professional accounting body offering the Chartered Certified Accountant qualification (ACCA). The ACCA website
+                %a{href: 'https://www.accaglobal.com', target: '_blank'}
+                  ="(www.accaglobal.com)"
+                is the main ACCA exams resource with all the important information you need to know in order to pass the exams. It has the most up-to-date information and we highly recommend that you use it as your main resource during your studies.
+              %p
+                In this guideline, we will provide a quick overview about the ACCA exams, ACCA progression rules, exam entry, exemptions and ethics module with direct links to more detailed information on the ACCA website.
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              ACCA Exams
-            %p
-              There are two levels of the ACCA Exams - Fundamentals and Professional.
-            %p
-              %a{href: 'http://www.accaglobal.com/us/en/qualifications/glance/acca/details.html', target: '_blank'}
-                ="More information"
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                ACCA Exams
+              %p
+                There are two levels of the ACCA Exams - Fundamentals and Professional.
+              %p
+                %a{href: 'http://www.accaglobal.com/us/en/qualifications/glance/acca/details.html', target: '_blank'}
+                  ="More information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              ACCA Progression Rules
-            %p
-              In order to plan for the ACCA exams, students should follow the progression rules which state when the exams are offered, how many they can take at once, etc.
-            %p
-              %a{href: 'http://www.accaglobal.com/us/en/student/exam-entry-and-administration/enter-an-exam/exam-progression-rules.html', target: '_blank'}
-                ="More information"
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                ACCA Progression Rules
+              %p
+                In order to plan for the ACCA exams, students should follow the progression rules which state when the exams are offered, how many they can take at once, etc.
+              %p
+                %a{href: 'http://www.accaglobal.com/us/en/student/exam-entry-and-administration/enter-an-exam/exam-progression-rules.html', target: '_blank'}
+                  ="More information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              Exam Entry Requirements
-            %p
-              There are three criteria to become qualified as an ACCA member:
-              %ul
-                %li
-                  Successfully pass 14 of 16 exams (some students are eligible for exemption)
-                %li
-                  Have 3 years of relevant experience
-                %li
-                  Pass the Professional Ethics module
-            %p
-              %a{href: 'http://www.accaglobal.com/us/en/qualifications/glance/acca/overview.html', target: '_blank'}
-                ="More information"
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                Exam Entry Requirements
+              %p
+                There are three criteria to become qualified as an ACCA member:
+                %ul
+                  %li
+                    Successfully pass 14 of 16 exams (some students are eligible for exemption)
+                  %li
+                    Have 3 years of relevant experience
+                  %li
+                    Pass the Professional Ethics module
+              %p
+                %a{href: 'http://www.accaglobal.com/us/en/qualifications/glance/acca/overview.html', target: '_blank'}
+                  ="More information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              ACCA Student Info
-            %p
-              Study support resources for students
-            %p
-              %a{href: 'http://www.accaglobal.com/gb/en/student.html', target: '_blank'}
-                ="Student information"
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                ACCA Student Info
+              %p
+                Study support resources for students
+              %p
+                %a{href: 'http://www.accaglobal.com/gb/en/student.html', target: '_blank'}
+                  ="Student information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              Practical Experience Requirements (PER)
-            %p
-              There are three criteria to become qualified as an ACCA member:
-            %iframe{:allowfullscreen => "", :frameborder => "0", :height => "315", :src => "https://www.youtube.com/embed/j83LbBEaUq0", :width => "560"}
-            %p
-              Copyright of ACCA
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                Practical Experience Requirements (PER)
+              %p
+                There are three criteria to become qualified as an ACCA member:
+              %iframe{:allowfullscreen => "", :frameborder => "0", :height => "315", :src => "https://www.youtube.com/embed/j83LbBEaUq0", :width => "560"}
+              %p
+                Copyright of ACCA
 
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %p
-              %a{href: 'http://www.accaglobal.com/us/en/student/practical-experience.html', target: '_blank'}
-                ="More information"
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %p
+                %a{href: 'http://www.accaglobal.com/us/en/student/practical-experience.html', target: '_blank'}
+                  ="More information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              Exemptions
-            %p
-              If you have studied accounting before, you might be eligible for exemptions from certain ACCA exams.
-            %p
-              %a{href: 'http://www.accaglobal.com/us/en/qualifications/apply-now/exemptions.html', target: '_blank'}
-                ="More information"
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                Exemptions
+              %p
+                If you have studied accounting before, you might be eligible for exemptions from certain ACCA exams.
+              %p
+                %a{href: 'http://www.accaglobal.com/us/en/qualifications/apply-now/exemptions.html', target: '_blank'}
+                  ="More information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              Professional Ethics Module
-            %p
-              The professional ethics module is an important part of the ACCA membership. It will give you exposure to ethical perspectives.
-            %p
-              Watch the video to learn more
-            %iframe{:allowfullscreen => "", :frameborder => "0", :height => "315", :src => "https://www.youtube.com/embed/2U97GUWXE0k", :width => "560"}
-            %p
-              Copyright of ACCA
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                Professional Ethics Module
+              %p
+                The professional ethics module is an important part of the ACCA membership. It will give you exposure to ethical perspectives.
+              %p
+                Watch the video to learn more
+              %iframe{:allowfullscreen => "", :frameborder => "0", :height => "315", :src => "https://www.youtube.com/embed/2U97GUWXE0k", :width => "560"}
+              %p
+                Copyright of ACCA
 
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %p
-              %a{href: 'http://www.accaglobal.com/us/en/student/ethics/professional-ethics.html', target: '_blank'}
-                ="More information"
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %p
+                %a{href: 'http://www.accaglobal.com/us/en/student/ethics/professional-ethics.html', target: '_blank'}
+                  ="More information"
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              %a{href: 'http://www.accaglobal.com/us/en/help/exam-sessions.html', target: '_blank'}
-                ="Students’ FAQs"
-
-
-
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              LearnSignal Support Options
-            %p
-              There are various options for a student to get in touch with LearnSignal.
-            %p
-              %ul
-                %li
-                  They can ask questions on the Student Forum.
-                %li
-                  There is the chat in the bottom right of the screen if they have a specific question about the material.
-                %li
-                  They can use the contact us form
-                %li
-                  If the have a specific complaint, there is the complaint form.
-            %p
-              All resources are provided on the platform.
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                %a{href: 'http://www.accaglobal.com/us/en/help/exam-sessions.html', target: '_blank'}
+                  ="Students’ FAQs"
 
 
-        .row
-          .col-md-10.col-md-offset-1.l-margin-top-big
-            %h4
-              ACCA Connect contact information:
-            %p
-              ACCA Connect, 110 Queen Street, Glasgow G1 3BX, United Kingdom
-            %p
-              ="T: +44 (0)141 582 2000"
-            %p
-              ="E: info@accaglobal.com"
+
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                LearnSignal Support Options
+              %p
+                There are various options for a student to get in touch with LearnSignal.
+              %p
+                %ul
+                  %li
+                    They can ask questions on the Student Forum.
+                  %li
+                    There is the chat in the bottom right of the screen if they have a specific question about the material.
+                  %li
+                    They can use the contact us form
+                  %li
+                    If the have a specific complaint, there is the complaint form.
+              %p
+                All resources are provided on the platform.
+
+
+          .row
+            .col-md-10.col-md-offset-1.l-margin-top-big
+              %h4
+                ACCA Connect contact information:
+              %p
+                ACCA Connect, 110 Queen Street, Glasgow G1 3BX, United Kingdom
+              %p
+                ="T: +44 (0)141 582 2000"
+              %p
+                ="E: info@accaglobal.com"
 
 
 

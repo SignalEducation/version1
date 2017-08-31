@@ -1,0 +1,17 @@
+.container
+  #logo
+    =link_to home_url do
+      =image_tag('logo.png')
+
+  %nav#menu
+    .mobile
+      %i.fa.fa-bars
+    %ul
+      %li
+        =link_to 'Courses', library_url
+      %li
+        =link_to 'Pricing', pricing_url
+      %li
+        =link_to 'Get free access', new_student_url, class: 'uc get'
+      %li
+        =link_to 'Login', sign_in_url, class: 'uc'

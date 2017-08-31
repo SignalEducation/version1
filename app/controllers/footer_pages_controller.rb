@@ -33,7 +33,7 @@ class FooterPagesController < ApplicationController
 
   def profile_index
     #/profiles
-    @tutors = User.all_tutors.all_active.where.not(profile_image_file_name: nil)
+    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
     seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
     @navbar = true
   end
@@ -52,10 +52,13 @@ class FooterPagesController < ApplicationController
 
   def info_subscribe
     email = params[:email][:address]
-    list_id = params[:list_id]
+    name = params[:first_name][:address]
+    #list_id = '866fa91d62' # Dev List
+    list_id = 'a716c282e2' # Production List
     if !email.blank?
       begin
-        @mc.lists.subscribe(list_id, {'email' => email})
+        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+
         respond_to do |format|
           format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
         end
