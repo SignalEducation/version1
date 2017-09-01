@@ -23,17 +23,14 @@
   }
 }
 .logo {
-  padding: $gutter 0;
+  padding: 16px 0;
   float: left;
-  max-width: 119px;
-  @include breakpoint(sm-min) {
-    max-width: 159px;
-  }
+  max-width: 159px;
 }
 .nav-logo {
-  padding: $gutter 0;
+  padding: $gutter/2 0;
   float: left;
-  max-width: 180px;
+  max-width: 240px;
 }
 .navbar-default .navbar-nav > li > a {
   color: rgba($white, .8);

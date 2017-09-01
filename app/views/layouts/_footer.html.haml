@@ -2,8 +2,9 @@
   .container
     .row
       .col-md-3.hidden-xs.hidden-sm
-        .logo
-          =image_tag('logo.png')
+        =link_to home_url do
+          =image_tag('ls-logo-transparent.svg', class: 'logo')
+
 
         .lsbtn-base
           =link_to 'Become a member now', new_student_url, class: 'lsbtn pull-left'

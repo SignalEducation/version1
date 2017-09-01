@@ -2,11 +2,12 @@
   .l-wrap
     .container-fluid
       %nav.navbar.navbar-default
-        .navbar-header
-          %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
+
+        %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+
         =link_to home_url do
           =image_tag('ls-logo-white.svg', class: 'logo')
 
