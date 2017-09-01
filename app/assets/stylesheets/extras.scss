@@ -69,6 +69,15 @@
 #free .approved img { max-width: 100%; }
 #free .form { padding-bottom: 15px; padding-top: 10px; display: none; }
 
+#upgrade { background: url(../assets/upgrade-background.jpg) center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#upgrade .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#upgrade .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#upgrade .subtitle { color: inherit; }
+#upgrade .lsbtn-base { margin: 0 0 28px 0; }
+#upgrade .approved { padding: 6em 0 0 0; margin: auto; }
+#upgrade .approved img { max-width: 100%; }
+#upgrade .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
 
 
 #explore { text-align: center; padding: 65px 0 46px 0; position: relative; }
