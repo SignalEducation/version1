@@ -111,7 +111,7 @@ a {
 }
 a:hover {
   color: inherit;
-  text-decoration: underline;
+  //text-decoration: underline;
 }
 a:active,
 a:focus { color: inherit;
@@ -535,6 +535,7 @@ label, .label {
 .lsbtn:hover {
   color: #fff;
   background: $red1;
+  text-decoration: none;
 }
 
 .lsbtn.v2 {
