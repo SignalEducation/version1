@@ -289,9 +289,10 @@ label, .label {
   font-weight: 300;
   text-align: left;
   line-height: 1.222em;
-  padding: 1.333em 1.444em;
+  padding: $gutter/2 $gutter/1.5;
   border-radius: 0.333em;
   border: none;
+  height: 45px;
   width: 100%;
   &:focus {
     background: $colour-14;
