@@ -88,4 +88,7 @@ shared_context 'course_content' do
   let!(:quiz_content_2_5)  { FactoryGirl.create(:quiz_content,
                              quiz_answer_id: quiz_answer_4.id) }
 
+
+  let!(:home) { FactoryGirl.create(:home_page, public_url: '/', home: true, group_id: course_group_1.id) }
+
 end

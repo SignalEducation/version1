@@ -14,6 +14,7 @@
 #  group_id                      :integer
 #  name                          :string
 #  discourse_ids                 :string
+#  home                          :boolean          default(FALSE)
 #
 
 require 'rails_helper'

@@ -14,6 +14,7 @@
 #  group_id                      :integer
 #  name                          :string
 #  discourse_ids                 :string
+#  home                          :boolean          default(FALSE)
 #
 
 class HomePagesController < ApplicationController
@@ -28,7 +29,7 @@ class HomePagesController < ApplicationController
   before_action :create_user_object, only: [:home, :show]
 
   def home
-    @home_page = HomePage.where(custom_file_name: 'home').where(public_url: '/').first
+    @home_page = HomePage.where(home: true).where(public_url: '/').first
     if @home_page
       @group = @home_page.group
     else
@@ -36,7 +37,7 @@ class HomePagesController < ApplicationController
     end
     #TODO Remove limit(3)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
-    if @home_page.discourse_ids
+    if @home_page && @home_page.discourse_ids
       ids = @home_page.discourse_ids.split(",")
       @topics = get_discourse_topics(ids)
     end
@@ -211,7 +212,7 @@ class HomePagesController < ApplicationController
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
                                       :subject_course_id, :custom_file_name,
-                                      :name, :group_id, :discourse_ids,
+                                      :name, :home, :group_id, :discourse_ids,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

@@ -14,6 +14,7 @@
 #  group_id                      :integer
 #  name                          :string
 #  discourse_ids                 :string
+#  home                          :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -28,6 +29,7 @@ FactoryGirl.define do
     factory :home do
       public_url '/'
       name 'home'
+      home true
     end
 
     factory :acca_home do
