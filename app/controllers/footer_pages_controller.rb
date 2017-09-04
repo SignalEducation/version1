@@ -46,6 +46,7 @@ class FooterPagesController < ApplicationController
     elsif params[:first_element].to_s == '500-page'
       render file: 'public/500.html', layout: nil, status: 500
     else
+      @top_margin = true
       render 'footer_pages/404_page.html.haml', status: 404
     end
     seo_title_maker('404 Page', "Sorry, we couldn't find what you are looking for. We missed the mark!

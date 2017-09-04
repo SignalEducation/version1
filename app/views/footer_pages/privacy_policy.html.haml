@@ -9,6 +9,8 @@
               Privacy Policy
             %p.h5.h-white.text-center.l-margin-bottom-big
               Our privacy outline for Learn Signal
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-asphalt
   .l-section
     .container

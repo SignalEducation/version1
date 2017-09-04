@@ -32,6 +32,8 @@ class ApplicationController < ActionController::Base
   Date::DATE_FORMATS[:simple] = I18n.t('controllers.application.date_formats.simple')
   Date::DATE_FORMATS[:standard] = I18n.t('controllers.application.date_formats.standard')
 
+  EXCLUDED_CONTROLLERS = %w(orders subscriptions)
+
   ### User access control and authentication
 
   def current_user_session

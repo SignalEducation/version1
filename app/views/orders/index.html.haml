@@ -1,3 +1,5 @@
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -25,7 +27,7 @@
                       %td=order.user.full_name
                       %td=order.current_status
                       %td
-                        =link_to t('views.general.view'), order, class: 'btn btn-red btn-small'
-                        =link_to t('views.general.view'), order.product, class: 'btn btn-cyan btn-small'
+                        =link_to 'Order', order, class: 'btn btn-red btn-small'
+                        =link_to 'Product', order.product, class: 'btn btn-cyan btn-small'
                         =link_to t('views.orders.index.user_id'), user_url(order.user_id), class: 'btn btn-purple btn-small'
 

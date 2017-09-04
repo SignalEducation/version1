@@ -16,8 +16,6 @@
       .bottom-arrow
 
 
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
     #upgrade-subscription
       =form_for @new_subscription, url: user_reactivate_account_subscription_url(@user.id), html: {id: 'reactivate-form', role: 'form'} do |f|
         =f.hidden_field :subscription_plan_id
