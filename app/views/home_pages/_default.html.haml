@@ -140,15 +140,15 @@
 
 
 
-    %section#reviews2.diag-l-up
+    -#%section#reviews2.diag-l-up
       .container
         .row.review1
           .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
             .review
-              %span.q.q1> “
-              Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem
+              %span.q.q1
+              I have only just discovered it. So far, very highly recommended. Videos are short, so easy to dip in and out when you are on the go and have a spare minute.
               %span.q.q2 ”
-            .name Billy Oliver. Quebec, Canada
+            .name Patti Mary, UK
         .row.reviews
           .col-md-5.col-md-offset-1.col-sm-6
             .box
@@ -206,6 +206,8 @@
 
 
 
+    %section#reviews
+      =render partial: 'layouts/image_slider'
 
 
     %section#plans
@@ -257,9 +259,8 @@
                       .line2
                         Save €25
                 .lsbtn-base
-                  =link_to new_student_url do
-                    .lsbtn
-                      Get Started For Free
+                  =link_to new_student_url, class: 'lsbtn' do
+                    Get Started For Free
 
 
 
