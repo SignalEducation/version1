@@ -38,6 +38,7 @@ describe SubscriptionsController, type: :controller do
   let!(:subscription_payment_card) { FactoryGirl.create(:subscription_payment_card, user_id: individual_student_user.id) }
   let!(:subscription_1) { x = FactoryGirl.create(:subscription,
                              user_id: individual_student_user.id,
+                             active: true,
                              subscription_plan_id: subscription_plan_1.id,
                              stripe_token: stripe_helper.generate_card_token)
   individual_student_user.stripe_customer_id = x.stripe_customer_id
@@ -202,7 +203,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "Get 'change_plan'" do
-      it 'should redirect to sign_in' do
+      it 'should successfully render the change_plan form' do
         get :change_plan
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
