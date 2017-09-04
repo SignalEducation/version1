@@ -72,6 +72,7 @@
 #explore { text-align: center; padding: 65px 0 46px 0; position: relative; }
 #explore .title1 { margin: 0 0 0.5em 0; }
 #explore .subtitle { font-size: inherit; line-height: inherit; font-weight: inherit; margin: 0 0 2em 0; }
+#explore a { text-decoration: none; }
 #explore .course { height: 170px; overflow: hidden; display: block; text-align: center; color: #fff; font-size: 1.333em; line-height: 1.17em; font-weight: inherit; position: relative; margin: 0 0 20px 0; background: #000; }
 #explore .course .tmain { height: inherit; padding: 10px 3em; position: relative; z-index: 2; }
 #explore .course .bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: center center no-repeat; background-size: cover; z-index: 1; transition: all 0.3s; }
