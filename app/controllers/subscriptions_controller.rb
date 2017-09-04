@@ -47,7 +47,8 @@ class SubscriptionsController < ApplicationController
     subscription_params = params[:user][:subscriptions_attributes]["0"]
     subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
 
-    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"]
+    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] && subscription_params["terms_and_conditions"] == 'true'
+
       # Coupon Code Param Check
       if params["hidden_coupon_code"] && params["hidden_coupon_code"].present?
         # Coupon Code Verification

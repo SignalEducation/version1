@@ -147,7 +147,7 @@ describe SubscriptionsController, type: :controller do
       it 'should respond okay with correct params and valid coupon' do
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: individual_student_user.id
+        post :create_subscription, user: upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: individual_student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -157,11 +157,11 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error coupon is invalid' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: individual_student_user.id
+        post :create_subscription, user: upgrade_params, hidden_coupon_code: 'abc123', user_id: individual_student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('The coupon code entered is not valid')
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(user_new_subscription_url(individual_student_user.id))
+        expect(response).to redirect_to(user_new_subscription_url(individual_student_user.id, coupon: true))
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
 
@@ -170,7 +170,7 @@ describe SubscriptionsController, type: :controller do
       it 'should respond okay with correct params without coupon' do
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: individual_student_user.id
+        post :create_subscription, user: upgrade_params, hidden_coupon_code: '', user_id: individual_student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -180,15 +180,15 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. With Bad params' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: individual_student_user.id
+        post :create_subscription, user: invalid_upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: individual_student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
         expect(response.status).to eq(302)
         expect(response).to redirect_to(user_new_subscription_url(individual_student_user.id))
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
-
       end
+
     end
 
     describe "GET 'personal_upgrade_complete'" do
