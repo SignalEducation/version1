@@ -59,7 +59,7 @@
 #menu ul li a.getu:hover:after { background: #EF5153; }
 
 
-#free { background: url(../assets/free.jpg) center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#free { background: asset-url('free.jpg') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
 #free .tmain { height: 790px; padding: 140px 0; text-align: center; }
 #free .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
 #free .subtitle { color: inherit; }
@@ -132,7 +132,7 @@
 #homeblog .posts + .posts { border-top: solid 1px #CBCBCB; padding: 2.5em 0 0 0; }
 
 
-#subscribe { padding: 190px 0 130px; color: #fff; text-align: center; background: url(../assets/subscribe.jpg) center center no-repeat fixed; background-size: cover; position: relative; }
+#subscribe { padding: 190px 0 130px; color: #fff; text-align: center; background: asset-url('subscribe.jpg') center center no-repeat fixed; background-size: cover; position: relative; }
 #subscribe .title1 { margin: 0 0 0.792em 0; }
 #subscribe .subtitle { font-size: inherit; font-weight: inherit; color: inherit; line-height: inherit; margin: 0 0 3.333em; }
 #subscribe .form-group { margin-bottom: 20px; }
@@ -231,7 +231,7 @@
 
 /* LANDING PAGE */
 
-.landing #free { text-align: left; background-image: url(../assets/landing_bakgroung.png); }
+.landing #free { text-align: left; background-image: asset-url('landing_bakgroung.png'); }
 .landing #free * { text-align: left; }
 .landing #free .tmain { }
 .landing #free .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
@@ -242,7 +242,7 @@
 .landing #cancel { padding-bottom: 9em; }
 .landing #cancel + #tryfirst { margin-top: -7em; }
 
-#tryfirst { background: url(../assets/tryfirst.jpg) center center no-repeat; background-size: cover; color: #fff; text-align: center; padding: 250px 0 135px 0; position: relative; }
+#tryfirst { background: asset-url('tryfirst.jpg') center center no-repeat; background-size: cover; color: #fff; text-align: center; padding: 250px 0 135px 0; position: relative; }
 #tryfirst .title1 { margin-bottom: 0.792em; }
 #tryfirst p { line-height: 2em; margin: 0 0 2.77em 0; color: $white; }
 #tryfirst .lsbtn-base { margin: 0 0 1.778em 0; }
@@ -262,7 +262,7 @@
 
 .landing #what { background: none; padding-top: 75px; }
 
-#trusted { color: #fff; text-align: center; padding: 160px 0 190px 0; background: url(../assets/trusted.jpg) center center no-repeat fixed; background-size: cover; position: relative; }
+#trusted { color: #fff; text-align: center; padding: 160px 0 190px 0; background: asset-url('trusted.jpg') center center no-repeat fixed; background-size: cover; position: relative; }
 #trusted .inner { margin: auto; max-width: 880px; }
 #trusted .title1 { margin-bottom: 0.792em; }
 #trusted p { line-height: 2em; margin: 0 0 5em 0; color: #fff;}
@@ -298,7 +298,7 @@
 #countdown .timer > div > span { display: block; }
 #countdown .timer .n { font-size: 2.667em; line-height: 1.1em; color: #DD5B59; }
 
-.upgrade #free { background: url(../assets/upgrade-background.png) center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+.upgrade #free { background: asset-url('upgrade-background.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
 .upgrade #free .tmain { height: auto; padding: 180px 0 140px 0; }
 .upgrade #free .title1 { margin: 0 auto 0.7em auto; max-width: 880px; }
 .upgrade #free .subtitle { font-size: 1.333em; line-height: 1.333em; margin: 0 auto; font-weight: 300; max-width: 880px; }
@@ -324,7 +324,7 @@
 .upgrade #reviews2 .review1 { margin-bottom: 0; }
 .upgrade #reviews2 .box { background: #f6f6f6; }
 
-#community { padding: 105px 0; background: url(../assets/community.jpg) center center no-repeat; background-size: cover; color: #fff; position: relative; }
+#community { padding: 105px 0; background: asset-url('community.jpg') center center no-repeat; background-size: cover; color: #fff; position: relative; }
 #community .inner { max-width: 630px; margin: auto; }
 
 #simply { background: #f6f6f6; padding: 70px 0 120px 0; position: relative; }
@@ -332,7 +332,7 @@
 #simply .cc { overflow: hidden; margin-bottom: 2.333em; }
 #simply .cc label { font-weight: inherit; display: block; margin: 0 0 0.5em 0; }
 #simply .cc .form-control { float: left; width: 70%; font-weight: normal; }
-#simply .cc .form-control.cc1 { border-top-right-radius: 0; border-bottom-right-radius: 0; padding-left: 3.6em; background: url(../img/input_cc.png) 1.167em center no-repeat #fff; background-size: 1.722em auto; }
+#simply .cc .form-control.cc1 { border-top-right-radius: 0; border-bottom-right-radius: 0; padding-left: 3.6em; background: asset-url('input_cc.png') 1.167em center no-repeat #fff; background-size: 1.722em auto; }
 #simply .cc .form-control.cc2 { width: 15%; border-radius: 0; padding-left: 0.2em; padding-right: 0.2em; text-align: center; }
 #simply .cc .form-control.cc3 { width: 15%; border-top-left-radius: 0; border-bottom-left-radius: 0; padding-left: 0.2em; text-align: center; }
 #simply .check { display: block; cursor: pointer; overflow: hidden; margin: 0 0 3em 0; }
@@ -367,7 +367,7 @@
 
 
 
-#loading { position: fixed; left: 0; top: 0; z-index: 5000; width: 100%; height: 100%; width: 100vw; height: 100vh; background: url(../img/loading.gif) center center no-repeat rgba(255,255,255,0.95); }
+#loading { position: fixed; left: 0; top: 0; z-index: 5000; width: 100%; height: 100%; width: 100vw; height: 100vh; background: asset-url('loading.gif') center center no-repeat rgba(255,255,255,0.95); }
 
 
 
