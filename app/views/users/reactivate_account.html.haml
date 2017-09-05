@@ -34,7 +34,7 @@
 
             %ul.plans.clearfix
               -@subscription_plans.each do |plan|
-                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months}}
                   .base
                     .topbox
                       -if plan.payment_frequency_in_months == 3
@@ -102,6 +102,7 @@
     $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
     $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
+    $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
   }
 
   $(document).on('ready', function() {

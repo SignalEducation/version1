@@ -23,8 +23,11 @@
   .form-group.l-margin-top
     .tot-get
       .price
+        -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
         %span.total Total:
-        %span.value £69.99
+        %span.value#total-value
+          =default_plan.currency.format_number(default_plan.price)
+
       %div
         = f.button :submit, class: 'lsbtn', id: 'card_submit' do
           %i.fa.fa-lock
@@ -47,7 +50,13 @@
 
 
     .obs
-      ="Your next recurring payment will be on 01 Jan 1980."
+      -#
+        -time_now = Proc.new{Time.now}.call
+        -number_of_months = default_plan.payment_frequency_in_months
+        ="Your next recurring payment will be on "
+        #next-payment-date
+          =humanize_datetime(time_now + number_of_months.months)
+
       %br
       Remember, you can cancel at anytime
 

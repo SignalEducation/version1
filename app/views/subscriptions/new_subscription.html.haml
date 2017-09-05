@@ -53,7 +53,7 @@
 
             %ul.plans.clearfix
               -@subscription_plans.each do |plan|
-                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months}}
                   .base
                     .topbox
                       -if plan.payment_frequency_in_months == 3
@@ -124,7 +124,7 @@
 
 
 
-    %section#reviews2
+    -#%section#reviews2
       .container
         .row
           .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
@@ -149,7 +149,7 @@
 
 
 
-    %section#community
+    -#%section#community
       .top-arrow
       .container
         .inner
@@ -168,6 +168,8 @@
     $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
     $('#user_subscriptions_attributes_0_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
+    $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
+    //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
   }
 
   $(document).on('ready', function() {
