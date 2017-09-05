@@ -175,7 +175,7 @@ class UsersController < ApplicationController
           email: @user.try(:email)
       )
       @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-
+      @user.update_attribute(:free_trial, true) if @user.user_group.try(:individual_student)
       if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
