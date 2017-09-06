@@ -77,7 +77,7 @@
 
         .col-md-4
           .l-margin-top-big
-            -if current_user
+            -#if current_user
               %p.h4.l-margin-bottom.l-margin-top
                 Contact Tutor
               %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
@@ -108,7 +108,7 @@
         .l-margin-top-huge
           =render partial: 'course_info'
 
-=render partial: 'courses/tutor_contact'
+-#=render partial: 'courses/tutor_contact'
 =render partial: 'courses/access_denied_modal'
 :javascript
 
