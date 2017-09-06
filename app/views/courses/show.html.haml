@@ -76,7 +76,7 @@
                     %a{href: '#notes', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.notes')
                   -if @course_module.discourse_topic_id
-                    %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                    %a{href: '#community-section', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                       Community
 
                 -else
@@ -84,7 +84,7 @@
                     %a{href: '#description', aria: {controls: 'active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                       =t('views.course_module_elements.show.tabs.description')
                   -if @course_module.discourse_topic_id
-                    %a{href: '#community', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                    %a{href: '#community-section', aria: {controls: 'in-active'}, role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                       Community
 
 

@@ -55,6 +55,7 @@ class LibraryController < ApplicationController
 
         if current_user && current_user.permission_to_see_content(@course)
           @subject_course_resources = @course.subject_course_resources
+          @form_type = "Course Tutor Question. Course: #{@course.name}"
         end
 
       else
@@ -63,7 +64,6 @@ class LibraryController < ApplicationController
       end
 
       if current_user
-        @form_type = 'Course Tutor Question'
         mock_exams = @course.mock_exams
         mock_exam_ids = mock_exams.map(&:id)
         ip_country = IpAddress.get_country(request.remote_ip)
@@ -87,9 +87,9 @@ class LibraryController < ApplicationController
 
   def tutor_contact_form
     user_id = current_user ? current_user.id : nil
-    #IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
-    #flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    #redirect_to request.referrer
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    redirect_to request.referrer
   end
 
 end

@@ -77,11 +77,13 @@
 
         .col-md-4
           .l-margin-top-big
-            -#if current_user
+            -if current_user && @course.enrolled_user_ids.include?(current_user.id)
               %p.h4.l-margin-bottom.l-margin-top
                 Contact Tutor
               %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
                 Ask The Tutor
+
+              =render partial: 'courses/tutor_contact'
 
             -if current_user && @course.mock_exams.any?
               %p.h4.l-margin-bottom.l-margin-top-huge
@@ -108,7 +110,6 @@
         .l-margin-top-huge
           =render partial: 'course_info'
 
--#=render partial: 'courses/tutor_contact'
 =render partial: 'courses/access_denied_modal'
 :javascript
 
