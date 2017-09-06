@@ -64,7 +64,7 @@
 
 
 
-    -@course_module_element_user_log.quiz_attempts.reverse.each_with_index do |attempt, counter|
+    -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
       -if attempt
         =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
