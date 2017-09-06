@@ -3,13 +3,21 @@
     .col-md-12
       =render partial: '/layouts/error_messages', locals: {thing: @home_page, message: nil}
       .col-md-6
+        =f.label :name, t('views.home_pages.form.name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, placeholder: t('views.home_pages.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
         =f.label :seo_title, t('views.home_pages.form.seo_title'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.text_field :seo_title, placeholder: t('views.home_pages.form.seo_title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+          =f.text_field :seo_title, placeholder: t('views.home_pages.form.seo_title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
         =f.label :seo_description, t('views.home_pages.form.seo_description'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :discourse_ids, t('views.home_pages.form.discourse_ids'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :discourse_ids, placeholder: t('views.home_pages.form.discourse_ids_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
       .col-md-6
         =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'
@@ -21,10 +29,25 @@
           =f.text_field :custom_file_name, placeholder: t('views.home_pages.form.custom_file_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
         %br/
+        =f.label :group_id, t('views.home_pages.form.group_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        %br/
         =f.label :subject_course_id, t('views.home_pages.form.subject_course_id'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
-  .row.l-margin-top-big
+      .col-sm-6
+        .checkbox
+          %label
+            =f.check_box :home
+            ='Home'
+
+
+  .row.l-margin-top
+    =render partial: 'fields_for_blog_posts', locals: {f: f}
+
+
+  .row.l-margin-top-huge
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), home_pages_path, class: 'btn btn-cyan'

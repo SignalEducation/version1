@@ -11,6 +11,10 @@
 #  updated_at                    :datetime         not null
 #  subject_course_id             :integer
 #  custom_file_name              :string
+#  group_id                      :integer
+#  name                          :string
+#  discourse_ids                 :string
+#  home                          :boolean          default(FALSE)
 #
 
 class HomePagesController < ApplicationController
@@ -21,43 +25,59 @@ class HomePagesController < ApplicationController
     ensure_user_is_of_type(%w(admin))
   end
   before_action :get_variables, except: [:home]
-  before_action :layout_variables, only: [:home]
+  before_action :layout_variables, only: [:home, :show]
   before_action :create_user_object, only: [:home, :show]
-  before_action :set_view_objects, only: [:show]
 
   def home
-    #This is the main home_page
-    @groups = Group.all_active.all_in_order
-    # Displaying the monthly price at top of page
-    @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
-    #To show each pricing plan on the page; not involved in the sign up process
-    @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
-    @groups = Group.all_active.all_in_order
-
-    seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+    @home_page = HomePage.where(home: true).where(public_url: '/').first
+    if @home_page
+      @group = @home_page.group
+    else
+      @group = Group.all_active.all_in_order.first
+    end
+    #TODO Remove limit(3)
+    @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+    if @home_page && @home_page.discourse_ids
+      ids = @home_page.discourse_ids.split(",")
+      @topics = get_discourse_topics(ids)
+    end
+    @form_type = 'Home Page Contact'
   end
 
   def show
-    @group = @course_object if @course_object
-    # Displaying the monthly price
-    @subscription_plan = SubscriptionPlan.for_students.all_active.generally_available.in_currency(@currency_id).where(payment_frequency_in_months: 1).first
-    @student_subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order
-
+    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
     if @home_page
+      @group = @home_page.group
+      @subject_course = @home_page.subject_course
+
+      #TODO Remove limit(3)
+      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+
+      # This is for sticky sub plans
       cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
+      if @home_page.discourse_ids
+        ids = @home_page.discourse_ids.split(",")
+        @topics = get_discourse_topics(ids)
+      end
+
     else
-      seo_title_maker('LearnSignal', 'LearnSignal an on-demand training library for business professionals. Learn the skills you need anytime, anywhere, on any device', false)
+      redirect_to root_url
     end
-    @navbar = nil
+
+    @form_type = 'Landing Page Contact'
   end
 
   def subscribe
     email = params[:email][:address]
-    list_id = 'a716c282e2'
+    name = params[:first_name][:address]
+    #list_id = '866fa91d62' # Dev List
+    list_id = 'a716c282e2' # Production List
     if !email.blank?
       begin
-        @mc.lists.subscribe(list_id, {'email' => email})
+        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+
         respond_to do |format|
           format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
         end
@@ -88,15 +108,16 @@ class HomePagesController < ApplicationController
   end
 
   def index
-    @navbar = nil
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
   def new
     @home_page = HomePage.new
+    @home_page.blog_posts.build
   end
 
   def edit
+    @home_page.blog_posts.build
   end
 
   def create
@@ -106,6 +127,7 @@ class HomePagesController < ApplicationController
       redirect_to home_pages_url
     else
       render action: :new
+      @home_page.blog_posts.build
     end
   end
 
@@ -134,20 +156,8 @@ class HomePagesController < ApplicationController
       @home_page = HomePage.where(id: params[:id]).first
     end
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @course_home_page_urls = HomePage.for_courses.map(&:public_url)
     @subject_courses = SubjectCourse.all_active.all_in_order
-  end
-
-  def set_view_objects
-    if params[:home_pages_public_url]
-      @public_url = params[:home_pages_public_url].to_s
-      @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
-      if @home_page
-        @course_object = @home_page.course if @home_page.course
-      else
-        redirect_to root_url
-      end
-    end
+    @groups = Group.all_active.all_in_order
   end
 
   def create_user_object
@@ -180,14 +190,39 @@ class HomePagesController < ApplicationController
   end
 
   def layout_variables
-    @navbar = nil
+    @navbar = false
+    @top_margin = false
     @footer = true
+  end
+
+  def get_discourse_topics(topic_ids)
+    @client = DiscourseApi::Client.new(ENV['learnsignal_discourse_api_host'])
+    @client.api_key = ENV['learnsignal_discourse_api_key']
+    @client.api_username = ENV['learnsignal_discourse_api_username']
+    topics = []
+    topic_ids.each do |topic_id|
+      topic = @client.topic(topic_id)
+      object = OpenStruct.new(topic)
+      topics << object
+    end
+    topics
   end
 
   def allowed_params
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
-                                      :subject_course_id, :custom_file_name)
+                                      :subject_course_id, :custom_file_name,
+                                      :name, :home, :group_id, :discourse_ids,
+                                      blog_posts_attributes: [:id, :home_page_id,
+                                                              :title, :description,
+                                                              :url, :_destroy,
+                                                              :image, :image_file_name,
+                                                              :image_content_type,
+                                                              :image_file_size,
+                                                              :image_updated_at
+                                      ]
+    )
+
   end
 
 end

@@ -42,11 +42,11 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
-    @footer = nil
+    @footer = true
   end
 
   def edit
-    @footer = nil
+    @footer = true
   end
 
   def create

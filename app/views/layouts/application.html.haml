@@ -1,8 +1,6 @@
 !!! 5
 %html{lang: params[:locale] || 'en'}
   %head
-    -if Rails.env.production?
-      %script{src: '//cdn.optimizely.com/js/5168310932.js'}
     %meta{charset: 'utf-8'}
     %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
     %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
@@ -13,13 +11,12 @@
         Business Training Library | LearnSignal
 
     =stylesheet_link_tag 'application', media: 'all'
-    =javascript_include_tag 'application'#, 'data-turbolinks-track' => true
+    =javascript_include_tag 'application', modernizr: :true
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
-    -if controller_name == 'courses'
+    -if controller_name == 'courses' || controller_name == 'home_pages'
       %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
       %script{src: 'https://player.vimeo.com/api/player.js'}
-    -#%script{type: 'text/javascript', src: '//use.typekit.net/jhv8rbq.js'}
     %link{href: 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700', rel: 'stylesheet'}
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -41,35 +38,38 @@
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
       =render partial: 'layouts/facebook_pixel'
-      =render partial: 'layouts/hotjar'
       =render partial: 'layouts/cookie_banner'
 
   %body
     %noscript
       %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
     height: 0, width: 0, style: 'display:none;visibility:hidden'}
+
     -if Rails.env.production?
       =render partial: 'layouts/google_tag_manager'
       =render partial: 'layouts/linkedin_pixel'
-    -if controller_name == 'referral_codes' && action_name == 'show'
-      =render partial: 'layouts/facebook_sdk'
 
     -if @navbar
       -if @navbar == 'transparent'
         =render partial: 'layouts/transparent_navbar'
       -else
         =render partial: 'layouts/navbar'
+
+    -if @top_margin
+      .margin-top
+
+    -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'home_pages'
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
+
     =yield
+
     -if @footer
-      =render partial: 'layouts/large_footer'
+      =render partial: 'layouts/footer'
 
 
     -#General partials
-    -unless controller_name == 'home_pages'
-      =render partial: 'layouts/misc_javascript'
-      -if current_user && (current_user.individual_student? || current_user.tutor? || current_user.blogger?)
-        =render partial: 'layouts/ls_referral'
-
+    =render partial: 'layouts/misc_javascript'
     =render partial: 'layouts/intercom'
 
     <!-- Mathjax -->

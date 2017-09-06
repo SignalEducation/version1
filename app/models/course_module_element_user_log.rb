@@ -157,7 +157,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_lesson_intercom_event
-    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:video_id), self.try(:count_of_questions_correct)) if Rails.env.production? || Rails.env.staging?
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
   end
 
   def check_for_enrollment_email_conditions
@@ -170,8 +170,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
           new_log_ids << log.id if log.updated_at > (time - 1.day) && log != self
         end
       end
-      if new_log_ids.empty? && scul.last_element.next_element
-        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email')
+      if new_log_ids.empty? && scul.last_element && scul.last_element.next_element
+        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email') unless Rails.env.test?
       end
     end
   end

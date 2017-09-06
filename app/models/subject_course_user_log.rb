@@ -41,7 +41,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :start_course_intercom_event if Rails.env.production? || Rails.env.staging?
   after_save :update_enrollment
   after_save :check_for_completion
 
@@ -130,10 +129,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def student_exam_tracks
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
-  end
-
-  def start_course_intercom_event
-    IntercomCourseStartedEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
   end
 
   protected

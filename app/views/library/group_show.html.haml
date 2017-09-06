@@ -1,41 +1,40 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-library.is-bg-asphalt
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .group_show{style: "background: url(#{@group.background_image.url})  50% 0 no-repeat;"}
-        .row
-          .col-md-6.col-md-offset-3.l-margin-top
-            %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe.l-margin-bottom
-              =@group.name
-            %p.h5.h-white.text-center
-              =@group.description.to_s.html_safe
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          .group_show{style: "background: url(#{@group.background_image.url})  50% 0 no-repeat;"}
+            .row
+              .col-md-6.col-md-offset-3.l-margin-top
+                %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe.l-margin-bottom
+                  =@group.name
+                %p.h5.h-white.text-center
+                  =@group.description.to_s.html_safe
 
-  .l-wrap.l-margin-top
+
+  .l-wrap.l-margin-top-big
     .container-fluid
-      .course-list-wrap
-        .row
-          -if @courses
-            -@courses.each do |course|
-              .col-sm-6.col-md-4
-                =link_to library_special_link(course), class: 'card card-course' do
-                  .card-outer
-                    .card-inner
-                      %h3.h3.card-title.l-margin-bottom
-                        =course.try(:name)
-                      -if course.short_description
-                        %p.card-desc
-                          =course.short_description.truncate(185)
+      .row
+        -if @courses
+          -@courses.each do |course|
+            .col-sm-6.col-md-4
+              =link_to library_special_link(course), class: 'card card-course' do
+                .card-outer
+                  .card-inner
+                    %h3.h3.card-title.l-margin-bottom
+                      =course.try(:name)
+                    -if course.short_description
+                      %p.card-desc
+                        =course.short_description.truncate(185)
 
-                  .card-label
-                    .row
-                      .col-md-12.col-xs-12
-                        .col-md-6.col-xs-6
-                          %h6
-                            =t('views.general.browse')
-                        .col-md-6.col-xs-6.text-right
-                          -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
-                            %h6.pull-right
-                              =simple_hour_time(course.total_estimated_time_in_seconds)
+                .card-label
+                  .row
+                    .col-md-12.col-xs-12
+                      .col-md-6.col-xs-6
+                        %h6
+                          =t('views.general.browse')
+                      .col-md-6.col-xs-6.text-right
+                        -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
+                          %h6.pull-right
+                            =simple_hour_time(course.total_estimated_time_in_seconds)
 

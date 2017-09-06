@@ -28,7 +28,7 @@ class IntercomLessonStartedWorker
                 "lesson_type" => type,
                 "module_name" => module_name,
                 "course_name" => course_name,
-                "wistia_id" => wistia_id,
+                "vimeo_guid" => wistia_id,
                 "quiz_score" => quiz_score
             }
         )

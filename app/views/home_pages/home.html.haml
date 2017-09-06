@@ -1,167 +1,259 @@
-.home_page_layout
-  %header.why-background
-    .l-wrap-home
-      =render partial: 'layouts/transparent_navbar'
+#wrapper
+  -#loading
+  %header#header
+    =render 'layouts/landing_navbar'
 
-      .cfa#sign-up
-        .row
-          .col-sm-6.col-md-8.col-lg-8
-            %p.h5.h-white.l-margin-bottom-huge
-              Prepare for your finance exams with our online courses
-            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              Professional Finance courses
+  %section#free.diag-r-down
+    .tmain
+      .tbase
+        .container
+          .row
+            .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
+              %h1.title1
+                Give yourself your best chance of passing your ACCA first time.
 
-            %p.h7
-              Our subscription model provides unlimited access to all content for a small monthly subscription
-
-          -unless current_user
-            .col-sm-6.col-md-4.col-lg-4#sign-up-form
               =render partial: 'sign_up_form'
 
-  -#%section#home_info
-    .l-wrap-home
-      .col-sm-12.text-center
-
-        %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-          Courses
-
-        -@groups.each_with_index do |group|
-          -if group.active_children.any?
-            .col-sm-4.col-md-4.l-margin-bottom-big.l-margin-top
-              =link_to library_special_link(group), class: 'box box-course' do
-                .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
-                .box-inner
-                  .l-margin-top-xl
-                    %h2{style: 'margin-bottom: 5px;'}
-                      =group.name
-                    %p.p
-                      =group.description
-
-                .box-label
-                  %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                    Browse Courses
+            .col-lg-2.col-md-1
+              .approved
+                =image_tag('acca_approved.png')
 
 
-  %section#advance_career{style: 'padding: 40px 0 40px 0;'}
-    .l-wrap-home
-      %h2 Advance your career
-      %p LearnSignal gives you access to world class training and certifications.
+  %section#explore
+    .container
+      %h1.title1
+        Explore our ACCA courses
+      %h2.subtitle
+        Taking your accounting skills to the next level.
+      .row
+        -@group.active_children.all_in_order.each do |course|
+          .col-md-4.col-sm-6
+            =link_to library_special_link(course) do
+              .course
+                .tmain
+                  .tbase
+                    =course.name
+                .bg{style: "background: url(#{course.background_image.url});"}
+
+
+      .lsbtn-base
+        =link_to 'Get started', new_student_url, class: 'lsbtn'
+
+
+
+
+  %section#what.diag-l-up
+    .container
+      %h1.title1
+        What you get from us
       %ul
         %li
-          .ac_title_bl
-            =image_tag('24h.png', alt: '24h')
-            %p Flexible study options
-          %p Whether you are studying at home, or on a tablet on your way to work, you can enjoy 24-hour access to video lectures, slide presentations, practical exercises, quizzes and a supportive student network. Never fear missing a class again.
-
+          .item
+            .img
+              =image_tag('what1.png')
+            .desc Access anytime, anywhere.
         %li
-          .ac_title_bl
-            =image_tag('world.png', alt: 'world')
-            %p.two_strings
-              World Leading
-              %br Education
-          %p LearnSignal is a global business school created by top accountancy tutors. Our courses are recognised by accreditation bodies all over the world.
-
+          .item
+            .img
+              =image_tag('what2.png')
+            .desc Topic-by-topic, bite-size lectures.
         %li
-          .ac_title_bl
-            =image_tag('tallent.png', alt: 'tallent')
-            %p.two_strings
-              Designed and Taught
-              %br by the Best
-          %p We have brought together the world's top accountancy tutors and the world's leading instructional designers to bring you one of the highest quality online course available anywhere in the world.
+          .item
+            .img
+              =image_tag('what3.png')
+            .desc Notes, MCQs and corrected mock exams.
         %li
-          .ac_title_bl
-            =image_tag('global.png', alt: 'global')
-            %p.two_strings
-              Be Part of Global
-              %br Student Body
-          %p Our courses are taught in over 100 countries around the world. Our tutors are globally recognised as some of the best accountancy trainers in the world!
-
-
-  -if @student_subscription_plans.any?
-    %section#diploma_courses
-      .l-wrap-home
-        .col-sm-12.text-center
-          %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-            Pricing
-
-        -@student_subscription_plans.each do |plan|
-          .col-sm-4
-            .plan{class: plan_interval_alt(plan.payment_frequency_in_months)}
-              .currency
-                .plan-header
-                  %h3.h4.plan-title
-                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                .plan-inner
-                  %h4.h3.plan-price
-                    =plan.currency.format_number(plan.price)
-                  %br/
-                  %p.plan-text
-                    =plan.unlimited_access
-                  %p.plan-text
-                    &middot;
-                  %p.plan-text
-                    =plan.cancel_anytime
-
-
-  -#%section#study_online
-    .l-wrap-home
-      .so_descrip
-        %h2 Study online with LearnSignal
-        .option
-          %p.key Study Time:
-          %p.value
-            Over 100 hrs
-        .option
-          %p.key Assessment:
-          %p.value Online Exam
-        .option
-          %p.key Resources:
-          %p.value Video lectures, slide presentations, practical exercises
-        .option
-          %p.key Payment Options:
-          %p.value
-            ="7-day Free Trial with #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of content"
-
-        =link_to new_student_url, class: 'enroll_now' do
-          Claim your Free Trial?
-
-      =image_tag('iphone.png', alt: 'iphone', class: 'phone-image hidden-xs hidden-sm')
+          .item
+            .img
+              =image_tag('what4.png')
+            .desc Tutor support
+      .lsbtn-base
+        =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
+      .obs-nocc No credit card details needed!
 
 
 
-  %section#subscribe
-    .l-wrap-home
-      %h2.h-white Subscribe to our newsletter
+  %section#reviews
+    =render partial: 'layouts/image_slider'
+
+
+  %section#homeblog
+    .container
+      %h1.title1 Get free advice and tips
+      -if @home_page && @home_page.blog_posts
+        .posts
+          .row
+            -@home_page.blog_posts.each do |blog_post|
+              .col-md-4.col-sm-6
+                .post
+                  .photo
+                    =link_to blog_post.url, target: '_blank' do
+                      =image_tag(blog_post.image.url)
+
+                  .cat
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        Blog
+                  .title
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        =blog_post.title
+                  .excerpt
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        =blog_post.description
+
+
+      -if @home_page.discourse_ids && @topics
+        .posts
+          .row
+            -@topics.each do |topic|
+              -url = @client.host + "t/#{topic.slug.to_s}" + "/#{topic.id.to_s}"
+              -if url
+                .col-sm-6
+                  .post
+                    .cat
+                      =link_to url, target: '_blank' do
+                        .hu
+                          Community
+                    .title
+                      =link_to url, target: '_blank' do
+                        .hu
+                          =topic.title
+                    %ul.stats
+                      %li
+                        %span
+                          =image_tag('icon_post_views.png')
+                        %span
+                          =topic.views
+                          Views
+                      %li
+                        %span
+                          =image_tag('icon_post_comments.png')
+                        %span
+                          =(topic.posts_count - 1)
+                          Comments
+
+
+  %section#subscribe.diag-l-up.bg-gradient1
+    .container
+      %h1.title1 Get fortnightly ACCA insider knowledge
+      %h2.subtitle Direct to your inbox.
       #response
         =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-          =email_field(:email, :address, {id: 'email', placeholder: 'Type your email...'})
-          %button{:type => "submit"}
-
-        %p
-          By providing us your email, you agree to the terms of our
-          =link_to privacy_policy_url do
-            Privacy Policy
-          and
-          =link_to terms_and_conditions_url do
-            Terms of Service
-
-
-
-  %section#help
-    .l-wrap-home
-      %h2
-        How can we
-        %br help you today?
-
-      .help_descr
-        =image_tag('call_us_icon.png', alt: 'call_us_icon')
-        .help_cont
-          %h4 Speak to one of our educational consultants
-
-          %p If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.
+          .row
+            .col-md-4.col-md-offset-1.col-sm-6
+              .form-group
+                =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
+            .col-md-4.col-sm-6
+              .form-group
+                =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
+            .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
+              .form-group
+                %button.lsbtn.s{:type => "submit"} Subscribe
+      .sep
+      .row
+        .col-lg-4.col-lg-offset-2.col-md-5.col-md-offset-1.col-sm-6
+          %a.lsbtn.v2{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
+        .col-lg-4.col-md-5.col-sm-6
+          %a.lsbtn.v2{href: 'https://community.learnsignal.com/', target: '_blank'} Visit the community
 
 
-          =link_to contact_url, class: 'enroll_now' do
-            contact us now!
+  -#%section#tips
+    .container
+      %h1.title1 Get Jamie’s 3 free tips on passing your ACCA.
+      .video
+        .play
+          #vimeo-player.vimeo-player
+
+        .about Meet course tutor Jamie. He’s helped learners all over the world pass their ACCA.
 
 
+
+
+  %section#whenever.bg-gradient1
+    .container
+      .devices
+        =image_tag('devices.png')
+      %h1.title1 Study whenever and wherever you want
+      %h2.subtitle With 24/7, 365 learning on any device, the days of inflexible classroom study are over.
+      .lsbtn-base
+        =link_to 'Get free course access', new_student_url, class: 'lsbtn'
+      .obs-nocc No credit card details needed!
+
+
+  %section#plans
+    .container
+      %h1.title1 Only pay for the access you need.
+      %h2.subtitle2
+        ="After your #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of free access, you can pick which plan suits you best."
+      %ul.plans.clearfix
+        -@subscription_plans.each do |plan|
+          %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
+            .base
+              .topbox
+                -if plan.payment_frequency_in_months == 3
+                  %span Our most popular payment plan
+              .box
+                .name
+                  =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                %ul.details.fa-ul
+                  %li
+                    %i.fa-li.fa.fa-check
+                    Get unlimited access
+                  %li
+                    %i.fa-li.fa.fa-check
+                    Cancel anytime
+                  %li
+                    %i.fa-li.fa.fa-check
+                    =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
+                    -#%li
+                      %i.fa-li.fa.fa-check
+                      -# TODO Add plans free mock exams count here
+                      =#'corrected mock exams'
+
+                .price
+                  =plan.currency.format_number(plan.price)
+
+                -#unless plan.payment_frequency_in_months == 1
+                  -# TODO change this display actual discount and saving values
+                  .promo
+                    .line1
+                      18% OFF
+                    .line2
+                      Save €25
+
+              .lsbtn-base
+                =link_to new_student_url, class: 'lsbtn' do
+                  Get Started For Free
+
+
+
+
+  %section#cancel.bg-gradient1
+    .container
+      %h1.title1
+        %span
+          And don’t forget,
+          %strong
+            you can cancel anytime.
+      %h1.title1
+        %span
+          No lengthy commitments or obligations.
+          %br/
+
+  %section#through
+    .container
+      .row
+        .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
+          %h1.title1 We’re here to guide you through.
+          %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
+          .lsbtn-base
+            %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
+              ='Chat our experts'
+
+
+
+=render partial: 'footer_pages/contact_us_form_modal'
+-#:javascript
+  var player = new Vimeo.Player('vimeo-player', {id: '224044673'});

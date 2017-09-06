@@ -97,10 +97,10 @@ en:
       expiry_month_prompt: "Exp Mth"
       expiry_year_prompt: "Exp Year"
       payment_frequency_in_months:
-        a1: Monthly
-        a3: Quarterly
+        a1: Pay monthly
+        a3: Pay quarterly
         a6: Half-yearly
-        a12: Yearly
+        a12: Pay yearly
       payment_intervals:
         a1: Month
         a3: Quarter
@@ -120,6 +120,10 @@ en:
         a1: Pay Monthly
         a3: Pay Quarterly
         a12: Pay Yearly
+      subscription_ideal_line:
+        a1: Ideal for Revision
+        a3: Ideal for a full sitting
+        a12: Ideal for corporates
       day: " Day"
       free_trial: " Free Trial"
       all_you_can_eat_yes: "Unlimited Access"
@@ -167,6 +171,7 @@ en:
         h1: Orders
         subject_course_id: Course
         mock_exam_id: Mock
+        product_id: Product
         order: Order
         user_id: User
         current_status: Status
@@ -183,6 +188,23 @@ en:
 
       new:
         h1: New Order
+
+    blog_posts:
+      form:
+        home_page_id: Landing page
+        title: Title
+        title_placeholder: Title of Blog Post
+        description: Description Text
+        description_placeholder: Description of your resource
+        url: URL
+        url_placeholder: Blog Post URL
+        image: Image
+        iamge_file_name: Image file name
+        image_content_type: Image content type
+        image_file_size: Image file size
+        image_updated_at: Image updated at
+        replace: Replace Image
+
 
     corporate_requests:
       form:
@@ -572,17 +594,22 @@ en:
 
     home_pages:
       form:
+        name: Name
+        name_placeholder: Name for Landing Page
         seo_title: SEO Title
-        seo_title_placeholder: SEO Title Placeholder
-        seo_description: SEO Description
+        seo_title_placeholder: SEO Title or Meta Title
+        seo_description: SEO Description or Meta description
         seo_description_placeholder: SEO Description Placeholder
         subscription_plan_category_id: Subscription Plan Category
-        group_id: Group
+        group_id: Related Group
         subject_course_id: Related Course
         public_url: Public URL
         public_url_placeholder: Public URL Placeholder
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
+        blog_posts: Blog Posts
+        discourse_ids: Community Topic IDs - (comma seperated no spaces)
+        discourse_ids_placeholder: Topic ID seperate by comma - (23,43,54)
 
       index:
         h1: Landing Pages
@@ -598,7 +625,7 @@ en:
 
       sign_up_form:
         confirm_password: Confirm Password
-        submit: Sign up now
+        submit: Get free course access
         sign_up_for_free_trial: Sign up for your 7-day free trial
         no_credit_card_needed: No credit card needed
         error_panel_caption: "prevented your Sign-Up from being completed:"
@@ -1020,20 +1047,24 @@ en:
     users:
       form:
         email: Email
+        your_email: Your email address
         email_placeholder: user@example.com
         phone_number: Phone Number
         interest: Topic
         topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
         first_name: First name
+        your_first_name: Your first name
         first_name_placeholder: John
         last_name: Last name
+        your_last_name: Your last name
         username: Community Username
         username_placeholder: Username for LearnSignal Community Forum
         last_name_placeholder: Smith
         full_name: Name
         current_password: Current password
         current_password_placeholder: Current password
+        create_password: Create a password
         password: Password
         password_placeholder: Password
         new_password: New Password
@@ -1145,7 +1176,7 @@ en:
         error_panel_caption: "prevented your subscription upgrade from being completed"
         stripe_com_logo: "Stripe.com logo"
         secure_server: "Secure server"
-        upgrade_subscription: Upgrade Subscription
+        upgrade_subscription: Get unlimited access
         reactivate_account: Reactivate Account
         h2:
           subscription: Choose your subscription plan

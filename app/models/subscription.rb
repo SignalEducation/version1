@@ -30,6 +30,7 @@ class Subscription < ActiveRecord::Base
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
+  VALID_STATES = %w(active past_due canceled-pending)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
@@ -58,6 +59,7 @@ class Subscription < ActiveRecord::Base
   scope :in_created_order, -> { order(:created_at) }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
   scope :all_active, -> { where(active: true) }
+  scope :all_valid, -> { where(current_status: VALID_STATES) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   # class methods
@@ -110,13 +112,8 @@ class Subscription < ActiveRecord::Base
   end
 
   def upgrade_options
-    SubscriptionPlan
-        .where.not(id: self.id)
-        .where(currency_id: self.subscription_plan.currency_id,
-             available_to_students: self.subscription_plan.available_to_students)
-      .generally_available
-      .all_active
-      .all_in_order
+    current_plan = self.subscription_plan
+    SubscriptionPlan.includes(:currency).where.not(id: current_plan.id).for_students.in_currency(current_plan.currency_id).all_active.all_in_order
   end
 
   def upgrade_plan(new_plan_id)

@@ -9,7 +9,6 @@ class StudentSignUpsController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
-    @topic_interests = Group.all_active.all_in_order
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|
@@ -22,8 +21,7 @@ class StudentSignUpsController < ApplicationController
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
     end
-    @navbar = false
-    @footer = false
+    @navbar = true
   end
 
   def create
@@ -82,7 +80,7 @@ class StudentSignUpsController < ApplicationController
     end
   end
 
-  #This is the post sign-up landing page.
+  #This is the post sign-up landing page - personal_sign_up_complete
   def show
     @user = User.get_and_activate(params[:account_activation_code])
     redirect_to root_url unless @user

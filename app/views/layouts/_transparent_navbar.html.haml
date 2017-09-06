@@ -1,12 +1,12 @@
 .header{role: 'banner'}
   %nav.navbar.navbar-default.navbar-transparent
-    .navbar-header
-      %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-        %span.icon-bar
-        %span.icon-bar
-        %span.icon-bar
-      =link_to home_url do
-        =image_tag('ls-logo-red.svg', class: 'logo')
+
+    %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+      %span.icon-bar
+      %span.icon-bar
+      %span.icon-bar
+    =link_to home_url do
+      =image_tag('ls-logo-transparent.svg', class: 'logo')
     #myNavbar.collapse.navbar-collapse
       %ul.nav.navbar-nav.navbar-right
         -if current_user
@@ -22,61 +22,22 @@
               %li
                 =link_to 'Upgrade Account', user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
 
-
-          -#Admin Dropdown
-          -if current_user.admin?
-            %li.dropdown.dropdown-admin
-              %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-                Admin
-                %span.caret
-              %ul#menu.dropdown-menu
-                %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
-                %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
-                %li=link_to t('views.products.index.h1'), products_url
-                %li=link_to t('views.mock_exams.index.h1'), mock_exams_url
-                %li.divider
-                %li=link_to t('views.white_papers.index.h1'), white_papers_url
-                %li=link_to 'Sidekiq', sidekiq_web_path, target: '_blank'
-                %li.divider
-                %li=link_to t('views.visits.index.h1'), visits_all_index_url
-                %li=link_to t('views.home_pages.index.h1'), home_pages_url
-                %li.divider
-                %li=link_to t('views.groups.index.h1'), groups_url
-                %li=link_to t('views.subject_courses.index.h1'), subject_courses_url
-
-            -#Student Dropdown
+          -#Student Dropdown
           %li.dropdown.dropdown-normal
             %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
               =t('views.general.user_name') + current_user.first_name.to_s
-              -#Todo when user notifications are reactivated
-              -#%span.user-notification
-                1
               %span.caret
             %ul#menu.dropdown-menu
-              -if current_user.content_manager?
-                %li=link_to t('views.subject_courses.index.manager_courses'), subject_courses_url
-              -if current_user.admin?
-                %li=link_to t('views.users.index.h1'), users_url
-                %li=link_to t('views.user_groups.index.h1'), user_groups_url
-                %li=link_to t('views.exam_bodies.index.h1'), exam_bodies_url
-                %li=link_to t('views.exam_sittings.index.h1'), exam_sittings_url
-                %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
-                %li=link_to t('views.currencies.index.h1'), currencies_url
-                %li=link_to t('views.countries.index.h1'), countries_url
-                %li.divider
               %li
                 %li=link_to t('views.users.show.h1'), account_url
-              -#if current_user.blogger? || current_user.individual_student?
-                %li
-                  %li=link_to t('views.users.show.tabs.referral_code'), referral_code_url(current_user.referral_code)
               %li
                 =link_to t('views.general.sign_out'), sign_out_url
 
         -else
           %li
-            =link_to 'Why LearnSignal', why_learn_signal_url
+            =link_to 'Blog', 'http://blog.learnsignal.com/', target: '_blank'
           %li
-            =link_to 'Business', business_url
+            =link_to 'Pricing', pricing_url
           %li
             =link_to 'Courses', library_url
           %li

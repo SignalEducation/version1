@@ -1,62 +1,47 @@
-.text-left=render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
 =form_for @user, url: create_student_url do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
-  =f.hidden_field :topic_interest, value: @url_value
-  .col-sm-12
-    %p.h5.h-white.l-margin-bottom
-      ="7-day free trial (up to #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes)"
+  =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
 
-  .col-sm-6
-    .form-group
-      =f.text_field :first_name, placeholder: t('views.users.form.first_name'), autofocus: true, required: true, class: 'form-control', id: 'user_first_name'
-  .col-sm-6
-    .form-group
-      =f.text_field :last_name, placeholder: t('views.users.form.last_name'), class: 'form-control', id: 'user_last_name'
-  .col-sm-12
-    .form-group
-      =f.email_field :email, placeholder: t('views.users.form.email'), class: 'form-control', required: true, id: 'user_email'
-  .col-sm-12
-    .form-group
-      =f.password_field :password, placeholder: t('views.users.form.password'), class: 'form-control', required: true, id: 'user_password'
-  .col-sm-12
-    .form-group
-      %label.h5.h-white
-        =f.check_box :terms_and_conditions, required: true
-        I Agree to LearnSignal
-        =link_to 'Terms & Conditions', terms_and_conditions_url, style: 'color: #EE5457;'
+  #sign_up.form
+    .row
+      =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+      .col-sm-6
+        .form-group
+          =f.text_field :first_name, placeholder: t('views.users.form.your_first_name'), class: 'form-control', required: true
+      .col-sm-6
+        .form-group
+          =f.text_field :last_name, placeholder: t('views.users.form.your_last_name'), class: 'form-control', required: true
+      .col-sm-6
+        .form-group
+          =f.email_field :email, placeholder: t('views.users.form.your_email'), class: 'form-control', required: true
+      .col-sm-6
+        .form-group
+          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', required: true
+
+      .col-sm-6
+        .form-group.l-margin-top
+          %label.check{style: 'color: #fff;'}
+            %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+              %span
+                %i.fa.fa-check
+              ='I Agree to LearnSignal'
+              =link_to 'Terms & Conditions', terms_and_conditions_url, style: 'color: #fff;'
 
 
-  .col-sm-6.col-xs-6
-    =f.submit t('views.home_pages.sign_up_form.submit'), class: 'btn btn-red', id: 'signUp'
-    .sk-circle
-      .sk-circle1.sk-child
-      .sk-circle2.sk-child
-      .sk-circle3.sk-child
-      .sk-circle4.sk-child
-      .sk-circle5.sk-child
-      .sk-circle6.sk-child
-      .sk-circle7.sk-child
-      .sk-circle8.sk-child
-      .sk-circle9.sk-child
-      .sk-circle10.sk-child
-      .sk-circle11.sk-child
-      .sk-circle12.sk-child
 
-  .col-sm-6.col-xs-6
-    %span.no-card
-      =t('views.home_pages.sign_up_form.no_credit_card_needed')
+  .lsbtn-base
+    =link_to '#' do
+      .lsbtn.s-get
+        Get free course access
+        %i.fa.fa-chevron-right
+  .obs-nocc No credit card details needed!
 
 
 :javascript
-
-  $(document).on('ready', function() {
-    $(".sk-circle").hide();
-
-    $("#signUp").click(function(event) {
-      if($('#user_first_name').val() && $('#user_last_name').val() && $('#user_email').val() && $('#user_password').val() && $('#user_terms_and_conditions').is(':checked') ) {
-        $("#signUp").hide();
-        $(".sk-circle").show();
-      }
-    });
-
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
   });

@@ -60,8 +60,6 @@ Rails.application.routes.draw do
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
-    resources :corporate_requests
-    get 'submission_complete', to: 'corporate_requests#submission_complete', as: :submission_complete
     resources :countries, concerns: :supports_reordering
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
@@ -90,6 +88,7 @@ Rails.application.routes.draw do
     get '/dashboard/export_enrollments', to: 'dashboard#export_enrollments', as: :export_enrollments
     get '/dashboard', to: 'dashboard#student', as: :student_dashboard
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
+    get '/dashboard/reports', to: 'dashboard#reports', as: :reports_dashboard
     get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
     get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
     get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard
@@ -109,8 +108,9 @@ Rails.application.routes.draw do
     post '/subscribe', to: 'library#subscribe'
     post '/home_page_subscribe', to: 'home_pages#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
-    post '/complaints_zendesk', to: 'footer_pages#complaints_zendesk'
-    post '/contact_us_zendesk', to: 'footer_pages#contact_us_zendesk'
+    post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
+    post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
+    post '/tutor_contact_form', to: 'library#tutor_contact_form'
 
     # Library Structure
 
@@ -138,14 +138,11 @@ Rails.application.routes.draw do
     resources :subscription_plans
     resources :subscription_plan_categories
     resources :subject_course_resources
-    resources :tutor_applications
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
-    get 'business', to: 'footer_pages#business', as: :business
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
-    get 'why-learn-signal', to: 'footer_pages#why_learn_signal', as: :why_learn_signal
     get 'profile/:id', to: 'footer_pages#profile', as: :profile
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
 

@@ -11,20 +11,30 @@
 #  updated_at                    :datetime         not null
 #  subject_course_id             :integer
 #  custom_file_name              :string
+#  group_id                      :integer
+#  name                          :string
+#  discourse_ids                 :string
+#  home                          :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
   factory :home_page do
+    sequence(:name)                { |n| "homepage-#{n}" }
     sequence(:seo_title)           { |n| "title-#{n}" }
     seo_description                'Seo Description'
+    group_id                       1
+    subject_course_id              nil
     sequence(:public_url)          { |n| "abc#{n}" }
 
     factory :home do
       public_url '/'
+      name 'home'
+      home true
     end
 
     factory :acca_home do
       public_url 'acca'
+      name 'acca_home'
     end
 
   end

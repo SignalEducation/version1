@@ -1,0 +1,67 @@
+#footer
+  .container
+    .row
+      .col-md-3.hidden-xs.hidden-sm
+        =link_to home_url do
+          =image_tag('ls-logo-transparent.svg', class: 'logo')
+
+
+        .lsbtn-base
+          =link_to 'Become a member now', new_student_url, class: 'lsbtn pull-left'
+
+
+      .col-md-9
+        .col-md-3.col-sm-3.col-xs-6
+          %ul.fmenu
+            -if @groups
+              -@groups.each do |group|
+                -if group.active && group.active_children.any?
+                  %li
+                    =link_to group.name, library_special_link(group)
+
+            %li
+              =link_to 'ACCA Info', acca_info_url
+            %li
+              &copy; 2017 &mdash; 2018 LearnSignal
+
+        .col-md-3.col-sm-3.col-xs-6
+          %ul.fmenu
+            %li
+              %a{href: 'http://blog.learnsignal.com/', target: '_blank'}
+                ='Blog'
+            %li
+              %a{href: 'https://community.learnsignal.com/', target: '_blank'}
+                ='Community'
+            %li
+              =link_to 'Lecturers', tutors_url
+            %li
+              =link_to 'Media', media_library_url
+
+        .clearfix.visible-xs-block
+
+        .col-md-3.col-sm-3.col-xs-6
+          %ul.fmenu
+            %li
+              =link_to 'Contact', contact_url
+            %li
+              =link_to 'Privacy Policy', privacy_policy_url
+            %li
+              =link_to 'Terms & Conditions', terms_and_conditions_url
+
+        .col-md-3.col-sm-3.col-xs-6
+          %ul.fmenu
+            %li
+              follow us
+            %li
+              %a{href: 'https://www.facebook.com/learnsignal1/', target: '_blank'}
+                %i.fa.fa-facebook.fa-fw
+                facebook
+            %li
+              %a{href: 'https://twitter.com/learnsignal', target: '_blank'}
+                %i.fa.fa-twitter.fa-fw
+                twitter
+            %li
+              %a{href: 'https://www.linkedin.com/company/learnsignal', target: '_blank'}
+                %i.fa.fa-linkedin.fa-fw
+                LinkedIn
+

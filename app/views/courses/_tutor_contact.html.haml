@@ -1,0 +1,34 @@
+.remodal{"data-remodal-id" => "tutor-contact-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          Ask The Tutor A Question
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top.text-left
+      =form_tag(tutor_contact_form_url, {class: 'form', role: 'form', name: 'tutor_contact_form_form'}) do
+        =hidden_field_tag :type, @form_type
+        .col-md-12
+          .col-md-6
+            =label_tag :full_name, 'Name'
+            =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name', required: true
+            %br/
+          .col-md-6
+            =label_tag :email, 'Email'
+            =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address', required: true
+
+          .col-md-12
+            =label_tag :question, 'Question'
+            =text_area_tag :question, nil, class: 'form-control', placeholder: 'Please outline your question', required: true
+
+        .col-sm-12.l-margin-top
+          .col-sm-12
+            =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
+:javascript
+
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['tutor_contact_form_form'].submit();
+  });

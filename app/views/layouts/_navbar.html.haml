@@ -1,14 +1,16 @@
-.header.header-dark.navbar-fixed-top{role: 'banner'}
+.nav-header.header-dark.navbar-fixed-top{role: 'banner'}
   .l-wrap
     .container-fluid
       %nav.navbar.navbar-default
-        .navbar-header
-          %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-          =link_to home_url do
-            =image_tag('ls-logo-red.svg', class: 'logo')
+
+        %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
+          %span.icon-bar
+          %span.icon-bar
+          %span.icon-bar
+
+        =link_to home_url do
+          =image_tag('ls-logo-white.svg', class: 'logo')
+
         #myNavbar.collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
             -if current_user
@@ -30,7 +32,7 @@
                   %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                     Admin
                     %span.caret
-                  %ul#menu.dropdown-menu
+                  %ul.dropdown-menu
                     %li=link_to t('views.subscription_plans.index.h1'), subscription_plans_url
                     %li=link_to t('views.subscription_plan_categories.index.h1'), subscription_plan_categories_url
                     %li=link_to t('views.products.index.h1'), products_url
@@ -58,7 +60,6 @@
                     %li=link_to t('views.user_groups.index.h1'), user_groups_url
                     %li=link_to t('views.exam_bodies.index.h1'), exam_bodies_url
                     %li=link_to t('views.exam_sittings.index.h1'), exam_sittings_url
-                    %li=link_to t('views.tutor_applications.index.h1'), tutor_applications_url
                     %li=link_to t('views.currencies.index.h1'), currencies_url
                     %li=link_to t('views.countries.index.h1'), countries_url
                     %li=link_to t('views.vat_codes.index.h1'), vat_codes_url
@@ -70,9 +71,9 @@
 
             -else
               %li
-                =link_to 'Why LearnSignal', why_learn_signal_url
+                =link_to 'Blog', 'http://blog.learnsignal.com/', target: '_blank'
               %li
-                =link_to 'Business', business_url
+                =link_to 'Pricing', pricing_url
               %li
                 =link_to 'Courses', library_url
               %li

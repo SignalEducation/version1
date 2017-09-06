@@ -8,7 +8,8 @@ shared_context 'course_content' do
   let!(:subject_course_1)  { FactoryGirl.create(:active_subject_course,
                                                 group_id: course_group_1.id) }
   let!(:subject_course_1_home_page)  { FactoryGirl.create(:home_page,
-                                                          subject_course_id: subject_course_1.id) }
+                                                          subject_course_id: subject_course_1.id,
+                                                          group_id: nil) }
   let!(:course_module_1) { FactoryGirl.create(:active_course_module,
                            subject_course_id: subject_course_1.id) }
   let!(:course_module_element_1_1) { FactoryGirl.create(:cme_quiz,
@@ -86,5 +87,8 @@ shared_context 'course_content' do
                              quiz_question_id: quiz_question_2.id) }
   let!(:quiz_content_2_5)  { FactoryGirl.create(:quiz_content,
                              quiz_answer_id: quiz_answer_4.id) }
+
+
+  let!(:home) { FactoryGirl.create(:home_page, public_url: '/', home: true, group_id: course_group_1.id) }
 
 end

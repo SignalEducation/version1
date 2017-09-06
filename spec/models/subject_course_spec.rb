@@ -27,6 +27,10 @@
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
 #  total_estimated_time_in_seconds         :integer
+#  background_image_file_name              :string
+#  background_image_content_type           :string
+#  background_image_file_size              :integer
+#  background_image_updated_at             :datetime
 #
 
 require 'rails_helper'
@@ -34,7 +38,7 @@ require 'rails_helper'
 describe SubjectCourse do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at best_possible_first_attempt_score destroyed_at)
+  black_list = %w(id created_at updated_at best_possible_first_attempt_score destroyed_at background_image_file_name background_image_content_type background_image_file_size background_image_updated_at)
   SubjectCourse.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -77,8 +81,6 @@ describe SubjectCourse do
 
   it { should_not validate_presence_of(:short_description) }
   it { should validate_length_of(:short_description).is_at_most(255) }
-
-  it { should validate_presence_of(:email_content).on(:update) }
 
   it { should validate_presence_of(:quiz_pass_rate) }
 

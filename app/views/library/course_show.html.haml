@@ -1,10 +1,7 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-library.is-bg-asphalt
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .row
+      .row.l-margin-bottom
         .col-sm-6
           .l-margin-bottom
             -if @course.parent
@@ -33,11 +30,12 @@
 
       -else
         .notice.warning
-          .fa.fa-info-circle.icon
-          An Account is required to access this content.
-          &#160;
-          =link_to new_student_url do
-            Claim your Free Trial?
+          .p
+            .fa.fa-info-circle.icon
+            A Valid Account is required to access this content.
+            &#160;
+            =link_to new_student_url do
+              Claim your Free Trial?
         %h1.h1.h-separator.h-separator-left
           =@course.name
         =render partial: 'course_info'
@@ -79,6 +77,12 @@
 
         .col-md-4
           .l-margin-top-big
+            -if current_user
+              %p.h4.l-margin-bottom.l-margin-top
+                Contact Tutor
+              %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
+                Ask The Tutor
+
             -if current_user && @course.mock_exams.any?
               %p.h4.l-margin-bottom.l-margin-top-huge
                 Mock Exams
@@ -104,6 +108,7 @@
         .l-margin-top-huge
           =render partial: 'course_info'
 
+=render partial: 'courses/tutor_contact'
 =render partial: 'courses/access_denied_modal'
 :javascript
 

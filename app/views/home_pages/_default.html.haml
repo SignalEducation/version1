@@ -1,130 +1,306 @@
-.hero-cfa.home_page_layout
-  %header.home-background
-    .l-wrap-home
-      =render partial: 'layouts/transparent_navbar'
-
-      .cfa#sign-up
-        .row
-          .col-sm-6.col-md-8.col-lg-8
-            %p.h5.h-white.l-margin-bottom-huge
-              Prepare for your ACCA exams with an online revision course
-            %h1.h1.bold.h-white.h-separator.h-separator-left.l-margin-bottom-big
-              ACCA revision courses online for a small monthly subscription
-
-            %p.h7
-              ="Subscription for only #{number_in_local_currency_no_precision(@subscription_plan.price, @currency_id)} per Month."
-              ='Start your 7-Day Free Trial'
-
-          -unless current_user
-            .col-sm-6.col-md-4.col-lg-4#sign-up-form
-              =render partial: 'sign_up_form'
+.landing
+  #wrapper
+    -#loading
+    %header#header
+      .container
+        #logo
+          =link_to home_url do
+            =image_tag('ls-logo-transparent.svg', class: 'nav-logo')
 
 
-.cfa-business
-  .l-wrap
-    .l-section
-      .container-fluid
-        .row
-          .col-sm-12
-            %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-              ='Features to support your ACCA study'
+    %section#free.diag-r-down
+      .tmain
+        .tbase
+          .container
+            .row
+              .col-md-10
+                %h1.title1 Want to pass your ACCA exams first time?
+                %h2.subtitle Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.
 
-        .row
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('phone-icon.png', class: 'features-img', alt: 'acca-anytime-anywhere-mobile-icon')
-              Anywhere, Anytime
-            %p.p
-              Study for your specific topics anytime, anywhere, on any device.
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('acca-coins.png', class: 'features-img', alt: 'acca-depth-of-content-icon')
-              Small Monthly Subscription
-            %p.p
-              Our subscription model offers you more flexibility than fixed price providers.
-          .col-sm-4
-            %h3.l-margin-bottom-big
-              =image_tag('network-icon.png', class: 'features-img', alt: 'acca-expert-author-network-icon')
-              Expert Author Network
-            %p.p
-              Learn from the best with training designed and developed by industry experts.
+                .lsbtn-base
+                  =link_to new_student_url, class: 'lsbtn' do
+                    Get free course access
+                    %i.fa.fa-chevron-right
+                .obs-nocc No credit card details needed!
 
--if @course_object
-  .l-section.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row
-          .col-sm-12
-            %h3.h2.text-center.h-separator.h-separator-center.l-margin-bottom-big
-              Access all ACCA Courses
-        .course-list-wrap
+              .col-md-2
+                .approved
+                  =image_tag('acca_approved.png')
+
+
+    -#%section#tips
+      .container
+        %h1.title1 Get Jamie’s 3 free tips on passing your ACCA.
+        .video
+          .play
+            #vimeo-player.vimeo-player
+
+          .about Meet course tutor Jamie. He’s helped learners all over the world pass their ACCA.
+
+
+    %section#homeblog
+      .container
+        %h1.title1 Access our latest free advice
+        .posts.first
           .row
-            .col-sm-12.col-md-12
-              -@course_object.try(:active_children).all_in_order.each do |child|
-                .col-sm-6
-                  =link_to library_special_link(child), class: 'course-panel course-panel-inner group-inner' do
-                    %h3.h2.course-panel-title.text-center
-                      =child.name
-                    -if child.try(:short_description)
-                      %p.p.course-panel-desc
-                        =child.short_description.truncate(150)
+            -@home_page.blog_posts.each do |blog_post|
+              .col-md-4.col-sm-6
+                .post
+                  .photo
+                    =link_to blog_post.url, target: '_blank' do
+                      =image_tag(blog_post.image.url)
+
+                  .cat
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        Blog
+                  .title
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        =blog_post.title
+                  .excerpt
+                    =link_to blog_post.url, target: '_blank' do
+                      .hu
+                        =blog_post.description
+
+
+        -if @home_page.discourse_ids && @topics
+          .posts
+            .row
+              -@topics.each do |topic|
+                -url = @client.host + "t/#{topic.slug.to_s}" + "/#{topic.id.to_s}"
+                -if url
+                  .col-sm-6
+                    .post
+                      .cat
+                        =link_to url, target: '_blank' do
+                          .hu
+                            Community
+                      .title
+                        =link_to url, target: '_blank' do
+                          .hu
+                            =topic.fancy_title
+                      %ul.stats
+                        %li
+                          %span
+                            =image_tag('icon_post_views.png')
+                          %span
+                            =topic.views
+                            Views
+                        %li
+                          %span
+                            =image_tag('icon_post_comments.png')
+                          %span
+                            =(topic.posts_count - 1)
+                            Comments
+
+        .row.btnset
+          .col-lg-4.col-lg-offset-2.col-md-5.col-md-offset-1.col-sm-6
+            %a.lsbtn.v4{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
+          .col-lg-4.col-md-5.col-sm-6
+            %a.lsbtn.v3{href: 'https://community.learnsignal.com/', target: '_blank'} Visit the community
+
+
+    %section#what
+      .container
+        %h1.title1 What you get from us
+      %ul
+        %li
+          .item
+            .img
+              =image_tag('what1.png')
+            .desc Access anytime, anywhere.
+        %li
+          .item
+            .img
+              =image_tag('what2.png')
+            .desc Topic-by-topic, bite-size lectures.
+        %li
+          .item
+            .img
+              =image_tag('what3.png')
+            .desc Notes, MCQs and corrected mock exams.
+        %li
+          .item
+            .img
+              =image_tag('what4.png')
+            .desc Tutor support
+        .lsbtn-base
+          =link_to 'Get free access', new_student_url, class: 'lsbtn'
+
+
+    %section#trusted
+      .container
+        .inner
+          %h1.title1 Trusted by learners all over the world.
+          %p The days of in-person training have become impractical. Issues with memory retention, data overload and poor quality trainers have made in-person training ineffective. That’s why we’ve created our adaptive learning platform, so you can access your learning anywhere and anytime that you need it.
+        .lsbtn-base
+          =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
+        .obs-nocc No credit card details needed!
 
 
 
-  -if @student_subscription_plans.any?
-    %section#diploma_courses
-      .l-wrap-home
-        .col-sm-12.text-center
-          %h2.h2.upcase.h-center.h-separator.h-separator-center.l-margin-bottom-big
-            Pricing
+    -#%section#reviews2.diag-l-up
+      .container
+        .row.review1
+          .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+            .review
+              %span.q.q1
+              I have only just discovered it. So far, very highly recommended. Videos are short, so easy to dip in and out when you are on the go and have a spare minute.
+              %span.q.q2 ”
+            .name Patti Mary, UK
+        .row.reviews
+          .col-md-5.col-md-offset-1.col-sm-6
+            .box
+              .review Videos are short, so easy to dip in and out when you are on the go and have a spare minute. Worth paying monthly fee, it makes the whole learning process much less daunting.
+              .name Patti Mary
+          .col-md-5.col-sm-6
+            .box
+              .review The good thing about Learn-signal was the way the lecturers went thru questions papers. It helped me so much with the technique that i had lacked in my previous paper.
+              .name Rebecca Nagujja
 
-        -@student_subscription_plans.each do |plan|
-          .col-sm-4
-            .plan{class: plan_interval_alt(plan.payment_frequency_in_months)}
-              .currency
-                .plan-header
-                  %h3.h4.plan-title
+
+
+
+    -if @group
+      %section#explore
+        .container
+          %h1.title1
+            ="Explore our #{@group.name} courses"
+          %h2.subtitle
+            Taking your accounting skills to the next level.
+          .row
+            -@group.active_children.all_in_order.each do |course|
+              .col-md-4.col-sm-6
+                =link_to library_special_link(course) do
+                  .course
+                    .tmain
+                      .tbase
+                        =course.name
+                    .bg{style: "background: url(#{course.background_image.url});"}
+
+
+          .btn-base
+            =link_to 'Get started', new_student_url, class: 'lsbtn'
+
+    -elsif @subject_course
+      %section#explore
+        .container
+          %h1.title1
+            ="Explore our #{@subject_course.name} modules"
+          %h2.subtitle
+            Taking your skills to the next level.
+          .row
+            -@subject_course.active_children.all_in_order.each do |course_module|
+              .col-md-4.col-sm-6
+                =link_to library_special_link(@subject_course) do
+                  .course
+                    .tmain
+                      .tbase
+                        =course_module.name
+                    .bg{style: "background: #35B8CF;"}
+
+
+          .btn-base
+            =link_to 'Get started', new_student_url, class: 'lsbtn'
+
+
+
+    %section#reviews
+      =render partial: 'layouts/image_slider'
+
+
+    %section#plans
+      .container
+        .row.header
+          .col-lg-8.col-lg-offset-1.col-sm-10
+            %h1.title1
+              Invest in
+              %strong your
+              future.
+            %h2.subtitle2 With LearnSignal, you can gain access to our body of ACCA accounting expert tutors from as little as £24.99. We also offer a selection of payment plans to suit you and your study needs.
+          .col-sm-2
+            .approved
+              =image_tag('acca_approved2.png')
+
+        %ul.plans.clearfix
+          -@subscription_plans.each do |plan|
+            %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
+              .base
+                .topbox
+                  -if plan.payment_frequency_in_months == 3
+                    %span Our most popular payment plan
+                .box
+                  .name
                     =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                .plan-inner
-                  %h4.h3.plan-price
+                  %ul.details.fa-ul
+                    %li
+                      %i.fa-li.fa.fa-check
+                      Get unlimited access
+                    %li
+                      %i.fa-li.fa.fa-check
+                      Cancel anytime
+                    %li
+                      %i.fa-li.fa.fa-check
+                      =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
+                      -#%li
+                        %i.fa-li.fa.fa-check
+                        -# TODO Add plans free mock exams count here
+                        =#'corrected mock exams'
+
+                  .price
                     =plan.currency.format_number(plan.price)
-                  %br/
-                  %p.plan-text
-                    =plan.unlimited_access
-                  %p.plan-text
-                    &middot;
-                  %p.plan-text
-                    =plan.cancel_anytime
+
+                  -#unless plan.payment_frequency_in_months == 1
+                    -# TODO change this display actual discount and saving values
+                    .promo
+                      .line1
+                        18% OFF
+                      .line2
+                        Save €25
+                .lsbtn-base
+                  =link_to new_student_url, class: 'lsbtn' do
+                    Get Started For Free
 
 
-.start-trial
-  %a.btn-block.btn-block-red{href: '#sign-up'}
-    .l-wrap
-      .l-section-small
-        .container-fluid
-          .col-sm-12
-            %p.h5.text-center
-              Become a member
-            %p.h2.text-center
-              Start your 7-day free trial
-              %span.ico-arrow-right-r
 
 
-:javascript
-  var nav = responsiveNav(".nav-collapse");
+    %section#cancel.bg-gradient1
+      .container
+        %h1.title1
+          %span
+            And don’t forget,
+            %strong
+              you can cancel anytime.
+        %h1.title1
+          %span
+            No lengthy commitments or obligations.
+            %br/
 
-  // Smooth scroll to top
-  $(document).ready(function(){
-    $('a[href^="#"]').on('click',function (e) {
-      e.preventDefault();
 
-      var target = this.hash,
-      $target = $(target);
+    %section#tryfirst.diag-l-up
+      .container
+        .row
+          .col-lg-10.col-lg-offset-1
+            %h1.title1 Prefer to try us out first?
+            %p
+              ="No problem! We’re so confident you’ll love our courses, we want to give you access to #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of completely FREE online revision. No credit card details are required, and if you feel our courses aren’t a good fit for you, you’ve no obligation to sign up for an unlimited access plan. So why not give it a try and sign up for your #{ENV['free_trial_days']}-day trial below?"
+            .lsbtn-base
+              =link_to 'Get free course access', new_student_url, class: 'lsbtn'
+            .obs-nocc No credit card details needed!
 
-      $('html, body').stop().animate({
-        'scrollTop': $target.offset().top
-      }, 500, 'swing', function () {
-        window.location.hash = target;
-      });
-    });
-  });
+
+    %section#through
+      .container
+        .row
+          .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
+            %h1.title1 We’re here to guide you through.
+            %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
+            .lsbtn-base
+              %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
+                ='Chat our experts'
+
+=render partial: 'footer_pages/contact_us_form_modal'
+-#:javascript
+  var player = new Vimeo.Player('vimeo-player', {id: '224044673'});
+

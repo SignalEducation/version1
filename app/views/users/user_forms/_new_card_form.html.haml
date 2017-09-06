@@ -1,34 +1,40 @@
-.col-md-12.l-margin-top
-  .col-md-10.col-md-offset-1
-    .form-row
-      #card-element
+.col-sm-10.col-sm-offset-1
+  .payment-errors
+    .form-group.cc
+      %label
+        Credit or debit card
+      .clearfix
+        #card-element
 
-      #card-errors{role: 'alert'}
-
-.col-md-12.l-margin-top
-  .col-md-10.col-md-offset-1
-    .form-group.l-margin-top.text-center
-      %input{type: 'submit', class: 'btn btn-red', value: t('views.general.save')}
+        #card-errors{role: 'alert'}
 
 
--#.col-md-12
-  .sk-circle
-    .sk-circle1.sk-child
-    .sk-circle2.sk-child
-    .sk-circle3.sk-child
-    .sk-circle4.sk-child
-    .sk-circle5.sk-child
-    .sk-circle6.sk-child
-    .sk-circle7.sk-child
-    .sk-circle8.sk-child
-    .sk-circle9.sk-child
-    .sk-circle10.sk-child
-    .sk-circle11.sk-child
-    .sk-circle12.sk-child
+    .form-group.l-margin-top
+      .tot-get
+        %div
+          = f.button :submit, class: 'lsbtn', id: 'card_submit' do
+            %i.fa.fa-lock
+            ='Add New Card'
+
+          .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+            .sk-circle1.sk-child
+            .sk-circle2.sk-child
+            .sk-circle3.sk-child
+            .sk-circle4.sk-child
+            .sk-circle5.sk-child
+            .sk-circle6.sk-child
+            .sk-circle7.sk-child
+            .sk-circle8.sk-child
+            .sk-circle9.sk-child
+            .sk-circle10.sk-child
+            .sk-circle11.sk-child
+            .sk-circle12.sk-child
 
 
 
 :javascript
+
+  $(".sk-circle").hide();
 
   var stripe = Stripe('#{ENV['learnsignal_v3_stripe_public_key']}');
   var elements = stripe.elements();
@@ -44,6 +50,8 @@
 
     // Submit the form
     form.submit();
+    $('#card_submit').hide();
+    $(".sk-circle").show();
   }
 
   function createToken() {

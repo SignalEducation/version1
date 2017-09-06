@@ -12,14 +12,17 @@ class DashboardController < ApplicationController
 
   def admin
     @new_users = User.this_week.all_students
-    @conversions = Subscription.this_week.all_active.all_of_status('active')
     free_trial_users = User.all_students.all_free_trial
     @free_trial_users = []
     free_trial_users.each do |user|
       @free_trial_users << user if user.valid_free_member?
     end
     @new_subscriptions = Subscription.this_week.all_active.all_of_status('active')
-    @all_subscriptions = Subscription.all_active.all_of_status('active')
+    @all_subscriptions = Subscription.all_active.all_valid
+  end
+
+  def reports
+
   end
 
   def export_users

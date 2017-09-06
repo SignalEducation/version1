@@ -1,6 +1,3 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -10,17 +7,14 @@
             =t('views.countries.index.h1')
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          .no-image-box-item.table-box
+          .table-box
             .table-responsive
               =will_paginate @countries, renderer: BootstrapPagination::Rails
-              %table.table.table-striped.table-bordered.sorted_table{data: {destination: countries_url}}
+              %table.table.sorted_table{data: {destination: countries_url}}
                 %thead
                   %tr
                     %th=t('views.countries.form.name')
                     %th=t('views.countries.form.iso_code')
-                    %th=t('views.countries.form.country_tld')
-                    %th=t('views.countries.form.in_the_eu')
-                    %th=t('views.countries.form.continent')
                     %th=t('views.countries.form.currency_id')
                     %th
                     %th
@@ -29,9 +23,6 @@
                     %tr{id: country.id}
                       %td=country.name
                       %td=country.iso_code
-                      %td=country.country_tld
-                      %td=tick_or_cross(country.in_the_eu)
-                      %td=country.continent || '--'
                       %td=country.currency.name
                       %td
                         =link_to t('views.general.show'), country_url(country), class: 'btn btn-cyan btn-small'

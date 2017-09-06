@@ -1,88 +1,59 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
-  .container-fluid
-    .row.l-margin-bottom
-      .col-md-12.text-center
-        %h1.h1.bold.h-separator.h-separator-center.l-margin-bottom.l-margin-top.text-center{style: 'letter-spacing:1.5px; '}
-          =t('views.subscription_plans.public_index.h1')
+  %section#plans
+    .container
+      %h1.title1
+        Some great savings can be made.
+      %h2.subtitle1
+        Pick which plan suits you best.
 
-    .row.l-margin-top.l-margin-bottom
+      %ul.plans.clearfix
+        -@subscription_plans.each do |plan|
+          %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
+            .base
+              .topbox
+                -if plan.payment_frequency_in_months == 3
+                  %span Our most popular payment plan
+              .box
+                .name
+                  =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                %ul.details.fa-ul
+                  %li
+                    %i.fa-li.fa.fa-check
+                    Get unlimited access
+                  %li
+                    %i.fa-li.fa.fa-check
+                    Cancel anytime
+                  %li
+                    %i.fa-li.fa.fa-check
+                    =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
+                  -#%li
+                    %i.fa-li.fa.fa-check
+                    -# TODO Add plans free mock exams count here
+                    =#'corrected mock exams'
 
-      .col-md-10.col-md-offset-1.l-margin-bottom-big
+                .price
+                  =plan.currency.format_number(plan.price)
+                  -#€34,99
+                -#unless plan.payment_frequency_in_months == 1
+                  -# TODO change this display actual discount and saving values
+                  .promo
+                    .line1
+                      18% OFF
+                    .line2
+                      Save €25
 
-        %h2.upcase.text-center
-          Individual Plans
-        .col-md-4
-          .pricing-box-purple.l-margin-top-big
-            .plan-header{style: 'background: #6E6D75;'}
-              %h3.h3.plan-title{style: 'color: #fff;'}
-                Monthly
-            .plan-inner{style: 'background: #6E6D75;'}
-              -if @student_plan_1
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  =number_in_local_currency(@student_plan_1.price, @student_plan_1.currency)
-                  &#47;
-                  =t("views.general.payment_intervals.a#{@student_plan_1.payment_frequency_in_months}")
-              .l-margin-bottom.l-margin-top-big
-                %h5.plan-title
-                  Reporting & Analytics
-                %br/
-                %h5.plan-title
-                  Expert Author Network
-                %br/
-                %h5.plan-title
-                  Course Completion Certificates
+              -if current_user && current_user.individual_student?
+                .lsbtn-base
+                  =link_to user_new_subscription_url(current_user.id) do
+                    .lsbtn
+                      %i.fa.fa-check
+                      Choose this plan
+              -elsif current_user
 
+              -else
+                .lsbtn-base
+                  =link_to new_student_url do
+                    .lsbtn
+                      Get Started For Free
 
-            =link_to 'Sign Up', new_student_url, class: 'h4 plan-title plan-footer'
-
-        .col-md-4
-          .pricing-box-cyan.l-margin-top-big
-            .plan-header{style: 'background: #6E6D75;'}
-              %h3.h3.plan-title{style: 'color: #fff;'}
-                Quarterly
-            .plan-inner{style: 'background: #6E6D75;'}
-              -if @student_plan_2
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  =number_in_local_currency(@student_plan_2.price, @student_plan_2.currency)
-                  &#47;
-                  =t("views.general.payment_intervals.a#{@student_plan_2.payment_frequency_in_months}")
-              .l-margin-bottom.l-margin-top-big
-                %h5.plan-title
-                  Reporting & Analytics
-                %br/
-                %h5.plan-title
-                  Expert Author Network
-                %br/
-                %h5.plan-title
-                  Course Completion Certificates
-
-
-            =link_to 'Sign Up', new_student_url, class: 'h4 plan-title plan-footer'
-
-        .col-md-4
-          .pricing-box-red.l-margin-top-big
-            .plan-header{style: 'background: #6E6D75;'}
-              %h3.h3.plan-title{style: 'color: #fff;'}
-                Yearly
-            .plan-inner{style: 'background: #6E6D75;'}
-              -if @student_plan_3
-                %h3.plan-text.h-separator.h-separator-white.h-separator-center.l-margin-bottom-big{style: 'padding-top: 5px'}
-                  =number_in_local_currency(@student_plan_3.price, @student_plan_3.currency)
-                  &#47;
-                  =t("views.general.payment_intervals.a#{@student_plan_3.payment_frequency_in_months}")
-              .l-margin-bottom.l-margin-top-big
-                %h5.plan-title
-                  Reporting & Analytics
-                %br/
-                %h5.plan-title
-                  Expert Author Network
-                %br/
-                %h5.plan-title
-                  Course Completion Certificates
-
-
-            =link_to 'Sign Up', new_student_url, class: 'h4 plan-title plan-footer'
 

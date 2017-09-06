@@ -12,6 +12,7 @@
     free_trial_days_left: current_user.try(:days_left),
     free_trial_minutes_left: current_user.try(:minutes_left),
     email_verified: current_user.try(:email_verified),
-    topic_interest: current_user.try(:topic_interest),
     ga_id: current_user.try(:analytics_guid),
+    student_number: current_user.try(:student_number),
+    date_of_birth: current_user.try(:date_of_birth),
     }})

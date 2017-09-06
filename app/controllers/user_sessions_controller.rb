@@ -6,14 +6,10 @@ class UserSessionsController < ApplicationController
   before_filter :check_email_verification, only: [:create]
 
   def new
-    @navbar = nil
-    @footer = nil
     @user_session = UserSession.new
   end
 
   def create
-    @navbar = nil
-    @footer = nil
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
       @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
@@ -53,7 +49,7 @@ class UserSessionsController < ApplicationController
   end
 
   def set_variables
-    @seo_title = 'LearnSignal - Sign In'
+    @seo_title = 'LearnSignal | Sign In'
     @seo_description = "Sign In here to access LearnSignal's online courses"
   end
 

@@ -1,7 +1,6 @@
-.margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
-.l-section-profile.is-bg-asphalt{style: 'padding-bottom: 0px;'}
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt{style: 'padding-bottom: 0px;'}
   .l-wrap
     .container-fluid
       .profile-single
@@ -18,7 +17,7 @@
                 %p
                   =@tutor.description.html_safe
 
-.l-section-profile.is-bg-asphalt
+.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row
@@ -29,25 +28,26 @@
             .course-list-wrap
               .row
                 -@courses.each do |course|
-                  .col-sm-6.col-md-4
-                    =link_to library_special_link(course), class: 'card card-course' do
-                      .card-outer
-                        .card-inner
-                          %h3.h3.card-title.l-margin-bottom
-                            =course.try(:name)
-                          %p.card-desc
-                            -if course.short_description
-                              =course.try(:short_description).to_s.truncate(185)
-                            -else
-                              =course.parent.try(:name).to_s.truncate(185)
-                      .card-label
-                        .row
-                          .col-md-12.col-xs-12
-                            .col-md-6.col-xs-6
-                              %h6
-                                =t('views.general.browse')
-                            .col-md-6.col-xs-6.text-right
-                              -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
+                  -if course.parent && course.parent.active && course.active_children
+                    .col-sm-6.col-md-4
+                      =link_to library_special_link(course), class: 'card card-course' do
+                        .card-outer
+                          .card-inner
+                            %h3.h3.card-title.l-margin-bottom
+                              =course.try(:name)
+                            %p.card-desc
+                              -if course.short_description
+                                =course.try(:short_description).to_s.truncate(185)
+                              -else
+                                =course.parent.try(:name).to_s.truncate(185)
+                        .card-label
+                          .row
+                            .col-md-12.col-xs-12
+                              .col-md-6.col-xs-6
                                 %h6
-                                  =simple_hour_time(course.total_estimated_time_in_seconds)
+                                  =t('views.general.browse')
+                              .col-md-6.col-xs-6.text-right
+                                -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
+                                  %h6
+                                    =simple_hour_time(course.total_estimated_time_in_seconds)
 

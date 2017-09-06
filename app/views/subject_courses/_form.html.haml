@@ -55,6 +55,15 @@
                 =f.check_box :active
                 =t('views.subject_courses.form.active')
 
+          .col-sm-6
+            .image-label
+              Background Image
+            -if @subject_course.background_image.url
+              =image_tag @subject_course.background_image.url, class: 'md-image'
+            %br/
+            =f.file_field :background_image
+
+
         .col-md-12.l-margin-top
           %br/
           =f.label :description, t('views.subject_courses.form.description'), class: 'control-label'

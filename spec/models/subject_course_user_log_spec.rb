@@ -34,7 +34,6 @@ describe SubjectCourseUserLog do
   end
 
   # Constants
-  #it { expect(SubjectCourseUserLog.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
@@ -72,7 +71,5 @@ describe SubjectCourseUserLog do
   it { should respond_to(:recalculate_completeness) }
 
   it { should respond_to(:student_exam_tracks) }
-
-  it { should respond_to(:start_course_intercom_event) }
 
 end

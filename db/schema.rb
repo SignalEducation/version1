@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170729164237) do
+ActiveRecord::Schema.define(version: 20170904174746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,22 +28,21 @@ ActiveRecord::Schema.define(version: 20170729164237) do
   add_index "ahoy_events", ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
   add_index "ahoy_events", ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
 
-  create_table "corporate_requests", force: :cascade do |t|
-    t.string   "name"
+  create_table "blog_posts", force: :cascade do |t|
+    t.integer  "home_page_id"
+    t.integer  "sorting_order"
     t.string   "title"
-    t.string   "company"
-    t.string   "email"
-    t.string   "phone_number"
-    t.string   "website"
-    t.text     "personal_message"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.text     "description"
+    t.string   "url"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
-  add_index "corporate_requests", ["company"], name: "index_corporate_requests_on_company", using: :btree
-  add_index "corporate_requests", ["email"], name: "index_corporate_requests_on_email", using: :btree
-  add_index "corporate_requests", ["name"], name: "index_corporate_requests_on_name", using: :btree
-  add_index "corporate_requests", ["phone_number"], name: "index_corporate_requests_on_phone_number", using: :btree
+  add_index "blog_posts", ["home_page_id"], name: "index_blog_posts_on_home_page_id", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"
@@ -257,10 +256,14 @@ ActiveRecord::Schema.define(version: 20170729164237) do
     t.string   "seo_description"
     t.integer  "subscription_plan_category_id"
     t.string   "public_url"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.integer  "subject_course_id"
     t.string   "custom_file_name"
+    t.integer  "group_id"
+    t.string   "name"
+    t.string   "discourse_ids"
+    t.boolean  "home",                          default: false
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
@@ -623,6 +626,10 @@ ActiveRecord::Schema.define(version: 20170729164237) do
     t.integer  "group_id"
     t.integer  "quiz_pass_rate"
     t.integer  "total_estimated_time_in_seconds"
+    t.string   "background_image_file_name"
+    t.string   "background_image_content_type"
+    t.integer  "background_image_file_size"
+    t.datetime "background_image_updated_at"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -762,18 +769,6 @@ ActiveRecord::Schema.define(version: 20170729164237) do
   add_index "system_defaults", ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id", using: :btree
   add_index "system_defaults", ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id", using: :btree
   add_index "system_defaults", ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id", using: :btree
-
-  create_table "tutor_applications", force: :cascade do |t|
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "email"
-    t.text     "info"
-    t.text     "description"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  add_index "tutor_applications", ["email"], name: "index_tutor_applications_on_email", using: :btree
 
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"

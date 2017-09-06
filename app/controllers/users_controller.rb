@@ -175,7 +175,7 @@ class UsersController < ApplicationController
           email: @user.try(:email)
       )
       @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-
+      @user.update_attribute(:free_trial, true) if @user.user_group.try(:individual_student)
       if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
@@ -222,15 +222,15 @@ class UsersController < ApplicationController
   end
 
   def reactivate_account
+    @navbar = false
     @user = User.find(params[:user_id])
     if @user && @user.individual_student?
       @subscription = @user.active_subscription ? @user.active_subscription : @user.subscriptions.last
       if @subscription && %w(canceled).include?(@subscription.current_status)
         currency_id = @subscription.subscription_plan.currency_id
         @country = Country.where(currency_id: currency_id).first
-        @subscription_plans = @subscription.reactivation_options
+        @subscription_plans = @subscription.reactivation_options.limit(3)
         @new_subscription = Subscription.new
-        @navbar = nil
       else
         redirect_to account_url(anchor: :subscriptions)
       end

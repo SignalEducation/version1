@@ -2,14 +2,16 @@
 -if current_user && current_user.individual_student? && current_user.free_member?
   -# Logged In Student
   .notice.warning
-    .fa.fa-info-circle.icon
-    Upgrade Your Account for Full Access.
-    =link_to user_new_subscription_url(current_user) do
-      Upgrade Account?
+    .p
+      .fa.fa-info-circle.icon
+      Upgrade Your Account for Full Access.
+      =link_to user_new_subscription_url(current_user) do
+        Upgrade Account?
 
 -elsif current_user && current_user.canceled_member?
   .notice.warning
-    .fa.fa-info-circle.icon
-    Your Account is canceled.
-    =link_to user_reactivate_account_url(current_user.id) do
-      Reactivate Account?
+    .p
+      .fa.fa-info-circle.icon
+      Your Account is canceled.
+      =link_to user_reactivate_account_url(current_user.id) do
+        Reactivate Account?

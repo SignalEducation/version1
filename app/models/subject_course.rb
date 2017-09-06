@@ -27,6 +27,10 @@
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
 #  total_estimated_time_in_seconds         :integer
+#  background_image_file_name              :string
+#  background_image_content_type           :string
+#  background_image_file_size              :integer
+#  background_image_updated_at             :datetime
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -41,7 +45,8 @@ class SubjectCourse < ActiveRecord::Base
                   :email_content, :external_url, :external_url_name,
                   :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url,
-                  :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds
+                  :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
+                  :background_image
 
   # Constants
 
@@ -62,6 +67,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :white_papers
   has_many :mock_exams
   has_one :exam_sitting
+  has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
 
   # validation
@@ -72,6 +78,7 @@ class SubjectCourse < ActiveRecord::Base
   #validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :short_description, allow_nil: true, length: {maximum: 255}
+  validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
 
   # callbacks

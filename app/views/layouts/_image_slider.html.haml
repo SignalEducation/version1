@@ -1,0 +1,49 @@
+.container
+  .row
+    .col-md-8.col-md-offset-2
+      %h1.title1
+        Don’t just take our word for it.
+
+  .slide-base
+    .slides.cycle-slideshow{"data-cycle-auto-height" => "calc", "data-cycle-fx" => "scrollHorz", "data-cycle-next" => "#reviews .next", "data-cycle-prev" => "#reviews .prev", "data-cycle-slides" => "> .slide", "data-cycle-speed" => "600", "data-cycle-swipe" => "true", "data-cycle-timeout" => "8000"}
+      .slide
+        .row
+          .col-md-8.col-md-offset-2
+            .inner
+              .review
+                %span.q.q1
+                I have only just discovered it. So far, very highly recommended. Videos are short, so easy to dip in and out when you are on the go and have a spare minute.
+                %span.q.q2
+              .name Patti Mary, UK
+
+      .slide
+        .row
+          .col-md-8.col-md-offset-2
+            .inner
+              .review
+                %span.q.q1
+                The good thing about LearnSignal was the way the lecturers went through questions papers. It helped me so much with the technique that I had lacked in my previous paper.
+                %span.q.q2
+              .name Rebecca Nagujja, Ireland
+
+      -#.slide
+        .row
+          .col-md-8.col-md-offset-2
+            .inner
+              .review
+                %span.q.q1
+                Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit.
+                %span.q.q2
+              .name Nancy Baker. Quebec, Canada
+
+    .setas
+      .seta.prev
+        %i.fa.fa-chevron-left
+      .seta.next
+        %i.fa.fa-chevron-right
+
+.bgslides.cycle-slideshow{"data-cycle-fx" => "fade", "data-cycle-slides" => "> .slide", "data-cycle-speed" => "600", "data-cycle-timeout" => "0"}
+  .slide
+  .slide
+  -#.slide{:style => "background-image:url(assets/testimonial-image.jpg);"}
+

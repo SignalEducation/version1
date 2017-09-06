@@ -27,6 +27,10 @@
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
 #  total_estimated_time_in_seconds         :integer
+#  background_image_file_name              :string
+#  background_image_content_type           :string
+#  background_image_file_size              :integer
+#  background_image_updated_at             :datetime
 #
 
 class SubjectCoursesController < ApplicationController
@@ -184,7 +188,8 @@ class SubjectCoursesController < ApplicationController
                                            :default_number_of_possible_exam_answers,
                                            :email_content, :external_url,
                                            :external_url_name, :exam_body_id,
-                                           :survey_url, :quiz_pass_rate, :group_id)
+                                           :background_image, :survey_url,
+                                           :quiz_pass_rate, :group_id)
   end
 
   def resource_allowed_params

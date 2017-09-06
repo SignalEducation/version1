@@ -1,24 +1,54 @@
-.l-margin-top-big.payment-errors
-  .row
-    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
-      .form-row
-        #card-element
+.payment-errors
+  .form-group.cc
+    %label
+      Credit or debit card
+    .clearfix
+      #card-element
 
-        #card-errors{role: 'alert'}
+      #card-errors{role: 'alert'}
 
-.l-margin-top.coupon-section
-  .row
-    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3
-      .col-sm-10{style: 'padding-right: 0;'}
-        .form-group
-          .checkbox
-            %label
-              %input{type: "checkbox", name: 'terms_and_conditions', id: 'terms_and_conditions', required: true}
-                =t('views.general.terms_and_conditions')
+  .form-group.l-margin-top
+    %label.check
+      %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+        %span
+          %i.fa.fa-check
+        =t('views.general.terms_and_conditions')
 
-    .col-sm-10.col-sm-offset-1.col-md-6.col-md-offset-3.l-margin-top-big
-      .form-group.l-margin-top
-        %input{type: 'submit', class: 'btn btn-red', value: t('views.users.upgrade_subscription.reactivate_account')}
+  .form-group.l-margin-top
+    .tot-get
+      .price
+        -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
+        %span.total Total:
+        %span.value#total-value
+          =default_plan.currency.format_number(default_plan.price)
+
+      %div
+        = f.button :submit, class: 'lsbtn', id: 'card_submit' do
+          %i.fa.fa-lock
+          =t('views.users.upgrade_subscription.upgrade_subscription')
+
+        .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+          .sk-circle1.sk-child
+          .sk-circle2.sk-child
+          .sk-circle3.sk-child
+          .sk-circle4.sk-child
+          .sk-circle5.sk-child
+          .sk-circle6.sk-child
+          .sk-circle7.sk-child
+          .sk-circle8.sk-child
+          .sk-circle9.sk-child
+          .sk-circle10.sk-child
+          .sk-circle11.sk-child
+          .sk-circle12.sk-child
+
+
+
+    .obs
+      =#"Your next recurring payment will be on 01 Jan 1980."
+      %br
+      Remember, you can cancel at anytime
+
+
 
 
 
@@ -32,10 +62,20 @@
     }
   });
 
+  // Custom styling can be passed to options when creating an Element.
+  var style = {
+    base: {
+      fontWeight: 300,
+      fontFamily: 'Rubik',
+      fontSize: '20px',
+      lineHeight: '24px'
+    }
+  };
+
   var stripe = Stripe('#{ENV['learnsignal_v3_stripe_public_key']}');
   var elements = stripe.elements();
 
-  var card = elements.create('card', {hidePostalCode: true,});
+  var card = elements.create('card', {hidePostalCode: true, style: style});
   card.mount('#card-element');
 
 
@@ -46,6 +86,9 @@
 
     // Submit the form
     form.submit();
+    //Replace with spinning JS
+    $('#card_submit').hide();
+    $(".sk-circle").show();
   }
 
   function createToken() {

@@ -11,6 +11,10 @@
 #  updated_at                    :datetime         not null
 #  subject_course_id             :integer
 #  custom_file_name              :string
+#  group_id                      :integer
+#  name                          :string
+#  discourse_ids                 :string
+#  home                          :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -25,6 +29,7 @@ describe HomePagesController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'system_setup'
 
+  let!(:home) { FactoryGirl.create(:home, public_url: '/', custom_file_name: 'home') }
   let!(:home_page_1) { FactoryGirl.create(:home_page) }
   let!(:home_page_2) { FactoryGirl.create(:acca_home) }
 
@@ -68,7 +73,7 @@ describe HomePagesController, type: :controller do
 
     describe "GET 'home'" do
       it 'should see home' do
-        get :home
+        get :home, home_pages_public_url: '/'
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)

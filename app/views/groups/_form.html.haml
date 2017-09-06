@@ -29,7 +29,8 @@
             =f.file_field :image
 
           .col-md-6
-            %p Background Image
+            .image-label
+              Background Image
             -if @group.background_image.url
               =image_tag @group.background_image.url, class: 'md-image'
             %br/

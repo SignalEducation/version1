@@ -1,16 +1,6 @@
 class FooterPagesController < ApplicationController
 
   before_action :get_variables, except: [:missing_page]
-  before_action :get_zendesk, only: [:complaints_zendesk, :contact_us_zendesk]
-
-  def business
-    @groups = Group.all_active.all_in_order
-    seo_title_maker('Business Training Solutions', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
-  end
-
-  def why_learn_signal
-    seo_title_maker('Why LearnSignal Training', 'Adaptive training is a great resource for professionals, helping to solve problems when they happen. Professionals can access training courses on any device.', nil)
-  end
 
   def privacy_policy
     seo_title_maker('Privacy Policy', 'Privacy Policy of learnsignal.com. This Application collects some Personal Data from its Users.', nil)
@@ -21,6 +11,7 @@ class FooterPagesController < ApplicationController
   end
 
   def contact
+    @form_type = 'Contact Us'
     seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
   end
 
@@ -38,6 +29,7 @@ class FooterPagesController < ApplicationController
       redirect_to tutors_url
     end
     @navbar = true
+    @top_margin = true
   end
 
   def profile_index
@@ -45,6 +37,7 @@ class FooterPagesController < ApplicationController
     @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
     seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
     @navbar = true
+    @top_margin = true
   end
 
   def missing_page
@@ -53,6 +46,7 @@ class FooterPagesController < ApplicationController
     elsif params[:first_element].to_s == '500-page'
       render file: 'public/500.html', layout: nil, status: 500
     else
+      @top_margin = true
       render 'footer_pages/404_page.html.haml', status: 404
     end
     seo_title_maker('404 Page', "Sorry, we couldn't find what you are looking for. We missed the mark!
@@ -61,10 +55,13 @@ class FooterPagesController < ApplicationController
 
   def info_subscribe
     email = params[:email][:address]
-    list_id = params[:list_id]
+    name = params[:first_name][:address]
+    #list_id = '866fa91d62' # Dev List
+    list_id = 'a716c282e2' # Production List
     if !email.blank?
       begin
-        @mc.lists.subscribe(list_id, {'email' => email})
+        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+
         respond_to do |format|
           format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
         end
@@ -94,44 +91,26 @@ class FooterPagesController < ApplicationController
     end
   end
 
-  def complaints_zendesk
-    options = {:subject => params[:subject], :comment => { :value => params[:body] }, :requester => { :email => params[:email_address], :name => params[:full_name] }}
-    request = ZendeskAPI::Ticket.create(@client, options)
-    if request && request.created_at
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    else
-      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
-    end
+  def complaints_intercom
+    user_id = current_user ? current_user.id : nil
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:body], 'Complaints Form')
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to contact_url
   end
 
-  def contact_us_zendesk
-    options = {:subject => "Basic Contact Us", :comment => { :value => params[:question] }, :requester => { :email => params[:email_address], :name => params[:full_name] }}
-    request = ZendeskAPI::Ticket.create(@client, options)
-    if request && request.try(:created_at)
-      flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    else
-      flash[:error] = 'Your submission was not successful. Please try again or email us directly at support@learnsignal.com'
-    end
-    redirect_to contact_url
+  def contact_us_intercom
+    user_id = current_user ? current_user.id : nil
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
+    redirect_to request.referrer
   end
 
   protected
 
-  def get_zendesk
-    require 'zendesk_api'
-    @client = ZendeskAPI::Client.new do |config|
-      config.url = "https://learnsignal.zendesk.com/api/v2"
-      config.username = "james@learnsignal.com/token"
-      config.token = ENV['learnsignal_zendesk_api_key'].to_s
-      config.retry = true
-      require 'logger'
-      config.logger = Logger.new(STDOUT)
-    end
-
-  end
-
   def get_variables
     @navbar = false
+    @top_margin = false
+    @footer = true
   end
+
 end

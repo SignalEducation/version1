@@ -39,6 +39,7 @@ class Enrollment < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   before_validation :set_empty_strings_to_nil
+  after_create :course_enrollment_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
@@ -88,7 +89,24 @@ class Enrollment < ActiveRecord::Base
     course_log = self.subject_course_user_log
     if course_log
       percentage = course_log.percentage_complete
-      percentage.to_s << ' %' if percentage
+      percentage.to_s << '%' if percentage
+    end
+  end
+
+  def rounded_percentage_complete
+    course_log = self.subject_course_user_log
+    if course_log
+      percentage = course_log.percentage_complete
+      percentage.between?(25,50)
+      if percentage && (percentage.between?(25,49))
+        '25%'
+      elsif percentage && (percentage.between?(50,74))
+        '50%'
+      elsif percentage && (percentage.between?(75,99))
+        '75%'
+      elsif percentage && (percentage == 100)
+        '100%'
+      end
     end
   end
 
@@ -114,6 +132,13 @@ class Enrollment < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def course_enrollment_intercom_event
+    unless Rails.env.test?
+      IntercomCourseEnrolledEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
+      IntercomExamSittingEventWorker.perform_async(self.try(:user_id), self.exam_date, self.exam_body.name)
     end
   end
 
