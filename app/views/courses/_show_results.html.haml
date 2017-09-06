@@ -30,7 +30,7 @@
 
 
 
-      -@course_module_element_user_log.quiz_attempts.reverse.each_with_index do |attempt, counter|
+      -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
         .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
           %p.text-inline.text-bold Question #{counter + 1}
           %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
