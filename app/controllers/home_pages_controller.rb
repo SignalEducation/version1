@@ -42,6 +42,7 @@ class HomePagesController < ApplicationController
       @topics = get_discourse_topics(ids)
     end
     @form_type = 'Home Page Contact'
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
   end
 
   def show
