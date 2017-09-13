@@ -29,6 +29,13 @@ class LibraryController < ApplicationController
       @revision_course_modules = @course_modules.all_revision.all_in_order
       tag_manager_data_layer(@course.name)
 
+      mock_exams = @course.mock_exams
+      mock_exam_ids = mock_exams.map(&:id)
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : current_user.country
+      @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+      @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+
       #Enrollment and SubjectCourseUserLog
       if current_user && !@course.enrolled_user_ids.include?(current_user.id)
         #Make Enrollment Form and required params
@@ -64,13 +71,6 @@ class LibraryController < ApplicationController
       end
 
       if current_user
-        mock_exams = @course.mock_exams
-        mock_exam_ids = mock_exams.map(&:id)
-        ip_country = IpAddress.get_country(request.remote_ip)
-        @country = ip_country ? ip_country : current_user.country
-        @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-        @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-
 
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
         user_course_sets = users_sets.where(subject_course_id: @course.try(:id))

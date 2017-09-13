@@ -74,42 +74,15 @@
 
 
 
-
         .col-md-4
-          .l-margin-top-big
-            -if current_user && @course.enrolled_user_ids.include?(current_user.id)
-              %p.h4.l-margin-bottom.l-margin-top
-                Contact Tutor
-              %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
-                Ask The Tutor
-
-              =render partial: 'courses/tutor_contact'
-
-            -if current_user && @course.mock_exams.any?
-              %p.h4.l-margin-bottom.l-margin-top-huge
-                Mock Exams
-              %ul.course-resources
-                -@products.each do |product|
-                  %li
-                    =link_to new_order_url(product) do
-                      .btn.btn-secondary.btn-red.btn-list
-                        =product.mock_exam.name
-
-            -if current_user && @subject_course_resources && @subject_course_resources.any?
-              %p.h4.l-margin-bottom.l-margin-top-huge
-                Course Resources
-              %ul.course-resources
-                -@subject_course_resources.each do |resource|
-                  %li
-                    =link_to resource.file_upload.url, target: '_blank' do
-                      .btn.btn-secondary.btn-red.btn-list
-                        =resource.name
+          =render partial: 'additional_content'
 
 
       -if current_user && @course.enrolled_user_ids.include?(current_user.id)
         .l-margin-top-huge
           =render partial: 'course_info'
 
+=render partial: 'courses/tutor_contact'
 =render partial: 'courses/access_denied_modal'
 :javascript
 
