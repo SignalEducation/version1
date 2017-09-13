@@ -35,7 +35,7 @@ class LibraryController < ApplicationController
       mock_exams = @course.mock_exams
       mock_exam_ids = mock_exams.map(&:id)
       ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : current_user.country
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
