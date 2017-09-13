@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170904174746) do
+ActiveRecord::Schema.define(version: 20170913142118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20170904174746) do
     t.integer  "seconds_watched",            default: 0
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_questions_correct"
+    t.integer  "subject_course_id"
   end
 
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree

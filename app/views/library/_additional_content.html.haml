@@ -3,6 +3,7 @@
     Contact Tutor
   -if current_user
     -if current_user && current_user.permission_to_see_content(@course)
+      =render partial: 'courses/tutor_contact'
       %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
         Ask The Tutor
     -else
