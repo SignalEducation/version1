@@ -262,11 +262,19 @@ class ApplicationController < ActionController::Base
               the_thing.subject_course
       )
     elsif the_thing.class == CourseModuleElement
-      course_url(
-              the_thing.course_module.subject_course.name_url,
-              the_thing.course_module.name_url,
-              the_thing.name_url
-      )
+      if current_user.permission_to_see_content(the_thing.parent.parent)
+        course_url(
+            the_thing.course_module.subject_course.name_url,
+            the_thing.course_module.name_url,
+            the_thing.name_url
+        )
+      else
+        library_course_url(
+            the_thing.parent.parent.parent.name_url,
+            the_thing.parent.parent.name_url,
+            anchor: 'access-denied-modal'
+        )
+      end
     else
       library_special_link(the_thing)
     end
