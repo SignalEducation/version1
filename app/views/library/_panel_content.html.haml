@@ -3,9 +3,9 @@
     .col-xs-12
       .col-xs-1.col-sm-1
         .left-side-meta
-          -if current_user && @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(grandchild.id)
+          -if current_user && current_user.completed_course_module_element(grandchild.id)
             =image_tag(grandchild.is_quiz? ? 'cm_green_tick.png' : 'cm_green_play.png')
-          -elsif current_user && @incomplete_cmeuls_cme_ids && @incomplete_cmeuls_cme_ids.include?(grandchild.id)
+          -elsif current_user && current_user.started_course_module_element(grandchild.id)
             =image_tag(grandchild.is_quiz? ? 'cm_red_tick.png' : 'cm_red_play.png')
           -else
             =image_tag(grandchild.is_quiz? ? 'cm_grey_tick.png' : 'cm_grey_play.png')
