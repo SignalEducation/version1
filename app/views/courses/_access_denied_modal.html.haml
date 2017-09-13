@@ -51,11 +51,12 @@
       .col-md-12
         %button.remodal-close{"data-remodal-action" => "close"}
         .col-md-12
-          %h2
-            ='Please Enrol to continue your studies'
+          %h2.l-margin-bottom-big
+            ='You must enrol in the course to continue your studies'
         %br/
+        =link_to library_course_url(@course.parent.name_url, @course.name_url, anchor: 'enrollment-modal'), class: 'btn btn-orange' do
+          Start Enrolment Process
 
-    =render partial: 'layouts/enrollment_form'
 
 
   -elsif current_user
