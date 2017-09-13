@@ -23,7 +23,8 @@ class CoursesController < ApplicationController
             time_taken_in_seconds: 0,
             is_video: true,
             is_quiz: false,
-            course_module_id: @course_module_element.course_module_id
+            course_module_id: @course_module_element.course_module_id,
+            subject_course_id: @course.id
         )
       end
     else
@@ -42,6 +43,7 @@ class CoursesController < ApplicationController
 
       @course_module_element = @course_module_element_user_log.course_module_element
       @course_module = @course_module_element_user_log.course_module
+      @course_module_element_user_log.subject_course_id = @course_module.subject_course_id
       @results = true
       if @course_module_element_user_log.save
         pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
@@ -99,7 +101,8 @@ class CoursesController < ApplicationController
               time_taken_in_seconds: 0,
               is_video: true,
               is_quiz: false,
-              course_module_id: course_module_element.course_module_id
+              course_module_id: course_module_element.course_module_id,
+              subject_course_id: course_module_element.course_module.subject_course_id
           )
         end
         data = {video_log_id: @video_cme_user_log.id}
@@ -114,6 +117,7 @@ class CoursesController < ApplicationController
 
   def allowed_params
     params.require(:course_module_element_user_log).permit(
+            :subject_course_id,
             :course_module_id,
             :course_module_element_id,
             :user_id,
@@ -133,6 +137,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log = CourseModuleElementUserLog.new(
             session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,
+            subject_course_id: @course_module_element.course_module.subject_course_id,
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
             is_video: false,

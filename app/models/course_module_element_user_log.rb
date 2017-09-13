@@ -19,6 +19,7 @@
 #  seconds_watched            :integer          default(0)
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
+#  subject_course_id          :integer
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -31,13 +32,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :quiz_score_actual, :quiz_score_potential,
                   :is_video, :is_quiz, :course_module_id,
                   :quiz_attempts_attributes, :seconds_watched,
-                  :count_of_questions_taken, :count_of_questions_correct
+                  :count_of_questions_taken, :count_of_questions_correct,
+                  :subject_course_id
 
   # Constants
 
   # relationships
-  belongs_to :course_module
   belongs_to :course_module_element
+  belongs_to :course_module
+  belongs_to :subject_course
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   belongs_to :user
   accepts_nested_attributes_for :quiz_attempts
@@ -56,10 +59,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
   scope :all_completed, -> { where(element_completed: true) }
+  scope :all_incomplete, -> { where(element_completed: false) }
   scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
+  scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }

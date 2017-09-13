@@ -38,20 +38,11 @@
         -child.children.all_in_order.all_active.each do |grandchild|
 
           -if current_user
-            -if current_user && current_user.permission_to_see_content(@course) && !@course.enrolled_user_ids.include?(current_user.id)
-              -# Enrolment Modal
-              %a{data: {remodal: {target: 'modal'}}, class: 'list-group-item link-purple box-topic-item'}
-                =render partial: 'panel_content', locals: {grandchild: grandchild}
 
-            -elsif current_user && current_user.permission_to_see_content(@course) && @course.enrolled_user_ids.include?(current_user.id)
-              =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
-                =render partial: 'panel_content', locals: {grandchild: grandchild}
+            =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+              =render partial: 'panel_content', locals: {grandchild: grandchild}
 
-            -else
-              %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'list-group-item link-purple box-topic-item'}
-                =render partial: 'panel_content', locals: {grandchild: grandchild}
 
           -else
             =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
               =render partial: 'panel_content', locals: {grandchild: grandchild}
-

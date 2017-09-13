@@ -46,6 +46,19 @@
         .col-sm-4.col-sm-offset-4
           =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user), class: 'btn btn-red'
 
+  -elsif current_user && !@course.enrolled_user_ids.include?(current_user.id)
+    .row
+      .col-md-12
+        %button.remodal-close{"data-remodal-action" => "close"}
+        .col-md-12
+          %h2.l-margin-bottom-big
+            ='You must enrol in the course to continue your studies'
+        %br/
+        =link_to library_course_url(@course.parent.name_url, @course.name_url, anchor: 'enrollment-modal'), class: 'btn btn-orange' do
+          Start Enrolment Process
+
+
+
   -elsif current_user
     .row
       .col-md-12
@@ -69,3 +82,4 @@
           =link_to 'Contact Us', contact_url, class: 'btn btn-red'
         .col-sm-6
           =link_to t('views.users.show.h1'), account_url, class: 'btn btn-red'
+

@@ -19,6 +19,7 @@
 #  seconds_watched            :integer          default(0)
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
+#  subject_course_id          :integer
 #
 
 FactoryGirl.define do

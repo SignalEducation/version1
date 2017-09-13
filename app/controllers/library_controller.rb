@@ -23,11 +23,21 @@ class LibraryController < ApplicationController
   def course_show
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     if @course && @course.active
+
       @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
       @tuition_course_modules = @course_modules.all_tuition.all_in_order
       @test_course_modules = @course_modules.all_test.all_in_order
       @revision_course_modules = @course_modules.all_revision.all_in_order
+
+
       tag_manager_data_layer(@course.name)
+
+      mock_exams = @course.mock_exams
+      mock_exam_ids = mock_exams.map(&:id)
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+      @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
       #Enrollment and SubjectCourseUserLog
       if current_user && !@course.enrolled_user_ids.include?(current_user.id)
@@ -50,7 +60,12 @@ class LibraryController < ApplicationController
         #Get existing enrollment and try find an associated SCUL
         @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
         if @enrollment
+          #Must always start with SCUL, not Enrollment, as old users may not have enrollments but will have SCULs
           @subject_course_user_log = @enrollment.subject_course_user_log
+          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+          @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+          @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
         end
 
         if current_user && current_user.permission_to_see_content(@course)
@@ -64,13 +79,6 @@ class LibraryController < ApplicationController
       end
 
       if current_user
-        mock_exams = @course.mock_exams
-        mock_exam_ids = mock_exams.map(&:id)
-        ip_country = IpAddress.get_country(request.remote_ip)
-        @country = ip_country ? ip_country : current_user.country
-        @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-        @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-
 
         users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
         user_course_sets = users_sets.where(subject_course_id: @course.try(:id))

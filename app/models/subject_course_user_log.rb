@@ -131,6 +131,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
 
+  def course_module_element_user_logs
+    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
+  end
+
   protected
 
   def check_dependencies
