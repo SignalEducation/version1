@@ -1,5 +1,3 @@
--#TODO factor in not enrolled in the course
-
 .remodal{"data-remodal-id" => "access-denied-modal"}
   -if current_user && current_user.expired_free_member?
     .row
@@ -48,6 +46,18 @@
         .col-sm-4.col-sm-offset-4
           =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user), class: 'btn btn-red'
 
+  -elsif current_user && !@course.enrolled_user_ids.include?(current_user.id)
+    .row
+      .col-md-12
+        %button.remodal-close{"data-remodal-action" => "close"}
+        .col-md-12
+          %h2
+            ='Please Enrol to continue your studies'
+        %br/
+
+    =render partial: 'layouts/enrollment_form'
+
+
   -elsif current_user
     .row
       .col-md-12
@@ -71,3 +81,4 @@
           =link_to 'Contact Us', contact_url, class: 'btn btn-red'
         .col-sm-6
           =link_to t('views.users.show.h1'), account_url, class: 'btn btn-red'
+

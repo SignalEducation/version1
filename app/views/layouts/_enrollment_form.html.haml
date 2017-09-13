@@ -1,0 +1,76 @@
+=form_for(@enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+  =f.hidden_field :subject_course_id, value: @course.id
+  .row.l-margin-top.text-left
+    .col-sm-12
+      .col-sm-6
+        =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :exam_date, @exam_sittings, :date, :formatted_date, {prompt: t('views.general.select'), include_blank: 'Computer Based Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
+
+      .col-sm-6#custom_exam_date
+        %label{class: 'control-label'}
+          ='Enter Computer Based Exam Date'
+        .input-group.input-group-lg.full-width
+          %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'}
+
+
+  %br/
+  .col-sm-12
+    %p.p
+      ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help for your exam."
+
+
+  %br/
+  .col-sm-12#actions_btns
+    .col-sm-4.col-sm-offset-8
+      .btn.btn-cyan#enroll_now{"data-remodal-action" => "confirm"}
+        Enrol Now
+
+
+:javascript
+
+  // Hide specific sections on page load
+  $( document ).ready(function() {
+    $("#custom_exam_date").hide();
+    $('#enroll_now').attr('disabled', true);
+  });
+
+  // Hide and show the form or info section depending on which checkbox is selected
+  $('select[name="exam_date"]').change(function () {
+    if ((this).selectedIndex == 1) {
+      $("#custom_exam_date").show();
+      $('#enroll_now').attr('disabled', true);
+    } else if ($('select[name="exam_date"]').val() != '') {
+      $('#enroll_now').attr('disabled', false);
+      $("#custom_exam_date").hide();
+    } else {
+      $("#custom_exam_date").hide();
+      $('#enroll_now').attr('disabled', true);
+    }
+
+  });
+  $('#datetimepicker').focusout(function(){
+    if ($('#datetimepicker').val().length !=0) {
+      $('#enroll_now').attr('disabled', false);
+    }
+  });
+
+
+  // JS to submit form when modal confirmation btn is clicked
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['enrollment_modal_form'].submit();
+  });
+
+  $(document).on('closing', '.remodal', function () {
+    $('input[type="checkbox"]').prop('checked', false);
+    $("#enrollment_form").hide();
+    $("#registration_info").hide();
+  });
+
+
+
+  // Both Date Pickers
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });
