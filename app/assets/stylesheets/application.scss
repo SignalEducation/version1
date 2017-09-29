@@ -2309,6 +2309,24 @@ spinner {
   }
 }
 
+.file-upload-box {
+  display: block;
+  background-color: $colour-6;
+  position: relative;
+  margin: 0 0 $gutter 0;
+  color: $colour-8;
+  padding: $gutter;
+  @include clearfix();
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    padding: $gutter;
+    &:before {
+      left: $gutter/1.5;
+    }
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 22. CSS Partials that depend on existing classes in this file so must be imported last

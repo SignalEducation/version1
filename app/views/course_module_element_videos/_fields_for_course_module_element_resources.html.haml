@@ -11,12 +11,15 @@
     -else
       %h4
         New Upload
+
     .col-md-6
       =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
     .col-md-6
       =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+
       -if cme_resource.object.upload_file_name
         .form-control-static
           =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
@@ -25,15 +28,18 @@
           %br/
 
         Upload a replacement file or delete the file
+        -#=t('views.course_module_element_resources.form.replace')
         .input-group.input-group-lg.form-control
-          =cme_resource.label :upload, t('views.course_module_element_resources.form.replace')
+
           =cme_resource.file_field :upload, style: 'border-radius: 6px;'
-          %p{style: 'margin: 10px 0;'}
-            OR
-          .checkbox
-            %label
-              =cme_resource.check_box :_destroy
-              =t('views.course_module_elements.form.delete')
+
+        %p{style: 'margin: 10px 0;'}
+          OR
+        .checkbox
+          %label
+            =cme_resource.check_box :_destroy
+            =t('views.course_module_elements.form.delete')
+
       -else
         .input-group.input-group-lg
           =cme_resource.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
