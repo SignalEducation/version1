@@ -657,6 +657,12 @@ class User < ActiveRecord::Base
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
             error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
 
+            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('.')
+            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].length >= 7
+
+            error_msgs << I18n.t('models.users.not_valid_first_name') unless fields[1].length >= 2
+            error_msgs << I18n.t('models.users.not_valid_last_name') unless fields[2].length >= 2
+
             duplicate_emails << fields[0]
           else
             error_msgs << I18n.t('models.users.invalid_field_count')
@@ -673,6 +679,12 @@ class User < ActiveRecord::Base
             if fields.length == 3
               error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
               error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
+
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('.')
+              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].length >= 7
+
+              error_msgs << I18n.t('models.users.not_valid_first_name') unless fields[1].length >= 2
+              error_msgs << I18n.t('models.users.not_valid_last_name') unless fields[2].length >= 2
 
               duplicate_emails << fields[0]
             else
