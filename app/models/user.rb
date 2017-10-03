@@ -255,7 +255,9 @@ class User < ActiveRecord::Base
   end
 
   def user_account_status
-    if self.valid_free_member?
+    if !self.trial_started?
+      'Trial Not Started'
+    elsif self.valid_free_member?
       'Valid Free Trial'
     elsif self.expired_free_member?
       'Expired Free Trial'
@@ -274,10 +276,10 @@ class User < ActiveRecord::Base
 
   def free_trial_days_valid?
     # 86400 is number of seconds in a day
-    trial_limit_in_seconds = self.trial_limit_in_days * 86400
+    trial_limit_days_in_seconds = self.trial_limit_in_days * 86400
     current_date_time = Proc.new { Time.now }.call
 
-    if  current_date_time <= (self.created_at + trial_limit_in_seconds)
+    if current_date_time <= (self.trial_start_date + trial_limit_days_in_seconds)
       true
     else
       false
@@ -296,11 +298,19 @@ class User < ActiveRecord::Base
   def days_left
     # Displayed in the Navbar change to return full sentence string 'X Days Left' or 'Your Trial has Expired'
     free_trial_days = self.trial_limit_in_days.to_i
-    if free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day).to_i > 0
-      free_trial_days - ((Time.now - self.created_at).to_i.abs / 1.day)
+    if free_trial_days - ((Time.now - self.trial_start_date).to_i.abs / 1.day).to_i > 0
+      free_trial_days - ((Time.now - self.trial_start_date).to_i.abs / 1.day)
     else
       '0'
     end
+  end
+
+  def trial_start_date
+    self.email_verified ? self.email_verified_at : self.created_at
+  end
+
+  def trial_started?
+    self.email_verified && self.email_verified_at
   end
 
   def minutes_left
