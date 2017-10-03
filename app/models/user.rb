@@ -172,10 +172,12 @@ class User < ActiveRecord::Base
   def self.start_password_reset_process(the_email_address, root_url)
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
-      if user
+      if user && user.email_verified
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
         #Send reset password email from Mandrill
         MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+      elsif user && !user.email_verified && user.email_verification_code
+        MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))
       end
     end
   end
