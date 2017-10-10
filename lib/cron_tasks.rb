@@ -32,7 +32,7 @@ class CronTasks
     all_enrollments = Enrollment.where('updated_at >= ?', 1.week.ago).all_active
 
     all_enrollments.each do |enrollment|
-      IntercomCourseProgressEventWorker.perform_async(enrollment.user_id, self.subject_course.name, self.rounded_percentage_complete)
+      #IntercomCourseProgressEventWorker.perform_async(enrollment.user_id, self.subject_course.name, self.rounded_percentage_complete)
     end
   end
 

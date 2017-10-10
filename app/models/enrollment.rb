@@ -138,7 +138,8 @@ class Enrollment < ActiveRecord::Base
   def course_enrollment_intercom_event
     unless Rails.env.test?
       IntercomCourseEnrolledEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
-      IntercomExamSittingEventWorker.perform_async(self.try(:user_id), self.exam_date, self.exam_body.name)
+      #TODO Needs to be resolved
+      #IntercomExamSittingEventWorker.perform_async(self.try(:user_id), self.exam_date, self.exam_body.name)
     end
   end
 
