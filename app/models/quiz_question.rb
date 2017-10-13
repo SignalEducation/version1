@@ -43,6 +43,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
+  validate :at_least_one_answer_is_correct
 
   # callbacks
   before_validation :set_course_module_element
@@ -72,9 +73,8 @@ class QuizQuestion < ActiveRecord::Base
   protected
 
   def at_least_one_answer_is_correct
-    # todo - this doesn't work
     counter = 0
-    quiz_answers_attributes.each do |attrs|
+    quiz_answers.each do |attrs|
       counter += 1 if attrs[:degree_of_wrongness] == 'correct'
     end
     if counter == 0
