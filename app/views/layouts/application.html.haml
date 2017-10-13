@@ -38,7 +38,7 @@
     -if @seo_no_index
       %meta{name: 'robots', content: 'noindex'}
 
-    =#render partial: 'layouts/favicon'
+    =render partial: 'layouts/favicon'
     -if Rails.env.production?
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/cookie_banner'
