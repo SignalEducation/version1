@@ -48,6 +48,8 @@ en:
 
     users:
       existing_emails: Email already exists in system
+      not_valid_first_name: Not a valid first name
+      not_valid_last_name: Not a valid last name
       not_valid_email: Not a valid email format
       duplicated_emails: Duplicate Email
       invalid_field_count: File must have 3 columns
