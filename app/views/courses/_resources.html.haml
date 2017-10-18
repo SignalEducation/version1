@@ -41,7 +41,7 @@
                     =@course_module_element.video_resource.try(:notes).try(:html_safe)
 
 
-          -if @course_module.discourse_topic_id
+          -#if @course_module.discourse_topic_id
             .tab-pane.fade#community-section{role: 'tabpanel'}
               .col-md-12
                 .content-box.content-box-outer.l-margin-bottom-huge
@@ -58,7 +58,7 @@
                       -if @course_module_element.try(:description)
                         =@course_module_element.description.html_safe
 
-          -if @course_module.discourse_topic_id
+          -#if @course_module.discourse_topic_id
             .tab-pane.fade#community-section{role: 'tabpanel'}
               .col-md-12
                 .content-box.content-box-outer.l-margin-bottom-huge

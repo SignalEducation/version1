@@ -31,6 +31,7 @@ class LibraryController < ApplicationController
 
 
       tag_manager_data_layer(@course.name)
+      seo_title_maker(@course.name, @course.description, nil)
 
       mock_exams = @course.mock_exams
       mock_exam_ids = mock_exams.map(&:id)
