@@ -89,9 +89,9 @@
 
                 .col-sm-6
                   .h3
-                    Topic Interest
+                    Trial Started
                   .h6
-                    =@user.topic_interest
+                    =humanize_datetime(@user.trial_start_date)
 
 
 
@@ -101,3 +101,4 @@
                     Account Type
                   .h6
                     =@user.user_account_status
+                .col-sm-6
