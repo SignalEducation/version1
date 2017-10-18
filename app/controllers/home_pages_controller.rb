@@ -196,18 +196,18 @@ class HomePagesController < ApplicationController
     @footer = true
   end
 
-  def get_discourse_topics(topic_ids)
-    #@client = DiscourseApi::Client.new(ENV['learnsignal_discourse_api_host'])
-    #@client.api_key = ENV['learnsignal_discourse_api_key']
-    #@client.api_username = ENV['learnsignal_discourse_api_username']
-    #topics = []
-    #topic_ids.each do |topic_id|
-    #  topic = @client.topic(topic_id)
-    #  object = OpenStruct.new(topic)
-    #  topics << object
-    #end
-    #topics
-  end
+  #def get_discourse_topics(topic_ids)
+  #  @client = DiscourseApi::Client.new(ENV['learnsignal_discourse_api_host'])
+  #  @client.api_key = ENV['learnsignal_discourse_api_key']
+  #  @client.api_username = ENV['learnsignal_discourse_api_username']
+  #  topics = []
+  #  topic_ids.each do |topic_id|
+  #    topic = @client.topic(topic_id)
+  #    object = OpenStruct.new(topic)
+  #    topics << object
+  #  end
+  #  topics
+  #end
 
   def allowed_params
     params.require(:home_page).permit(:seo_title, :seo_description,

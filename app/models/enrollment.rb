@@ -39,7 +39,7 @@ class Enrollment < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   before_validation :set_empty_strings_to_nil
-  after_create :course_enrollment_intercom_event
+  #after_create :course_enrollment_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
@@ -137,8 +137,7 @@ class Enrollment < ActiveRecord::Base
 
   def course_enrollment_intercom_event
     unless Rails.env.test?
-      IntercomCourseEnrolledEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
-      #TODO Needs to be resolved
+      #IntercomCourseEnrolledEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
       #IntercomExamSittingEventWorker.perform_async(self.try(:user_id), self.exam_date, self.exam_body.name)
     end
   end
