@@ -9,10 +9,11 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  active                     :boolean          default(FALSE)
-#  student_number             :string
 #  exam_body_id               :integer
 #  exam_date                  :date
-#  registered                 :boolean          default(FALSE)
+#  expired                    :boolean          default(FALSE)
+#  paused                     :boolean          default(FALSE)
+#  notifications              :boolean          default(TRUE)
 #
 
 class EnrollmentsController < ApplicationController
@@ -22,8 +23,8 @@ class EnrollmentsController < ApplicationController
 
   def create
     @course = SubjectCourse.find(params[:enrollment][:subject_course_id])
-    @exam_body = @course.exam_body if @course.exam_body_id
-    log = create_subject_course_user_log
+    @exam_body = @course.exam_body
+
     @enrollment = Enrollment.new(allowed_params)
     if params[:custom_exam_date].present? && !params[:exam_date].present?
       date = params[:custom_exam_date]
@@ -32,12 +33,15 @@ class EnrollmentsController < ApplicationController
     end
     @enrollment.exam_date = date
     @enrollment.user_id = current_user.id
-    @enrollment.subject_course_user_log_id = log.id
     @enrollment.exam_body_id = @exam_body.id
     @enrollment.active = true
 
+    #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
+    @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id) unless @enrollment.subject_course_user_log_id
+
+
     if @enrollment.save
-      send_welcome_email(@course.id)
+      send_welcome_email(current_user.id, @course.name)
       redirect_to library_special_link(@course)
       flash[:success] = 'Thank you for your Enrolment'
     else
@@ -73,50 +77,35 @@ class EnrollmentsController < ApplicationController
 
   end
 
-  def send_welcome_email(course_id)
-    @course = SubjectCourse.find(course_id)
-    MandrillWorker.perform_at(5.minute.from_now, @user.id, 'send_enrollment_welcome_email', @course.name, account_url)
+  def send_welcome_email(user_id, course_name)
+    MandrillWorker.perform_at(5.minute.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
   end
-
-  def basic_create
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @user = current_user
-    log = create_subject_course_user_log
-    @enrollment = Enrollment.create(user_id: @user.id, subject_course_user_log_id: log.id, subject_course_id: @course.id, active: true)
-    redirect_to course_special_link(@course.first_active_cme)
-    flash[:success] = "Thank you for enrolling in #{@course.name}"
-  end
-
-  def pause
-    @enrollment = Enrollment.find(params[:enrollment_id])
-    @enrollment.update_attributes(active: false)
-    redirect_to "#{account_url}#enrollment"
-  end
-
-  def activate
-    @enrollment = Enrollment.find(params[:enrollment_id])
-    @enrollment.update_attributes(active: true)
-    redirect_to account_url(anchor: :enrollments)
-  end
-
 
   protected
 
-  def create_subject_course_user_log
-    log = @user.subject_course_user_logs.where(subject_course_id: @course.id).first
-    if log
-      log
+  def find_or_create_scul(course_id)
+    #Users second+ Enrollment - so wants a new scul
+    if current_user.enrolled_course_ids.include?(course_id)
+      scul = SubjectCourseUserLog.create!(user_id: self.user_id, session_guid: current_session_guid, subject_course_id: self.subject_course_id)
     else
-      SubjectCourseUserLog.create!(user_id: @user.id, session_guid: current_session_guid, subject_course_id: @course.id)
+      #Users first Enrollment for this course - so find or create new scul
+      scul = current_user.subject_course_user_logs.where(subject_course_id: self.subject_course_id).last
+      if scul
+        scul
+      else
+        scul = SubjectCourseUserLog.create!(user_id: self.user_id, session_guid: current_session_guid, subject_course_id: self.subject_course_id)
+      end
     end
+    # Must return Id of a SCUL
+    scul.id
   end
 
   def allowed_params
-    params.require(:enrollment).permit(:subject_course_id, :student_number, :exam_date, :registered)
+    params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id)
   end
 
-  def limited_params
-    params.require(:enrollment).permit(:subject_course_id, :registered)
+  def updatable_params
+    params.require(:enrollment).permit(:exam_date, :notifications, :expired)
   end
 
   def get_variables

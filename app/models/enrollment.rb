@@ -9,16 +9,17 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  active                     :boolean          default(FALSE)
-#  student_number             :string
 #  exam_body_id               :integer
 #  exam_date                  :date
-#  registered                 :boolean          default(FALSE)
+#  expired                    :boolean          default(FALSE)
+#  paused                     :boolean          default(FALSE)
+#  notifications              :boolean          default(TRUE)
 #
 
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active, :student_number, :exam_body_id, :exam_date, :registered
+  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active, :exam_body_id, :exam_date, :expired, :paused, :notifications
 
   # Constants
 
@@ -35,16 +36,25 @@ class Enrollment < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :exam_body_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :exam_date, presence: true
+
 
   # callbacks
   before_destroy :check_dependencies
-  before_validation :set_empty_strings_to_nil
-  #after_create :course_enrollment_intercom_event
+  after_create :create_expiration_worker
+  after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
   scope :all_in_order, -> { order(created_at: :desc) }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
-  scope :all_paused, -> { where(active: false) }
+  scope :all_expired, -> { where(expired: true) }
+  scope :all_not_expired, -> { where(expired: false) }
+  scope :all_paused, -> { where(paused: true) }
+  scope :all_un_paused, -> { where(paused: false) }
+  scope :all_for_notifications, -> { where(notifications: true) }
+  scope :all_not_for_notifications, -> { where(notifications: false) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   scope :all_completed, ->() {
@@ -55,11 +65,7 @@ class Enrollment < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
-  end
-
-  def set_empty_strings_to_nil
-    self.student_number = nil if self.student_number && self.student_number.empty?
+    false
   end
 
   def self.to_csv(options = {})
@@ -79,6 +85,10 @@ class Enrollment < ActiveRecord::Base
 
   def user_email
     self.user.email
+  end
+
+  def student_number
+    self.user.student_number
   end
 
   def date_of_birth
@@ -125,6 +135,9 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
+  def sibling_enrollments
+    self.user.enrollments.where(subject_course_id: self.subject_course_id).where.not(id: self.id)
+  end
 
   protected
 
@@ -135,11 +148,9 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  def course_enrollment_intercom_event
-    unless Rails.env.test?
-      #IntercomCourseEnrolledEventWorker.perform_async(self.try(:user_id), self.subject_course.name)
-      #IntercomExamSittingEventWorker.perform_async(self.try(:user_id), self.exam_date, self.exam_body.name)
-    end
+  def create_expiration_worker
+    EnrollmentExpirationEventWorker.perform_at(self.exam_date.to_datetime + 1.hour, self.id)
   end
+
 
 end

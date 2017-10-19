@@ -31,7 +31,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
-  has_one :enrollment
+  has_many :enrollments
 
 
   # validation

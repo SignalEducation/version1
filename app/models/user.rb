@@ -574,6 +574,10 @@ class User < ActiveRecord::Base
     visits
   end
 
+  def enrolled_course_ids
+    self.enrollments.map(&:subject_course_id)
+  end
+
   def create_on_discourse
     DiscourseCreateUserWorker.perform_at(24.hours.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end

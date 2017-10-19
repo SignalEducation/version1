@@ -8,7 +8,7 @@
         %h3
           ='To continue your studies please enrol.'
 
-      =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+      =form_for(@new_enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
         =f.hidden_field :subject_course_id, value: @course.id
         .row.l-margin-top.text-left
           .col-sm-12
@@ -27,7 +27,7 @@
         %br/
         .col-sm-12
           %p.p
-            ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help for your exam."
+            ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
 
 
         %br/

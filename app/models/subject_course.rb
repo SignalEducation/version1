@@ -202,6 +202,10 @@ class SubjectCourse < ActiveRecord::Base
     self.enrollments.map(&:user_id)
   end
 
+  def active_enrollment_user_ids
+    self.enrollments.all_active.map(&:user_id)
+  end
+
   def started_by_user_or_guid(user_id, session_guid)
     self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
   end
