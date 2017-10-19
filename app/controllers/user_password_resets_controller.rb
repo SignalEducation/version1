@@ -39,6 +39,9 @@ class UserPasswordResetsController < ApplicationController
         @user = User.find_by_password_reset_token(params[:id])
         flash[:error] = I18n.t('controllers.user_password_resets.update.flash.error')
         render :edit
+
+        #TODO need to add another if/else here. If @user can't be found then pw reset process needs to start again with new email submission and email with reset link. But currently could not work due to account being set to active after first part of reset process.
+
       end
     else
       @user = User.find_by_password_reset_token(params[:id])
