@@ -94,14 +94,12 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.subject_course.try(:cme_count) || 0
   end
 
-  def update_enrollment
-    if self.enrollment && !self.enrollment.active
-      self.enrollment.update_attributes(updated_at: Proc.new{Time.now}.call, active: true)
-    elsif self.enrollment && self.enrollment.active
-      self.enrollment.update_attribute(:updated_at, Proc.new{Time.now}.call)
-    else
+  def active_enrollment
+    self.enrollments.where(active: true).last
+  end
 
-    end
+  def update_enrollment
+    self.active_enrollment.update_attributes(updated_at: Proc.new{Time.now}.call) if self.active_enrollment && !self.active_enrollment.expired
   end
 
   def last_element

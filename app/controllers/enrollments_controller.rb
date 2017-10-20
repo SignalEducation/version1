@@ -86,14 +86,14 @@ class EnrollmentsController < ApplicationController
   def find_or_create_scul(course_id)
     #Users second+ Enrollment - so wants a new scul
     if current_user.enrolled_course_ids.include?(course_id)
-      scul = SubjectCourseUserLog.create!(user_id: self.user_id, session_guid: current_session_guid, subject_course_id: self.subject_course_id)
+      scul = SubjectCourseUserLog.create!(user_id: current_user.id, session_guid: current_session_guid, subject_course_id: course_id)
     else
       #Users first Enrollment for this course - so find or create new scul
-      scul = current_user.subject_course_user_logs.where(subject_course_id: self.subject_course_id).last
+      scul = current_user.subject_course_user_logs.where(subject_course_id: course_id).last
       if scul
         scul
       else
-        scul = SubjectCourseUserLog.create!(user_id: self.user_id, session_guid: current_session_guid, subject_course_id: self.subject_course_id)
+        scul = SubjectCourseUserLog.create!(user_id: current_user.id, session_guid: current_session_guid, subject_course_id: course_id)
       end
     end
     # Must return Id of a SCUL

@@ -19,7 +19,7 @@
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active, :exam_body_id, :exam_date, :expired, :paused, :notifications
+  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active, :exam_body_id, :exam_date, :expired, :notifications
 
   # Constants
 
@@ -43,7 +43,7 @@ class Enrollment < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_expiration_worker
+  after_create :create_expiration_worker, :deactivate_siblings
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -148,9 +148,16 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  def create_expiration_worker
-    EnrollmentExpirationEventWorker.perform_at(self.exam_date.to_datetime + 1.hour, self.id)
+  def deactivate_siblings
+    if self.sibling_enrollments.any?
+      self.sibling_enrollments.each do |enrollment|
+        enrollment.update_attributes(active: false, notifications: false)
+      end
+    end
   end
 
+  def create_expiration_worker
+    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 1.hour, self.id)
+  end
 
 end

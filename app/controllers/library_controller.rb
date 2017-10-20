@@ -31,11 +31,11 @@ class LibraryController < ApplicationController
       @test_course_modules = @course_modules.all_test.all_in_order
       @revision_course_modules = @course_modules.all_revision.all_in_order
 
+      ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
 
       mock_exam_ids = @course.mock_exams.map(&:id)
-      ip_country = IpAddress.get_country(request.remote_ip)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
 
@@ -57,7 +57,7 @@ class LibraryController < ApplicationController
 
 
         #Enrollment(s) and SubjectCourseUserLog
-        if current_user.enrolled_course_ids.include?(@course.id)
+        if current_user.enrolled_course_ids.include?(@course.id) && @active_enrollment
           @active_enrollment = Enrollment.where(user_id: current_user.id, subject_course_id: @course.id, active: true).last
 
           if @active_enrollment.expired
