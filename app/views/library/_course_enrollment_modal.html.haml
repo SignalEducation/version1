@@ -37,7 +37,7 @@
                           %i.fa.fa-check
                         ='Keep progress from previous Enrolment'
 
-          .col-sm-12
+          .col-sm-12.l-margin-top
             %p.p
               ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
 
@@ -77,16 +77,6 @@
     }
   });
 
-  // Set the hidden field value if checkbox is selected
-  var scul_id = #{@active_enrollment.subject_course_user_log_id}
-  $('input[type="checkbox"]').on('change', function() {
-    if($('#use_old_log').prop('checked') == true) {
-      $("#hidden_scul_id").val(scul_id);
-    } else if($('#use_old_log').prop('checked') == false) {
-      $("#hidden_scul_id").val('nil');
-    }
-  });
-
 
   // JS to submit form when modal confirmation btn is clicked
   $(document).on('confirmation', '.remodal', function () {
@@ -102,3 +92,15 @@
       format: 'DD/MM/YYYY'
   });
 
+-if @active_enrollment && @active_enrollment.expired
+
+  :javascript
+    // Set the hidden field value if checkbox is selected
+    var scul_id = #{@active_enrollment.subject_course_user_log_id}
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#use_old_log').prop('checked') == true) {
+        $("#hidden_scul_id").val(scul_id);
+      } else if($('#use_old_log').prop('checked') == false) {
+        $("#hidden_scul_id").val('nil');
+      }
+    });

@@ -43,7 +43,7 @@ class EnrollmentsController < ApplicationController
     if @enrollment.save
       send_welcome_email(current_user.id, @course.name)
       redirect_to library_special_link(@course)
-      flash[:success] = 'Thank you for your Enrolment'
+      flash[:success] = 'Thank you for your Enrolment Details'
     else
       flash[:error] = 'The data entered for the enrolment was not valid. Please try again!'
       redirect_to library_special_link(@course)
@@ -83,6 +83,7 @@ class EnrollmentsController < ApplicationController
 
   protected
 
+  #Only find and attach a SCUL if it's the first Enrollment
   def find_or_create_scul(course_id)
     #Users second+ Enrollment - so wants a new scul
     if current_user.enrolled_course_ids.include?(course_id)

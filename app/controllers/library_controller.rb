@@ -57,19 +57,25 @@ class LibraryController < ApplicationController
 
 
         #Enrollment(s) and SubjectCourseUserLog
-        if current_user.enrolled_course_ids.include?(@course.id) && @active_enrollment
+        if current_user.enrolled_course_ids.include?(@course.id)
           @active_enrollment = Enrollment.where(user_id: current_user.id, subject_course_id: @course.id, active: true).last
 
-          if @active_enrollment.expired
-            #Active Enrollment is expired - new enrollment needed
-            get_enrollment_form_variables(@course.id, @course.exam_body_id)
+          if @active_enrollment
+            if @active_enrollment.expired
+              #Active Enrollment is expired - new enrollment needed
+              get_enrollment_form_variables(@course.id, @course.exam_body_id)
+            else
+              #Active Enrollment is Not Expired - no action required
+              @subject_course_user_log = @active_enrollment.subject_course_user_log
+              @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+              @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+              @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+              @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+            end
+
           else
-            #Active Enrollment is Not Expired - no action required
-            @subject_course_user_log = @active_enrollment.subject_course_user_log
-            @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-            @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-            @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-            @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+            # Enrollments found but all are active: false
+            get_enrollment_form_variables(@course.id, @course.exam_body_id)
           end
         else
           #No Enrollments

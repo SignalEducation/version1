@@ -54,7 +54,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score
   after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
-  after_create :check_for_enrollment_email_conditions, :create_lesson_intercom_event
+  after_create :create_lesson_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -166,9 +166,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def check_for_enrollment_email_conditions
+    #TODO Review this - must also factor in enrollment notifications boolean
     new_log_ids = []
     time = Proc.new{Time.now}.call
-    if self.student_exam_track && self.student_exam_track.subject_course_user_log && self.student_exam_track.subject_course_user_log.enrollment
+    if self.student_exam_track && self.student_exam_track.subject_course_user_log && self.student_exam_track.subject_course_user_log.active_enrollment
       scul = self.student_exam_track.subject_course_user_log
       scul.student_exam_tracks.each do |set|
         set.cme_user_logs.each do |log|
