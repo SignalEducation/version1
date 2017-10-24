@@ -81,15 +81,15 @@ Rails.application.configure do
   # email delivery through Mandrill
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address:              ENV['learnsignal_v2_server_email_smtp'],
+      address:              ENV['LEARNSIGNAL_V2_SERVER_EMAIL_SMTP'],
       port:                 587,
-      domain:               ENV['learnsignal_v3_server_email_domain'],
-      user_name:            ENV['learnsignal_v3_server_email_address'],
-      password:             ENV['learnsignal_v3_server_email_password'],
+      domain:               ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'],
+      user_name:            ENV['LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS'],
+      password:             ENV['LEARNSIGNAL_V3_SERVER_EMAIL_PASSWORD'],
       authentication:       :plain,
       enable_starttls_auto: true
   }
-  config.action_mailer.default_url_options = { host: ENV['learnsignal_v3_server_email_domain'] }
+  config.action_mailer.default_url_options = { host: ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'] }
 
   # see the HerokuDevCenter Article
   # https://devcenter.heroku.com/articles/paperclip-s3
@@ -108,7 +108,7 @@ Rails.application.configure do
 
   config.exceptions_app = self.routes
   config.action_dispatch.trusted_proxies = ActionDispatch::RemoteIp::TRUSTED_PROXIES +
-                                           ENV['aws_load_balancers'].split(',').map { |alp| IPAddr.new(alp) }
+                                           ENV['AWS_LOAD_BALANCERS'].split(',').map { |alp| IPAddr.new(alp) }
 end
 
 # Required by LogEntries

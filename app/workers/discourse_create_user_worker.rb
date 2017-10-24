@@ -10,7 +10,7 @@ class DiscourseCreateUserWorker
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
     end
 
-    payload = { email: email, api_key: ENV['learnsignal_discourse_api_key'], api_username: ENV['learnsignal_discourse_api_username'] }
+    payload = { email: email, api_key: ENV['LEARNSIGNAL_DISCOURSE_API_KEY'], api_username: ENV['LEARNSIGNAL_DISCOURSE_API_USERNAME'] }
 
     response = conn.post '/invites', payload
 

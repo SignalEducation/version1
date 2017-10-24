@@ -117,7 +117,7 @@ class MandrillClient
   private
 
   def send_template(template_slug, msg)
-    @mandrill ||= Mandrill::API.new ENV['learnsignal_mandrill_api_key']
+    @mandrill ||= Mandrill::API.new ENV['LEARNSIGNAL_MANDRILL_API_KEY']
     @mandrill.messages.send_template template_slug, nil, msg, false, nil, nil
   end
 

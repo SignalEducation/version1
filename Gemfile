@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.2'
+ruby '2.2.8'
 gem 'rails', '4.2.1'
 
 # Core gems - common to all environments
@@ -21,7 +21,6 @@ gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
 gem 'discourse_api'
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.9.2'
-gem 'figaro' # management of ENV vars
 gem 'geocoder', '~> 1.3', '>= 1.3.7'#  a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails', '~> 0.2.27' # communicate with Intercom.io
@@ -43,6 +42,7 @@ gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
 gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'rack-attack'
+gem 'redis-rails' #use redis from AWS Elasticache service
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'remodal-rails'
 gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
@@ -142,3 +142,13 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+require "erb"
+require "yaml"
+
+local_env_file = File.join(File.dirname(__FILE__), "config/local_env.yml")
+if File.exist?(local_env_file)
+  YAML.load(File.open(local_env_file)).each do |key, value|
+    ENV[key.to_s] = value
+  end
+end
