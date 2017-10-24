@@ -1,12 +1,3 @@
-GIT
-  remote: git@github.com:JamesMacRedmond/stripe-ruby-mock.git
-  revision: 8b99d86a606fe06b8c98dd00e55e00c2636250ed
-  specs:
-    stripe-ruby-mock (2.4.0)
-      dante (>= 0.2.0)
-      multi_json (~> 1.0)
-      stripe (~> 2.8)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -144,7 +135,6 @@ GEM
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
     daemons (1.2.3)
-    dante (0.2.0)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
@@ -567,7 +557,6 @@ DEPENDENCIES
   sinatra
   spring
   stripe (= 2.8.0)
-  stripe-ruby-mock!
   summernote-rails
   therubyracer
   thin
