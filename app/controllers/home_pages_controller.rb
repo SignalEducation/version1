@@ -197,9 +197,9 @@ class HomePagesController < ApplicationController
   end
 
   #def get_discourse_topics(topic_ids)
-  #  @client = DiscourseApi::Client.new(ENV['learnsignal_discourse_api_host'])
-  #  @client.api_key = ENV['learnsignal_discourse_api_key']
-  #  @client.api_username = ENV['learnsignal_discourse_api_username']
+  #  @client = DiscourseApi::Client.new(ENV['LEARNSIGNAL_DISCOURSE_API_HOST'])
+  #  @client.api_key = ENV['LEARNSIGNAL_DISCOURSE_API_KEY']
+  #  @client.api_username = ENV['LEARNSIGNAL_DISCOURSE_API_USERNAME']
   #  topics = []
   #  topic_ids.each do |topic_id|
   #    topic = @client.topic(topic_id)

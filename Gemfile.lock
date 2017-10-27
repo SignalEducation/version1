@@ -1,12 +1,3 @@
-GIT
-  remote: git@github.com:JamesMacRedmond/stripe-ruby-mock.git
-  revision: 8b99d86a606fe06b8c98dd00e55e00c2636250ed
-  specs:
-    stripe-ruby-mock (2.4.0)
-      dante (>= 0.2.0)
-      multi_json (~> 1.0)
-      stripe (~> 2.8)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -144,7 +135,6 @@ GEM
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
     daemons (1.2.3)
-    dante (0.2.0)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
@@ -172,8 +162,6 @@ GEM
     ffi-compiler (0.1.3)
       ffi (>= 1.0.0)
       rake
-    figaro (1.1.1)
-      thor (~> 0.14)
     font-awesome-rails (4.5.0.0)
       railties (>= 3.2, < 5.0)
     formatador (0.2.5)
@@ -345,6 +333,22 @@ GEM
     rdoc (4.2.1)
       json (~> 1.4)
     redis (3.2.2)
+    redis-actionpack (5.0.2)
+      actionpack (>= 4.0, < 6)
+      redis-rack (>= 1, < 3)
+      redis-store (>= 1.1.0, < 2)
+    redis-activesupport (5.0.4)
+      activesupport (>= 3, < 6)
+      redis-store (>= 1.3, < 2)
+    redis-rack (2.0.3)
+      rack (>= 1.5, < 3)
+      redis-store (>= 1.2, < 2)
+    redis-rails (5.0.2)
+      redis-actionpack (>= 5.0, < 6)
+      redis-activesupport (>= 5.0, < 6)
+      redis-store (>= 1.2, < 2)
+    redis-store (1.4.1)
+      redis (>= 2.2, < 5)
     ref (2.0.0)
     referer-parser (0.3.0)
     remodal-rails (1.1.1)
@@ -508,7 +512,6 @@ DEPENDENCIES
   execjs
   factory_girl_rails
   faraday (~> 0.9.2)
-  figaro
   font-awesome-rails
   geocoder (~> 1.3, >= 1.3.7)
   guard-rspec
@@ -539,6 +542,7 @@ DEPENDENCIES
   pry-stack_explorer
   rack-attack
   rails (= 4.2.1)
+  redis-rails
   remodal-rails
   remotipart
   rspec-rails
@@ -553,7 +557,6 @@ DEPENDENCIES
   sinatra
   spring
   stripe (= 2.8.0)
-  stripe-ruby-mock!
   summernote-rails
   therubyracer
   thin
@@ -566,3 +569,9 @@ DEPENDENCIES
   wistia-api
   zendesk_api
   zeroclipboard-rails
+
+RUBY VERSION
+   ruby 2.2.8p477
+
+BUNDLED WITH
+   1.16.0.pre.3

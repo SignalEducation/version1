@@ -172,5 +172,5 @@ def expect_delivery_to_from_and_subject_success(recipient_email, mailer_name, me
   expect(ActionMailer::Base.deliveries.count).to eq(1)
   expect(ActionMailer::Base.deliveries.first.to.first).to eq(recipient_email)
   expect(ActionMailer::Base.deliveries.first.subject).to eq(I18n.t("mailers.#{mailer_name}.#{method_name}.subject_line"))
-  expect(ActionMailer::Base.deliveries.first.from.first).to eq(ENV['learnsignal_v3_server_email_address'])
+  expect(ActionMailer::Base.deliveries.first.from.first).to eq(ENV['LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS'])
 end

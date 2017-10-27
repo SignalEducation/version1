@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_students, -> { where(user_group_id: UserGroup.default_student_user_group.id) }
-  scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['free_trial_limit_in_seconds'].to_i}") }
+  scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i}") }
 
   # class methods
   def self.all_admins
@@ -291,7 +291,7 @@ class User < ActiveRecord::Base
 
   def free_trial_minutes_valid?
     #If the Number of seconds watched is less than the allowed free trial time limit then permission is allowed
-    if self.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i
+    if self.trial_limit_in_seconds <= ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
       true
     else
       false
@@ -317,7 +317,7 @@ class User < ActiveRecord::Base
   end
 
   def minutes_left
-    free_trial_seconds = ENV['free_trial_limit_in_seconds'].to_i
+    free_trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
     seconds_left = free_trial_seconds - self.trial_limit_in_seconds
     minutes_left = (seconds_left/60)
   end
@@ -764,7 +764,7 @@ class User < ActiveRecord::Base
     if self.subscription_plan_category_id && self.subscription_plan_category.trial_period_in_days
       free_trial_days = self.subscription_plan_category.trial_period_in_days.to_i
     else
-      free_trial_days = ENV["free_trial_days"].to_i
+      free_trial_days = ENV["FREE_TRIAL_DAYS"].to_i
     end
     self.update_attributes(trial_limit_in_days: free_trial_days)
   end

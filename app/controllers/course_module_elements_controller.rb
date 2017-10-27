@@ -210,7 +210,7 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Post.new('/me/videos')
-      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
+      request['authorization'] = "Bearer #{ENV['LEARNSIGNAL_VIMEO_API_KEY']}"
       request.form_data = {'redirect_url' => url}
       response = session.request(request)
       ticket = OpenStruct.new(JSON.parse(response.body))
@@ -226,7 +226,7 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Patch.new("/videos/#{video_uri}")
-      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
+      request['authorization'] = "Bearer #{ENV['LEARNSIGNAL_VIMEO_API_KEY']}"
       request.form_data = {'name' => cme_name}
       response = session.request(request)
       return response
@@ -241,7 +241,7 @@ class CourseModuleElementsController < ApplicationController
 
     http.start do |session|
       request = Net::HTTP::Delete.new("/videos/#{video_guid}")
-      request['authorization'] = "Bearer #{ENV['learnsignal_vimeo_api_key']}"
+      request['authorization'] = "Bearer #{ENV['LEARNSIGNAL_VIMEO_API_KEY']}"
       response = session.request(request)
       return response
     end

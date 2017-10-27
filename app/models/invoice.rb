@@ -51,7 +51,7 @@ class Invoice < ActiveRecord::Base
                   :original_stripe_data
 
   # Constants
-  STRIPE_LIVE_MODE = (ENV['learnsignal_v3_stripe_live_mode'] == 'live')
+  STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
 
   # relationships
   belongs_to :currency
