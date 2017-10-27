@@ -186,7 +186,7 @@
     .container
       %h1.title1 Only pay for the access you need.
       %h2.subtitle2
-        ="After your #{(ENV['free_trial_limit_in_seconds'].to_i/60).to_s} minutes of free access, you can pick which plan suits you best."
+        ="After your #{(ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i/60).to_s} minutes of free access, you can pick which plan suits you best."
       %ul.plans.clearfix
         -@subscription_plans.each do |plan|
           %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
