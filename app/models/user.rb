@@ -266,6 +266,8 @@ class User < ActiveRecord::Base
       'Expired Free Trial'
     elsif self.active_subscription
       self.user_subscription_status
+    else
+      'Unknown'
     end
   end
 
@@ -752,6 +754,46 @@ class User < ActiveRecord::Base
   end
 
 
+  def update_from_stripe
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    stripe_subscriptions = stripe_customer.subscriptions[:data]
+    if stripe_subscriptions && stripe_subscriptions.count == 1
+      stripe_subscription = stripe_customer.subscriptions[:data].first
+      if self.active_subscription && stripe_subscription.id == self.active_subscription.stripe_guid
+        self.active_subscription.update_from_stripe
+      else
+        create_subscription_from_stripe(stripe_subscription, stripe_customer)
+      end
+    end
+  end
+
+
+  def create_subscription_from_stripe(stripe_subscription_object, stripe_customer_object)
+    subscription_plan = SubscriptionPlan.where(stripe_guid: stripe_subscription_object.plan.id).first
+    if subscription_plan
+      subscription = Subscription.new(
+          user_id: self.id,
+          subscription_plan_id: subscription_plan.id,
+          complimentary: false,
+          active: true,
+          livemode: stripe_subscription_object.plan.livemode,
+          current_status: stripe_subscription_object.status,
+      )
+      subscription.stripe_guid = stripe_subscription_object.id
+      subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)
+      subscription.stripe_customer_id = stripe_customer_object.id
+      subscription.terms_and_conditions = true
+      subscription.stripe_customer_data = stripe_customer_object.to_hash.deep_dup
+      subscription_saved = subscription.save(validate: false)
+      #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
+
+      if subscription_saved
+        trial_ended_date = self.free_trial_ended_at ? self.free_trial_ended_at : Proc.new{Time.now}.call
+        self.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
+      end
+    end
+
+  end
 
   protected
 
