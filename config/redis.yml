@@ -1,0 +1,9 @@
+development:
+  host: <%= ENV["REDIS_DEVELOPMENT_HOST"] %>
+  port: <%= ENV["REDIS_DEVELOPMENT_HOST_PORT"] %>
+test:
+  host: <%= ENV["REDIS_TEST_HOST"] %>
+  port: <%= ENV["REDIS_TEST_HOST_PORT"] %>
+production:
+  host: <%= ENV["REDIS_PRODUCTION_HOST"] %>
+  port: <%= ENV["REDIS_PRODUCTION_HOST_PORT"] %>

@@ -5,8 +5,8 @@ class IntercomCreateMessageWorker
 
   def perform(user_id, email, full_name, message, type)
     intercom = Intercom::Client.new(
-        app_id: ENV['intercom_app_id'],
-        api_key: ENV['intercom_api_key']
+        app_id: ENV['INTERCOM_APP_ID'],
+        api_key: ENV['INTERCOM_API_KEY']
     )
 
     if user_id

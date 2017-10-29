@@ -72,7 +72,7 @@
     }
   };
 
-  var stripe = Stripe('#{ENV['learnsignal_v3_stripe_public_key']}');
+  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
   var elements = stripe.elements();
 
   var card = elements.create('card', {hidePostalCode: true, style: style});
@@ -86,9 +86,6 @@
 
     // Submit the form
     form.submit();
-    //Replace with spinning JS
-    $('#card_submit').hide();
-    $(".sk-circle").show();
   }
 
   function createToken() {
@@ -108,5 +105,8 @@
   var form = document.getElementById('reactivate-form');
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    //Replace submit button with spinning JS
+    $('#card_submit').hide();
+    $(".sk-circle").show();
     createToken();
   });

@@ -332,7 +332,7 @@ class ApplicationController < ActionController::Base
   helper_method :tag_manager_data_layer
 
   def setup_mcapi
-    @mc = Mailchimp::API.new(ENV['learnsignal_mailchimp_api_key'])
+    @mc = Mailchimp::API.new(ENV['LEARNSIGNAL_MAILCHIMP_API_KEY'])
   end
 
   def verify_coupon(coupon, currency_id)

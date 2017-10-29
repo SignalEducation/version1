@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_students, -> { where(user_group_id: UserGroup.default_student_user_group.id) }
-  scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['free_trial_limit_in_seconds'].to_i}") }
+  scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i}") }
 
   # class methods
   def self.all_admins
@@ -266,6 +266,8 @@ class User < ActiveRecord::Base
       'Expired Free Trial'
     elsif self.active_subscription
       self.user_subscription_status
+    else
+      'Unknown'
     end
   end
 
@@ -291,7 +293,7 @@ class User < ActiveRecord::Base
 
   def free_trial_minutes_valid?
     #If the Number of seconds watched is less than the allowed free trial time limit then permission is allowed
-    if self.trial_limit_in_seconds <= ENV['free_trial_limit_in_seconds'].to_i
+    if self.trial_limit_in_seconds <= ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
       true
     else
       false
@@ -317,7 +319,7 @@ class User < ActiveRecord::Base
   end
 
   def minutes_left
-    free_trial_seconds = ENV['free_trial_limit_in_seconds'].to_i
+    free_trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
     seconds_left = free_trial_seconds - self.trial_limit_in_seconds
     minutes_left = (seconds_left/60)
   end
@@ -756,6 +758,46 @@ class User < ActiveRecord::Base
   end
 
 
+  def update_from_stripe
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    stripe_subscriptions = stripe_customer.subscriptions[:data]
+    if stripe_subscriptions && stripe_subscriptions.count == 1
+      stripe_subscription = stripe_customer.subscriptions[:data].first
+      if self.active_subscription && stripe_subscription.id == self.active_subscription.stripe_guid
+        self.active_subscription.update_from_stripe
+      else
+        create_subscription_from_stripe(stripe_subscription, stripe_customer)
+      end
+    end
+  end
+
+
+  def create_subscription_from_stripe(stripe_subscription_object, stripe_customer_object)
+    subscription_plan = SubscriptionPlan.where(stripe_guid: stripe_subscription_object.plan.id).first
+    if subscription_plan
+      subscription = Subscription.new(
+          user_id: self.id,
+          subscription_plan_id: subscription_plan.id,
+          complimentary: false,
+          active: true,
+          livemode: stripe_subscription_object.plan.livemode,
+          current_status: stripe_subscription_object.status,
+      )
+      subscription.stripe_guid = stripe_subscription_object.id
+      subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)
+      subscription.stripe_customer_id = stripe_customer_object.id
+      subscription.terms_and_conditions = true
+      subscription.stripe_customer_data = stripe_customer_object.to_hash.deep_dup
+      subscription_saved = subscription.save(validate: false)
+      #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
+
+      if subscription_saved
+        trial_ended_date = self.free_trial_ended_at ? self.free_trial_ended_at : Proc.new{Time.now}.call
+        self.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
+      end
+    end
+
+  end
 
   protected
 
@@ -768,7 +810,7 @@ class User < ActiveRecord::Base
     if self.subscription_plan_category_id && self.subscription_plan_category.trial_period_in_days
       free_trial_days = self.subscription_plan_category.trial_period_in_days.to_i
     else
-      free_trial_days = ENV["free_trial_days"].to_i
+      free_trial_days = ENV["FREE_TRIAL_DAYS"].to_i
     end
     self.update_attributes(trial_limit_in_days: free_trial_days)
   end

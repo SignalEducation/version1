@@ -49,8 +49,8 @@ Rails.application.configure do
           address:              'smtp.gmail.com',
           port:                 587,
           #domain:              'learnsignal.com',
-          user_name:            ENV['learnsignal_v3_server_email_address'],
-          password:             ENV['learnsignal_v3_server_email_password'],
+          user_name:            ENV['LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS'],
+          password:             ENV['LEARNSIGNAL_V3_SERVER_EMAIL_PASSWORD'],
           authentication:       'plain',
           enable_starttls_auto: true
   }

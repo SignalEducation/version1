@@ -137,7 +137,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     user = self.user
     if user.individual_student? && user.valid_free_member?
       new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
-      if new_limit > ENV['free_trial_limit_in_seconds'].to_i
+      if new_limit > ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
         user.update_attributes(trial_limit_in_seconds: new_limit, free_trial_ended_at: Proc.new{Time.now }.call)
       else
         user.update_attribute(:trial_limit_in_seconds, new_limit)

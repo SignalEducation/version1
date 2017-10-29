@@ -11,9 +11,9 @@ class EnrollmentEmailWorker
     @enrollment = @subject_course_user_log.enrollment
 
     if @subject_course_user_log.last_element.next_element.class == CourseModuleElement
-      @url = Rails.application.routes.url_helpers.course_url(subject_course_name_url: @course.name_url, course_module_name_url: @subject_course_user_log.last_element.course_module.name_url, course_module_element_name_url: @subject_course_user_log.last_element.next_element.name_url, host: ENV['learnsignal_v3_server_email_domain'])
+      @url = Rails.application.routes.url_helpers.course_url(subject_course_name_url: @course.name_url, course_module_name_url: @subject_course_user_log.last_element.course_module.name_url, course_module_element_name_url: @subject_course_user_log.last_element.next_element.name_url, host: ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'])
     else
-      @url = Rails.application.routes.url_helpers.library_course_url(group_name_url: @course.parent.name_url, subject_course_name_url: @course.name_url, host: ENV['learnsignal_v3_server_email_domain'])
+      @url = Rails.application.routes.url_helpers.library_course_url(group_name_url: @course.parent.name_url, subject_course_name_url: @course.name_url, host: ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'])
     end
 
 

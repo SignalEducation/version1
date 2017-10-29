@@ -27,7 +27,7 @@
 
 :javascript
 
-  Stripe.setPublishableKey('#{ENV['learnsignal_v3_stripe_public_key']}');
+  Stripe.setPublishableKey('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
 
   function luhnCheckCardNumber(cardNo) {
     var c = cardNo.replace(/[^\d]/g, '');
