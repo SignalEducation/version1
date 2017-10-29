@@ -103,9 +103,6 @@
 
     // Submit the form
     form.submit();
-    //Replace with spinning JS
-    $('#card_submit').hide();
-    $(".sk-circle").show();
   }
 
   function createToken() {
@@ -125,5 +122,8 @@
   var form = document.getElementById('upgrade-form');
   form.addEventListener('submit', function(e) {
     e.preventDefault();
+    //Replace submit button with spinning JS
+    $('#card_submit').hide();
+    $(".sk-circle").show();
     createToken();
   });
