@@ -20,6 +20,8 @@
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
 #  subject_course_id          :integer
+#  student_exam_track_id      :integer
+#  subject_course_user_log_id :integer
 #
 
 FactoryGirl.define do

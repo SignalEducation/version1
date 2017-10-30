@@ -32,6 +32,8 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
   has_many :enrollments
+  has_many :student_exam_tracks
+  has_many :course_module_element_user_logs
 
 
   # validation
@@ -103,6 +105,9 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def last_element
+    ###
+    ###
+    ###
     cme = CourseModuleElement.where(id: self.latest_course_module_element_id).first
     back_up_cme = self.subject_course.first_active_cme
     if cme
@@ -125,11 +130,11 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.save
   end
 
-  def student_exam_tracks
+  def old_sets
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
 
-  def course_module_element_user_logs
+  def old_cmeuls
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
 

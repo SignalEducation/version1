@@ -20,6 +20,8 @@
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
 #  subject_course_id          :integer
+#  student_exam_track_id      :integer
+#  subject_course_user_log_id :integer
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -33,25 +35,30 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :is_video, :is_quiz, :course_module_id,
                   :quiz_attempts_attributes, :seconds_watched,
                   :count_of_questions_taken, :count_of_questions_correct,
-                  :subject_course_id
+                  :subject_course_id, :student_exam_track_id,
+                  :subject_course_user_log_id
 
   # Constants
 
   # relationships
-  belongs_to :course_module_element
-  belongs_to :course_module
+  belongs_to :subject_course_user_log
+  belongs_to :student_exam_track
   belongs_to :subject_course
+  belongs_to :course_module
+  belongs_to :course_module_element
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   belongs_to :user
   accepts_nested_attributes_for :quiz_attempts
 
   # validation
   validates :session_guid, presence: true, length: {maximum: 255}
+  validates :student_exam_track_id, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_user_log_id, presence: true, numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
   # callbacks
-  before_create :set_latest_attempt, :set_booleans
+  before_create :set_latest_attempt, :set_booleans, :find_or_create_parent
   after_create :calculate_score
   after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
   after_create :create_lesson_intercom_event
@@ -111,7 +118,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
-  def student_exam_track
+  def old_set
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id).first
   end
 
@@ -122,11 +129,23 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
       percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
       passed = percentage_score >= course_pass_rate ? true : false
-      self.update_attributes(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count,quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
+      self.update_attributes(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
     end
   end
 
   def create_or_update_student_exam_track
+    set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
+    set.subject_course_id ||= self.course_module.subject_course.id
+    set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+    set.recalculate_completeness # Includes a save!
+  end
+
+  def find_or_create_parent
+    if self.subject_course_user_log_id
+      
+    else
+
+    end
     set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
     set.subject_course_id ||= self.course_module.subject_course.id
     set.latest_course_module_element_id = self.course_module_element_id if self.element_completed

@@ -15,6 +15,7 @@ class CoursesController < ApplicationController
       if @course_module_element.is_quiz
         set_up_quiz
       elsif @course_module_element.is_video && !@course_module_element.course_module_element_video.vimeo_guid
+        #TODO Remove this once all Wistia videos are gone
         @video_cme_user_log = CourseModuleElementUserLog.create!(
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
@@ -44,6 +45,7 @@ class CoursesController < ApplicationController
       @course_module_element = @course_module_element_user_log.course_module_element
       @course_module = @course_module_element_user_log.course_module
       @course_module_element_user_log.subject_course_id = @course_module.subject_course_id
+      @course_module_element_user_log.subject_course_user_log_id = @subject_course_user_log.try(:id)
       @results = true
       if @course_module_element_user_log.save
         pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
@@ -102,7 +104,8 @@ class CoursesController < ApplicationController
               is_video: true,
               is_quiz: false,
               course_module_id: course_module_element.course_module_id,
-              subject_course_id: course_module_element.course_module.subject_course_id
+              subject_course_id: course_module_element.course_module.subject_course_id,
+              subject_course_user_log_id: @subject_course_user_log.try(:id)
           )
         end
         data = {video_log_id: @video_cme_user_log.id}
@@ -118,6 +121,7 @@ class CoursesController < ApplicationController
   def allowed_params
     params.require(:course_module_element_user_log).permit(
             :subject_course_id,
+            :subject_course_user_log_id,
             :course_module_id,
             :course_module_element_id,
             :user_id,
@@ -138,6 +142,7 @@ class CoursesController < ApplicationController
             session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,
             subject_course_id: @course_module_element.course_module.subject_course_id,
+            subject_course_user_log_id: @subject_course_user_log.try(:id),
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
             is_video: false,
@@ -166,7 +171,17 @@ class CoursesController < ApplicationController
 
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    unless @course && current_user && current_user.permission_to_see_content(@course)
+
+    if @course && current_user && current_user.permission_to_see_content(@course)
+      ## Continue to load the Video or Quiz ##
+      @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id)
+      if @active_enrollment
+        @subject_course_user_log = @active_enrollment.subject_course_user_log_id
+      else
+        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
+      end
+
+    else
       if current_user.expired_free_member?
         flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue'
         redirect_to user_new_subscription_url(current_user.id)
@@ -178,9 +193,6 @@ class CoursesController < ApplicationController
         redirect_to root_url
       end
     end
-
-    ## Continue to load the Video or Quiz ##
-
   end
 
 end

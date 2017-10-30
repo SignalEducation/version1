@@ -17,6 +17,7 @@
 #  count_of_questions_correct      :integer
 #  count_of_quizzes_taken          :integer
 #  count_of_videos_taken           :integer
+#  subject_course_user_log_id      :integer
 #
 
 require 'rails_helper'

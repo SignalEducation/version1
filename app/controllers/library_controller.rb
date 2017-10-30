@@ -42,14 +42,6 @@ class LibraryController < ApplicationController
 
       if current_user
 
-        #Generate @next_element variable for Resume button
-        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
-        users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
-        user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-        latest_set = user_course_sets.first
-        @latest_element_id = latest_set.try(:latest_course_module_element_id)
-        @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-
         if current_user.permission_to_see_content(@course)
           @subject_course_resources = @course.subject_course_resources
           @form_type = "Course Tutor Question. Course: #{@course.name}"
@@ -61,26 +53,35 @@ class LibraryController < ApplicationController
           @active_enrollment = Enrollment.where(user_id: current_user.id, subject_course_id: @course.id, active: true).last
 
           if @active_enrollment
+            @subject_course_user_log = @active_enrollment.subject_course_user_log
+
             if @active_enrollment.expired
               #Active Enrollment is expired - new enrollment needed
               get_enrollment_form_variables(@course.id, @course.exam_body_id)
             else
               #Active Enrollment is Not Expired - no action required
-              @subject_course_user_log = @active_enrollment.subject_course_user_log
+
               @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
               @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
               @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
               @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
             end
 
+            #Generate @next_element variable for Resume button
+            users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
+            user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
+            latest_set = user_course_sets.first
+            @latest_element_id = latest_set.try(:latest_course_module_element_id)
+            @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+
           else
             # Enrollments found but all are active: false
             get_enrollment_form_variables(@course.id, @course.exam_body_id)
           end
         else
-          #No Enrollments
+          #No Enrollments - make form variable and try find a SCUL
           get_enrollment_form_variables(@course.id, @course.exam_body_id)
-
+          @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
         end
       end
 
