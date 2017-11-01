@@ -113,12 +113,6 @@ class DashboardController < ApplicationController
     @non_enrollment_log_ids = log_ids - enrollment_ids
     @non_enrollment_logs = SubjectCourseUserLog.includes(subject_course: :group).where(id: @non_enrollment_log_ids)
     @acca_group = Group.all_active.all_in_order.first
-    @cfa_group = Group.all_in_order.where(name_url: 'cfa-revision').first
-    if @cfa_group
-      @cfa_courses = @cfa_group.subject_courses.all_active
-      cfa_course_ids = @cfa_courses.map(&:id)
-      @cfa_logs = @logs.where(subject_course_id: cfa_course_ids)
-    end
   end
 
   def tutor
