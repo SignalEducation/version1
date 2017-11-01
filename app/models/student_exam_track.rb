@@ -173,7 +173,7 @@ class StudentExamTrack < ActiveRecord::Base
 
       raise e
     end
-    ## TODO See Sidekiq Github wiki FAQ may be race condition issue ##
+    self
   end
 
   def subject_course_user_log

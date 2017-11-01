@@ -52,13 +52,13 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # validation
   validates :session_guid, presence: true, length: {maximum: 255}
-  validates :student_exam_track_id, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :student_exam_track_id, allow_nil: true, numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, presence: true, numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
   # callbacks
-  before_create :set_latest_attempt, :set_booleans, :find_or_create_parent
+  before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score
   after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
   after_create :create_lesson_intercom_event
@@ -134,37 +134,18 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_or_update_student_exam_track
-    set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-    set.subject_course_id ||= self.course_module.subject_course.id
-    set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    set.recalculate_completeness # Includes a save!
-  end
-
-  def find_or_create_parent(scul_id, cm_id)
-    binding.pry
-    scul = SubjectCourseUserLog.where(id: scul_id).first if scul_id
-
-    if scul
-      existing_set = scul.student_exam_tracks.where(course_module_id: cm_id).last
-      if existing_set
-        #Do nothing the SET will be updated after this saves!
-
-      else
-        #Create SET & Update the SCUL
-        set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-        set.subject_course_id ||= self.course_module.subject_course.id
-        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-        set.recalculate_completeness # Includes a save!
-
-      end
+    if self.student_exam_track
+      #Update SET record
+      set = self.student_exam_track
+      set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+      set.recalculate_completeness # Includes a save!
     else
-      #create set and scul
-
+      #Create SET and assign it id to this record
+      set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
+      set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+      saved_set = set.recalculate_completeness # Includes a save!
+      self.update_column(:student_exam_track_id, saved_set.id)
     end
-    set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
-    set.subject_course_id ||= self.course_module.subject_course.id
-    set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    set.recalculate_completeness # Includes a save!
   end
 
   def add_to_user_trial_limit
@@ -172,9 +153,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     if user.individual_student? && user.valid_free_member?
       new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
       if new_limit > ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        user.update_attributes(trial_limit_in_seconds: new_limit, free_trial_ended_at: Proc.new{Time.now }.call)
+        user.update_columns(trial_limit_in_seconds: new_limit, free_trial_ended_at: Proc.new{Time.now }.call)
       else
-        user.update_attribute(:trial_limit_in_seconds, new_limit)
+        user.update_column(:trial_limit_in_seconds, new_limit)
       end
     end
   end
