@@ -32,13 +32,16 @@ class SubscriptionsController < ApplicationController
     @top_margin = false
     @countries = Country.all_in_order
     @user = User.where(id: params[:user_id]).first
-    @user.subscriptions.build
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : @user.country
-    @currency_id = @country.currency_id
-    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
-
-    IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name) unless Rails.env.test?
+    if current_user.id == @user.id
+      @user.subscriptions.build
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : @user.country
+      @currency_id = @country.currency_id
+      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+      IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name) unless Rails.env.test?
+    else
+      redirect_to root_url
+    end
   end
 
   def create_subscription
@@ -47,7 +50,7 @@ class SubscriptionsController < ApplicationController
     subscription_params = params[:user][:subscriptions_attributes]["0"]
     subscription_plan = SubscriptionPlan.find(subscription_params["subscription_plan_id"].to_i)
 
-    if user && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] && subscription_params["terms_and_conditions"] == 'true'
+    if user && user.id == current_user.id && subscription_params && subscription_plan && subscription_params["terms_and_conditions"] && subscription_params["terms_and_conditions"] == 'true'
 
       # Coupon Code Param Check
       if params["hidden_coupon_code"] && params["hidden_coupon_code"].present?
