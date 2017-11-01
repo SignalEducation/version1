@@ -14,11 +14,11 @@
             %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.subscriptions')
 
-          -if @subscription_payment_cards.any?
+          -if @user.individual_student? && @subscription_payment_cards.any?
             %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.payments')
 
-          -if @valid_order.any?
+          -if @user.individual_student? && @valid_order.any?
             %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.users.show.tabs.orders')
 
