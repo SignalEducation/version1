@@ -140,10 +140,25 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     set.recalculate_completeness # Includes a save!
   end
 
-  def find_or_create_parent
-    if self.subject_course_user_log_id
-      
+  def find_or_create_parent(scul_id, cm_id)
+    binding.pry
+    scul = SubjectCourseUserLog.where(id: scul_id).first if scul_id
+
+    if scul
+      existing_set = scul.student_exam_tracks.where(course_module_id: cm_id).last
+      if existing_set
+        #Do nothing the SET will be updated after this saves!
+
+      else
+        #Create SET & Update the SCUL
+        set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)
+        set.subject_course_id ||= self.course_module.subject_course.id
+        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+        set.recalculate_completeness # Includes a save!
+
+      end
     else
+      #create set and scul
 
     end
     set = self.student_exam_track || StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id)

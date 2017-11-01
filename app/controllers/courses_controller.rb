@@ -174,7 +174,7 @@ class CoursesController < ApplicationController
 
     if @course && current_user && current_user.permission_to_see_content(@course)
       ## Continue to load the Video or Quiz ##
-      @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id)
+      @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id).last
       if @active_enrollment
         @subject_course_user_log = @active_enrollment.subject_course_user_log_id
       else

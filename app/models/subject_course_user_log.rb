@@ -130,6 +130,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.save
   end
 
+  def student_exam_track_course_module_ids
+    self.student_exam_tracks.map(&:course_module_id)
+  end
+
   def old_sets
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
