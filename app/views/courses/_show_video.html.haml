@@ -43,7 +43,7 @@
   :javascript
     var video_cme_id = #{@course_module_element.id};
     var course_log_id = #{@subject_course_user_log.id};
-    var exam_track_id = #{@student_exam_track.try(:id)};
+    var exam_track_id = "#{@student_exam_track.try(:id)}";
     var logId = '';
     var options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",

@@ -95,6 +95,13 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json {
         course_module_element = CourseModuleElement.find(params[:course][:cmeId])
+        param_id = params[:course][:set_id]
+        if param_id.empty?
+          student_exam_track_id = nil
+        else
+          student_exam_track_id = param_id
+        end
+
         if course_module_element
           @video_cme_user_log = CourseModuleElementUserLog.create!(
               course_module_element_id: course_module_element.id,
@@ -107,7 +114,7 @@ class CoursesController < ApplicationController
               course_module_id: course_module_element.course_module_id,
               subject_course_id: course_module_element.course_module.subject_course_id,
               subject_course_user_log_id: params[:course][:scul_id],
-              student_exam_track_id: params[:course][:set_id]
+              student_exam_track_id: student_exam_track_id
           )
         end
         data = {video_log_id: @video_cme_user_log.id}
@@ -181,7 +188,7 @@ class CoursesController < ApplicationController
 
       @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id).last
       @subject_course_user_log = @active_enrollment.subject_course_user_log
-      @student_exam_track = @subject_course_user_log.student_exam_tracks.where(id: @course_module.id).last
+      @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
 
     else
       if current_user.expired_free_member?
