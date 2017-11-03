@@ -377,7 +377,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_to_see_content(course)
-    if self.individual_student? && course.enrolled_user_ids.include?(self.id)
+    if self.individual_student? && course.active_enrollment_user_ids.include?(self.id)
       if course.active
         if self.valid_free_member?
           true
@@ -391,7 +391,7 @@ class User < ActiveRecord::Base
       else
         false
       end
-    elsif self.complimentary_user?
+    elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
       true
     else
       false

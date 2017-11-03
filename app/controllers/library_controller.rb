@@ -34,54 +34,36 @@ class LibraryController < ApplicationController
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-
       mock_exam_ids = @course.mock_exams.map(&:id)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
-
-
       if current_user
 
+        #Enrollment(s) and SubjectCourseUserLog
         if current_user.permission_to_see_content(@course)
           @subject_course_resources = @course.subject_course_resources
           @form_type = "Course Tutor Question. Course: #{@course.name}"
-        end
 
-
-        #Enrollment(s) and SubjectCourseUserLog
-        if current_user.enrolled_course_ids.include?(@course.id)
           @active_enrollment = Enrollment.where(user_id: current_user.id, subject_course_id: @course.id, active: true).last
+          @subject_course_user_log = @active_enrollment.subject_course_user_log
 
-          if @active_enrollment
-            @subject_course_user_log = @active_enrollment.subject_course_user_log
+          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+          @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+          @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
 
-            if @active_enrollment.expired
-              #Active Enrollment is expired - new enrollment needed
-              get_enrollment_form_variables(@course.id, @course.exam_body_id)
-            else
-              #Active Enrollment is Not Expired - no action required
-
-              @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-              @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-              @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-              @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
-            end
-
-            #Generate @next_element variable for Resume button
-            users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
-            user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-            latest_set = user_course_sets.first
-            @latest_element_id = latest_set.try(:latest_course_module_element_id)
-            @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-
-          else
-            # Enrollments found but all are active: false
+          if @active_enrollment.expired
+            #Active Enrollment is expired - new enrollment needed
             get_enrollment_form_variables(@course.id, @course.exam_body_id)
+          else
+            #Generate @next_element variable for Resume button
+            @latest_element_id = @subject_course_user_log.latest_course_module_element_id
+            @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
           end
+
         else
           #No Enrollments - make form variable and try find a SCUL
           get_enrollment_form_variables(@course.id, @course.exam_body_id)
-          @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
         end
       end
 

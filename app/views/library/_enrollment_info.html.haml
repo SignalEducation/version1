@@ -16,13 +16,18 @@
             .progress
               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
-        .col-sm-4.col-xs-12.text-center.resume-course
-          -if current_user && current_user.permission_to_see_content(@course)
-            -if @subject_course_user_log.student_exam_tracks.any?
-              =link_to 'Resume', course_special_link(@subject_course_user_log.last_element.next_element), class: 'btn btn-wide btn-cyan'
+        .col-sm-4.col-xs-12
+          .text-center.resume-course
+            -if current_user && current_user.permission_to_see_content(@course)
+              -if @subject_course_user_log.student_exam_tracks.any?
+                =link_to 'Resume', course_special_link(@next_element), class: 'btn btn-wide btn-cyan'
+              -else
+                =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn full-width btn-cyan resume'
             -else
-              =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn full-width btn-cyan resume'
-          -else
-            =link_to 'Continue', subscription_special_link(current_user.id), class: 'btn full-width btn-cyan'
+              =link_to 'Continue', subscription_special_link(current_user.id), class: 'btn full-width btn-cyan'
+
+          -unless @active_enrollment.expired
+            .edit-enrollment.l-margin-top
+              =link_to 'Edit Enrolment', edit_enrollment_url(@active_enrollment), class: 'btn btn-small btn-purple pull-right'
 
 
