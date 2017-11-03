@@ -52,6 +52,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
+  scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
 
 
   # class methods

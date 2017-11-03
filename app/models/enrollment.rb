@@ -51,6 +51,7 @@ class Enrollment < ActiveRecord::Base
   scope :all_in_order, -> { order(created_at: :desc) }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_expired, -> { where(expired: true) }
+  scope :all_valid, -> { where(active: true, expired: false, paused: false) }
   scope :all_not_expired, -> { where(expired: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :all_paused, -> { where(paused: true) }
@@ -68,6 +69,10 @@ class Enrollment < ActiveRecord::Base
   # instance methods
   def destroyable?
     false
+  end
+
+  def valid?
+    self.active && !self.expired && !self.paused
   end
 
   def self.to_csv(options = {})

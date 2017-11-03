@@ -15,18 +15,6 @@ class CronTasks
     end
   end
 
-  def self.pause_inactive_enrollments
-
-    all_enrollments = Enrollment.all_active
-
-    all_enrollments.each do |enrollment|
-      time_now = Proc.new { Time.now }.call
-      if enrollment.updated_at < time_now - 6.months
-        enrollment.update_attribute(:active, false)
-      end
-    end
-  end
-
   def self.create_course_progress_intercom_worker
 
     #all_enrollments = Enrollment.where('updated_at >= ?', 1.week.ago).all_active

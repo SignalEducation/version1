@@ -131,6 +131,10 @@ class StudentExamTrack < ActiveRecord::Base
     self.course_module_element_user_logs.all_completed.with_elements_active.map(&:course_module_element_id).uniq
   end
 
+  def enrollment
+    self.subject_course_user_log.active_enrollment
+  end
+
   def calculate_completeness
     self.count_of_cmes_completed = self.unique_logs.count
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
@@ -138,7 +142,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def worker_update_completeness
-    #This can only be called from the StudentExamTrackWorker to ensure the parent SCUL is not updated
+    #This can only be called from the SubjectCourseUserLogWorker to ensure the parent SCUL is not updated
     questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
     questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
     video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)

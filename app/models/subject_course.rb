@@ -232,11 +232,8 @@ class SubjectCourse < ActiveRecord::Base
     log.try(:count_of_cmes_completed)
   end
 
-  def update_all_course_sets
-    self.student_exam_tracks.each do |set|
-      StudentExamTracksWorker.perform_async(set.id)
-    end
-    SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
+  def update_all_course_logs
+    SubjectCourseUserLogWorker.perform_async(self.id)
   end
 
   ########################################################################
