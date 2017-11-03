@@ -19,7 +19,8 @@
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active, :exam_body_id, :exam_date, :expired, :notifications
+  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active,
+                  :exam_body_id, :exam_date, :expired, :notifications, :updated_at
 
   # Constants
 

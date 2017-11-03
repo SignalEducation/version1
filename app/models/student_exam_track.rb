@@ -40,16 +40,19 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :course_module
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
+  has_many :course_module_element_user_logs
 
   # validation
-  validates :subject_course_id, presence: true
-  validates :subject_course_user_log_id, allow_nil: true, numericality: {only_integer: true,
-                                                                        greater_than: 0}
   validates :session_guid, presence: true, length: { maximum: 255 }
-  validates :course_module_id, presence: true
+  validates :subject_course_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :course_module_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_user_log_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
-  after_save :create_or_update_subject_course_user_log
+  after_save :update_subject_course_user_log
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -94,23 +97,22 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   # instance methods
-  def create_or_update_subject_course_user_log
-    log = self.subject_course_user_log || SubjectCourseUserLog.new(user_id: self.user_id, session_guid: self.session_guid, subject_course_id: self.subject_course_id)
-    log.subject_course_id ||= self.try(:subject_course_id)
+  def update_subject_course_user_log
+    log = self.subject_course_user_log
     log.latest_course_module_element_id = self.latest_course_module_element_id
     log.recalculate_completeness # Includes a save
   end
 
-  def cme_user_logs
+  def old_cme_user_logs
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id)
   end
 
   def completed_cme_user_logs
-    cme_user_logs.all_completed.with_elements_active
+    self.course_module_element_user_logs.with_elements_active.all_completed
   end
 
   def destroyable?
-    self.cme_user_logs.empty?
+    self.course_module_element_user_logs.empty?
   end
 
   def elements_total
@@ -122,11 +124,11 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def latest_cme_user_logs
-    self.cme_user_logs.latest_only
+    self.course_module_element_user_logs.latest_only
   end
 
   def unique_logs
-    cme_user_logs.all_completed.with_elements_active.map(&:course_module_element_id).uniq
+    self.course_module_element_user_logs.all_completed.with_elements_active.map(&:course_module_element_id).uniq
   end
 
   def calculate_completeness
@@ -176,7 +178,7 @@ class StudentExamTrack < ActiveRecord::Base
     self
   end
 
-  def subject_course_user_log
+  def old_subject_course_user_log
     SubjectCourseUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id).first
   end
 

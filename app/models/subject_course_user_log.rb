@@ -22,7 +22,7 @@
 class SubjectCourseUserLog < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :session_guid, :subject_course_id, :completed_at, :updated_at
+  attr_accessible :user_id, :session_guid, :subject_course_id, :completed_at
 
   # Constants
 
@@ -101,7 +101,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def update_enrollment
-    self.active_enrollment.update_attributes(updated_at: Proc.new{Time.now}.call) if self.active_enrollment && !self.active_enrollment.expired
+    self.active_enrollment.touch if self.active_enrollment && !self.active_enrollment.expired
   end
 
   def last_element
