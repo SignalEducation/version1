@@ -67,9 +67,8 @@ class EnrollmentsController < ApplicationController
     elsif params[:custom_exam_date].present? && params[:exam_date].present?
       date = params[:exam_date]
     end
-    @enrollment.exam_date = date
 
-    if @enrollment.save
+    if @enrollment.update_attributes(exam_date: date, notifications: params[:enrollment][:notifications])
       redirect_to account_url(anchor: :enrollments)
     else
       redirect_to account_url(anchor: :enrollments)
@@ -103,10 +102,6 @@ class EnrollmentsController < ApplicationController
 
   def allowed_params
     params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id)
-  end
-
-  def updatable_params
-    params.require(:enrollment).permit(:exam_date, :notifications, :expired)
   end
 
   def get_variables

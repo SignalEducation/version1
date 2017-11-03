@@ -48,10 +48,10 @@ class Enrollment < ActiveRecord::Base
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
-  scope :all_in_order, -> { order(created_at: :desc) }
+  scope :all_in_order, -> { order(:active, :created_at) }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_expired, -> { where(expired: true) }
-  scope :all_valid, -> { where(active: true, expired: false, paused: false) }
+  scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :all_paused, -> { where(paused: true) }
@@ -71,8 +71,8 @@ class Enrollment < ActiveRecord::Base
     false
   end
 
-  def valid?
-    self.active && !self.expired && !self.paused
+  def valid_enrollment?
+    self.active && !self.expired
   end
 
   def self.to_csv(options = {})
@@ -144,6 +144,10 @@ class Enrollment < ActiveRecord::Base
 
   def sibling_enrollments
     self.user.enrollments.where(subject_course_id: self.subject_course_id).where.not(id: self.id)
+  end
+
+  def status
+    self.expired ? 'Expired' : 'Active'
   end
 
   protected

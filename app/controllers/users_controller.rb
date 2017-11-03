@@ -80,6 +80,7 @@ class UsersController < ApplicationController
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
     @orders = @user.orders
+    @enrollments = @user.enrollments.all_active
     @footer = true
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:user_update_errors] && session[:valid_params]
@@ -106,7 +107,7 @@ class UsersController < ApplicationController
   def show #(Admin Overview)
     @user = User.find(params[:id])
     @user_sessions_count = @user.login_count
-    @enrollments = @user.enrollments
+    @enrollments = @user.enrollments.all_in_order
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end
 
@@ -331,7 +332,6 @@ class UsersController < ApplicationController
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
-    @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 
