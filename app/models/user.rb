@@ -399,6 +399,7 @@ class User < ActiveRecord::Base
   end
 
   def assign_anonymous_logs_to_user(session_guid)
+    #TODO This is currently not used, as no content can be viewed without an account. Note: When reinstated only the CMEUL's should exist and this process should create the SET and find the SCUL when the user creates an Enrollment if these CMEUL's are for the course enrolled
     model_list = [CourseModuleElementUserLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
       the_model.assign_user_to_session_guid(self.id, session_guid)

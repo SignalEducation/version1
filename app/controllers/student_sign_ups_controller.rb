@@ -70,7 +70,6 @@ class StudentSignUpsController < ApplicationController
           cookies.delete(:referral_data)
         end
       end
-      @user.assign_anonymous_logs_to_user(current_session_guid)
       @user.create_referral_code
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
     else

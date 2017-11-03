@@ -12,7 +12,6 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
-      @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
       @user_session.user.update_attribute(:session_key, session[:session_id])
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       set_current_visit
