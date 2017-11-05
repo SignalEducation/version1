@@ -546,6 +546,7 @@ en:
         name: Name
         subject_course_id: Course
         exam_body_id: Exam Body
+        active: Active
         date: Date
         date_placeholder: "2015-01-01"
 

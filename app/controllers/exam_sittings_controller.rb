@@ -77,4 +77,8 @@ class ExamSittingsController < ApplicationController
     params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id, :active)
   end
 
+  def update_params
+    params.require(:exam_sitting).permit(:name, :subject_course_id, :exam_body_id, :active)
+  end
+
 end

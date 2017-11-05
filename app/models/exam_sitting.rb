@@ -36,7 +36,7 @@ class ExamSitting < ActiveRecord::Base
   after_create :create_expiration_worker
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:date, :name) }
   scope :all_active, -> { where(active: true) }
 
   # class methods

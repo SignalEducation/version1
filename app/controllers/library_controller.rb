@@ -80,10 +80,8 @@ class LibraryController < ApplicationController
   end
 
   def get_enrollment_form_variables(course_id, exam_body_id)
-
-    @exam_sittings = ExamSitting.where(subject_course_id: course_id).all_in_order
+    @exam_sittings = ExamSitting.where(subject_course_id: course_id).all_active.all_in_order
     @new_enrollment = Enrollment.new(subject_course_id: course_id, exam_body_id: exam_body_id)
-
   end
 
 end
