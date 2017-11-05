@@ -168,7 +168,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 1.hour, self.id)
+    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
   end
 
 end
