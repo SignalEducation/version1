@@ -38,7 +38,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # validation
   validates :user_id, presence: true
-  validates :session_guid, presence: true, length: { maximum: 255 }
+  validates :session_guid, allow_nil: true, length: { maximum: 255 }
   validates :subject_course_id, presence: true
 
   # callbacks

@@ -126,7 +126,7 @@ class UsersController < ApplicationController
 
   def user_enrollments_details
     @user = User.find(params[:user_id])
-    @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
+    @enrollments = @user.enrollments.all_in_admin_order
     render 'users/admin_view/user_enrollments_details'
   end
 

@@ -1,0 +1,82 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            ="Enrolment #{@enrollment.id}"
+
+
+
+        .row.l-margin-top
+          .col-md-12
+            .box-item
+              .col-sm-10.l-margin-top
+                .col-sm-6
+                  .h3
+                    User
+                  .h6
+                    =@enrollment.user.full_name
+                  .h6
+                    =@enrollment.user.email
+
+                .col-sm-6
+                  .h3
+                    Course
+                  .h6
+                    =@enrollment.subject_course.name
+
+              .col-sm-2.l-margin-top
+                =link_to 'Edit Details', '#', class: 'btn btn-cyan'
+
+
+              .col-sm-10.l-margin-top-big
+                .col-sm-6
+                  .h3
+                    Exam Date (Sitting)
+                  .h6
+                    =exam_sitting_date(@enrollment.exam_date)
+
+                .col-sm-6
+                  .h3
+                    Exam Body
+                  .h6
+                    =@enrollment.exam_body.name
+
+
+        -if @enrollment.subject_course_user_log
+          .row.l-margin-bottom
+            .col-md-12
+              .box-item
+                .col-sm-10.l-margin-top
+                  .col-sm-6
+                    .h3
+                      Course Log ID
+                    .h6
+                      =@enrollment.subject_course_user_log.id
+
+                  .col-sm-6
+                    .h3
+                      Course progress
+                    .h6
+                      =@enrollment.percentage_complete
+
+                .col-sm-2.l-margin-top
+                  -if @enrollment.valid_enrollment?
+                    =link_to 'Reset Progress', admin_create_new_scul_url(@enrollment), class: 'btn btn-red', data: { confirm: t('views.general.delete_confirmation') }
+
+
+                .col-sm-10.l-margin-top
+                  .col-sm-6
+                    .h3
+                      Videos Count
+                    .h6
+                      =@enrollment.subject_course_user_log.count_of_videos_taken
+
+                  .col-sm-6
+                    .h3
+                      Quiz Count
+                    .h6
+                      =@enrollment.subject_course_user_log.count_of_quizzes_taken
+
+

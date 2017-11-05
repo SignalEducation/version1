@@ -93,8 +93,28 @@ class EnrollmentsController < ApplicationController
 
   end
 
+  def admin_create_new_scul
+    @enrollment = Enrollment.find(params[:id])
+    @course = @enrollment.subject_course
+
+    if @enrollment
+      scul = create_new_scul(@course.id, @enrollment.user_id)
+
+      if @enrollment.update_attribute(:subject_course_user_log_id, scul.id)
+        flash[:success] = "Enrolment Progress Reset Successfully"
+      else
+        flash[:error] = 'Sorry. Something went wrong!'
+      end
+      redirect_to user_enrollments_details_url(@enrollment.user)
+    end
+  end
+
   def send_welcome_email(user_id, course_name)
     MandrillWorker.perform_at(5.minute.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
+  end
+
+  def admin_show
+    @enrollment = Enrollment.find(params[:id])
   end
 
   protected
@@ -115,6 +135,10 @@ class EnrollmentsController < ApplicationController
     end
     # Must return Id of a SCUL
     scul.id
+  end
+
+  def create_new_scul(course_id, user_id)
+    SubjectCourseUserLog.create!(user_id: user_id, subject_course_id: course_id)
   end
 
   def allowed_params

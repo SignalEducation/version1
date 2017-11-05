@@ -1,6 +1,4 @@
 .margin-top
-  -if flash[:success] || flash[:error] || flash[:warning]
-    =render partial: 'layouts/flash_messages'
   .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
@@ -13,54 +11,42 @@
             =render partial: 'user_tabs'
 
 
+        .row
+          .col-md-12.l-margin-top
+            .content-box.content-box-outer.l-margin-bottom-huge
+              .content-box-inner
 
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12.l-margin-top-big
-            -if @enrollments.any?
-              -@enrollments.each do |enrollment|
-
-                .corporate-box-item
-                  .col-sm-12.l-margin-top
-                    .col-sm-4
-                      .h3
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
                         Course
-                      .h6
-                        =enrollment.subject_course.name
-
-                    .col-sm-4
-                      .h3
-                        Created At
-                      .h6
-                        =humanize_datetime(enrollment.created_at)
-
-                    .col-sm-4
-                      .h3
+                      %th
+                        Exam Sitting
+                      %th
                         Active
-                      .h6
-                        =tick_or_cross(enrollment.active)
-
-                  .col-sm-12.l-margin-top
-                    .col-sm-4
-                      .h3
-                        Student Number
-                      .h6
-                        =@user.student_number || '------'
-
-                    .col-sm-4
-                      .h3
-                        Progress
-                      .h6
-                        =enrollment.subject_course_user_log.percentage_complete.to_s + '%'
-
-                    .col-sm-4
-                      .h3
-                        Exam Date
-                      .h6
-                        =enrollment.exam_date || '------'
-
-            -else
-              .col-sm-8.col-sm-offset-2
-                .corporate-box-item
-                  .col-sm-8.col-sm-offset-2.l-margin-top.text-center
-                    .h3
-                      No Current Enrolments
+                      %th
+                        Expired
+                      %th
+                      %th
+                  %tbody
+                    -@enrollments.each do |enrollment|
+                      %tr
+                        %td
+                          -if enrollment.subject_course
+                            =enrollment.subject_course.name
+                        %td
+                          -if enrollment.exam_date
+                            =exam_sitting_date(enrollment.exam_date)
+                        %td
+                          =tick_or_cross(enrollment.active)
+                        %td
+                          =tick_or_cross(enrollment.expired)
+                        %td
+                          =link_to enrollment_admin_show_url(enrollment) do
+                            .btn.btn-purple.btn-small.pull-right
+                              =t('views.general.view')
+                        %td
+                          =link_to edit_enrollment_url(enrollment) do
+                            .btn.btn-cyan.btn-small.pull-right
+                              =t('views.general.edit')

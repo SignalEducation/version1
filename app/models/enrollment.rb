@@ -48,6 +48,7 @@ class Enrollment < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:active, :created_at) }
+  scope :all_in_admin_order, -> { order(:subject_course_id, :created_at) }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_expired, -> { where(expired: true) }
   scope :all_valid, -> { where(active: true, expired: false) }
