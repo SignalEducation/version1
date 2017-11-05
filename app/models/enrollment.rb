@@ -37,9 +37,8 @@ class Enrollment < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_body_id, presence: true,
+  validates :exam_body_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_date, presence: true
 
 
   # callbacks
@@ -169,7 +168,9 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
+    if self.user.individual_student?
+      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
+    end
   end
 
 end

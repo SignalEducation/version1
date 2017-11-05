@@ -76,6 +76,23 @@ class EnrollmentsController < ApplicationController
 
   end
 
+  def basic_create
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+
+    @enrollment = Enrollment.new(user_id: current_user.id, subject_course_id: @course.id, active: true, notifications: false, exam_body_id: @course.exam_body.id)
+
+    @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id)
+
+    if @enrollment.save
+      redirect_to course_special_link(@course.first_active_cme)
+      flash[:success] = "Thank you for enrolling in #{@course.name}"
+    else
+      flash[:error] = 'The data entered for the enrolment was not valid. Please try again!'
+      redirect_to library_special_link(@course)
+    end
+
+  end
+
   def send_welcome_email(user_id, course_name)
     MandrillWorker.perform_at(5.minute.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
   end
