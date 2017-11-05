@@ -9,6 +9,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
+#  active            :boolean          default(TRUE)
 #
 
 require 'rails_helper'
