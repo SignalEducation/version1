@@ -60,7 +60,7 @@ class ExamSitting < ActiveRecord::Base
   end
 
   def create_expiration_worker
-
+    ExamSittingExpirationWorker.perform_at(self.date.to_datetime + 23.hours, self.id)
   end
 
 end
