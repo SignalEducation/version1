@@ -53,6 +53,7 @@ class Enrollment < ActiveRecord::Base
   scope :all_expired, -> { where(expired: true) }
   scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
+  scope :all_expired, -> { where(expired: true) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :all_paused, -> { where(paused: true) }
   scope :all_un_paused, -> { where(paused: false) }

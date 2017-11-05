@@ -1,4 +1,4 @@
--if @first_active_log
+-if @enrollments
   .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
@@ -11,44 +11,20 @@
               %ul
                 %li
                   %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
-                    Enrolments
-                -if @non_enrollment_logs
+                    Active Enrolments
+                -if @expired_enrollments
                   %li
                     %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
-                      Activity
-                -if @cfa_logs
-                  %li
-                    %a{href: '#cfa', role: 'tab', data: {toggle: 'tab'}}
-                      CFA
+                      Expired Enrolments
 
           .col-sm-9
             .dashboard-tab-content
               .tab.dashboard-tab#enrollments
                 =render partial: 'enrollments'
 
-              -if @non_enrollment_logs
+              -if @expired_enrollments
                 .tab.dashboard-tab#activity
                   =render partial: 'activity'
-
-              -if @cfa_logs
-                .tab.dashboard-tab#cfa
-                  -@cfa_courses.each do |course|
-                    -if course.active_children.any?
-                      .col-sm-4.col-md-6
-                        =link_to library_special_link(course), class: 'card card-course' do
-                          .card-outer
-                            .card-inner
-                              %h3.h3.card-title.l-margin-bottom{style: 'color: black;'}
-                                =course.name
-                              %p.card-desc
-                                =course.try(:short_description).truncate(185)
-                          .card-label
-                            .row
-                              .col-md-12.col-xs-12
-                                .col-md-6.col-xs-6
-                                  %h6
-                                    =t('views.general.browse')
-                                .col-md-6.col-xs-6.text-right
 
 
 
@@ -66,7 +42,7 @@
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap
           .row
-            -@acca_group.subject_courses.all_in_order.each do |course|
+            -@default_group.subject_courses.all_in_order.each do |course|
               .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
                 =link_to library_special_link(course), class: 'card card-course' do
                   .card-outer
