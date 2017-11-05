@@ -68,6 +68,8 @@ Rails.application.routes.draw do
     post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
     get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
     get '/enrollments/admin_show/:id', to: 'enrollments#admin_show', as: :enrollment_admin_show
+    get '/enrollments/admin_edit/:id', to: 'enrollments#admin_edit', as: :enrollment_admin_edit
+    patch '/enrollments/admin_update/:id', to: 'enrollments#admin_update', as: :enrollment_admin_update
     get '/enrollments/reset_progress/:id', to: 'enrollments#admin_create_new_scul', as: :admin_create_new_scul
     resources :enrollments, only: [:edit, :update, :create]
     get 'course_modules/:subject_course_name_url',

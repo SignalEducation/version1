@@ -101,12 +101,41 @@ class EnrollmentsController < ApplicationController
       scul = create_new_scul(@course.id, @enrollment.user_id)
 
       if @enrollment.update_attribute(:subject_course_user_log_id, scul.id)
-        flash[:success] = "Enrolment Progress Reset Successfully"
+        flash[:success] = 'Enrolment Progress Reset Successfully'
       else
         flash[:error] = 'Sorry. Something went wrong!'
       end
       redirect_to user_enrollments_details_url(@enrollment.user)
     end
+  end
+
+  def admin_edit
+    @enrollment = Enrollment.find(params[:id])
+    @subject_course = @enrollment.subject_course
+    @exam_body = @subject_course.exam_body if @subject_course
+    @exam_sittings = @subject_course.exam_sittings.all_active.all_in_order
+
+  end
+
+  def admin_update
+    @enrollment = Enrollment.find(params[:id])
+
+    if params[:custom_exam_date].present? && !params[:exam_date].present?
+      date = params[:custom_exam_date]
+    elsif !params[:custom_exam_date].present? && params[:exam_date].present?
+      date = params[:exam_date]
+    elsif params[:custom_exam_date].present? && params[:exam_date].present?
+      date = params[:exam_date]
+    end
+
+    if @enrollment.update_attributes(exam_date: date, active: params[:enrollment][:active], expired: params[:enrollment][:expired], notifications: params[:enrollment][:notifications])
+      flash[:success] = 'Enrolment Successfully Updated'
+      redirect_to user_enrollments_details_url(@enrollment.user)
+    else
+      flash[:error] = 'Sorry. Something went wrong!'
+      redirect_to user_enrollments_details_url(@enrollment.user)
+    end
+
   end
 
   def send_welcome_email(user_id, course_name)

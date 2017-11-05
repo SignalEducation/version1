@@ -955,6 +955,15 @@ en:
         student_number_placeholder: Student Number
         notifications: Receive Notifications
 
+      admin_form:
+        registered: Registered
+        exam_date: Select your Exam Date
+        student_number: Student Number
+        student_number_placeholder: Student Number
+        active: Active
+        expired: Expired
+        notifications: Notifications
+
 
 
     subscription_plans:
