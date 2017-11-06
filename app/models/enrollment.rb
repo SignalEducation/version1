@@ -99,10 +99,6 @@ class Enrollment < ActiveRecord::Base
     self.user.student_number
   end
 
-  def student_number
-    self.user.student_number
-  end
-
   def date_of_birth
     self.user.try(:date_of_birth)
   end

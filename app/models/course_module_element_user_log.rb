@@ -62,7 +62,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score
   after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
-  after_create :create_lesson_intercom_event
+  after_create :create_lesson_intercom_event, :check_for_enrollment_email_conditions
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -182,17 +182,16 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def check_for_enrollment_email_conditions
-    #TODO Review this - must also factor in enrollment notifications boolean
     new_log_ids = []
     time = Proc.new{Time.now}.call
-    if self.student_exam_track && self.student_exam_track.subject_course_user_log && self.student_exam_track.subject_course_user_log.active_enrollment
-      scul = self.student_exam_track.subject_course_user_log
-      scul.student_exam_tracks.each do |set|
-        set.cme_user_logs.each do |log|
-          new_log_ids << log.id if log.updated_at > (time - 1.day) && log != self
+    if self.subject_course_user_log && self.subject_course_user_log.active_enrollment && !self.subject_course_user_log.active_enrollment.expired
+      scul = self.subject_course_user_log
+      scul.course_module_element_user_logs.each do |log|
+        if log.updated_at > (time - 1.day) && log.id != self.id
+          new_log_ids << log.id
         end
       end
-      if new_log_ids.empty? && scul.last_element && scul.last_element.next_element
+      if new_log_ids.any? && scul.last_element && scul.last_element.next_element
         EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email') unless Rails.env.test?
       end
     end
