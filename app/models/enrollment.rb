@@ -77,7 +77,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id course_name exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -88,11 +88,15 @@ class Enrollment < ActiveRecord::Base
   end
 
   def course_name
-    self.subject_course.name
+    self.subject_course.try(:name)
   end
 
   def user_email
     self.user.email
+  end
+
+  def student_number
+    self.user.student_number
   end
 
   def student_number

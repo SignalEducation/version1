@@ -505,7 +505,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{first_name last_name email id}
+    attributes = %w{first_name last_name email id student_number}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -516,7 +516,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_enrollments(options = {})
-    attributes = %w{first_name last_name email date_of_birth enrolled_courses student_numbers}
+    attributes = %w{first_name last_name email student_number date_of_birth enrolled_courses valid_enrolled_courses}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -540,17 +540,17 @@ class User < ActiveRecord::Base
   def enrolled_courses
     course_names = []
     self.enrollments.each do |enrollment|
-      course_names << enrollment.subject_course.name
+      course_names << enrollment.subject_course.name if enrollment.subject_course
     end
     course_names
   end
 
-  def student_numbers
-    student_numbers = []
-    self.enrollments.each do |enrollment|
-      student_numbers << enrollment.student_number
+  def valid_enrolled_courses
+    course_names = []
+    self.enrollments.all_valid.each do |enrollment|
+      course_names << enrollment.subject_course.name if enrollment.subject_course
     end
-    student_numbers
+    course_names
   end
 
   def visit_campaigns

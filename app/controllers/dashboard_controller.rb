@@ -46,7 +46,7 @@ class DashboardController < ApplicationController
   end
 
   def export_enrollments
-    @enrollments = Enrollment.all_in_order.all_active
+    @enrollments = Enrollment.all_active.all_in_admin_order
 
     respond_to do |format|
       format.html
