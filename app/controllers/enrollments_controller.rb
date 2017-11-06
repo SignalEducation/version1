@@ -146,6 +146,10 @@ class EnrollmentsController < ApplicationController
     @enrollment = Enrollment.find(params[:id])
   end
 
+  def create_new_scul(course_id, user_id)
+    SubjectCourseUserLog.create!(user_id: user_id, subject_course_id: course_id)
+  end
+
   protected
 
   #Only find and attach a SCUL if it's the first Enrollment
@@ -164,10 +168,6 @@ class EnrollmentsController < ApplicationController
     end
     # Must return Id of a SCUL
     scul.id
-  end
-
-  def create_new_scul(course_id, user_id)
-    SubjectCourseUserLog.create!(user_id: user_id, subject_course_id: course_id)
   end
 
   def allowed_params

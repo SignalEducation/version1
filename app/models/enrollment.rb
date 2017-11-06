@@ -43,7 +43,7 @@ class Enrollment < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_expiration_worker, :deactivate_siblings
+  after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -169,9 +169,11 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    if self.user.individual_student?
-      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
-    end
+    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) if self.user.individual_student?
+  end
+
+  def create_intercom_event
+    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date) if self.user.individual_student?
   end
 
 end
