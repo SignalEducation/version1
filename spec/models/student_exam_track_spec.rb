@@ -40,8 +40,10 @@ describe StudentExamTrack do
   # relationships
   it { should belong_to(:user) }
   it { should belong_to(:subject_course) }
+  it { should belong_to(:subject_course_user_log) }
   it { should belong_to(:course_module) }
   it { should belong_to(:latest_course_module_element) }
+  it { should have_many(:course_module_element_user_logs) }
 
   # validation
   it { should_not validate_presence_of(:user_id) }
@@ -57,6 +59,7 @@ describe StudentExamTrack do
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:update_subject_course_user_log).after(:save) }
 
   # scopes
   it { expect(StudentExamTrack).to respond_to(:all_in_order) }
@@ -64,12 +67,25 @@ describe StudentExamTrack do
   it { expect(StudentExamTrack).to respond_to(:for_unknown_users) }
   it { expect(StudentExamTrack).to respond_to(:with_active_cmes) }
   it { expect(StudentExamTrack).to respond_to(:all_complete) }
+  it { expect(StudentExamTrack).to respond_to(:all_incomplete) }
 
   # class methods
   it { expect(StudentExamTrack).to respond_to(:assign_user_to_session_guid) }
   it { expect(StudentExamTrack).to respond_to(:for_user_or_session) }
 
   # instance methods
+  it { should respond_to(:update_subject_course_user_log) }
+  it { should respond_to(:old_cme_user_logs) }
+  it { should respond_to(:completed_cme_user_logs) }
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:elements_total) }
+  it { should respond_to(:elements_complete) }
+  it { should respond_to(:latest_cme_user_logs) }
+  it { should respond_to(:unique_logs) }
+  it { should respond_to(:enrollment) }
+  it { should respond_to(:calculate_completeness) }
+  it { should respond_to(:worker_update_completeness) }
+  it { should respond_to(:recalculate_completeness) }
+  it { should respond_to(:old_subject_course_user_log) }
 
 end

@@ -46,8 +46,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :course_module
   belongs_to :course_module_element
-  has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   belongs_to :user
+  has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
+
   accepts_nested_attributes_for :quiz_attempts
 
   # validation
