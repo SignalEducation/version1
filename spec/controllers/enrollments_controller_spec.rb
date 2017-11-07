@@ -18,24 +18,28 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 RSpec.describe EnrollmentsController, type: :controller do
 
   include_context 'users_and_groups_setup'
+  include_context 'course_content'
 
-  let!(:enrollment_1) { FactoryGirl.create(:enrollment, subject_course_id: course_1.id) }
-  let!(:enrollment_2) { FactoryGirl.create(:enrollment, subject_course_id: course_1.id) }
-  let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting, subject_course_id: course_1.id) }
-  let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting, subject_course_id: course_1.id) }
-  let!(:course_1) { FactoryGirl.create(:subject_course) }
-  let!(:registered_params) { {enrollment: [subject_course_id: 1, student_number: '124324554667'], registered: 1, exam_date: '2016-12-01', custom_exam_date: ''} }
-  let!(:registered_params_with_custom_date) { {enrollment: [subject_course_id: 1, student_number: '124324554667'], registered: 1, exam_date: '', custom_exam_date: '2016-12-01'} }
-  let!(:non_registered_params) { {enrollment: [subject_course_id: 1, student_number: nil], registered: 0, exam_date: nil, custom_exam_date: ''} }
-  let!(:no_exam_body_params) { {enrollment: [subject_course_id: 1, student_number: nil], registered: 0, exam_date: nil, custom_exam_date: ''} }
+  let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+
+  let!(:enrollment_1) { FactoryGirl.create(:enrollment, user_id: individual_student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:enrollment_2) { FactoryGirl.create(:enrollment, user_id: individual_student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+
+  let!(:valid_params) { {enrollment: {subject_course_id: subject_course_1.id}, exam_date: exam_sitting_1.date, custom_exam_date: ''} }
+  let!(:invalid_params) { {enrollment: {subject_course_id: nil}, exam_date: exam_sitting_1.date, custom_exam_date: ''} }
+  let!(:custom_date_params) { {enrollment: {subject_course_id: subject_course_1.id}, exam_date: '', custom_exam_date: '2016-12-01'} }
+
+
 
   context 'Not logged in: ' do
 
-    describe "GET 'edit/1'" do
+    describe "GET 'edit'" do
       it 'should redirect to sign_in' do
         get :edit, id: 1
         expect_bounce_as_not_signed_in
@@ -43,43 +47,50 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should redirect to sign_in' do
+      it 'should redirect to sign_in' do
         post :create, enrollment: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
+    describe "PUT 'update'" do
+      it 'should redirect to sign_in' do
         put :update, id: 1, enrollment: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "PUT 'basic_create'" do
-      xit 'should redirect to sign_in' do
-        get :basic_create, subject_course_name_url: course_1.name_url
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "PUT 'pause'" do
+    describe "GET 'basic_create'" do
       it 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "PUT 'activate'" do
+    describe "GET 'admin_create_new_scul'" do
       it 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET 'admin_edit'" do
+      it 'should redirect to sign_in' do
+        get :admin_edit, id: enrollment_2.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT 'admin_update'" do
+      it 'should redirect to sign_in' do
+        post :admin_update, id: enrollment_2.id
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should redirect to sign_in' do
+        get :admin_show, id: enrollment_2.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -101,61 +112,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -176,61 +199,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -251,61 +286,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -326,61 +373,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -401,61 +460,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -476,61 +547,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -551,61 +634,73 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should bounce as not allowed' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should bounce as not allowed' do
+        get :admin_edit, id: enrollment_1.id
+        expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should bounce as not allowed' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should bounce as not allowed' do
+        get :admin_show, id: enrollment_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -626,61 +721,87 @@ RSpec.describe EnrollmentsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for registered_params' do
-        post :create, params: registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for valid_params' do
+        post :create, valid_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for registered_params_with_custom_date' do
-        post :create, enrollment: registered_params_with_custom_date
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      it 'should report OK for params_with_custom_date' do
+        post :create, custom_date_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for non_registered_params' do
-        post :create, enrollment: non_registered_params
-        expect_create_success_with_model('enrollment', course_special_link(course_1.first_active_cme))
+      xit 'should report OK for attaching previous enrollment scul_id' do
+        post :create, scul_id_params
+        expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
+      end
+
+      it 'should fail for invalid_params' do
+        post :create, invalid_params
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.enrollments.create.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_url)
       end
 
     end
 
     describe "PUT 'update/1'" do
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params
-        expect_bounce_as_not_signed_in
-      end
-
-
-      xit 'should redirect to sign_in' do
-        put :update, id: 1, params: registered_params_with_custom_date
-        expect_bounce_as_not_signed_in
+      it 'should respond OK with new params' do
+        put :update, id: enrollment_1.id, enrollment: {notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :enrollments))
       end
     end
 
-    describe "PUT 'create_with_order'" do
-      xit 'should redirect to sign_in' do
-        get :create_with_order
-        expect_bounce_as_not_signed_in
+    describe "GET 'basic_create'" do
+      it 'should respond OK' do
+        get :basic_create, subject_course_name_url: subject_course_1.name_url
+        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
 
-    describe "PUT 'basic_create'" do
-      xit 'should report OK for no_exam_body_params' do
-        get :basic_create, enrollment: no_exam_body_params
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_create_new_scul'" do
+      it 'should respond OK' do
+        get :admin_create_new_scul, id: enrollment_1.id
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.admin_create_new_scul.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(user_enrollments_details_url(enrollment_1.user))
+
       end
     end
 
-    describe "PUT 'pause'" do
-      xit 'should redirect to sign_in' do
-        post :pause, enrollment_id: enrollment_1.id
-        expect_bounce_as_not_signed_in
+    describe "GET 'admin_edit'" do
+      it 'should respond OK' do
+        get :admin_edit, id: enrollment_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:admin_edit)
+
       end
     end
 
-    describe "PUT 'activate'" do
-      xit 'should redirect to sign_in' do
-        post :activate, enrollment_id: enrollment_2.id
-        expect_bounce_as_not_signed_in
+    describe "PUT 'admin_update'" do
+      it 'should respond OK' do
+        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
+        expect(flash[:error]).to be_nil
+        expect(flash[:success]).to eq(I18n.t('controllers.enrollments.admin_update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(user_enrollments_details_url(enrollment_1.user))
+      end
+    end
+
+    describe "GET 'admin_show'" do
+      it 'should respond OK' do
+        get :admin_show, id: enrollment_2.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:admin_show)
       end
     end
 

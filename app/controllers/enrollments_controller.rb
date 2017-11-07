@@ -19,34 +19,40 @@
 class EnrollmentsController < ApplicationController
 
   before_action :logged_in_required
+  before_action only: [:admin_create_new_scul, :admin_edit, :admin_update, :admin_show] do
+    ensure_user_is_of_type(%w(admin))
+  end
   before_action :get_variables
 
   def create
-    @course = SubjectCourse.find(params[:enrollment][:subject_course_id])
-    @exam_body = @course.exam_body
+    @course = SubjectCourse.where(id: params[:enrollment][:subject_course_id]).first
 
-    @enrollment = Enrollment.new(allowed_params)
-    if params[:custom_exam_date].present? && !params[:exam_date].present?
-      date = params[:custom_exam_date]
-    elsif !params[:custom_exam_date].present? && params[:exam_date].present?
-      date = params[:exam_date]
-    end
-    @enrollment.exam_date = date
-    @enrollment.user_id = current_user.id
-    @enrollment.exam_body_id = @exam_body.id
-    @enrollment.active = true
+    if @course
+      @enrollment = Enrollment.new(allowed_params)
+      if params[:custom_exam_date].present? && !params[:exam_date].present?
+        date = params[:custom_exam_date]
+      elsif !params[:custom_exam_date].present? && params[:exam_date].present?
+        date = params[:exam_date]
+      end
+      @enrollment.exam_date = date
+      @enrollment.user_id = current_user.id
+      @enrollment.exam_body_id = @course.exam_body.id
+      @enrollment.active = true
 
-    #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
-    @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id) unless @enrollment.subject_course_user_log_id
+      #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
+      @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id) unless @enrollment.subject_course_user_log_id
 
-
-    if @enrollment.save
-      send_welcome_email(current_user.id, @course.name)
-      redirect_to library_special_link(@course)
-      flash[:success] = 'Thank you for your Enrolment Details'
+      if @enrollment.save
+        send_welcome_email(current_user.id, @course.name)
+        redirect_to library_special_link(@course)
+        flash[:success] = t('controllers.enrollments.create.flash.success')
+      else
+        flash[:error] = t('controllers.enrollments.create.flash.error')
+        redirect_to library_special_link(@course)
+      end
     else
-      flash[:error] = 'The data entered for the enrolment was not valid. Please try again!'
-      redirect_to library_special_link(@course)
+      flash[:error] = t('controllers.enrollments.create.flash.error')
+      redirect_to library_url
     end
   end
 
@@ -69,8 +75,10 @@ class EnrollmentsController < ApplicationController
     end
 
     if @enrollment.update_attributes(exam_date: date, notifications: params[:enrollment][:notifications])
+      flash[:success] = t('controllers.enrollments.update.flash.success')
       redirect_to account_url(anchor: :enrollments)
     else
+      flash[:error] = t('controllers.enrollments.update.flash.error')
       redirect_to account_url(anchor: :enrollments)
     end
 
@@ -85,9 +93,9 @@ class EnrollmentsController < ApplicationController
 
     if @enrollment.save
       redirect_to course_special_link(@course.first_active_cme)
-      flash[:success] = "Thank you for enrolling in #{@course.name}"
+      flash[:success] = t('controllers.enrollments.create.flash.success')
     else
-      flash[:error] = 'The data entered for the enrolment was not valid. Please try again!'
+      flash[:error] = t('controllers.enrollments.create.flash.error')
       redirect_to library_special_link(@course)
     end
 
@@ -101,9 +109,9 @@ class EnrollmentsController < ApplicationController
       scul = create_new_scul(@course.id, @enrollment.user_id)
 
       if @enrollment.update_attribute(:subject_course_user_log_id, scul.id)
-        flash[:success] = 'Enrolment Progress Reset Successfully'
+        flash[:success] = t('controllers.enrollments.admin_create_new_scul.flash.success')
       else
-        flash[:error] = 'Sorry. Something went wrong!'
+        flash[:error] = t('controllers.enrollments.admin_create_new_scul.flash.error')
       end
       redirect_to user_enrollments_details_url(@enrollment.user)
     end
@@ -129,10 +137,10 @@ class EnrollmentsController < ApplicationController
     end
 
     if @enrollment.update_attributes(exam_date: date, active: params[:enrollment][:active], expired: params[:enrollment][:expired], notifications: params[:enrollment][:notifications])
-      flash[:success] = 'Enrolment Successfully Updated'
+      flash[:success] = t('controllers.enrollments.admin_update.flash.success')
       redirect_to user_enrollments_details_url(@enrollment.user)
     else
-      flash[:error] = 'Sorry. Something went wrong!'
+      flash[:error] = t('controllers.enrollments.admin_update.flash.error')
       redirect_to user_enrollments_details_url(@enrollment.user)
     end
 

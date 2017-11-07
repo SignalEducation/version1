@@ -113,6 +113,28 @@ en:
           error: There was an issue with your upload file, please ensure it meets the requirements
           success: Process was successful. Users have been invited or reminded to upgrade
 
+    enrollments:
+      create:
+        flash:
+          success: Thank you for your Enrolment Details
+          error: The data entered for the enrolment was not valid. Please try again!
+      update:
+        flash:
+          success: Enrollment details have been updated successfully
+          error: Enrollment details were not updated successfully. Please try again!
+      admin_create_new_scul:
+        flash:
+          success: Enrolment Progress Reset Successfully
+          error: Sorry. Something went wrong!
+      admin_update:
+        flash:
+          success: Enrolment Successfully Updated
+          error: Sorry. Something went wrong!
+      destroy:
+        flash:
+          success: Enrollment has been deleted
+          error: Enrollment was not deleted
+
     exam_bodies:
       create:
         flash:
