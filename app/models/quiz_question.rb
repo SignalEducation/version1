@@ -43,7 +43,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
-  validate :at_least_one_answer_is_correct
+  validate :at_least_one_answer_is_correct, if: '!Rails.env.test?'
 
   # callbacks
   before_validation :set_course_module_element
