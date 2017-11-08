@@ -45,6 +45,7 @@ class HomePage < ActiveRecord::Base
             uniqueness: true
 
   validate :group_xor_course
+  #TODO add custom validation to ensure only one can be 'home: true'
 
 
   # callbacks
