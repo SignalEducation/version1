@@ -43,7 +43,7 @@ class StudentExamTrack < ActiveRecord::Base
   has_many :course_module_element_user_logs
 
   # validation
-  validates :session_guid, presence: true, length: { maximum: 255 }
+  validates :session_guid, allow_nil: true, length: { maximum: 255 }
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :course_module_id, presence: true,

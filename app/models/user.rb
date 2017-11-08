@@ -393,8 +393,10 @@ class User < ActiveRecord::Base
       end
     elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
       true
-    else
+    elsif self.admin? && course.active_enrollment_user_ids.include?(self.id)
       true
+    else
+      false
     end
   end
 

@@ -39,6 +39,8 @@ FactoryGirl.define do
     latest_attempt false
     count_of_questions_taken 1
     count_of_questions_correct 1
+    subject_course_user_log_id 1
+    subject_course_user_log_id 1
   end
 
 end
