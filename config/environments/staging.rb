@@ -112,8 +112,8 @@ Rails.application.configure do
 end
 
 # Required by LogEntries
-Rails.logger = Le.new('133cb62a-cefa-43a4-b277-f7f87a78ac54', # staging
-                      debug: true, # logs debug-level events to LE
-                      ssl: true, # encrypt our log transmissions
-                      local: true # keep local logs as well
-)
+#Rails.logger = Le.new('133cb62a-cefa-43a4-b277-f7f87a78ac54', # staging
+#                      debug: true, # logs debug-level events to LE
+#                      ssl: true, # encrypt our log transmissions
+#                      local: true # keep local logs as well
+#)
