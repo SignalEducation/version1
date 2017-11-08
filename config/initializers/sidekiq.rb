@@ -8,6 +8,9 @@ when "production"
 when "test"
   redis_host = ENV["REDIS_TEST_HOST"]
   redis_host_port = ENV["REDIS_TEST_HOST_PORT"]
+when "staging"
+  redis_host = ENV["REDIS_STAGING_HOST"]
+  redis_host_port = ENV["REDIS_STAGING_HOST_PORT"]
 when "development"
   redis_host = ENV["REDIS_DEVELOPMENT_HOST"]
   redis_host_port = ENV["REDIS_DEVELOPMENT_HOST_PORT"]
