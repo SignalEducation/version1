@@ -127,18 +127,9 @@ class DashboardController < ApplicationController
 
   def import_csv_upload
     if params[:csvdata]
-      @users = User.bulk_create(params[:csvdata])
-      @users.each do |user|
-        if user.save
-          if user.valid_free_member? && !user.stripe_customer_id
-            MandrillWorker.perform_async(user.id, 'csv_webinar_invite', user_verification_url(email_verification_code: user.email_verification_code))
-            stripe_customer = Stripe::Customer.create(email: user.email)
-            user.update_attribute(:stripe_customer_id, stripe_customer.id)
-          elsif !user.valid_free_member? && user.stripe_customer_id
-            MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', user_new_subscription_url(user.id))
-          end
-        end
-      end
+      @users = User.bulk_create(params[:csvdata], root_url)
+      #@new_user = @users.first
+      #@existing_user = @users.last
       flash[:success] = t('controllers.dashboard.import_csv.flash.success')
     else
       flash[:error] = t('controllers.dashboard.import_csv.flash.error')

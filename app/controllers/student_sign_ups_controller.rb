@@ -27,7 +27,6 @@ class StudentSignUpsController < ApplicationController
   def create
     @navbar = false
     @footer = false
-    @topic_interests = Group.all_active.all_in_order
 
     @user = User.new(student_allowed_params)
     @user.user_group_id = UserGroup.default_student_user_group.try(:id)

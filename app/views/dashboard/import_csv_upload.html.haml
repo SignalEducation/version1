@@ -8,25 +8,7 @@
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
           .col-sm-12
-            %table.table.table-striped.table-bordered
-              %thead
-                %tr
-                  %th
-                    Email
-                  %th
-                    First name
-                  %th
-                    Last Name
-                  %th
-                    Email Type
-              %tbody
-                -@users.each do |user|
-                  -type = user.this_hour ? 'Invite' : 'Upgrade'
-                  %tr{id: user.id}
-                    %td=user.email
-                    %td=user.first_name
-                    %td=user.last_name
-                    %td=type
+            =@users.inspect
 
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big

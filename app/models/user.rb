@@ -728,41 +728,48 @@ class User < ActiveRecord::Base
     return csv_data, has_errors
   end
 
-  def self.bulk_create(csv_data)
-    users = []
-    used_emails = []
+  def self.bulk_create(csv_data, root_url)
+    existing_users = []
+    new_users = []
     if csv_data.is_a?(Hash)
       self.transaction do
         csv_data.each do |k,v|
           user = User.where(email: v['email']).first
           if user && v['email'].empty?
-            users = []
+            existing_users = []
             raise ActiveRecord::Rollback
           elsif user
-            users << user
-          else
-            country = Country.find(78) || Country.find(name: 'United Kingdom').last
-            password = SecureRandom.hex(5)
-            verification_code = ApplicationController::generate_random_code(20)
-            time_now = Proc.new{Time.now}.call
-            user_group = UserGroup.where(individual_student: true, name: 'Individual students').first
-            user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-
-            user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
-            if used_emails.include?(v['email']) || !user.valid?
-              users = []
-              Rails.logger.error "ERROR: Dashboard#import_csv_upload - failed to save a csv user. Error:#{user.errors.inspect}. Count of used emails: #{used_emails.count}"
-              raise ActiveRecord::Rollback
+            if user.expired_free_member? && user.stripe_customer_id
+              MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}#{user.id}/new_subscription")
+              existing_users << user
             end
-            users << user
-            used_emails << user.email
+          else
+            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], root_url)
+            new_users << v['email']
           end
         end
       end
     end
-    users
+    return new_users, existing_users
   end
 
+  def self.create_csv_user(email, first_name, last_name, root_url)
+    country = Country.find(78) || Country.find(name: 'United Kingdom').last
+    password = SecureRandom.hex(5)
+    verification_code = ApplicationController::generate_random_code(20)
+    time_now = Proc.new{Time.now}.call
+    user_group = UserGroup.where(individual_student: true, name: 'Individual students').first
+
+    user = self.where(email: email, first_name: first_name, last_name: last_name).first_or_create
+
+    stripe_customer = Stripe::Customer.create(email: user.email)
+
+    user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id, stripe_customer_id: stripe_customer.id)
+
+    MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+
+
+  end
 
   def update_from_stripe
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
