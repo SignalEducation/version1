@@ -17,9 +17,9 @@ class UserSessionsController < ApplicationController
       set_current_visit
       flash[:error] = nil
       if session[:return_to]
-        redirect_back_or_default dashboard_special_link(@user_session.user)
+        redirect_back_or_default(student_dashboard_url)
       else
-        redirect_to dashboard_special_link(@user_session.user), flash: { just_signed_in: true }
+        redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
     else
       render action: :new
