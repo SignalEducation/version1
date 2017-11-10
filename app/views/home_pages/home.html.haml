@@ -21,7 +21,7 @@
 
   %section#explore
     .container
-      %h1.title1
+      %h2.title1
         Explore our ACCA courses
       %h2.subtitle
         Taking your accounting skills to the next level.
@@ -44,7 +44,7 @@
 
   %section#what.diag-l-up
     .container
-      %h1.title1
+      %h2.title1
         What you get from us
       %ul
         %li
@@ -79,7 +79,7 @@
 
   %section#homeblog
     .container
-      %h1.title1 Get free advice and tips
+      %h2.title1 Get free advice and tips
       -if @home_page && @home_page.blog_posts
         .posts
           .row
@@ -107,7 +107,7 @@
 
   %section#subscribe.diag-l-up.bg-gradient1
     .container
-      %h1.title1 Get fortnightly ACCA insider knowledge
+      %h2.title1 Get fortnightly ACCA insider knowledge
       %h2.subtitle Direct to your inbox.
       #response
         =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
@@ -129,7 +129,7 @@
 
   -#%section#tips
     .container
-      %h1.title1 Get Jamie’s 3 free tips on passing your ACCA.
+      %h2.title1 Get Jamie’s 3 free tips on passing your ACCA.
       .video
         .play
           #vimeo-player.vimeo-player
@@ -143,7 +143,7 @@
     .container
       .devices
         =image_tag('devices.png')
-      %h1.title1 Study whenever and wherever you want
+      %h2.title1 Study whenever and wherever you want
       %h2.subtitle With 24/7, 365 learning on any device, the days of inflexible classroom study are over.
       .lsbtn-base
         =link_to 'Get free course access', new_student_url, class: 'lsbtn'
@@ -152,7 +152,7 @@
 
   %section#plans
     .container
-      %h1.title1 Only pay for the access you need.
+      %h2.title1 Only pay for the access you need.
       %h2.subtitle2
         ="After your #{(ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i/60).to_s} minutes of free access, you can pick which plan suits you best."
       %ul.plans.clearfix
@@ -200,12 +200,12 @@
 
   %section#cancel.bg-gradient1
     .container
-      %h1.title1
+      %h2.title1
         %span
           And don’t forget,
           %strong
             you can cancel anytime.
-      %h1.title1
+      %h2.title1
         %span
           No lengthy commitments or obligations.
           %br/
@@ -214,8 +214,8 @@
     .container
       .row
         .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
-          %h1.title1 We’re here to guide you through.
-          %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
+          %h2.title1 We’re here to guide you through.
+          %h3.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
           .lsbtn-base
             %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
               ='Chat with our experts'
