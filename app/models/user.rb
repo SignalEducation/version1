@@ -677,13 +677,17 @@ class User < ActiveRecord::Base
           error_msgs = []
           if fields.length == 3
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
 
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('.')
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].length >= 5
+            error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
 
-            error_msgs << I18n.t('models.users.not_valid_first_name') unless fields[1].length >= 2
-            error_msgs << I18n.t('models.users.not_valid_last_name') unless fields[2].length >= 2
+            error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
+            error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
+
+            error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
+            error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
+
+            error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
+            error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
 
             duplicate_emails << fields[0]
           else
@@ -700,13 +704,17 @@ class User < ActiveRecord::Base
             error_msgs = []
             if fields.length == 3
               error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
 
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('.')
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].length >= 5
+              error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
 
-              error_msgs << I18n.t('models.users.not_valid_first_name') unless fields[1].length >= 2
-              error_msgs << I18n.t('models.users.not_valid_last_name') unless fields[2].length >= 2
+              error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
+              error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
+
+              error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
+              error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
+
+              error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
+              error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
 
               duplicate_emails << fields[0]
             else
