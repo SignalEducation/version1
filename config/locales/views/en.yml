@@ -609,8 +609,6 @@ en:
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
         blog_posts: Blog Posts
-        discourse_ids: Community Topic IDs - (comma seperated no spaces)
-        discourse_ids_placeholder: Topic ID seperate by comma - (23,43,54)
 
       index:
         h1: Landing Pages
@@ -872,8 +870,6 @@ en:
         external_url_name_placeholder: Name of External Link to appear on Course Page
         external_url: External Link
         external_url_placeholder: External Link URL for Course Page
-        discourse_topic_id: Community Topic ID
-        discourse_topic_id_placeholder: Discourse ID for topic - in URL
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group

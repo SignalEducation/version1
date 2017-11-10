@@ -132,7 +132,6 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :set_trial_limit_in_days
-  after_create :create_on_discourse
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -581,10 +580,6 @@ class User < ActiveRecord::Base
 
   def enrolled_course_ids
     self.enrollments.map(&:subject_course_id)
-  end
-
-  def create_on_discourse
-    #DiscourseCreateUserWorker.perform_at(24.hours.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
   end
 
   def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)

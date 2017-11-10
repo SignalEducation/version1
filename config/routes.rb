@@ -65,7 +65,6 @@ Rails.application.routes.draw do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
-    post '/create_discourse_user', to: 'users#create_discourse_user', as: :user_create_discourse_user
     get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
     get '/enrollments/admin_show/:id', to: 'enrollments#admin_show', as: :enrollment_admin_show
     get '/enrollments/admin_edit/:id', to: 'enrollments#admin_edit', as: :enrollment_admin_edit

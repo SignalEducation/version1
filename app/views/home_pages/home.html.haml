@@ -104,36 +104,6 @@
                         =blog_post.description
 
 
-      -if @home_page.discourse_ids && @topics
-        .posts
-          .row
-            -@topics.each do |topic|
-              -url = @client.host + "t/#{topic.slug.to_s}" + "/#{topic.id.to_s}"
-              -if url
-                .col-sm-6
-                  .post
-                    .cat
-                      =link_to url, target: '_blank' do
-                        .hu
-                          Community
-                    .title
-                      =link_to url, target: '_blank' do
-                        .hu
-                          =topic.title
-                    %ul.stats
-                      %li
-                        %span
-                          =image_tag('icon_post_views.png')
-                        %span
-                          =topic.views
-                          Views
-                      %li
-                        %span
-                          =image_tag('icon_post_comments.png')
-                        %span
-                          =(topic.posts_count - 1)
-                          Comments
-
 
   %section#subscribe.diag-l-up.bg-gradient1
     .container
@@ -153,10 +123,8 @@
                 %button.lsbtn.s{:type => "submit"} Subscribe
       .sep
       .row
-        .col-lg-4.col-lg-offset-2.col-md-5.col-md-offset-1.col-sm-6
+        .col-lg-6.col-lg-offset-3.col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3.col-xs-6.col-xs-offset-3
           %a.lsbtn.v2{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
-        .col-lg-4.col-md-5.col-sm-6
-          %a.lsbtn.v2{href: 'https://community.learnsignal.com/', target: '_blank'} Visit the community
 
 
   -#%section#tips
