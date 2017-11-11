@@ -131,7 +131,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_trial_limit_in_days
+  after_create :set_trial_limit_in_days, :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -824,6 +824,10 @@ class User < ActiveRecord::Base
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+  end
+
+  def create_on_intercom
+    IntercomCreateUserWorker.perform_async(self.id)
   end
 
   def set_trial_limit_in_days
