@@ -52,7 +52,7 @@ describe StudentExamTrack do
 
   it { should_not validate_presence_of(:latest_course_module_element_id) }
 
-  it { should validate_presence_of(:session_guid) }
+  it { should_not validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
 
   it { should validate_presence_of(:course_module_id) }
