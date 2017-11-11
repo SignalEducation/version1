@@ -21,7 +21,7 @@
                       %th='New Users - Invite Email'
                       %th
                   %tbody
-                    -@new_user.each do |user_email|
+                    -@new_users.each do |user_email|
                       %tr
                         %td=user_email
                         %td='Processing'
@@ -34,8 +34,9 @@
                   %thead
                     %tr
                       %th='Expired Trial Users - Trial Expired Email'
+                      %th
                   %tbody
-                    -@existing_user.each do |user|
+                    -@existing_users.each do |user|
                       %tr
                         %td=user.email
                         %td=user.id

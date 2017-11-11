@@ -735,6 +735,7 @@ class User < ActiveRecord::Base
       self.transaction do
         csv_data.each do |k,v|
           user = User.where(email: v['email']).first
+          similar_user = User.search_for(v['email']).first
           if user && v['email'].empty?
             existing_users = []
             raise ActiveRecord::Rollback
@@ -743,7 +744,13 @@ class User < ActiveRecord::Base
               MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}#{user.id}/new_subscription")
               existing_users << user
             end
+          elsif !user && similar_user
+            if similar_user.expired_free_member? && similar_user.stripe_customer_id
+              MandrillWorker.perform_async(similar_user.id, 'send_free_trial_over_email', "#{root_url}#{similar_user.id}/new_subscription")
+              existing_users << similar_user
+            end
           else
+
             CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], root_url)
             new_users << v['email']
           end
