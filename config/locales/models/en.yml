@@ -63,3 +63,5 @@ en:
       invalid_field_count: File must have 3 columns
       preview_csv: Preview Users
       import_csv: Imported Users
+      dont_reload: 'Do Not Reload This Page!'
+      sidekiq_explanation: "Users are created as background jobs so as not to cause heavy cpu strain on the servers. If you want to check their progress click the 'Sidekiq' link below."

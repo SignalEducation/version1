@@ -128,8 +128,8 @@ class DashboardController < ApplicationController
   def import_csv_upload
     if params[:csvdata]
       @users = User.bulk_create(params[:csvdata], root_url)
-      #@new_user = @users.first
-      #@existing_user = @users.last
+      @new_user = @users[0]
+      @existing_user = @users[1]
       flash[:success] = t('controllers.dashboard.import_csv.flash.success')
     else
       flash[:error] = t('controllers.dashboard.import_csv.flash.error')

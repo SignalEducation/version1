@@ -2,14 +2,46 @@
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
-        .col-md-12.text-center
+        .col-md-8.col-sm-offset-2.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
             =t('models.users.import_csv')
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .col-sm-12
-            =@users.inspect
+          %h6
+            =t('models.users.sidekiq_explanation')
+          %h6.l-margin-top{style: 'color: #EF5153;'}
+            =t('models.users.dont_reload')
 
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          =link_to 'Return to Dashboard', admin_dashboard_url, class: 'btn btn-cyan'
+          .col-sm-6
+            .table-box
+              .table-responsive
+                %table.table
+                  %thead
+                    %tr
+                      %th='New Users - Invite Email'
+                      %th
+                  %tbody
+                    -@new_user.each do |user_email|
+                      %tr
+                        %td=user_email
+                        %td='Processing'
+
+
+          .col-sm-6
+            .table-box
+              .table-responsive
+                %table.table
+                  %thead
+                    %tr
+                      %th='Expired Trial Users - Trial Expired Email'
+                  %tbody
+                    -@existing_user.each do |user|
+                      %tr
+                        %td=user.email
+                        %td=user.id
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          =link_to 'Return', users_url, class: 'btn btn-cyan'
+          =link_to 'Sidekiq', sidekiq_web_path, target: '_blank', class: 'btn btn-red'
