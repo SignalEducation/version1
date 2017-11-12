@@ -29,10 +29,6 @@ class HomePagesController < ApplicationController
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
-  def show
-
-  end
-
   def new
     @home_page = HomePage.new
     @home_page.blog_posts.build

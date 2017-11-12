@@ -1,5 +1,0 @@
--if @public_url && File.exists?(Rails.root.join('app', 'views', 'home_pages', "_#{@home_page.custom_file_name}"))
-  =render partial: "home_pages/#{@home_page.custom_file_name}"
--else
-  =render partial: 'home_pages/default'
-
