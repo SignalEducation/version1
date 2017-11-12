@@ -31,11 +31,15 @@ Rails.application.routes.draw do
       resources :visits, only: [:index, :show]
     end
 
-    #User Account & Session
+    #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
-    get 'account_verified', to: 'student_sign_ups#account_verified',
+    get 'account_verified', to: 'user_verifications#account_verified',
         as: :account_verified
+    get 'send_verification/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
+    get 'resend_verification/:email_verification_code', to: 'user_verifications#admin_resend_verification_mail', as: :admin_resend_verification_mail
+
+    #User Account & Session
     resources :user_groups
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
@@ -48,8 +52,6 @@ Rails.application.routes.draw do
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
     get 'set_password/:id', to: 'user_password_resets#set_password', as: :set_password
     put 'create_password/:id', to: 'user_password_resets#create_password', as: :user_create_password
-    get 'send_verification/:email_verification_code', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
-    get 'resend_verification/:email_verification_code', to: 'student_sign_ups#admin_resend_verification_mail', as: :admin_resend_verification_mail
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
@@ -107,7 +109,7 @@ Rails.application.routes.draw do
     get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
-    post '/home_page_subscribe', to: 'home_pages#subscribe'
+    post '/home_page_subscribe', to: 'student_sign_ups#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
     post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
     post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
@@ -178,14 +180,14 @@ Rails.application.routes.draw do
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
-    get 'group/:home_pages_public_url', to: 'home_pages#show', as: :group_landing
+    get 'group/:home_pages_public_url', to: 'student_sign_ups#landing', as: :group_landing
 
-    root 'home_pages#home'
+    root 'student_sign_ups#home'
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     #Catch Old URL
-    get '/:home_pages_public_url', to: 'home_pages#show'
+    get '/:home_pages_public_url', to: 'student_sign_ups#landing'
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

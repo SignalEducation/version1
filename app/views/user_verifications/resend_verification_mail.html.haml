@@ -6,7 +6,7 @@
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Thanks for Signing Up
         .col-md-10.col-md-offset-1.l-margin-bottom-6x
-          .corporate-box-item
+          .box-item
             .container-fluid
               .email-pic-padding
                 .row
@@ -23,4 +23,8 @@
                 %p.text-center{style: 'text-align: center;  letter-spacing: 0.5px;'}
                   ="If you don't receive your verification email in the next 5 minutes please click on the speech bubble in the bottom right of your screen to talk with us directly."
 
--#TODO FAQ will be added here when static page changes are done
+
+        .col-md-12.l-margin-bottom-6x
+          %hr/
+          =render partial: 'layouts/faq'
+

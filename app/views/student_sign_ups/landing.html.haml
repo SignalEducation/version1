@@ -1,0 +1,5 @@
+-if @public_url && File.exists?(Rails.root.join('app', 'views', 'student_sign_ups', "_#{@home_page.custom_file_name}"))
+  =render partial: "student_sign_ups/#{@home_page.custom_file_name}"
+-else
+  =render partial: 'student_sign_ups/default'
+
