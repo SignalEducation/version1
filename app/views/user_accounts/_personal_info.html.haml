@@ -3,31 +3,31 @@
 
     .col-sm-6
       .h3
-        First Name
+        =t('views.user_accounts.personal_info.first_name')
       .h6
         =@user.first_name
 
     .col-sm-6
       .h3
-        Last Name
+        =t('views.user_accounts.personal_info.last_name')
       .h6
         =@user.last_name
 
     .col-sm-6.l-margin-top
       .h3
-        Email
+        =t('views.user_accounts.personal_info.email')
       .h6
         =@user.email
 
     .col-sm-6.l-margin-top
       .h3
-        ="D.O.B"
+        =t('views.user_accounts.personal_info.date_of_birth')
       .h6
         =@user.date_of_birth || '--------'
 
     .col-sm-6.l-margin-top
       .h3
-        Student Number
+        =t('views.user_accounts.personal_info.student_number')
       .h6
         =@user.student_number || '--------'
 
@@ -38,10 +38,8 @@
   .col-sm-4
     #modal-links
       %a{data: {remodal: {target: 'personal-details-modal'}}, class: 'btn btn-red full-width l-margin-bottom edit-details'}
-        Edit Details
+        =t('views.user_accounts.student_user_form.button_label')
 
       %a{data: {remodal: {target: 'change-password-modal'}}, class: 'btn btn-cyan full-width l-margin-bottom change-pw-link'}
-        =t('views.users.show.change_your_password.link')
+        =t('views.user_accounts.change_password.button_label')
 
-
-=render partial: 'users/user_account/student_user_form'

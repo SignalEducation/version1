@@ -75,26 +75,6 @@ class UsersController < ApplicationController
   before_action :get_variables, only: [:account, :show, :user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :new, :create, :edit, :update, :destroy, :reactivate_account, :reactivate_account_subscription, :reactivation_complete]
 
   #User account view for all users
-  def account
-    #user account info page
-    @user.create_referral_code unless @user.referral_code
-    @valid_order = @user.orders
-    @orders = @user.orders
-    @enrollments = @user.enrollments.all_active
-    @footer = true
-    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
-    if session[:user_update_errors] && session[:valid_params]
-      session[:user_update_errors].each do |k, v|
-        v.each { |err| @user.errors.add(k, err) }
-      end
-      @user.first_name = session[:valid_params][0]
-      @user.last_name = session[:valid_params][1]
-      @user.email = session[:valid_params][2]
-      @user.date_of_birth = session[:valid_params][3]
-      session.delete(:user_update_errors)
-      session.delete(:valid_params)
-    end
-  end
 
   #Admin & CustomerSupport Manager views under dashboard tabs
   def index
@@ -221,83 +201,10 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  def reactivate_account
-    @navbar = false
-    @user = User.find(params[:user_id])
-    if @user && @user.individual_student?
-      @subscription = @user.active_subscription ? @user.active_subscription : @user.subscriptions.last
-      if @subscription && %w(canceled).include?(@subscription.current_status)
-        currency_id = @subscription.subscription_plan.currency_id
-        @country = Country.where(currency_id: currency_id).first
-        @subscription_plans = @subscription.reactivation_options.limit(3)
-        @new_subscription = Subscription.new
-      else
-        redirect_to account_url(anchor: :subscriptions)
-      end
-    else
-      redirect_to root_url
-    end
-  end
-
-  def reactivate_account_subscription
-    subscription_id = params[:subscription]["subscription_plan_id"]
-    stripe_token_guid = params[:subscription]["stripe_token"]
-    @user = User.find(params[:user_id])
-    if subscription_id && stripe_token_guid && params[:subscription]["terms_and_conditions"]
-      #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
-      @user.resubscribe_account(subscription_id, stripe_token_guid, params[:subscription]["terms_and_conditions"])
-      redirect_to reactivation_complete_url
-    else
-      redirect_to account_url
-    end
-  end
-
-  def reactivation_complete
-    @subscription = current_user.active_subscription
-    @subject_course_user_logs = current_user.subject_course_user_logs
-    @groups = Group.all_active.all_in_order
-  end
-
-  def subscription_invoice
-    invoice = Invoice.where(id: params[:id]).first
-    if invoice && invoice.user_id == current_user.id
-      @invoice = invoice
-      @invoice_date = invoice.issued_at
-      description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
-      if @invoice.vat_rate
-        vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
-      else
-        vat_rate = '0%'
-      end
-      respond_to do |format|
-        format.html
-        format.pdf do
-          pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate, @invoice_date)
-          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: "inline"
-        end
-      end
-    else
-      redirect_to account_url
-    end
-  end
 
 
 
   #Non-standard actions logged in required
-
-  def change_password
-    @user = current_user
-    if @user.change_the_password(change_password_params)
-      flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-    else
-      flash[:error] = I18n.t('controllers.users.change_password.flash.error')
-    end
-    if current_user.admin? || current_user.customer_support_manager?
-      redirect_to users_url
-    else
-      redirect_to account_url
-    end
-  end
 
   def update_courses
     @user = User.find(params[:user_id]) rescue nil
@@ -335,9 +242,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def change_password_params
-    params.require(:user).permit(:current_password, :password, :password_confirmation)
-  end
 
   def sign_in_params
     params.require(:user_session).permit(:email, :password)

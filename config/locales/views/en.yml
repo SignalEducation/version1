@@ -1190,6 +1190,48 @@ en:
           payment: Enter your payment details
 
 
+    user_accounts:
+      account_show:
+        h1: Account Details
+
+      personal_info:
+        tab_heading: Personal Info
+        first_name: First Name
+        last_name: Last Name
+        email: Email
+        date_of_birth: Date of Birth
+        student_number: Student Number
+
+      subscription_info:
+        tab_heading: Account Info
+
+      payment_details:
+        tab_heading: Payment Info
+
+      orders_info:
+        tab_heading: Purchase Info
+
+      enrollments_info:
+        tab_heading: Enrolments Info
+
+      student_user_form:
+        button_label: Edit Details
+        heading: Edit Personal Details
+        first_name: First Name
+        last_name: Last Name
+        email: Email
+        date_of_birth: Date of Birth
+        student_number: Student Number
+
+      change_password:
+        button_label: Change Password
+        heading: Change your password
+        current_password: Current password
+        current_password_placeholder: Current password
+        new_password: New Password
+        new_password_placeholder: New Password
+        password_confirmation: Password confirmation
+        password_confirmation_placeholder: Password confirmation
 
 
     user_groups:

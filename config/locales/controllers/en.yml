@@ -383,7 +383,7 @@ en:
       change_password:
         flash:
           success: Your password has been updated successfully
-          error: Your password was not changed
+          error: Your password was not changed. Please try again!
       update_subjects:
         flash:
           success: User Courses have been updated successfully

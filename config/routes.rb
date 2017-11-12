@@ -26,8 +26,8 @@ Rails.application.routes.draw do
       get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
       patch 'create_subscription', to: 'subscriptions#create_subscription', as: :create_subscription
 
-      get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
-      post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
+      get 'reactivate_account', to: 'user_accounts#reactivate_account', as: :reactivate_account
+      post 'reactivate_account_subscription', to: 'user_accounts#reactivate_account_subscription', as: :reactivate_account_subscription
       resources :visits, only: [:index, :show]
     end
 
@@ -39,14 +39,21 @@ Rails.application.routes.draw do
     get 'send_verification/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
     get 'resend_verification/:email_verification_code', to: 'user_verifications#admin_resend_verification_mail', as: :admin_resend_verification_mail
 
-    #User Account & Session
-    resources :user_groups
+    # User Sessions
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
-    get 'account', to: 'users#account', as: :account
+
+    # User Accounts
+    get 'account', to: 'user_accounts#account_show', as: :account
+    post 'change_password', to: 'user_accounts#change_password', as: :change_password
+    patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
+    get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
+    get 'reactivation_complete', to: 'user_accounts#reactivation_complete', as: :reactivation_complete
+
+
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
-    post 'change_password', to: 'users#change_password', as: :change_password
+    resources :user_groups
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
@@ -56,7 +63,6 @@ Rails.application.routes.draw do
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
-    get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
@@ -106,7 +112,6 @@ Rails.application.routes.draw do
     post '/student_create', to: 'student_sign_ups#create', as: :create_student
 
     resources :invoices, only: [:index, :show]
-    get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
     post '/home_page_subscribe', to: 'student_sign_ups#subscribe'
