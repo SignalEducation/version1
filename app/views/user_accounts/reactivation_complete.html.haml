@@ -25,36 +25,36 @@
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap
           .row
-            -if @subject_course_user_logs.any?
-              -@subject_course_user_logs.each do |log|
-                -if log.subject_course
-                  .col-sm-6.col-md-4
-                    =link_to library_special_link(log.subject_course), class: 'box box-course' do
-                      .box-inner
-                        .l-margin-top-xl
-                          %h2{style: 'margin-bottom: 5px;'}
-                            =log.subject_course.try(:name)
-                          %p.p
-                            -if log.subject_course.short_description
-                              =log.subject_course.try(:short_description).to_s.truncate(30)
-                            -else
-                              =log.subject_course.description.to_s.truncate(30)
-                      .box-label
-                        =t('views.general.continue')
+            -if @enrollments.any?
+              -@enrollments.each do |enrollment|
+                .col-sm-6.col-md-4
+                  =link_to library_special_link(enrollment.subject_course), class: 'box box-course' do
+                    .box-inner
+                      .l-margin-top-xl
+                        %h2{style: 'margin-bottom: 5px;'}
+                          =enrollment.subject_course.try(:name)
+                        %p.p
+                          -if enrollment.subject_course.short_description
+                            =log.subject_course.try(:short_description).to_s.truncate(30)
+                          -else
+                            =enrollment.subject_course.description.to_s.truncate(30)
+                    .box-label
+                      =t('views.general.continue')
 
             -else
-              -@groups.each do |group|
-                -if group.active_children.any?
-                  .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
-                    =link_to library_special_link(group), class: 'box box-course' do
-                      .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
-                      .box-inner
-                        .l-margin-top-xl
-                          %h2{style: 'margin-bottom: 5px;'}
-                            =group.name
-                          %p.p
-                            =group.description
-
-                      .box-label
-                        %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                          Browse Courses
+              -if @groups
+                -@groups.each do |group|
+                  -group.active_children.all_in_order.each do |course|
+                    .col-sm-6.col-md-4
+                      =link_to library_special_link(course), class: 'box box-course' do
+                        .box-inner
+                          .l-margin-top-xl
+                            %h2{style: 'margin-bottom: 5px;'}
+                              =course.try(:name)
+                            %p.p
+                              -if course.short_description
+                                =course.try(:short_description).to_s.truncate(30)
+                              -else
+                                =course.description.to_s.truncate(30)
+                        .box-label
+                          =t('views.general.start')

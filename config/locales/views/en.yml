@@ -1173,7 +1173,8 @@ en:
         your_next_payment_will_be_on: Next Bill Due
         your_plans_current_status: "Your subscription is"
         your_plan_expired_on: "Your plan expired on"
-        your_plan_will_expire_on: "Your subscription is cancelled, you will continue to have access until: "
+        subscription_set_to_cancel: "Your subscription is set to cancel at the end of the current billing period."
+        your_plan_will_expire_on: "You will continue to have access until: "
         your_subscription: My Subscription
         you_dont_have_referral_code: "You don't have a referral code Yet."
         total_number_of_referred_users: Total number of referred users

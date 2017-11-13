@@ -104,7 +104,7 @@ class UserAccountsController < ApplicationController
 
   def reactivation_complete
     @subscription = current_user.active_subscription
-    @subject_course_user_logs = current_user.subject_course_user_logs
+    @enrollments = current_user.enrollments.all_active.all_in_order
     @groups = Group.all_active.all_in_order
   end
 

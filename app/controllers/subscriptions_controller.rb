@@ -113,6 +113,23 @@ class SubscriptionsController < ApplicationController
     @subscription_plans = @current_subscription.upgrade_options
   end
 
+  def un_cancel_subscription
+    if @subscription && @subscription.current_status == 'canceled-pending'
+      @subscription.un_cancel
+
+      if @subscription && @subscription.errors.count == 0
+        flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
+      else
+        Rails.logger.error "ERROR: SubscriptionsController#un_cancel_subscription - something went wrong."
+        flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
+      end
+      redirect_to account_url(anchor: 'subscriptions')
+    else
+      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      redirect_to account_url(anchor: 'subscriptions')
+    end
+  end
+
   #Upgrading current subscription to a new subscription plan
   def update
     if @subscription

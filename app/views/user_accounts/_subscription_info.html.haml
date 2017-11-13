@@ -53,7 +53,7 @@
               =humanize_datetime(@user.active_subscription.updated_at)
 
 
-      -if @current_subscription
+      -if @current_subscription && @user.valid_subscription
         .col-sm-12.col-md-6.l-margin-top
           .h3
             =t('views.users.show.your_next_payment_will_be_on')
@@ -61,12 +61,14 @@
             =humanize_stripe_date(@current_subscription.next_renewal_date)
 
 
-        .col-sm-12.l-margin-top
+        .col-sm-12.l-margin-top-big
           -if @user.canceled_pending?
-            .h3
-              =t('views.users.show.your_plan_will_expire_on')
             .h6
-              =humanize_stripe_date(@current_subscription.next_renewal_date) + '.'
+              =t('views.users.show.subscription_set_to_cancel')
+            %span
+              =t('views.users.show.your_plan_will_expire_on')
+              %strong
+                =humanize_stripe_date_full(@current_subscription.next_renewal_date)
 
 
 
@@ -89,6 +91,10 @@
           =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
             .btn.btn-red.full-width.l-margin-bottom
               =t('views.users.show.cancel_your_subscription_plan')
+
+      -elsif @current_subscription.current_status == 'canceled-pending'
+        %h3=t('views.users.show.un_cancel_subscription.h3')
+        =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_subscription_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
 
 
     -if @current_subscription

@@ -337,6 +337,10 @@ en:
         flash:
           success: Your Subscription has been updated successfully
           error: Your Subscription has not been updated
+      un_cancel:
+        flash:
+          success: Your Subscription has been un-canceled
+          error: Your Subscription has not been un-canceled
       destroy:
         flash:
           success: Your Subscription has been cancelled

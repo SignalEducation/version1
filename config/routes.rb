@@ -50,9 +50,9 @@ Rails.application.routes.draw do
     patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
     get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
     get 'reactivation_complete', to: 'user_accounts#reactivation_complete', as: :reactivation_complete
-
-
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
+    put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
+
     resources :user_groups
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
