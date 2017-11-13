@@ -741,12 +741,12 @@ class User < ActiveRecord::Base
             raise ActiveRecord::Rollback
           elsif user
             if user.expired_free_member? && user.stripe_customer_id
-              MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}#{user.id}/new_subscription")
+              MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}/users/#{user.id}/new_subscription")
               existing_users << user
             end
           elsif !user && similar_user
             if similar_user.expired_free_member? && similar_user.stripe_customer_id
-              MandrillWorker.perform_async(similar_user.id, 'send_free_trial_over_email', "#{root_url}#{similar_user.id}/new_subscription")
+              MandrillWorker.perform_async(similar_user.id, 'send_free_trial_over_email', "#{root_url}/users#{similar_user.id}/new_subscription")
               existing_users << similar_user
             end
           else
