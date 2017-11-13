@@ -62,7 +62,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score
   after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
-  after_create :create_lesson_intercom_event, :check_for_enrollment_email_conditions
+  after_create :create_lesson_intercom_event
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -182,6 +182,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def check_for_enrollment_email_conditions
+    #Needs serious improvements and is failing in sidekiq with undefined method `enrollment' for #<SubjectCourseUserLog>
     new_log_ids = []
     time = Proc.new{Time.now}.call
     if self.subject_course_user_log && self.subject_course_user_log.active_enrollment && !self.subject_course_user_log.active_enrollment.expired
