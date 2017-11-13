@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170913142118) do
+ActiveRecord::Schema.define(version: 20171105143811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,8 @@ ActiveRecord::Schema.define(version: 20170913142118) do
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_questions_correct"
     t.integer  "subject_course_id"
+    t.integer  "student_exam_track_id"
+    t.integer  "subject_course_user_log_id"
   end
 
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree
@@ -195,10 +197,11 @@ ActiveRecord::Schema.define(version: 20170913142118) do
     t.datetime "created_at",                                 null: false
     t.datetime "updated_at",                                 null: false
     t.boolean  "active",                     default: false
-    t.string   "student_number"
     t.integer  "exam_body_id"
     t.date     "exam_date"
-    t.boolean  "registered",                 default: false
+    t.boolean  "expired",                    default: false
+    t.boolean  "paused",                     default: false
+    t.boolean  "notifications",              default: true
   end
 
   create_table "exam_bodies", force: :cascade do |t|
@@ -214,9 +217,10 @@ ActiveRecord::Schema.define(version: 20170913142118) do
     t.string   "name"
     t.integer  "subject_course_id"
     t.date     "date"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "exam_body_id"
+    t.boolean  "active",            default: true
   end
 
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
@@ -560,6 +564,7 @@ ActiveRecord::Schema.define(version: 20170913142118) do
     t.integer  "count_of_questions_correct"
     t.integer  "count_of_quizzes_taken"
     t.integer  "count_of_videos_taken"
+    t.integer  "subject_course_user_log_id"
   end
 
   add_index "student_exam_tracks", ["exam_schedule_id"], name: "index_student_exam_tracks_on_exam_schedule_id", using: :btree

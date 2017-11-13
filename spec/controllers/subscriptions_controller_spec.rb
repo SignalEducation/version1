@@ -112,6 +112,12 @@ describe SubscriptionsController, type: :controller do
 
   context 'Logged in as a individual_student_user: ' do
 
+    ##TODO
+    ## Testing for student users must test each account type a user can have
+    ## [not-started-trial, valid-trial, expired-trial]
+    ## [valid-sub, past-due-sub, canceled-pending-sub, canceled-sub]
+    ##TODO
+
     before(:each) do
       activate_authlogic
       UserSession.create!(individual_student_user)

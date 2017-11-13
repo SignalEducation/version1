@@ -80,6 +80,7 @@ class UsersController < ApplicationController
     @user.create_referral_code unless @user.referral_code
     @valid_order = @user.orders
     @orders = @user.orders
+    @enrollments = @user.enrollments.all_active
     @footer = true
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home_pages controller
     if session[:user_update_errors] && session[:valid_params]
@@ -106,7 +107,7 @@ class UsersController < ApplicationController
   def show #(Admin Overview)
     @user = User.find(params[:id])
     @user_sessions_count = @user.login_count
-    @enrollments = @user.enrollments
+    @enrollments = @user.enrollments.all_in_order
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end
 
@@ -125,7 +126,7 @@ class UsersController < ApplicationController
 
   def user_enrollments_details
     @user = User.find(params[:user_id])
-    @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
+    @enrollments = @user.enrollments.all_in_admin_order
     render 'users/admin_view/user_enrollments_details'
   end
 
@@ -181,7 +182,6 @@ class UsersController < ApplicationController
         new_referral_code.generate_referral_code(@user.id)
       end
       MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
-      #@user.create_on_discourse
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -299,13 +299,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def create_discourse_user
-    @user = current_user
-    DiscourseCreateUserWorker.perform_async(@user.id, @user.email) if @user.individual_student? && !@user.discourse_user && Rails.env.production?
-    flash[:success] = "An invite email has just been sent to #{@user.email}. Please follow its instructions to access the Community"
-    redirect_to account_url
-  end
-
   def update_courses
     @user = User.find(params[:user_id]) rescue nil
     if params[:user]
@@ -331,7 +324,6 @@ class UsersController < ApplicationController
     seo_title_maker('Account Details', '', true)
     @current_subscription = @user.active_subscription
     @orders = @user.orders
-    @enrollments = Enrollment.where(user_id: @user.try(:id)).all_in_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
   end
 

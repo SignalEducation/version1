@@ -31,13 +31,17 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
-  has_one :enrollment
+  has_many :enrollments
+  has_many :student_exam_tracks
+  has_many :course_module_element_user_logs
 
 
   # validation
-  validates :user_id, presence: true
-  validates :session_guid, presence: true, length: { maximum: 255 }
-  validates :subject_course_id, presence: true
+  validates :user_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :session_guid, allow_nil: true, length: { maximum: 255 }
 
   # callbacks
   before_destroy :check_dependencies
@@ -50,6 +54,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   scope :for_unknown_users, -> { where(user_id: nil) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
+  scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
 
 
   # class methods
@@ -94,17 +99,18 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.subject_course.try(:cme_count) || 0
   end
 
-  def update_enrollment
-    if self.enrollment && !self.enrollment.active
-      self.enrollment.update_attributes(updated_at: Proc.new{Time.now}.call, active: true)
-    elsif self.enrollment && self.enrollment.active
-      self.enrollment.update_attribute(:updated_at, Proc.new{Time.now}.call)
-    else
+  def active_enrollment
+    self.enrollments.where(active: true).last
+  end
 
-    end
+  def update_enrollment
+    self.active_enrollment.touch if self.active_enrollment && !self.active_enrollment.expired
   end
 
   def last_element
+    ###
+    ###
+    ###
     cme = CourseModuleElement.where(id: self.latest_course_module_element_id).first
     back_up_cme = self.subject_course.first_active_cme
     if cme
@@ -127,11 +133,15 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.save
   end
 
-  def student_exam_tracks
+  def student_exam_track_course_module_ids
+    self.student_exam_tracks.map(&:course_module_id)
+  end
+
+  def old_sets
     StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
 
-  def course_module_element_user_logs
+  def old_cmeuls
     CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
   end
 

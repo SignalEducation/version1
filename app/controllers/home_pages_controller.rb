@@ -32,17 +32,13 @@ class HomePagesController < ApplicationController
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     if @home_page
       @group = @home_page.group
+      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
     else
       @group = Group.all_active.all_in_order.first
     end
     #TODO Remove limit(3)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
-    #if @home_page && @home_page.discourse_ids
-    #  ids = @home_page.discourse_ids.split(",")
-    #  @topics = get_discourse_topics(ids)
-    #end
     @form_type = 'Home Page Contact'
-    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
   end
 
   def show
@@ -58,10 +54,6 @@ class HomePagesController < ApplicationController
 
       # This is for sticky sub plans
       cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
-      #if @home_page.discourse_ids
-      #  ids = @home_page.discourse_ids.split(",")
-      #  @topics = get_discourse_topics(ids)
-      #end
 
     else
       redirect_to root_url
@@ -213,7 +205,7 @@ class HomePagesController < ApplicationController
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
                                       :subject_course_id, :custom_file_name,
-                                      :name, :home, :group_id, :discourse_ids,
+                                      :name, :home, :group_id,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

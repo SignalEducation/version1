@@ -12,4 +12,7 @@ shared_context 'system_setup' do
   let!(:ireland) { FactoryGirl.create(:ireland, currency_id: eur.id) }
   let!(:usa) { FactoryGirl.create(:usa, currency_id: usd.id) }
 
+  # homepages
+  let!(:home) { FactoryGirl.create(:home) }
+
 end

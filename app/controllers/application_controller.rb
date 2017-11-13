@@ -285,31 +285,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
-  def dashboard_special_link(user = nil)
-    #TODO this needs to be better
-    user = user || current_user
-    redirect_to root_url unless user
-    case user.user_group_id
-      when UserGroup.default_student_user_group.id
-        student_dashboard_url
-      when UserGroup.default_complimentary_user_group.id
-        student_dashboard_url
-      when UserGroup.default_admin_user_group.id
-        admin_dashboard_url
-      when UserGroup.default_tutor_user_group.id
-        tutor_dashboard_url
-      when UserGroup.default_content_manager_user_group.id
-        content_manager_dashboard_url
-      when UserGroup.default_marketing_support_user_group.id
-        marketing_manager_dashboard_url
-      when UserGroup.default_customer_support_user_group.id
-        customer_support_manager_dashboard_url
-    else
-      student_dashboard_url
-    end
-  end
-  helper_method :dashboard_special_link
-
   def subscription_special_link(user_id)
     user = User.find(user_id)
     if user.individual_student?

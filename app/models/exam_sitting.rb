@@ -9,12 +9,13 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
+#  active            :boolean          default(TRUE)
 #
 
 class ExamSitting < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :date, :exam_body_id
+  attr_accessible :name, :subject_course_id, :date, :exam_body_id, :active
 
   # Constants
 
@@ -25,21 +26,24 @@ class ExamSitting < ActiveRecord::Base
   # validation
   validates :exam_body_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :name, presence: true
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :name, presence: true
+  validates :date, presence: true
 
   # callbacks
   before_destroy :check_dependencies
+  after_create :create_expiration_worker
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:date, :name) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
 
   # instance methods
   def destroyable?
-    true
+    !self.active
   end
 
   def formatted_date
@@ -53,6 +57,10 @@ class ExamSitting < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def create_expiration_worker
+    ExamSittingExpirationWorker.perform_at(self.date.to_datetime + 23.hours, self.id)
   end
 
 end

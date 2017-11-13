@@ -44,7 +44,7 @@
                       %td=user.user_group.try(:name)
                       %td=user.user_account_status if user.individual_student?
                       %td
-                        =link_to t('views.general.show'), user_url(user), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.view'), user_url(user), class: 'btn btn-purple btn-small'
                       %td
                         =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
 

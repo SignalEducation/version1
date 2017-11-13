@@ -23,70 +23,48 @@ class LibraryController < ApplicationController
   def course_show
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     if @course && @course.active
+      tag_manager_data_layer(@course.name)
+      seo_title_maker(@course.name, @course.description, nil)
 
       @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
       @tuition_course_modules = @course_modules.all_tuition.all_in_order
       @test_course_modules = @course_modules.all_test.all_in_order
       @revision_course_modules = @course_modules.all_revision.all_in_order
 
-
-      tag_manager_data_layer(@course.name)
-      seo_title_maker(@course.name, @course.description, nil)
-
-      mock_exams = @course.mock_exams
-      mock_exam_ids = mock_exams.map(&:id)
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+      mock_exam_ids = @course.mock_exams.map(&:id)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
-      #Enrollment and SubjectCourseUserLog
-      if current_user && !@course.enrolled_user_ids.include?(current_user.id)
-        #Make Enrollment Form and required params
-        if @course.exam_body
-          @exam_body = @course.exam_body
-          @enrollments = @exam_body.enrollments.where(user_id: current_user.id)
-          possible_student_number = @enrollments.map(&:student_number).first
-        else
-          possible_student_number = nil
-        end
-        @enrollment = Enrollment.new(student_number: possible_student_number)
-        @exam_sittings = ExamSitting.where(subject_course_id: @course.id).all_in_order
-        if current_user && current_user.permission_to_see_content(@course)
-          @subject_course_resources = @course.subject_course_resources
-        end
-        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
+      if current_user
 
-      elsif current_user && @course.enrolled_user_ids.include?(current_user.id)
-        #Get existing enrollment and try find an associated SCUL
-        @enrollment = Enrollment.where(user_id: current_user.id).where(subject_course_id: @course.id).first
-        if @enrollment
-          #Must always start with SCUL, not Enrollment, as old users may not have enrollments but will have SCULs
-          @subject_course_user_log = @enrollment.subject_course_user_log
+        #Enrollment(s) and SubjectCourseUserLog
+        if current_user.permission_to_see_content(@course)
+          @subject_course_resources = @course.subject_course_resources
+          @form_type = "Course Tutor Question. Course: #{@course.name}"
+
+          @active_enrollment = Enrollment.where(user_id: current_user.id, subject_course_id: @course.id, active: true).last
+          @subject_course_user_log = @active_enrollment.subject_course_user_log
+
           @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
           @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
           @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
           @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+
+          if @active_enrollment.expired
+            #Active Enrollment is expired - new enrollment needed
+            get_enrollment_form_variables(@course.id, @course.exam_body_id)
+          else
+            #Generate @next_element variable for Resume button
+            @latest_element_id = @subject_course_user_log.latest_course_module_element_id
+            @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+          end
+
+        else
+          #No Enrollments - make form variable and try find a SCUL
+          get_enrollment_form_variables(@course.id, @course.exam_body_id)
         end
-
-        if current_user && current_user.permission_to_see_content(@course)
-          @subject_course_resources = @course.subject_course_resources
-          @form_type = "Course Tutor Question. Course: #{@course.name}"
-        end
-
-      else
-        #As a backup try find a related SCUL
-        @subject_course_user_log = SubjectCourseUserLog.for_user_or_session(current_user.try(:id), current_session_guid).where(subject_course_id: @course.id).all_in_order.first
-      end
-
-      if current_user
-
-        users_sets = StudentExamTrack.for_user_or_session(current_user.try(:id), current_session_guid).with_active_cmes.all_incomplete.all_in_order
-        user_course_sets = users_sets.where(subject_course_id: @course.try(:id))
-        latest_set = user_course_sets.first
-        @latest_element_id = latest_set.try(:latest_course_module_element_id)
-        @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-
       end
 
     else
@@ -99,6 +77,11 @@ class LibraryController < ApplicationController
     IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to request.referrer
+  end
+
+  def get_enrollment_form_variables(course_id, exam_body_id)
+    @exam_sittings = ExamSitting.where(subject_course_id: course_id).all_active.all_in_order
+    @new_enrollment = Enrollment.new(subject_course_id: course_id, exam_body_id: exam_body_id)
   end
 
 end

@@ -21,8 +21,9 @@
                 %p{style: 'text-align: center;  letter-spacing: 0.5px;'}
                   ="To complete your registration we need to verify your email address. To do this click on the verification email we just sent to #{@user.email}."
 
-                %p{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                  ="Didn't get the email? Please check your spam folder or "
-                  =link_to 'click here', resend_verification_mail_url(@user.email_verification_code)
-                  =" to resend it."
+                -if @user && @user.email_verification_code
+                  %p{style: 'text-align: center;  letter-spacing: 0.5px;'}
+                    ="Didn't get the email? Please check your spam folder or "
+                    =link_to 'click here', resend_verification_mail_url(@user.email_verification_code)
+                    =" to resend it."
 

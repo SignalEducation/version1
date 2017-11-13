@@ -63,6 +63,7 @@ describe SubjectCourse do
   it { should have_many(:orders) }
   it { should have_many(:white_papers) }
   it { should have_many(:mock_exams) }
+  it { should have_many(:exam_sittings) }
   it { should have_and_belong_to_many(:users) }
 
   # validation
