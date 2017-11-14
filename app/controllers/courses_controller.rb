@@ -96,10 +96,12 @@ class CoursesController < ApplicationController
       format.json {
         course_module_element = CourseModuleElement.find(params[:course][:cmeId])
         param_id = params[:course][:set_id]
-        if param_id.empty?
+        if param_id && !param_id.empty?
+          student_exam_track_id = param_id
+        elsif param_id && param_id.empty?
           student_exam_track_id = nil
         else
-          student_exam_track_id = param_id
+          student_exam_track_id = nil
         end
 
         if course_module_element
