@@ -17,6 +17,12 @@ test:
   database: db/learnsignal_v3_test
 
 staging:
+  adapter: <%= ENV['DB_ADAPTER'] %>
+  host: <%= ENV['DB_HOSTNAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+
+  database: <%= ENV['DB_NAME'] %>
 
 production:
   adapter: <%= ENV['DB_ADAPTER'] %>

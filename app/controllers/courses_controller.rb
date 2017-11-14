@@ -96,10 +96,12 @@ class CoursesController < ApplicationController
       format.json {
         course_module_element = CourseModuleElement.find(params[:course][:cmeId])
         param_id = params[:course][:set_id]
-        if param_id.empty?
+        if param_id && !param_id.empty?
+          student_exam_track_id = param_id
+        elsif param_id && param_id.empty?
           student_exam_track_id = nil
         else
-          student_exam_track_id = param_id
+          student_exam_track_id = nil
         end
 
         if course_module_element
@@ -187,9 +189,13 @@ class CoursesController < ApplicationController
     if @course && current_user && current_user.permission_to_see_content(@course)
 
       @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id).last
-      @subject_course_user_log = @active_enrollment.subject_course_user_log
-      @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
-
+      if @active_enrollment
+        @subject_course_user_log = @active_enrollment.subject_course_user_log
+        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+      else
+        flash[:warning] = 'Sorry, you are not permitted to access that content.'
+        redirect_to root_url
+      end
     else
       if current_user.expired_free_member?
         flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue'
