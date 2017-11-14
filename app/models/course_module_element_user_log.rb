@@ -112,7 +112,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.quiz_attempts.empty?
+    #self.quiz_attempts.empty?
+    true
   end
 
   def recent_attempts
