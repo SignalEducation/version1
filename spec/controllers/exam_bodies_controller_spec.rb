@@ -18,7 +18,7 @@ describe ExamBodiesController, type: :controller do
 
   let!(:exam_body_1) { FactoryGirl.create(:exam_body) }
   let!(:exam_body_2) { FactoryGirl.create(:exam_body) }
-  let!(:enrollment_1) {FactoryGirl.create(:enrollment, exam_body_id: exam_body_1.id)}
+  let!(:enrollment_1) {FactoryGirl.create(:enrollment, user_id: individual_student_user.id, exam_body_id: exam_body_1.id)}
   let!(:exam_sitting_1) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
   let!(:exam_sitting_2) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_body) }

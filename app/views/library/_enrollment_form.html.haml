@@ -6,7 +6,12 @@
           %h3.h3.card-title.l-margin-bottom
             =@course.name
         .col-sm-4.col-xs-12.text-center.enroll-section
-          -if @course.exam_body && @course.exam_sitting
-            %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width'}
-              Enrol Now
+          -if @course.exam_body && @course.exam_sittings
+            -if current_user.individual_student?
+              %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width'}
+                Enrol Now
+            -else
+              =link_to enrollment_basic_create_url(@course.name_url) do
+                .btn.full-width.btn-cyan
+                  Enrol
 

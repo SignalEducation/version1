@@ -42,6 +42,8 @@
 
   :javascript
     var video_cme_id = #{@course_module_element.id};
+    var course_log_id = #{@subject_course_user_log.id};
+    var exam_track_id = "#{@student_exam_track.try(:id)}";
     var logId = '';
     var options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
@@ -72,7 +74,7 @@
         $.ajax({
           url: '#{create_video_user_log_courses_path}',
           dataType: 'json',
-          data: JSON.stringify({'cmeId': video_cme_id}),
+          data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'set_id': exam_track_id }),
           method: 'POST',
           contentType: "application/json; charset=utf-8",
           success: function(data,status,xhr){

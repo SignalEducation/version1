@@ -4,7 +4,6 @@ class CoursesController < ApplicationController
   before_action :check_permission, only: :show
 
   def show
-    @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url])
     if @course_module && @course_module.active_children
       @course_module_element = @course_module.active_children.find_by(name_url: params[:course_module_element_name_url])
       @course_module_element ||= @course_module.active_children.all_in_order.first
@@ -15,6 +14,7 @@ class CoursesController < ApplicationController
       if @course_module_element.is_quiz
         set_up_quiz
       elsif @course_module_element.is_video && !@course_module_element.course_module_element_video.vimeo_guid
+        #TODO Remove this once all Wistia videos are gone
         @video_cme_user_log = CourseModuleElementUserLog.create!(
             course_module_element_id: @course_module_element.id,
             user_id: current_user.try(:id),
@@ -24,7 +24,9 @@ class CoursesController < ApplicationController
             is_video: true,
             is_quiz: false,
             course_module_id: @course_module_element.course_module_id,
-            subject_course_id: @course.id
+            subject_course_id: @course.id,
+            student_exam_track_id: @student_exam_track.try(:id),
+            subject_course_user_log_id: @subject_course_user_log.id
         )
       end
     else
@@ -64,6 +66,7 @@ class CoursesController < ApplicationController
         # it did not save
         Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
         flash[:error] = I18n.t('controllers.courses.create.flash.error')
+        redirect_to library_special_link(@course_module.parent)
       end
 
     else
@@ -92,6 +95,15 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json {
         course_module_element = CourseModuleElement.find(params[:course][:cmeId])
+        param_id = params[:course][:set_id]
+        if param_id && !param_id.empty?
+          student_exam_track_id = param_id
+        elsif param_id && param_id.empty?
+          student_exam_track_id = nil
+        else
+          student_exam_track_id = nil
+        end
+
         if course_module_element
           @video_cme_user_log = CourseModuleElementUserLog.create!(
               course_module_element_id: course_module_element.id,
@@ -102,7 +114,9 @@ class CoursesController < ApplicationController
               is_video: true,
               is_quiz: false,
               course_module_id: course_module_element.course_module_id,
-              subject_course_id: course_module_element.course_module.subject_course_id
+              subject_course_id: course_module_element.course_module.subject_course_id,
+              subject_course_user_log_id: params[:course][:scul_id],
+              student_exam_track_id: student_exam_track_id
           )
         end
         data = {video_log_id: @video_cme_user_log.id}
@@ -118,6 +132,8 @@ class CoursesController < ApplicationController
   def allowed_params
     params.require(:course_module_element_user_log).permit(
             :subject_course_id,
+            :student_exam_track_id,
+            :subject_course_user_log_id,
             :course_module_id,
             :course_module_element_id,
             :user_id,
@@ -138,6 +154,8 @@ class CoursesController < ApplicationController
             session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,
             subject_course_id: @course_module_element.course_module.subject_course_id,
+            subject_course_user_log_id: @subject_course_user_log.id,
+            student_exam_track_id: @student_exam_track.try(:id),
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
             is_video: false,
@@ -166,7 +184,19 @@ class CoursesController < ApplicationController
 
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    unless @course && current_user && current_user.permission_to_see_content(@course)
+    @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url]) if @course
+
+    if @course && current_user && current_user.permission_to_see_content(@course)
+
+      @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id).last
+      if @active_enrollment
+        @subject_course_user_log = @active_enrollment.subject_course_user_log
+        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+      else
+        flash[:warning] = 'Sorry, you are not permitted to access that content.'
+        redirect_to root_url
+      end
+    else
       if current_user.expired_free_member?
         flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue'
         redirect_to user_new_subscription_url(current_user.id)
@@ -178,9 +208,6 @@ class CoursesController < ApplicationController
         redirect_to root_url
       end
     end
-
-    ## Continue to load the Video or Quiz ##
-
   end
 
 end

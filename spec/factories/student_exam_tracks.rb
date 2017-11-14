@@ -17,13 +17,15 @@
 #  count_of_questions_correct      :integer
 #  count_of_quizzes_taken          :integer
 #  count_of_videos_taken           :integer
+#  subject_course_user_log_id      :integer
 #
 
 FactoryGirl.define do
   factory :student_exam_track do
     user_id 1
     latest_course_module_element_id 1
-    exam_schedule_id 1
+    subject_course_id 1
+    subject_course_user_log_id 1
   end
 
 end

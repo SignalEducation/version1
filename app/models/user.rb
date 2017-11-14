@@ -131,8 +131,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_trial_limit_in_days
-  after_create :create_on_discourse
+  after_create :set_trial_limit_in_days, :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -377,7 +376,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_to_see_content(course)
-    if self.individual_student? && course.enrolled_user_ids.include?(self.id)
+    if self.individual_student? && course.active_enrollment_user_ids.include?(self.id)
       if course.active
         if self.valid_free_member?
           true
@@ -391,7 +390,9 @@ class User < ActiveRecord::Base
       else
         false
       end
-    elsif self.complimentary_user?
+    elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
+      true
+    elsif self.admin? && course.active_enrollment_user_ids.include?(self.id)
       true
     else
       false
@@ -399,6 +400,7 @@ class User < ActiveRecord::Base
   end
 
   def assign_anonymous_logs_to_user(session_guid)
+    #TODO This is currently not used, as no content can be viewed without an account. Note: When reinstated only the CMEUL's should exist and this process should create the SET and find the SCUL when the user creates an Enrollment if these CMEUL's are for the course enrolled
     model_list = [CourseModuleElementUserLog, StudentExamTrack, SubjectCourseUserLog]
     model_list.each do |the_model|
       the_model.assign_user_to_session_guid(self.id, session_guid)
@@ -504,7 +506,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{first_name last_name email id}
+    attributes = %w{first_name last_name email id student_number}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -515,7 +517,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_enrollments(options = {})
-    attributes = %w{first_name last_name email date_of_birth enrolled_courses student_numbers}
+    attributes = %w{first_name last_name email student_number date_of_birth enrolled_courses valid_enrolled_courses}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -539,17 +541,17 @@ class User < ActiveRecord::Base
   def enrolled_courses
     course_names = []
     self.enrollments.each do |enrollment|
-      course_names << enrollment.subject_course.name
+      course_names << enrollment.subject_course.name if enrollment.subject_course
     end
     course_names
   end
 
-  def student_numbers
-    student_numbers = []
-    self.enrollments.each do |enrollment|
-      student_numbers << enrollment.student_number
+  def valid_enrolled_courses
+    course_names = []
+    self.enrollments.all_valid.each do |enrollment|
+      course_names << enrollment.subject_course.name if enrollment.subject_course
     end
-    student_numbers
+    course_names
   end
 
   def visit_campaigns
@@ -576,8 +578,8 @@ class User < ActiveRecord::Base
     visits
   end
 
-  def create_on_discourse
-    #DiscourseCreateUserWorker.perform_at(24.hours.from_now, self.id, self.email) if self.individual_student? && !self.discourse_user && Rails.env.production?
+  def enrolled_course_ids
+    self.enrollments.map(&:subject_course_id)
   end
 
   def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)
@@ -670,13 +672,17 @@ class User < ActiveRecord::Base
           error_msgs = []
           if fields.length == 3
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
 
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('.')
-            error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].length >= 5
+            error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
 
-            error_msgs << I18n.t('models.users.not_valid_first_name') unless fields[1].length >= 2
-            error_msgs << I18n.t('models.users.not_valid_last_name') unless fields[2].length >= 2
+            error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
+            error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
+
+            error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
+            error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
+
+            error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
+            error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
 
             duplicate_emails << fields[0]
           else
@@ -693,13 +699,17 @@ class User < ActiveRecord::Base
             error_msgs = []
             if fields.length == 3
               error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('@')
 
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].include?('.')
-              error_msgs << I18n.t('models.users.not_valid_email') unless fields[0].length >= 5
+              error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
 
-              error_msgs << I18n.t('models.users.not_valid_first_name') unless fields[1].length >= 2
-              error_msgs << I18n.t('models.users.not_valid_last_name') unless fields[2].length >= 2
+              error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
+              error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
+
+              error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
+              error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
+
+              error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
+              error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
 
               duplicate_emails << fields[0]
             else
@@ -718,41 +728,55 @@ class User < ActiveRecord::Base
     return csv_data, has_errors
   end
 
-  def self.bulk_create(csv_data)
-    users = []
-    used_emails = []
+  def self.bulk_create(csv_data, root_url)
+    existing_users = []
+    new_users = []
     if csv_data.is_a?(Hash)
       self.transaction do
         csv_data.each do |k,v|
           user = User.where(email: v['email']).first
+          similar_user = User.search_for(v['email']).first
           if user && v['email'].empty?
-            users = []
+            existing_users = []
             raise ActiveRecord::Rollback
           elsif user
-            users << user
-          else
-            country = Country.find(78) || Country.find(name: 'United Kingdom').last
-            password = SecureRandom.hex(5)
-            verification_code = ApplicationController::generate_random_code(20)
-            time_now = Proc.new{Time.now}.call
-            user_group = UserGroup.where(individual_student: true, name: 'Individual students').first
-            user = self.where(email: v['email'], first_name: v['first_name'], last_name: v['last_name']).first_or_create
-
-            user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
-            if used_emails.include?(v['email']) || !user.valid?
-              users = []
-              Rails.logger.error "ERROR: Dashboard#import_csv_upload - failed to save a csv user. Error:#{user.errors.inspect}. Count of used emails: #{used_emails.count}"
-              raise ActiveRecord::Rollback
+            if user.expired_free_member? && user.stripe_customer_id
+              MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}/users/#{user.id}/new_subscription")
+              existing_users << user
             end
-            users << user
-            used_emails << user.email
+          elsif !user && similar_user
+            if similar_user.expired_free_member? && similar_user.stripe_customer_id
+              MandrillWorker.perform_async(similar_user.id, 'send_free_trial_over_email', "#{root_url}/users/#{similar_user.id}/new_subscription")
+              existing_users << similar_user
+            end
+          else
+
+            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], root_url)
+            new_users << v['email']
           end
         end
       end
     end
-    users
+    return new_users, existing_users
   end
 
+  def self.create_csv_user(email, first_name, last_name, root_url)
+    country = Country.find(78) || Country.find(name: 'United Kingdom').last
+    password = SecureRandom.hex(5)
+    verification_code = ApplicationController::generate_random_code(20)
+    time_now = Proc.new{Time.now}.call
+    user_group = UserGroup.where(individual_student: true, name: 'Individual students').first
+
+    user = self.where(email: email, first_name: first_name, last_name: last_name).first_or_create
+
+    stripe_customer = Stripe::Customer.create(email: user.email)
+
+    user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id, stripe_customer_id: stripe_customer.id)
+
+    MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+
+
+  end
 
   def update_from_stripe
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
@@ -800,6 +824,10 @@ class User < ActiveRecord::Base
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+  end
+
+  def create_on_intercom
+    IntercomCreateUserWorker.perform_async(self.id)
   end
 
   def set_trial_limit_in_days

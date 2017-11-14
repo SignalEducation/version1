@@ -48,10 +48,20 @@ en:
 
     users:
       existing_emails: Email already exists in system
+      first_name_too_short: First Name must be min 2 characters
+      first_name_too_long: First Name must be max 20 characters
+      last_name_too_short: Last Name must be min 2 characters
+      last_name_too_long: Last Name must be max 30 characters
       not_valid_first_name: Not a valid first name
       not_valid_last_name: Not a valid last name
+
+      email_must_have_at_symbol: "Email must contain an @ symbol"
+      email_must_have_dot: "Email must contain an . symbol"
+      email_too_short: Email must be min 5 characters
       not_valid_email: Not a valid email format
       duplicated_emails: Duplicate Email
       invalid_field_count: File must have 3 columns
       preview_csv: Preview Users
       import_csv: Imported Users
+      dont_reload: 'Do Not Reload This Page!'
+      sidekiq_explanation: "Users are created as background jobs so as not to cause heavy cpu strain on the servers. If you want to check their progress click the 'Sidekiq' link below."

@@ -66,7 +66,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :orders
   has_many :white_papers
   has_many :mock_exams
-  has_one :exam_sitting
+  has_many :exam_sittings
   has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
 
@@ -108,7 +108,7 @@ class SubjectCourse < ActiveRecord::Base
   ## Structures data in CSV format for Excel downloads ##
   def self.to_csv(options = {})
     #attributes are either model attributes or data generate in methods below
-    attributes = %w{name subject_area new_enrollments total_enrollments paused_enrollments completed_enrollments}
+    attributes = %w{name new_enrollments total_enrollments active_enrollments non_expired_enrollments expired_enrollments completed_enrollments}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -202,6 +202,10 @@ class SubjectCourse < ActiveRecord::Base
     self.enrollments.map(&:user_id)
   end
 
+  def active_enrollment_user_ids
+    self.enrollments.all_active.map(&:user_id)
+  end
+
   def started_by_user_or_guid(user_id, session_guid)
     self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
   end
@@ -228,11 +232,8 @@ class SubjectCourse < ActiveRecord::Base
     log.try(:count_of_cmes_completed)
   end
 
-  def update_all_course_sets
-    self.student_exam_tracks.each do |set|
-      StudentExamTracksWorker.perform_async(set.id)
-    end
-    SubjectCourseUserLogWorker.perform_at(5.minute.from_now, self.id)
+  def update_all_course_logs
+    SubjectCourseUserLogWorker.perform_async(self.id)
   end
 
   ########################################################################
@@ -242,8 +243,16 @@ class SubjectCourse < ActiveRecord::Base
     self.enrollments.this_week.count
   end
 
-  def paused_enrollments
-    self.enrollments.all_paused.count
+  def active_enrollments
+    self.enrollments.all_active.count
+  end
+
+  def expired_enrollments
+    self.enrollments.all_expired.count
+  end
+
+  def non_expired_enrollments
+    self.enrollments.all_not_expired.count
   end
 
   def completed_enrollments

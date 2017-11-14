@@ -45,7 +45,6 @@ end
 #### Student sign_up process
 
 def student_sign_up_as(user_first_name, user_second_name, user_email, user_password)
-  expect(page).to have_content(maybe_upcase '7-day free trial (up to 45 minutes)')
   enter_user_details(user_first_name, user_second_name, user_email, user_password)
   page.all(:css, '#signUp').first.click
   sleep 1

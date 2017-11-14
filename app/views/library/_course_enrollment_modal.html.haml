@@ -2,39 +2,51 @@
   .row
     .col-md-12
       %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
+      .col-md-12.l-margin-bottom
         %h3
           ="Welcome to the #{@course.try(:name)}."
         %h3
-          ='To continue your studies please enrol.'
+          ='To continue your studies please Enrol.'
 
-      =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
-        =f.hidden_field :subject_course_id, value: @course.id
-        .row.l-margin-top.text-left
-          .col-sm-12
-            .col-sm-6
-              =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.collection_select :exam_date, @exam_sittings, :date, :formatted_date, {prompt: t('views.general.select'), include_blank: 'Computer Based Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
+      #enrollment_form
+        =form_for(@new_enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
+          =f.hidden_field :subject_course_id, value: @course.id
+          =f.hidden_field :subject_course_user_log_id, value: nil, id: 'hidden_scul_id'
+          .row.l-margin-top.text-left
+            .col-sm-12
+              .col-sm-6
+                =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.collection_select :exam_date, @exam_sittings, :date, :formatted_date, {prompt: t('views.general.select'), include_blank: 'Computer Based Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
 
-            .col-sm-6#custom_exam_date
-              %label{class: 'control-label'}
-                ='Enter Computer Based Exam Date'
-              .input-group.input-group-lg.full-width
-                %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'}
-
-
-        %br/
-        .col-sm-12
-          %p.p
-            ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help for your exam."
+              .col-sm-6#custom_exam_date
+                %label{class: 'control-label'}
+                  ='Enter Computer Based Exam Date'
+                .input-group.input-group-lg.full-width
+                  %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'}
 
 
-        %br/
-        .col-sm-12#actions_btns
-          .col-sm-4.col-sm-offset-8
-            .btn.btn-cyan#enroll_now{"data-remodal-action" => "confirm"}
-              Enrol Now
+            -if @active_enrollment && @active_enrollment.expired
+              %br/
+              .col-sm-12
+                .col-sm-10
+                  .l-margin-top-big
+                    %label.check
+                      %input{type: "checkbox", id: 'use_old_log'}
+                        %span
+                          %i.fa.fa-check
+                        ='Keep progress from previous Enrolment'
+
+          .col-sm-12.l-margin-top
+            %p.p
+              ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
+
+
+          %br/
+          .col-sm-12#actions_btns
+            .col-sm-4.col-sm-offset-8
+              #enroll_now
+                =submit_tag 'Enrol Now', class: 'btn btn-cyan'
 
 
 :javascript
@@ -45,7 +57,7 @@
     $('#enroll_now').attr('disabled', true);
   });
 
-  // Hide and show the form or info section depending on which checkbox is selected
+  // Hide and show the datepicker depending on exam_date selection
   $('select[name="exam_date"]').change(function () {
     if ((this).selectedIndex == 1) {
       $("#custom_exam_date").show();
@@ -68,20 +80,27 @@
 
   // JS to submit form when modal confirmation btn is clicked
   $(document).on('confirmation', '.remodal', function () {
+    $("#enrollment_form").hide();
     document.forms['enrollment_modal_form'].submit();
   });
 
-  $(document).on('closing', '.remodal', function () {
-    $('input[type="checkbox"]').prop('checked', false);
-    $("#enrollment_form").hide();
-    $("#registration_info").hide();
-  });
 
 
-
-  // Both Date Pickers
+  // Date Picker
   $(function () {
     $('#datetimepicker').datetimepicker();
       format: 'DD/MM/YYYY'
   });
 
+-if @active_enrollment && @active_enrollment.expired
+
+  :javascript
+    // Set the hidden field value if checkbox is selected
+    var scul_id = #{@active_enrollment.subject_course_user_log_id}
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#use_old_log').prop('checked') == true) {
+        $("#hidden_scul_id").val(scul_id);
+      } else if($('#use_old_log').prop('checked') == false) {
+        $("#hidden_scul_id").val('nil');
+      }
+    });

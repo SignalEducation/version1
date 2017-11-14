@@ -23,12 +23,8 @@
                         Last Name
                       %th
                         Errors
-                      %th
-                        Email Type
                   %tbody
                     -@csv_data.each_with_index do |csd, idx|
-                      -user = User.where(email: csd[:values][0]).first
-                      -email_type = user ? 'Upgrade' : 'Invite'
                       %tr{id: "csvdata-#{idx}"}
                         =hidden_field_tag "csvdata[#{idx}][email]", csd[:values][0]
                         =hidden_field_tag "csvdata[#{idx}][first_name]", csd[:values][1]
@@ -40,7 +36,6 @@
                         %td
                           =csd[:values][2]
                         %td=csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
-                        %td=email_type
 
               .row
                 .col-sm-12

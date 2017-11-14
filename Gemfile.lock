@@ -135,6 +135,7 @@ GEM
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
     daemons (1.2.3)
+    dante (0.2.0)
     database_cleaner (1.5.1)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
@@ -430,6 +431,10 @@ GEM
       net-ssh (>= 2.8.0)
     stripe (2.8.0)
       faraday (~> 0.9)
+    stripe-ruby-mock (2.5.0)
+      dante (>= 0.2.0)
+      multi_json (~> 1.0)
+      stripe (>= 2.0.3)
     summernote-rails (0.7.1.0)
       railties (>= 3.1)
     therubyracer (0.12.2)
@@ -557,6 +562,7 @@ DEPENDENCIES
   sinatra
   spring
   stripe (= 2.8.0)
+  stripe-ruby-mock (>= 2.4.0)
   summernote-rails
   therubyracer
   thin

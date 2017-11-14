@@ -20,6 +20,8 @@
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
 #  subject_course_id          :integer
+#  student_exam_track_id      :integer
+#  subject_course_user_log_id :integer
 #
 
 FactoryGirl.define do
@@ -37,6 +39,8 @@ FactoryGirl.define do
     latest_attempt false
     count_of_questions_taken 1
     count_of_questions_correct 1
+    subject_course_user_log_id 1
+    subject_course_user_log_id 1
   end
 
 end

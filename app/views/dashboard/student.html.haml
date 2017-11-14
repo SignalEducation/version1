@@ -1,4 +1,4 @@
--if @first_active_log
+-if @enrollments
   .l-section-small.is-bg-asphalt
     .l-wrap
       .container-fluid
@@ -11,20 +11,21 @@
               %ul
                 %li
                   %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
-                    Enrolments
-                -if @non_enrollment_logs
+                    Active Enrolments
+                -if @expired_enrollments
                   %li
                     %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
-                      Activity
+                      Expired Enrolments
 
           .col-sm-9
             .dashboard-tab-content
               .tab.dashboard-tab#enrollments
                 =render partial: 'enrollments'
 
-              -if @non_enrollment_logs
+              -if @expired_enrollments
                 .tab.dashboard-tab#activity
                   =render partial: 'activity'
+
 
 
 -else
@@ -41,7 +42,7 @@
       .container-fluid.l-margin-bottom-huge
         .course-list-wrap
           .row
-            -@acca_group.subject_courses.all_in_order.each do |course|
+            -@default_group.subject_courses.all_in_order.each do |course|
               .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
                 =link_to library_special_link(course), class: 'card card-course' do
                   .card-outer
