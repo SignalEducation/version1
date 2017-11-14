@@ -27,7 +27,6 @@ class StudentSignUpsController < ApplicationController
   def create
     @navbar = false
     @footer = false
-    @topic_interests = Group.all_active.all_in_order
 
     @user = User.new(student_allowed_params)
     @user.user_group_id = UserGroup.default_student_user_group.try(:id)
@@ -70,7 +69,6 @@ class StudentSignUpsController < ApplicationController
           cookies.delete(:referral_data)
         end
       end
-      @user.assign_anonymous_logs_to_user(current_session_guid)
       @user.create_referral_code
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
     else

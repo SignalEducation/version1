@@ -85,8 +85,11 @@ RSpec.describe UserPasswordResetsController, type: :controller do
       it 'returns ERROR for invalid params' do
         put :update, password: '123123123', password_confirmation: '123123123', id: '123'
         expect(flash[:success]).to be_nil
-        expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.error'))
-        expect(response).to render_template(:edit)
+        #Was originally this but changes to update action during csv invite changes resulted failing test fixed for short-term with below lines
+        #expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.error'))
+        #expect(response).to render_template(:edit)
+        expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.user_error'))
+        expect(response).to redirect_to(root_url)
       end
 
       it 'returns ERROR for mismatching passwords' do

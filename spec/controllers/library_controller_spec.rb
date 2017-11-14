@@ -87,6 +87,7 @@ RSpec.describe LibraryController, type: :controller do
     end
 
     describe "GET course_show" do
+      #TODO include variations depending on enrollment conditions
       it "returns http success" do
         get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
         expect(response).to have_http_status(:success)

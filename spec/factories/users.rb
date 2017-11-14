@@ -73,6 +73,7 @@ FactoryGirl.define do
     factory :individual_student_user do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
       active                            true
+      free_trial                        true
       user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       account_activation_code           'abc123'

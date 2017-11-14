@@ -1124,6 +1124,9 @@ a.card {
 
 }
 
+.edit-enrollment {
+  padding: $gutter/2 0 $gutter $gutter;
+}
 
 a.link-purple {
   color: $colour-7;
@@ -2221,6 +2224,13 @@ spinner {
 #sign_up .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
 #sign_up .check input + span .fa { opacity: 0; }
 #sign_up .check input:checked + span .fa { opacity: 1; }
+
+
+#enrollment_form .check { display: block; cursor: pointer; overflow: hidden; margin: 0 0 3em 0; }
+#enrollment_form .check input { position: absolute; opacity: 0; left: -30px; top: -30px; }
+#enrollment_form .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
+#enrollment_form .check input + span .fa { opacity: 0; }
+#enrollment_form .check input:checked + span .fa { opacity: 1; }
 
 
 

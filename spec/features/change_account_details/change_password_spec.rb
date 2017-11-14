@@ -2,12 +2,14 @@ require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/subscription_plans_setup'
 require 'support/system_setup'
+require 'support/course_content'
 
 describe 'User changing their password', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'subscription_plans_setup'
   include_context 'system_setup'
+  include_context 'course_content'
 
   before(:each) do
     a = admin_user

@@ -312,7 +312,6 @@ describe 'The sign in process.', type: :feature do
       find('.dropdown.dropdown-admin').click
       expect(page).to have_content I18n.t('views.users.index.h1')
       expect(page).to have_content I18n.t('views.user_groups.index.h1')
-      expect(page).to have_content I18n.t('views.tutor_applications.index.h1')
       find('.dropdown.dropdown-normal').click
       click_link('Sign out')
     end

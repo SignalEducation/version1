@@ -43,9 +43,5 @@
       %a{data: {remodal: {target: 'change-password-modal'}}, class: 'btn btn-cyan full-width l-margin-bottom change-pw-link'}
         =t('views.users.show.change_your_password.link')
 
-      -#unless current_user.discourse_user
-        =link_to user_create_discourse_user_path, method: :post, class: 'btn btn-purple full-width l-margin-bottom' do
-          ='Join Our Community'
-
 
 =render partial: 'users/user_account/student_user_form'

@@ -39,18 +39,23 @@ describe SubjectCourseUserLog do
   it { should belong_to(:user) }
   it { should belong_to(:subject_course) }
   it { should belong_to(:latest_course_module_element) }
+  it { should have_many(:enrollments) }
+  it { should have_many(:student_exam_tracks) }
+  it { should have_many(:course_module_element_user_logs) }
 
   # validation
   it { should validate_presence_of(:user_id) }
-
-  it { should validate_presence_of(:session_guid) }
+  it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:subject_course_id) }
+  it { should validate_numericality_of(:subject_course_id) }
 
   it { should_not validate_presence_of(:latest_course_module_element_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:update_enrollment).after(:save) }
+  it { should callback(:check_for_completion).after(:save) }
 
   # scopes
   it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }
@@ -58,6 +63,7 @@ describe SubjectCourseUserLog do
   it { expect(SubjectCourseUserLog).to respond_to(:for_unknown_users) }
   it { expect(SubjectCourseUserLog).to respond_to(:all_complete) }
   it { expect(SubjectCourseUserLog).to respond_to(:all_incomplete) }
+  it { expect(SubjectCourseUserLog).to respond_to(:for_subject_course) }
 
   # class methods.
   it { expect(SubjectCourseUserLog).to respond_to(:assign_user_to_session_guid) }
@@ -65,11 +71,14 @@ describe SubjectCourseUserLog do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
   it { should respond_to(:elements_total) }
-
+  it { should respond_to(:active_enrollment) }
+  it { should respond_to(:update_enrollment) }
+  it { should respond_to(:last_element) }
   it { should respond_to(:recalculate_completeness) }
+  it { should respond_to(:student_exam_track_course_module_ids) }
+  it { should respond_to(:old_sets) }
+  it { should respond_to(:old_cmeuls) }
 
-  it { should respond_to(:student_exam_tracks) }
 
 end

@@ -64,7 +64,7 @@ require 'rails_helper'
 describe User do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number discourse_user name_url analytics_guid)
+  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid crush_offers_session_id subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number name_url analytics_guid discourse_user)
 
   User.column_names.each do |column_name|
     if black_list.include?(column_name)
@@ -102,7 +102,7 @@ describe User do
 
   it { should validate_presence_of(:email) }
 
-  it { should validate_length_of(:email).is_at_least(7).is_at_most(50) }
+  it { should validate_length_of(:email).is_at_least(5).is_at_most(50) }
 
   it { should validate_presence_of(:first_name) }
   it { should validate_length_of(:first_name).is_at_least(2).is_at_most(20) }

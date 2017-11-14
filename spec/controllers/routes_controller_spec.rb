@@ -74,7 +74,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(tutor_dashboard_url)
+        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 
@@ -91,7 +91,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(content_manager_dashboard_url)
+        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 

@@ -20,6 +20,8 @@
 #  count_of_questions_taken   :integer
 #  count_of_questions_correct :integer
 #  subject_course_id          :integer
+#  student_exam_track_id      :integer
+#  subject_course_user_log_id :integer
 #
 
 require 'rails_helper'
@@ -39,10 +41,13 @@ describe CourseModuleElementUserLog do
   # Constants
 
   # relationships
+  it { should belong_to(:subject_course_user_log) }
+  it { should belong_to(:student_exam_track) }
+  it { should belong_to(:subject_course) }
   it { should belong_to(:course_module) }
   it { should belong_to(:course_module_element) }
-  it { should have_many(:quiz_attempts) }
   it { should belong_to(:user) }
+  it { should have_many(:quiz_attempts) }
 
   # validation
   it { should_not validate_presence_of(:course_module_element_id) }
@@ -73,10 +78,12 @@ describe CourseModuleElementUserLog do
   # scopes
   it { expect(CourseModuleElementUserLog).to respond_to(:all_in_order) }
   it { expect(CourseModuleElementUserLog).to respond_to(:all_completed) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:all_incomplete) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_session_guid) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_unknown_users) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module_element) }
+  it { expect(CourseModuleElementUserLog).to respond_to(:for_subject_course) }
   it { expect(CourseModuleElementUserLog).to respond_to(:latest_only) }
   it { expect(CourseModuleElementUserLog).to respond_to(:quizzes) }
   it { expect(CourseModuleElementUserLog).to respond_to(:videos) }
@@ -95,7 +102,7 @@ describe CourseModuleElementUserLog do
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:recent_attempts) }
-  it { should respond_to(:student_exam_track) }
+  it { should respond_to(:old_set) }
 
 
 end

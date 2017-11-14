@@ -12,15 +12,14 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(allowed_params)
     if @user_session.save
-      @user_session.user.assign_anonymous_logs_to_user(current_session_guid)
       @user_session.user.update_attribute(:session_key, session[:session_id])
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       set_current_visit
       flash[:error] = nil
       if session[:return_to]
-        redirect_back_or_default dashboard_special_link(@user_session.user)
+        redirect_back_or_default(student_dashboard_url)
       else
-        redirect_to dashboard_special_link(@user_session.user), flash: { just_signed_in: true }
+        redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
     else
       render action: :new
