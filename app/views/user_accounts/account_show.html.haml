@@ -20,7 +20,7 @@
             %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.user_accounts.payment_details.tab_heading')
 
-          -if @user.individual_student? && @valid_order.any?
+          -if @user.individual_student? && @orders.any?
             %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.user_accounts.orders_info.tab_heading')
 
@@ -52,12 +52,12 @@
                   =render partial: 'payment_details'
 
 
-        -if @valid_order.any?
+        -if @orders.any?
           .tab-pane.fade#orders{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge
                 .content-box-inner
-                  =render partial: 'orders/account_info'
+                  =render partial: 'orders_info'
 
         .tab-pane.fade#enrollments{role: 'tabpanel'}
           .col-md-12

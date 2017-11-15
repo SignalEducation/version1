@@ -5,7 +5,6 @@ class UserAccountsController < ApplicationController
 
 
   def account_show
-    @valid_order = @user.orders
     @orders = @user.orders
     @enrollments = @user.enrollments.all_active
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
@@ -119,7 +118,7 @@ class UserAccountsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :address, :employee_guid, :topic_interest, :date_of_birth, :terms_and_conditions, :student_number)
+    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number)
   end
 
   def get_variables
