@@ -138,6 +138,7 @@ class User < ActiveRecord::Base
   scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
   scope :sort_by_email, -> { order(:email) }
   scope :sort_by_name, -> { order(:last_name, :first_name) }
+  scope :sort_by_most_recent, -> { order(created_at: :desc) }
   scope :sort_by_recent_registration, -> { order(created_at: :desc) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }

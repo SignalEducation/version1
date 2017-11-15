@@ -380,6 +380,7 @@ en:
       update:
         flash:
           success: User details have been updated successfully
+          error: User details have not been updated
       destroy:
         flash:
           success: User has been deleted

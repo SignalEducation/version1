@@ -54,6 +54,14 @@ Rails.application.routes.draw do
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
     resources :user_groups
+    resources :user_management do
+      get  '/personal', action: :user_personal_details, as: :personal
+      get  '/subscription', action: :user_subscription_status, as: :subscription
+      get  '/courses', action: :user_courses_status, as: :courses
+      get  '/enrollments', action: :user_enrollments_details, as: :enrollments
+      get  '/orders', action: :user_purchases_details, as: :orders
+      patch  '/update_courses', action: :update_courses, as: :update_courses
+    end
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
@@ -155,14 +163,7 @@ Rails.application.routes.draw do
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
 
     resources :user_notifications
-    resources :users, only: [:new, :create] do
-      get  '/user_personal_details', action: :user_personal_details, as: :personal_details
-      get  '/user_subscription_status', action: :user_subscription_status, as: :subscription_status
-      get  '/user_courses_status', action: :user_courses_status, as: :courses_status
-      get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
-      get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
-      patch  '/update_courses', action: :update_courses, as: :update_courses
-    end
+    resources :users, only: [:new, :create]
 
     post :preview_csv_upload, to: 'dashboard#preview_csv_upload'
     post :import_csv_upload, to: 'dashboard#import_csv_upload'

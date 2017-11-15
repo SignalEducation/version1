@@ -123,6 +123,7 @@ class UserAccountsController < ApplicationController
 
   def get_variables
     @user = current_user
+    seo_title_maker('Account Details', '', true)
   end
 
 end
