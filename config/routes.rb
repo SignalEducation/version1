@@ -97,15 +97,8 @@ Rails.application.routes.draw do
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
     resources :currencies, concerns: :supports_reordering
 
-    get '/dashboard/export_users', to: 'dashboard#export_users', as: :export_users
-    get '/dashboard/export_users_monthly', to: 'dashboard#export_users_monthly', as: :export_users_monthly
-    get '/dashboard/export_users_with_enrollments', to: 'dashboard#export_users_with_enrollments', as: :export_users_with_enrollments
-    get '/dashboard/export_visits', to: 'dashboard#export_visits', as: :export_visits
-    get '/dashboard/export_courses', to: 'dashboard#export_courses', as: :export_courses
-    get '/dashboard/export_enrollments', to: 'dashboard#export_enrollments', as: :export_enrollments
     get '/dashboard', to: 'dashboard#student', as: :student_dashboard
     get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
-    get '/dashboard/reports', to: 'dashboard#reports', as: :reports_dashboard
     get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
     get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
     get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard
@@ -139,6 +132,16 @@ Rails.application.routes.draw do
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     resources :products
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
+
+    get '/reports', to: 'reports#index', as: :reports
+    get '/export_users', to: 'reports#export_users', as: :export_users
+    get '/export_users_monthly', to: 'reports#export_users_monthly', as: :export_users_monthly
+    get '/export_users_with_enrollments', to: 'reports#export_users_with_enrollments', as: :export_users_with_enrollments
+    get '/export_visits', to: 'reports#export_visits', as: :export_visits
+    get '/export_courses', to: 'reports#export_courses', as: :export_courses
+    get '/export_enrollments', to: 'reports#export_enrollments', as: :export_enrollments
+
+
     resources :subject_courses, concerns: :supports_reordering do
       get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors
       patch 'update_tutors', action: :update_tutors, as: :update_course_tutors
@@ -165,8 +168,8 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :users, only: [:new, :create]
 
-    post :preview_csv_upload, to: 'dashboard#preview_csv_upload'
-    post :import_csv_upload, to: 'dashboard#import_csv_upload'
+    post :preview_csv_upload, to: 'user_management#preview_csv_upload'
+    post :import_csv_upload, to: 'user_management#import_csv_upload'
 
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index

@@ -6,10 +6,17 @@
           %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Users
 
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'layouts/stats_navbar'
 
       .row.l-margin-top.l-margin-bottom
         .col-md-4.col-sm-4.l-margin-top
+          %a{data: {remodal: {target: 'csv-upload-modal'}}, class: 'btn btn-purple'}
+            Bulk Invite Users
           =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+
+
         .col-md-offset-4.col-md-4.l-margin-top
           =form_tag(users_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
@@ -47,3 +54,4 @@
               .col-sm-10.user-pagination
                 =will_paginate @users, renderer: BootstrapPagination::Rails
 
+=render partial: 'csv_import_modal'

@@ -116,6 +116,27 @@ class UserManagementController < ApplicationController
     redirect_to users_url
   end
 
+  def preview_csv_upload
+    if params[:upload] && params[:upload].respond_to?(:read)
+      @csv_data, @has_errors = User.parse_csv(params[:upload].read)
+    else
+      flash[:error] = t('controllers.dashboard.preview_csv.flash.error')
+      redirect_to admin_dashboard_url
+    end
+  end
+
+  def import_csv_upload
+    if params[:csvdata]
+
+      @new_users, @existing_users = User.bulk_create(params[:csvdata], root_url)
+
+      flash[:success] = t('controllers.dashboard.import_csv.flash.success')
+    else
+      flash[:error] = t('controllers.dashboard.import_csv.flash.error')
+      redirect_to admin_dashboard_url
+    end
+  end
+
 
   protected
 
