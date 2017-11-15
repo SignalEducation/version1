@@ -97,12 +97,7 @@ Rails.application.routes.draw do
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
     resources :currencies, concerns: :supports_reordering
 
-    get '/dashboard', to: 'dashboard#student', as: :student_dashboard
-    get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
-    get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
-    get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
-    get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard
-    get '/dashboard/customer_support_manager', to: 'dashboard#customer_support_manager', as: :customer_support_manager_dashboard
+    get '/dashboard', to: 'dashboard#show', as: :student_dashboard
 
     resources :exam_bodies
     resources :exam_sittings
@@ -127,6 +122,7 @@ Rails.application.routes.draw do
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
 
+    resources :management_consoles
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order

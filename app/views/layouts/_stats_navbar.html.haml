@@ -2,7 +2,7 @@
   %ul.admin-nav-block
     -if current_user.admin?
       %li
-        =link_to 'Overview', admin_dashboard_url
+        =link_to 'Overview', management_consoles_url
       %li
         =link_to 'Reports', reports_url
     -elsif current_user.customer_support_manager?
