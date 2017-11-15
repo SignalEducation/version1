@@ -5,6 +5,7 @@ class UserManagementController < ApplicationController
   before_action do
     ensure_user_is_of_type(%w(admin customer_support_manager))
   end
+  before_action :layout_variables
   before_action :get_variables, except: [:user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status]
   before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status]
 
@@ -150,6 +151,12 @@ class UserManagementController < ApplicationController
     @user_groups = UserGroup.where(site_admin: false).all_in_order
     @countries = Country.all_in_order
     seo_title_maker('Users Management', '', true)
+  end
+
+  def layout_variables
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def get_user_variables

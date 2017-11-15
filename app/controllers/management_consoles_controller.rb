@@ -16,6 +16,9 @@ class ManagementConsolesController < ApplicationController
   protected
 
   def get_variables
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
 end

@@ -9,7 +9,7 @@
           .row.l-margin-bottom
             .col-md-12
               %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                =t('views.users.edit.h1')
+                New User
 
               =form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
                 =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
