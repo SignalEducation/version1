@@ -48,6 +48,9 @@ class VisitsController < ApplicationController
         @visits = Visit.search_for(params[:search_term].to_s).
             paginate(per_page: 50, page: params[:page])
 
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def show
@@ -56,6 +59,9 @@ class VisitsController < ApplicationController
 
   def all_show
     @visit = Visit.find(params[:id])
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   protected
@@ -63,6 +69,9 @@ class VisitsController < ApplicationController
   def get_variables
     @user = User.find(params[:user_id])
     seo_title_maker('User Visits', nil, false)
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
 end

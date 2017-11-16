@@ -78,6 +78,9 @@ class ReportsController < ApplicationController
 
   def get_variables
     seo_title_maker('System Reports', '', true)
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
 end

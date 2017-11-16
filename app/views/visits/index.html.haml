@@ -1,35 +1,46 @@
-.l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
-  .container-fluid.l-padding-side-3x
-    .row.l-margin-bottom.l-margin-top
-      .col-md-12.col-sm-12.col-xs-12.text-center
-        %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-          =@user.full_name
-          =t('views.visits.index.h1')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-      .col-md-12.l-margin-top-big
-        .corporate-box-item.table-box
-          .table-responsive
-            =will_paginate @visits, renderer: BootstrapPagination::Rails
-            %table.table.sorted_table{style: 'font-size: 18px;'}
-              %thead
-                %tr
-                  %th=t('views.visits.index.ip')
-                  %th=t('views.visits.index.utm_source')
-                  %th=t('views.visits.index.utm_medium')
-                  %th=t('views.visits.index.utm_term')
-                  %th=t('views.visits.index.utm_content')
-                  %th=t('views.visits.index.utm_campaign')
-                  %th=t('views.visits.index.started_at')
-                  %th
-              %tbody
-                -@visits.each do |visit|
-                  %tr
-                    %td=visit.ip
-                    %td=visit.utm_source
-                    %td=visit.utm_medium
-                    %td=visit.utm_term
-                    %td=visit.utm_content
-                    %td=visit.utm_campaign
-                    %td=humanize_datetime(visit.started_at)
-                    %td
-                      =link_to t('views.general.view'), user_visit_url(@user, visit.id), class: 'btn btn-cyan btn-small'
+  .main-content
+
+    .l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
+      .container-fluid.l-padding-side-3x
+        .row.l-margin-bottom.l-margin-top
+          .col-md-12.col-sm-12.col-xs-12.text-center
+            %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+              =@user.full_name
+              =t('views.visits.index.h1')
+
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12
+            =render partial: 'user_management/tabs'
+
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12.l-margin-top-big
+            .corporate-box-item.table-box
+              .table-responsive
+                =will_paginate @visits, renderer: BootstrapPagination::Rails
+                %table.table.sorted_table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th=t('views.visits.index.ip')
+                      %th=t('views.visits.index.utm_source')
+                      %th=t('views.visits.index.utm_medium')
+                      %th=t('views.visits.index.utm_term')
+                      %th=t('views.visits.index.utm_content')
+                      %th=t('views.visits.index.utm_campaign')
+                      %th=t('views.visits.index.started_at')
+                      %th
+                  %tbody
+                    -@visits.each do |visit|
+                      %tr
+                        %td=visit.ip
+                        %td=visit.utm_source
+                        %td=visit.utm_medium
+                        %td=visit.utm_term
+                        %td=visit.utm_content
+                        %td=visit.utm_campaign
+                        %td=humanize_datetime(visit.started_at)
+                        %td
+                          =link_to t('views.general.view'), user_visit_url(@user, visit.id), class: 'btn btn-cyan btn-small'
