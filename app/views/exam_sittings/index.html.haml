@@ -1,38 +1,48 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.exam_sittings.index.h1')
-      .row
-        .col-sm-12
-          =link_to t('views.general.new'), new_exam_sitting_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
+  .main-content
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                =t('views.exam_sittings.index.h1')
+
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              =render partial: 'layouts/courses_navbar'
 
 
-      .row
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              =will_paginate @exam_sittings, renderer: BootstrapPagination::Rails
-              %table.table
-                %thead
-                  %tr
-                    %th=t('views.exam_sittings.form.name')
-                    %th=t('views.exam_sittings.form.subject_course_id')
-                    %th=t('views.exam_sittings.form.date')
-                    %th=t('views.exam_sittings.form.active')
-                    %th
-                %tbody
-                  -@exam_sittings.each do |exam_sitting|
-                    %tr
-                      %td=exam_sitting.name
-                      %td=exam_sitting.subject_course.name
-                      %td=exam_sitting.date.strftime("%B %Y")
-                      %td=tick_or_cross(exam_sitting.active)
-                      %td
-                        =link_to t('views.general.view'), exam_sitting, class: 'btn btn-purple btn-small'
-                        =link_to t('views.general.edit'), edit_exam_sitting_url(exam_sitting), class: 'btn btn-cyan btn-small'
-                        -if exam_sitting.destroyable?
-                          =link_to t('views.general.delete'), exam_sitting, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+          .row.l-margin-top.l-margin-bottom
+            .col-sm-12
+              =link_to 'New Exam Sitting', new_exam_sitting_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+
+          .row
+            .col-md-12.l-margin-top
+              .table-box
+                .table-responsive
+                  =will_paginate @exam_sittings, renderer: BootstrapPagination::Rails
+                  %table.table
+                    %thead
+                      %tr
+                        %th=t('views.exam_sittings.form.name')
+                        %th=t('views.exam_sittings.form.subject_course_id')
+                        %th=t('views.exam_sittings.form.date')
+                        %th=t('views.exam_sittings.form.active')
+                        %th
+                    %tbody
+                      -@exam_sittings.each do |exam_sitting|
+                        %tr
+                          %td=exam_sitting.name
+                          %td=exam_sitting.subject_course.name
+                          %td=exam_sitting.date.strftime("%B %Y")
+                          %td=tick_or_cross(exam_sitting.active)
+                          %td
+                            =link_to t('views.general.view'), exam_sitting, class: 'btn btn-purple btn-small'
+                            =link_to t('views.general.edit'), edit_exam_sitting_url(exam_sitting), class: 'btn btn-cyan btn-small'
+                            -if exam_sitting.destroyable?
+                              =link_to t('views.general.delete'), exam_sitting, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 

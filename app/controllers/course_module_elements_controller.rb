@@ -199,6 +199,9 @@ class CourseModuleElementsController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @letters = ('A'..'Z').to_a
     @mathjax_required = true
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   ## Vimeo Video Actions ##

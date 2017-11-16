@@ -98,6 +98,9 @@ class CourseModulesController < ApplicationController
     end
     @subject_courses = SubjectCourse.all_in_order
     @tutors = User.all_tutors.all_in_order
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

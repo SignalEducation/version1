@@ -1,26 +1,32 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-sm-12.text-center
-          %h1
-            -if @course_module_element.is_video
-              =t('views.course_module_elements.show.video_preview')
-            -elsif @course_module_element.is_quiz
-              =t('views.course_module_elements.show.quiz_preview')
-            -else
-              =t('views.course_module_elements.show.h1')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-      .row.l-margin-bottom-big
-        .col-sm-10.col-sm-offset-1.margin-top
-          -if @course_module_element.is_video
-            =render partial: 'courses/show_video', locals: {cme: @course_module_element}
-          -elsif @course_module_element.is_quiz
-            =render partial: 'courses/show_quiz', locals: {cme: @course_module_element}
-          -else
-            .well.well-sm
-              %h2 Sorry, this Course Module Element is of an unknown type
+  .main-content
 
-      .row.l-margin-bottom-huge
-        .col-sm-8.col-sm-offset-2
-          =link_to sanitize('&larr; ' + t('views.course_modules.index.h1')), course_module_special_link(@course_module_element.course_module)
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-sm-12.text-center
+              %h1
+                -if @course_module_element.is_video
+                  =t('views.course_module_elements.show.video_preview')
+                -elsif @course_module_element.is_quiz
+                  =t('views.course_module_elements.show.quiz_preview')
+                -else
+                  =t('views.course_module_elements.show.h1')
+
+          .row.l-margin-bottom-big
+            .col-sm-10.col-sm-offset-1.margin-top
+              -if @course_module_element.is_video
+                =render partial: 'courses/show_video', locals: {cme: @course_module_element}
+              -elsif @course_module_element.is_quiz
+                =render partial: 'courses/show_quiz', locals: {cme: @course_module_element}
+              -else
+                .well.well-sm
+                  %h2 Sorry, this Course Module Element is of an unknown type
+
+          .row.l-margin-bottom-huge
+            .col-sm-8.col-sm-offset-2
+              =link_to sanitize('&larr; ' + t('views.course_modules.index.h1')), course_module_special_link(@course_module_element.course_module)

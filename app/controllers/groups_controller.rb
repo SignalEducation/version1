@@ -32,7 +32,6 @@ class GroupsController < ApplicationController
   # Standard Actions #
   def index
     @groups = Group.paginate(per_page: 50, page: params[:page])
-    @footer = true
   end
 
   def show
@@ -42,11 +41,9 @@ class GroupsController < ApplicationController
 
   def new
     @group = Group.new
-    @footer = true
   end
 
   def edit
-    @footer = true
   end
 
   def create
@@ -89,6 +86,9 @@ class GroupsController < ApplicationController
 
   def get_variables
     @group = Group.where(name_url: params[:group_name_url]).first || Group.where(id: params[:id]).first
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

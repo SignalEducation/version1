@@ -88,6 +88,9 @@ class QuizQuestionsController < ApplicationController
     end
     @quiz_questions = QuizQuestion.all_in_order
     seo_title_maker("Quiz Questions #{@quiz_question.try(:id)}", '', true)
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

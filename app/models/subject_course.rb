@@ -158,7 +158,7 @@ class SubjectCourse < ActiveRecord::Base
 
   ## Archivable ability ##
   def destroyable?
-    true
+    self.course_modules.empty?
   end
 
   def destroyable_children

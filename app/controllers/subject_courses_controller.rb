@@ -178,7 +178,9 @@ class SubjectCoursesController < ApplicationController
     @groups = Group.all_active.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
-    @footer = true
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

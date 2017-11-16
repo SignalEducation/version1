@@ -1,30 +1,36 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            ="Reorder Questions for #{@course_module_element.name}"
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-      .row.l-margin-top.l-margin-bottom
-        .pull-right
-          =link_to t('views.subject_courses.course_modules_order.return'), edit_course_module_element_url(@course_module_element), class: 'btn btn-red'
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              %table.table.sorted_table{data: {destination: quiz_questions_url}, id: @course_module_element, style: 'font-size: 18px;'}
-                %thead
-                  %tr
-                    %th Question ID
-                    %th Question Text
-                    %th
-                %tbody
-                  -@quiz_questions.all_in_order.each do |qq|
-                    %tr{id: qq.id, data: {parent: @course_module_element.id, destination: quiz_questions_url}}
-                      %td
-                        =qq.id
-                      %td
-                        =qq.quiz_contents.first.text_content.truncate(30)
-                      %td
-                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+  .main-content
+
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                ="Reorder Questions for #{@course_module_element.name}"
+
+          .row.l-margin-top.l-margin-bottom
+            .pull-right
+              =link_to t('views.subject_courses.course_modules_order.return'), edit_course_module_element_url(@course_module_element), class: 'btn btn-red'
+            .col-md-12.l-margin-top-big
+              .table-box
+                .table-responsive
+                  %table.table.sorted_table{data: {destination: quiz_questions_url}, id: @course_module_element, style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th Question ID
+                        %th Question Text
+                        %th
+                    %tbody
+                      -@quiz_questions.all_in_order.each do |qq|
+                        %tr{id: qq.id, data: {parent: @course_module_element.id, destination: quiz_questions_url}}
+                          %td
+                            =qq.id
+                          %td
+                            =qq.quiz_contents.first.text_content.truncate(30)
+                          %td
+                            %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
