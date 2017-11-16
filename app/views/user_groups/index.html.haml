@@ -1,40 +1,50 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.user_groups.index.h1')
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              =will_paginate @user_groups, renderer: BootstrapPagination::Rails
-              %table.table
-                %thead
-                  %tr
-                    %th=t('views.user_groups.form.name')
-                    %th=t('views.user_groups.form.individual_student')
-                    %th=t('views.user_groups.form.complimentary')
-                    %th=t('views.user_groups.form.tutor')
-                    %th=t('views.user_groups.form.content_manager')
-                    %th=t('views.user_groups.form.site_admin')
-                    %th
-                %tbody
-                  -@user_groups.each do |user_group|
-                    %tr
-                      %td=user_group.name
-                      %td=tick_or_cross(user_group.individual_student)
-                      %td=tick_or_cross(user_group.complimentary)
-                      %td=tick_or_cross(user_group.tutor)
-                      %td=tick_or_cross(user_group.content_manager)
-                      %td=tick_or_cross(user_group.site_admin)
-                      %td
-                        =link_to t('views.general.show'), user_group_url(user_group), class: 'btn btn-cyan btn-small'
-                        =link_to t('views.general.edit'), edit_user_group_url(user_group), class: 'btn btn-cyan btn-small'
-                        -if user_group.destroyable?
-                          =link_to t('views.general.delete'), user_group, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-    .row
-      =link_to t('views.general.new'), new_user_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+  .main-content
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                =t('views.user_groups.index.h1')
+
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              =render partial: 'user_management/tabs'
+
+
+          .row.l-margin-top.l-margin-bottom
+            .col-md-4.col-sm-4.l-margin-top
+              =link_to 'New User Group', new_user_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+
+            .col-md-12.l-margin-top-big
+              .table-box
+                .table-responsive
+                  =will_paginate @user_groups, renderer: BootstrapPagination::Rails
+                  %table.table
+                    %thead
+                      %tr
+                        %th=t('views.user_groups.form.name')
+                        %th=t('views.user_groups.form.individual_student')
+                        %th=t('views.user_groups.form.complimentary')
+                        %th=t('views.user_groups.form.content_manager')
+                        %th=t('views.user_groups.form.site_admin')
+                        %th
+                    %tbody
+                      -@user_groups.each do |user_group|
+                        %tr
+                          %td=user_group.name
+                          %td=tick_or_cross(user_group.individual_student)
+                          %td=tick_or_cross(user_group.complimentary)
+                          %td=tick_or_cross(user_group.content_manager)
+                          %td=tick_or_cross(user_group.site_admin)
+                          %td
+                            =link_to t('views.general.show'), user_group_url(user_group), class: 'btn btn-purple btn-small'
+                            =link_to t('views.general.edit'), edit_user_group_url(user_group), class: 'btn btn-cyan btn-small'
+                            -if user_group.destroyable?
+                              =link_to t('views.general.delete'), user_group, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 

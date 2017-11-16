@@ -1,7 +1,7 @@
 #sidebar-wrapper.text-center
   .sidebar-brand
     .brand-logo
-      =link_to management_consoles_url do
+      =link_to root_url do
         =image_tag('ls-logo-white.svg', class: 'logo')
 
 
@@ -9,9 +9,9 @@
     %li.first-li
       =link_to 'Overview', management_consoles_url
     %li
-      =link_to 'Reports', reports_url
-    %li
       =link_to 'Users', user_management_index_url
+    %li
+      =link_to 'Reports', reports_url
     %li
       =link_to 'Courses', subject_courses_url
     %li
