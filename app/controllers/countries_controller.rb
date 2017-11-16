@@ -81,6 +81,9 @@ class CountriesController < ApplicationController
     end
     @currencies = Currency.all_in_order
     seo_title_maker(@country.try(:name) || 'Countries', '', true)
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

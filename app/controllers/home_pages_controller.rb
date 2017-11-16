@@ -76,6 +76,9 @@ class HomePagesController < ApplicationController
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
     @groups = Group.all_active.all_in_order
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

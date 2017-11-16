@@ -1,38 +1,46 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.currencies.show.h1')
-            \#
-            =@currency.id
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              %table.table.table-bordered.l-margin-top
-                %tr
-                  %td.col-sm-4=t('views.currencies.form.iso_code')
-                  %td.col-sm-8=@currency.iso_code
-                %tr
-                  %td.col-sm-4=t('views.currencies.form.name')
-                  %td.col-sm-8=@currency.name
-                %tr
-                  %td.col-sm-4=t('views.currencies.form.leading_symbol')
-                  %td.col-sm-8=@currency.leading_symbol
-                %tr
-                  %td.col-sm-4=t('views.currencies.form.trailing_symbol')
-                  %td.col-sm-8=@currency.trailing_symbol
-                %tr
-                  %td.col-sm-4=t('views.currencies.form.active')
-                  %td.col-sm-8=tick_or_cross(@currency.active)
-                %tr
-                  %td.col-sm-4=t('views.countries.index.h1')
-                  %td.col-sm-8
-                    -@currency.countries.each do |country|
-                      =link_to country.name, country
-      .row
-        =link_to t('views.currencies.index.h1'), currencies_url
-        |
-        =link_to t('views.general.edit'), edit_currency_url(id: @currency.id), title: t('views.general.edit_tooltip')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
+
+  .main-content
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                =t('views.currencies.show.h1')
+                \#
+                =@currency.id
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12.l-margin-top-big
+              .table-box
+                .table-responsive
+                  %table.table.table-bordered.l-margin-top
+                    %tr
+                      %td.col-sm-4=t('views.currencies.form.iso_code')
+                      %td.col-sm-8=@currency.iso_code
+                    %tr
+                      %td.col-sm-4=t('views.currencies.form.name')
+                      %td.col-sm-8=@currency.name
+                    %tr
+                      %td.col-sm-4=t('views.currencies.form.leading_symbol')
+                      %td.col-sm-8=@currency.leading_symbol
+                    %tr
+                      %td.col-sm-4=t('views.currencies.form.trailing_symbol')
+                      %td.col-sm-8=@currency.trailing_symbol
+                    %tr
+                      %td.col-sm-4=t('views.currencies.form.active')
+                      %td.col-sm-8=tick_or_cross(@currency.active)
+                    %tr
+                      %td.col-sm-4=t('views.countries.index.h1')
+                      %td.col-sm-8
+                        -@currency.countries.each do |country|
+                          =link_to country.name, country
+          .row
+            =link_to t('views.currencies.index.h1'), currencies_url
+            |
+            =link_to t('views.general.edit'), edit_currency_url(id: @currency.id), title: t('views.general.edit_tooltip')

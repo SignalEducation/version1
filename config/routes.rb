@@ -123,6 +123,7 @@ Rails.application.routes.draw do
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
 
     resources :management_consoles
+    get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order

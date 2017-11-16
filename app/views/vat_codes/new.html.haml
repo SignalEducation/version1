@@ -1,9 +1,17 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.vat_codes.new.h1')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-        =render partial: 'form'
+  .main-content
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                =t('views.vat_codes.new.h1')
+
+            =render partial: 'form'

@@ -71,6 +71,9 @@ class VatCodesController < ApplicationController
     end
     @countries = Country.all_in_order
     seo_title_maker(@vat_code.try(:name) || 'VAT Codes', '', true)
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

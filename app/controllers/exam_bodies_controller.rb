@@ -66,6 +66,9 @@ class ExamBodiesController < ApplicationController
     if params[:id].to_i > 0
       @exam_body = ExamBody.where(id: params[:id]).first
     end
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params
