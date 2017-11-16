@@ -1,28 +1,34 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =@product.name
-            \#
-            =@product.id
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              %table.table.table-bordered.l-margin-top
-                %tr
-                  %td.col-sm-4=t('views.products.form.name')
-                  %td.col-sm-8=@product.name
-                %tr
-                  %td.col-sm-4=t('views.products.form.subject_course')
-                  %td.col-sm-8=link_to @product.subject_course.name, @product.subject_course
-                %tr
-                  %td.col-sm-4=t('views.products.form.currency')
-                  -#%td.col-sm-8=link_to @product.currency.name, @product.currency
-              %p
-                =link_to sanitize('&larr; ' + t('views.products.index.h1')), products_url
-                |
-                =link_to t('views.general.edit'), edit_product_url(id: @product.id), title: t('views.general.edit_tooltip')
+  .main-content
+
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                =@product.name
+                \#
+                =@product.id
+
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12.l-margin-top-big
+              .table-box
+                .table-responsive
+                  %table.table.table-bordered.l-margin-top
+                    %tr
+                      %td.col-sm-4=t('views.products.form.name')
+                      %td.col-sm-8=@product.name
+                    %tr
+                      %td.col-sm-4=t('views.products.form.subject_course')
+                      %td.col-sm-8=link_to @product.subject_course.name, @product.subject_course
+                    %tr
+                      %td.col-sm-4=t('views.products.form.currency')
+                      -#%td.col-sm-8=link_to @product.currency.name, @product.currency
+                  %p
+                    =link_to sanitize('&larr; ' + t('views.products.index.h1')), products_url
+                    |
+                    =link_to t('views.general.edit'), edit_product_url(id: @product.id), title: t('views.general.edit_tooltip')

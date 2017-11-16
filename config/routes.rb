@@ -152,6 +152,9 @@ Rails.application.routes.draw do
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
     resources :subscription_plans
     resources :subscription_plan_categories
+    get '/all_subscriptions', to: 'subscription_plans#all_subscriptions', as: :all_subscriptions
+    get '/subscription_show/:id', to: 'subscription_plans#subscription_show', as: :subscription_show
+
     resources :subject_course_resources
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'acca_info', to: 'footer_pages#acca_info'

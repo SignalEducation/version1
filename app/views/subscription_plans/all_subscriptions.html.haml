@@ -1,0 +1,44 @@
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
+  .main-content
+
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                Subscriptions
+
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              =render partial: 'subscription_plans/plans_nav'
+
+
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12.l-margin-top
+              .table-box
+                .table-responsive
+                  %table.table.sorted_table{data: {destination: mock_exams_url}, style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th='ID'
+                        %th='User'
+                        %th='Stripe ID'
+                        %th
+                        %th
+                        %th
+                    %tbody
+                      -@subscriptions.each do |subscription|
+                        %tr
+                          %td=subscription.id
+                          %td=subscription.user.full_name
+                          %td=subscription.stripe_guid
+                          %td
+                            =link_to 'Show', subscription_show_url(subscription), class: 'btn btn-purple btn-small'
+                          %td
+                            =link_to 'User', user_management_url(subscription.user), class: 'btn btn-cyan btn-small'
+
+
+

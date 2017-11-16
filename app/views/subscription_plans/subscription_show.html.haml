@@ -1,0 +1,17 @@
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
+
+  .main-content
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                ='Subscription: '
+                =@subscription.id
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12
+              =render partial: 'subscription_plans/plans_nav'
+

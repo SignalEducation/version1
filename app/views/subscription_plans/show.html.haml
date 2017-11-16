@@ -1,64 +1,70 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.subscription_plans.show.h1')
-            \#
-            =@subscription_plan.id
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              %table.table.table-bordered.l-margin-top
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.name')
-                  %td.col-sm-8=@subscription_plan.name
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.available_to_students')
-                  %td.col-sm-8=tick_or_cross(@subscription_plan.available_to_students)
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.all_you_can_eat')
-                  %td.col-sm-8=tick_or_cross(@subscription_plan.all_you_can_eat)
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.payment_frequency_in_months')
-                  %td.col-sm-8=@subscription_plan.payment_frequency_in_months
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.currency_id')
-                  %td.col-sm-8=link_to @subscription_plan.currency.name, @subscription_plan.currency
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.price')
-                  %td.col-sm-8=number_in_local_currency(@subscription_plan.price, @subscription_plan.currency_id)
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.available_from')
-                  %td.col-sm-8=@subscription_plan.available_from.to_s(:standard)
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.available_to')
-                  %td.col-sm-8=@subscription_plan.available_to.to_s(:standard)
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.stripe_guid')
-                  %td.col-sm-8=link_to @subscription_plan.stripe_guid, "https://dashboard.stripe.com/#{Rails.env.production? ? '' : 'test/'}plans/#{@subscription_plan.stripe_guid}", title: 'stripe.com', target: '_blank'
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.trial_period_in_days')
-                  %td.col-sm-8=@subscription_plan.trial_period_in_days
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.subscription_plan_category_id')
-                  %td.col-sm-8=link_to @subscription_plan.subscription_plan_category.try(:full_name), @subscription_plan.subscription_plan_category, title: t('views.general.tooltips.click_to_view')
-                %tr
-                  %td.h2{colspan: 2}
-                    Stripe Details
-                -Stripe::Plan.retrieve(@subscription_plan.stripe_guid).to_hash.each do |attr_key, attr_value|
-                  %tr
-                    %td.col-sm-4=attr_key.to_s.titleize
-                    %td.col-sm-8
-                      -if attr_key.to_s == 'created'
-                        =Time.at(attr_value).to_s(:standard)
-                      -elsif attr_key.to_s == 'amount'
-                        =attr_value / 100.0
-                      -else
-                        =attr_value.to_s
-          %p
-            =link_to sanitize('&larr; ' + t('views.subscription_plans.index.h1')), subscription_plans_url
-            |
-            =link_to t('views.general.edit'), edit_subscription_plan_url(id: @subscription_plan.id), title: t('views.general.edit_tooltip')
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
+
+  .main-content
+
+    .l-section-small.is-bg-asphalt
+      .l-wrap
+        .container-fluid
+          .row.l-margin-bottom
+            .col-md-12.text-center
+              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                =t('views.subscription_plans.show.h1')
+                \#
+                =@subscription_plan.id
+          .row.l-margin-top.l-margin-bottom
+            .col-md-12.l-margin-top-big
+              .table-box
+                .table-responsive
+                  %table.table.table-bordered.l-margin-top
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.name')
+                      %td.col-sm-8=@subscription_plan.name
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.available_to_students')
+                      %td.col-sm-8=tick_or_cross(@subscription_plan.available_to_students)
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.all_you_can_eat')
+                      %td.col-sm-8=tick_or_cross(@subscription_plan.all_you_can_eat)
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.payment_frequency_in_months')
+                      %td.col-sm-8=@subscription_plan.payment_frequency_in_months
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.currency_id')
+                      %td.col-sm-8=link_to @subscription_plan.currency.name, @subscription_plan.currency
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.price')
+                      %td.col-sm-8=number_in_local_currency(@subscription_plan.price, @subscription_plan.currency_id)
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.available_from')
+                      %td.col-sm-8=@subscription_plan.available_from.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.available_to')
+                      %td.col-sm-8=@subscription_plan.available_to.to_s(:standard)
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.stripe_guid')
+                      %td.col-sm-8=link_to @subscription_plan.stripe_guid, "https://dashboard.stripe.com/#{Rails.env.production? ? '' : 'test/'}plans/#{@subscription_plan.stripe_guid}", title: 'stripe.com', target: '_blank'
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.trial_period_in_days')
+                      %td.col-sm-8=@subscription_plan.trial_period_in_days
+                    %tr
+                      %td.col-sm-4=t('views.subscription_plans.form.subscription_plan_category_id')
+                      %td.col-sm-8=link_to @subscription_plan.subscription_plan_category.try(:full_name), @subscription_plan.subscription_plan_category, title: t('views.general.tooltips.click_to_view')
+                    %tr
+                      %td.h2{colspan: 2}
+                        Stripe Details
+                    -Stripe::Plan.retrieve(@subscription_plan.stripe_guid).to_hash.each do |attr_key, attr_value|
+                      %tr
+                        %td.col-sm-4=attr_key.to_s.titleize
+                        %td.col-sm-8
+                          -if attr_key.to_s == 'created'
+                            =Time.at(attr_value).to_s(:standard)
+                          -elsif attr_key.to_s == 'amount'
+                            =attr_value / 100.0
+                          -else
+                            =attr_value.to_s
+              %p
+                =link_to sanitize('&larr; ' + t('views.subscription_plans.index.h1')), subscription_plans_url
+                |
+                =link_to t('views.general.edit'), edit_subscription_plan_url(id: @subscription_plan.id), title: t('views.general.edit_tooltip')

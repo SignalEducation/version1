@@ -69,6 +69,9 @@ class SubscriptionPlanCategoriesController < ApplicationController
     if params[:id].to_i > 0
       @subscription_plan_category = SubscriptionPlanCategory.where(id: params[:id]).first
     end
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def allowed_params

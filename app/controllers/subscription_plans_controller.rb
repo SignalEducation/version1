@@ -29,6 +29,7 @@ class SubscriptionPlansController < ApplicationController
 
   def index
     @subscription_plans = SubscriptionPlan.for_students.all_in_order
+    seo_title_maker('Subscription Plans', '', true)
   end
 
   def public_index
@@ -80,6 +81,15 @@ class SubscriptionPlansController < ApplicationController
     redirect_to subscription_plans_url
   end
 
+
+  def all_subscriptions
+    @subscriptions = Subscription.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
+  def subscription_show
+    @subscription = Subscription.where(id: params[:id]).first
+  end
+
   protected
 
   def get_variables
@@ -90,6 +100,9 @@ class SubscriptionPlansController < ApplicationController
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
     seo_title_maker(@subscription_plan.try(:id).to_s, '', true)
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
+    @navbar = false
+    @footer = false
+    @top_margin = false
   end
 
   def create_params
