@@ -1,23 +1,29 @@
-.l-margin-top
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              =t('views.mock_exams.show.h1')
-              \#
-              =@mock_exam.id
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12.l-margin-top-big
-            .table-box
-              .table-responsive
-                %table.table.table-bordered.l-margin-top
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.subject_course_id')
-                    %td.col-sm-8=@mock_exam.subject_course.try(:name)
+#wrapper
+  .hidden-xs
+    =render partial: 'layouts/management_side_navbar'
 
-                =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
+  .main-content
 
-                %p
-                  =link_to t('views.general.back'), orders_url
+    .l-margin-top
+      .l-section-small.is-bg-asphalt
+        .l-wrap
+          .container-fluid
+            .row.l-margin-bottom
+              .col-md-12.text-center
+                %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                  =t('views.mock_exams.show.h1')
+                  \#
+                  =@mock_exam.id
+            .row.l-margin-top.l-margin-bottom
+              .col-md-12.l-margin-top-big
+                .table-box
+                  .table-responsive
+                    %table.table.table-bordered.l-margin-top
+                      %tr
+                        %td.col-sm-4=t('views.orders.show.subject_course_id')
+                        %td.col-sm-8=@mock_exam.subject_course.try(:name)
+
+                    =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
+
+                    %p
+                      =link_to t('views.general.back'), orders_url
