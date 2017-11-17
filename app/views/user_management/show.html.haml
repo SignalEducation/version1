@@ -86,7 +86,7 @@
 
             -if @user.destroyable?
               .col-md-3.col-sm-3.col-xs-6
-                =link_to 'Delete User', @user, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
+                =link_to 'Delete User', user_management_url(@user), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
 
             -if @user.visits.any?
               .col-md-3.col-sm-3.col-xs-6

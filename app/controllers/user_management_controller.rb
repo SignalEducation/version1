@@ -32,7 +32,6 @@ class UserManagementController < ApplicationController
   end
 
   def create
-    #Admin creating users
     password = SecureRandom.hex(5)
     @user = User.new(allowed_params.merge({password: password,
                                            password_confirmation: password,
@@ -55,7 +54,7 @@ class UserManagementController < ApplicationController
       end
       MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
-      redirect_to users_url
+      redirect_to user_management_index_url
     else
       render action: :new
     end
@@ -64,11 +63,11 @@ class UserManagementController < ApplicationController
   def update
     if @user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
+      redirect_to user_management_index_url
     else
       flash[:error] = I18n.t('controllers.users.update.flash.error')
       render action: :edit
     end
-    redirect_to user_management_url(@user)
   end
 
   def destroy
@@ -77,7 +76,7 @@ class UserManagementController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.users.destroy.flash.error')
     end
-    redirect_to users_url
+    redirect_to user_management_index_url
   end
 
   def user_personal_details

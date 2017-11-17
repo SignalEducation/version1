@@ -4,10 +4,10 @@
       =link_to 'Overview', user_management_url(@user)
     %li
       =link_to 'Personal', user_management_personal_url(@user)
-    -if @user.tutor?
+    -if @user.tutor_user?
       %li
         =link_to 'Courses', user_management_courses_url(@user)
-    -else
+    -elsif @user.trial_or_sub_user?
       %li
         =link_to 'Subscription', user_management_subscription_url(@user)
     %li

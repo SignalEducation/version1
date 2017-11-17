@@ -430,7 +430,7 @@ label, .label {
     background: $colour-7;
     color: $white;
     &:hover {
-      background: shade($colour-7, 10%);
+      background: darken($colour-7, 8%);
     }
     &:active {
       background: ($colour-7);
