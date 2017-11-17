@@ -2,19 +2,29 @@
 #
 # Table name: user_groups
 #
-#  id                 :integer          not null, primary key
-#  name               :string
-#  description        :text
-#  individual_student :boolean          default(FALSE), not null
-#  tutor              :boolean          default(FALSE), not null
-#  content_manager    :boolean          default(FALSE), not null
-#  blogger            :boolean          default(FALSE), not null
-#  site_admin         :boolean          default(FALSE), not null
-#  created_at         :datetime
-#  updated_at         :datetime
-#  complimentary      :boolean          default(FALSE)
-#  customer_support   :boolean          default(FALSE)
-#  marketing_support  :boolean          default(FALSE)
+#  id                           :integer          not null, primary key
+#  name                         :string
+#  description                  :text
+#  individual_student           :boolean          default(FALSE), not null
+#  tutor                        :boolean          default(FALSE), not null
+#  content_manager              :boolean          default(FALSE), not null
+#  blogger                      :boolean          default(FALSE), not null
+#  site_admin                   :boolean          default(FALSE), not null
+#  created_at                   :datetime
+#  updated_at                   :datetime
+#  complimentary                :boolean          default(FALSE)
+#  customer_support             :boolean          default(FALSE)
+#  marketing_support            :boolean          default(FALSE)
+#  system_requirements_access   :boolean          default(FALSE)
+#  content_management_access    :boolean          default(FALSE)
+#  stripe_management_access     :boolean          default(FALSE)
+#  user_management_access       :boolean          default(FALSE)
+#  developer_access             :boolean          default(FALSE)
+#  home_pages_access            :boolean          default(FALSE)
+#  user_group_management_access :boolean          default(FALSE)
+#  student_user                 :boolean          default(FALSE)
+#  trial_or_sub_required        :boolean          default(FALSE)
+#  blocked_user                 :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

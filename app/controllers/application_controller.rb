@@ -92,20 +92,18 @@ class ApplicationController < ActionController::Base
     redirect_to(destination)
   end
 
-  def ensure_user_is_of_type(authorised_features)
+  def ensure_user_has_access_rights(authorised_features)
     logged_in_required
     the_user_group = current_user.user_group
-    # for a list of permitted features, see UserGroup::FEATURES
     permission_granted = false
     authorised_features.each do |permitted_thing|
-      if (the_user_group.individual_student && permitted_thing == 'individual_student') ||
-         (the_user_group.tutor              && permitted_thing == 'tutor') ||
-         (the_user_group.blogger            && permitted_thing == 'blogger') ||
-         (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
-         (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
-         (the_user_group.customer_support    && permitted_thing == 'customer_support_manager') ||
-         (the_user_group.marketing_support    && permitted_thing == 'marketing_manager') ||
-         (the_user_group.site_admin           && permitted_thing == 'admin')
+      if (the_user_group.system_requirements_access && permitted_thing == 'system_requirements_access') ||
+         (the_user_group.content_management_access && permitted_thing == 'content_management_access') ||
+         (the_user_group.stripe_management_access && permitted_thing == 'stripe_management_access') ||
+         (the_user_group.user_management_access && permitted_thing == 'user_management_access') ||
+         (the_user_group.developer_access && permitted_thing == 'developer_access') ||
+         (the_user_group.home_pages_access && permitted_thing == 'home_pages_access') ||
+         (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access')
         permission_granted = true
       end
     end

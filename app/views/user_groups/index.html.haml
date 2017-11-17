@@ -29,22 +29,15 @@
                     %thead
                       %tr
                         %th=t('views.user_groups.form.name')
-                        %th=t('views.user_groups.form.individual_student')
-                        %th=t('views.user_groups.form.complimentary')
-                        %th=t('views.user_groups.form.content_manager')
-                        %th=t('views.user_groups.form.site_admin')
                         %th
                     %tbody
                       -@user_groups.each do |user_group|
                         %tr
                           %td=user_group.name
-                          %td=tick_or_cross(user_group.individual_student)
-                          %td=tick_or_cross(user_group.complimentary)
-                          %td=tick_or_cross(user_group.content_manager)
-                          %td=tick_or_cross(user_group.site_admin)
                           %td
-                            =link_to t('views.general.show'), user_group_url(user_group), class: 'btn btn-purple btn-small'
-                            =link_to t('views.general.edit'), edit_user_group_url(user_group), class: 'btn btn-cyan btn-small'
-                            -if user_group.destroyable?
-                              =link_to t('views.general.delete'), user_group, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                            .pull-right
+                              =link_to t('views.general.show'), user_group_url(user_group), class: 'btn btn-purple btn-small'
+                              =link_to t('views.general.edit'), edit_user_group_url(user_group), class: 'btn btn-cyan btn-small'
+                              -if user_group.destroyable?
+                                =link_to t('views.general.delete'), user_group, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 

@@ -21,12 +21,14 @@
 
 class OrdersController < ApplicationController
 
+  #TODO Review this controller split student and admin actions
+
   before_action :logged_in_required
   before_action except: [:new, :create] do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(user_management_access))
   end
   before_action only: [:new, :create] do
-    ensure_user_is_of_type(%w(individual_student))
+    ensure_user_has_access_rights(%w(student_user))
   end
   before_action :get_variables
 

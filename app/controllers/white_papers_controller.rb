@@ -24,7 +24,7 @@ class WhitePapersController < ApplicationController
 
   before_action :logged_in_required, except: [:show, :create_request, :media_library]
   before_action except: [:show, :create_request, :media_library] do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_has_access_rights(%w(content_management_access))
   end
   before_action :get_variables, except: [:show]
 

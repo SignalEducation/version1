@@ -22,7 +22,7 @@ class SubscriptionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(individual_student))
+    ensure_user_has_access_rights(%w(student_user))
   end
   before_action :get_subscription
   before_action :check_subscriptions, only: [:new_subscription, :create_subscription]

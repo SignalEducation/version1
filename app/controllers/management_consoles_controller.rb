@@ -1,8 +1,12 @@
 class ManagementConsolesController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
-    ensure_user_is_of_type(%w(admin))
+  before_action except: [:system_requirements] do
+    #TODO Can this ensure non-student_user
+    ensure_user_has_access_rights(%w())
+  end
+  before_action only: [:system_requirements] do
+    ensure_user_has_access_rights(%w(home_pages_access))
   end
   before_action :get_variables
 

@@ -23,7 +23,7 @@ class SubscriptionPlansController < ApplicationController
 
   before_action :logged_in_required, except: [:public_index]
   before_action except: [:public_index] do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(stripe_management_access))
   end
   before_action :get_variables
 

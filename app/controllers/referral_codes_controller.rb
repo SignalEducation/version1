@@ -14,10 +14,10 @@ class ReferralCodesController < ApplicationController
 
   before_action :logged_in_required
   before_action only: [:index, :destroy] do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(user_management_access))
   end
   before_action only: [:show] do
-    ensure_user_is_of_type(%w(individual_student tutor blogger))
+    ensure_user_has_access_rights(%w(student_user))
   end
 
   def index

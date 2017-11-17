@@ -1241,14 +1241,16 @@ en:
         name_placeholder: Name of your user group
         description: Description
         description_placeholder: Give a general description of your group
-        individual_student: Individual student
-        tutor: Tutor
-        content_manager: Content manager
-        blogger: Blogger
-        site_admin: Site admin
-        customer_support: Customer Support
-        marketing_support: Marketing Support
-        complimentary: Complimentary
+        system_requirements_access: System Requirements Access
+        content_management_access: Course Content Access
+        stripe_management_access: Sub Plan & Product Access
+        user_management_access: User Management Access
+        developer_access: Developer Access
+        home_pages_access: Landing Pages Access
+        user_group_management_access: User Group Management Access
+        student_user: Student User
+        trial_or_sub_required: Trial or Sub Required
+        blocked_user: Blocked User
 
       edit:
         h1: Edit User Group

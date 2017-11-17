@@ -1,7 +1,7 @@
 class UserVerificationsController < ApplicationController
 
   before_action only: [:admin_resend_verification_mail] do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(user_management_access))
   end
   before_action :get_variables
 

@@ -1,66 +1,105 @@
 =form_for(@user_group, html: {class: 'form-horizontal', role: 'form'}) do |f|
   .row
-    .col-md-6
-      =render partial: '/layouts/error_messages', locals: {thing: @user_group, message: nil}
-      =f.label :name, t('views.user_groups.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      %br/
-      =f.label :description, t('views.user_groups.form.description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
-    .col-md-6
+    .col-sm-12
       .col-md-6
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :individual_student
-                =t('views.user_groups.form.individual_student')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :complimentary
-                =t('views.user_groups.form.complimentary')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :tutor
-                =t('views.user_groups.form.tutor')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :content_manager
-                =t('views.user_groups.form.content_manager')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :blogger
-                =t('views.user_groups.form.blogger')
+        =render partial: '/layouts/error_messages', locals: {thing: @user_group, message: nil}
+        =f.label :name, t('views.user_groups.form.name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+
       .col-md-6
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :site_admin
-                =t('views.user_groups.form.site_admin')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :customer_support
-                =t('views.user_groups.form.customer_support')
-        .form-group
-          .col-sm-8.col-sm-offset-4
-            .checkbox
-              %label
-                =f.check_box :marketing_support
-                =t('views.user_groups.form.marketing_support')
+
+        =f.label :description, t('views.user_groups.form.description'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+
+
+  .row
+    .col-sm-12.l-margin-top
+      .box-item
+        .col-sm-12
+          .h6.l-margin-bottom
+            Student Access
+          .col-sm-6
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :student_user
+                    =t('views.user_groups.form.student_user')
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :blocked_user
+                    =t('views.user_groups.form.blocked_user')
+
+
+          .col-sm-6
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :trial_or_sub_required
+                    =t('views.user_groups.form.trial_or_sub_required')
+
+
+
+
+  .row
+    .col-sm-12.l-margin-top
+      .box-item
+        .col-sm-12
+          .col-sm-6
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :system_requirements_access
+                    =t('views.user_groups.form.system_requirements_access')
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :content_management_access
+                    =t('views.user_groups.form.content_management_access')
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :stripe_management_access
+                    =t('views.user_groups.form.stripe_management_access')
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :user_management_access
+                    =t('views.user_groups.form.user_management_access')
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :developer_access
+                    =t('views.user_groups.form.developer_access')
+
+          .col-sm-6
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :home_pages_access
+                    =t('views.user_groups.form.home_pages_access')
+            .form-group
+              .col-sm-12
+                .checkbox
+                  %label
+                    =f.check_box :user_group_management_access
+                    =t('views.user_groups.form.user_group_management_access')
+
+
+
+
+
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), user_groups_path, class: 'btn btn-cyan'
