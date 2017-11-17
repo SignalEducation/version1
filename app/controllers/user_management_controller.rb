@@ -48,8 +48,8 @@ class UserManagementController < ApplicationController
           email: @user.try(:email)
       )
       @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-      @user.update_attribute(:free_trial, true) if @user.user_group.try(:individual_student)
-      if @user.user_group.try(:individual_student) || @user.user_group.try(:blogger)
+      @user.update_attribute(:free_trial, true) if @user.trial_or_sub_user?
+      if @user.trial_or_sub_user?
         new_referral_code = ReferralCode.new
         new_referral_code.generate_referral_code(@user.id)
       end
@@ -148,7 +148,7 @@ class UserManagementController < ApplicationController
 
   def get_variables
     @user = User.where(id: params[:id]).first
-    @user_groups = UserGroup.where(site_admin: false).all_in_order
+    @user_groups = UserGroup.all_in_order
     @countries = Country.all_in_order
     seo_title_maker('Users Management', '', true)
   end

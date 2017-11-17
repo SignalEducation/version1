@@ -160,7 +160,7 @@ class SubscriptionsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
 
-    if current_user.individual_student?
+    if current_user.trial_or_sub_user?
       redirect_to account_url(anchor: 'subscriptions')
     else
       redirect_to user_subscription_status_url(@subscription.user)
@@ -219,7 +219,7 @@ class SubscriptionsController < ApplicationController
   def check_subscriptions
     if current_user && current_user.valid_subscription
       redirect_to account_url(anchor: :subscriptions)
-    elsif current_user && !current_user.individual_student?
+    elsif current_user && !current_user.trial_or_sub_user?
       redirect_to root_url
     end
   end

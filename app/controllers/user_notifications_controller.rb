@@ -27,7 +27,7 @@ class UserNotificationsController < ApplicationController
   before_action :get_variables
 
   def index
-    if current_user.admin?
+    if current_user.user_management_access?
       @user_notifications = UserNotification.paginate(per_page: 50, page: params[:page]).all_in_order
     else
       @user_notifications = current_user.user_notifications.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -78,7 +78,7 @@ class UserNotificationsController < ApplicationController
 
   def get_variables
     if params[:id].to_i > 0
-      if current_user.try(:admin?)
+      if current_user.user_management_access?
         @user_notification = UserNotification.where(id: params[:id]).first
         @users = User.all_in_order
       else

@@ -138,8 +138,9 @@ class SubjectCoursesController < ApplicationController
   end
 
   def update_tutors
+    # TODO Review this - why the conditional
     @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
-    if @subject_course && current_user.admin?
+    if @subject_course && current_user.content_management_access?
       if params[:subject_course]
         @subject_course.user_ids = params[:subject_course][:user_ids]
       else

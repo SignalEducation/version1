@@ -38,8 +38,9 @@ class UserSessionsController < ApplicationController
   end
 
   def check_email_verification
+    #TODO review this
     user = User.find_by_email(params[:user_session][:email])
-    if user && user.individual_student? && !user.email_verified
+    if user && user.student_user? && !user.email_verified
       flash[:warning] = "The email for that account has not been verified. Please follow the instructions in the verification email we just sent you at #{user.email}"
       user.update_attribute(:email_verification_code, SecureRandom.hex(10)) unless user.email_verification_code
       MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))

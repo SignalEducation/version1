@@ -27,7 +27,7 @@ class ReferralCodesController < ApplicationController
   def show
     @referral_code = ReferralCode.find(params[:id])
     @user = User.find(@referral_code.user_id)
-    if @user.individual_student?
+    if @user.student_user?
       sub_plan_currency = @user.subscriptions.first.subscription_plan.currency
       @current_monthly_sub = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
     end

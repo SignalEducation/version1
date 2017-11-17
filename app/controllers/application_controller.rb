@@ -206,7 +206,7 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
-  # tutor/admin-facing
+  # content management links (non-student)
   def course_module_special_link(the_thing)
     # used for tutor-facing links
 
@@ -285,7 +285,7 @@ class ApplicationController < ActionController::Base
 
   def subscription_special_link(user_id)
     user = User.find(user_id)
-    if user.individual_student?
+    if user.trial_or_sub_user?
       if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
         user_reactivate_account_url(user_id)
       else

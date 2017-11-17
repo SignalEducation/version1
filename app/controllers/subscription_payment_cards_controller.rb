@@ -77,11 +77,7 @@ class SubscriptionPaymentCardsController < ApplicationController
   end
 
   def get_variables
-    if params[:id]
-      @subscription_payment_card = current_user.admin? ?
-              SubscriptionPaymentCard.find_by_id(params[:id]) :
-              current_user.subscription_payment_cards.find_by_id(params[:id])
-    end
+    @subscription_payment_card = current_user.subscription_payment_cards.find_by_id(params[:id]) if params[:id]
   end
 
   def update_params

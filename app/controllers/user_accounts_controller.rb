@@ -75,7 +75,7 @@ class UserAccountsController < ApplicationController
 
   def reactivate_account
     @user = User.find(params[:user_id])
-    if @user == current_user && @user.individual_student?
+    if @user == current_user && @user.trial_or_sub_user?
       @subscription = @user.active_subscription ? @user.active_subscription : @user.subscriptions.last
       if @subscription && %w(canceled).include?(@subscription.current_status)
         currency_id = @subscription.subscription_plan.currency_id

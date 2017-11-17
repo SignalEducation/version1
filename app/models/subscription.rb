@@ -133,8 +133,8 @@ class Subscription < ActiveRecord::Base
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
       return self
     end
-    # only individual students are allowed to upgrade their plan
-    unless self.user.individual_student?
+    # only student_users are allowed to upgrade their plan
+    unless self.user.trial_or_sub_user?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
       return self
     end
