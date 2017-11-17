@@ -8,19 +8,29 @@
   %ul.sidebar-nav
     %li.first-li
       =link_to 'Overview', management_consoles_url
-    %li
-      =link_to 'Users', user_management_index_url
-    %li
-      =link_to 'Course Content', subject_courses_url
-    %li
-      =link_to 'Plans + Products', subscription_plans_url
-    %li
-      =link_to 'Reports', reports_url
-    %li
-      =link_to 'System Requirements', system_requirements_url
 
-    %li
-      =link_to 'Landing Pages', home_pages_url
+    -if current_user.admin? || current_user.customer_support_manager?
+      %li
+        =link_to 'Users', user_management_index_url
+
+    -if current_user.admin? || current_user.content_manager?
+      %li
+        =link_to 'Course Content', subject_courses_url
+    -if current_user.admin?
+      %li
+        =link_to 'Plans + Products', subscription_plans_url
+      %li
+        =link_to 'Reports', reports_url
+      %li
+        =link_to 'System Requirements', system_requirements_url
+
+    -if current_user.customer_support_manager? || current_user.marketing_support_manager?
+      %li
+        =link_to 'Landing Pages', home_pages_url
+
+    -if current_user.admin?
+      %li
+        =link_to'Sidekiq', sidekiq_web_path, target: '_blank'
 
     %li
       =link_to 'Return', root_url

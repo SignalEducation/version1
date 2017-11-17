@@ -16,13 +16,13 @@
               =render partial: 'tabs'
 
           .row.l-margin-top.l-margin-bottom
-            .col-md-4.col-sm-4.l-margin-top
+            .col-sm-6.l-margin-top
               %a{data: {remodal: {target: 'csv-upload-modal'}}, class: 'btn btn-purple'}
                 Bulk Invite Users
               =link_to t('views.general.add_user'), new_user_management_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
 
-            .col-md-offset-4.col-md-4.l-margin-top
+            .col-sm-4.col-sm-offset-2.l-margin-top
               =form_tag(user_management_index_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
                 .form-group.input-group.input-group-lg
                   =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
