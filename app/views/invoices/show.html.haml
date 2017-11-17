@@ -75,7 +75,7 @@
 
 .row.print-hidden
   .col-xs-12
-    -if current_user.admin?
+    -if current_user.user_management_access?
       =link_to sanitize('&larr; ' + t('views.invoices.index.h1')), invoices_url
     -else
       =link_to sanitize('&larr; ' + t('views.users.show.h1')), account_url

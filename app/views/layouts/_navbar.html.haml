@@ -26,7 +26,7 @@
                   %li
                     =link_to 'Upgrade Account', user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
 
-              -if current_user.admin? || current_user.customer_support_manager? || current_user.content_manager? || current_user.marketing_support_manager?
+              -if current_user.non_student_user?
                 %li=link_to 'Console', management_consoles_url
 
 

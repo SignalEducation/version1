@@ -42,13 +42,12 @@
                     .line2
                       Save €25
 
-              -if current_user && current_user.individual_student?
+              -if current_user && current_user.trial_or_sub_user?
                 .lsbtn-base
                   =link_to user_new_subscription_url(current_user.id) do
                     .lsbtn
                       %i.fa.fa-check
                       Choose this plan
-              -elsif current_user
 
               -else
                 .lsbtn-base

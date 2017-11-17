@@ -12,15 +12,15 @@
           %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.user_accounts.personal_info.tab_heading')
 
-          -if @user.individual_student?
+          -if @user.trial_or_sub_user?
             %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.user_accounts.subscription_info.tab_heading')
 
-          -if @user.individual_student? && @subscription_payment_cards.any?
+          -if @user.trial_or_sub_user? && @subscription_payment_cards.any?
             %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.user_accounts.payment_details.tab_heading')
 
-          -if @user.individual_student? && @orders.any?
+          -if @user.trial_or_sub_user? && @orders.any?
             %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
               =t('views.user_accounts.orders_info.tab_heading')
 
@@ -36,7 +36,7 @@
               .content-box-inner
                 =render partial: 'personal_info'
 
-        -if @user.individual_student?
+        -if @user.trial_or_sub_user?
           .tab-pane.fade#subscriptions{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge
