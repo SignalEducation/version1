@@ -1,47 +1,42 @@
-#console-wrapper
-  .hidden-xs
-    =render partial: 'layouts/management_side_navbar'
-
-  .main-content
-    .l-section-small.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-md-12.text-center
-              %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                =@user.full_name
-          .row.l-margin-top.l-margin-bottom
-            .col-md-12
-              =render partial: 'user_tabs'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'user_tabs'
 
 
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12.l-margin-top
-            %h2.l-margin-bottom.text-center
-              ='Courses'
+    .row.l-margin-top.l-margin-bottom
+      .col-md-12.l-margin-top
+        %h2.l-margin-bottom.text-center
+          ='Courses'
 
-            .corporate-box-item.table-box
-              =form_for(@user, url: { action: :update_courses }, html: {class: 'form-horizontal', role: 'form', id: 'user-courses-form'}) do |f|
-                .col-sm-12
-                  .col-sm-6
-                    %table
-                      %thead
-                      %tbody
-                        -@first_courses.each do |course|
-                          %tr
-                            %td= course.name
-                            %td{style: 'width: 5%;'}
-                              =check_box_tag "user[subject_course_ids][]", course.id, @user.subject_courses.include?(course)
+        .corporate-box-item.table-box
+          =form_for(@user, url: { action: :update_courses }, html: {class: 'form-horizontal', role: 'form', id: 'user-courses-form'}) do |f|
+            .col-sm-12
+              .col-sm-6
+                %table
+                  %thead
+                  %tbody
+                    -@first_courses.each do |course|
+                      %tr
+                        %td= course.name
+                        %td{style: 'width: 5%;'}
+                          =check_box_tag "user[subject_course_ids][]", course.id, @user.subject_courses.include?(course)
 
-                  .col-sm-6
-                    %table
-                      %thead
-                      %tbody
-                        -@second_courses.each do |course|
-                          %tr
-                            %td= course.name
-                            %td{style: 'width: 5%;'}
-                              =check_box_tag "user[subject_course_ids][]", course.id, @user.subject_courses.include?(course)
+              .col-sm-6
+                %table
+                  %thead
+                  %tbody
+                    -@second_courses.each do |course|
+                      %tr
+                        %td= course.name
+                        %td{style: 'width: 5%;'}
+                          =check_box_tag "user[subject_course_ids][]", course.id, @user.subject_courses.include?(course)
 
 
-                =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+            =f.submit t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'

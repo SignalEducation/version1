@@ -1,51 +1,43 @@
-#console-wrapper
-  .hidden-xs
-    =render partial: 'layouts/management_side_navbar'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.countries.index.h1')
 
-  .main-content
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'management_consoles/system_requirements_nav'
 
-    .l-section-small.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-md-12.text-center
-              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                =t('views.countries.index.h1')
+      .row
+        .col-md-12
+          =link_to 'New Country', new_country_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
-          .row.l-margin-top.l-margin-bottom
-            .col-md-12
-              =render partial: 'management_consoles/system_requirements_nav'
-
-          .row
-            .col-md-12
-              =link_to 'New Country', new_country_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
-
-          .row.l-margin-top.l-margin-bottom
-            .col-md-12.l-margin-top
-              .table-box
-                .table-responsive
-                  =will_paginate @countries, renderer: BootstrapPagination::Rails
-                  %table.table.sorted_table{data: {destination: countries_url}}
-                    %thead
-                      %tr
-                        %th=t('views.countries.form.name')
-                        %th=t('views.countries.form.iso_code')
-                        %th=t('views.countries.form.currency_id')
-                        %th
-                        %th
-                    %tbody
-                      -@countries.each do |country|
-                        %tr{id: country.id}
-                          %td=country.name
-                          %td=country.iso_code
-                          %td=country.currency.name
-                          %td
-                            =link_to t('views.general.show'), country_url(country), class: 'btn btn-cyan btn-small'
-                            =link_to t('views.general.edit'), edit_country_url(country), class: 'btn btn-cyan btn-small'
-                            -if country.destroyable?
-                              =link_to t('views.general.delete'), country, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
-                          %td
-                            %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
+          .table-box
+            .table-responsive
+              =will_paginate @countries, renderer: BootstrapPagination::Rails
+              %table.table.sorted_table{data: {destination: countries_url}}
+                %thead
+                  %tr
+                    %th=t('views.countries.form.name')
+                    %th=t('views.countries.form.iso_code')
+                    %th=t('views.countries.form.currency_id')
+                    %th
+                    %th
+                %tbody
+                  -@countries.each do |country|
+                    %tr{id: country.id}
+                      %td=country.name
+                      %td=country.iso_code
+                      %td=country.currency.name
+                      %td
+                        =link_to t('views.general.show'), country_url(country), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.edit'), edit_country_url(country), class: 'btn btn-cyan btn-small'
+                        -if country.destroyable?
+                          =link_to t('views.general.delete'), country, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 

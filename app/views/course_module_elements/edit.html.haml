@@ -1,19 +1,13 @@
-#console-wrapper
-  .hidden-xs
-    =render partial: 'layouts/management_side_navbar'
-
-  .main-content
-
-    .l-section-small.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-md-12.text-center
-              %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                -if @course_module_element.is_video
-                  =t('views.course_module_elements.edit.video')
-                -elsif @course_module_element.is_quiz
-                  =t('views.course_module_elements.edit.quiz')
-                -else
-                  =t('views.course_module_elements.edit.h1')
-          =render partial: 'form'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            -if @course_module_element.is_video
+              =t('views.course_module_elements.edit.video')
+            -elsif @course_module_element.is_quiz
+              =t('views.course_module_elements.edit.quiz')
+            -else
+              =t('views.course_module_elements.edit.h1')
+      =render partial: 'form'

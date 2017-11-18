@@ -1,33 +1,27 @@
-#console-wrapper
-  .hidden-xs
-    =render partial: 'layouts/management_side_navbar'
-
-  .main-content
-
-    .l-section-small.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-md-12.text-center
-              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                =t('views.exam_sittings.show.h1')
-                \#
-                =@exam_sitting.id
-          .row.l-margin-top.l-margin-bottom
-            .col-md-12.l-margin-top-big
-              .table-box
-                .table-responsive
-                  %table.table.table-bordered.l-margin-top
-                    %tr
-                      %td.col-sm-4=t('views.exam_sittings.form.name')
-                      %td.col-sm-8=@exam_sitting.name
-                    %tr
-                      %td.col-sm-4=t('views.exam_sittings.form.subject_course_id')
-                      %td.col-sm-8=@exam_sitting.subject_course.name
-                    %tr
-                      %td.col-sm-4=t('views.exam_sittings.form.date')
-                      %td.col-sm-8=@exam_sitting.date
-                  %p
-                    =link_to t('views.general.back'), exam_sittings_url
-                    |
-                    =link_to t('views.general.edit'), edit_exam_sitting_url(id: @exam_sitting.id), title: t('views.general.edit_tooltip')
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.exam_sittings.show.h1')
+            \#
+            =@exam_sitting.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.exam_sittings.form.name')
+                  %td.col-sm-8=@exam_sitting.name
+                %tr
+                  %td.col-sm-4=t('views.exam_sittings.form.subject_course_id')
+                  %td.col-sm-8=@exam_sitting.subject_course.name
+                %tr
+                  %td.col-sm-4=t('views.exam_sittings.form.date')
+                  %td.col-sm-8=@exam_sitting.date
+              %p
+                =link_to t('views.general.back'), exam_sittings_url
+                |
+                =link_to t('views.general.edit'), edit_exam_sitting_url(id: @exam_sitting.id), title: t('views.general.edit_tooltip')

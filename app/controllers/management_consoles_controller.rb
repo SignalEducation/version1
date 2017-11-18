@@ -6,7 +6,7 @@ class ManagementConsolesController < ApplicationController
     #ensure_user_has_access_rights(%w())
   end
   before_action only: [:system_requirements] do
-    ensure_user_has_access_rights(%w(home_pages_access))
+    ensure_user_has_access_rights(%w(home_pages_access system_requirements_access))
   end
   before_action :get_variables
 
@@ -25,9 +25,7 @@ class ManagementConsolesController < ApplicationController
   protected
 
   def get_variables
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
 end

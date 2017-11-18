@@ -78,10 +78,7 @@ class CurrenciesController < ApplicationController
       @currency = Currency.where(id: params[:id]).first
     end
     seo_title_maker(@currency.try(:name) || 'Currencies', '', true)
-    @navbar = false
-    @footer = false
-    @top_margin = false
-
+    @layout = 'management'
   end
 
   def allowed_params

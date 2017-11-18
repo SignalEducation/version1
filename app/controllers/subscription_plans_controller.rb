@@ -100,9 +100,7 @@ class SubscriptionPlansController < ApplicationController
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
     seo_title_maker(@subscription_plan.try(:id).to_s, '', true)
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
   def create_params

@@ -114,9 +114,7 @@ class WhitePapersController < ApplicationController
       @white_paper = WhitePaper.where(id: params[:id]).first
     end
     @subject_courses = SubjectCourse.all_active.all_in_order
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
   def allowed_params

@@ -84,9 +84,7 @@ class UserGroupsController < ApplicationController
       @user_group = UserGroup.where(id: params[:id]).first
     end
     seo_title_maker(@user_group.try(:name) || 'User groups', '', true)
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
   def allowed_params

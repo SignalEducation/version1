@@ -34,17 +34,13 @@ class OrdersController < ApplicationController
 
   def index
     @orders = Order.paginate(per_page: 50, page: params[:page]).all_in_order
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
     seo_title_maker('Orders', '', true)
 
   end
 
   def show
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
     seo_title_maker('Orders', '', true)
   end
 

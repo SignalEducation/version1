@@ -1,48 +1,40 @@
-#console-wrapper
-  .hidden-xs
-    =render partial: 'layouts/management_side_navbar'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@country.name
+            \#
+            =@country.id
 
-  .main-content
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
-
-    .l-section-small.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-md-12.text-center
-              %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-                =@country.name
-                \#
-                =@country.id
-
-          .row.l-margin-top.l-margin-bottom
-            .col-md-12.l-margin-top-big
-              .table-box
-                .table-responsive
-                  %table.table.table-bordered.l-margin-top
-                    %tr
-                      %td.col-sm-4=t('views.countries.form.name')
-                      %td.col-sm-8=@country.name
-                    %tr
-                      %td.col-sm-4=t('views.countries.form.iso_code')
-                      %td.col-sm-8=@country.iso_code
-                    %tr
-                      %td.col-sm-4=t('views.countries.form.country_tld')
-                      %td.col-sm-8=@country.country_tld
-                    %tr
-                      %td.col-sm-4=t('views.countries.form.in_the_eu')
-                      %td.col-sm-8=tick_or_cross(@country.in_the_eu)
-                    %tr
-                      %td.col-sm-4=t('views.countries.form.continent')
-                      %td.col-sm-8=@country.continent
-                    %tr
-                      %td.col-sm-4=t('views.countries.form.currency_id')
-                      %td.col-sm-8=link_to @country.currency.name, @country.currency
-                    %tr
-                      %td.col-sm-4=t('views.invoices.form.number_of_users')
-                      %td.col-sm-8=@country.users.size
-                  %p
-                    =link_to sanitize('&larr; ' + t('views.countries.index.h1')), countries_url
-                    |
-                    =link_to t('views.general.edit'), edit_country_url(id: @country.id), title: t('views.general.edit_tooltip')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.countries.form.name')
+                  %td.col-sm-8=@country.name
+                %tr
+                  %td.col-sm-4=t('views.countries.form.iso_code')
+                  %td.col-sm-8=@country.iso_code
+                %tr
+                  %td.col-sm-4=t('views.countries.form.country_tld')
+                  %td.col-sm-8=@country.country_tld
+                %tr
+                  %td.col-sm-4=t('views.countries.form.in_the_eu')
+                  %td.col-sm-8=tick_or_cross(@country.in_the_eu)
+                %tr
+                  %td.col-sm-4=t('views.countries.form.continent')
+                  %td.col-sm-8=@country.continent
+                %tr
+                  %td.col-sm-4=t('views.countries.form.currency_id')
+                  %td.col-sm-8=link_to @country.currency.name, @country.currency
+                %tr
+                  %td.col-sm-4=t('views.invoices.form.number_of_users')
+                  %td.col-sm-8=@country.users.size
+              %p
+                =link_to sanitize('&larr; ' + t('views.countries.index.h1')), countries_url
+                |
+                =link_to t('views.general.edit'), edit_country_url(id: @country.id), title: t('views.general.edit_tooltip')

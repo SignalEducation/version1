@@ -1,39 +1,33 @@
-#console-wrapper
-  .hidden-xs
-    =render partial: 'layouts/management_side_navbar'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-sm-4
+          %h1=@quiz_question.course_module_element.try(:name).try(:html_safe)
+        .col-sm-4
+          %h2.h1.preview-mode=t('views.quiz_questions.show.preview_mode')
+        .col-sm-4
+          =link_to edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id) do
+            .btn.btn-red.btn-secondary.full-width
+              &#60;
+              =t('views.general.return')
 
-  .main-content
+      .row.l-margin-bottom-big
+        .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
+          .quiz-heading.l-margin-bottom
+            #question-count.p
+              Question 1 of 4
+          .progress.l-margin-bottom-huge
+            .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
-    .l-section-small.is-bg-asphalt
-      .l-wrap
-        .container-fluid
-          .row.l-margin-bottom
-            .col-sm-4
-              %h1=@quiz_question.course_module_element.try(:name).try(:html_safe)
-            .col-sm-4
-              %h2.h1.preview-mode=t('views.quiz_questions.show.preview_mode')
-            .col-sm-4
-              =link_to edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id) do
-                .btn.btn-red.btn-secondary.full-width
-                  &#60;
-                  =t('views.general.return')
+          =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
 
-          .row.l-margin-bottom-big
-            .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
-              .quiz-heading.l-margin-bottom
-                #question-count.p
-                  Question 1 of 4
-              .progress.l-margin-bottom-huge
-                .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+        .box-item.question-box.border-same-backcolor#quiz-contents
+          .quiz-heading.l-margin-bottom
+            %h3=t('views.quiz_questions.form.solution_to_the_question')
 
-              =render partial: 'quiz_questions/show', locals: {question: @quiz_question, hide_me: false}
-
-            .box-item.question-box.border-same-backcolor#quiz-contents
-              .quiz-heading.l-margin-bottom
-                %h3=t('views.quiz_questions.form.solution_to_the_question')
-
-              -if @quiz_question.custom_styles
-                =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
-              -else
-                %p=render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+          -if @quiz_question.custom_styles
+            =render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
+          -else
+            %p=render partial: 'quiz_contents/index', locals: {contents: @quiz_question.quiz_solutions}
 

@@ -86,9 +86,7 @@ class GroupsController < ApplicationController
 
   def get_variables
     @group = Group.where(name_url: params[:group_name_url]).first || Group.where(id: params[:id]).first
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
   def allowed_params

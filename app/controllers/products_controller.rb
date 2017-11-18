@@ -80,9 +80,7 @@ class ProductsController < ApplicationController
     @mock_exams = MockExam.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
     seo_title_maker(@product.try(:name) || 'Products', '', true)
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
   def allowed_params

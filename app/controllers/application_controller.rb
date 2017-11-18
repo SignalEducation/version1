@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  before_action :set_navbar_and_footer
+  before_action :set_layout_variables
 
   helper_method :current_user_session, :current_user
 
@@ -53,7 +53,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_navbar_and_footer
+  def set_layout_variables
+    @layout = 'standard'
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'

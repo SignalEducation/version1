@@ -153,9 +153,7 @@ class UserManagementController < ApplicationController
   end
 
   def layout_variables
-    @navbar = false
-    @footer = false
-    @top_margin = false
+    @layout = 'management'
   end
 
   def get_user_variables
