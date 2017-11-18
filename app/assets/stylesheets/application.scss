@@ -2343,7 +2343,7 @@ spinner {
 
 
 
-#wrapper {
+#console-wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
@@ -2446,11 +2446,11 @@ spinner {
 }
 
 @media(min-width:768px) {
-  #wrapper {
+  #console-wrapper {
     padding-left: 250px;
   }
 
-  #wrapper.toggled {
+  #console-wrapper.toggled {
     padding-left: 0;
   }
 
@@ -2458,7 +2458,7 @@ spinner {
     width: 250px;
   }
 
-  #wrapper.toggled #sidebar-wrapper {
+  #console-wrapper.toggled #sidebar-wrapper {
     width: 0;
   }
 
@@ -2467,7 +2467,7 @@ spinner {
     position: relative;
   }
 
-  #wrapper.toggled #page-content-wrapper {
+  #console-wrapper.toggled #page-content-wrapper {
     position: relative;
     margin-right: 0;
   }

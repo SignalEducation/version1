@@ -25,7 +25,7 @@ class SubscriptionPlansController < ApplicationController
   before_action except: [:public_index] do
     ensure_user_has_access_rights(%w(stripe_management_access))
   end
-  before_action :get_variables
+  before_action :get_variables, except: [:public_index]
 
   def index
     @subscription_plans = SubscriptionPlan.for_students.all_in_order
