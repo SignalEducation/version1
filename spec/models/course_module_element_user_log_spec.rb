@@ -52,9 +52,9 @@ describe CourseModuleElementUserLog do
   # validation
   it { should_not validate_presence_of(:course_module_element_id) }
 
-  it { should_not validate_presence_of(:user_id) }
+  it { should validate_presence_of(:user_id) }
 
-  it { should validate_presence_of(:session_guid) }
+  it { should_not validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
 
   it { should_not validate_presence_of(:time_taken_in_seconds) }
@@ -79,8 +79,6 @@ describe CourseModuleElementUserLog do
   it { expect(CourseModuleElementUserLog).to respond_to(:all_in_order) }
   it { expect(CourseModuleElementUserLog).to respond_to(:all_completed) }
   it { expect(CourseModuleElementUserLog).to respond_to(:all_incomplete) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:for_session_guid) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:for_unknown_users) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_course_module_element) }
   it { expect(CourseModuleElementUserLog).to respond_to(:for_subject_course) }
@@ -92,12 +90,8 @@ describe CourseModuleElementUserLog do
   it { expect(CourseModuleElementUserLog).to respond_to(:this_month) }
   it { expect(CourseModuleElementUserLog).to respond_to(:two_months_ago) }
   it { expect(CourseModuleElementUserLog).to respond_to(:three_months_ago) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:four_months_ago) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:five_months_ago) }
 
   # class methods
-  it { expect(CourseModuleElementUserLog).to respond_to(:assign_user_to_session_guid) }
-  it { expect(CourseModuleElementUserLog).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

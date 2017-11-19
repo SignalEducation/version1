@@ -150,7 +150,7 @@ class User < ActiveRecord::Base
     includes(:user_group).references(:user_groups).where('user_groups.student_user = ?', true)
   end
 
-  def self.all__trial_or_sub_students
+  def self.all_trial_or_sub_students
     includes(:user_group).references(:user_groups).where('user_groups.student_user = ?', true).where('user_groups.trial_or_sub_required = ?', true)
   end
 
@@ -231,7 +231,7 @@ class User < ActiveRecord::Base
 
   # UserGroup Access methods
   def student_user?
-    self.user_group.student_user
+    self.user_group.try(:student_user)
   end
 
   def non_student_user?
@@ -239,11 +239,11 @@ class User < ActiveRecord::Base
   end
 
   def trial_or_sub_user?
-    self.user_group.student_user && self.user_group.trial_or_sub_required
+    self.user_group.try(:student_user)&& self.user_group.trial_or_sub_required
   end
 
   def complimentary_user?
-    self.user_group.student_user && !self.user_group.trial_or_sub_required
+    self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
   end
 
   def tutor_user?

@@ -92,7 +92,8 @@ class UserGroupsController < ApplicationController
                                        :content_management_access, :stripe_management_access,
                                        :user_management_access, :developer_access,
                                        :home_pages_access, :user_group_management_access,
-                                       :student_user, :trial_or_sub_required, :blocked_user)
+                                       :student_user, :trial_or_sub_required, :blocked_user,
+                                       :tutor)
   end
 
 end

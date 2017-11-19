@@ -32,7 +32,7 @@ require 'rails_helper'
 describe UserGroup do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at individual_student content_manager blogger site_admin complimentary customer_support marketing_support)
   UserGroup.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -44,7 +44,6 @@ describe UserGroup do
   subject { FactoryGirl.build(:user_group) }
 
   # Constants
-  it { expect(UserGroup.const_defined?(:FEATURES)).to eq(true) }
 
   # relationships
   it { should have_many(:users) }
@@ -63,13 +62,6 @@ describe UserGroup do
   it { expect(UserGroup).to respond_to(:all_in_order) }
 
   # class methods
-  it { expect(UserGroup).to respond_to(:default_admin_user_group) }
-  it { expect(UserGroup).to respond_to(:default_complimentary_user_group) }
-  it { expect(UserGroup).to respond_to(:default_student_user_group) }
-  it { expect(UserGroup).to respond_to(:default_tutor_user_group) }
-  it { expect(UserGroup).to respond_to(:default_content_manager_user_group) }
-  it { expect(UserGroup).to respond_to(:default_customer_support_user_group) }
-  it { expect(UserGroup).to respond_to(:default_marketing_support_user_group) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
