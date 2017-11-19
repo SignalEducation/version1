@@ -15,7 +15,7 @@
         =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
       =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
-        =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.id
+        =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
         =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
         =f.text_field :user_id
         =f.text_field :course_module_id
