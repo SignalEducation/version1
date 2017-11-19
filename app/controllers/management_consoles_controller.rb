@@ -2,8 +2,7 @@ class ManagementConsolesController < ApplicationController
 
   before_action :logged_in_required
   before_action except: [:system_requirements] do
-    #TODO Can this ensure non-student_user
-    #ensure_user_has_access_rights(%w())
+    ensure_user_has_access_rights(%w(non_student_user))
   end
   before_action only: [:system_requirements] do
     ensure_user_has_access_rights(%w(home_pages_access system_requirements_access))

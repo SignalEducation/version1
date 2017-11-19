@@ -22,11 +22,8 @@ class EnrollmentsController < ApplicationController
 
   #TODO Review this controller - move admin abilities to new controller
 
-  before_action only: [:admin_create_new_scul, :admin_edit, :admin_update, :admin_show] do
+  before_action only: [:admin_edit, :admin_update, :admin_show] do
     ensure_user_has_access_rights(%w(user_management_access))
-  end
-  before_action except: [:admin_create_new_scul, :admin_edit, :admin_update, :admin_show] do
-    ensure_user_has_access_rights(%w(student_user))
   end
   before_action :get_variables
 
