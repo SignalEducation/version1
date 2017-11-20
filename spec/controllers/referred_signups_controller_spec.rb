@@ -182,23 +182,53 @@ RSpec.describe ReferredSignupsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should bounce as not allowed' do
+      it 'should respond OK by default with referred signups that are not payed' do
+        referred_student_2 = FactoryGirl.create(:student_user)
+        subscription_2 = FactoryGirl.create(:subscription, user_id: referred_student_2.id)
+        referred_signup_2 = FactoryGirl.create(:referred_signup,
+                                               user_id: referred_student_2.id,
+                                               subscription_id: subscription_2.id,
+                                               referral_code_id: tutor_referral_code.id,
+                                               payed_at: nil)
         get :index
-        expect_bounce_as_not_allowed
+        expect(assigns(:referred_signups)[0].id).to eq(referred_signup_2.id)
+        expect_index_success_with_model('referred_signups', 1)
+      end
+
+      it 'should respond OK with all payed referred signups' do
+        get :index, payed: 1
+        expect_index_success_with_model('referred_signups', 1)
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should bounce as not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK with referred_signup' do
+        get :edit, id: referred_signup.id
+        expect_edit_success_with_model('referred_signup', referred_signup.id)
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should bounce as not allowed' do
-        put :update, id: 1
-        expect_bounce_as_not_allowed
+      it 'should respond OK to valid params for referred_signup' do
+        put :update, id: referred_signup, referred_signup: { payed_at: Time.now }
+        expect_update_success_with_model('referred_signup', referred_signups_url)
+      end
+
+      it 'should update only payed_at' do
+        now = Time.zone.now
+        put :update, id: referred_signup.id, referred_signup: { referral_code_id: tutor_referral_code.id + 1000,
+                                                                user_id: referred_student.id + 1000,
+                                                                referrer_url: "http://dummy.url",
+                                                                subscription_id: subscription.id + 1000,
+                                                                maturing_on: now,
+                                                                payed_at: now}
+        referred_signup.reload
+        expect(referred_signup.referral_code_id).to eq(tutor_referral_code.id)
+        expect(referred_signup.user_id).to eq(referred_student.id)
+        expect(referred_signup.referrer_url).to eq("http://example.com/referral")
+        expect(referred_signup.subscription_id).to eq(subscription.id)
+        expect(referred_signup.maturing_on).to eq(nil)
+        expect(referred_signup.payed_at.strftime("%Y-%m-%d")).to eq(now.strftime("%Y-%m-%d"))
       end
     end
 
@@ -291,6 +321,7 @@ RSpec.describe ReferredSignupsController, type: :controller do
         expect(referred_signup.payed_at.strftime("%Y-%m-%d")).to eq(now.strftime("%Y-%m-%d"))
       end
     end
+
   end
 
 end

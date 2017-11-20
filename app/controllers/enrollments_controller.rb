@@ -22,7 +22,7 @@ class EnrollmentsController < ApplicationController
 
   #TODO Review this controller - move admin abilities to new controller
 
-  before_action only: [:admin_edit, :admin_update, :admin_show] do
+  before_action only: [:admin_edit, :admin_update, :admin_show, :admin_create_new_scul] do
     ensure_user_has_access_rights(%w(user_management_access))
   end
   before_action :get_variables
@@ -116,7 +116,7 @@ class EnrollmentsController < ApplicationController
       else
         flash[:error] = t('controllers.enrollments.admin_create_new_scul.flash.error')
       end
-      redirect_to user_enrollments_details_url(@enrollment.user)
+      redirect_to user_management_url(@enrollment.user)
     end
   end
 
@@ -141,10 +141,10 @@ class EnrollmentsController < ApplicationController
 
     if @enrollment.update_attributes(exam_date: date, active: params[:enrollment][:active], expired: params[:enrollment][:expired], notifications: params[:enrollment][:notifications])
       flash[:success] = t('controllers.enrollments.admin_update.flash.success')
-      redirect_to user_enrollments_details_url(@enrollment.user)
+      redirect_to user_management_url(@enrollment.user)
     else
       flash[:error] = t('controllers.enrollments.admin_update.flash.error')
-      redirect_to user_enrollments_details_url(@enrollment.user)
+      redirect_to user_management_url(@enrollment.user)
     end
 
   end

@@ -21,8 +21,8 @@
 class UserNotificationsController < ApplicationController
 
   before_action :logged_in_required
-  before_action except: [:index, :show, :destroy, :update] do
-    ensure_user_has_access_rights(%w(user_management_access))
+  before_action do
+    ensure_user_has_access_rights(%w())
   end
   before_action :get_variables
 

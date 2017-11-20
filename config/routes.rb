@@ -185,18 +185,18 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
-    resources :home_pages, only: [:index, :new, :edit, :update, :create, :destroy]
+    resources :home_pages
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
-    get 'group/:home_pages_public_url', to: 'student_sign_ups#landing', as: :group_landing
+    get 'group/:public_url', to: 'student_sign_ups#landing', as: :group_landing
 
     root 'student_sign_ups#home'
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     #Catch Old URL
-    get '/:home_pages_public_url', to: 'student_sign_ups#landing'
+    get '/:public_url', to: 'student_sign_ups#landing'
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

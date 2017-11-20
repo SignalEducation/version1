@@ -215,16 +215,30 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      it 'expect ERROR as not allowed' do
-        post :create, subscription_payment_card: {}
-        expect_bounce_as_not_allowed
+      it 'should be OK with redirect' do
+        post :create, subscription_payment_card: create_params.merge(user_id: student_user.id)
+        expect(flash[:error]).to eq(nil)
+        expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
+      end
+
+      it 'should report ERROR as token is invalid' do
+        post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: student_user_2.id, make_default_card: true}
+        expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
+        expect(flash[:success]).to eq(nil)
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
 
     describe "PUT 'update'" do
-      it 'expect ERROR as not allowed' do
-        put :update, id: 1
-        expect_bounce_as_not_allowed
+      it 'should be OK with redirect' do
+        put :update, id: card_1.id
+        expect(flash[:error]).to eq(nil)
+        expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
 
@@ -287,6 +301,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
     end
+
   end
 
 end

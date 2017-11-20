@@ -18,7 +18,7 @@ class StudentSignUpsController < ApplicationController
   end
 
   def landing
-    @home_page = HomePage.find_by_public_url(params[:home_pages_public_url])
+    @home_page = HomePage.find_by_public_url(params[:public_url])
     if @home_page
       @group = @home_page.group
       @subject_course = @home_page.subject_course
@@ -85,7 +85,8 @@ class StudentSignUpsController < ApplicationController
     @footer = false
 
     @user = User.new(student_allowed_params)
-    @user.user_group_id = UserGroup.default_student_user_group.try(:id)
+    student_user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
+    @user.user_group_id = student_user_group.try(:id)
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
