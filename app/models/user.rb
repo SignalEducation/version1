@@ -853,7 +853,7 @@ class User < ActiveRecord::Base
   end
 
   def create_on_intercom
-    IntercomCreateUserWorker.perform_async(self.id)
+    IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
   end
 
   def set_trial_limit_in_days

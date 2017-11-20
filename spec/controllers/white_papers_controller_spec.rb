@@ -104,11 +104,11 @@ describe WhitePapersController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -264,83 +264,6 @@ describe WhitePapersController, type: :controller do
       activate_authlogic
       UserSession.create!(tutor_user)
     end
-    describe "GET 'index'" do
-      it 'should redirect to sign_in' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'media_library'" do
-      xit 'should render public index' do
-        get :media_library
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:media_library)
-        expect(assigns('white_papers'.to_sym).first.class.name).to eq('white_papers'.classify)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should render  show' do
-        get :show, white_paper_name_url: white_paper_1.name_url, id: white_paper_1.id
-        expect_show_success_with_model('white_paper', white_paper_1.id)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should redirect to sign_in' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should redirect to sign_in' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to sign_in' do
-        post :create, user: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create_request'" do
-      it 'should report OK for valid params' do
-        post :create_request, white_paper_request: request_params
-        expect_create_success_with_model('white_paper_request', public_white_paper_url(white_paper_1.name_url))
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should redirect to sign_in' do
-        put :update, id: 1, user: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-
-    describe "DELETE 'destroy'" do
-      it 'should redirect to sign_in' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
     describe "GET 'index'" do
       it 'should redirect to sign_in' do
         get :index

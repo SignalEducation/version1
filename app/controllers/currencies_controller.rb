@@ -17,7 +17,7 @@ class CurrenciesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
+    ensure_user_has_access_rights(%w(system_requirements_access stripe_management_access))
   end
   before_action :get_variables
 

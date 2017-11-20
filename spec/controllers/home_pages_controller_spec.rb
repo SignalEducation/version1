@@ -39,7 +39,7 @@ describe HomePagesController, type: :controller do
                             email: 'test.student@example.com', password: 'dummy_pass',
                             password_confirmation: 'dummy_pass' } }
   let!(:default_plan) { FactoryGirl.create(:subscription_plan) }
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: individual_student_user.id) }
+  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student_user.id) }
 
   context 'Not logged in: ' do
 
@@ -94,11 +94,11 @@ describe HomePagesController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'home'" do
@@ -251,85 +251,6 @@ describe HomePagesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-      a = admin_user
-      d = content_manager_user
-      e = tutor_user
-      f = comp_user
-      g = customer_support_manager_user
-      h = marketing_manager_user
-    end
-
-    describe "GET 'home'" do
-      it 'should see home' do
-        get :home
-        expect_bounce_to_dashboard_as_signed_in
-      end
-    end
-
-    describe "GET 'show'" do
-      it 'should see show' do
-        get :show, home_pages_public_url: home_page_2.public_url
-        expect_bounce_to_dashboard_as_signed_in
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with home_page_1' do
-        get :edit, id: home_page_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with home_page_2' do
-        get :edit, id: home_page_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, home_page: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, home_page: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for home_page_1' do
-        put :update, id: home_page_1.id, home_page: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for home_page_2' do
-        put :update, id: home_page_2.id, home_page: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: home_page_1.id, home_page: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
       a = admin_user
       d = content_manager_user
       e = tutor_user

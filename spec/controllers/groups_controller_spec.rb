@@ -87,11 +87,11 @@ describe GroupsController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -262,91 +262,6 @@ describe GroupsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with group_1' do
-        get :edit, id: group_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with group_2' do
-        get :edit, id: group_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, group: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, group: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for group_1' do
-        put :update, id: group_1.id, group: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for group_2' do
-        put :update, id: group_2.id, group: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: group_1.id, group: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
-        post :reorder, array_of_ids: [group_2.id, group_1.id]
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: group_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: group_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
     end
 
     describe "GET 'index'" do

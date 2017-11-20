@@ -22,7 +22,7 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
   let!(:tutor) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id ) }
   let!(:tutor_referral_code) { FactoryGirl.create(:referral_code, user_id: tutor.id) }
-  let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
+  let!(:referred_student) { FactoryGirl.create(:student_user) }
   let!(:subscription) { FactoryGirl.create(:subscription, user_id: referred_student.id) }
   let!(:referred_signup) { FactoryGirl.create(:referred_signup,
                                               user_id: referred_student.id,
@@ -54,11 +54,11 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -119,36 +119,6 @@ RSpec.describe ReferredSignupsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should bounce as not allowed' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should bounce as not allowed' do
-        put :update, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
     end
 
     describe "GET 'index'" do
@@ -273,7 +243,7 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
     describe "GET 'index'" do
       it 'should respond OK by default with referred signups that are not payed' do
-        referred_student_2 = FactoryGirl.create(:individual_student_user)
+        referred_student_2 = FactoryGirl.create(:student_user)
         subscription_2 = FactoryGirl.create(:subscription, user_id: referred_student_2.id)
         referred_signup_2 = FactoryGirl.create(:referred_signup,
                                               user_id: referred_student_2.id,

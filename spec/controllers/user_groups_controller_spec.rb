@@ -89,11 +89,11 @@ describe UserGroupsController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user' do
+  context 'Logged in as a student_user' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -210,64 +210,6 @@ describe UserGroupsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should redirect to root' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should redirect to root' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should redirect to root' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should redirect to root' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to root' do
-        post :create, user_group: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should redirect to root' do
-        put :update, id: 1, user_group: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should redirect to root' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
     end
 
     describe "GET 'index'" do
@@ -511,13 +453,13 @@ describe UserGroupsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond with OK' do
-        get :show, id: individual_student_user_group.id
-        expect_show_success_with_model('user_group', individual_student_user_group.id)
+        get :show, id: student_user_group.id
+        expect_show_success_with_model('user_group', student_user_group.id)
       end
 
         it 'should respond with OK if I ask for another' do
-        get :show, id: site_admin_user_group.id
-        expect_show_success_with_model('user_group', site_admin_user_group.id)
+        get :show, id: admin_user_group.id
+        expect_show_success_with_model('user_group', admin_user_group.id)
       end
     end
 
@@ -530,13 +472,13 @@ describe UserGroupsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user_group.id
-        expect_edit_success_with_model('user_group', individual_student_user_group.id)
+        get :edit, id: student_user_group.id
+        expect_edit_success_with_model('user_group', student_user_group.id)
         end
 
       it 'should respond with OK' do
-        get :edit, id: site_admin_user_group.id
-        expect_edit_success_with_model('user_group', site_admin_user_group.id)
+        get :edit, id: admin_user_group.id
+        expect_edit_success_with_model('user_group', admin_user_group.id)
       end
     end
 
@@ -554,26 +496,26 @@ describe UserGroupsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid input' do
-        put :update, id: individual_student_user_group.id, user_group: valid_params
+        put :update, id: student_user_group.id, user_group: valid_params
         expect_update_success_with_model('user_group', user_groups_url)
       end
 
       it 'should reload the edit page on invalid input' do
-        put :update, id: individual_student_user_group.id, user_group: {name: ''}
+        put :update, id: student_user_group.id, user_group: {name: ''}
         expect_update_error_with_model('user_group')
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should allow the deletion as dependant has been deleted too' do
-        individual_student_user_group.users.destroy_all
-        delete :destroy, id: individual_student_user_group.id
+        student_user_group.users.destroy_all
+        delete :destroy, id: student_user_group.id
         expect_delete_success_with_model('user_group', user_groups_url)
       end
 
       it 'should fail to delete as dependant exists' do
-        x = individual_student_user
-        delete :destroy, id: individual_student_user_group.id
+        x = student_user
+        delete :destroy, id: student_user_group.id
         expect_delete_error_with_model('user_group', user_groups_url)
       end
     end

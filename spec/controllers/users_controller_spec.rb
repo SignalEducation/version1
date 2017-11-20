@@ -75,26 +75,26 @@ describe UsersController, type: :controller do
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
   let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:upgrading_user) { FactoryGirl.create(:individual_student_user) }
-  let!(:individual_student_user_1) { FactoryGirl.create(:individual_student_user) }
-  let!(:subscription_payment_card) { FactoryGirl.create(:subscription_payment_card, user_id: individual_student_user_1.id) }
+  let!(:upgrading_user) { FactoryGirl.create(:student_user) }
+  let!(:student_user_1) { FactoryGirl.create(:student_user) }
+  let!(:subscription_payment_card) { FactoryGirl.create(:subscription_payment_card, user_id: student_user_1.id) }
   let!(:subscription_1) { x = FactoryGirl.create(:subscription,
-                                                 user_id: individual_student_user_1.id,
+                                                 user_id: student_user_1.id,
                                                  subscription_plan_id: subscription_plan_1.id,
                                                  active: true,
                                                  current_status: 'canceled',
                                                  stripe_token: stripe_helper.generate_card_token)
-  individual_student_user_1.stripe_customer_id = x.stripe_customer_id
-  individual_student_user_1.save
+  student_user_1.stripe_customer_id = x.stripe_customer_id
+  student_user_1.save
   x }
-  let!(:valid_params) { FactoryGirl.attributes_for(:individual_student_user, user_group_id: individual_student_user_group.id) }
+  let!(:valid_params) { FactoryGirl.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
 
   context 'Not logged in...' do
 
     describe "GET account" do
       it 'should see my own profile' do
-        get :account, id: individual_student_user.id
+        get :account, id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -108,42 +108,42 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should redirect to root' do
-        get :show, id: individual_student_user.id
+        get :show, id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'user_personal_details'" do
       it 'should redirect to root' do
-        get :user_personal_details, user_id: individual_student_user.id
+        get :user_personal_details, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'user_subscription_status'" do
       it 'should redirect to root' do
-        get :user_subscription_status, user_id: individual_student_user.id
+        get :user_subscription_status, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'user_enrollments_details'" do
       it 'should redirect to root' do
-        get :user_enrollments_details, user_id: individual_student_user.id
+        get :user_enrollments_details, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'user_purchases_details'" do
       it 'should redirect to root' do
-        get :user_purchases_details, user_id: individual_student_user.id
+        get :user_purchases_details, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "GET 'user_courses_status'" do
       it 'should redirect to root' do
-        get :user_courses_status, user_id: individual_student_user.id
+        get :user_courses_status, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -157,7 +157,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should redirect to root' do
-        get :edit, id: individual_student_user.id
+        get :edit, id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -171,7 +171,7 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
+        put :update, id: student_user.id, user: valid_params
         expect_bounce_as_not_signed_in
       end
 
@@ -181,7 +181,7 @@ describe UsersController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
+        put :update, id: student_user.id, user: {email: 'a'}
         expect_bounce_as_not_signed_in
       end
     end
@@ -195,14 +195,14 @@ describe UsersController, type: :controller do
 
     describe "GET 'reactivate_account'" do
       it 'should redirect to root' do
-        get :reactivate_account, user_id: individual_student_user.id
+        get :reactivate_account, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
 
     describe "POST 'reactivate_account_subscription'" do
       it 'should redirect to root' do
-        post :reactivate_account_subscription, user_id: individual_student_user.id
+        post :reactivate_account_subscription, user_id: student_user.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -235,16 +235,16 @@ describe UsersController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user' do
+  context 'Logged in as a student_user' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'account'" do
       it 'should see my own profile' do
-        get :account, id: individual_student_user.id
+        get :account, id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -261,42 +261,42 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should redirect to root' do
-        get :show, id: individual_student_user.id
+        get :show, id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'user_personal_details'" do
       it 'should redirect to root' do
-        get :user_personal_details, user_id: individual_student_user.id
+        get :user_personal_details, user_id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'user_subscription_status'" do
       it 'should redirect to root' do
-        get :user_subscription_status, user_id: individual_student_user.id
+        get :user_subscription_status, user_id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'user_enrollments_details'" do
       it 'should redirect to root' do
-        get :user_enrollments_details, user_id: individual_student_user.id
+        get :user_enrollments_details, user_id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'user_purchases_details'" do
       it 'should redirect to root' do
-        get :user_purchases_details, user_id: individual_student_user.id
+        get :user_purchases_details, user_id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'user_courses_status'" do
       it 'should redirect to root' do
-        get :user_courses_status, user_id: individual_student_user.id
+        get :user_courses_status, user_id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -310,7 +310,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should redirect to root' do
-        get :edit, id: individual_student_user.id
+        get :edit, id: student_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -324,19 +324,19 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params' do
-        put :update, id: individual_student_user.id, user: valid_params
+        put :update, id: student_user.id, user: valid_params
         expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect(assigns(:user).id).to eq(student_user.id)
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
         put :update, id: admin_user.id, user: valid_params
         expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect(assigns(:user).id).to eq(student_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
+        put :update, id: student_user.id, user: {email: 'a'}
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -353,7 +353,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'reactivate_account'" do
       it 'should redirect to root as no subscription exists for user' do
-        get :reactivate_account, user_id: individual_student_user.id
+        get :reactivate_account, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -361,7 +361,7 @@ describe UsersController, type: :controller do
       end
 
       xit 'successfully render reactivate_account view' do
-        get :reactivate_account, user_id: individual_student_user_1.id
+        get :reactivate_account, user_id: student_user_1.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -371,14 +371,14 @@ describe UsersController, type: :controller do
 
     describe "POST 'reactivate_account_subscription'" do
       it 'create new subscription for the user' do
-        stripe_customer = Stripe::Customer.create(email: individual_student_user_1.email)
-        individual_student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_customer = Stripe::Customer.create(email: student_user_1.email)
+        student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
         stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
         subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-        post :reactivate_account_subscription, user_id: individual_student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'}, coupon: ''
-        expect(individual_student_user_1.active_subscription.current_status).to eq('active')
+        post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'}, coupon: ''
+        expect(student_user_1.active_subscription.current_status).to eq('active')
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -388,7 +388,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'reactivation_complete'" do
       it 'should redirect to root' do
-        post :reactivation_complete, user_id: individual_student_user_1.id
+        post :reactivation_complete, user_id: student_user_1.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -733,166 +733,6 @@ describe UsersController, type: :controller do
 
   end
 
-  context 'Logged in as a blogger_user' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
-    describe "GET account" do
-      it 'should see my own profile' do
-        get :account, id: blogger_user.id
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:account)
-      end
-    end
-
-    describe "GET 'index'" do
-      it 'should redirect to root' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should redirect to root' do
-        get :show, id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'user_personal_details'" do
-      it 'should redirect to root' do
-        get :user_personal_details, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'user_subscription_status'" do
-      it 'should redirect to root' do
-        get :user_subscription_status, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'user_enrollments_details'" do
-      it 'should redirect to root' do
-        get :user_enrollments_details, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'user_purchases_details'" do
-      it 'should redirect to root' do
-        get :user_purchases_details, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'user_courses_status'" do
-      it 'should redirect to root' do
-        get :user_courses_status, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should redirect to root' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should redirect to root' do
-        get :edit, id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should redirect to root' do
-        post :create, user: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params' do
-        put :update, id: blogger_user.id, user: valid_params
-        expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(blogger_user.id)
-
-      end
-
-      it 'should respond OK to valid params and insist on their own user ID being updated' do
-        put :update, id: admin_user.id, user: valid_params
-        expect_update_success_with_model('user', account_url)
-        expect(assigns(:user).id).to eq(blogger_user.id)
-
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: blogger_user.id, user: {email: 'a'}
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
-
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should redirect to root' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'reactivate_account'" do
-      it 'should redirect to root' do
-        get :reactivate_account, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'reactivate_account_subscription'" do
-      it 'should redirect to root' do
-        post :reactivate_account_subscription, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'reactivation_complete'" do
-      it 'should redirect to root' do
-        post :reactivation_complete, user_id: blogger_user.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'subscription_invoice'" do
-      xit 'should redirect to root' do
-        post :subscription_invoice, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST: 'change_password'" do
-      it 'should respond OK to correct details' do
-        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_success_with_model(account_url)
-      end
-
-      it 'should respond ERROR to incorrect details' do
-        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
-        expect_change_password_error_with_model(account_url)
-      end
-    end
-
-  end
 
   context 'Logged in as a content_manager_user' do
 
@@ -1243,19 +1083,19 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see my own profile' do
-        get :show, id: individual_student_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        get :show, id: student_user.id
+        expect_show_success_with_model('user', student_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
-        get :show, id: individual_student_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        get :show, id: student_user.id
+        expect_show_success_with_model('user', student_user.id)
       end
     end
 
     describe "GET 'user_personal_details'" do
       it 'should redirect to root' do
-        get :user_personal_details, user_id: individual_student_user.id
+        get :user_personal_details, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1265,7 +1105,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_subscription_status'" do
       it 'should redirect to root' do
-        get :user_subscription_status, user_id: individual_student_user.id
+        get :user_subscription_status, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1276,7 +1116,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_enrollments_details'" do
       it 'should redirect to root' do
-        get :user_enrollments_details, user_id: individual_student_user.id
+        get :user_enrollments_details, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1286,7 +1126,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_purchases_details'" do
       it 'should redirect to root' do
-        get :user_purchases_details, user_id: individual_student_user.id
+        get :user_purchases_details, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1296,7 +1136,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_courses_status'" do
       it 'should redirect to root' do
-        get :user_courses_status, user_id: individual_student_user.id
+        get :user_courses_status, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1313,8 +1153,8 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
+        get :edit, id: student_user.id
+        expect_edit_success_with_model('user', student_user.id)
       end
     end
 
@@ -1354,7 +1194,7 @@ describe UsersController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be OK if deleting normal user' do
-        delete :destroy, id: individual_student_user.id
+        delete :destroy, id: student_user.id
         expect_bounce_as_not_allowed
       end
 
@@ -1366,7 +1206,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'reactivate_account'" do
       it 'should render reactivation page for individual student' do
-        get :reactivate_account, user_id: individual_student_user.id
+        get :reactivate_account, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -1376,14 +1216,14 @@ describe UsersController, type: :controller do
 
     describe "POST 'reactivate_account_subscription'" do
       it 'should redirect to root' do
-        stripe_customer = Stripe::Customer.create(email: individual_student_user_1.email)
-        individual_student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_customer = Stripe::Customer.create(email: student_user_1.email)
+        student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
         stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
         subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-        post :reactivate_account_subscription, user_id: individual_student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'}, coupon: ''
-        expect(individual_student_user_1.active_subscription.current_status).to eq('active')
+        post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'}, coupon: ''
+        expect(student_user_1.active_subscription.current_status).to eq('active')
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -1393,7 +1233,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'reactivation_complete'" do
       it 'should redirect to root' do
-        post :reactivation_complete, user_id: individual_student_user_1.id
+        post :reactivation_complete, user_id: student_user_1.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1448,20 +1288,20 @@ describe UsersController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should redirect to root' do
-        get :show, id: individual_student_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        get :show, id: student_user.id
+        expect_show_success_with_model('user', student_user.id)
       end
 
       it 'should see my own profile even if I ask for another' do
-        get :show, id: individual_student_user.id
-        expect_show_success_with_model('user', individual_student_user.id)
+        get :show, id: student_user.id
+        expect_show_success_with_model('user', student_user.id)
       end
 
     end
 
     describe "GET 'user_personal_details'" do
       it 'should redirect to root' do
-        get :user_personal_details, user_id: individual_student_user.id
+        get :user_personal_details, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1471,7 +1311,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_subscription_status'" do
       it 'should redirect to root' do
-        get :user_subscription_status, user_id: individual_student_user.id
+        get :user_subscription_status, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1482,7 +1322,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_enrollments_details'" do
       it 'should redirect to root' do
-        get :user_enrollments_details, user_id: individual_student_user.id
+        get :user_enrollments_details, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1492,7 +1332,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_purchases_details'" do
       it 'should redirect to root' do
-        get :user_purchases_details, user_id: individual_student_user.id
+        get :user_purchases_details, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1502,7 +1342,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_courses_status'" do
       it 'should redirect to root' do
-        get :user_courses_status, user_id: individual_student_user.id
+        get :user_courses_status, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -1519,8 +1359,8 @@ describe UsersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: individual_student_user.id
-        expect_edit_success_with_model('user', individual_student_user.id)
+        get :edit, id: student_user.id
+        expect_edit_success_with_model('user', student_user.id)
       end
 
       it 'should only allow editing of own user' do
@@ -1551,28 +1391,28 @@ describe UsersController, type: :controller do
       end
 
       it 'should respond OK to valid params and insist on their own user ID being updated' do
-        put :update, id: individual_student_user.id, user: valid_params
+        put :update, id: student_user.id, user: valid_params
         expect_update_success_with_model('user', users_url)
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect(assigns(:user).id).to eq(student_user.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: individual_student_user.id, user: {email: 'a'}
+        put :update, id: student_user.id, user: {email: 'a'}
         expect_update_error_with_model('user')
-        expect(assigns(:user).id).to eq(individual_student_user.id)
+        expect(assigns(:user).id).to eq(student_user.id)
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be OK if deleting normal user' do
-        delete :destroy, id: individual_student_user.id
+        delete :destroy, id: student_user.id
         expect_delete_success_with_model('user', users_url)
       end
     end
 
     describe "GET 'reactivate_account'" do
       it 'should render reactivation page for individual student' do
-        get :reactivate_account, user_id: individual_student_user.id
+        get :reactivate_account, user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -1582,14 +1422,14 @@ describe UsersController, type: :controller do
 
     describe "POST 'reactivate_account_subscription'" do
       it 'should redirect to root' do
-        stripe_customer = Stripe::Customer.create(email: individual_student_user_1.email)
-        individual_student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_customer = Stripe::Customer.create(email: student_user_1.email)
+        student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
         stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
         subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-        post :reactivate_account_subscription, user_id: individual_student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'}, coupon: ''
-        expect(individual_student_user_1.active_subscription.current_status).to eq('active')
+        post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'}, coupon: ''
+        expect(student_user_1.active_subscription.current_status).to eq('active')
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -1599,7 +1439,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'reactivation_complete'" do
       it 'should redirect to root' do
-        post :reactivation_complete, user_id: individual_student_user_1.id
+        post :reactivation_complete, user_id: student_user_1.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)

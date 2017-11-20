@@ -48,11 +48,11 @@ describe WhitePaperRequestsController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -135,47 +135,6 @@ describe WhitePaperRequestsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see white_paper_request_1' do
-        get :show, id: white_paper_request_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see white_paper_request_2' do
-        get :show, id: white_paper_request_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: white_paper_request_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: white_paper_request_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
     end
 
     describe "GET 'index'" do

@@ -41,8 +41,8 @@ describe InvoicesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:individual_student_user_invoice) { FactoryGirl.create(:invoice,
-                                  user_id: individual_student_user.id) }
+  let!(:student_user_invoice) { FactoryGirl.create(:invoice,
+                                  user_id: student_user.id) }
   let!(:tutor_user_invoice) { FactoryGirl.create(:invoice,
                                   user_id: tutor_user.id) }
   let!(:content_manager_user_invoice) { FactoryGirl.create(:invoice,
@@ -73,11 +73,11 @@ describe InvoicesController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -89,7 +89,7 @@ describe InvoicesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see invoice' do
-        get :show, id: individual_student_user_invoice.id
+        get :show, id: student_user_invoice.id
         expect_bounce_as_not_allowed
       end
 
@@ -124,7 +124,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
+        get :show, id: student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -153,40 +153,11 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
+        get :show, id: student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
 
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see invoice' do
-        get :show, id: blogger_user_invoice.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
-        expect_bounce_as_not_allowed
-      end
-    end
 
   end
 
@@ -212,7 +183,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
+        get :show, id: student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -241,7 +212,7 @@ describe InvoicesController, type: :controller do
 
       # optional - some other object
       it 'should return ERROR and redirect' do
-        get :show, id: individual_student_user_invoice.id
+        get :show, id: student_user_invoice.id
         expect_bounce_as_not_allowed
       end
     end
@@ -264,8 +235,8 @@ describe InvoicesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see invoice_1' do
-        get :show, id: individual_student_user_invoice.id
-        expect_show_success_with_model('invoice', individual_student_user_invoice.id)
+        get :show, id: student_user_invoice.id
+        expect_show_success_with_model('invoice', student_user_invoice.id)
       end
 
       # optional - some other object
