@@ -36,7 +36,7 @@ class SubscriptionPaymentCardsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(individual_student admin))
+    ensure_user_has_access_rights(%w(student_user user_management_access))
   end
   before_action :get_variables
 
@@ -77,11 +77,7 @@ class SubscriptionPaymentCardsController < ApplicationController
   end
 
   def get_variables
-    if params[:id]
-      @subscription_payment_card = current_user.admin? ?
-              SubscriptionPaymentCard.find_by_id(params[:id]) :
-              current_user.subscription_payment_cards.find_by_id(params[:id])
-    end
+    @subscription_payment_card = current_user.subscription_payment_cards.find_by_id(params[:id]) if params[:id]
   end
 
   def update_params

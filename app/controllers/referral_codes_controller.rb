@@ -14,10 +14,10 @@ class ReferralCodesController < ApplicationController
 
   before_action :logged_in_required
   before_action only: [:index, :destroy] do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(user_management_access))
   end
   before_action only: [:show] do
-    ensure_user_is_of_type(%w(individual_student tutor blogger))
+    ensure_user_has_access_rights(%w(student_user))
   end
 
   def index
@@ -27,7 +27,7 @@ class ReferralCodesController < ApplicationController
   def show
     @referral_code = ReferralCode.find(params[:id])
     @user = User.find(@referral_code.user_id)
-    if @user.individual_student?
+    if @user.student_user?
       sub_plan_currency = @user.subscriptions.first.subscription_plan.currency
       @current_monthly_sub = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
     end

@@ -59,7 +59,7 @@ class ReferredSignup < ActiveRecord::Base
   protected
 
   def check_conversion_count
-    if referrer_user.individual_student?
+    if referrer_user.student_user?
       current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id)
       current_payed_referrals = current_referrals.where.not(payed_at: nil)
       if current_payed_referrals.count == 5

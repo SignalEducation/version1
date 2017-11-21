@@ -16,7 +16,7 @@
             -# todo %th=t('views.user_notifications.index.blog_post_id')
             %th.col-sm-3
               =t('views.user_notifications.index.tutor_id')
-              -if current_user.admin?
+              -if current_user.user_management_access?
                 %br/
                 =t('views.user_notifications.form.user_id')
             %th.col-sm-1
@@ -33,7 +33,7 @@
               -# todo %td=link_to(user_notification.blog_post.try(:name), user_notification, title: t('views.general.view_tooltip'))
               %td
                 =link_to(user_notification.tutor.try(:full_name) || '--', user_notification, title: t('views.general.view_tooltip'))
-                -if current_user.admin?
+                -if current_user.user_management_access?
                   %br/
                   =link_to(user_notification.user.full_name, user_notification, title: t('views.general.view_tooltip'))
 
@@ -49,7 +49,7 @@
     .col-sm-12
       .well
         %h2.text-center=t('views.user_notifications.index.h2')
--if current_user.admin? || current_user.tutor?
+-if current_user.user_management_access?
   .row
     .col-sm-12
       =link_to t('views.general.new'), new_user_notification_url, class: 'btn btn-success', title: t('views.general.new_tooltip')

@@ -169,11 +169,11 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) if self.user.individual_student? && !Rails.env.test? && self.exam_date
+    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) if self.user.student_user? && !Rails.env.test? && self.exam_date
   end
 
   def create_intercom_event
-    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date) if self.user.individual_student? && !Rails.env.test?
+    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date) if self.user.student_user? && !Rails.env.test?
   end
 
 end

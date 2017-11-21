@@ -1,0 +1,76 @@
+-if flash[:success] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .col-sm-12
+        %h1.h1.h-separator.h-separator-left.l-margin-bottom
+          =t('views.user_accounts.account_show.h1')
+
+      .col-md-12.l-margin-top-big{role: 'tablist'}
+        .signal-tabs
+          %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+            =t('views.user_accounts.personal_info.tab_heading')
+
+          -if @user.trial_or_sub_user?
+            %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+              =t('views.user_accounts.subscription_info.tab_heading')
+
+          -if @user.trial_or_sub_user? && @subscription_payment_cards.any?
+            %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+              =t('views.user_accounts.payment_details.tab_heading')
+
+          -if @user.trial_or_sub_user? && @orders.any?
+            %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+              =t('views.user_accounts.orders_info.tab_heading')
+
+          %a{href: '#enrollments', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+            =t('views.user_accounts.enrollments_info.tab_heading')
+
+
+
+      .tab-content
+        .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
+          .col-md-12
+            .content-box.content-box-outer.l-margin-bottom-huge
+              .content-box-inner
+                =render partial: 'personal_info'
+
+        -if @user.trial_or_sub_user?
+          .tab-pane.fade#subscriptions{role: 'tabpanel'}
+            .col-md-12
+              .content-box.content-box-outer.l-margin-bottom-huge
+                .content-box-inner
+                  =render partial: 'subscription_info'
+
+
+        -if @subscription_payment_cards.any?
+          .tab-pane.fade#payment-details{role: 'tabpanel'}
+            .col-md-12
+              .content-box.content-box-outer.l-margin-bottom-huge
+                .content-box-inner
+                  =render partial: 'payment_details'
+
+
+        -if @orders.any?
+          .tab-pane.fade#orders{role: 'tabpanel'}
+            .col-md-12
+              .content-box.content-box-outer.l-margin-bottom-huge
+                .content-box-inner
+                  =render partial: 'orders_info'
+
+        .tab-pane.fade#enrollments{role: 'tabpanel'}
+          .col-md-12
+            .content-box.content-box-outer.l-margin-bottom-huge
+              .content-box-inner
+                =render partial: 'enrollments_info'
+
+
+
+
+
+
+=render partial: 'shared/activate_tab'
+=render partial: 'subscription_payment_cards/modal'
+=render partial: 'student_user_form'
+=render partial: 'change_password'

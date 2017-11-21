@@ -16,7 +16,7 @@ class SubscriptionPlanCategoriesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(stripe_management_access))
   end
   before_action :get_variables
 
@@ -69,6 +69,7 @@ class SubscriptionPlanCategoriesController < ApplicationController
     if params[:id].to_i > 0
       @subscription_plan_category = SubscriptionPlanCategory.where(id: params[:id]).first
     end
+    @layout = 'management'
   end
 
   def allowed_params

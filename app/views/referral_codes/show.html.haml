@@ -1,4 +1,4 @@
--if current_user.individual_student?
+-if current_user.student_user?
   .l-section-small.is-bg-asphalt
     .container-fluid
       .row.l-margin-bottom
@@ -182,7 +182,7 @@
 
     $("#menu-toggle").click(function(e) {
       e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
+      $("#console-wrapper").toggleClass("toggled");
     });
 
     $(document).ready(function() {

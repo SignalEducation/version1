@@ -133,8 +133,8 @@ class Subscription < ActiveRecord::Base
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
       return self
     end
-    # only individual students are allowed to upgrade their plan
-    unless self.user.individual_student?
+    # only student_users are allowed to upgrade their plan
+    unless self.user.trial_or_sub_user?
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
       return self
     end
@@ -150,6 +150,7 @@ class Subscription < ActiveRecord::Base
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
       stripe_subscription.plan = new_subscription_plan.stripe_guid
       stripe_subscription.prorate = true
+      #stripe_subscription.trial_end = 'now'
       stripe_subscription.trial_end = 'now'
 
       result = stripe_subscription.save # saves it at stripe.com, not in our DB
@@ -219,6 +220,20 @@ class Subscription < ActiveRecord::Base
 
       end
     end
+  end
+
+  def un_cancel
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+    latest_subscription.plan = self.subscription_plan.stripe_guid
+    response = latest_subscription.save
+    if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
+      self.update_attributes(current_status: 'active', active: true)
+
+    else
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+    end
+    self
   end
 
   protected

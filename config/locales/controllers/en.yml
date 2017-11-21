@@ -337,6 +337,10 @@ en:
         flash:
           success: Your Subscription has been updated successfully
           error: Your Subscription has not been updated
+      un_cancel:
+        flash:
+          success: Your Subscription has been un-canceled
+          error: Your Subscription has not been un-canceled
       destroy:
         flash:
           success: Your Subscription has been cancelled
@@ -376,6 +380,7 @@ en:
       update:
         flash:
           success: User details have been updated successfully
+          error: User details have not been updated
       destroy:
         flash:
           success: User has been deleted
@@ -383,7 +388,7 @@ en:
       change_password:
         flash:
           success: Your password has been updated successfully
-          error: Your password was not changed
+          error: Your password was not changed. Please try again!
       update_subjects:
         flash:
           success: User Courses have been updated successfully

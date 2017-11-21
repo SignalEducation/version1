@@ -7,7 +7,7 @@
             =t('views.products.index.h1')
       .row.l-margin-top.l-margin-bottom
         .col-md-12
-          =render partial: 'layouts/stats_navbar'
+          =render partial: 'management_consoles/subscriptions_nav'
 
       .row.l-margin-top.l-margin-bottom
         .col-md-7.col-sm-4.l-margin-top
@@ -15,9 +15,6 @@
 
           =link_to 'Mock Exams', mock_exams_url, class: 'btn btn-cyan', title: t('views.general.new_tooltip')
 
-          =link_to 'New Mock Exam', new_mock_exam_url, class: 'btn btn-purple', title: t('views.general.new_tooltip')
-
-          =link_to 'Orders', orders_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
         .col-md-offset-2.col-md-3.l-margin-top
           =form_tag(products_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do

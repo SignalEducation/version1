@@ -1,0 +1,43 @@
+#sidebar-wrapper.text-center
+  .sidebar-brand
+    .brand-logo
+      =link_to root_url do
+        =image_tag('ls-logo-white.svg', class: 'logo')
+
+
+  %ul.sidebar-nav
+    %li.first-li
+      -if current_user.non_student_user?
+        =link_to 'Overview', management_consoles_url
+
+    -if current_user.user_management_access?
+      %li
+        =link_to 'Users', user_management_index_url
+
+    -if current_user.content_management_access?
+      %li
+        =link_to 'Course Content', subject_courses_url
+
+    -if current_user.stripe_management_access?
+      %li
+        =link_to 'Plans + Products', subscription_plans_url
+
+    -if current_user.system_requirements_access? || current_user.stripe_management_access? || current_user.user_management_access?
+      %li
+        =link_to 'Reports', reports_url
+
+    -if current_user.system_requirements_access?
+      %li
+        =link_to 'System Requirements', system_requirements_url
+
+    -if current_user.home_pages_access?
+      %li
+        =link_to 'Landing Pages', home_pages_url
+
+    -if current_user.developer_access?
+      %li
+        =link_to'Sidekiq', sidekiq_web_path, target: '_blank'
+
+    %li
+      =link_to 'Return', root_url
+
