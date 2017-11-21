@@ -93,17 +93,14 @@ class StudentSignUpsController < ApplicationController
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password
-    @user.free_trial = true
 
-    # Check for CrushOffers cookie and assign it to the User
-    if cookies.encrypted[:crush_offers]
-      @user.crush_offers_session_id = cookies.encrypted[:crush_offers]
-      cookies.delete(:crush_offers)
-    end
+    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+
     # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
     if cookies.encrypted[:latest_subscription_plan_category_guid]
       subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
       @user.subscription_plan_category_id = subscription_plan_category.try(:id)
+      @user.student_access.trial_days_limit = subscription_plan_category.trial_period_in_days.to_i
     end
 
     if @user.valid? && @user.save

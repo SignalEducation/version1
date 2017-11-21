@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171117122210) do
+ActiveRecord::Schema.define(version: 20171121104513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -548,6 +548,28 @@ ActiveRecord::Schema.define(version: 20171117122210) do
   add_index "stripe_api_events", ["guid"], name: "index_stripe_api_events_on_guid", using: :btree
   add_index "stripe_api_events", ["processed"], name: "index_stripe_api_events_on_processed", using: :btree
   add_index "stripe_api_events", ["processed_at"], name: "index_stripe_api_events_on_processed_at", using: :btree
+
+  create_table "student_accesses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "trial_started_date"
+    t.datetime "trial_ending_at_date"
+    t.datetime "trial_ended_date"
+    t.integer  "trial_seconds_limit"
+    t.integer  "trial_days_limit"
+    t.integer  "content_seconds_consumed", default: 0
+    t.integer  "subscription_id"
+    t.string   "account_type"
+    t.boolean  "content_access",           default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
+  add_index "student_accesses", ["account_type"], name: "index_student_accesses_on_account_type", using: :btree
+  add_index "student_accesses", ["content_access"], name: "index_student_accesses_on_content_access", using: :btree
+  add_index "student_accesses", ["content_seconds_consumed"], name: "index_student_accesses_on_content_seconds_consumed", using: :btree
+  add_index "student_accesses", ["subscription_id"], name: "index_student_accesses_on_subscription_id", using: :btree
+  add_index "student_accesses", ["trial_days_limit"], name: "index_student_accesses_on_trial_days_limit", using: :btree
+  add_index "student_accesses", ["trial_seconds_limit"], name: "index_student_accesses_on_trial_seconds_limit", using: :btree
 
   create_table "student_exam_tracks", force: :cascade do |t|
     t.integer  "user_id"

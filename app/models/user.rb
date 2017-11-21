@@ -110,11 +110,13 @@ class User < ActiveRecord::Base
   has_many :visits
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
   has_one :referral_code
+  has_one :student_access
   has_one :referred_signup
   belongs_to :subscription_plan_category
   has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :subscriptions
+  accepts_nested_attributes_for :student_access
 
   # validation
   validates :email, presence: true, uniqueness: true, length: {within: 5..50}
@@ -131,7 +133,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :set_trial_limit_in_days, :create_on_intercom
+  after_create :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -168,8 +170,11 @@ class User < ActiveRecord::Base
   def self.get_and_verify(email_verification_code)
     time_now = Proc.new{Time.now}.call
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
-    user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true) if user
-    return user
+    if user
+      user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true)
+      user.student_access.update_attributes(trial_start_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
+      return user
+    end
   end
 
   def self.start_password_reset_process(the_email_address, root_url)
@@ -845,6 +850,13 @@ class User < ActiveRecord::Base
 
   end
 
+  def create_free_trial_expiration_worker
+    if self.student_user? && self.student_access
+      trial_ending_at_date = self.student_access.trial_ending_at_date + 23.hours
+      TrialExpirationWorker.perform_at(trial_ending_at_date, self.id)
+    end
+  end
+
   protected
 
   def add_guid
@@ -854,15 +866,6 @@ class User < ActiveRecord::Base
 
   def create_on_intercom
     IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
-  end
-
-  def set_trial_limit_in_days
-    if self.subscription_plan_category_id && self.subscription_plan_category.trial_period_in_days
-      free_trial_days = self.subscription_plan_category.trial_period_in_days.to_i
-    else
-      free_trial_days = ENV["FREE_TRIAL_DAYS"].to_i
-    end
-    self.update_attributes(trial_limit_in_days: free_trial_days)
   end
 
 end

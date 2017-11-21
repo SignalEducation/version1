@@ -132,11 +132,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   def add_to_user_trial_limit
     user = self.user
     if user.trial_or_sub_user? && user.valid_free_member?
-      new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
-      if new_limit > ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        user.update_columns(trial_limit_in_seconds: new_limit, free_trial_ended_at: Proc.new{Time.now }.call)
-      else
-        user.update_column(:trial_limit_in_seconds, new_limit)
+      new_limit = user.student_access.content_seconds_consumed + self.try(:time_taken_in_seconds)
+      user.student_access.update_attribute(:content_seconds_consumed, new_limit)
+      if new_limit > user.student_access.trial_seconds_limit
+        TrialExpirationWorker.perform_async(user.id)
       end
     end
   end
