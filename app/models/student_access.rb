@@ -44,12 +44,22 @@ class StudentAccess < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
+  scope :all_trial, -> { where(account_type: 'Trial') }
+  scope :all_sub, -> { where(account_type: 'Subscription') }
 
   # class methods
 
   # instance methods
   def destroyable?
     false
+  end
+
+  def trial_user?
+    self.account_type == 'Trial'
+  end
+
+  def sub_user?
+    self.account_type == 'Subscription'
   end
 
   protected

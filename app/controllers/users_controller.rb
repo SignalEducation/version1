@@ -103,15 +103,9 @@ class UsersController < ApplicationController
 
     if @user.save
       # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(
-          email: @user.try(:email)
-      )
+      stripe_customer = Stripe::Customer.create(email: @user.email)
       @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-      @user.update_attribute(:free_trial, true) if @user.trial_or_sub_user?
-      if @user.trial_or_sub_user?
-        new_referral_code = ReferralCode.new
-        new_referral_code.generate_referral_code(@user.id)
-      end
+
       MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
@@ -181,13 +175,13 @@ class UsersController < ApplicationController
   protected
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description, :student_number)
+    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description, :student_number)
   end
 
 
   def get_variables
     @user = User.where(id: params[:id]).first
-    @user_groups = UserGroup.all_in_order
+    @user_groups = UserGroup.all_not_student
     @countries = Country.all_in_order
     seo_title_maker('Users Management', '', true)
   end

@@ -52,6 +52,9 @@ class UserGroup < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:name) }
+  scope :all_not_student, -> { where(student_user: false) }
+  scope :all_student, -> { where(student_user: true) }
+  scope :all_trial_or_sub, -> { where(trial_or_sub_required: true) }
 
   # class methods
 

@@ -4,36 +4,36 @@ class StudentUserManagementController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w(user_management_access))
   end
-  before_action :layout_variables
+  before_action :layout_variables, :get_variables
 
 
   def edit
   end
 
   def new
-    @user = User.new
-    @user.build_student_access
+    @student_user = User.new
+    @student_user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i)
   end
 
   def create
     password = SecureRandom.hex(5)
-    @user = User.new(allowed_params.merge({password: password,
-                                           password_confirmation: password,
-                                           password_change_required: true}))
+    @student_user = User.new(allowed_params.merge({password: password, password_confirmation: password, password_change_required: true}))
 
-    @user.activate_user
-    @user.generate_email_verification_code
-    @user.locale = 'en'
+    @student_user.activate_user
+    @student_user.generate_email_verification_code
+    @student_user.locale = 'en'
+    @student_user.student_access.account_type = 'Trial'
 
-    if @user.save
+
+    if @student_user.save
       # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(email: @user.email)
-      @user.update_attribute(:stripe_customer_id, stripe_customer.id)
+      stripe_customer = Stripe::Customer.create(email: @student_user.email)
+      @student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
 
       new_referral_code = ReferralCode.new
-      new_referral_code.generate_referral_code(@user.id)
+      new_referral_code.generate_referral_code(@student_user.id)
 
-      MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
+      MandrillWorker.perform_async(@student_user.id, 'admin_invite', user_verification_url(email_verification_code: @student_user.email_verification_code))
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
@@ -42,9 +42,9 @@ class StudentUserManagementController < ApplicationController
   end
 
   def update
-    if @user.update_attributes(allowed_params)
+    if @student_user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
-      redirect_to user_management_index_url
+      redirect_to users_url
     else
       flash[:error] = I18n.t('controllers.users.update.flash.error')
       render action: :edit
@@ -56,7 +56,7 @@ class StudentUserManagementController < ApplicationController
       @csv_data, @has_errors = User.parse_csv(params[:upload].read)
     else
       flash[:error] = t('controllers.dashboard.preview_csv.flash.error')
-      redirect_to admin_dashboard_url
+      redirect_to users_url
     end
   end
 
@@ -68,19 +68,21 @@ class StudentUserManagementController < ApplicationController
       flash[:success] = t('controllers.dashboard.import_csv.flash.success')
     else
       flash[:error] = t('controllers.dashboard.import_csv.flash.error')
-      redirect_to admin_dashboard_url
+      redirect_to users_url
     end
   end
 
   protected
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :active, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description, :student_number)
+    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id,
+                                 :profile_image, :date_of_birth, :description, :student_number,
+                                 student_access_attributes: [:trial_seconds_limit, :trial_days_limit, :account_type])
   end
 
   def get_variables
-    @user = User.where(id: params[:id]).first
-    @user_groups = UserGroup.all_in_order
+    @student_user = User.where(id: params[:id]).first
+    @user_groups = UserGroup.all_trial_or_sub
     @countries = Country.all_in_order
     seo_title_maker('Users Management', '', true)
   end

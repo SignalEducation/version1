@@ -14,7 +14,9 @@
         .col-sm-6.l-margin-top
           %a{data: {remodal: {target: 'csv-upload-modal'}}, class: 'btn btn-purple'}
             Bulk Invite Users
-          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+
+          =link_to t('views.general.add_student'), new_student_user_management_url, class: 'btn btn-cyan l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+          =link_to t('views.general.add_manager'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
 
         .col-sm-4.col-sm-offset-2.l-margin-top
@@ -49,7 +51,10 @@
                       %td
                         =link_to t('views.general.view'), user_url(user), class: 'btn btn-purple btn-small'
                       %td
-                        =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
+                        -if user.student_user? && user.trial_or_sub_user?
+                          =link_to t('views.general.edit'), edit_student_user_management_url(user), class: 'btn btn-cyan btn-small'
+                        -else
+                          =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
 
               .col-sm-10.user-pagination
                 =will_paginate @users, renderer: BootstrapPagination::Rails

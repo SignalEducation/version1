@@ -8,6 +8,7 @@ en:
         decimal_separator: "."
       active: Active
       add_user: Add a user
+      add_student: Add Student
       add_manager: Add Manager
       add_group: Add Team
       edit_user: Edit user
@@ -1110,6 +1111,13 @@ en:
         description_placeholder: Tutor Info
         student_number: Student Number
         student_number_placeholder: Student Number
+
+        student_access:
+          trial_seconds_limit: Trial Content Limit (Seconds)
+          trial_seconds_limit_placeholder: Trial Content Limit (Seconds)
+          trial_days_limit: Trial Day Limit (Days)
+          trial_days_limit_placeholder: Trial Day Limit (Days)
+
 
       edit:
         h1: Edit User

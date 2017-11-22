@@ -82,7 +82,7 @@ class User < ActiveRecord::Base
                   :free_trial, :trial_limit_in_days,
                   :trial_ended_notification_sent_at, :terms_and_conditions,
                   :date_of_birth, :description, :free_trial_ended_at,
-                  :student_number
+                  :student_number, :student_access_attributes
 
   # Constants
   LOCALES = %w(en)
