@@ -54,7 +54,8 @@ Rails.application.routes.draw do
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
     resources :user_groups
-    resources :user_management do
+    resources :student_user_management
+    resources :users do
       get  '/personal', action: :user_personal_details, as: :personal
       get  '/subscription', action: :user_subscription_status, as: :subscription
       get  '/courses', action: :user_courses_status, as: :courses
@@ -168,8 +169,8 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :users, only: [:new, :create]
 
-    post :preview_csv_upload, to: 'user_management#preview_csv_upload'
-    post :import_csv_upload, to: 'user_management#import_csv_upload'
+    post :preview_csv_upload, to: 'student_user_management#preview_csv_upload'
+    post :import_csv_upload, to: 'student_user_management#import_csv_upload'
 
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index

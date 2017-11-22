@@ -14,11 +14,11 @@
         .col-sm-6.l-margin-top
           %a{data: {remodal: {target: 'csv-upload-modal'}}, class: 'btn btn-purple'}
             Bulk Invite Users
-          =link_to t('views.general.add_user'), new_user_management_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
 
 
         .col-sm-4.col-sm-offset-2.l-margin-top
-          =form_tag(user_management_index_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
+          =form_tag(users_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
               =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
               .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
@@ -47,11 +47,11 @@
                       %td=user.user_group.try(:name)
                       %td=user.user_account_status
                       %td
-                        =link_to t('views.general.view'), user_management_url(user), class: 'btn btn-purple btn-small'
+                        =link_to t('views.general.view'), user_url(user), class: 'btn btn-purple btn-small'
                       %td
-                        =link_to t('views.general.edit'), edit_user_management_url(user), class: 'btn btn-cyan btn-small'
+                        =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
 
               .col-sm-10.user-pagination
                 =will_paginate @users, renderer: BootstrapPagination::Rails
 
-=render partial: 'csv_import_modal'
+=render partial: 'student_user_management/csv_import_modal'

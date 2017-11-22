@@ -1,0 +1,7 @@
+=f.fields_for :student_access do |student_access|
+
+  =student_access.label :trial_started_date, t('views.course_module_element_videos.form.duration'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =student_access.text_field :trial_started_date, placeholder: t('views.course_module_element_videos.form.duration_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+  %br/
+

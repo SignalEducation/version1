@@ -12,7 +12,7 @@
 
     -if current_user.user_management_access?
       %li
-        =link_to 'Users', user_management_index_url
+        =link_to 'Users', users_url
 
     -if current_user.content_management_access?
       %li
