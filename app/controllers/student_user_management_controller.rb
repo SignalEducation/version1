@@ -52,6 +52,22 @@ class StudentUserManagementController < ApplicationController
     end
   end
 
+  def convert_to_student
+    @student_user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i)
+  end
+
+  def update_to_student
+    @student_user.assign_attributes(allowed_params)
+    @student_user.student_access.account_type = 'Trial'
+    if @student_user.save
+      flash[:success] = I18n.t('controllers.users.update.flash.success')
+      redirect_to users_url
+    else
+      flash[:error] = I18n.t('controllers.users.update.flash.error')
+      render action: :edit
+    end
+  end
+
   def preview_csv_upload
     if params[:upload] && params[:upload].respond_to?(:read)
       @csv_data, @has_errors = User.parse_csv(params[:upload].read)

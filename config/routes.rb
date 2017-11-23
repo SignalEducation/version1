@@ -55,6 +55,8 @@ Rails.application.routes.draw do
 
     resources :user_groups
     resources :student_user_management
+    get  'student_user_management/:id/convert_to_student', to: 'student_user_management#convert_to_student', as: :convert_to_student
+    patch  'student_user_management/:id/update_to_student', to: 'student_user_management#update_to_student', as: :update_to_student
     resources :users do
       get  '/personal', action: :user_personal_details, as: :personal
       get  '/subscription', action: :user_subscription_status, as: :subscription

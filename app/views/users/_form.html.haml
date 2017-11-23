@@ -1,7 +1,12 @@
 =form_for(@user, html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
   =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
+  -unless @user.new_record?
+    .row
+      .col-md-12.l-margin-bottom-big
+        =link_to 'Convert to Student User', convert_to_student_url(@user), class: 'btn btn-purple pull-right'
+
   .row
-    .col-md-12.l-margin-bottom-big
+    .col-md-12
       .col-md-6
         =f.label :email, t('views.users.form.email'), class: 'control-label'
         .input-group.input-group-lg.full-width
