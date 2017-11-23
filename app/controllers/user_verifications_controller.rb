@@ -6,7 +6,9 @@ class UserVerificationsController < ApplicationController
   before_action :get_variables
 
   def update
-    @user = User.get_and_verify(params[:email_verification_code])
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @user = User.get_and_verify(params[:email_verification_code], country.id)
     @user.create_free_trial_expiration_worker if @user.student_access
 
     if @user && @user.password_change_required?

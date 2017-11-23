@@ -126,7 +126,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
-  validates :country_id, presence: true, if: :student_user?
+  validates :country_id, presence: true, if: :trial_or_sub_user?
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
@@ -167,11 +167,11 @@ class User < ActiveRecord::Base
     return user
   end
 
-  def self.get_and_verify(email_verification_code)
+  def self.get_and_verify(email_verification_code, country_id)
     time_now = Proc.new{Time.now}.call
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
     if user
-      user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true)
+      user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
       user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
       return user
     end

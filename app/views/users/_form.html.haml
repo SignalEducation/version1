@@ -16,9 +16,9 @@
         .input-group.input-group-lg.full-width
           =f.collection_select :user_group_id, @user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
         %br/
-        =f.label :country_id, t('views.users.form.country_id'), class: 'control-label'
+        =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+          =f.text_field :email, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
         =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
         .input-group.input-group-lg.full-width
@@ -35,8 +35,6 @@
         .input-group.input-group-lg.full-width
           =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-        %br/
-        %br/
         %br/
         =f.label :profile_image, t('views.users.form.profile_image'), class: 'control-label'
         -if f.object.profile_image.url
