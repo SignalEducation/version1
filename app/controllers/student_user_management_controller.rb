@@ -42,7 +42,8 @@ class StudentUserManagementController < ApplicationController
   end
 
   def update
-    if @student_user.update_attributes(allowed_params)
+    @student_user.assign_attributes(allowed_params)
+    if @student_user.save
       flash[:success] = I18n.t('controllers.users.update.flash.success')
       redirect_to users_url
     else
@@ -77,13 +78,12 @@ class StudentUserManagementController < ApplicationController
   def allowed_params
     params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id,
                                  :profile_image, :date_of_birth, :description, :student_number,
-                                 student_access_attributes: [:trial_seconds_limit, :trial_days_limit, :account_type])
+                                 student_access_attributes: [:id, :trial_seconds_limit, :trial_days_limit, :account_type])
   end
 
   def get_variables
     @student_user = User.where(id: params[:id]).first
-    @user_groups = UserGroup.all_trial_or_sub
-    @countries = Country.all_in_order
+    @user_groups = UserGroup.all_student
     seo_title_maker('Users Management', '', true)
   end
 

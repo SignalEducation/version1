@@ -172,7 +172,7 @@ class User < ActiveRecord::Base
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
     if user
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true)
-      user.student_access.update_attributes(trial_start_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
+      user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
       return user
     end
   end

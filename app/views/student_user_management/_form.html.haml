@@ -1,4 +1,4 @@
-=form_for(@student_user, url: url_for(controller: 'student_user_management', action: 'create'), html: {class: 'form-horizontal', role: 'form', multipart: true}) do |f|
+=form_for(@student_user, url: url_for(controller: 'student_user_management', action: @student_user.new_record? ? 'create' : 'update'), html: {class: 'form-horizontal', role: 'form'}) do |f|
   =render partial: '/layouts/error_messages', locals: {thing: @student_user, message: nil}
   .row
     .col-md-12
@@ -9,11 +9,11 @@
         %br/
         =f.label :user_group_id, t('views.users.form.user_group_id'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.collection_select :user_group_id, @user_groups, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+          =f.collection_select :user_group_id, @user_groups, :id, :name, {}, {class: 'form-control', style: 'border-radius: 6px;'}
         %br/
-        =f.label :country_id, t('views.users.form.country_id'), class: 'control-label'
+        =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+          =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
       .col-md-6
         =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
@@ -29,22 +29,22 @@
           =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
 
 
-    -if @student_user.student_access && @student_user.student_access.trial_user?
-      .col-md-12.l-margin-bottom-big.l-margin-top
-        %hr/
-        %h2='Free Trial Limits'
-        .col-md-6
-          =f.fields_for :student_access do |student_access|
+    .col-md-12.l-margin-bottom-big.l-margin-top
+      %hr/
+      %h2='Free Trial Limits'
+      .col-md-6
+        =f.fields_for :student_access do |student_access|
 
-            =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
-            .input-group.input-group-lg.full-width
-              =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-            %br/
+          =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+          %br/
 
-            =student_access.label :trial_days_limit, t('views.users.form.student_access.trial_days_limit'), class: 'control-label'
-            .input-group.input-group-lg.full-width
-              =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+          =student_access.label :trial_days_limit, t('views.users.form.student_access.trial_days_limit'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
 
+      -if @student_user.student_access && @student_user.student_access.trial_user?
         .col-md-6
           -unless @student_user.new_record?
             %h4
@@ -54,7 +54,7 @@
             %h4
               Trial Started:
             %p
-              =@student_user.student_access.trial_started_date
+              =humanize_datetime(@student_user.student_access.trial_started_date)
 
 
   .row
