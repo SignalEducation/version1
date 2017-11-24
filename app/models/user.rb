@@ -654,7 +654,7 @@ class User < ActiveRecord::Base
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
 
       user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
-
+      user.student_access.update_attributes(subscription_id: new_sub.id, content_access: true)
       return new_sub
     end
   rescue ActiveRecord::RecordInvalid => exception
@@ -757,12 +757,12 @@ class User < ActiveRecord::Base
             existing_users = []
             raise ActiveRecord::Rollback
           elsif user
-            if user.expired_free_member? && user.stripe_customer_id
+            if user.expired_trial_user? && user.stripe_customer_id
               MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}/users/#{user.id}/new_subscription")
               existing_users << user
             end
           elsif !user && similar_user
-            if similar_user.expired_free_member? && similar_user.stripe_customer_id
+            if similar_user.expired_trial_user? && similar_user.stripe_customer_id
               MandrillWorker.perform_async(similar_user.id, 'send_free_trial_over_email', "#{root_url}/users/#{similar_user.id}/new_subscription")
               existing_users << similar_user
             end
@@ -785,6 +785,7 @@ class User < ActiveRecord::Base
     user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
 
     user = self.where(email: email, first_name: first_name, last_name: last_name).first_or_create
+    StudentAccess.create(user_id: user.id, trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
 
     stripe_customer = Stripe::Customer.create(email: user.email)
 

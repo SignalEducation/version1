@@ -37,6 +37,7 @@ class Subscription < ActiveRecord::Base
   has_many :invoices
   has_many :invoice_line_items
   belongs_to :subscription_plan
+  belongs_to :student_access
   has_many :subscription_transactions
   has_one :referred_signup
 
@@ -53,6 +54,7 @@ class Subscription < ActiveRecord::Base
 
   # callbacks
   after_create :create_a_subscription_transaction
+  after_save :update_student_access
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -75,6 +77,7 @@ class Subscription < ActiveRecord::Base
         self.update_attribute(:current_status, 'canceled-pending')
       elsif response[:status] == 'past_due'
         self.update_attribute(:current_status, 'canceled')
+        self.user.student_access.update_attributes(content_access: false)
         #We don't send any email here!!
         Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
       else
@@ -118,6 +121,7 @@ class Subscription < ActiveRecord::Base
 
   def upgrade_plan(new_plan_id)
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
+    user = self.user
     # compare the currencies of the old and new plans,
     unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
@@ -243,6 +247,16 @@ class Subscription < ActiveRecord::Base
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
     SubscriptionTransaction.create_from_stripe_data(self)
     Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+  end
+
+  def update_student_access
+    if self.active && self.student_access
+      if %w(unpaid suspended canceled).include?(self.current_status)
+        self.student_access.update_attribute(:content_access, false)
+      elsif %w(active past_due canceled-pending).include?(self.current_status)
+        self.student_access.update_attribute(:content_access, true)
+      end
+    end
   end
 
   def prefix

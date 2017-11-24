@@ -88,9 +88,10 @@ class SubscriptionsController < ApplicationController
       end
 
       if subscription_saved
-        trial_ended_date = user.free_trial_ended_at ? user.free_trial_ended_at : Proc.new{Time.now}.call
-        user.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
-        user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if current_user.referred_user
+        trial_ended_date = user.student_access.trial_ended_date ? user.student_access.trial_ended_date : Proc.new{Time.now}.call
+        user.student_access.update_attributes(subscription_id: subscription_saved.id, trial_ended_date: trial_ended_date, account_type: 'Subscription', content_access: true)
+
+        user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if user.referred_user
         redirect_to personal_upgrade_complete_url
       else
         redirect_to user_new_subscription_url(current_user.id)
@@ -105,11 +106,11 @@ class SubscriptionsController < ApplicationController
   end
 
   def personal_upgrade_complete
-    @subscription = current_user.active_subscription
+    @subscription = current_user.current_subscription
   end
 
   def change_plan
-    @current_subscription = current_user.active_subscription
+    @current_subscription = current_user.current_subscription
     @subscription_plans = @current_subscription.upgrade_options
   end
 
