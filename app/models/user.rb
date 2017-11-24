@@ -303,6 +303,10 @@ class User < ActiveRecord::Base
     self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date && self.trial_limits_valid?
   end
 
+  def not_started_trial_user?
+    self.trial_user? && !self.student_access.trial_started_date
+  end
+
   def expired_trial_user?
     self.trial_user? && !self.trial_limits_valid?
   end
@@ -380,11 +384,11 @@ class User < ActiveRecord::Base
 
   def user_account_status
     if self.trial_or_sub_user?
-      if !self.student_access.trial_started_date
+      if self.not_started_trial_user?
         'Trial Not Started'
-      elsif self.valid_free_member?
+      elsif self.valid_trial_user?
         'Valid Free Trial'
-      elsif self.expired_free_member?
+      elsif self.expired_trial_user?
         'Expired Free Trial'
       elsif self.current_subscription
         self.user_subscription_status
