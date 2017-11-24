@@ -54,11 +54,11 @@ class StudentAccess < ActiveRecord::Base
     false
   end
 
-  def trial_user?
+  def trial_access?
     self.account_type == 'Trial'
   end
 
-  def sub_user?
+  def subscription_access?
     self.account_type == 'Subscription'
   end
 

@@ -147,7 +147,7 @@ class User < ActiveRecord::Base
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i}") }
 
-  # class methods
+  ### class methods
   def self.all_students
     includes(:user_group).references(:user_groups).where('user_groups.student_user = ?', true)
   end
@@ -232,9 +232,9 @@ class User < ActiveRecord::Base
   end
 
 
-  ## instance methods
+  ### instance methods
 
-  # UserGroup Access methods
+  ## UserGroup Access methods
   def student_user?
     self.user_group.try(:student_user)
   end
@@ -244,7 +244,7 @@ class User < ActiveRecord::Base
   end
 
   def trial_or_sub_user?
-    self.user_group.try(:student_user)&& self.user_group.trial_or_sub_required
+    self.student_user? && self.user_group.trial_or_sub_required && self.student_access
   end
 
   def complimentary_user?
@@ -290,12 +290,72 @@ class User < ActiveRecord::Base
 
 
 
-  def active_subscription
-    self.subscriptions.where(active: true).in_created_order.last
+
+  ## StudentAccess methods
+
+  # Trial Access
+
+  def trial_user?
+    self.trial_or_sub_user? && self.student_access.trial_access? && !self.student_access.subscription_id
   end
 
+  def valid_trial_user?
+    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date && self.trial_limits_valid?
+  end
+
+  def expired_trial_user?
+    self.trial_user? && !self.trial_limits_valid?
+  end
+
+  # Trial Limits
+  def trial_limits_valid?
+    self.trial_days_valid? && self.trial_seconds_valid?
+  end
+
+  def trial_days_valid?
+    time_now =Proc.new{Time.now.to_datetime}.call
+    self.student_access.trial_ending_at_date && !self.student_access.trial_ended_date && time_now <= student_access.trial_ending_at_date
+  end
+
+  def trial_seconds_valid?
+    self.student_access.content_seconds_consumed <= self.student_access.trial_seconds_limit
+  end
+
+  def trial_days_left
+    (self.student_access.trial_ending_at_date.to_date - self.student_access.trial_started_date.to_date).to_i
+  end
+
+  def trial_seconds_left
+    self.student_access.trial_seconds_limit - self.student_access.content_seconds_consumed
+  end
+
+
+
+  # Subscription Access
+
+  def subscription_user?
+    self.trial_or_sub_user? && self.student_access.subscription_access? && self.student_access.subscription
+  end
+
+  def valid_subscription?
+    self.trial_or_sub_user? && self.current_subscription && %w(active past_due).include?(self.current_subscription.current_status)
+  end
+
+  def canceled_pending?
+    self.subscription_user? && self.current_subscription && self.current_subscription.current_status == 'canceled-pending'
+  end
+
+  def canceled_member?
+    self.subscription_user? && self.current_subscription && self.current_subscription.current_status == 'canceled'
+  end
+
+  def current_subscription
+    self.student_access.subscription
+  end
+
+
   def user_subscription_status
-    current_subscription = self.active_subscription
+    current_subscription = self.current_subscription
     if current_subscription
       case current_subscription.current_status
         when 'active'
@@ -320,105 +380,50 @@ class User < ActiveRecord::Base
 
   def user_account_status
     if self.trial_or_sub_user?
-      if !self.trial_started?
+      if !self.student_access.trial_started_date
         'Trial Not Started'
       elsif self.valid_free_member?
         'Valid Free Trial'
       elsif self.expired_free_member?
         'Expired Free Trial'
-      elsif self.active_subscription
+      elsif self.current_subscription
         self.user_subscription_status
       else
         'Unknown'
       end
-    elsif complimentary_user?
-      'Comp User'
     else
       self.user_group.name
     end
   end
 
-  def days_or_seconds_valid?
-    if free_trial_days_valid? && free_trial_minutes_valid?
+
+  def permission_to_see_content(course)
+    if self.trial_or_sub_user? && course.active_enrollment_user_ids.include?(self.id)
+      if course.active
+        if self.student_access.content_access
+          true
+        else
+          false
+        end
+      else
+        true
+      end
+    elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
+      true
+    elsif self.non_student_user? && course.active_enrollment_user_ids.include?(self.id)
       true
     else
       false
     end
   end
 
-  def free_trial_days_valid?
-    # 86400 is number of seconds in a day
-    trial_limit_days_in_seconds = self.trial_limit_in_days * 86400
-    current_date_time = Proc.new { Time.now }.call
 
-    if  current_date_time <= (self.trial_start_date + trial_limit_days_in_seconds)
-      true
-    else
-      false
-    end
-  end
-
-  def free_trial_minutes_valid?
-    #If the Number of seconds watched is less than the allowed free trial time limit then permission is allowed
-    if self.trial_limit_in_seconds <= ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-      true
-    else
-      false
-    end
-  end
-
-  def days_left
-    # Displayed in the Navbar change to return full sentence string 'X Days Left' or 'Your Trial has Expired'
-    free_trial_days = self.trial_limit_in_days.to_i
-    if free_trial_days - ((Time.now - self.trial_start_date).to_i.abs / 1.day).to_i > 0
-      free_trial_days - ((Time.now - self.trial_start_date).to_i.abs / 1.day)
-    else
-      '0'
-    end
-  end
-
-  def trial_start_date
-    self.email_verified ? self.email_verified_at : self.created_at
-  end
-
-  def trial_started?
-    self.email_verified && self.email_verified_at
-  end
-
-  def minutes_left
-    free_trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-    seconds_left = free_trial_seconds - self.trial_limit_in_seconds
-    minutes_left = (seconds_left/60)
-  end
-
-  def free_member?
-    self.trial_or_sub_user? && self.free_trial && !self.subscriptions.any?
-  end
-
-  def valid_free_member?
-    self.free_member? && self.days_or_seconds_valid? && !self.free_trial_ended_at
-  end
-
-  def expired_free_member?
-    self.free_member? && !self.days_or_seconds_valid?
-  end
-
-  def canceled_member?
-    self.trial_or_sub_user? && !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled'
-  end
-
-  def canceled_pending?
-    self.trial_or_sub_user? && !self.free_trial? && self.subscriptions.any? && self.active_subscription && self.active_subscription.current_status == 'canceled-pending'
-  end
 
   def referred_user
     self.student_user? && self.referred_signup
   end
 
-  def valid_subscription
-    true if self.active_subscription && %w(active past_due).include?(self.active_subscription.current_status)
-  end
-
+  # Orders/Products
   def valid_order_ids
     order_ids = []
     self.orders.each do |order|
@@ -443,29 +448,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def permission_to_see_content(course)
-    if self.trial_or_sub_user? && course.active_enrollment_user_ids.include?(self.id)
-      if course.active
-        if self.valid_free_member?
-          true
-        elsif self.expired_free_member?
-          false
-        elsif self.active_subscription && %w(active past_due canceled-pending).include?(self.active_subscription.current_status)
-          true
-        else
-          false
-        end
-      else
-        false
-      end
-    elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
-      true
-    elsif self.non_student_user? && course.active_enrollment_user_ids.include?(self.id)
-      true
-    else
-      false
-    end
-  end
 
   def change_the_password(options)
     # options = {current_password: '123123123', password: 'new123',
@@ -618,7 +600,7 @@ class User < ActiveRecord::Base
 
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     user = self
-    old_sub = user.active_subscription
+    old_sub = user.current_subscription
 
     # compare the currencies of the old and new plans,
     unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
@@ -814,8 +796,8 @@ class User < ActiveRecord::Base
     stripe_subscriptions = stripe_customer.subscriptions[:data]
     if stripe_subscriptions && stripe_subscriptions.count == 1
       stripe_subscription = stripe_customer.subscriptions[:data].first
-      if self.active_subscription && stripe_subscription.id == self.active_subscription.stripe_guid
-        self.active_subscription.update_from_stripe
+      if self.current_subscription && stripe_subscription.id == self.current_subscription.stripe_guid
+        self.current_subscription.update_from_stripe
       else
         create_subscription_from_stripe(stripe_subscription, stripe_customer)
       end
