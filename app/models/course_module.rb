@@ -174,14 +174,12 @@ class CourseModule < ActiveRecord::Base
 
   ## User Course Tracking ##
 
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  def completed_by_user(user_id)
+    self.percentage_complete_by_user(user_id) == 100
   end
 
-  def percentage_complete_by_user_or_guid(user_id, session_guid)
-    set = user_id ?
-        self.student_exam_tracks.where(user_id: user_id).first :
-        self.student_exam_tracks.where(user_id: nil, session_guid: session_guid).first
+  def percentage_complete_by_user(user_id)
+    set = self.student_exam_tracks.where(user_id: user_id).first
     set.try(:percentage_complete) || 0
   end
 

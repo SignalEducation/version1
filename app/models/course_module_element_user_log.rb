@@ -72,6 +72,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :all_in_order, -> { order(:course_module_element_id) }
   scope :all_completed, -> { where(element_completed: true) }
   scope :all_incomplete, -> { where(element_completed: false) }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
@@ -96,11 +97,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def recent_attempts
-    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
   def old_set
-    StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id).first
+    StudentExamTrack.for_user(self.user_id).where(course_module_id: self.course_module_id).first
   end
 
   protected
@@ -122,7 +123,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       set.recalculate_completeness # Includes a save!
     else
       #Create SET and assign it id to this record
-      set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
+      set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
       set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
       saved_set = set.recalculate_completeness # Includes a save!
       self.update_column(:student_exam_track_id, saved_set.id)
@@ -151,7 +152,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def set_latest_attempt
     self.latest_attempt = true
-    others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id).latest_only
+    others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
     others.update_all(latest_attempt: false)
     true
   end

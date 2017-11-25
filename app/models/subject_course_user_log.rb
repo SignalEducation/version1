@@ -52,6 +52,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
 
 
@@ -105,11 +106,11 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def old_sets
-    StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
+    StudentExamTrack.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
   end
 
   def old_cmeuls
-    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
+    CourseModuleElementUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
   end
 
   protected

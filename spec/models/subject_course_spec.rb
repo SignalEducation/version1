@@ -107,7 +107,7 @@ describe SubjectCourse do
   it { should respond_to(:active_children) }
   it { should respond_to(:first_active_child) }
   it { should respond_to(:children) }
-  it { should respond_to(:completed_by_user_or_guid) }
+  it { should respond_to(:completed_by_user) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
   it { should respond_to(:enrolled_user_ids) }
@@ -118,7 +118,7 @@ describe SubjectCourse do
   it { should respond_to(:percentage_complete_by_user_or_guid) }
   it { should respond_to(:recalculate_fields) }
   it { should respond_to(:revision_children?) }
-  it { should respond_to(:started_by_user_or_guid) }
+  it { should respond_to(:started_by_user) }
   it { should respond_to(:test_children?) }
   it { should respond_to(:tuition_children?) }
 
