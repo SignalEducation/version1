@@ -9,7 +9,6 @@ class UserVerificationsController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user = User.get_and_verify(params[:email_verification_code], country.id)
-    @user.create_free_trial_expiration_worker if @user.student_access
 
     if @user && @user.password_change_required?
       @user.update_attributes(password_reset_requested_at: Time.now, password_reset_token: SecureRandom.hex(10))
