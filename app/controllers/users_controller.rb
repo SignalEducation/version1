@@ -140,6 +140,7 @@ class UsersController < ApplicationController
     @subscription = @user.current_subscription if @user.subscriptions.any?
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last
+    @invoices = @user.invoices
   end
 
   def user_enrollments_details

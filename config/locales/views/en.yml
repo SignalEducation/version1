@@ -1210,6 +1210,25 @@ en:
           content_access: Access to Content
           subscription_id: Subscription
 
+        subscription_info:
+          subscription_status: Subscription Status
+          subscription_created: Subscription Created
+          cancel_at_billing_end: Cancel Subscription
+          cancel_immediately: Cancel Immediately
+          subscription_plan: Subscription Plan
+          billing_interval: Billing Interval
+          start_of_billing: Start of Current Billing
+          next_billing_date: Next Billing Date
+          last_billing_date: Last Billing Date
+          subscription_ending: Current Billing Ends
+          subscription_ended: Billing Ended
+          next_billing_amount: Next Billing Amount
+          current_billing_ending: Current Billing Ending
+          invoices: Invoices
+          stripe_sub_guid: Stripe Subscription ID
+          stripe_sub_status: Stripe Subscription Status
+          valid_payment_card: Valid Payment Card
+
 
     user_accounts:
       account_show:
