@@ -1198,6 +1198,18 @@ en:
           subscription: Choose your subscription plan
           payment: Enter your payment details
 
+      user_subscription_status:
+        trial_info:
+          trial_started_date: Trial Started
+          trial_ending_at_date: Trial Ending
+          trial_ended_date: Trial Ended
+          trial_seconds_limit: Trial Content Limit (seconds)
+          trial_days_limit: Trial Days Limit
+          content_seconds_consumed: Content Consumed (seconds)
+          account_type: Account Access Type
+          content_access: Access to Content
+          subscription_id: Subscription
+
 
     user_accounts:
       account_show:

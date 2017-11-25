@@ -11,41 +11,67 @@
 
       -if @user.trial_user?
         .row.l-margin-top.l-margin-bottom
-          .col-md-12
+          .col-sm-12
             .box-item
-              .col-sm-10.l-margin-top
-                .col-sm-6
+              .col-sm-12
+                .col-md-4
                   .h3
-                    Free Trial
+                    =t('views.users.user_subscription_status.trial_info.trial_started_date')
                   .h6
-                    =@user.trial_user?.to_s.capitalize
-
-                .col-sm-6
+                    -if @user.student_access.trial_started_date
+                      =humanize_datetime(@user.student_access.trial_started_date)
+                    -else
+                      ='-----'
+                .col-md-4
                   .h3
-                    Trial Limit in Days
+                    =t('views.users.user_subscription_status.trial_info.content_access')
                   .h6
-                    =@user.trial_limit_in_days
+                    =@user.student_access.content_access.to_s
+
+                .col-md-4.text-center
+                  -if @user.student_user? && @user.trial_or_sub_user?
+                    =link_to 'Edit Details', edit_student_user_management_url(@user), class: 'btn btn-red'
+                  -else
+                    =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
 
 
-              .col-sm-10.l-margin-top-big
-                .col-sm-6
+              .col-sm-12.l-margin-top-big
+                .col-md-4
                   .h3
-                    Trial Expired
+                    =t('views.users.user_subscription_status.trial_info.trial_days_limit')
                   .h6
-                    =@user.expired_free_member?.to_s.capitalize
+                    =@user.student_access.trial_days_limit
 
-                .col-sm-6
-                  .h3
-                    Remaining Trial Days
-                  .h6
-                    =@user.days_left
+                .col-md-4
+                  -if @user.student_access.trial_ended_date
+                    .h3
+                      =t('views.users.user_subscription_status.trial_info.trial_ended_date')
+                    .h6
+                      =humanize_datetime(@user.student_access.trial_ended_date)
+                  -elsif !@user.student_access.trial_ended_date && @user.student_access.trial_ending_at_date
+                    .h3
+                      =t('views.users.user_subscription_status.trial_info.trial_ending_at_date')
+                    .h6
+                      =humanize_datetime(@user.student_access.trial_ending_at_date)
 
-              .col-sm-10.l-margin-top-big
-                .col-sm-6
+
+              .col-sm-12.l-margin-top-big
+                .col-md-4
                   .h3
-                    Remaining Trial Minutes
+                    =t('views.users.user_subscription_status.trial_info.trial_seconds_limit')
                   .h6
-                    =@user.minutes_left
+                    =@user.student_access.trial_seconds_limit
+
+                .col-md-4
+                  .h3
+                    =t('views.users.user_subscription_status.trial_info.content_seconds_consumed')
+                  .h6
+                    =@user.student_access.content_seconds_consumed
+
+                .col-md-4
+
+
+
       -elsif @user.subscriptions.any?
         .row.l-margin-top.l-margin-bottom
           .col-md-12

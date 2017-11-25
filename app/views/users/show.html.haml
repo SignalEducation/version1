@@ -50,9 +50,9 @@
           .stats-box
             .stats-box-inner
               .h3
-                =tick_or_cross(@user.current_subscription)
+                =@user.student_access.account_type
               .h6
-                Active Subscription
+                Account Type
 
         .col-md-3.col-sm-3.col-xs-6
           .stats-box

@@ -27,7 +27,10 @@
                   =@user.date_of_birth || '--------'
 
             .col-sm-2.l-margin-top
-              =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
+              -if @user.student_user? && @user.trial_or_sub_user?
+                =link_to 'Edit Details', edit_student_user_management_url(@user), class: 'btn btn-red'
+              -else
+                =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
 
 
             .col-sm-10.l-margin-top-big
@@ -88,7 +91,7 @@
                 .h3
                   Trial Started
                 .h6
-                  =humanize_datetime(@user.trial_start_date)
+                  =humanize_datetime(@user.student_access.trial_started_date)
 
 
 
