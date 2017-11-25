@@ -11,10 +11,12 @@ class TrialExpirationWorker
       student_access = user.student_access
 
       if student_access.trial_ended_date == nil && ((time_now >= student_access.trial_ending_at_date) || student_access.content_seconds_consumed >= student_access.trial_seconds_limit)
-        user.student_access.update_attributes(trial_end_date: time_now, content_access: false)
-      else
+        user.student_access.update_attributes(trial_ended_date: time_now, content_access: false)
+      elsif student_access.trial_ended_date == nil
         trial_ending_at_date = student_access.trial_ending_at_date + 23.hours
         TrialExpirationWorker.perform_at(trial_ending_at_date, user.id)
+      else
+
       end
     end
   end
