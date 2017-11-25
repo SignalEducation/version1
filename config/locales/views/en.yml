@@ -1211,8 +1211,27 @@ en:
         date_of_birth: Date of Birth
         student_number: Student Number
 
+      trial_info:
+        tab_heading: Trial Info
+        trial_started: Trial Started
+        trial_status: Trial Status
+        trial_ending: Trial Ending
+        trial_ended: Trial Ended
+        remaning_minutes: Remaining Trial Minutes
+        upgrade_button: Upgrade Account
+
+
       subscription_info:
-        tab_heading: Account Info
+        tab_heading: Subscription Info
+        subscription_status: Subscription Status
+        member_since: Account Created
+        start_of_billing: Start of Current Billing
+        next_billing_date: Next Billing Date
+        subscription_ending: Current Billing Ends
+        subscription_ended: Billing Ended
+        next_billing_amount: Next Billing Amount
+        current_billing_ending: Current Billing Ending
+        invoices: Invoices
 
       payment_details:
         tab_heading: Payment Info

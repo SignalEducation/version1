@@ -1,5 +1,5 @@
 .remodal{"data-remodal-id" => "access-denied-modal"}
-  -if current_user && current_user.expired_free_member?
+  -if current_user && current_user.expired_trial_user?
     .row
       .col-md-12
         %button.remodal-close{"data-remodal-action" => "close"}

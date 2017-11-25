@@ -14,11 +14,11 @@
             =link_to 'Dashboard', student_dashboard_url
           %li
             =link_to 'Courses', library_url
-          -if current_user.free_member?
-            -if current_user.valid_free_member?
+          -if current_user.trial_user?
+            -if current_user.valid_trial_user?
               %li
                 =link_to "#{current_user.days_left} Days left in Trial", user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
-            -elsif current_user.expired_free_member?
+            -elsif current_user.expired_trial_user?
               %li
                 =link_to 'Upgrade Account', user_new_subscription_url(current_user.id), class: 'days-left', title: 'Upgrade your account'
 

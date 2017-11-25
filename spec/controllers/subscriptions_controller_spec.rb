@@ -230,9 +230,9 @@ describe SubscriptionsController, type: :controller do
         put :update, id: subscription_1.id, subscription: valid_params
         old_sub = Subscription.find(subscription_1.id)
         expect(old_sub.current_status).to eq('canceled')
-        expect(student_user.active_subscription.id).not_to eq(old_sub.id)
-        expect(student_user.active_subscription.current_status).to eq('active')
-        expect(student_user.active_subscription.subscription_plan_id).to eq(subscription_plan_2.id)
+        expect(student_user.current_subscription.id).not_to eq(old_sub.id)
+        expect(student_user.current_subscription.current_status).to eq('active')
+        expect(student_user.current_subscription.subscription_plan_id).to eq(subscription_plan_2.id)
 
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
         expect(flash[:error]).to be_nil

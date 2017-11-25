@@ -8,7 +8,8 @@ class UserAccountsController < ApplicationController
     @orders = @user.orders
     @enrollments = @user.enrollments.all_active
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-    @current_subscription = @user.active_subscription
+    @current_subscription = @user.current_subscription
+    @invoices = @user.invoices
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
@@ -73,7 +74,7 @@ class UserAccountsController < ApplicationController
   def reactivate_account
     @user = User.find(params[:user_id])
     if @user == current_user && @user.trial_or_sub_user?
-      @subscription = @user.active_subscription ? @user.active_subscription : @user.subscriptions.last
+      @subscription = @user.current_subscription ? @user.current_subscription : @user.subscriptions.last
       if @subscription && %w(canceled).include?(@subscription.current_status)
         currency_id = @subscription.subscription_plan.currency_id
         @country = Country.where(currency_id: currency_id).first
@@ -102,7 +103,7 @@ class UserAccountsController < ApplicationController
   end
 
   def reactivation_complete
-    @subscription = current_user.active_subscription
+    @subscription = current_user.current_subscription
     @enrollments = current_user.enrollments.all_active.all_in_order
     @groups = Group.all_active.all_in_order
   end

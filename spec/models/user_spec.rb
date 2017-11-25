@@ -174,7 +174,7 @@ describe User do
   it { should respond_to(:developer_access?) }
   it { should respond_to(:home_pages_access?) }
   it { should respond_to(:user_group_management_access?) }
-  it { should respond_to(:active_subscription) }
+  it { should respond_to(:current_subscription) }
   it { should respond_to(:user_subscription_status) }
   it { should respond_to(:user_account_status) }
   it { should respond_to(:days_or_seconds_valid?) }
@@ -184,7 +184,7 @@ describe User do
   it { should respond_to(:trial_start_date) }
   it { should respond_to(:trial_started?) }
   it { should respond_to(:minutes_left) }
-  it { should respond_to(:free_member?) }
+  it { should respond_to(:trial_user?) }
   it { should respond_to(:valid_free_member?) }
   it { should respond_to(:expired_free_member?) }
   it { should respond_to(:canceled_member?) }

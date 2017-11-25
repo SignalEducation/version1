@@ -9,7 +9,7 @@
         .col-md-12
           =render partial: 'user_tabs'
 
-      -if @user.free_member?
+      -if @user.trial_user?
         .row.l-margin-top.l-margin-bottom
           .col-md-12
             .box-item
@@ -18,7 +18,7 @@
                   .h3
                     Free Trial
                   .h6
-                    =@user.free_member?.to_s.capitalize
+                    =@user.trial_user?.to_s.capitalize
 
                 .col-sm-6
                   .h3

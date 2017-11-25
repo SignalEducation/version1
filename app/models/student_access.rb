@@ -54,6 +54,10 @@ class StudentAccess < ActiveRecord::Base
     false
   end
 
+  def subscription
+    Subscription.where(id: self.subscription_id, active: true).last
+  end
+
   def trial_access?
     self.account_type == 'Trial'
   end

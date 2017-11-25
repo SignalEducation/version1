@@ -1,7 +1,6 @@
 =render 'layouts/navbar'
 .upgrade
   #wrapper
-    -#loading
 
 
     %section#free
@@ -12,7 +11,7 @@
               .col-lg-4.col-lg-offset-4.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
                 #countdown
                   %h4 Time left in FREE trial:
-                  .timer{"data-date" => timer_datetime(@user.trial_start_date + 7.days)}
+                  .timer{"data-date" => timer_datetime(@user.student_access.trial_ending_at_date)}
                   -#.timer{"data-date" => "2017/10/10 12:34:56"}
             .row
               .col-md-10.col-md-offset-1

@@ -12,9 +12,13 @@
           %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.user_accounts.personal_info.tab_heading')
 
-          -if @user.trial_or_sub_user?
-            %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.subscription_info.tab_heading')
+          -if @user.trial_or_sub_user? && @user.student_access
+            -if @user.trial_user?
+              %a{href: '#trial', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                =t('views.user_accounts.trial_info.tab_heading')
+            -elsif @user.subscription_user?
+              %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                =t('views.user_accounts.subscription_info.tab_heading')
 
           -if @user.trial_or_sub_user? && @subscription_payment_cards.any?
             %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
@@ -36,15 +40,22 @@
               .content-box-inner
                 =render partial: 'personal_info'
 
-        -if @user.trial_or_sub_user?
-          .tab-pane.fade#subscriptions{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'subscription_info'
+        -if @user.trial_or_sub_user? && @user.student_access
+          -if @user.trial_user?
+            .tab-pane.fade#trial{role: 'tabpanel'}
+              .col-md-12
+                .content-box.content-box-outer.l-margin-bottom-huge
+                  .content-box-inner
+                    =render partial: 'trial_info'
+          -elsif @user.subscription_user?
+            .tab-pane.fade#subscriptions{role: 'tabpanel'}
+              .col-md-12
+                .content-box.content-box-outer.l-margin-bottom-huge
+                  .content-box-inner
+                    =render partial: 'subscription_info'
 
 
-        -if @subscription_payment_cards.any?
+        -if @user.subscription_user? && @subscription_payment_cards.any?
           .tab-pane.fade#payment-details{role: 'tabpanel'}
             .col-md-12
               .content-box.content-box-outer.l-margin-bottom-huge

@@ -319,7 +319,7 @@ describe UserAccountsController, type: :controller do
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
         post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_condxitions: 'true'}, coupon: ''
-        expect(student_user_1.active_subscription.current_status).to eq('active')
+        expect(student_user_1.current_subscription.current_status).to eq('active')
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -1164,7 +1164,7 @@ describe UserAccountsController, type: :controller do
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
         post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_condxitions: 'true'}, coupon: ''
-        expect(student_user_1.active_subscription.current_status).to eq('active')
+        expect(student_user_1.current_subscription.current_status).to eq('active')
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -1370,7 +1370,7 @@ describe UserAccountsController, type: :controller do
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
         post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_condxitions: 'true'}, coupon: ''
-        expect(student_user_1.active_subscription.current_status).to eq('active')
+        expect(student_user_1.current_subscription.current_status).to eq('active')
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)

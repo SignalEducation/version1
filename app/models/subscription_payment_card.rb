@@ -245,7 +245,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   def expiring_soon?
     unless self.status == 'expired'
-      if self.expiry_year && self.expiry_month && self.is_default_card && self.user.active_subscription
+      if self.expiry_year && self.expiry_month && self.is_default_card && self.user.current_subscription
 
         expiration = Date.new(self.expiry_year, self.expiry_month, 1)
         month_before_expiration = Date.new(self.expiry_year, self.expiry_month, 1) - 1.month

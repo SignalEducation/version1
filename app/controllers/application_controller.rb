@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
       false
     end
   end
-  helper_method :ensure_user_is_of_type
+  helper_method :ensure_user_has_access_rights
 
   def paywall_checkpoint
     allowed     = {course_content: {view_all: true, reason: nil}}

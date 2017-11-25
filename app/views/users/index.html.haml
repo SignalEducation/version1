@@ -35,7 +35,6 @@
                     %th=t('views.users.form.full_name')
                     %th=t('views.users.form.email')
                     %th=t('views.users.form.email_verified')
-                    %th=t('views.users.form.user_group_id')
                     %th=t('views.users.form.subscription_status')
                     %th
                     %th
@@ -44,9 +43,7 @@
                     %tr
                       %td=user.full_name
                       %td=user.email
-                      %td
-                        =tick_or_cross(user.email_verified)
-                      %td=user.user_group.try(:name)
+                      %td=tick_or_cross(user.email_verified)
                       %td=user.user_account_status
                       %td
                         =link_to t('views.general.view'), user_url(user), class: 'btn btn-purple btn-small'

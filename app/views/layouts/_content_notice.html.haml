@@ -1,5 +1,5 @@
 -# Logged In User
--if current_user && current_user.trial_or_sub_user? && current_user.free_member?
+-if current_user && current_user.trial_user?
   -# Logged In Student
   .notice.warning
     .p

@@ -333,6 +333,10 @@ class User < ActiveRecord::Base
     self.student_access.trial_seconds_limit - self.student_access.content_seconds_consumed
   end
 
+  def trial_minutes_left
+    self.trial_seconds_left.to_i / 60
+  end
+
 
 
   # Subscription Access
@@ -387,9 +391,9 @@ class User < ActiveRecord::Base
       if self.not_started_trial_user?
         'Trial Not Started'
       elsif self.valid_trial_user?
-        'Valid Free Trial'
+        'Valid Trial'
       elsif self.expired_trial_user?
-        'Expired Free Trial'
+        'Expired Trial'
       elsif self.current_subscription
         self.user_subscription_status
       else

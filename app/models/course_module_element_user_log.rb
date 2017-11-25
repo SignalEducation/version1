@@ -131,7 +131,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def add_to_user_trial_limit
     user = self.user
-    if user.trial_or_sub_user? && user.valid_free_member?
+    if user.trial_or_sub_user? && user.trial_user?
       new_limit = user.student_access.content_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, new_limit)
       if new_limit > user.student_access.trial_seconds_limit

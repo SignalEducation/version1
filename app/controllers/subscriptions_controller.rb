@@ -89,7 +89,7 @@ class SubscriptionsController < ApplicationController
 
       if subscription_saved
         trial_ended_date = user.student_access.trial_ended_date ? user.student_access.trial_ended_date : Proc.new{Time.now}.call
-        user.student_access.update_attributes(subscription_id: subscription_saved.id, trial_ended_date: trial_ended_date, account_type: 'Subscription', content_access: true)
+        user.student_access.update_attributes(subscription_id: subscription.id, trial_ended_date: trial_ended_date, account_type: 'Subscription', content_access: true)
 
         user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if user.referred_user
         redirect_to personal_upgrade_complete_url
@@ -218,7 +218,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def check_subscriptions
-    if current_user && current_user.valid_subscription
+    if current_user && current_user.valid_subscription?
       redirect_to account_url(anchor: :subscriptions)
     elsif current_user && !current_user.trial_or_sub_user?
       redirect_to root_url

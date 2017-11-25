@@ -109,6 +109,34 @@ class Subscription < ActiveRecord::Base
     @stripe_token
   end
 
+  def active_status?
+    self.current_status == 'active'
+  end
+
+  def canceled_status?
+    self.current_status == 'canceled'
+  end
+
+  def past_due_status?
+    self.current_status == 'past_due'
+  end
+
+  def unpaid_status?
+    self.current_status == 'unpaid'
+  end
+
+  def canceled_pending_status?
+    self.current_status == 'canceled-pending'
+  end
+
+  def suspended_status?
+    self.current_status == 'suspended'
+  end
+
+  def billing_amount
+    self.subscription_plan.amount
+  end
+
   def reactivation_options
     SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id,
                            available_to_students: true).where('price > 0.0').generally_available.all_active.all_in_order
