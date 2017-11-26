@@ -113,9 +113,9 @@ describe SubjectCourse do
   it { should respond_to(:enrolled_user_ids) }
   it { should respond_to(:first_active_cme) }
   it { should respond_to(:home_page) }
-  it { should respond_to(:number_complete_by_user_or_guid) }
+  it { should respond_to(:number_complete_by_user) }
   it { should respond_to(:parent) }
-  it { should respond_to(:percentage_complete_by_user_or_guid) }
+  it { should respond_to(:percentage_complete_by_user) }
   it { should respond_to(:recalculate_fields) }
   it { should respond_to(:revision_children?) }
   it { should respond_to(:started_by_user) }

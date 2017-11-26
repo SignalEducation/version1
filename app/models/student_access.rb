@@ -30,7 +30,7 @@ class StudentAccess < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  has_one :subscription
+  belongs_to :subscription
 
   # validation
   validates :user_id, presence: true,
@@ -52,10 +52,6 @@ class StudentAccess < ActiveRecord::Base
   # instance methods
   def destroyable?
     false
-  end
-
-  def subscription
-    Subscription.where(id: self.subscription_id, active: true).last
   end
 
   def trial_access?

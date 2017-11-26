@@ -231,6 +231,39 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.to_csv(options = {})
+    attributes = %w{first_name last_name email id student_number}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def self.to_csv_with_enrollments(options = {})
+    attributes = %w{first_name last_name email student_number date_of_birth enrolled_courses valid_enrolled_courses}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
+  def self.to_csv_with_visits(options = {})
+    attributes = %w{email id user_account_status visit_campaigns visit_sources visit_landing_pages}
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |user|
+        csv << attributes.map{ |attr| user.send(attr) }
+      end
+    end
+  end
+
 
   ### instance methods
 
@@ -527,38 +560,6 @@ class User < ActiveRecord::Base
   end
 
 
-  def self.to_csv(options = {})
-    attributes = %w{first_name last_name email id student_number}
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
-      end
-    end
-  end
-
-  def self.to_csv_with_enrollments(options = {})
-    attributes = %w{first_name last_name email student_number date_of_birth enrolled_courses valid_enrolled_courses}
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
-      end
-    end
-  end
-
-  def self.to_csv_with_visits(options = {})
-    attributes = %w{email id user_account_status visit_campaigns visit_sources visit_landing_pages}
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
-      end
-    end
-  end
 
   def enrolled_courses
     course_names = []
