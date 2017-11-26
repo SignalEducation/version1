@@ -182,10 +182,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def process_crush_offers_session_id
-    cookies.encrypted[:crush_offers] = { value: params[:co_id], expires: 30.days.from_now, httponly: true } if params[:co_id]
-  end
-
 
   #### General purpose code
 
