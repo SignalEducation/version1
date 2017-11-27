@@ -28,11 +28,8 @@ class SubscriptionsController < ApplicationController
   before_action :check_subscriptions, only: [:new_subscription, :create_subscription]
 
   def new_subscription
-    @navbar = false
-    @top_margin = false
-    @countries = Country.all_in_order
-    @user = User.where(id: params[:user_id]).first
-    if current_user.id == @user.id
+    @user = current_user
+    if @user.trial_or_sub_user?
       @user.subscriptions.build
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : @user.country
@@ -58,7 +55,7 @@ class SubscriptionsController < ApplicationController
         verified_coupon = verify_coupon(params["hidden_coupon_code"], subscription_plan.currency_id)
 
         if verified_coupon == 'bad_coupon'
-          redirect_to user_new_subscription_url(current_user.id, coupon: true)
+          redirect_to new_subscription_url(coupon: true)
           return
         else
           stripe_subscription = create_on_stripe(user.stripe_customer_id, subscription_plan, subscription_params, verified_coupon)
@@ -94,12 +91,12 @@ class SubscriptionsController < ApplicationController
         user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if user.referred_user
         redirect_to personal_upgrade_complete_url
       else
-        redirect_to user_new_subscription_url(current_user.id)
+        redirect_to new_subscription_url
         flash[:error] = "Your card was declined! Please check that it's valid and the details you entered are correct."
       end
 
     else
-      redirect_to user_new_subscription_url(current_user.id)
+      redirect_to new_subscription_url
       flash[:error] = 'Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.'
     end
 

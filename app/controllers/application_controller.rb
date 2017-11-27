@@ -288,7 +288,7 @@ class ApplicationController < ActionController::Base
       if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
         user_reactivate_account_url(user_id)
       else
-        user_new_subscription_url(user_id)
+        new_subscription_url
       end
     else
       account_url

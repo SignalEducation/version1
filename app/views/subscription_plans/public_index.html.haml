@@ -44,7 +44,7 @@
 
               -if current_user && current_user.trial_or_sub_user?
                 .lsbtn-base
-                  =link_to user_new_subscription_url(current_user.id) do
+                  =link_to new_subscription_url do
                     .lsbtn
                       %i.fa.fa-check
                       Choose this plan

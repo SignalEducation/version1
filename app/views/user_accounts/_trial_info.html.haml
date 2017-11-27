@@ -37,5 +37,5 @@
 
   .col-sm-6.col-md-4
     -if @user.trial_user?
-      =link_to t('views.user_accounts.trial_info.upgrade_button'), user_new_subscription_url(@user.id), class: 'btn btn-red full-width'
+      =link_to t('views.user_accounts.trial_info.upgrade_button'), new_subscription_url, class: 'btn btn-red full-width'
 

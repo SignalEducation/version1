@@ -41,6 +41,7 @@ class StudentAccess < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  after_save :create_on_intercom, :create_trial_expiration_worker
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -78,6 +79,16 @@ class StudentAccess < ActiveRecord::Base
   end
 
   protected
+
+  def create_on_intercom
+    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
+  end
+
+  def create_trial_expiration_worker
+    if self.user.student_user? && self.user.trial_user? && self.trial_ending_at_date && !self.trial_ended_date
+      TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)  unless Rails.env.test?
+    end
+  end
 
   def check_dependencies
     unless self.destroyable?

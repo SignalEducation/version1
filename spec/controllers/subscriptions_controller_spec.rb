@@ -168,7 +168,7 @@ describe SubscriptionsController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('The coupon code entered is not valid')
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(user_new_subscription_url(student_user.id, coupon: true))
+        expect(response).to redirect_to(new_subscription_url(coupon: true))
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
 
@@ -191,7 +191,7 @@ describe SubscriptionsController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(user_new_subscription_url(student_user.id))
+        expect(response).to redirect_to(new_subscription_url)
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
       end

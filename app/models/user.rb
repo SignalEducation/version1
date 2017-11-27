@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_commit :create_on_intercom, :create_trial_expiration_worker
+  after_create :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -856,10 +856,5 @@ class User < ActiveRecord::Base
     IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
   end
 
-  def create_trial_expiration_worker
-    if self.student_user? && self.student_access && self.trial_user? && self.student_access.trial_ending_at_date && !self.student_access.trial_ended_date
-      TrialExpirationWorker.perform_at(self.student_access.trial_ending_at_date, self.id)
-    end
-  end
 
 end

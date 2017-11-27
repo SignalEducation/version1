@@ -199,10 +199,10 @@ class CoursesController < ApplicationController
     else
       if current_user.expired_trial_user?
         flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue'
-        redirect_to user_new_subscription_url(current_user.id)
+        redirect_to new_subscription_url
       elsif current_user.current_subscription && current_user.canceled_member?
         flash[:warning] = 'Sorry, your Subscription is no longer valid. Please Upgrade to a valid subscription to continue'
-        redirect_to user_new_subscription_url(current_user.id)
+        redirect_to new_subscription_url
       else
         flash[:warning] = 'Sorry, you are not permitted to access that content.'
         redirect_to root_url

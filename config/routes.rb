@@ -23,13 +23,13 @@ Rails.application.routes.draw do
 
     # users and authentication
     resources :users do
-      get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
-      patch 'create_subscription', to: 'subscriptions#create_subscription', as: :create_subscription
-
       get 'reactivate_account', to: 'user_accounts#reactivate_account', as: :reactivate_account
       post 'reactivate_account_subscription', to: 'user_accounts#reactivate_account_subscription', as: :reactivate_account_subscription
       resources :visits, only: [:index, :show]
     end
+
+    get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
+    patch 'create_subscription/:user_id', to: 'subscriptions#create_subscription', as: :create_subscription
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
