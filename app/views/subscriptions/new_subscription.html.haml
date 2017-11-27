@@ -1,7 +1,5 @@
 .upgrade
   #wrapper
-
-
     %section#free
       .tmain
         .tbase
@@ -10,17 +8,18 @@
               .col-lg-4.col-lg-offset-4.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
                 -#TODO Slow to load !!!
                 #countdown
-                  %h4 Time left in FREE trial:
+                  %h4
+                    =t('views.subscriptions.new_subscription.time_h4')
                   .timer{"data-date" => timer_datetime(@user.student_access.trial_ending_at_date)}
 
             .row
               .col-md-10.col-md-offset-1
                 %h1.title1
-                  Get unlimited access today.
+                  =t('views.subscriptions.new_subscription.h1')
                 %h2.subtitle
-                  Thank you so much for trialling LearnSignal, we hope you found it valuable.
-                  %br
-                  Now just imagine how much easier it could be to pass your ACCA exams with all this support and expertise at your fingertips. We’d love to see you inside!
+                  =t('views.subscriptions.new_subscription.h2a')
+                %h2.subtitle
+                  =t('views.subscriptions.new_subscription.h2b')
       .go-down
         %a.anchor{:href => "#plans"}
           %i.fa.fa-angle-down
@@ -45,10 +44,10 @@
 
         %section#plans
           .container
-            %h1.title1
-              Some great savings can be made.
+            %h2.title1
+              =t('views.subscriptions.new_subscription.h2c')
             %h2.subtitle1
-              Pick which plan suits you best.
+              =t('views.subscriptions.new_subscription.h2d')
 
             %ul.plans.clearfix
               -@subscription_plans.each do |plan|
@@ -56,17 +55,18 @@
                   .base
                     .topbox
                       -if plan.payment_frequency_in_months == 3
-                        %span Our most popular payment plan
+                        %span
+                          =t('views.subscriptions.new_subscription.h2d')
                     .box
                       .name
                         =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                       %ul.details.fa-ul
                         %li
                           %i.fa-li.fa.fa-check
-                          Get unlimited access
+                          =t('views.subscriptions.new_subscription.get_unlimited_access')
                         %li
                           %i.fa-li.fa.fa-check
-                          Cancel anytime
+                          =t('views.subscriptions.new_subscription.cancel_anytime')
                         %li
                           %i.fa-li.fa.fa-check
                           =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
@@ -91,7 +91,7 @@
                       -# TODO change this to have no tick and then tick if selected
                       %label.lsbtn.plan-option
                         %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                        Choose this plan
+                        =t('views.subscriptions.new_subscription.select_this_plan')
 
 
 
@@ -100,13 +100,12 @@
           .container
             %h1.title1
               %span
-                And don’t forget,
+                =t('views.subscriptions.new_subscription.and_dont_forget')
                 %strong
-                  you can cancel anytime.
-
+                  =t('views.subscriptions.new_subscription.you_can_cancel_anytime')
             %h1.title1
               %span
-                No lengthy commitments or obligations.
+                =t('views.subscriptions.new_subscription.no_commitments')
                 %br/
 
 
@@ -114,10 +113,10 @@
           .container
             .row
               .col-lg-10.col-lg-offset-1
-                %h1.title1
-                  Simply enter your payment details.
+                %h2.title1
+                  =t('views.subscriptions.new_subscription.enter_payment_details')
                 %h2.subtitle1
-                  And you can continue your studying straight away, without wasting a moment.
+                  =t('views.subscriptions.new_subscription.continue_right_away')
 
             .row
               .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1

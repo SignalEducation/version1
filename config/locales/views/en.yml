@@ -963,6 +963,28 @@ en:
 
 
 
+    subscriptions:
+      new_subscription:
+        time_h4: 'Time left in FREE trial:'
+        h1: Get unlimited access today.
+        h2a: Thank you so much for trialling LearnSignal, we hope you found it valuable.
+        h2b: Now just imagine how much easier it could be to pass your ACCA exams with all this support and expertise at your fingertips. We’d love to see you inside!
+        h2c: Some great savings can be made.
+        h2d: Pick which plan suits you best.
+        most_popular_plan: Our most popular payment plan
+        get_unlimited_access: Get unlimited access
+        cancel_anytime: Cancel anytime
+        select_this_plan: Choose this plan
+        and_dont_forget: And don’t forget,
+        you_can_cancel_anytime: you can cancel anytime.
+        no_commitments: No lengthy commitments or obligations.
+        enter_payment_details: Simply enter your payment details.
+        continue_right_away: And you can continue your studying straight away, without wasting a moment.
+        credit_card: Credit/Debit Card
+        coupon_code: Coupon Code
+        remember_cancel_anytime: Remember, you can cancel at anytime
+
+
     subscription_plans:
       form:
         name: Name

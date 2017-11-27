@@ -1,7 +1,7 @@
 .payment-errors
   .form-group.cc
     %label
-      Credit or debit card
+      =t('views.subscriptions.new_subscription.credit_card')
     .clearfix
       #card-element
 
@@ -17,7 +17,7 @@
   -if params[:coupon]
     .form-group.cc
       %label
-        Coupon Code
+        =t('views.subscriptions.new_subscription.coupon_code')
       %input{type: "text_field", id: 'coupon_code', class: 'form-control', placeholder: 'Valid Coupon Code'}
 
   .form-group.l-margin-top
@@ -62,7 +62,7 @@
 
 
       %p
-        Remember, you can cancel at anytime
+        =t('views.subscriptions.new_subscription.remember_cancel_anytime')
 
 
 

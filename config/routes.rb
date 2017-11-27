@@ -28,6 +28,7 @@ Rails.application.routes.draw do
       resources :visits, only: [:index, :show]
     end
 
+    get 'users/:user_id/new_subscription', to: 'subscriptions#new_subscription'
     get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
     patch 'create_subscription/:user_id', to: 'subscriptions#create_subscription', as: :create_subscription
 
