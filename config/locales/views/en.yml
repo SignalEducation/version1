@@ -1281,6 +1281,7 @@ en:
         email: Email
         date_of_birth: Date of Birth
         student_number: Student Number
+        unsubscribed_from_emails: Unsubscribe from Emails
 
       change_password:
         button_label: Change Password

@@ -15,6 +15,7 @@ class IntercomCreateUserWorker
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,
+                            unsubscribed_from_emails: user.unsubscribed_from_emails,
                             custom_data: {guid: user.guid,
                                           user_group: user.user_group,
                                           account_status: user.user_account_status,

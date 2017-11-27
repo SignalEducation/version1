@@ -2232,6 +2232,12 @@ spinner {
 #enrollment_form .check input + span .fa { opacity: 0; }
 #enrollment_form .check input:checked + span .fa { opacity: 1; }
 
+#student_details_modal .check { display: block; cursor: pointer; overflow: hidden; margin: 2em 0 3em 0; }
+#student_details_modal .check input { position: absolute; opacity: 0; left: -30px; top: -30px; }
+#student_details_modal .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
+#student_details_modal .check input + span .fa { opacity: 0; }
+#student_details_modal .check input:checked + span .fa { opacity: 1; }
+
 
 
 

@@ -119,7 +119,8 @@ class UserAccountsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number)
+    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number,
+    :unsubscribed_from_emails)
   end
 
   def get_variables
