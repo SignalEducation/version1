@@ -111,6 +111,10 @@
         // Inform the user if there was an error
         var errorElement = document.getElementById('card-errors');
         errorElement.textContent = result.error.message;
+        //Replace spinning JS with Submit button
+        $('#card_submit').show();
+        $(".sk-circle").hide();
+
       } else {
         // Send the token to your server
         stripeTokenHandler(result.token);
@@ -126,4 +130,15 @@
     $('#card_submit').hide();
     $(".sk-circle").show();
     createToken();
+  });
+
+
+
+    card.addEventListener('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
   });
