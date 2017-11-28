@@ -44,7 +44,7 @@
       %br/
       .col-sm-12#actions_btns
         .col-sm-4.col-sm-offset-4
-          =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user), class: 'btn btn-red'
+          =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red'
 
   -elsif current_user && !@course.enrolled_user_ids.include?(current_user.id)
     .row

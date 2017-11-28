@@ -143,7 +143,7 @@
     -elsif @current_subscription.canceled_status?
 
       %h3=t('views.users.show.reactivate_subscription.h3')
-      =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red full-width'
+      =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red full-width'
 
 
 

@@ -104,7 +104,7 @@
                   =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
 
                 -elsif @subscription.canceled_status? || @subscription.unpaid_status?
-                  =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(@user.id), class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                  =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
 
 
               .col-sm-9.l-margin-top

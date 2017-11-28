@@ -23,14 +23,12 @@ Rails.application.routes.draw do
 
     # users and authentication
     resources :users do
-      get 'reactivate_account', to: 'user_accounts#reactivate_account', as: :reactivate_account
-      post 'reactivate_account_subscription', to: 'user_accounts#reactivate_account_subscription', as: :reactivate_account_subscription
       resources :visits, only: [:index, :show]
     end
 
     get 'users/:user_id/new_subscription', to: 'subscriptions#new_subscription'
     get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
-    patch 'create_subscription/:user_id', to: 'subscriptions#create_subscription', as: :create_subscription
+    post 'create_subscription/:user_id', to: 'subscriptions#create_subscription', as: :create_subscription
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
@@ -50,7 +48,6 @@ Rails.application.routes.draw do
     post 'change_password', to: 'user_accounts#change_password', as: :change_password
     patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
     get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
-    get 'reactivation_complete', to: 'user_accounts#reactivation_complete', as: :reactivation_complete
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 

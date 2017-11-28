@@ -117,7 +117,6 @@ class User < ActiveRecord::Base
   belongs_to :subscription_plan_category
   has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
 
-  accepts_nested_attributes_for :subscriptions
   accepts_nested_attributes_for :student_access
 
   # validation

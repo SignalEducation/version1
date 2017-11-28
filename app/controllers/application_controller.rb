@@ -282,20 +282,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
-  def subscription_special_link(user_id)
-    user = User.find(user_id)
-    if user.trial_or_sub_user?
-      if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
-        user_reactivate_account_url(user_id)
-      else
-        new_subscription_url
-      end
-    else
-      account_url
-    end
-  end
-  helper_method :subscription_special_link
-
   def seo_title_maker(seo_title, seo_description, seo_no_index)
     @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
     @seo_description = seo_description.to_s.truncate(156)

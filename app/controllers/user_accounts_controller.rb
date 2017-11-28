@@ -70,48 +70,6 @@ class UserAccountsController < ApplicationController
   end
 
 
-
-  def reactivate_account
-    @user = User.find(params[:user_id])
-    if @user == current_user && @user.trial_or_sub_user?
-      @subscription = @user.current_subscription ? @user.current_subscription : @user.subscriptions.last
-      if @subscription && %w(canceled).include?(@subscription.current_status)
-        currency_id = @subscription.subscription_plan.currency_id
-        @country = Country.where(currency_id: currency_id).first
-        @subscription_plans = @subscription.reactivation_options.limit(3)
-        @new_subscription = Subscription.new
-      else
-        redirect_to account_url(anchor: :subscriptions)
-      end
-    else
-      redirect_to root_url
-    end
-  end
-
-
-  def reactivate_account_subscription
-    subscription_id = params[:subscription]["subscription_plan_id"]
-    stripe_token_guid = params[:subscription]["stripe_token"]
-    @user = User.find(params[:user_id])
-    if subscription_id && stripe_token_guid && params[:subscription]["terms_and_conditions"]
-      #Save Sub in our DB, create sub on stripe, with coupon option and send card to stripe an save in our DB
-      @user.resubscribe_account(subscription_id, stripe_token_guid, params[:subscription]["terms_and_conditions"])
-      redirect_to reactivation_complete_url
-    else
-      redirect_to account_url
-    end
-  end
-
-  def reactivation_complete
-    @subscription = current_user.current_subscription
-    @enrollments = current_user.enrollments.all_active.all_in_order
-    @groups = Group.all_active.all_in_order
-  end
-
-
-
-
-
   protected
 
   def change_password_params

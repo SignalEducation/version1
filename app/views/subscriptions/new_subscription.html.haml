@@ -4,22 +4,30 @@
       .tmain
         .tbase
           .container
-            .row
-              .col-lg-4.col-lg-offset-4.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
-                -#TODO Slow to load !!!
-                #countdown
-                  %h4
-                    =t('views.subscriptions.new_subscription.time_h4')
-                  .timer{"data-date" => timer_datetime(@user.student_access.trial_ending_at_date)}
+            -if @user.trial_user?
+              .row
+                .col-lg-4.col-lg-offset-4.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
+                  -#TODO Slow to load !!!
+                  #countdown
+                    %h4
+                      =t('views.subscriptions.new_subscription.time_h4')
+                    .timer{"data-date" => timer_datetime(@user.student_access.trial_ending_at_date)}
 
-            .row
-              .col-md-10.col-md-offset-1
-                %h1.title1
-                  =t('views.subscriptions.new_subscription.h1')
-                %h2.subtitle
-                  =t('views.subscriptions.new_subscription.h2a')
-                %h2.subtitle
-                  =t('views.subscriptions.new_subscription.h2b')
+              .row
+                .col-md-10.col-md-offset-1
+                  %h1.title1
+                    =t('views.subscriptions.new_subscription.h1')
+                  %h2.subtitle
+                    =t('views.subscriptions.new_subscription.h2a')
+                  %h2.subtitle
+                    =t('views.subscriptions.new_subscription.h2b')
+            -else
+              .row
+                .col-md-10.col-md-offset-1
+                  %h1.title1
+                    =t('views.subscriptions.new_subscription.h2e')
+
+
       .go-down
         %a.anchor{:href => "#plans"}
           %i.fa.fa-angle-down
@@ -28,18 +36,16 @@
 
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
+
     #upgrade-subscription
-      =form_for @user, url: create_subscription_url(@user), html: { id: 'upgrade-form', role: 'form'} do |f|
-        =f.hidden_field :country_id, value: @country.id
-        =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
-
-
-        =f.fields_for :subscriptions do |sub|
-          =sub.hidden_field :subscription_plan_id
-          =sub.hidden_field :stripe_token
-          =sub.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-          -if params[:coupon]
-            =hidden_field_tag :hidden_coupon_code
+      =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
+        =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+        =f.hidden_field :user_id, value: @user.id
+        =f.hidden_field :subscription_plan_id
+        =f.hidden_field :stripe_token
+        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        -if params[:coupon]
+          =hidden_field_tag :hidden_coupon_code
 
 
         %section#plans
@@ -134,7 +140,7 @@
   function choosePlan(theThing) {
     $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
-    $('#user_subscriptions_attributes_0_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
+    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
     $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
     //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
   }
