@@ -135,6 +135,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :create_on_intercom
+  after_update :update_email_on_stripe, if: :email_changed?
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -853,6 +854,13 @@ class User < ActiveRecord::Base
 
   def create_on_intercom
     IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
+  end
+
+  def update_email_on_stripe
+    Rails.logger.debug 'DEBUG: Updating stripe email'
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+    stripe_customer.email = self.email
+    stripe_customer.save
   end
 
 
