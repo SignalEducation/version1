@@ -48,7 +48,8 @@ class SubscriptionsController < ApplicationController
     stripe_token = params[:subscription][:stripe_token]
     user = @subscription.user
     subscription_plan_stripe_guid = @subscription.subscription_plan.stripe_guid
-
+    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+    
     begin
       stripe_subscription = Stripe::Subscription.create(
           customer: user.stripe_customer_id,
@@ -57,7 +58,6 @@ class SubscriptionsController < ApplicationController
           trial_end: 'now'
       )
 
-      stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
       @subscription.assign_attributes(
           complimentary: false,
           active: true,

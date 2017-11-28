@@ -65,9 +65,6 @@
         =t('views.subscriptions.new_subscription.remember_cancel_anytime')
 
 
-
-
-
 :javascript
 
   $('input[type="checkbox"]').on('change', function() {
@@ -112,6 +109,7 @@
         var errorElement = document.getElementById('card-errors');
         errorElement.textContent = result.error.message;
         //Replace spinning JS with Submit button
+        $('#card_submit').prop('disabled',false);
         $('#card_submit').show();
         $(".sk-circle").hide();
 
@@ -127,6 +125,7 @@
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     //Replace submit button with spinning JS
+    $('#card_submit').prop('disabled',true);
     $('#card_submit').hide();
     $(".sk-circle").show();
     createToken();
@@ -142,3 +141,6 @@
       displayError.textContent = '';
     }
   });
+
+
+
