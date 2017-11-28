@@ -34,8 +34,6 @@
       .bottom-arrow
 
 
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
 
     #upgrade-subscription
       =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
@@ -50,6 +48,9 @@
 
         %section#plans
           .container
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
+
             %h2.title1
               =t('views.subscriptions.new_subscription.h2c')
             %h2.subtitle1

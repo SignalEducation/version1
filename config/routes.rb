@@ -26,9 +26,9 @@ Rails.application.routes.draw do
       resources :visits, only: [:index, :show]
     end
 
-    get 'users/:user_id/new_subscription', to: 'subscriptions#new_subscription'
-    get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
-    post 'create_subscription/:user_id', to: 'subscriptions#create_subscription', as: :create_subscription
+    get 'users/:user_id/new_subscription', to: 'subscriptions#new'
+    get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
+    post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
