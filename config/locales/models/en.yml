@@ -17,6 +17,7 @@ en:
       must_populate_one: Amount Off or Percent Off must have a value
       cant_populate_both: Only Amount Off or Percent Off can have a value
       must_populate_duration_months: Must provide Duration in Months when Duration value is repeating
+      must_populate_currency_if_amount_off: Must select a Currency if Amount Off has a value
 
     video_resources:
       must_populate_one: At least one of the three fileds must have a value

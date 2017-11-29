@@ -41,6 +41,7 @@ class Coupon < ActiveRecord::Base
 
   validate :amount_or_percent_off
   validate :duration_months_if_repeating
+  validate :currency_if_amount_off_set
 
 
   # callbacks
@@ -74,6 +75,12 @@ class Coupon < ActiveRecord::Base
   def duration_months_if_repeating
     if self.duration == 'repeating' && self.duration_in_months.blank?
       errors.add(:base, I18n.t('models.coupons.must_populate_duration_months'))
+    end
+  end
+
+  def currency_if_amount_off_set
+    if self.amount_off && self.currency_id.blank?
+      errors.add(:base, I18n.t('models.coupons.must_populate_currency_if_amount_off'))
     end
   end
 
