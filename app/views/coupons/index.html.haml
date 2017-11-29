@@ -39,11 +39,9 @@
                       %td=coupon.name
                       %td=coupon.code
                       %td=tick_or_cross(coupon.active)
-                      %td=coupon.currency.leading_symbol
+                      %td=coupon.currency_id ? coupon.currency.leading_symbol : ''
                       %td=coupon.times_redeemed
                       %td
                         =link_to t('views.general.view'), coupon_url(coupon), class: 'btn btn-purple btn-small'
-                        =link_to t('views.general.edit'), edit_coupon_url(coupon), class: 'btn btn-cyan btn-small'
-                        -if coupon.destroyable?
-                          =link_to t('views.general.delete'), coupon, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                        =link_to t('views.general.delete'), coupon, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
 

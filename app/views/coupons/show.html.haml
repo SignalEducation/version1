@@ -20,7 +20,7 @@
                   %td.col-sm-8=@coupon.code
                 %tr
                   %td.col-sm-4=t('views.coupons.form.currency_id')
-                  %td.col-sm-8=@coupon.currency.name
+                  %td.col-sm-8=@coupon.currency.try(:name)
                 %tr
                   %td.col-sm-4=t('views.coupons.form.active')
                   %td.col-sm-8=tick_or_cross(@coupon.active)
@@ -43,9 +43,10 @@
                   %td.col-sm-4=t('views.coupons.form.redeem_by')
                   %td.col-sm-8=@coupon.redeem_by
                 %tr
+                  %td.col-sm-4=t('views.coupons.show.stripe_coupon_data')
+                  %td.col-sm-8=@coupon.stripe_coupon_data
+                %tr
                   %td.col-sm-4=t('views.coupons.index.times_redeemed')
                   %td.col-sm-8=@coupon.times_redeemed
               %p
                 =link_to t('views.general.back'), coupons_url
-                |
-                =link_to t('views.general.edit'), edit_coupon_url(id: @coupon.id), title: t('views.general.edit_tooltip')

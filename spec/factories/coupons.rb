@@ -17,6 +17,7 @@
 #  times_redeemed     :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  stripe_coupon_data :text
 #
 
 FactoryGirl.define do

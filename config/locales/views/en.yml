@@ -270,17 +270,17 @@ en:
         code_placeholder: Code for coupon
         currency_id: Currency
         active: Active
-        amount_off: Amount Off
+        amount_off: Amount Off (cents)
         amount_off_placeholder: Amount Off
-        duration: Duration (forever, once, repeating)
+        duration: Duration
         duration_placeholder: Duration Type
         duration_in_months: Duration in Months
-        duration_in_months_placeholder: Amount Off
+        duration_in_months_placeholder: Number of Months the Coupon Applies
         max_redemptions: Max Redemptions
         max_redemptions_placeholder: Limit the number of times this can be used
         percent_off: Percentage Off
         percent_off_placeholder: Percentage Off
-        redeem_by: Redeem By
+        redeem_by: Redeem By (Date)
         redeem_by_placeholder: Redeem By Specific Date
 
 
@@ -297,10 +297,10 @@ en:
         percent_off: Percentage Off
         redeem_by: Redeem By
         times_redeemed: Times Redeemed
-        valid: Valid
 
       show:
         h1: Coupon
+        stripe_coupon_data: Stripe Coupon Object
 
       edit:
         h1: Edit Coupon

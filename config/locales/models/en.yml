@@ -13,6 +13,11 @@ en:
       web_url_or_upload_error: You must enter a web URL or upload a file
       must_link_with_an_upload_or_url: You must link this Resource to an upload or URL
 
+    coupons:
+      must_populate_one: Amount Off or Percent Off must have a value
+      cant_populate_both: Only Amount Off or Percent Off can have a value
+      must_populate_duration_months: Must provide Duration in Months when Duration value is repeating
+
     video_resources:
       must_populate_one: At least one of the three fileds must have a value
 

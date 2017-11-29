@@ -17,6 +17,7 @@
 #  times_redeemed     :integer
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  stripe_coupon_data :text
 #
 
 class CouponsController < ApplicationController
@@ -38,9 +39,6 @@ class CouponsController < ApplicationController
     @coupon = Coupon.new
   end
 
-  def edit
-  end
-
   def create
     @coupon = Coupon.new(allowed_params)
     if @coupon.save
@@ -50,16 +48,6 @@ class CouponsController < ApplicationController
       render action: :new
     end
   end
-
-  def update
-    if @coupon.update_attributes(allowed_params)
-      flash[:success] = I18n.t('controllers.coupons.update.flash.success')
-      redirect_to coupons_url
-    else
-      render action: :edit
-    end
-  end
-
 
   def destroy
     if @coupon.destroy
@@ -81,8 +69,8 @@ class CouponsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:coupon).permit(:name, :code, :currency_id, :active, :amount_off, :duration,
-                                   :duration_in_months, :max_redemptions, :percent_off, :redeem_by)
+    params.require(:coupon).permit(:name, :code, :currency_id, :amount_off, :duration, :max_redemptions,
+                                   :duration_in_months, :percent_off, :redeem_by)
   end
 
 end
