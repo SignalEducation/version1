@@ -107,11 +107,11 @@ en:
         a3: Quarter
         a6: 6 Months
         a12: Year
-      sibscription_in_months:
-        a1: Monthly subscription
-        a3: Quarterly subscription
-        a6: Half-yearly subscription
-        a12: Yearly subscription
+      subscription_label_in_months:
+        a1: Monthly Subscription Plan
+        a3: Quarterly Subscription Plan
+        a6: Half-yearly Subscription Plan
+        a12: Yearly Subscription Plan
       subscription_in_months:
         a1: LearnSignal Monthly Subscription
         a3: LearnSignal Quarterly Subscription
@@ -984,6 +984,10 @@ en:
         credit_card: Credit/Debit Card
         coupon_code: Coupon Code
         remember_cancel_anytime: Remember, you can cancel at anytime
+
+      upgrade_complete:
+        h1: Thanks for choosing a subscription!
+        h2:
 
 
     subscription_plans:

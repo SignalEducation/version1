@@ -687,6 +687,7 @@ class User < ActiveRecord::Base
   end
 
   def self.parse_csv(csv_content)
+    #TODO Remove the if line count is one - reject csv file if it's less than 2 lines
     csv_data = []
     duplicate_emails = []
     has_errors = false
