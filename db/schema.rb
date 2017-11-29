@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171127112312) do
+ActiveRecord::Schema.define(version: 20171129161446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,27 @@ ActiveRecord::Schema.define(version: 20171127112312) do
   add_index "countries", ["in_the_eu"], name: "index_countries_on_in_the_eu", using: :btree
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
   add_index "countries", ["sorting_order"], name: "index_countries_on_sorting_order", using: :btree
+
+  create_table "coupons", force: :cascade do |t|
+    t.string   "name"
+    t.string   "code"
+    t.integer  "currency_id"
+    t.boolean  "livemode",           default: false
+    t.boolean  "active",             default: false
+    t.integer  "amount_off"
+    t.string   "duration"
+    t.integer  "duration_in_months"
+    t.integer  "max_redemptions"
+    t.integer  "percent_off"
+    t.datetime "redeem_by"
+    t.integer  "times_redeemed"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
+  add_index "coupons", ["active"], name: "index_coupons_on_active", using: :btree
+  add_index "coupons", ["code"], name: "index_coupons_on_code", using: :btree
+  add_index "coupons", ["name"], name: "index_coupons_on_name", using: :btree
 
   create_table "course_module_element_quizzes", force: :cascade do |t|
     t.integer  "course_module_element_id"

@@ -1,0 +1,49 @@
+=form_for(@coupon, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .row
+    .col-sm-12
+      =render partial: '/layouts/error_messages', locals: {thing: @coupon, message: nil}
+      .col-sm-6
+        =f.label :name, t('views.coupons.form.name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, placeholder: t('views.coupons.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+        %br/
+        =f.label :code, t('views.coupons.form.code'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :code, placeholder: t('views.coupons.form.code_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+        %br/
+
+        =f.label :currency_id, t('views.coupons.form.currency_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        %br/
+
+        =f.label :amount_off, t('views.coupons.form.amount_off'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :amount_off, placeholder: t('views.coupons.form.amount_off_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :duration, t('views.coupons.form.duration'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :duration, placeholder: t('views.coupons.form.duration_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+      .col-sm-6
+        =f.label :duration_in_months, t('views.coupons.form.duration_in_months'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :duration_in_months, placeholder: t('views.coupons.form.duration_in_months_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :max_redemptions, t('views.coupons.form.max_redemptions'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :max_redemptions, placeholder: t('views.coupons.form.max_redemptions_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :percent_off, t('views.coupons.form.percent_off'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :percent_off, placeholder: t('views.coupons.form.percent_off_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :redeem_by, t('views.coupons.form.redeem_by'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :redeem_by, placeholder: t('views.coupons.form.redeem_by_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, style: 'border-radius: 6px;'
+
+
+      .row
+        .col-sm-12.l-margin-top-big
+          =f.submit t('views.general.save'), class: 'btn btn-red'
+          =link_to t('views.general.cancel'), coupons_path, class: 'btn btn-cyan'

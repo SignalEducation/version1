@@ -78,6 +78,7 @@ Rails.application.routes.draw do
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
     resources :countries, concerns: :supports_reordering
+    resources :coupons
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]

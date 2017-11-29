@@ -59,6 +59,19 @@ en:
           success: Country has been deleted
           error: Country was not deleted
 
+    coupons:
+      create:
+        flash:
+          success: Coupon has been created successfully
+      update:
+        flash:
+          success: Coupon details have been updated successfully
+      destroy:
+        flash:
+          success: Coupon has been deleted
+          error: Coupon was not deleted
+
+
     courses:
       show:
         warning: "Sorry, we couldn't find the thing you were looking for"
