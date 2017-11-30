@@ -50,13 +50,19 @@ class SubscriptionsController < ApplicationController
     user = @subscription.user
     subscription_plan_stripe_guid = @subscription.subscription_plan.stripe_guid
     stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
+    @coupon = Coupon.where(code: coupon_code).first
+
+    if coupon_code && !@coupon
+      flash[:error] = 'Sorry! That is not a valid coupon code.'
+      redirect_to request.referrer and return
+    end
 
     begin
       stripe_subscription = Stripe::Subscription.create(
           customer: user.stripe_customer_id,
           plan: subscription_plan_stripe_guid,
           source: stripe_token,
-          coupon: coupon_code,
+          coupon: @coupon.try(:code),
           trial_end: 'now'
       )
 
@@ -68,6 +74,7 @@ class SubscriptionsController < ApplicationController
           stripe_guid: stripe_subscription.id,
           next_renewal_date: Time.at(stripe_subscription.current_period_end),
           stripe_customer_id: stripe_customer.id,
+          #coupon_id: @coupon.id,
           stripe_customer_data: stripe_customer.to_hash.deep_dup
       )
       if @subscription.valid? && @subscription.save
