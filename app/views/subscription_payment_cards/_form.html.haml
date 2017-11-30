@@ -1,7 +1,8 @@
 .payment-errors
   .form-group.cc
     %label
-      =t('views.subscriptions.new_subscription.credit_card')
+      %h4{style: 'padding-bottom: 0;'}
+        =t('views.subscriptions.new_subscription.credit_card')
     .clearfix
       #card-element
 
@@ -9,16 +10,22 @@
 
   .form-group.l-margin-top
     %label.check
-      %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+      %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
         %span
           %i.fa.fa-check
         =t('views.general.terms_and_conditions')
 
   -if params[:coupon]
     .form-group.cc
-      %label
-        =t('views.subscriptions.new_subscription.coupon_code')
-      %input{type: "text_field", id: 'coupon_code', class: 'form-control', placeholder: 'Valid Coupon Code'}
+      .col-xs-6{style: 'padding-left: 5px;'}
+        %label
+          %h4{style: 'padding-bottom: 0;'}
+            =t('views.subscriptions.new_subscription.coupon_code')
+      .invalid-code.col-xs-6{style: 'color: #EF5153;'}
+        ='Invalid Code'
+      %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Valid Coupon Code'}
+
+
 
   .form-group.l-margin-top
     .tot-get

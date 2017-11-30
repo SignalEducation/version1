@@ -145,9 +145,15 @@
   }
 
   var couponCode = $('#coupon_code');
-  var plan_id = '16';
+  var plan_id = '2';
 
 
+  // Trigger Ajax call on every input into the coupon field.
+  // Ajax call params are the coupon field value and selected_plan_id
+  // If response contains 'valid:true' add green border to field input
+  // If response contains 'valid:false' add red border to field and show error text
+  //
+  //
   $('#coupon_code').on('input',function(e) {
     if(!couponCode.value){
         $.ajax({
@@ -164,13 +170,20 @@
             if(validCoupon === false){
               $('#coupon_code').removeClass("coupon-success");
               $('#coupon_code').addClass("coupon-error");
-            } else {
+              $('.invalid-code').show();
+            } else if(validCoupon === true){
               $('#coupon_code').removeClass("coupon-error");
               $('#coupon_code').addClass("coupon-success");
+              $('.invalid-code').hide();
+            } else {
+              $('#coupon_code').removeClass("coupon-error");
+              $('#coupon_code').removeClass("coupon-success");
+              $('.invalid-code').hide();
             }
 
             discountedPrice = data.discounted_price;
             $('#total-value').text(discountedPrice);
+
           },
           error: function(xhr,status,error){
             console.log(xhr);
@@ -179,11 +192,21 @@
 
         });
 
-    } else {
-
+    } else  {
+      couponCode.removeClass("coupon-error");
+      couponCode.removeClass("coupon-success");
+      couponCode.hide();
     }
   });
 
+  // Hide green/red border and coupon error text if input has no value
+  $('#coupon_code').blur(function() {
+    if ($('#coupon_code').val() === '') {
+      $('#coupon_code').removeClass("coupon-error");
+      $('#coupon_code').removeClass("coupon-success");
+      $('.invalid-code').hide();
+    }
+  });
 
   $(document).on('ready', function() {
     choosePlan($('.plan-option')[1]);
@@ -197,6 +220,7 @@
       choosePlan(this);
     });
     $(".sk-circle").hide();
+    $('.invalid-code').hide();
   })
 
 
