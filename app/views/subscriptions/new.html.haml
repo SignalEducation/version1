@@ -133,6 +133,10 @@
 
 :javascript
 
+
+  var couponCode = $('#coupon_code');
+  var plan_id = '1';
+
   // UnChecks radio buttons except the one that was clicked.
   // Finds the id value of the sub plan that the radio button belongs to.
   // Sets the hidden field subscription_plan_id to that id.
@@ -142,10 +146,13 @@
     $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
     $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
     //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
-  }
+    plan_id = $('#subscription_subscription_plan_id').val();
 
-  var couponCode = $('#coupon_code');
-  var plan_id = '2';
+    // Need to trigger Ajax call here if the coupon field already has a value
+    if ($('#coupon_code').val()) {
+      validateCoupon();
+    }
+  }
 
 
   // Trigger Ajax call on every input into the coupon field.
@@ -154,8 +161,9 @@
   // If response contains 'valid:false' add red border to field and show error text
   //
   //
-  $('#coupon_code').on('input',function(e) {
-    if(!couponCode.value){
+  function validateCoupon() {
+
+      if(!couponCode.value){
         $.ajax({
           url: '#{coupon_validation_path}',
 
@@ -166,23 +174,31 @@
 
           success: function(data,status,xhr){
             var validCoupon = data.valid;
+            var discountedPrice = data.discounted_price;
 
             if(validCoupon === false){
               $('#coupon_code').removeClass("coupon-success");
               $('#coupon_code').addClass("coupon-error");
               $('.invalid-code').show();
+              $('.discounted-price').hide();
+              $('#total-value').removeClass('strike');
+
             } else if(validCoupon === true){
               $('#coupon_code').removeClass("coupon-error");
               $('#coupon_code').addClass("coupon-success");
               $('.invalid-code').hide();
+
+              $('.discounted-price').show();
+              $('#total-value').addClass('strike');
+              $('#discounted-value').text(discountedPrice);
+
             } else {
               $('#coupon_code').removeClass("coupon-error");
               $('#coupon_code').removeClass("coupon-success");
               $('.invalid-code').hide();
             }
 
-            discountedPrice = data.discounted_price;
-            $('#total-value').text(discountedPrice);
+
 
           },
           error: function(xhr,status,error){
@@ -197,6 +213,11 @@
       couponCode.removeClass("coupon-success");
       couponCode.hide();
     }
+
+  }
+
+  $('#coupon_code').on('input',function(e) {
+    validateCoupon();
   });
 
   // Hide green/red border and coupon error text if input has no value
@@ -221,6 +242,7 @@
     });
     $(".sk-circle").hide();
     $('.invalid-code').hide();
+    $('.discounted-price').hide();
   })
 
 
