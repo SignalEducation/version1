@@ -131,8 +131,6 @@
 
 
 
-
-
 :javascript
 
   // UnChecks radio buttons except the one that was clicked.
@@ -145,6 +143,38 @@
     $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
     //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
   }
+
+  var couponCode = $('#coupon_code');
+  var plan_id = '16';
+
+
+  $('#coupon_code').on('input',function(e) {
+    if(!couponCode.value){
+        $.ajax({
+          url: '#{coupon_validation_path}',
+
+          dataType: 'json',
+          data: JSON.stringify({'coupon_code': couponCode.val(), 'plan_id': plan_id }),
+          method: 'POST',
+          contentType: "application/json; charset=utf-8",
+
+          success: function(data,status,xhr){
+            validCoupon = data.valid;
+            discountedPrice = data.discounted_price;
+            $('#total-value').text(discountedPrice);
+          },
+          error: function(xhr,status,error){
+            console.log(xhr);
+            alert(error);
+          }
+
+        });
+
+    } else {
+
+    }
+  });
+
 
   $(document).on('ready', function() {
     choosePlan($('.plan-option')[1]);
@@ -159,3 +189,5 @@
     });
     $(".sk-circle").hide();
   })
+
+

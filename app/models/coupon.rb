@@ -56,6 +56,24 @@ class Coupon < ActiveRecord::Base
 
   # class methods
 
+  def self.verify_coupon_and_get_discount(code, plan_id)
+    coupon = Coupon.where(code: code).first
+    sub_plan = SubscriptionPlan.find(plan_id)
+    valid = false
+    discounted_price = sub_plan.price
+
+    if coupon && coupon.active
+      if coupon.amount_off
+        valid = true if coupon.currency_id == sub_plan.currency_id
+        discounted_price = sub_plan.price.to_f - (coupon.amount_off/100).to_f
+      elsif coupon.percent_off
+        valid = true
+        discounted_price = (sub_plan.price.to_f/100)*coupon.percent_off
+      end
+    end
+    return valid, discounted_price
+  end
+
   # instance methods
 
   def destroyable?
@@ -83,7 +101,6 @@ class Coupon < ActiveRecord::Base
       errors.add(:base, I18n.t('models.coupons.must_populate_currency_if_amount_off'))
     end
   end
-
 
 
   protected

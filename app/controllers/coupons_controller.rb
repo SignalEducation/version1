@@ -23,7 +23,7 @@
 class CouponsController < ApplicationController
 
   before_action :logged_in_required
-  before_action do
+  before_action except: [:validate_coupon] do
     ensure_user_has_access_rights(%w(stripe_management_access))
   end
   before_action :get_variables
@@ -56,6 +56,18 @@ class CouponsController < ApplicationController
       flash[:error] = I18n.t('controllers.coupons.destroy.flash.error')
     end
     redirect_to coupons_url
+  end
+
+  def validate_coupon
+    respond_to do |format|
+      format.json {
+        discount = Coupon.verify_coupon_and_get_discount(params[:coupon_code], params[:plan_id])
+        data = {valid: discount[0], discounted_price: discount[1]}
+
+        render json: data, status: :ok
+      }
+    end
+
   end
 
   protected

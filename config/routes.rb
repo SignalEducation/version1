@@ -79,6 +79,7 @@ Rails.application.routes.draw do
 
     resources :countries, concerns: :supports_reordering
     resources :coupons
+    post '/coupon_validation', to: 'coupons#validate_coupon', as: :coupon_validation
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
