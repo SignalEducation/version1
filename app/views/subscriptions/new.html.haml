@@ -159,7 +159,16 @@
           contentType: "application/json; charset=utf-8",
 
           success: function(data,status,xhr){
-            validCoupon = data.valid;
+            var validCoupon = data.valid;
+
+            if(validCoupon === false){
+              $('#coupon_code').removeClass("coupon-success");
+              $('#coupon_code').addClass("coupon-error");
+            } else {
+              $('#coupon_code').removeClass("coupon-error");
+              $('#coupon_code').addClass("coupon-success");
+            }
+
             discountedPrice = data.discounted_price;
             $('#total-value').text(discountedPrice);
           },

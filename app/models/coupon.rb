@@ -60,15 +60,17 @@ class Coupon < ActiveRecord::Base
     coupon = Coupon.where(code: code).first
     sub_plan = SubscriptionPlan.find(plan_id)
     valid = false
-    discounted_price = sub_plan.price
+    discounted_price = sub_plan.currency.format_number(sub_plan.price)
 
     if coupon && coupon.active
       if coupon.amount_off
         valid = true if coupon.currency_id == sub_plan.currency_id
-        discounted_price = sub_plan.price.to_f - (coupon.amount_off/100).to_f
+        discounted_number = sub_plan.price.to_f - (coupon.amount_off/100).to_f
+        discounted_price = sub_plan.currency.format_number(discounted_number)
       elsif coupon.percent_off
         valid = true
-        discounted_price = (sub_plan.price.to_f/100)*coupon.percent_off
+        discounted_number = (sub_plan.price.to_f/100)*coupon.percent_off
+        discounted_price = sub_plan.currency.format_number(discounted_number)
       end
     end
     return valid, discounted_price
