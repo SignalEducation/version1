@@ -36,7 +36,7 @@ class SubscriptionsController < ApplicationController
 
       @subscription = Subscription.new(user_id: @user.id)
 
-      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order.limit(3)
       IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name) unless Rails.env.test?
     else
       redirect_to root_url
@@ -46,15 +46,17 @@ class SubscriptionsController < ApplicationController
   def create
     @subscription = Subscription.new(allowed_params)
     stripe_token = params[:subscription][:stripe_token]
+    coupon_code = params[:hidden_coupon_code]
     user = @subscription.user
     subscription_plan_stripe_guid = @subscription.subscription_plan.stripe_guid
     stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-    
+
     begin
       stripe_subscription = Stripe::Subscription.create(
           customer: user.stripe_customer_id,
           plan: subscription_plan_stripe_guid,
           source: stripe_token,
+          coupon: coupon_code,
           trial_end: 'now'
       )
 
