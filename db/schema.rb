@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171129194641) do
+ActiveRecord::Schema.define(version: 20171201220135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,42 @@ ActiveRecord::Schema.define(version: 20171129194641) do
   end
 
   add_index "blog_posts", ["home_page_id"], name: "index_blog_posts_on_home_page_id", using: :btree
+
+  create_table "charges", force: :cascade do |t|
+    t.integer  "subscription_id"
+    t.integer  "invoice_id"
+    t.integer  "user_id"
+    t.integer  "subscription_payment_card_id"
+    t.integer  "currency_id"
+    t.integer  "coupon_id"
+    t.integer  "stripe_api_event_id"
+    t.string   "stripe_guid"
+    t.integer  "amount"
+    t.integer  "amount_refunded"
+    t.string   "failure_code"
+    t.text     "failure_message"
+    t.string   "stripe_customer_id"
+    t.string   "stripe_invoice_id"
+    t.boolean  "livemode",                     default: false
+    t.string   "stripe_order_id"
+    t.boolean  "paid",                         default: false
+    t.boolean  "refunded",                     default: false
+    t.text     "refunds"
+    t.string   "status"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+  end
+
+  add_index "charges", ["coupon_id"], name: "index_charges_on_coupon_id", using: :btree
+  add_index "charges", ["currency_id"], name: "index_charges_on_currency_id", using: :btree
+  add_index "charges", ["invoice_id"], name: "index_charges_on_invoice_id", using: :btree
+  add_index "charges", ["paid"], name: "index_charges_on_paid", using: :btree
+  add_index "charges", ["refunded"], name: "index_charges_on_refunded", using: :btree
+  add_index "charges", ["status"], name: "index_charges_on_status", using: :btree
+  add_index "charges", ["stripe_api_event_id"], name: "index_charges_on_stripe_api_event_id", using: :btree
+  add_index "charges", ["subscription_id"], name: "index_charges_on_subscription_id", using: :btree
+  add_index "charges", ["subscription_payment_card_id"], name: "index_charges_on_subscription_payment_card_id", using: :btree
+  add_index "charges", ["user_id"], name: "index_charges_on_user_id", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"

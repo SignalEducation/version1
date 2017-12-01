@@ -31,6 +31,7 @@ class Currency < ActiveRecord::Base
   has_many :subscription_plans
   has_many :subscription_transactions
   has_many :coupons
+  has_many :charges
 
   # validation
   validates :iso_code, presence: true, uniqueness: true, length: {maximum: 255}

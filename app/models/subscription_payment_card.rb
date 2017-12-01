@@ -53,6 +53,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   # relationships
   has_many :subscription_transactions
+  has_many :charges
   belongs_to :user
   belongs_to :account_address_country, class_name: 'Country',
              foreign_key: :account_country_id

@@ -30,6 +30,7 @@ class StripeApiEvent < ActiveRecord::Base
   KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted)
 
   # relationships
+  has_many :charges
 
   # validation
   validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }

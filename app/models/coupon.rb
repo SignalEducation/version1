@@ -31,6 +31,7 @@ class Coupon < ActiveRecord::Base
 
   # relationships
   belongs_to :currency
+  has_many :charges
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
