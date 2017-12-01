@@ -25,6 +25,7 @@
 #  status                       :string
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
+#  original_event_data          :text
 #
 
 class Charge < ActiveRecord::Base
@@ -33,7 +34,7 @@ class Charge < ActiveRecord::Base
   attr_accessible :subscription_id, :invoice_id, :user_id, :subscription_payment_card_id, :currency_id, :coupon_id,
                   :stripe_api_event_id, :stripe_guid, :amount, :amount_refunded, :failure_code, :failure_message,
                   :stripe_customer_id, :stripe_invoice_id, :livemode, :stripe_order_id, :paid, :refunded, :refunds,
-                  :status
+                  :status, :original_event_data
 
   # Constants
 
@@ -76,6 +77,42 @@ class Charge < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  def self.create_from_stripe_data(event_id, event)
+
+    invoice = Invoice.where(stripe_guid: event[:invoice]).first
+    subscription = invoice.subscription
+    user = User.where(stripe_customer_id: event[:customer]).first
+    card = SubscriptionPaymentCard.where(stripe_card_guid: event[:invoice][:source][:id]).first
+
+    Charge.create!(
+      subscription_id: subscription.id,
+      invoice_id: invoice.id,
+      user_id: user.id,
+      subscription_payment_card_id: card.id,
+      currency_id: subscription.currency_id,
+      coupon_id: subscription.try(:coupon_id),
+      stripe_api_event_id: event_id,
+      stripe_guid: event[:id],
+      amount: event[:amount],
+      amount_refunded: event[:amount_refunded],
+      failure_code: event[:failure_code],
+      failure_message: event[:failure_message],
+      stripe_customer_id: event[:customer],
+      stripe_invoice_id: event[:invoice],
+      livemode: event[:livemode],
+      stripe_order_id: event[:order],
+      paid: event[:paid],
+      refunded: event[:refunded],
+      refunds: event[:refunds],
+      status: event[:status],
+      original_event_data: event.to_hash.deep_dup
+    )
+  rescue => e
+    Rails.logger.error "ERROR: Charge#create_from_stripe_data failed to save. Error:#{e.inspect}"
+    return false
+  end
+
   def destroyable?
     false
   end

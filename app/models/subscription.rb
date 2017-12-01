@@ -16,6 +16,7 @@
 #  livemode             :boolean          default(FALSE)
 #  active               :boolean          default(FALSE)
 #  terms_and_conditions :boolean          default(FALSE)
+#  coupon_id            :integer
 #
 
 class Subscription < ActiveRecord::Base
@@ -27,7 +28,7 @@ class Subscription < ActiveRecord::Base
   attr_accessible :user_id, :subscription_plan_id, :complimentary,
                   :current_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data
+                  :stripe_guid, :stripe_customer_data, :coupon_id
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
@@ -38,6 +39,7 @@ class Subscription < ActiveRecord::Base
   has_many :invoices
   has_many :invoice_line_items
   belongs_to :subscription_plan
+  belongs_to :coupon
   has_one :student_access
   has_many :subscription_transactions
   has_many :charges

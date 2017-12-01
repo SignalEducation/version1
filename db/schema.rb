@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171201220135) do
+ActiveRecord::Schema.define(version: 20171201224518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20171201220135) do
     t.string   "status"
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false
+    t.text     "original_event_data"
   end
 
   add_index "charges", ["coupon_id"], name: "index_charges_on_coupon_id", using: :btree
@@ -837,6 +838,7 @@ ActiveRecord::Schema.define(version: 20171201220135) do
     t.boolean  "livemode",             default: false
     t.boolean  "active",               default: false
     t.boolean  "terms_and_conditions", default: false
+    t.integer  "coupon_id"
   end
 
   add_index "subscriptions", ["current_status"], name: "index_subscriptions_on_current_status", using: :btree

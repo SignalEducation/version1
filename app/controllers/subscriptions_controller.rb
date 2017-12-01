@@ -16,6 +16,7 @@
 #  livemode             :boolean          default(FALSE)
 #  active               :boolean          default(FALSE)
 #  terms_and_conditions :boolean          default(FALSE)
+#  coupon_id            :integer
 #
 
 class SubscriptionsController < ApplicationController
@@ -76,7 +77,7 @@ class SubscriptionsController < ApplicationController
           stripe_guid: stripe_subscription.id,
           next_renewal_date: Time.at(stripe_subscription.current_period_end),
           stripe_customer_id: stripe_customer.id,
-          #coupon_id: @coupon.id,
+          coupon_id: @coupon.try(:id),
           stripe_customer_data: stripe_customer.to_hash.deep_dup
       )
       if @subscription.valid? && @subscription.save

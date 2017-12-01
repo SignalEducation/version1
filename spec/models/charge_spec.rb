@@ -25,6 +25,7 @@
 #  status                       :string
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
+#  original_event_data          :text
 #
 
 require 'rails_helper'
