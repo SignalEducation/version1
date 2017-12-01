@@ -3,6 +3,9 @@
     %section#free
       .tmain
         .tbase
+          -if flash[:success] || flash[:error] || flash[:warning]
+            .col-sm-8.col-sm-offset-2.col-xs-12
+              =render partial: 'layouts/flash_messages'
           .container
             -if @user.trial_user?
               .row
@@ -48,8 +51,6 @@
 
         %section#plans
           .container
-            -if flash[:success] || flash[:error] || flash[:warning]
-              =render partial: 'layouts/flash_messages'
 
             %h2.title1
               =t('views.subscriptions.new_subscription.h2c')

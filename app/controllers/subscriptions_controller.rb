@@ -46,11 +46,11 @@ class SubscriptionsController < ApplicationController
   def create
     @subscription = Subscription.new(allowed_params)
     stripe_token = params[:subscription][:stripe_token]
-    coupon_code = params[:hidden_coupon_code]
+    coupon_code = params[:hidden_coupon_code] if params[:hidden_coupon_code].present?
     user = @subscription.user
     subscription_plan_stripe_guid = @subscription.subscription_plan.stripe_guid
     stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-    @coupon = Coupon.where(code: coupon_code).first
+    @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id) if coupon_code
 
     if coupon_code && !@coupon
       flash[:error] = 'Sorry! That is not a valid coupon code.'
@@ -97,12 +97,12 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
 
       flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
-      redirect_to new_subscription_url
+      redirect_to request.referrer
 
     rescue => e
       Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
       flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
-      redirect_to new_subscription_url
+      redirect_to request.referrer
     end
   end
 

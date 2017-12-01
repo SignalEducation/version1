@@ -56,24 +56,40 @@ class Coupon < ActiveRecord::Base
 
   # class methods
 
+  #Called from Subscriptions new form with Ajax through Coupons Controller.
   def self.verify_coupon_and_get_discount(code, plan_id)
-    coupon = Coupon.where(code: code).first
+    coupon = Coupon.where(code: code, active: true).first
     sub_plan = SubscriptionPlan.find(plan_id)
     valid = false
     discounted_price = sub_plan.currency.format_number(sub_plan.price)
 
     if coupon && coupon.active
       if coupon.amount_off
-        valid = true if coupon.currency_id == sub_plan.currency_id
         discounted_number = sub_plan.price.to_f - (coupon.amount_off/100).to_f
         discounted_price = sub_plan.currency.format_number(discounted_number)
+        valid = true if (coupon.currency_id == sub_plan.currency_id) && (discounted_number > 0)
       elsif coupon.percent_off
-        valid = true
         discounted_number = (sub_plan.price.to_f/100)*coupon.percent_off
         discounted_price = sub_plan.currency.format_number(discounted_number)
+        valid = true if discounted_number > 0
       end
     end
     return valid, discounted_price
+  end
+
+  #Called from Subscriptions#create action
+  def self.get_and_verify(coupon_param, sub_plan_id)
+    coupon = Coupon.where(code: coupon_param, active: true).first
+    sub_plan = SubscriptionPlan.where(id: sub_plan_id).first
+
+    if coupon && coupon.amount_off
+      discounted_number = sub_plan.price.to_f - (coupon.amount_off/100).to_f
+      if coupon.currency_id != sub_plan.currency_id || discounted_number < 0
+        coupon = nil
+      end
+    end
+
+    return coupon
   end
 
   # instance methods
