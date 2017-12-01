@@ -66,6 +66,8 @@ class SubscriptionsController < ApplicationController
           trial_end: 'now'
       )
 
+      stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id) #Reload the stripe_customer to get new Subscription details
+
       @subscription.assign_attributes(
           complimentary: false,
           active: true,
