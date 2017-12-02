@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded)
 
   # relationships
   has_many :charges
@@ -71,6 +71,8 @@ class StripeApiEvent < ActiveRecord::Base
             process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
           when 'charge.failed'
             process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'charge.refunded'
+            process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
           else
             set_process_error "Unknown event type - #{self.payload}"
         end
@@ -193,10 +195,24 @@ class StripeApiEvent < ActiveRecord::Base
   def process_charge_event(invoice_guid, event_data)
     invoice = Invoice.where(stripe_guid: invoice_guid).first
 
-    charge = Charge.create_from_stripe_data(self.id,event_data)
+    charge = Charge.create_from_stripe_data(event_data)
 
     if invoice && charge
-      Rails.logger.debug "DEBUG: Create Charge Failed - #{charge.id} for Invoice - #{invoice.id}"
+      Rails.logger.debug "DEBUG: Successful Create Charge - #{charge.id} for Invoice - #{invoice.id}"
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error("Error creating charge. #{}")
+    end
+  end
+
+  def process_charge_refunded(invoice_guid, event_data)
+    invoice = Invoice.where(stripe_guid: invoice_guid).first
+
+    charge = Charge.update_refund_data(event_data)
+
+    if invoice && charge
+
       self.processed = true
       self.processed_at = Time.now
     else

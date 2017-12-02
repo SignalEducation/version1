@@ -60,8 +60,6 @@ class Charge < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :coupon_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_api_event_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :stripe_guid, presence: true
   validates :amount, presence: true
   validates :stripe_customer_id, presence: true
@@ -78,21 +76,21 @@ class Charge < ActiveRecord::Base
 
   # instance methods
 
-  def self.create_from_stripe_data(event_id, event)
+  def self.create_from_stripe_data(event)
 
     invoice = Invoice.where(stripe_guid: event[:invoice]).first
     subscription = invoice.subscription
     user = User.where(stripe_customer_id: event[:customer]).first
-    card = SubscriptionPaymentCard.where(stripe_card_guid: event[:invoice][:source][:id]).first
+    card = SubscriptionPaymentCard.where(stripe_card_guid: event[:source][:id]).first
 
     Charge.create!(
       subscription_id: subscription.id,
       invoice_id: invoice.id,
       user_id: user.id,
       subscription_payment_card_id: card.id,
-      currency_id: subscription.currency_id,
+      currency_id: subscription.subscription_plan.currency_id,
       coupon_id: subscription.try(:coupon_id),
-      stripe_api_event_id: event_id,
+      #stripe_api_event_id: event_id,
       stripe_guid: event[:id],
       amount: event[:amount],
       amount_refunded: event[:amount_refunded],
@@ -111,6 +109,22 @@ class Charge < ActiveRecord::Base
   rescue => e
     Rails.logger.error "ERROR: Charge#create_from_stripe_data failed to save. Error:#{e.inspect}"
     return false
+  end
+
+  def self.update_refund_data(event)
+
+    charge = Charge.where(stripe_guid: event[:id]).first
+    if charge
+      charge.update_attributes(
+          amount: event[:amount],
+          amount_refunded: event[:amount_refunded],
+          paid: event[:paid],
+          refunded: event[:refunded],
+          refunds: event[:refunds],
+          status: event[:status]
+      )
+    end
+    return charge
   end
 
   def destroyable?
