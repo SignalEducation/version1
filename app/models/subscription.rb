@@ -62,7 +62,7 @@ class Subscription < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
-  scope :in_created_order, -> { order(:created_at) }
+  scope :in_created_order, -> { order(:created_at).reverse_order }
   scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
   scope :all_active, -> { where(active: true) }
   scope :all_valid, -> { where(current_status: VALID_STATES) }

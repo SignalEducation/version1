@@ -67,8 +67,10 @@ class UsersController < ApplicationController
     ensure_user_has_access_rights(%w(user_management_access))
   end
   before_action :layout_variables
-  before_action :get_variables, except: [:user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status]
-  before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status, :user_enrollments_details, :user_purchases_details, :user_courses_status]
+  before_action :get_variables, except: [:user_personal_details, :user_subscription_status,
+                                         :user_enrollments_details, :user_purchases_details, :user_courses_status]
+  before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status,
+                                            :user_enrollments_details, :user_purchases_details, :user_courses_status]
 
 
   def index
@@ -82,6 +84,10 @@ class UsersController < ApplicationController
   def show
     @user_sessions_count = @user.login_count
     @enrollments = @user.enrollments.all_in_order
+    @subscription = @user.current_subscription if @user.subscriptions.any?
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    @default_card = @subscription_payment_cards.all_default_cards.last
+    @invoices = @user.invoices
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end
 
@@ -138,6 +144,7 @@ class UsersController < ApplicationController
   end
 
   def user_subscription_status
+    @subscriptions = @user.subscriptions.in_created_order
     @subscription = @user.current_subscription if @user.subscriptions.any?
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last

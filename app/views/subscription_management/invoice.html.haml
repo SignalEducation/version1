@@ -1,0 +1,31 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@invoice.user.full_name
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-md-9.col-sm-12.col-xs-12
+              .col-sm-6.l-margin-bottom
+                .h3
+                  ID
+                .h6
+                  =@invoice.id
+
+
+
+            .col-md-3.col-sm-12.col-xs-12
+
+
+
+

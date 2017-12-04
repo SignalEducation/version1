@@ -9,170 +9,185 @@
         .col-md-12
           =render partial: 'user_tabs'
 
-      -if @user.trial_user?
-        .row.l-margin-top.l-margin-bottom
-          .col-sm-12
-            .box-item
-              .col-sm-12
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.trial_started_date')
-                  .h6
-                    -if @user.student_access.trial_started_date
-                      =humanize_datetime(@user.student_access.trial_started_date)
-                    -else
-                      ='-----'
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.content_access')
-                  .h6
-                    =@user.student_access.content_access.to_s
 
-                .col-md-4.text-center
-                  -if @user.student_user? && @user.trial_or_sub_user?
-                    =link_to 'Edit Details', edit_student_user_management_url(@user), class: 'btn btn-red'
-                  -else
-                    =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
+                Subscriptions
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
+                        Sub ID
+                      %th
+                        Sub Plan
+                      %th
+                        Created At
+                      %th
+                        Status
+                      %th
 
-
-              .col-sm-12.l-margin-top-big
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.trial_days_limit')
-                  .h6
-                    =@user.student_access.trial_days_limit
-
-                .col-md-4
-                  -if @user.student_access.trial_ended_date
-                    .h3
-                      =t('views.users.user_subscription_status.trial_info.trial_ended_date')
-                    .h6
-                      =humanize_datetime(@user.student_access.trial_ended_date)
-                  -elsif !@user.student_access.trial_ended_date && @user.student_access.trial_ending_at_date
-                    .h3
-                      =t('views.users.user_subscription_status.trial_info.trial_ending_at_date')
-                    .h6
-                      =humanize_datetime(@user.student_access.trial_ending_at_date)
+                  %tbody
+                    -@subscriptions.each do |subscription|
+                      %tr
+                        %td
+                          =subscription.id
+                        %td
+                          =@subscription.subscription_plan.name
+                        %td
+                          =humanize_datetime(subscription.created_at)
+                        %td
+                          =subscription.current_status.camelcase
+                        %td
+                          =link_to subscription_management_url(subscription) do
+                            .btn.btn-purple.btn-small.pull-right
+                              View
 
 
-              .col-sm-12.l-margin-top-big
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.trial_seconds_limit')
-                  .h6
-                    =@user.student_access.trial_seconds_limit
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
+                Payment Cards
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
+                        Ending In
+                      %th
+                        Expiration
+                      %th
+                        Status
+                      %th
+                        Default
 
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.content_seconds_consumed')
-                  .h6
-                    =@user.student_access.content_seconds_consumed
+                  %tbody
+                    -@subscription_payment_cards.each do |card|
+                      %tr
+                        %td
+                          =card.last_4
+                        %td
+                          =card.expiry_month
+                          &#45;
+                          =card.expiry_year
+                        %td
+                          =card.status
 
-                .col-md-4
-
-
-
-      -elsif @user.subscriptions.any?
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12
-            .box-item
-              .col-sm-9.l-margin-top
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.subscription_status')
-                  .h6
-                    =@subscription.current_status.camelcase
-
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.subscription_created')
-                  .h6
-                    =humanize_datetime(@subscription.created_at)
-
-              .col-sm-3.l-margin-top
-                -if !@subscription.canceled_status?
-                  =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
-                    .btn.btn-cyan.full-width
-                      =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
-
-                  -#TODO Make this cancel immediately work - just cancel on stripe, api_event will do the rest
-                  =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
-                    .btn.btn-red.full-width.l-margin-top
-                      =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
-
-                -elsif @subscription.canceled_pending_status?
-                  =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
-
-                -elsif @subscription.canceled_status? || @subscription.unpaid_status?
-                  =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                        %td
+                          =tick_or_cross(card.is_default_card?)
 
 
-              .col-sm-9.l-margin-top
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.subscription_plan')
-                  .h6
-                    =@subscription.subscription_plan.name
-
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.billing_interval')
-                  .h6
-                    =t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")
-
-              .col-sm-9.l-margin-top-big
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.last_billing_date')
-                  .h6
-                    -if @invoices && @subscription.invoices
-                      =humanize_datetime(@subscription.invoices.last.created_at)
-                    -else
-                      ='------'
-
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.next_billing_date')
-                  .h6
-                    =@subscription.next_renewal_date
-
-              .col-sm-9.l-margin-top-big
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.stripe_sub_guid')
-                  .h6
-                    =@subscription.stripe_guid
-                .col-sm-6
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
-                  .h6
-                    =@subscription.current_status.to_s.capitalize
-
-              .col-sm-9.l-margin-top-big
-                .col-sm-6
-                  -if @default_card
-                    .h3
-                      =t('views.users.user_subscription_status.subscription_info.valid_payment_card')
-                    .h6
-                      =@default_card.status ? 'True' : 'False'
-                .col-sm-6
-                  -if @subscription.canceled_pending_status?
-                    .h3
-                      =t('views.users.user_subscription_status.subscription_info.subscription_ending')
-                    .h6
-
-                      =@subscription.next_renewal_date.to_s
-                  -elsif @subscription.canceled_status?
-                    .h3
-                      =t('views.users.user_subscription_status.subscription_info.subscription_ended')
-                    .h6
-                      =@subscription.next_renewal_date.to_s
-
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12
-            .corporate-box-item.table-box#invoices-panel.l-margin-bottom-huge
-              %h2.l-margin-bottom-big.text-center
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
                 =t('views.users.user_subscription_status.subscription_info.invoices')
               .table-responsive
                 -@invoices = @user.invoices.where('sub_total > 0').all_in_order
-                =render partial: 'invoices/index'
+                =render partial: 'subscription_management/invoices'
+
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-sm-9.l-margin-top
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.subscription_status')
+                .h6
+                  =@subscription.current_status.camelcase
+
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.subscription_created')
+                .h6
+                  =humanize_datetime(@subscription.created_at)
+
+            .col-sm-3.l-margin-top
+              -if !@subscription.canceled_status?
+                =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
+                  .btn.btn-cyan.full-width
+                    =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
+
+                -#TODO Make this cancel immediately work - just cancel on stripe, api_event will do the rest
+                =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
+                  .btn.btn-red.full-width.l-margin-top
+                    =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
+
+              -elsif @subscription.canceled_pending_status?
+                =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
+
+              -elsif @subscription.canceled_status? || @subscription.unpaid_status?
+                =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+
+
+            .col-sm-9.l-margin-top
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.subscription_plan')
+                .h6
+                  =@subscription.subscription_plan.name
+
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.billing_interval')
+                .h6
+                  =t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")
+
+            .col-sm-9.l-margin-top-big
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.last_billing_date')
+                .h6
+                  -if @invoices && @subscription.invoices
+                    =humanize_datetime(@subscription.invoices.last.created_at)
+                  -else
+                    ='------'
+
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.next_billing_date')
+                .h6
+                  =@subscription.next_renewal_date
+
+            .col-sm-9.l-margin-top-big
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.stripe_sub_guid')
+                .h6
+                  =@subscription.stripe_guid
+              .col-sm-6
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
+                .h6
+                  =@subscription.current_status.to_s.capitalize
+
+            .col-sm-9.l-margin-top-big
+              .col-sm-6
+                -if @default_card
+                  .h3
+                    =t('views.users.user_subscription_status.subscription_info.valid_payment_card')
+                  .h6
+                    =@default_card.status ? 'True' : 'False'
+              .col-sm-6
+                -if @subscription.canceled_pending_status?
+                  .h3
+                    =t('views.users.user_subscription_status.subscription_info.subscription_ending')
+                  .h6
+
+                    =@subscription.next_renewal_date.to_s
+                -elsif @subscription.canceled_status?
+                  .h3
+                    =t('views.users.user_subscription_status.subscription_info.subscription_ended')
+                  .h6
+                    =@subscription.next_renewal_date.to_s
+
+
