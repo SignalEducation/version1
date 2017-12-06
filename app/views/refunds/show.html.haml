@@ -3,46 +3,84 @@
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.refunds.show.h1')
-            \#
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+          %p
+            ='Refund Id:'
             =@refund.id
+
       .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              %table.table.table-bordered.l-margin-top
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.stripe_guid')
-                  %td.col-sm-8=@refund.stripe_guid
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.charge_id')
-                  %td.col-sm-8=@refund.charge.name
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.stripe_charge_guid')
-                  %td.col-sm-8=@refund.stripe_charge_guid
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.invoice_id')
-                  %td.col-sm-8=@refund.invoice.name
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.subscription_id')
-                  %td.col-sm-8=@refund.subscription.name
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.user_id')
-                  %td.col-sm-8=@refund.user.name
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.manager_id')
-                  %td.col-sm-8=@refund.manager.name
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.amount')
-                  %td.col-sm-8=@refund.amount
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.reason')
-                  %td.col-sm-8=@refund.reason
-                %tr
-                  %td.col-sm-4=t('views.refunds.form.status')
-                  %td.col-sm-8=@refund.status
-              %p
-                =link_to t('views.general.back'), refunds_url
-                |
-                =link_to t('views.general.edit'), edit_refund_url(id: @refund.id), title: t('views.general.edit_tooltip')
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-sm-12.col-xs-12.l-margin-bottom
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Refund ID
+                .h6
+                  =@refund.id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe ID
+                .h6
+                  =@refund.stripe_guid
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Charge ID
+                .h6
+                  =@refund.charge_id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe Charge ID
+                .h6
+                  =@refund.stripe_charge_guid
+
+            .col-sm-12.col-xs-12.l-margin-bottom
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Invoice ID
+                .h6
+                  =@refund.invoice_id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe Invoice ID
+                .h6
+                  =@refund.invoice.stripe_guid
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Subscription ID
+                .h6
+                  =@refund.subscription_id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe Sub ID
+                .h6
+                  =@refund.subscription.stripe_guid
+
+
+            .col-sm-12.col-xs-12.l-margin-bottom
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Status
+                .h6
+                  =@refund.status
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Manager
+                .h6
+                  =@refund.manager.full_name
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Amount
+                .h6
+                  =@refund.amount
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Reason
+                .h6
+                  =@refund.reason
+

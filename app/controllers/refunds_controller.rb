@@ -29,6 +29,10 @@ class RefundsController < ApplicationController
 
   def show
     @refund = Refund.where(id: params[:id]).first
+    @user = @refund.user
+    @subscription = @refund.subscription
+    @invoice = @refund.invoice
+    @charge = @refund.charge
   end
 
   def new
