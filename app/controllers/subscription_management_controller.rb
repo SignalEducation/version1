@@ -17,9 +17,19 @@ class SubscriptionManagementController < ApplicationController
   end
 
   def invoice
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
     @invoice = Invoice.where(id: params[:invoice_id]).first
+    @user = @invoice.user
+    @charges = @invoice.charges
+  end
+
+  def charge
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
+    @invoice = Invoice.where(id: params[:invoice_id]).first
+    @charge = Charge.where(id: params[:id]).first
     @subscription = @invoice.subscription
     @user = @invoice.user
+    @charges = @invoice.charges
   end
 
 
