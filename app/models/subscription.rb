@@ -58,7 +58,7 @@ class Subscription < ActiveRecord::Base
 
 
   # callbacks
-  after_create :create_a_subscription_transaction
+  after_create :create_subscription_payment_card
   after_save :update_student_access
 
   # scopes
@@ -295,11 +295,10 @@ class Subscription < ActiveRecord::Base
 
   protected
 
-  #This also creates the SubscriptionPaymentCard
-  def create_a_subscription_transaction
-    Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction START at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-    SubscriptionTransaction.create_from_stripe_data(self)
-    Rails.logger.debug "DEBUG: Subscription#create_a_subscription_transaction FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+  def create_subscription_payment_card
+    array_of_cards = self.stripe_customer_data[:sources][:data]
+    card_guid = self.stripe_customer_data[:default_source]
+    SubscriptionPaymentCard.create_cards_from_stripe_array(array_of_cards, self.user_id, card_guid)
   end
 
   def update_student_access
