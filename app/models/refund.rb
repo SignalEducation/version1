@@ -51,7 +51,6 @@ class Refund < ActiveRecord::Base
   validates :amount, presence: true
   validates :reason, presence: true, inclusion: {in: REASONS}
   validates :status, presence: true
-  validates :livemode, presence: true
   validates :stripe_refund_data, presence: true
 
   # callbacks
@@ -83,7 +82,6 @@ class Refund < ActiveRecord::Base
     if stripe_refund
       self.stripe_guid = stripe_refund[:id]
       self.status = stripe_refund[:status]
-
       self.livemode = stripe_refund[:livemode]
       self.stripe_refund_data = stripe_refund.to_hash.deep_dup
     else

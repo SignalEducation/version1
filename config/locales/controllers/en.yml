@@ -291,6 +291,7 @@ en:
       create:
         flash:
           success: Refund has been created successfully
+          error: Refund was not created successfully
       update:
         flash:
           success: Refund details have been updated successfully

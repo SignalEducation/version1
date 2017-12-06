@@ -43,9 +43,10 @@ class RefundsController < ApplicationController
     @refund = Refund.new(allowed_params)
     if @refund.save
       flash[:success] = I18n.t('controllers.refunds.create.flash.success')
-      redirect_to refunds_url
+      redirect_to subscription_management_invoice_charge_url(@refund.subscription_id, @refund.invoice_id, @refund.charge_id)
     else
-      render action: :new
+      redirect_to request.referrer
+      flash[:error] = I18n.t('controllers.refunds.create.flash.error')
     end
   end
 
@@ -56,7 +57,7 @@ class RefundsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:refund).permit(:charge_id, :invoice_id, :subscription_id, :user_id, :manager_id, :amount, :reason)
+    params.require(:refund).permit(:stripe_charge_guid, :charge_id, :invoice_id, :subscription_id, :user_id, :manager_id, :amount, :reason)
   end
 
 end

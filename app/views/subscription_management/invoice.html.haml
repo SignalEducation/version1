@@ -98,7 +98,7 @@
         .col-md-12
           .box-item.table-box#invoices-panel.l-margin-bottom-huge
             .col-sm-12
-              %h2.l-margin-bottom-big
+              %h2.l-margin-bottom
                 Charges
               .table-responsive
                 %table.table{style: 'font-size: 18px;'}
@@ -108,6 +108,8 @@
                         Charge ID
                       %th
                         Stripe ID
+                      %th
+                        Refunded
                       %th
                         Status
                       %th
@@ -121,6 +123,8 @@
                           =charge.id
                         %td
                           =charge.stripe_guid
+                        %td
+                          =tick_or_cross(charge.refunded)
                         %td
                           =charge.status
                         %td

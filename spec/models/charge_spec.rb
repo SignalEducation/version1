@@ -21,7 +21,7 @@
 #  stripe_order_id              :string
 #  paid                         :boolean          default(FALSE)
 #  refunded                     :boolean          default(FALSE)
-#  refunds                      :text
+#  stripe_refunds_data          :text
 #  status                       :string
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null

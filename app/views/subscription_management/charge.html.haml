@@ -45,12 +45,12 @@
                 .h3
                   Subscription ID
                 .h6
-                  =@charge.invoice_id
+                  =@charge.subscription_id
               .col-sm-6.l-margin-bottom
                 .h3
                   Stripe Subscription ID
                 .h6
-                  =@charge.stripe_invoice_id
+                  =@charge.subscription.stripe_guid
 
               .col-sm-6.l-margin-bottom
                 .h3
@@ -110,9 +110,44 @@
 
 
             .col-md-3.col-sm-12.col-xs-12
-              .col-sm-12.l-margin-top-small
-                -@charge.refunds.each do |refund|
-                  =link_to 'View Refund', refund_url(refund), class: 'btn btn-purple full-width'
+              -if @charge.refundable?
+                .col-sm-12.l-margin-top-small
+                  =link_to 'Refund Charge', new_refund_url(subscription_id: @subscription.id, invoice_id: @invoice.id, charge_id: @charge.id, user_id: @user.id), class: 'btn btn-red full-width'
 
-              .col-sm-12.l-margin-top-small
-                =link_to 'Refund Charge', new_refund_url(subscription_id: @subscription.id, invoice_id: @invoice.id, charge_id: @charge.id, user_id: @user.id), class: 'btn btn-red full-width'
+
+
+
+      -if @charge.refunds.any?
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12
+            .box-item.table-box#invoices-panel.l-margin-bottom-huge
+              .col-sm-12
+                %h2.l-margin-bottom
+                  Refunds
+                .table-responsive
+                  %table.table{style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th
+                          Refund ID
+                        %th
+                          Stripe ID
+                        %th
+                          Amount Refunded
+                        %th
+                          Status
+                        %th
+
+                    %tbody
+                      -@charge.refunds.each do |refund|
+                        %tr
+                          %td
+                            =refund.id
+                          %td
+                            =refund.stripe_guid
+                          %td
+                            =refund.amount
+                          %td
+                            =refund.status
+                          %td
+                            =link_to 'View', refund_url(refund), class: 'btn btn-purple btn-small'

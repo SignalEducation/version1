@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171206130111) do
+ActiveRecord::Schema.define(version: 20171206164823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20171206130111) do
     t.string   "stripe_order_id"
     t.boolean  "paid",                         default: false
     t.boolean  "refunded",                     default: false
-    t.text     "refunds"
+    t.text     "stripe_refunds_data"
     t.string   "status"
     t.datetime "created_at",                                   null: false
     t.datetime "updated_at",                                   null: false

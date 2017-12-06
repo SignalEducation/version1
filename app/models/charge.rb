@@ -21,7 +21,7 @@
 #  stripe_order_id              :string
 #  paid                         :boolean          default(FALSE)
 #  refunded                     :boolean          default(FALSE)
-#  refunds                      :text
+#  stripe_refunds_data          :text
 #  status                       :string
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
@@ -33,8 +33,8 @@ class Charge < ActiveRecord::Base
   # attr-accessible
   attr_accessible :subscription_id, :invoice_id, :user_id, :subscription_payment_card_id, :currency_id, :coupon_id,
                   :stripe_api_event_id, :stripe_guid, :amount, :amount_refunded, :failure_code, :failure_message,
-                  :stripe_customer_id, :stripe_invoice_id, :livemode, :stripe_order_id, :paid, :refunded, :refunds,
-                  :status, :original_event_data
+                  :stripe_customer_id, :stripe_invoice_id, :livemode, :stripe_order_id, :paid, :refunded,
+                  :stripe_refunds_data, :status, :original_event_data
 
   # Constants
 
@@ -103,7 +103,7 @@ class Charge < ActiveRecord::Base
       stripe_order_id: event[:order],
       paid: event[:paid],
       refunded: event[:refunded],
-      refunds: event[:refunds],
+      stripe_refunds_data: event[:refunds],
       status: event[:status],
       original_event_data: event.to_hash.deep_dup
     )
@@ -121,7 +121,7 @@ class Charge < ActiveRecord::Base
           amount_refunded: event[:amount_refunded],
           paid: event[:paid],
           refunded: event[:refunded],
-          refunds: event[:refunds],
+          stripe_refunds_data: event[:refunds].to_hash.deep_dup,
           status: event[:status]
       )
     end
@@ -130,6 +130,10 @@ class Charge < ActiveRecord::Base
 
   def destroyable?
     false
+  end
+
+  def refundable?
+    self.amount > self.amount_refunded
   end
 
   protected
