@@ -57,6 +57,9 @@ Rails.application.routes.draw do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice
       get '/pdf_invoice/:invoice_id', action: :pdf_invoice, as: :pdf_invoice
       get '/invoice/:invoice_id/charge/:id', action: :charge, as: :invoice_charge
+      put '/cancel', action: :cancel, as: :cancel
+      put '/un_cancel', action: :un_cancel_subscription, as: :un_cancel_subscription
+      put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
     end
     get  'student_user_management/:id/convert_to_student', to: 'student_user_management#convert_to_student', as: :convert_to_student
     patch  'student_user_management/:id/update_to_student', to: 'student_user_management#update_to_student', as: :update_to_student

@@ -372,6 +372,22 @@ en:
           success: Your Subscription has been cancelled
           error: Your Subscription has not been cancelled
 
+
+    subscription_management:
+      un_cancel_subscription:
+        flash:
+          success: Subscription has been un-canceled
+          error: Subscription has not been un-canceled
+          not_pending_sub: The Subscription must be Canceled-Pending!
+      cancel:
+        flash:
+          success: Subscription has been cancelled
+          error: Subscription has not been cancelled
+      immediately_cancel:
+        flash:
+          success: Subscription has been cancelled
+          error: Subscription has not been cancelled
+
     subscription_plan_categories:
       create:
         flash:

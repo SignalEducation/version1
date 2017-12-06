@@ -96,6 +96,26 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def immediate_cancel
+    if self.stripe_customer_id && self.stripe_guid
+      # call stripe and cancel the subscription
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
+      response = stripe_subscription.delete(at_period_end: false).to_hash
+      if response[:status] == 'canceled'
+        self.update_attribute(:current_status, 'canceled')
+        self.user.student_access.update_attributes(content_access: false)
+      else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
+        errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      end
+      # return true or false - if everything went well
+      errors.messages.count == 0
+    else
+      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
+    end
+  end
+
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&

@@ -23,16 +23,6 @@ class SubscriptionManagementController < ApplicationController
     @charges = @invoice.charges
   end
 
-  def charge
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    @invoice = Invoice.where(id: params[:invoice_id]).first
-    @charge = Charge.where(id: params[:id]).first
-    @subscription = @invoice.subscription
-    @user = @invoice.user
-    @charges = @invoice.charges
-  end
-
-
   def pdf_invoice
     invoice = Invoice.where(id: params[:invoice_id]).first
     if invoice
@@ -55,6 +45,58 @@ class SubscriptionManagementController < ApplicationController
       redirect_to users_url
     end
   end
+
+  def charge
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
+    @invoice = Invoice.where(id: params[:invoice_id]).first
+    @charge = Charge.where(id: params[:id]).first
+    @subscription = @invoice.subscription
+    @user = @invoice.user
+    @charges = @invoice.charges
+  end
+
+  def un_cancel_subscription
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
+    if @subscription && @subscription.current_status == 'canceled-pending'
+      @subscription.un_cancel
+
+      if @subscription && @subscription.errors.count == 0
+        flash[:success] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.success')
+      else
+        Rails.logger.error "ERROR: SubscriptionManagement#un_cancel_subscription - something went wrong. Errors:#{@subscription.errors.inspect}"
+        flash[:error] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.error')
+      end
+      redirect_to subscription_management_url(@subscription)
+    else
+      flash[:error] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.not_pending_sub')
+      redirect_to subscription_management_url(@subscription)
+    end
+  end
+
+  def cancel
+    # Set Subscription to canceled-pending
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
+    if @subscription.cancel
+      flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
+    else
+      Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
+      flash[:error] = I18n.t('controllers.subscription_management.cancel.flash.error')
+    end
+    redirect_to subscription_management_url(@subscription)
+  end
+
+  def immediate_cancel
+    # Set Subscription to canceled
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
+    if @subscription.immediate_cancel
+      flash[:success] = I18n.t('controllers.subscription_management.immediately_cancel.flash.success')
+    else
+      Rails.logger.warn "WARN: SubscriptionManagement#immediately_cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
+      flash[:error] = I18n.t('controllers.subscription_management.immediately_cancel.flash.error')
+    end
+    redirect_to subscription_management_url(@subscription)
+  end
+
 
   protected
 

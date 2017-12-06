@@ -84,21 +84,17 @@
 
 
             .col-md-3.col-sm-12.col-xs-12
-              -if !@subscription.canceled_status?
-                =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
+              -if @subscription.active_status? || @subscription.past_due_status?
+                =link_to subscription_management_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to cancel subscription?'} do
                   .btn.btn-cyan.full-width
                     =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
 
-                -#TODO Make this cancel immediately work - just cancel on stripe, api_event will do the rest
-                =link_to @subscription, method: :delete, data: {confirm: 'Are you sure you want to cancel this users subscription?'} do
+                =link_to subscription_management_immediate_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to immediately cancel this subscription?'} do
                   .btn.btn-red.full-width.l-margin-top
                     =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
 
               -elsif @subscription.canceled_pending_status?
-                =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_url(id: @subscription.id, subscription: {subscription_plan_id: 123}), method: :put, class: 'btn btn-red l-margin-top'
-
-              -elsif @subscription.canceled_status? || @subscription.unpaid_status?
-                =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x l-margin-top'
+                =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_management_un_cancel_subscription_url(@subscription.id), method: :put, class: 'btn btn-red full-width', data: {confirm: 'Are you sure you want to Un-Cancel this subscription?'}
 
 
 
