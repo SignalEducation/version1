@@ -601,8 +601,10 @@ ActiveRecord::Schema.define(version: 20171206130111) do
     t.integer  "amount"
     t.text     "reason"
     t.string   "status"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.boolean  "livemode",           default: true
+    t.text     "stripe_refund_data"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   add_index "refunds", ["charge_id"], name: "index_refunds_on_charge_id", using: :btree

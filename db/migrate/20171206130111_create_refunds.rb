@@ -11,6 +11,8 @@ class CreateRefunds < ActiveRecord::Migration
       t.integer :amount
       t.text :reason
       t.string :status, index: true
+      t.boolean :livemode, default: true
+      t.text :stripe_refund_data
 
       t.timestamps null: false
     end

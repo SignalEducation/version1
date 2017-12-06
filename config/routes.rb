@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :refunds
   concern :supports_reordering do
     post :reorder, on: :collection
   end
@@ -187,6 +186,7 @@ Rails.application.routes.draw do
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
+    resources :refunds
 
     resources :white_papers, except: [:show, :media_library], concerns: :supports_reordering
     get 'media_library', to: 'white_papers#media_library', as: :media_library

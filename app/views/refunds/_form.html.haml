@@ -1,45 +1,44 @@
 =form_for(@refund, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @refund, message: nil}
+  =f.hidden_field :manager_id, value: current_user.id
+  =f.hidden_field :stripe_charge_guid, value: @charge.stripe_guid
+
   .row
     .col-md-12
-    =render partial: '/layouts/error_messages', locals: {thing: @refund, message: nil}
-      .form-group
-        =f.label :stripe_guid, t('views.refunds.form.stripe_guid'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :stripe_guid, placeholder: t('views.refunds.form.stripe_guid_placeholder'), class: 'form-control', autofocus: true
-      .form-group
-        =f.label :charge_id, t('views.refunds.form.charge_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_select :charge_id, @charges, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      .form-group
-        =f.label :stripe_charge_guid, t('views.refunds.form.stripe_charge_guid'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :stripe_charge_guid, placeholder: t('views.refunds.form.stripe_charge_guid_placeholder'), class: 'form-control'
-      .form-group
-        =f.label :invoice_id, t('views.refunds.form.invoice_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_select :invoice_id, @invoices, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      .form-group
-        =f.label :subscription_id, t('views.refunds.form.subscription_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_select :subscription_id, @subscriptions, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      .form-group
-        =f.label :manager_id, t('views.refunds.form.manager_id'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.collection_select :manager_id, @managers, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      .form-group
-        =f.label :amount, t('views.refunds.form.amount'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :amount, placeholder: t('views.refunds.form.amount_placeholder'), class: 'form-control'
-      .form-group
-        =f.label :reason, t('views.refunds.form.reason'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_area :reason, placeholder: t('views.refunds.form.reason_placeholder'), rows: 4, class: 'form-control'
-      .form-group
-        =f.label :status, t('views.refunds.form.status'), class: 'control-label col-sm-4'
-        .col-sm-8
-          =f.text_field :status, placeholder: t('views.refunds.form.status_placeholder'), class: 'form-control'
+      .col-sm-6
+        =f.label :charge_id, t('views.refunds.form.charge_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :charge_id, value: @charge.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
 
-      .row.l-margin-top-big
-        =f.submit t('views.general.save'), class: 'btn btn-red'
-        =t('views.general.or')
-        =link_to t('views.general.cancel'), refunds_path, class: 'btn btn-cyan'
+        =f.label :invoice_id, t('views.refunds.form.invoice_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :invoice_id, value: @invoice.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+
+      .col-sm-6
+        =f.label :user_id, t('views.refunds.form.user_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :user_id, value: @user.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+        =f.label :subscription_id, t('views.refunds.form.subscription_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :subscription_id, value: @subscription.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+
+      .col-sm-8.col-md-offset-2
+        %hr/
+        =f.label :amount, t('views.refunds.form.amount'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :amount, placeholder: t('views.refunds.form.amount_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :reason, t('views.refunds.form.reason'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.select :reason, Refund::REASONS, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        %br/
+
+    .row
+      .col-md-12.l-margin-top-big
+        .col-sm-8.col-md-offset-2
+          =f.submit t('views.general.save'), class: 'btn btn-red'
+          =link_to t('views.general.cancel'), subscription_management_invoice_charge_url(@subscription.id, @invoice.id, @charge.id), class: 'btn btn-cyan'

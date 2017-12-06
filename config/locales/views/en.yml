@@ -875,6 +875,23 @@ en:
         preview_mode: Preview Mode
         choose_an_answer: Choose an Answer
 
+    refunds:
+      form:
+        charge_id: Charge ID
+        subscription_id: Subscription ID
+        invoice_id: Invoice ID
+        user_id: User ID
+        amount: Amount (In Cents)
+        amount_placeholder: Refund Amount
+        reason: Reason for Refund
+
+      show:
+        h1: Refund
+
+      new:
+        h1: New Refund
+
+
     shared:
       filter_panel:
         filter: 'filter:'

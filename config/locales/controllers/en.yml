@@ -287,6 +287,18 @@ en:
         flash:
           success: Referred Signup details have been updated successfully
 
+    refunds:
+      create:
+        flash:
+          success: Refund has been created successfully
+      update:
+        flash:
+          success: Refund details have been updated successfully
+      destroy:
+        flash:
+          success: Refund has been deleted
+          error: Refund was not deleted
+
     subject_courses:
       create:
         flash:
