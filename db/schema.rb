@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171201224518) do
+ActiveRecord::Schema.define(version: 20171206130111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -589,6 +589,28 @@ ActiveRecord::Schema.define(version: 20171201224518) do
   add_index "referred_signups", ["referral_code_id"], name: "index_referred_signups_on_referral_code_id", using: :btree
   add_index "referred_signups", ["subscription_id"], name: "index_referred_signups_on_subscription_id", using: :btree
   add_index "referred_signups", ["user_id"], name: "index_referred_signups_on_user_id", using: :btree
+
+  create_table "refunds", force: :cascade do |t|
+    t.string   "stripe_guid"
+    t.integer  "charge_id"
+    t.string   "stripe_charge_guid"
+    t.integer  "invoice_id"
+    t.integer  "subscription_id"
+    t.integer  "user_id"
+    t.integer  "manager_id"
+    t.integer  "amount"
+    t.text     "reason"
+    t.string   "status"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "refunds", ["charge_id"], name: "index_refunds_on_charge_id", using: :btree
+  add_index "refunds", ["invoice_id"], name: "index_refunds_on_invoice_id", using: :btree
+  add_index "refunds", ["manager_id"], name: "index_refunds_on_manager_id", using: :btree
+  add_index "refunds", ["status"], name: "index_refunds_on_status", using: :btree
+  add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
+  add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"

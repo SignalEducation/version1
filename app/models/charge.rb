@@ -46,6 +46,7 @@ class Charge < ActiveRecord::Base
   belongs_to :currency
   belongs_to :coupon
   belongs_to :stripe_api_event
+  has_many :refunds
 
   # validation
   validates :subscription_id, presence: true,

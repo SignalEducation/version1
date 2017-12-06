@@ -1,0 +1,51 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.refunds.index.h1')
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              =will_paginate @refunds, renderer: BootstrapPagination::Rails
+              %table.table.table-striped.table-bordered
+                %thead
+                  %tr
+                    %th=t('views.refunds.form.stripe_guid')
+                    %th=t('views.refunds.form.charge_id')
+                    %th=t('views.refunds.form.stripe_charge_guid')
+                    %th=t('views.refunds.form.invoice_id')
+                    %th=t('views.refunds.form.subscription_id')
+                    %th=t('views.refunds.form.user_id')
+                    %th=t('views.refunds.form.manager_id')
+                    %th=t('views.refunds.form.amount')
+                    %th=t('views.refunds.form.reason')
+                    %th=t('views.refunds.form.status')
+                    %th
+                    %th
+                %tbody
+                  -@refunds.each do |refund|
+                    %tr{id: refund.id}
+                      %td=link_to(refund.stripe_guid, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.charge.name, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.stripe_charge_guid, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.invoice.name, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.subscription.name, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.user.name, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.manager.name, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.amount, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.reason, refund, title: t('views.general.view_tooltip'))
+                      %td=link_to(refund.status, refund, title: t('views.general.view_tooltip'))
+                      %td
+                        -#=link_to t('views.general.view'), refund
+                        =link_to t('views.general.edit'), edit_refund_url(refund), class: 'btn btn-info btn-xs'
+                        -if refund.destroyable?
+                          =link_to t('views.general.delete'), refund, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+      .row
+        .col-sm-12
+          =link_to t('views.general.new'), new_refund_url, class: 'btn btn-red', title: t('views.general.new_tooltip')

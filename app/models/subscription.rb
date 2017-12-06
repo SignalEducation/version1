@@ -43,6 +43,7 @@ class Subscription < ActiveRecord::Base
   has_one :student_access
   has_many :subscription_transactions
   has_many :charges
+  has_many :refunds
   has_one :referred_signup
 
   # validation

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :refunds
   concern :supports_reordering do
     post :reorder, on: :collection
   end

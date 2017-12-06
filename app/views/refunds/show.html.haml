@@ -1,0 +1,48 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.refunds.show.h1')
+            \#
+            =@refund.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.stripe_guid')
+                  %td.col-sm-8=@refund.stripe_guid
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.charge_id')
+                  %td.col-sm-8=@refund.charge.name
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.stripe_charge_guid')
+                  %td.col-sm-8=@refund.stripe_charge_guid
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.invoice_id')
+                  %td.col-sm-8=@refund.invoice.name
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.subscription_id')
+                  %td.col-sm-8=@refund.subscription.name
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.user_id')
+                  %td.col-sm-8=@refund.user.name
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.manager_id')
+                  %td.col-sm-8=@refund.manager.name
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.amount')
+                  %td.col-sm-8=@refund.amount
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.reason')
+                  %td.col-sm-8=@refund.reason
+                %tr
+                  %td.col-sm-4=t('views.refunds.form.status')
+                  %td.col-sm-8=@refund.status
+              %p
+                =link_to t('views.general.back'), refunds_url
+                |
+                =link_to t('views.general.edit'), edit_refund_url(id: @refund.id), title: t('views.general.edit_tooltip')
