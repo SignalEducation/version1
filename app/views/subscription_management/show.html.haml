@@ -46,7 +46,7 @@
                 .h3
                   =t('views.users.user_subscription_status.subscription_info.last_billing_date')
                 .h6
-                  -if @subscription.invoices
+                  -if @subscription.invoices.any?
                     =humanize_datetime(@subscription.invoices.last.created_at)
                   -else
                     ='------'

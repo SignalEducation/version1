@@ -13,7 +13,7 @@
                   %h4.h3.l-margin-bottom
                     Your account is now active
                   %p.p
-                    =#"Your Free Trial is valid until #{humanize_date_and_month(current_user.student_access.trial_started_date + 7.days)} or when you reach #{(ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i/60).to_s} minutes of course content"
+                    ="Your Trial is valid until #{humanize_date_and_month(current_user.student_access.trial_ending_at_date)} or when you reach #{(current_user.student_access.trial_seconds_limit/60).to_s} minutes of course content"
 
 
       .l-margin-top-huge.l-margin-bottom-huge
