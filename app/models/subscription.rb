@@ -297,11 +297,11 @@ class Subscription < ActiveRecord::Base
 
   def create_subscription_payment_card
     array_of_cards = self.stripe_customer_data[:sources][:data]
-    card_guid = self.stripe_customer_data[:default_source]
-    SubscriptionPaymentCard.create_cards_from_stripe_array(array_of_cards, self.user_id, card_guid)
+    SubscriptionPaymentCard.create_from_stripe_array(array_of_cards, self.user_id)
   end
 
   def update_student_access
+    ## TODO Review this!
     if self.active && self.student_access
       if %w(unpaid suspended canceled).include?(self.current_status)
         self.student_access.update_attribute(:content_access, false)

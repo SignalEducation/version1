@@ -152,16 +152,22 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   end
 
-  def self.get_updates_for_user(stripe_customer_guid)
-    customer_payload = Stripe::Customer.retrieve(stripe_customer_guid).to_hash
-    if customer_payload && customer_payload[:sources]
-      user = User.where(stripe_customer_id: stripe_customer_guid).first
-
-      SubscriptionPaymentCard.create_cards_from_stripe_array(customer_payload[:sources][:data], user.id, customer_payload[:default_source])
-
-    else
-      Rails.logger.warn "WARN: SubscriptionPaymentCard#get_updates_for_user - couldn't retrieve valid customer data for customer guid #{stripe_customer_guid}"
+  # This should not loop. Create from stripe card object created with subscription token
+  #
+  #
+  def self.create_from_stripe_array(stripe_card_array, user_id)
+    this_customers_cards = SubscriptionPaymentCard.where(user_id: user_id)
+    stripe_card_array.each do |data_item|
+      if data_item[:object] == 'card'
+        SubscriptionPaymentCard.build_from_stripe_data(data_item, user_id)
+      end
     end
+
+    # Delete the all previous existing cards
+    this_customers_cards.each do |card|
+      card.destroy unless card.is_default_card
+    end
+
   end
 
   # instance methods
@@ -234,16 +240,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     self.read_attribute(:status)
   end
 
-  def check_valid_dates
-    unless self.status == 'expired'
-      if self.expiry_year && self.expiry_month
-        expires_on = Date.new(self.expiry_year, self.expiry_month, 1) + 1.month
-        self.update_column(:status, 'expired') if expires_on < Proc.new{Time.now}.call
-        return expires_on < Proc.new{Time.now}.call ? 'false' : 'true'
-      end
-    end
-  end
-
   def expiring_soon?
     unless self.status == 'expired'
       if self.expiry_year && self.expiry_month && self.is_default_card && self.user.current_subscription
@@ -294,7 +290,8 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   def remove_card_from_stripe
     stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
-    response = stripe_customer.sources.retrieve(self.stripe_card_guid).delete
+    stripe_card = stripe_customer.sources.retrieve(self.stripe_card_guid)
+    response = stripe_card.delete
     if response[:deleted]
       true
     else
@@ -303,9 +300,13 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     end
 
   rescue => e
-    Rails.logger.error "ERROR: SubscriptionPaymentCard#delete_card failed. Error: #{e.inspect}. Self: #{self.errors.inspect}"
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
+    if e.response.data[:error][:message] == "No such source: #{self.stripe_card_guid}"
+      true
+    else
+      Rails.logger.error "ERROR: SubscriptionPaymentCard#delete_card failed. Error: #{e.inspect}. Self: #{self.errors.inspect}"
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      false
+    end
   end
 
 end

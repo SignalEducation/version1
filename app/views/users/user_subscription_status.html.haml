@@ -62,6 +62,8 @@
                       %th
                         Expiration
                       %th
+                        Stripe ID
+                      %th
                         Status
                       %th
                         Default
@@ -75,6 +77,8 @@
                           =card.expiry_month
                           &#45;
                           =card.expiry_year
+                        %td
+                          =card.stripe_card_guid
                         %td
                           =card.status
 
