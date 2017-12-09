@@ -207,14 +207,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     !self.is_default_card?
   end
 
-  def make_default_card=(t)
-    @make_default_card = t
-  end
-
-  def make_default_card
-    @make_default_card
-  end
-
   def status
     unless self.read_attribute(:status) == 'expired'
       if self.expiry_year && self.expiry_month
@@ -229,32 +221,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     self.read_attribute(:status)
   end
 
-  def check_valid_dates
-    unless self.status == 'expired'
-      if self.expiry_year && self.expiry_month
-        expires_on = Date.new(self.expiry_year, self.expiry_month, 1) + 1.month
-        self.update_column(:status, 'expired') if expires_on < Proc.new{Time.now}.call
-        return expires_on < Proc.new{Time.now}.call ? 'false' : 'true'
-      end
-    end
-  end
-
-  def expiring_soon?
-    unless self.status == 'expired'
-      if self.expiry_year && self.expiry_month && self.is_default_card && self.user.current_subscription
-
-        expiration = Date.new(self.expiry_year, self.expiry_month, 1)
-        month_before_expiration = Date.new(self.expiry_year, self.expiry_month, 1) - 1.month
-
-        if (Proc.new{Time.now}.call) > month_before_expiration && (Proc.new{Time.now}.call < expiration)
-          true
-        else
-          false
-        end
-
-      end
-    end
-  end
 
   def stripe_token=(t)
     @stripe_token = t
@@ -285,15 +251,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     false
   end
 
-  def update_stripe_and_other_cards
-    stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
-    stripe_customer.default_source = self.stripe_card_guid
-    stripe_customer.save
-
-    other_cards = SubscriptionPaymentCard.where(user_id: self.user_id, is_default_card: true).where.not(id: self.id)
-    other_cards.update_all(status: 'not-live', is_default_card: false)
-  end
-
   protected
 
   def remove_card_from_stripe
@@ -316,5 +273,15 @@ class SubscriptionPaymentCard < ActiveRecord::Base
       false
     end
   end
+
+  def update_stripe_and_other_cards
+    stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
+    stripe_customer.default_source = self.stripe_card_guid
+    stripe_customer.save
+
+    other_cards = SubscriptionPaymentCard.where(user_id: self.user_id, is_default_card: true).where.not(id: self.id)
+    other_cards.update_all(status: 'not-live', is_default_card: false)
+  end
+
 
 end
