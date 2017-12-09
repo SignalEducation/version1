@@ -296,8 +296,9 @@ class Subscription < ActiveRecord::Base
   protected
 
   def create_subscription_payment_card
-    array_of_cards = self.stripe_customer_data[:sources][:data]
-    SubscriptionPaymentCard.create_from_stripe_array(array_of_cards, self.user_id)
+    stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
+    array_of_cards = stripe_customer.sources.data
+    SubscriptionPaymentCard.create_from_stripe_array(array_of_cards, self.user_id, stripe_customer.default_source)
   end
 
   def update_student_access
