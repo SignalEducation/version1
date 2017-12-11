@@ -207,7 +207,6 @@ class Subscription < ActiveRecord::Base
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
       stripe_subscription.plan = new_subscription_plan.stripe_guid
       stripe_subscription.prorate = true
-      #stripe_subscription.trial_end = 'now'
       stripe_subscription.trial_end = 'now'
 
       result = stripe_subscription.save # saves it at stripe.com, not in our DB
@@ -232,6 +231,8 @@ class Subscription < ActiveRecord::Base
         new_sub.stripe_customer_id = self.stripe_customer_id
         new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
         new_sub.save(validate: false)
+
+        user.student_access.update_attributes(subscription_id: new_sub.id, account_type: 'Subscription', content_access: true)
 
         #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
         self.update_attributes(current_status: 'canceled', active: false)

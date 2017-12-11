@@ -62,9 +62,11 @@ class InvoiceDocument < Prawn::Document
 
     table_details = [ ['No.', 'Description', 'VAT', 'Total Price'] ]
     @invoice.invoice_line_items.each_with_index do |line_item, index|
+      line_description = line_item.prorated ? 'Prorated Discount' : @description
+      vat_rate = line_item.prorated ? '' : @vat_rate
       net_amount = line_item.amount
       table_details <<
-          [index + 1, @description, @vat_rate, net_amount]
+          [index + 1, line_description, vat_rate, net_amount]
     end
     table(table_details, column_widths: [40, 380, 60, 60], header: true,
               cell_style: {padding: 5, border_width: 0.5}) do

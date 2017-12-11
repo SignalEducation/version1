@@ -589,6 +589,16 @@ label, .label {
   color: #fff;
 }
 
+.lsbtn.change-plan {
+  background: $cyan1;
+  border-radius: 0.62em;
+}
+.lsbtn.change-plan:hover {
+  background: $cyan1;
+  color: #fff;
+}
+
+
 .pagination > li > a, .pagination > li > span {
   padding: 10px 18px;
   color: $colour-7;

@@ -71,7 +71,7 @@
                 .h3
                   Last Charge ID
                 .h6
-                  =@invoice.charge_guid
+                  =@invoice.charge_guid || '----'
 
 
               .col-sm-4.l-margin-bottom
@@ -91,6 +91,19 @@
                   Amount Due
                 .h6
                   =@invoice.amount_due
+
+              -if @invoice.invoice_line_items.where(prorated: true).any?
+                .col-sm-4.l-margin-bottom
+                  .h3
+                    Proration
+                  .h6
+                    =@invoice.invoice_line_items.where(prorated: true).any?
+
+                .col-sm-4.l-margin-bottom
+                  .h3
+                    Proration Adjustment
+                  .h6
+                    =@invoice.invoice_line_items.where(prorated: true).first.amount
 
 
 

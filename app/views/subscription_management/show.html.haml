@@ -105,7 +105,7 @@
               %h2.l-margin-bottom-big
                 =t('views.users.user_subscription_status.subscription_info.invoices')
               .table-responsive
-                -@invoices = @subscription.invoices.where('sub_total > 0').all_in_order
+                -@invoices = @subscription.invoices.all_in_order
                 =render partial: 'subscription_management/invoices'
 
 

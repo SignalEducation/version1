@@ -36,7 +36,7 @@
                         %td
                           =subscription.id
                         %td
-                          =@subscription.subscription_plan.name
+                          =subscription.subscription_plan.name
                         %td
                           =humanize_datetime(subscription.created_at)
                         %td
@@ -93,7 +93,7 @@
               %h2.l-margin-bottom-big
                 =t('views.users.user_subscription_status.subscription_info.invoices')
               .table-responsive
-                -@invoices = @user.invoices.where('sub_total > 0').all_in_order
+                -@invoices = @user.invoices.all_in_order
                 =render partial: 'subscription_management/invoices'
 
 
