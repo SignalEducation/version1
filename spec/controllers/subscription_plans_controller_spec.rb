@@ -30,12 +30,15 @@ describe SubscriptionPlansController, type: :controller do
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
-  #Commented this out because creating the stripe_token fails to save the subscription
-  #let!(:subscription_1) { FactoryGirl.create(:subscription,
-  #                        subscription_plan_id: subscription_plan_1.id,
-  #                        stripe_token: stripe_helper.generate_card_token) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription, subscription_plan_id: subscription_plan_1.id) }
   let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
+  let!(:stripe_student_user) { FactoryGirl.create(:student_user,
+                                                  stripe_customer_id: (Stripe::Customer.create({email: student_user.email})).id) }
+
+  let!(:subscription_1) { FactoryGirl.create(:subscription,
+                          subscription_plan_id: subscription_plan_1.id,
+                          user_id: stripe_student_user.id,
+                          stripe_token: stripe_helper.generate_card_token) }
+
   let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
 
   #before { StripeMock.start }

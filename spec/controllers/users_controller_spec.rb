@@ -4,7 +4,7 @@ require 'support/course_content'
 require 'support/system_setup'
 require 'stripe_mock'
 
-describe UserManagementController, type: :controller do
+describe UsersController, type: :controller do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
