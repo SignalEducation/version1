@@ -51,7 +51,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   STATUSES = %w(card-live not-live expired)
 
   # relationships
-  has_many :subscription_transactions
   has_many :charges
   belongs_to :user
   belongs_to :account_address_country, class_name: 'Country',

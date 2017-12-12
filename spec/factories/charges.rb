@@ -31,25 +31,25 @@
 FactoryGirl.define do
   factory :charge do
     subscription_id 1
-invoice_id 1
-user_id 1
-subscription_payment_card_id 1
-currency_id 1
-coupon_id 1
-stripe_api_event_id 1
-stripe_guid "MyString"
-amount 1
-amount_refunded 1
-failure_code "MyString"
-failure_message "MyText"
-stripe_customer_id "MyString"
-stripe_invoice_id "MyString"
-livemode false
-stripe_order_id "MyString"
-paid false
-refunded false
-refunds "MyText"
-status "MyString"
+    invoice_id 1
+    user_id 1
+    subscription_payment_card_id 1
+    currency_id 1
+    coupon_id 1
+    stripe_api_event_id 1
+    stripe_guid "MyString"
+    amount 1
+    amount_refunded 1
+    failure_code "MyString"
+    failure_message "MyText"
+    stripe_customer_id "MyString"
+    stripe_invoice_id "MyString"
+    livemode false
+    stripe_order_id "MyString"
+    paid false
+    refunded false
+    refunds "MyText"
+    status "MyString"
   end
 
 end

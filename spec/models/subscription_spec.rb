@@ -24,7 +24,7 @@ require 'rails_helper'
 describe Subscription do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at stripe_customer_data stripe_guid)
+  black_list = %w(id created_at updated_at)
   Subscription.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -35,6 +35,7 @@ describe Subscription do
 
   # Constants
   it { expect(Subscription.const_defined?(:STATUSES)).to eq(true) }
+  it { expect(Subscription.const_defined?(:VALID_STATES)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
@@ -42,6 +43,8 @@ describe Subscription do
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
   it { should have_many(:subscription_transactions) }
+  it { should have_many(:charges) }
+  it { should have_many(:refunds) }
   it { should have_one(:referred_signup) }
 
   # validation
@@ -59,7 +62,8 @@ describe Subscription do
   it { should validate_length_of(:stripe_customer_id).is_at_most(255) }
 
   # callbacks
-  it { should callback(:create_a_subscription_transaction).after(:create) }
+  it { should callback(:create_subscription_payment_card).after(:create) }
+  it { should callback(:update_student_access).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -72,10 +76,22 @@ describe Subscription do
   # class methods
 
   # instance methods
+  it { should respond_to(:active_status?) }
+  it { should respond_to(:canceled_status?) }
+  it { should respond_to(:past_due_status?) }
+  it { should respond_to(:unpaid_status?) }
+  it { should respond_to(:canceled_pending_status?) }
+  it { should respond_to(:suspended_status?) }
+  it { should respond_to(:billing_amount) }
+
+  it { should respond_to(:stripe_token) }
   it { should respond_to(:cancel) }
+  it { should respond_to(:immediate_cancel) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:reactivation_options) }
+  it { should respond_to(:update_from_stripe) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
+  it { should respond_to(:un_cancel) }
 
 end

@@ -53,9 +53,7 @@ describe Charge do
   it { should belong_to(:currency) }
   it { should belong_to(:coupon) }
   it { should belong_to(:stripe_api_event) }
-  it { should belong_to(:stripe_customer) }
-  it { should belong_to(:stripe_invoice) }
-  it { should belong_to(:stripe_order) }
+  it { should have_many(:refunds) }
 
   # validation
   it { should validate_presence_of(:subscription_id) }
@@ -73,32 +71,16 @@ describe Charge do
   it { should validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
 
-  it { should validate_presence_of(:coupon_id) }
+  it { should_not validate_presence_of(:coupon_id) }
   it { should validate_numericality_of(:coupon_id) }
-
-  it { should validate_presence_of(:stripe_api_event_id) }
-  it { should validate_numericality_of(:stripe_api_event_id) }
 
   it { should validate_presence_of(:stripe_guid) }
 
   it { should validate_presence_of(:amount) }
 
-  it { should validate_presence_of(:amount_refunded) }
-
-  it { should validate_presence_of(:failure_code) }
-
-  it { should validate_presence_of(:failure_message) }
-
   it { should validate_presence_of(:stripe_customer_id) }
-  it { should validate_numericality_of(:stripe_customer_id) }
 
   it { should validate_presence_of(:stripe_invoice_id) }
-  it { should validate_numericality_of(:stripe_invoice_id) }
-
-  it { should validate_presence_of(:stripe_order_id) }
-  it { should validate_numericality_of(:stripe_order_id) }
-
-  it { should validate_presence_of(:refunds) }
 
   it { should validate_presence_of(:status) }
 
@@ -109,10 +91,12 @@ describe Charge do
   it { expect(Charge).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(Charge).to respond_to(:create_from_stripe_data) }
+  it { expect(Charge).to respond_to(:update_refund_data) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:refundable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

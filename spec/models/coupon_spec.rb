@@ -35,44 +35,43 @@ describe Coupon do
   end
 
   # Constants
-  #it { expect(Coupon.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(Coupon.const_defined?(:DURATIONS)).to eq(true) }
 
   # relationships
-  it { should belong_to(:stripe) }
   it { should belong_to(:currency) }
+  it { should have_many(:charges) }
+  it { should have_many(:subscriptions) }
 
   # validation
-  it { should validate_presence_of(:stripe_id) }
-  it { should validate_numericality_of(:stripe_id) }
 
-  it { should validate_presence_of(:currency_id) }
+  it { should validate_presence_of(:name) }
+
+  it { should_not validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
 
-  it { should validate_presence_of(:amount_off) }
+  it { should validate_presence_of(:code) }
 
   it { should validate_presence_of(:duration) }
 
-  it { should validate_presence_of(:duration_in_months) }
-
-  it { should validate_presence_of(:max_redemptions) }
-
-  it { should validate_presence_of(:percent_off) }
-
-  it { should validate_presence_of(:redeem_by) }
-
-  it { should validate_presence_of(:times_redeemed) }
-
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:create_on_stripe).before(:create) }
+  it { should callback(:activate).after(:create) }
+  it { should callback(:delete_on_stripe).before(:destroy) }
 
   # scopes
   it { expect(Coupon).to respond_to(:all_in_order) }
+  it { expect(Coupon).to respond_to(:all_active) }
 
   # class methods
+  it { expect(Coupon).to respond_to(:verify_coupon_and_get_discount) }
+  it { expect(Coupon).to respond_to(:get_and_verify) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:amount_or_percent_off) }
+  it { should respond_to(:duration_months_if_repeating) }
+  it { should respond_to(:currency_if_amount_off_set) }
 
-  pending "Please review #{__FILE__}"
 
 end

@@ -21,16 +21,14 @@
 
 FactoryGirl.define do
   factory :refund do
-    stripe_guid "MyString"
-charge_id 1
-stripe_charge_guid "MyString"
-invoice_id 1
-subscription_id 1
-user_id 1
-manager_id 1
-amount ""
-reason "MyText"
-status "MyString"
+    stripe_charge_guid 'Stripe-charge-001'
+    charge_id 1
+    invoice_id 1
+    subscription_id 1
+    user_id 1
+    manager_id 8
+    amount ""
+    reason "MyText"
   end
 
 end

@@ -34,7 +34,7 @@ describe Refund do
   end
 
   # Constants
-  #it { expect(Refund.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(Refund.const_defined?(:REASONS)).to eq(true) }
 
   # relationships
   it { should belong_to(:charge) }
@@ -80,6 +80,5 @@ describe Refund do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

@@ -36,10 +36,10 @@ class Refund < ActiveRecord::Base
   belongs_to :manager, class_name: 'User', foreign_key: :manager_id
 
   # validation
-  validates :stripe_guid, presence: true
+  validates :stripe_guid, presence: true, uniqueness: true
   validates :charge_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_charge_guid, presence: true
+  validates :stripe_charge_guid, presence: true, uniqueness: true
   validates :invoice_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subscription_id, presence: true,
@@ -55,7 +55,7 @@ class Refund < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  before_validation :create_on_stripe
+  before_validation :create_on_stripe, unless: 'Rails.env.test?'
 
   # scopes
   scope :all_in_order, -> { order(:stripe_guid) }
