@@ -161,21 +161,5 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
   end
 
-  def check_for_enrollment_email_conditions
-    #Needs serious improvements and is failing in sidekiq with undefined method `enrollment' for #<SubjectCourseUserLog>
-    new_log_ids = []
-    time = Proc.new{Time.now}.call
-    if self.subject_course_user_log && self.subject_course_user_log.active_enrollment && !self.subject_course_user_log.active_enrollment.expired
-      scul = self.subject_course_user_log
-      scul.course_module_element_user_logs.each do |log|
-        if log.updated_at > (time - 1.day) && log.id != self.id
-          new_log_ids << log.id
-        end
-      end
-      if new_log_ids.any? && scul.last_element && scul.last_element.next_element
-        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email') unless Rails.env.test?
-      end
-    end
-  end
 
 end
