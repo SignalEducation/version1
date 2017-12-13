@@ -58,7 +58,7 @@ class Subscription < ActiveRecord::Base
 
 
   # callbacks
-  after_create :create_subscription_payment_card
+  after_create :create_subscription_payment_card, unless: 'Rails.env.test?'
   after_save :update_student_access
 
   # scopes

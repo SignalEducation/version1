@@ -67,9 +67,37 @@ describe SubscriptionsController, type: :controller do
 
   context 'Not logged in: ' do
 
+    describe "GET 'new'" do
+      it 'should redirect to sign_in' do
+        get :new
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to sign_in' do
+        post :create, user_id: student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should redirect to sign_in' do
+        get :personal_upgrade_complete, id: 1
+        expect_bounce_as_not_signed_in
+      end
+    end
+
     describe "Get 'change_plan'" do
       it 'should redirect to sign_in' do
         get :change_plan, subscription: valid_params
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe "PUT un_cancel_subscription" do
+      it 'should redirect to sign_in' do
+        put :un_cancel_subscription, id: subscription_1.id
         expect_bounce_as_not_signed_in
       end
     end
@@ -84,27 +112,6 @@ describe SubscriptionsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'new_subscription'" do
-      it 'should redirect to sign_in' do
-        get :new_subscription, user_id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "POST 'create_subscription'" do
-      it 'should respond ERROR not permitted' do
-        post :create_subscription, user_id: student_user.id, subscription: subscription_plan_1, stripe_token: stripe_helper.generate_card_token
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'personal_upgrade_complete'" do
-      it 'should redirect to sign_in' do
-        get :personal_upgrade_complete, id: 1
         expect_bounce_as_not_signed_in
       end
     end
@@ -141,21 +148,21 @@ describe SubscriptionsController, type: :controller do
       valid_coupon = Stripe::Coupon.create(percent_off: 25, duration: 'repeating', duration_in_months: 3, id: 'valid_coupon_code', currency: subscription_plan_1.currency.try(:iso_code).try(:downcase))
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new_subscription, user_id: student_user.id
+        get :new
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
-        expect(response).to render_template(:new_subscription)
+        expect(response).to render_template(:new)
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should respond okay with correct params and valid coupon' do
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
-        post :create_subscription, user: upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        post :create, user: upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -165,11 +172,11 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error coupon is invalid' do
-        post :create_subscription, user: upgrade_params, hidden_coupon_code: 'abc123', user_id: student_user.id
+        post :create, user: upgrade_params, hidden_coupon_code: 'abc123', user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('The coupon code entered is not valid')
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(new_subscription_url(coupon: true))
+        expect(response).to redirect_to(new_url(coupon: true))
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
 
@@ -178,7 +185,7 @@ describe SubscriptionsController, type: :controller do
       it 'should respond okay with correct params without coupon' do
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
-        post :create_subscription, user: upgrade_params, hidden_coupon_code: '', user_id: student_user.id
+        post :create, user: upgrade_params, hidden_coupon_code: '', user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -188,11 +195,11 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. With Bad params' do
-        post :create_subscription, user: invalid_upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        post :create, user: invalid_upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(new_subscription_url)
+        expect(response).to redirect_to(new_url)
         expect(SubscriptionTransaction.count).to eq(0)
         expect(SubscriptionPaymentCard.count).to eq(1)
       end
@@ -288,31 +295,31 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(comp_user)
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should bounce as not allowed' do
-        get :new_subscription, user_id: comp_user.id
+        get :new, user_id: comp_user.id
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: comp_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: comp_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: comp_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: comp_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: comp_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: comp_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: comp_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: comp_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -366,31 +373,31 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new_subscription, user_id: student_user_2.id
+        get :new, user_id: student_user_2.id
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: tutor_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: tutor_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: tutor_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: tutor_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: tutor_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: tutor_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: tutor_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: tutor_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -444,31 +451,31 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(content_manager_user)
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new_subscription, user_id: content_manager_user.id
+        get :new, user_id: content_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: content_manager_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: content_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: content_manager_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: content_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: content_manager_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: content_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: content_manager_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: content_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -522,31 +529,31 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(marketing_manager_user)
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new_subscription, user_id: marketing_manager_user.id
+        get :new, user_id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: marketing_manager_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: marketing_manager_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: marketing_manager_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: marketing_manager_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: marketing_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -600,31 +607,31 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(customer_support_manager_user)
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new_subscription, user_id: customer_support_manager_user.id
+        get :new, user_id: customer_support_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: customer_support_manager_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: customer_support_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: customer_support_manager_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: customer_support_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: customer_support_manager_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: customer_support_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: customer_support_manager_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: customer_support_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -668,31 +675,31 @@ describe SubscriptionsController, type: :controller do
       UserSession.create!(admin_user)
     end
 
-    describe "GET 'new_subscription'" do
+    describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new_subscription, user_id: admin_user.id
+        get :new, user_id: admin_user.id
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create_subscription'" do
+    describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'valid_coupon_code', user_id: admin_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: admin_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: 'abc123', user_id: admin_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: admin_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: upgrade_params, coupon: '', user_id: admin_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: admin_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create_subscription, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: admin_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: admin_user.id
         expect_bounce_as_not_allowed
       end
     end

@@ -14,6 +14,8 @@ shared_context 'users_and_groups_setup' do
 
   # users
   let!(:student_user) { FactoryGirl.create(:student_user, user_group_id: student_user_group.id) }
+  let(:student_access_1) { FactoryGirl.create(:valid_trial_student_access, user_id: student_user.id) }
+
   let(:inactive_student_user) { FactoryGirl.create(:inactive_student_user , user_group_id: student_user_group.id) }
   let(:unverified_student_user) { FactoryGirl.create(:unverified_user, user_group_id: student_user_group.id) }
   let(:tutor_user) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id) }

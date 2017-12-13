@@ -487,6 +487,7 @@ ActiveRecord::Schema.define(version: 20171206164823) do
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
+    t.integer  "subject_course_id"
     t.integer  "mock_exam_id"
     t.string   "stripe_guid"
     t.boolean  "live_mode",         default: false
@@ -496,12 +497,12 @@ ActiveRecord::Schema.define(version: 20171206164823) do
     t.integer  "currency_id"
     t.decimal  "price"
     t.string   "stripe_sku_guid"
-    t.integer  "subject_course_id"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
+  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"

@@ -20,14 +20,35 @@
 FactoryGirl.define do
   factory :student_access do
     user_id 1
-trial_start_date "2017-11-21 10:45:13"
-trial_end_date "2017-11-21 10:45:13"
-trial_seconds_limit 1
-trial_days_limit 1
-content_seconds_consumed 1
-subscription_id 1
-account_type "MyString"
-content_access false
+    trial_seconds_limit 1
+    trial_days_limit 1
+    content_seconds_consumed 1
+    account_type 'Trial'
+    content_access false
+
+
+
+    factory :trial_student_access do
+      trial_seconds_limit 100
+      trial_days_limit 7
+      content_seconds_consumed 0
+      account_type 'Trial'
+
+      factory :valid_trial_student_access do
+        content_access true
+      end
+
+      factory :expired_trial_student_access do
+        content_access false
+      end
+
+    end
+
+    factory :subscription_student_access do
+      account_type 'Subscription'
+      content_access true
+    end
+
   end
 
 end
