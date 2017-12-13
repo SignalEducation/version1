@@ -7,9 +7,11 @@ class UserAccountsController < ApplicationController
   def account_show
     @orders = @user.orders
     @enrollments = @user.enrollments.all_active
-    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-    @current_subscription = @user.current_subscription
-    @invoices = @user.invoices
+    if current_user.student_access
+      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+      @current_subscription = @user.current_subscription
+      @invoices = @user.invoices
+    end
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
