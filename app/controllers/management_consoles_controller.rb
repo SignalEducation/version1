@@ -12,6 +12,19 @@ class ManagementConsolesController < ApplicationController
 
   def index
     #Default view for all management users. General stats on site - user number, sub numbers, enrollment numbers, course numbers
+    @users_count = StudentAccess.count
+    @subscriptions = Subscription.where(current_status: Subscription::VALID_STATES).count
+    @valid_trial_users = StudentAccess.all_trial.where(content_access: true).count
+    @invalid_trial_users = StudentAccess.all_trial.where(content_access: false).count
+    @active_courses = SubjectCourse.all_active.count
+    @active_course_modules = CourseModule.all_active.count
+    @active_groups = Group.all_active.count
+    active_cmes = CourseModuleElement.all_active
+    @active_videos = active_cmes.all_videos.count
+    @active_quizzes = active_cmes.all_quizzes.count
+    @total_enrollments = Enrollment.count
+    @active_enrollments = Enrollment.all_active.count
+    @expired_enrollments = Enrollment.all_expired.count
   end
 
   def system_requirements

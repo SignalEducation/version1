@@ -7,7 +7,106 @@
             Management Console
 
       .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          -# Default view for all management users. General stats on site - user number, sub numbers, enrollment numbers, course numbers
-          %h6.text-center
-            This page will soon contain general stats on the site.
+        .col-sm-12
+          .box-item
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@users_count
+                  .h6
+                    Users
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@subscriptions
+                  .h6
+                    Subscriptions
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@valid_trial_users
+                  .h6
+                    Valid Trials
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@invalid_trial_users
+                  .h6
+                    Expired Trials
+
+
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@total_enrollments
+                  .h6
+                    Enrolments - Total
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_enrollments
+                  .h6
+                    Enrolments - Active
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@expired_enrollments
+                  .h6
+                    Enrolments - Expired
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_groups
+                  .h6
+                    Groups
+
+
+
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_courses
+                  .h6
+                    Courses
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_course_modules
+                  .h6
+                    Course Modules
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_videos
+                  .h6
+                    Videos
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_quizzes
+                  .h6
+                    Quizzes
+

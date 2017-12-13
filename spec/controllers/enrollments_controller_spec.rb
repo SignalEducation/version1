@@ -150,6 +150,7 @@ RSpec.describe EnrollmentsController, type: :controller do
     describe "GET 'basic_create'" do
       it 'should respond OK' do
         get :basic_create, subject_course_name_url: subject_course_1.name_url
+        #This should fail as only non-student users can do this
         expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
       end
     end
