@@ -119,6 +119,10 @@ class SubscriptionPlan < ActiveRecord::Base
     self.subscriptions.empty?
   end
 
+  def amount
+    self.currency.format_number(self.price)
+  end
+
   protected
 
   def available_to_in_the_future

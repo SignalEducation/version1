@@ -28,13 +28,19 @@ FactoryGirl.define do
 
     factory :home do
       public_url '/'
+      custom_file_name 'home'
       name 'home'
       home true
     end
 
-    factory :acca_home do
-      public_url 'acca'
-      name 'acca_home'
+    factory :landing_page_1 do
+      public_url '/acca1'
+      name 'Landing Page 1'
+    end
+
+    factory :landing_page_2 do
+      public_url '/acca2'
+      name 'Landing Page 2'
     end
 
   end

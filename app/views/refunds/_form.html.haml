@@ -1,0 +1,44 @@
+=form_for(@refund, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @refund, message: nil}
+  =f.hidden_field :manager_id, value: current_user.id
+  =f.hidden_field :stripe_charge_guid, value: @charge.stripe_guid
+
+  .row
+    .col-md-12
+      .col-sm-6
+        =f.label :charge_id, t('views.refunds.form.charge_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :charge_id, value: @charge.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+
+        =f.label :invoice_id, t('views.refunds.form.invoice_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :invoice_id, value: @invoice.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+
+      .col-sm-6
+        =f.label :user_id, t('views.refunds.form.user_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :user_id, value: @user.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+        =f.label :subscription_id, t('views.refunds.form.subscription_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :subscription_id, value: @subscription.id, class: 'form-control', style: 'border-radius: 6px;', readonly: true
+        %br/
+
+      .col-sm-8.col-md-offset-2
+        %hr/
+        =f.label :amount, t('views.refunds.form.amount'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :amount, placeholder: t('views.refunds.form.amount_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :reason, t('views.refunds.form.reason'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.select :reason, Refund::REASONS, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+        %br/
+
+    .row
+      .col-md-12.l-margin-top-big
+        .col-sm-8.col-md-offset-2
+          =f.submit t('views.general.save'), class: 'btn btn-red'
+          =link_to t('views.general.cancel'), subscription_management_invoice_charge_url(@subscription.id, @invoice.id, @charge.id), class: 'btn btn-cyan'

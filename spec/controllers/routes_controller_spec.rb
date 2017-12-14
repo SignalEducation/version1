@@ -8,12 +8,6 @@ describe RoutesController, type: :controller do
   include_context 'course_content'
 
   before(:each) do
-    t = tutor_user
-    a = admin_user
-    cm = content_manager_user
-    cu = comp_user
-    cs = customer_support_manager_user
-    mm = marketing_manager_user
   end
 
   context 'Not logged in: ' do
@@ -27,11 +21,11 @@ describe RoutesController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'root'" do
@@ -39,7 +33,6 @@ describe RoutesController, type: :controller do
         get :root
         expect(response.status).to eq(302)
         expect(response).to redirect_to(student_dashboard_url)
-
       end
     end
 
@@ -57,7 +50,6 @@ describe RoutesController, type: :controller do
         get :root
         expect(response.status).to eq(302)
         expect(response).to redirect_to(student_dashboard_url)
-
       end
     end
 
@@ -108,7 +100,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(customer_support_manager_dashboard_url)
+        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 
@@ -125,7 +117,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(marketing_manager_dashboard_url)
+        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 
@@ -142,7 +134,7 @@ describe RoutesController, type: :controller do
       it 'should redirect to dashboard#index' do
         get :root
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(admin_dashboard_url)
+        expect(response).to redirect_to(student_dashboard_url)
       end
     end
 

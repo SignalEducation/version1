@@ -36,7 +36,7 @@ class SubscriptionPaymentCardsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(individual_student admin))
+    ensure_user_has_access_rights(%w(student_user user_management_access))
   end
   before_action :get_variables
 
@@ -44,10 +44,15 @@ class SubscriptionPaymentCardsController < ApplicationController
     @subscription_payment_card = SubscriptionPaymentCard.new(create_params)
     if @subscription_payment_card.save
       flash[:success] = I18n.t('controllers.subscription_payment_cards.create.flash.success')
+      redirect_to account_url(anchor: 'payment-details')
     else
-      flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
+      if @subscription_payment_card.errors.any?
+        flash[:error] = @subscription_payment_card.errors.first[1]
+      else
+        flash[:error] = I18n.t('controllers.subscription_payment_cards.create.flash.error')
+      end
+      redirect_to account_url(anchor: 'add-card-modal')
     end
-    redirect_to account_url(anchor: 'payment-details')
   end
 
   def update
@@ -73,15 +78,11 @@ class SubscriptionPaymentCardsController < ApplicationController
   protected
 
   def create_params
-    params.require(:subscription_payment_card).permit(:stripe_token, :make_default_card, :user_id)
+    params.require(:subscription_payment_card).permit(:stripe_token, :user_id)
   end
 
   def get_variables
-    if params[:id]
-      @subscription_payment_card = current_user.admin? ?
-              SubscriptionPaymentCard.find_by_id(params[:id]) :
-              current_user.subscription_payment_cards.find_by_id(params[:id])
-    end
+    @subscription_payment_card = current_user.subscription_payment_cards.find_by_id(params[:id]) if params[:id]
   end
 
   def update_params

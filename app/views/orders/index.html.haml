@@ -1,5 +1,3 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
@@ -9,7 +7,11 @@
             =t('views.orders.index.h1')
 
       .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
+        .col-md-12
+          =render partial: 'management_consoles/subscriptions_nav'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
           .table-box
             .table-responsive
               =will_paginate @orders, renderer: BootstrapPagination::Rails

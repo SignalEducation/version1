@@ -56,6 +56,8 @@ class Invoice < ActiveRecord::Base
   # relationships
   belongs_to :currency
   has_many :invoice_line_items
+  has_many :charges
+  has_many :refunds
   belongs_to :subscription_transaction
   belongs_to :subscription
   belongs_to :user

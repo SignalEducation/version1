@@ -56,45 +56,12 @@ class StudentExamTrack < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
-  scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
-  scope :for_unknown_users, -> { where(user_id: nil) }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :with_active_cmes, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
 
   # class methods
-  def self.assign_user_to_session_guid(the_user_id, the_session_guid)
-    # activate this with the following:
-    # StudentExamTrack.assign_user_to_session_guid(123, 'abcde123')
-    StudentExamTrack.for_session_guid(the_session_guid).for_unknown_users.update_all(user_id: the_user_id)
-    user_tracks = StudentExamTrack.for_user_or_session(the_user_id, the_session_guid)
-    set_ids = user_tracks.map(&:course_module_id)
-    duplicate_set_cm_ids = set_ids.select{ |e| set_ids.count(e) > 1 }.uniq
-    duplicate_set_cm_ids.each do |duplicate_cm_id|
-      # find the SETs for the user, for the CM-id
-      duplicate_sets = StudentExamTrack.where(user_id: the_user_id, course_module_id: duplicate_cm_id).order(:updated_at)
-      # build a new SET combining all of the data
-      new_one = StudentExamTrack.new(
-              user_id: the_user_id,
-              session_guid: the_session_guid,
-              subject_course_id: duplicate_sets.last.subject_course_id,
-              latest_course_module_element_id: duplicate_sets.last.latest_course_module_element_id,
-              course_module_id: duplicate_cm_id
-      )
-      new_one.calculate_completeness # includes a 'save'
-      # delete the previous SETs
-      duplicate_sets.destroy_all
-    end
-    return true
-  end
-
-  def self.for_user_or_session(the_user_id, the_session_guid)
-    if the_user_id
-      where(user_id: the_user_id)
-    else
-      where(session_guid: the_session_guid, user_id: nil)
-    end
-  end
 
   # instance methods
   def update_subject_course_user_log
@@ -104,7 +71,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def old_cme_user_logs
-    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id)
+    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_id: self.course_module_id)
   end
 
   def completed_cme_user_logs
@@ -183,7 +150,7 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def old_subject_course_user_log
-    SubjectCourseUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id).first
+    SubjectCourseUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id).first
   end
 
   protected

@@ -1,0 +1,153 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@invoice.user.full_name
+          %p
+            ='Charge ID: '
+            =@charge.id
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-md-9.col-sm-12.col-xs-12
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Charge ID
+                .h6
+                  =@charge.id
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Stripe ID
+                .h6
+                  =@charge.stripe_guid
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Invoice ID
+                .h6
+                  =@charge.invoice_id
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Stripe Invoice ID
+                .h6
+                  =@charge.stripe_invoice_id
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Subscription ID
+                .h6
+                  =@charge.subscription_id
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Stripe Subscription ID
+                .h6
+                  =@charge.subscription.stripe_guid
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Card ID
+                .h6
+                  =@charge.subscription_payment_card_id
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Stripe Card ID
+                .h6
+                  =@charge.subscription_payment_card.stripe_card_guid
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Amount
+                .h6
+                  =@charge.amount
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Amount Refunded
+                .h6
+                  =@charge.amount_refunded
+
+              -if @charge.failure_code
+                .col-sm-6.l-margin-bottom
+                  .h3
+                    Failure Code
+                  .h6
+                    =@charge.failure_code
+                .col-sm-6.l-margin-bottom
+                  .h3
+                    Failure Message
+                  .h6
+                    =@charge.failure_message
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Paid
+                .h6
+                  =@charge.paid
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Status
+                .h6
+                  =@charge.status
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Refunded
+                .h6
+                  =@charge.refunded
+              .col-sm-6.l-margin-bottom
+                .h3
+                  Refund Count
+                .h6
+                  =@charge.refunds.count if @charge.refunded
+
+
+            .col-md-3.col-sm-12.col-xs-12
+              -if @charge.refundable?
+                .col-sm-12.l-margin-top-small
+                  =link_to 'Refund Charge', new_refund_url(subscription_id: @subscription.id, invoice_id: @invoice.id, charge_id: @charge.id, user_id: @user.id), class: 'btn btn-red full-width'
+
+
+
+
+      -if @charge.refunds.any?
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12
+            .box-item.table-box#invoices-panel.l-margin-bottom-huge
+              .col-sm-12
+                %h2.l-margin-bottom
+                  Refunds
+                .table-responsive
+                  %table.table{style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th
+                          Refund ID
+                        %th
+                          Stripe ID
+                        %th
+                          Amount Refunded
+                        %th
+                          Status
+                        %th
+
+                    %tbody
+                      -@charge.refunds.each do |refund|
+                        %tr
+                          %td
+                            =refund.id
+                          %td
+                            =refund.stripe_guid
+                          %td
+                            =refund.amount
+                          %td
+                            =refund.status
+                          %td
+                            =link_to 'View', refund_url(refund), class: 'btn btn-purple btn-small'

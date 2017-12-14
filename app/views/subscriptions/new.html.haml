@@ -1,0 +1,249 @@
+.upgrade
+  #wrapper
+    %section#free
+      .tmain
+        .tbase
+          -if flash[:success] || flash[:error] || flash[:warning]
+            .col-sm-8.col-sm-offset-2.col-xs-12
+              =render partial: 'layouts/flash_messages'
+          .container
+            -if @user.trial_user?
+              .row
+                .col-lg-4.col-lg-offset-4.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
+                  -#TODO Slow to load !!!
+                  #countdown
+                    %h4
+                      =t('views.subscriptions.new_subscription.time_h4')
+                    .timer{"data-date" => timer_datetime(@user.student_access.trial_ending_at_date)}
+
+              .row
+                .col-md-10.col-md-offset-1
+                  %h1.title1
+                    =t('views.subscriptions.new_subscription.h1')
+                  %h2.subtitle
+                    =t('views.subscriptions.new_subscription.h2a')
+                  %h2.subtitle
+                    =t('views.subscriptions.new_subscription.h2b')
+            -else
+              .row
+                .col-md-10.col-md-offset-1
+                  %h1.title1
+                    =t('views.subscriptions.new_subscription.h2e')
+
+
+      .go-down
+        %a.anchor{:href => "#plans"}
+          %i.fa.fa-angle-down
+      .bottom-arrow
+
+
+
+    #upgrade-subscription
+      =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
+        =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+        =f.hidden_field :user_id, value: @user.id
+        =f.hidden_field :subscription_plan_id
+        =f.hidden_field :stripe_token
+        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        -if params[:coupon]
+          =hidden_field_tag :hidden_coupon_code
+
+
+        %section#plans
+          .container
+
+            %h2.title1
+              =t('views.subscriptions.new_subscription.h2c')
+            %h2.subtitle1
+              =t('views.subscriptions.new_subscription.h2d')
+
+            %ul.plans.clearfix
+              -@subscription_plans.each do |plan|
+                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months}}
+                  .base
+                    .topbox
+                      -if plan.payment_frequency_in_months == 3
+                        %span
+                          =t('views.subscriptions.new_subscription.h2d')
+                    .box
+                      .name
+                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                      %ul.details.fa-ul
+                        %li
+                          %i.fa-li.fa.fa-check
+                          =t('views.subscriptions.new_subscription.get_unlimited_access')
+                        %li
+                          %i.fa-li.fa.fa-check
+                          =t('views.subscriptions.new_subscription.cancel_anytime')
+                        %li
+                          %i.fa-li.fa.fa-check
+                          =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
+                        -#%li
+                          %i.fa-li.fa.fa-check
+                          -# TODO Add plans free mock exams count here
+                          =#'corrected mock exams'
+
+                      .price
+                        =plan.currency.format_number(plan.price)
+                      -#unless plan.payment_frequency_in_months == 1
+                        -# TODO change this display actual discount and saving values
+                        .promo
+                          .line1
+                            18% OFF
+                          .line2
+                            Save €25
+                    .lsbtn-base
+                      -#%a.lsbtn{:href => "#"}
+                        %i.fa.fa-check
+                        Choose this plan
+                      -# TODO change this to have no tick and then tick if selected
+                      %label.lsbtn.plan-option
+                        %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
+                        =t('views.subscriptions.new_subscription.select_this_plan')
+
+
+
+
+        %section#cancel.bg-gradient1
+          .container
+            %h1.title1
+              %span
+                =t('views.subscriptions.new_subscription.and_dont_forget')
+                %strong
+                  =t('views.subscriptions.new_subscription.you_can_cancel_anytime')
+            %h1.title1
+              %span
+                =t('views.subscriptions.new_subscription.no_commitments')
+                %br/
+
+
+        %section#simply
+          .container
+            .row
+              .col-lg-10.col-lg-offset-1
+                %h2.title1
+                  =t('views.subscriptions.new_subscription.enter_payment_details')
+                %h2.subtitle1
+                  =t('views.subscriptions.new_subscription.continue_right_away')
+
+            .row
+              .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+                =render partial: 'subscription_payment_cards/form', locals: {f: f}
+
+
+
+:javascript
+
+
+  var couponCode = $('#coupon_code');
+  var plan_id = '1';
+
+  // UnChecks radio buttons except the one that was clicked.
+  // Finds the id value of the sub plan that the radio button belongs to.
+  // Sets the hidden field subscription_plan_id to that id.
+  function choosePlan(theThing) {
+    $('.option[type="radio"]:checked').prop('checked', false);
+    $(theThing).find('.option[type="radio"]').prop('checked', true);
+    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
+    $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
+    //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
+    plan_id = $('#subscription_subscription_plan_id').val();
+
+    // Need to trigger Ajax call here if the coupon field already has a value
+    if ($('#coupon_code').val()) {
+      validateCoupon();
+    }
+  }
+
+
+  // Trigger Ajax call on every input into the coupon field.
+  // Ajax call params are the coupon field value and selected_plan_id
+  // If response contains 'valid:true' add green border to field input
+  // If response contains 'valid:false' add red border to field and show error text
+  //
+  //
+  function validateCoupon() {
+
+      if(!couponCode.value){
+        $.ajax({
+          url: '#{coupon_validation_path}',
+
+          dataType: 'json',
+          data: JSON.stringify({'coupon_code': couponCode.val(), 'plan_id': plan_id }),
+          method: 'POST',
+          contentType: "application/json; charset=utf-8",
+
+          success: function(data,status,xhr){
+            var validCoupon = data.valid;
+            var discountedPrice = data.discounted_price;
+
+            if(validCoupon === false){
+              $('#coupon_code').removeClass("coupon-success");
+              $('#coupon_code').addClass("coupon-error");
+              $('.invalid-code').show();
+              $('.discounted-price').hide();
+              $('#total-value').removeClass('strike');
+
+            } else if(validCoupon === true){
+              $('#coupon_code').removeClass("coupon-error");
+              $('#coupon_code').addClass("coupon-success");
+              $('.invalid-code').hide();
+
+              $('.discounted-price').show();
+              $('#total-value').addClass('strike');
+              $('#discounted-value').text(discountedPrice);
+
+            } else {
+              $('#coupon_code').removeClass("coupon-error");
+              $('#coupon_code').removeClass("coupon-success");
+              $('.invalid-code').hide();
+            }
+
+
+
+          },
+          error: function(xhr,status,error){
+            console.log(xhr);
+            alert(error);
+          }
+
+        });
+
+    } else  {
+      couponCode.removeClass("coupon-error");
+      couponCode.removeClass("coupon-success");
+      couponCode.hide();
+    }
+
+  }
+
+  $('#coupon_code').on('input',function(e) {
+    validateCoupon();
+  });
+
+  // Hide green/red border and coupon error text if input has no value
+  $('#coupon_code').blur(function() {
+    if ($('#coupon_code').val() === '') {
+      $('#coupon_code').removeClass("coupon-error");
+      $('#coupon_code').removeClass("coupon-success");
+      $('.invalid-code').hide();
+    }
+  });
+
+  $(document).on('ready', function() {
+    choosePlan($('.plan-option')[1]);
+    $('.option').bind('click', function(event) {
+      event.stopPropagation();
+      choosePlan(this.parentElement);
+    });
+
+    $(".plan-option").bind('click', function(event) {
+      event.preventDefault();
+      choosePlan(this);
+    });
+    $(".sk-circle").hide();
+    $('.invalid-code').hide();
+    $('.discounted-price').hide();
+  })
+
+

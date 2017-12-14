@@ -18,7 +18,7 @@ describe ExamBodiesController, type: :controller do
 
   let!(:exam_body_1) { FactoryGirl.create(:exam_body) }
   let!(:exam_body_2) { FactoryGirl.create(:exam_body) }
-  let!(:enrollment_1) {FactoryGirl.create(:enrollment, user_id: individual_student_user.id, exam_body_id: exam_body_1.id)}
+  let!(:enrollment_1) {FactoryGirl.create(:enrollment, user_id: student_user.id, exam_body_id: exam_body_1.id)}
   let!(:exam_sitting_1) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
   let!(:exam_sitting_2) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
   let!(:valid_params) { FactoryGirl.attributes_for(:exam_body) }
@@ -77,11 +77,11 @@ describe ExamBodiesController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -266,98 +266,6 @@ describe ExamBodiesController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see exam_body_1' do
-        get :show, id: exam_body_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see exam_body_2' do
-        get :show, id: exam_body_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with exam_body_1' do
-        get :edit, id: exam_body_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK with exam_body_2' do
-        get :edit, id: exam_body_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, exam_body: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should report error for invalid params' do
-        post :create, exam_body: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for exam_body_1' do
-        put :update, id: exam_body_1.id, exam_body: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      # optional
-      it 'should respond OK to valid params for exam_body_2' do
-        put :update, id: exam_body_2.id, exam_body: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: exam_body_1.id, exam_body: {valid_params.keys.first => ''}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: exam_body_1.id
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: exam_body_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
     end
 
     describe "GET 'index'" do

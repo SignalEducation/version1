@@ -43,7 +43,7 @@
                     .price
                       =plan.currency.format_number(plan.price)
                       -#€34,99
-                    -unless plan.payment_frequency_in_months == 1
+                    -#unless plan.payment_frequency_in_months == 1
                       -# TODO change this display actual discount and saving values
                       .promo
                         .line1
@@ -60,6 +60,16 @@
                       Choose this plan
 
 
+      %section#simply
+        .container
+          .row
+            .col-lg-10.col-lg-offset-1
+              %h2.subtitle1{style: 'margin-bottom: 20px;'}
+                ='Selecting this Plan will result in an immediate charge and start a new billing period from this date.'
+              .col-sm-10.col-sm-offset-1
+                %p
+                  ='Any remaining time paid for on your current billing will be credited to your account and deducted from this payment and any future payment until that credit is used.'
+
 
 
           .row
@@ -67,7 +77,7 @@
               .lsbtn-base
                 =f.submit 'Change Plan', class: 'lsbtn'
 
-                =link_to t('views.general.cancel'), account_url(anchor: 'subscriptions'), class: 'lsbtn v3'
+                =link_to t('views.general.cancel'), account_url(anchor: 'subscriptions'), class: 'lsbtn change-plan'
 
 
 

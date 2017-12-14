@@ -7,7 +7,7 @@
             Courses
       .row.l-margin-top.l-margin-bottom
         .col-md-12
-          =render partial: 'layouts/stats_navbar'
+          =render partial: 'management_consoles/course_content_nav'
 
       .row.l-margin-top.l-margin-bottom
         .col-md-4.col-sm-4.l-margin-top
@@ -19,7 +19,9 @@
               =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
               .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
                 %span.glyphicon.glyphicon-search
-        .col-md-12.l-margin-top-big
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
           .table-box
             .table-responsive
               %table.table.sorted_table{style: 'font-size: 18px;'}

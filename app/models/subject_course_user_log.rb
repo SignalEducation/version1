@@ -50,45 +50,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
-  scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
-  scope :for_unknown_users, -> { where(user_id: nil) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
 
 
   # class methods
-  def self.assign_user_to_session_guid(the_user_id, the_session_guid)
-    # activate this with the following:
-    # SubjectCourseUserLog.assign_user_to_session_guid(123, 'abcde123')
-    SubjectCourseUserLog.for_session_guid(the_session_guid).for_unknown_users.update_all(user_id: the_user_id)
-    user_logs = SubjectCourseUserLog.for_user_or_session(the_user_id, the_session_guid)
-    log_ids = user_logs.map(&:subject_course_id)
-    duplicate_log_sc_ids = log_ids.select{ |e| log_ids.count(e) > 1 }.uniq
-    duplicate_log_sc_ids.each do |duplicate_sc_id|
-      # find the SCUL's for the user, for the SC_id
-      duplicate_logs = SubjectCourseUserLog.where(user_id: the_user_id, subject_course_id: duplicate_sc_id).order(:updated_at)
-      # build a new SET combining all of the data
-      new_one = SubjectCourseUserLog.new(
-          user_id: the_user_id,
-          session_guid: the_session_guid,
-          latest_course_module_element_id: duplicate_logs.last.latest_course_module_element_id,
-          subject_course_id: duplicate_sc_id,
-      )
-      new_one.recalculate_completeness # includes a 'save'
-      # delete the previous SETs
-      duplicate_logs.destroy_all
-    end
-    return true
-  end
-
-  def self.for_user_or_session(the_user_id, the_session_guid)
-    if the_user_id
-      where(user_id: the_user_id)
-    else
-      where(session_guid: the_session_guid, user_id: nil)
-    end
-  end
 
   # instance methods
   def destroyable?
@@ -138,11 +106,11 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def old_sets
-    StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
+    StudentExamTrack.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
   end
 
   def old_cmeuls
-    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(subject_course_id: self.subject_course_id)
+    CourseModuleElementUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
   end
 
   protected

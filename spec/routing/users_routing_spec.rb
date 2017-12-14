@@ -57,6 +57,7 @@
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
 #  student_number                   :string
+#  unsubscribed_from_emails         :boolean          default(FALSE)
 #
 
 require 'rails_helper'

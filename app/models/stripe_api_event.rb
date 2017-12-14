@@ -27,9 +27,10 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded)
 
   # relationships
+  has_many :charges
 
   # validation
   validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
@@ -66,6 +67,12 @@ class StripeApiEvent < ActiveRecord::Base
             process_invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription], self.payload[:data][:object][:id])
           when 'customer.subscription.deleted'
             process_customer_subscription_deleted(self.payload[:data][:object][:customer], self.payload[:data][:object][:id])
+          when 'charge.succeeded'
+            process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'charge.failed'
+            process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'charge.refunded'
+            process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
           else
             set_process_error "Unknown event type - #{self.payload}"
         end
@@ -182,6 +189,34 @@ class StripeApiEvent < ActiveRecord::Base
       subscription.update_from_stripe
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
+    end
+  end
+
+  def process_charge_event(invoice_guid, event_data)
+    invoice = Invoice.where(stripe_guid: invoice_guid).first
+
+    charge = Charge.create_from_stripe_data(event_data)
+
+    if invoice && charge
+      Rails.logger.debug "DEBUG: Successful Create Charge - #{charge.id} for Invoice - #{invoice.id}"
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error("Error creating charge. #{}")
+    end
+  end
+
+  def process_charge_refunded(invoice_guid, event_data)
+    invoice = Invoice.where(stripe_guid: invoice_guid).first
+
+    charge = Charge.update_refund_data(event_data)
+
+    if invoice && charge
+
+      self.processed = true
+      self.processed_at = Time.now
+    else
+      set_process_error("Error creating charge. #{}")
     end
   end
 

@@ -54,7 +54,7 @@ describe ReferralCode do
 
   describe "user groups" do
     it "should create valid referral code for students and bloggers" do
-      [individual_student_user,  blogger_user].each do |allowed_user|
+      [student_user].each do |allowed_user|
         expect(allowed_user.create_referral_code).to be_valid
       end
     end

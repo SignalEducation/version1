@@ -3,15 +3,21 @@
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.exam_sittings.index.h1')
-      .row
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'management_consoles/course_content_nav'
+
+
+      .row.l-margin-top.l-margin-bottom
         .col-sm-12
-          =link_to t('views.general.new'), new_exam_sitting_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+          =link_to 'New Exam Sitting', new_exam_sitting_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
 
       .row
-        .col-md-12.l-margin-top-big
+        .col-md-12.l-margin-top
           .table-box
             .table-responsive
               =will_paginate @exam_sittings, renderer: BootstrapPagination::Rails

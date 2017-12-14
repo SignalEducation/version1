@@ -45,14 +45,13 @@ class SubscriptionPaymentCard < ActiveRecord::Base
                   :stripe_object_name, :funding, :cardholder_name, :fingerprint,
                   :cvc_checked, :address_line1_check, :address_zip_check,
                   :dynamic_last4, :customer_guid, :is_default_card,
-                  :stripe_token, :make_default_card
+                  :stripe_token
 
   # Constants
   STATUSES = %w(card-live not-live expired)
-  CHECKING_STATUSES = %w(pass fail unavailable unchecked)
 
   # relationships
-  has_many :subscription_transactions
+  has_many :charges
   belongs_to :user
   belongs_to :account_address_country, class_name: 'Country',
              foreign_key: :account_country_id
@@ -84,7 +83,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   # callbacks
   before_validation :create_on_stripe_using_token, on: :create, if: :stripe_token
-  after_create :update_as_the_default_card, if: :is_default_card
+  after_create :update_stripe_and_other_cards, if: :stripe_token
   before_destroy :remove_card_from_stripe
 
   # scopes
@@ -94,73 +93,59 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   # class methods
   def self.build_from_stripe_data(stripe_card_data, user_id=nil)
-    if stripe_card_data[:object] == 'card'
-      user = User.find(user_id)
-      country_id = Country.find_by_iso_code(stripe_card_data[:country].to_s.upcase).try(:id) || user.try(:country_id)
-      x = SubscriptionPaymentCard.new(
-              user_id: user.id,
-              stripe_card_guid: stripe_card_data[:id],
-              brand: stripe_card_data[:brand],
-              last_4: stripe_card_data[:last4],
-              expiry_month: stripe_card_data[:exp_month],
-              expiry_year: stripe_card_data[:exp_year],
-              address_line1: stripe_card_data[:address_line1],
-              address_line2: stripe_card_data[:address_line2],
-              address_city: stripe_card_data[:address_city],
-              address_zip: stripe_card_data[:address_zip],
-              address_state: stripe_card_data[:address_state],
-              address_country: stripe_card_data[:address_country],
-              account_country: stripe_card_data[:country],
-              account_country_id: country_id,
-              stripe_object_name: stripe_card_data[:object],
-              funding: stripe_card_data[:funding],
-              cardholder_name: stripe_card_data[:name],
-              fingerprint: stripe_card_data[:fingerprint],
-              cvc_checked: stripe_card_data[:cvc_check],
-              address_line1_check: stripe_card_data[:address_line1_check],
-              address_zip_check: stripe_card_data[:address_zip_check],
-              dynamic_last4: stripe_card_data[:dynamic_last4],
-              customer_guid: stripe_card_data[:customer],
-              is_default_card: true,
-              status: 'card-live'
-      )
+    user = User.find(user_id)
+    country_id = Country.find_by_iso_code(stripe_card_data[:country].to_s.upcase).try(:id) || user.try(:country_id)
+    x = SubscriptionPaymentCard.new(
+            user_id: user.id,
+            stripe_card_guid: stripe_card_data[:id],
+            brand: stripe_card_data[:brand],
+            last_4: stripe_card_data[:last4],
+            expiry_month: stripe_card_data[:exp_month],
+            expiry_year: stripe_card_data[:exp_year],
+            address_line1: stripe_card_data[:address_line1],
+            address_line2: stripe_card_data[:address_line2],
+            address_city: stripe_card_data[:address_city],
+            address_zip: stripe_card_data[:address_zip],
+            address_state: stripe_card_data[:address_state],
+            address_country: stripe_card_data[:address_country],
+            account_country: stripe_card_data[:country],
+            account_country_id: country_id,
+            stripe_object_name: stripe_card_data[:object],
+            funding: stripe_card_data[:funding],
+            cardholder_name: stripe_card_data[:name],
+            fingerprint: stripe_card_data[:fingerprint],
+            cvc_checked: stripe_card_data[:cvc_check],
+            address_line1_check: stripe_card_data[:address_line1_check],
+            address_zip_check: stripe_card_data[:address_zip_check],
+            dynamic_last4: stripe_card_data[:dynamic_last4],
+            customer_guid: stripe_card_data[:customer],
+            is_default_card: true,
+            status: 'card-live'
+    )
 
-      unless x.save
-        Rails.logger.error "SubscriptionPaymentCard#build_from_stripe_data - failed to save a new record. Errors: #{x.errors.inspect}"
-      end
-    else
-      Rails.logger.error "SubscriptionPaymentCard#build_from_stripe_data - invalid data structure sent into this method.  Incoming data: #{stripe_card_data.inspect}."
+    unless x.save
+      Rails.logger.error "SubscriptionPaymentCard#build_from_stripe_data - failed to save a new record. Errors: #{x.errors.inspect}"
     end
   end
 
-  def self.create_cards_from_stripe_array(stripe_card_array, user_id, default_card_guid)
-    this_customers_cards = SubscriptionPaymentCard.where(user_id: user_id)
-    card_guid_list = this_customers_cards.map(&:stripe_card_guid)
+  # AfterCreate callback from Subscription model
+  def self.create_from_stripe_array(stripe_card_array, user_id, default_card_guid)
+    #
+    # TODO: Should expired cards also be deleted here?
+    #
+    old_default_cards = SubscriptionPaymentCard.where(user_id: user_id, is_default_card: true)
+    # Delete any previous default cards
+    old_default_cards.each do |card|
+      card.destroy
+    end
+
     stripe_card_array.each do |data_item|
-      if data_item[:object] == 'card' && !card_guid_list.include?(data_item[:id])
+      # Loop through the array if one item is equal to the customers default_card id then create a card record for it
+      if data_item[:object] == 'card' && data_item[:id] == default_card_guid
         SubscriptionPaymentCard.build_from_stripe_data(data_item, user_id)
       end
     end
 
-    #### mark the default card as "live"
-    this_customers_cards.reload
-    the_default_card = this_customers_cards.where(stripe_card_guid: default_card_guid).first
-    the_default_card.update_as_the_default_card
-
-    return the_default_card.id || this_customers_cards.last.try(:id)
-
-  end
-
-  def self.get_updates_for_user(stripe_customer_guid)
-    customer_payload = Stripe::Customer.retrieve(stripe_customer_guid).to_hash
-    if customer_payload && customer_payload[:sources]
-      user = User.where(stripe_customer_id: stripe_customer_guid).first
-
-      SubscriptionPaymentCard.create_cards_from_stripe_array(customer_payload[:sources][:data], user.id, customer_payload[:default_source])
-
-    else
-      Rails.logger.warn "WARN: SubscriptionPaymentCard#get_updates_for_user - couldn't retrieve valid customer data for customer guid #{stripe_customer_guid}"
-    end
   end
 
   # instance methods
@@ -169,9 +154,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     if self.stripe_token.to_s.length > 0 && self.user.stripe_customer_id && self.stripe_card_guid.blank?
       stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
       new_card_hash = stripe_customer.sources.create({source: self.stripe_token}).to_hash
+
       if stripe_customer && new_card_hash
         self.stripe_card_guid = new_card_hash[:id]
-        self.status = (new_card_hash[:cvc_check] == 'pass' && self.make_default_card) ? 'card-live' : 'not-live'
+        self.status = (new_card_hash[:cvc_check] == 'pass') ? 'card-live' : 'not-live'
         self.brand = new_card_hash[:brand]
         self.last_4 = new_card_hash[:last4]
         self.expiry_month = new_card_hash[:exp_month]
@@ -193,13 +179,22 @@ class SubscriptionPaymentCard < ActiveRecord::Base
         self.address_zip_check = new_card_hash[:address_zip_check]
         self.dynamic_last4 = new_card_hash[:dynamic_last4]
         self.customer_guid = new_card_hash[:customer]
-        self.is_default_card = self.make_default_card
+        self.is_default_card = true
       else
         Rails.logger.error "ERROR: Could not find Stripe Customer with-#{self.user.stripe_customer_id}. OR Stripe Create card failed with response-#{new_card_hash}."
       end
     else
       Rails.logger.error "ERROR: Could not find Stripe Token-#{self.stripe_token} OR a customer id in the User-#{self.user.stripe_customer_id}"
     end
+
+  rescue Stripe::CardError => e
+    body = e.json_body
+    err  = body[:error]
+
+    Rails.logger.error "DEBUG: SubPaymentCard#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
+
+    errors.add(:base, "Sorry! Your card was declined because - #{err[:message]}")
+    false
 
   rescue => e
     Rails.logger.error "ERROR: SubscriptionPaymentCard#create_on_stripe_using_token - error: #{e.inspect}.  Self: #{self.inspect}."
@@ -209,14 +204,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   def destroyable?
     !self.is_default_card?
-  end
-
-  def make_default_card=(t)
-    @make_default_card = t
-  end
-
-  def make_default_card
-    @make_default_card
   end
 
   def status
@@ -233,32 +220,6 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     self.read_attribute(:status)
   end
 
-  def check_valid_dates
-    unless self.status == 'expired'
-      if self.expiry_year && self.expiry_month
-        expires_on = Date.new(self.expiry_year, self.expiry_month, 1) + 1.month
-        self.update_column(:status, 'expired') if expires_on < Proc.new{Time.now}.call
-        return expires_on < Proc.new{Time.now}.call ? 'false' : 'true'
-      end
-    end
-  end
-
-  def expiring_soon?
-    unless self.status == 'expired'
-      if self.expiry_year && self.expiry_month && self.is_default_card && self.user.active_subscription
-
-        expiration = Date.new(self.expiry_year, self.expiry_month, 1)
-        month_before_expiration = Date.new(self.expiry_year, self.expiry_month, 1) - 1.month
-
-        if (Proc.new{Time.now}.call) > month_before_expiration && (Proc.new{Time.now}.call < expiration)
-          true
-        else
-          false
-        end
-
-      end
-    end
-  end
 
   def stripe_token=(t)
     @stripe_token = t
@@ -293,7 +254,8 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   def remove_card_from_stripe
     stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
-    response = stripe_customer.sources.retrieve(self.stripe_card_guid).delete
+    stripe_card = stripe_customer.sources.retrieve(self.stripe_card_guid)
+    response = stripe_card.delete
     if response[:deleted]
       true
     else
@@ -302,9 +264,23 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     end
 
   rescue => e
-    Rails.logger.error "ERROR: SubscriptionPaymentCard#delete_card failed. Error: #{e.inspect}. Self: #{self.errors.inspect}"
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
+    if e.response.data[:error][:message] == "No such source: #{self.stripe_card_guid}"
+      true
+    else
+      Rails.logger.error "ERROR: SubscriptionPaymentCard#delete_card failed. Error: #{e.inspect}. Self: #{self.errors.inspect}"
+      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      false
+    end
   end
+
+  def update_stripe_and_other_cards
+    stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
+    stripe_customer.default_source = self.stripe_card_guid
+    stripe_customer.save
+
+    other_cards = SubscriptionPaymentCard.where(user_id: self.user_id, is_default_card: true).where.not(id: self.id)
+    other_cards.update_all(status: 'not-live', is_default_card: false)
+  end
+
 
 end

@@ -19,20 +19,35 @@
                   %td.col-sm-4=t('views.user_groups.form.description')
                   %td.col-sm-8=@user_group.description
                 %tr
-                  %td.col-sm-4=t('views.user_groups.form.individual_student')
-                  %td.col-sm-8=tick_or_cross(@user_group.individual_student)
+                  %td.col-sm-4=t('views.user_groups.form.student_user')
+                  %td.col-sm-8=tick_or_cross(@user_group.student_user)
                 %tr
-                  %td.col-sm-4=t('views.user_groups.form.tutor')
-                  %td.col-sm-8=tick_or_cross(@user_group.tutor)
+                  %td.col-sm-4=t('views.user_groups.form.blocked_user')
+                  %td.col-sm-8=tick_or_cross(@user_group.blocked_user)
                 %tr
-                  %td.col-sm-4=t('views.user_groups.form.content_manager')
-                  %td.col-sm-8=tick_or_cross(@user_group.content_manager)
+                  %td.col-sm-4=t('views.user_groups.form.trial_or_sub_required')
+                  %td.col-sm-8=tick_or_cross(@user_group.trial_or_sub_required)
                 %tr
-                  %td.col-sm-4=t('views.user_groups.form.blogger')
-                  %td.col-sm-8=tick_or_cross(@user_group.blogger)
+                  %td.col-sm-4=t('views.user_groups.form.system_requirements_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.system_requirements_access)
                 %tr
-                  %td.col-sm-4=t('views.user_groups.form.site_admin')
-                  %td.col-sm-8=tick_or_cross(@user_group.site_admin)
+                  %td.col-sm-4=t('views.user_groups.form.content_management_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.content_management_access)
+                %tr
+                  %td.col-sm-4=t('views.user_groups.form.stripe_management_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.stripe_management_access)
+                %tr
+                  %td.col-sm-4=t('views.user_groups.form.user_management_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.user_management_access)
+                %tr
+                  %td.col-sm-4=t('views.user_groups.form.developer_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.developer_access)
+                %tr
+                  %td.col-sm-4=t('views.user_groups.form.home_pages_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.home_pages_access)
+                %tr
+                  %td.col-sm-4=t('views.user_groups.form.user_group_management_access')
+                  %td.col-sm-8=tick_or_cross(@user_group.user_group_management_access)
                 %tr
                   %td.col-sm-4=t('views.user_groups.show.users')
                   %td.col-sm-8
@@ -41,7 +56,7 @@
                         =link_to user.full_name, user
                         %br/
                     -else
-                      =link_to users_url, title: t('views.general.tooltips.click_to_view') do
+                      =link_to user_management_index_url, title: t('views.general.tooltips.click_to_view') do
                         =@user_group.users.count
                         =t('views.users.index.h1').downcase
               %p

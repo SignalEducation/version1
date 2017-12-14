@@ -1,0 +1,80 @@
+.remodal{"data-remodal-id" => "personal-details-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          =t('views.user_accounts.student_user_form.heading')
+        =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top.text-left
+      #student_details_modal
+        =form_for(@user, url: update_personal_details_url, html: {class: 'form-horizontal', role: 'form', id: 'personal-details-form'}, name: 'personal_details_form') do |f|
+          .col-md-12
+            .col-md-6
+              =f.label :first_name, t('views.user_accounts.student_user_form.first_name'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.text_field :first_name, class: 'form-control', style: 'border-radius: 6px;'
+              %br/
+              =f.label :last_name, t('views.user_accounts.student_user_form.last_name'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.text_field :last_name, class: 'form-control', style: 'border-radius: 6px;'
+              %br/
+
+            .col-md-6
+              =f.label :email, t('views.user_accounts.student_user_form.email'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.text_field :email, class: 'form-control', style: 'border-radius: 6px;'
+              %br/
+              =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.text_field :date_of_birth, class: 'form-control', style: 'border-radius: 6px;', id: 'dob', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+              %br/
+
+          .col-md-12
+            .col-md-6
+              =f.label :student_number, t('views.user_accounts.student_user_form.student_number'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.text_field :student_number, class: 'form-control', style: 'border-radius: 6px;'
+              %br/
+
+            .col-md-6
+              =f.hidden_field :unsubscribed_from_emails, id: 'hidden_unsubscribe_from_emails'
+              %label.check
+                %input{type: 'checkbox', id: 'unsubscribe_checkbox'}
+                  %span
+                    %i.fa.fa-check
+                  =t('views.user_accounts.student_user_form.unsubscribed_from_emails')
+
+          .col-sm-12.l-margin-top
+            .col-md-12
+              =f.submit t('views.general.actual_submit'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+
+
+
+
+:javascript
+
+  $(document).on('confirmation', '.remodal', function () {
+    document.forms['personal_details_form'].submit();
+  });
+
+  $(function () {
+    $('#dob').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });
+
+
+  $(document).ready(function() {
+    if ($("#hidden_unsubscribe_from_emails").val() == 'true') {
+      $('#unsubscribe_checkbox').prop('checked', true);
+    }
+  });
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#unsubscribe_checkbox').is(':checked') ) {
+      $("#hidden_unsubscribe_from_emails").val(true);
+    } else {
+      $("#hidden_unsubscribe_from_emails").val(false);
+    }
+  });

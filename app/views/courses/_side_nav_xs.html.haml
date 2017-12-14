@@ -16,7 +16,7 @@
                   Active
             -else
               =link_to course_special_link(course_module_element), title: t('views.courses.show.h1'), class: 'list-group-item' do
-                -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+                -if course_module_element.completed_by_user(current_user.try(:id))
                   %p
                     =course_module_element.name.html_safe
                   %h5.text-passed.text-bold

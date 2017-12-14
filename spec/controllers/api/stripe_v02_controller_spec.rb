@@ -14,10 +14,10 @@ describe Api::StripeV02Controller, type: :controller do
   let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
   let!(:subscription_plan_q) { FactoryGirl.create(:student_subscription_plan_q) }
 
-  let!(:student) { FactoryGirl.create(:individual_student_user) }
-  let!(:student_2) { FactoryGirl.create(:individual_student_user) }
-  let!(:reactivating_student) { FactoryGirl.create(:individual_student_user) }
-  let!(:canceled_pending_student) { FactoryGirl.create(:individual_student_user) }
+  let!(:student) { FactoryGirl.create(:student_user) }
+  let!(:student_2) { FactoryGirl.create(:student_user) }
+  let!(:reactivating_student) { FactoryGirl.create(:student_user) }
+  let!(:canceled_pending_student) { FactoryGirl.create(:student_user) }
   let!(:card_details_1) { {number: '4242424242424242', cvc: '123', exp_month: '12', exp_year: '2019'} }
   let!(:card_details_2) { {number: '4242424242424242', cvc: '123', exp_month: '11', exp_year: '2019'} }
   let!(:card_token_1)   { Stripe::Token.create(card: card_details_1) }

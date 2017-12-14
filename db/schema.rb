@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171105143811) do
+ActiveRecord::Schema.define(version: 20171206164823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,43 @@ ActiveRecord::Schema.define(version: 20171105143811) do
 
   add_index "blog_posts", ["home_page_id"], name: "index_blog_posts_on_home_page_id", using: :btree
 
+  create_table "charges", force: :cascade do |t|
+    t.integer  "subscription_id"
+    t.integer  "invoice_id"
+    t.integer  "user_id"
+    t.integer  "subscription_payment_card_id"
+    t.integer  "currency_id"
+    t.integer  "coupon_id"
+    t.integer  "stripe_api_event_id"
+    t.string   "stripe_guid"
+    t.integer  "amount"
+    t.integer  "amount_refunded"
+    t.string   "failure_code"
+    t.text     "failure_message"
+    t.string   "stripe_customer_id"
+    t.string   "stripe_invoice_id"
+    t.boolean  "livemode",                     default: false
+    t.string   "stripe_order_id"
+    t.boolean  "paid",                         default: false
+    t.boolean  "refunded",                     default: false
+    t.text     "stripe_refunds_data"
+    t.string   "status"
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.text     "original_event_data"
+  end
+
+  add_index "charges", ["coupon_id"], name: "index_charges_on_coupon_id", using: :btree
+  add_index "charges", ["currency_id"], name: "index_charges_on_currency_id", using: :btree
+  add_index "charges", ["invoice_id"], name: "index_charges_on_invoice_id", using: :btree
+  add_index "charges", ["paid"], name: "index_charges_on_paid", using: :btree
+  add_index "charges", ["refunded"], name: "index_charges_on_refunded", using: :btree
+  add_index "charges", ["status"], name: "index_charges_on_status", using: :btree
+  add_index "charges", ["stripe_api_event_id"], name: "index_charges_on_stripe_api_event_id", using: :btree
+  add_index "charges", ["subscription_id"], name: "index_charges_on_subscription_id", using: :btree
+  add_index "charges", ["subscription_payment_card_id"], name: "index_charges_on_subscription_payment_card_id", using: :btree
+  add_index "charges", ["user_id"], name: "index_charges_on_user_id", using: :btree
+
   create_table "countries", force: :cascade do |t|
     t.string   "name"
     t.string   "iso_code"
@@ -60,6 +97,28 @@ ActiveRecord::Schema.define(version: 20171105143811) do
   add_index "countries", ["in_the_eu"], name: "index_countries_on_in_the_eu", using: :btree
   add_index "countries", ["name"], name: "index_countries_on_name", using: :btree
   add_index "countries", ["sorting_order"], name: "index_countries_on_sorting_order", using: :btree
+
+  create_table "coupons", force: :cascade do |t|
+    t.string   "name"
+    t.string   "code"
+    t.integer  "currency_id"
+    t.boolean  "livemode",           default: false
+    t.boolean  "active",             default: false
+    t.integer  "amount_off"
+    t.string   "duration"
+    t.integer  "duration_in_months"
+    t.integer  "max_redemptions"
+    t.integer  "percent_off"
+    t.datetime "redeem_by"
+    t.integer  "times_redeemed"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.text     "stripe_coupon_data"
+  end
+
+  add_index "coupons", ["active"], name: "index_coupons_on_active", using: :btree
+  add_index "coupons", ["code"], name: "index_coupons_on_code", using: :btree
+  add_index "coupons", ["name"], name: "index_coupons_on_name", using: :btree
 
   create_table "course_module_element_quizzes", force: :cascade do |t|
     t.integer  "course_module_element_id"
@@ -428,6 +487,7 @@ ActiveRecord::Schema.define(version: 20171105143811) do
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
+    t.integer  "subject_course_id"
     t.integer  "mock_exam_id"
     t.string   "stripe_guid"
     t.boolean  "live_mode",         default: false
@@ -437,12 +497,12 @@ ActiveRecord::Schema.define(version: 20171105143811) do
     t.integer  "currency_id"
     t.decimal  "price"
     t.string   "stripe_sku_guid"
-    t.integer  "subject_course_id"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
+  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
@@ -531,6 +591,30 @@ ActiveRecord::Schema.define(version: 20171105143811) do
   add_index "referred_signups", ["subscription_id"], name: "index_referred_signups_on_subscription_id", using: :btree
   add_index "referred_signups", ["user_id"], name: "index_referred_signups_on_user_id", using: :btree
 
+  create_table "refunds", force: :cascade do |t|
+    t.string   "stripe_guid"
+    t.integer  "charge_id"
+    t.string   "stripe_charge_guid"
+    t.integer  "invoice_id"
+    t.integer  "subscription_id"
+    t.integer  "user_id"
+    t.integer  "manager_id"
+    t.integer  "amount"
+    t.text     "reason"
+    t.string   "status"
+    t.boolean  "livemode",           default: true
+    t.text     "stripe_refund_data"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "refunds", ["charge_id"], name: "index_refunds_on_charge_id", using: :btree
+  add_index "refunds", ["invoice_id"], name: "index_refunds_on_invoice_id", using: :btree
+  add_index "refunds", ["manager_id"], name: "index_refunds_on_manager_id", using: :btree
+  add_index "refunds", ["status"], name: "index_refunds_on_status", using: :btree
+  add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
+  add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
+
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"
     t.string   "api_version"
@@ -548,6 +632,28 @@ ActiveRecord::Schema.define(version: 20171105143811) do
   add_index "stripe_api_events", ["guid"], name: "index_stripe_api_events_on_guid", using: :btree
   add_index "stripe_api_events", ["processed"], name: "index_stripe_api_events_on_processed", using: :btree
   add_index "stripe_api_events", ["processed_at"], name: "index_stripe_api_events_on_processed_at", using: :btree
+
+  create_table "student_accesses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "trial_started_date"
+    t.datetime "trial_ending_at_date"
+    t.datetime "trial_ended_date"
+    t.integer  "trial_seconds_limit"
+    t.integer  "trial_days_limit"
+    t.integer  "content_seconds_consumed", default: 0
+    t.integer  "subscription_id"
+    t.string   "account_type"
+    t.boolean  "content_access",           default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
+  add_index "student_accesses", ["account_type"], name: "index_student_accesses_on_account_type", using: :btree
+  add_index "student_accesses", ["content_access"], name: "index_student_accesses_on_content_access", using: :btree
+  add_index "student_accesses", ["content_seconds_consumed"], name: "index_student_accesses_on_content_seconds_consumed", using: :btree
+  add_index "student_accesses", ["subscription_id"], name: "index_student_accesses_on_subscription_id", using: :btree
+  add_index "student_accesses", ["trial_days_limit"], name: "index_student_accesses_on_trial_days_limit", using: :btree
+  add_index "student_accesses", ["trial_seconds_limit"], name: "index_student_accesses_on_trial_seconds_limit", using: :btree
 
   create_table "student_exam_tracks", force: :cascade do |t|
     t.integer  "user_id"
@@ -757,6 +863,7 @@ ActiveRecord::Schema.define(version: 20171105143811) do
     t.boolean  "livemode",             default: false
     t.boolean  "active",               default: false
     t.boolean  "terms_and_conditions", default: false
+    t.integer  "coupon_id"
   end
 
   add_index "subscriptions", ["current_status"], name: "index_subscriptions_on_current_status", using: :btree
@@ -779,16 +886,26 @@ ActiveRecord::Schema.define(version: 20171105143811) do
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.boolean  "individual_student", default: false, null: false
-    t.boolean  "tutor",              default: false, null: false
-    t.boolean  "content_manager",    default: false, null: false
-    t.boolean  "blogger",            default: false, null: false
-    t.boolean  "site_admin",         default: false, null: false
+    t.boolean  "individual_student",           default: false, null: false
+    t.boolean  "tutor",                        default: false, null: false
+    t.boolean  "content_manager",              default: false, null: false
+    t.boolean  "blogger",                      default: false, null: false
+    t.boolean  "site_admin",                   default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "complimentary",      default: false
-    t.boolean  "customer_support",   default: false
-    t.boolean  "marketing_support",  default: false
+    t.boolean  "complimentary",                default: false
+    t.boolean  "customer_support",             default: false
+    t.boolean  "marketing_support",            default: false
+    t.boolean  "system_requirements_access",   default: false
+    t.boolean  "content_management_access",    default: false
+    t.boolean  "stripe_management_access",     default: false
+    t.boolean  "user_management_access",       default: false
+    t.boolean  "developer_access",             default: false
+    t.boolean  "home_pages_access",            default: false
+    t.boolean  "user_group_management_access", default: false
+    t.boolean  "student_user",                 default: false
+    t.boolean  "trial_or_sub_required",        default: false
+    t.boolean  "blocked_user",                 default: false
   end
 
   create_table "user_notifications", force: :cascade do |t|
@@ -867,6 +984,7 @@ ActiveRecord::Schema.define(version: 20171105143811) do
     t.datetime "free_trial_ended_at"
     t.string   "analytics_guid"
     t.string   "student_number"
+    t.boolean  "unsubscribed_from_emails",                     default: false
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree

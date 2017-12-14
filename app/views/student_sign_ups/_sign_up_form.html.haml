@@ -1,0 +1,47 @@
+=form_for @user, url: create_student_url do |f|
+  =f.hidden_field :locale, value: (params[:locale] || 'en')
+  =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+
+  #sign_up.form
+    .row
+      =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+      .col-sm-6
+        .form-group
+          =f.text_field :first_name, placeholder: t('views.users.form.your_first_name'), class: 'form-control', required: true
+      .col-sm-6
+        .form-group
+          =f.text_field :last_name, placeholder: t('views.users.form.your_last_name'), class: 'form-control', required: true
+      .col-sm-6
+        .form-group
+          =f.email_field :email, placeholder: t('views.users.form.your_email'), class: 'form-control', required: true
+      .col-sm-6
+        .form-group
+          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', required: true
+
+      .col-sm-6
+        .form-group.l-margin-top
+          %label.check{style: 'color: #fff;'}
+            %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+              %span
+                %i.fa.fa-check
+              ='I Agree to LearnSignal'
+              =link_to 'Terms & Conditions', terms_and_conditions_url, style: 'color: #fff;', target: '_blank'
+
+
+
+  .lsbtn-base
+    =link_to '#' do
+      .lsbtn.s-get
+        Get free course access
+        %i.fa.fa-chevron-right
+  .obs-nocc No credit card details needed!
+
+
+:javascript
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
+  });

@@ -23,44 +23,71 @@ Rails.application.routes.draw do
 
     # users and authentication
     resources :users do
-      get 'new_subscription', to: 'subscriptions#new_subscription', as: :new_subscription
-      patch 'create_subscription', to: 'subscriptions#create_subscription', as: :create_subscription
-
-      get 'reactivate_account', to: 'users#reactivate_account', as: :reactivate_account
-      post 'reactivate_account_subscription', to: 'users#reactivate_account_subscription', as: :reactivate_account_subscription
       resources :visits, only: [:index, :show]
     end
 
-    #User Account & Session
+    get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
+    get 'users/:user_id/new_subscription', to: 'subscriptions#new'
+    post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
+
+    #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
-    get 'account_verified', to: 'student_sign_ups#account_verified',
+    get 'account_verified', to: 'user_verifications#account_verified',
         as: :account_verified
-    resources :user_groups
+    get 'send_verification/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
+    get 'resend_verification/:email_verification_code', to: 'user_verifications#admin_resend_verification_mail', as: :admin_resend_verification_mail
+
+    # User Sessions
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
-    get 'account', to: 'users#account', as: :account
+
+    # User Accounts
+    get 'account', to: 'user_accounts#account_show', as: :account
+    post 'change_password', to: 'user_accounts#change_password', as: :change_password
+    patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
+    get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
-    post 'change_password', to: 'users#change_password', as: :change_password
+    put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
+
+    resources :user_groups
+    resources :student_user_management
+    resources :subscription_management do
+      get '/invoice/:invoice_id', action: :invoice, as: :invoice
+      get '/pdf_invoice/:invoice_id', action: :pdf_invoice, as: :pdf_invoice
+      get '/invoice/:invoice_id/charge/:id', action: :charge, as: :invoice_charge
+      put '/cancel', action: :cancel, as: :cancel
+      put '/un_cancel', action: :un_cancel_subscription, as: :un_cancel_subscription
+      put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
+    end
+    get  'student_user_management/:id/convert_to_student', to: 'student_user_management#convert_to_student', as: :convert_to_student
+    patch  'student_user_management/:id/update_to_student', to: 'student_user_management#update_to_student', as: :update_to_student
+    resources :users do
+      get  '/personal', action: :user_personal_details, as: :personal
+      get  '/subscription', action: :user_subscription_status, as: :subscription
+      get  '/courses', action: :user_courses_status, as: :courses
+      get  '/enrollments', action: :user_enrollments_details, as: :enrollments
+      get  '/orders', action: :user_purchases_details, as: :orders
+      patch  '/update_courses', action: :update_courses, as: :update_courses
+    end
     resources :user_password_resets, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
     get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
     get 'set_password/:id', to: 'user_password_resets#set_password', as: :set_password
     put 'create_password/:id', to: 'user_password_resets#create_password', as: :user_create_password
-    get 'send_verification/:email_verification_code', to: 'student_sign_ups#resend_verification_mail', as: :resend_verification_mail
-    get 'resend_verification/:email_verification_code', to: 'student_sign_ups#admin_resend_verification_mail', as: :admin_resend_verification_mail
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
-    get 'reactivation_complete', to: 'users#reactivation_complete', as: :reactivation_complete
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
     resources :countries, concerns: :supports_reordering
+    resources :coupons
+    post '/coupon_validation', to: 'coupons#validate_coupon', as: :coupon_validation
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
@@ -81,19 +108,7 @@ Rails.application.routes.draw do
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
     resources :currencies, concerns: :supports_reordering
 
-    get '/dashboard/export_users', to: 'dashboard#export_users', as: :export_users
-    get '/dashboard/export_users_monthly', to: 'dashboard#export_users_monthly', as: :export_users_monthly
-    get '/dashboard/export_users_with_enrollments', to: 'dashboard#export_users_with_enrollments', as: :export_users_with_enrollments
-    get '/dashboard/export_visits', to: 'dashboard#export_visits', as: :export_visits
-    get '/dashboard/export_courses', to: 'dashboard#export_courses', as: :export_courses
-    get '/dashboard/export_enrollments', to: 'dashboard#export_enrollments', as: :export_enrollments
-    get '/dashboard', to: 'dashboard#student', as: :student_dashboard
-    get '/dashboard/admin', to: 'dashboard#admin', as: :admin_dashboard
-    get '/dashboard/reports', to: 'dashboard#reports', as: :reports_dashboard
-    get '/dashboard/tutor', to: 'dashboard#tutor', as: :tutor_dashboard
-    get '/dashboard/content_manager', to: 'dashboard#content_manager', as: :content_manager_dashboard
-    get '/dashboard/marketing_manager', to: 'dashboard#marketing_manager', as: :marketing_manager_dashboard
-    get '/dashboard/customer_support_manager', to: 'dashboard#customer_support_manager', as: :customer_support_manager_dashboard
+    get '/dashboard', to: 'dashboard#show', as: :student_dashboard
 
     resources :exam_bodies
     resources :exam_sittings
@@ -104,10 +119,9 @@ Rails.application.routes.draw do
     post '/student_create', to: 'student_sign_ups#create', as: :create_student
 
     resources :invoices, only: [:index, :show]
-    get 'subscription_invoice/:id', to: 'users#subscription_invoice', as: :subscription_invoices
 
     post '/subscribe', to: 'library#subscribe'
-    post '/home_page_subscribe', to: 'home_pages#subscribe'
+    post '/home_page_subscribe', to: 'student_sign_ups#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'
     post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
     post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
@@ -119,11 +133,23 @@ Rails.application.routes.draw do
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
 
+    resources :management_consoles
+    get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     resources :products
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
+
+    get '/reports', to: 'reports#index', as: :reports
+    get '/export_users', to: 'reports#export_users', as: :export_users
+    get '/export_users_monthly', to: 'reports#export_users_monthly', as: :export_users_monthly
+    get '/export_users_with_enrollments', to: 'reports#export_users_with_enrollments', as: :export_users_with_enrollments
+    get '/export_visits', to: 'reports#export_visits', as: :export_visits
+    get '/export_courses', to: 'reports#export_courses', as: :export_courses
+    get '/export_enrollments', to: 'reports#export_enrollments', as: :export_enrollments
+
+
     resources :subject_courses, concerns: :supports_reordering do
       get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors
       patch 'update_tutors', action: :update_tutors, as: :update_course_tutors
@@ -138,6 +164,9 @@ Rails.application.routes.draw do
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
     resources :subscription_plans
     resources :subscription_plan_categories
+    get '/all_subscriptions', to: 'subscription_plans#all_subscriptions', as: :all_subscriptions
+    get '/subscription_show/:id', to: 'subscription_plans#subscription_show', as: :subscription_show
+
     resources :subject_course_resources
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'acca_info', to: 'footer_pages#acca_info'
@@ -148,17 +177,10 @@ Rails.application.routes.draw do
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
 
     resources :user_notifications
-    resources :users, only: [:new, :create] do
-      get  '/user_personal_details', action: :user_personal_details, as: :personal_details
-      get  '/user_subscription_status', action: :user_subscription_status, as: :subscription_status
-      get  '/user_courses_status', action: :user_courses_status, as: :courses_status
-      get  '/user_enrollments_details', action: :user_enrollments_details, as: :enrollments_details
-      get  '/user_purchases_details', action: :user_purchases_details, as: :purchases_details
-      patch  '/update_courses', action: :update_courses, as: :update_courses
-    end
+    resources :users, only: [:new, :create]
 
-    post :preview_csv_upload, to: 'dashboard#preview_csv_upload'
-    post :import_csv_upload, to: 'dashboard#import_csv_upload'
+    post :preview_csv_upload, to: 'student_user_management#preview_csv_upload'
+    post :import_csv_upload, to: 'student_user_management#import_csv_upload'
 
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
@@ -167,6 +189,7 @@ Rails.application.routes.draw do
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
+    resources :refunds
 
     resources :white_papers, except: [:show, :media_library], concerns: :supports_reordering
     get 'media_library', to: 'white_papers#media_library', as: :media_library
@@ -174,18 +197,18 @@ Rails.application.routes.draw do
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
-    resources :home_pages, only: [:index, :new, :edit, :update, :create, :destroy]
+    resources :home_pages
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
-    get 'group/:home_pages_public_url', to: 'home_pages#show', as: :group_landing
+    get 'group/:public_url', to: 'student_sign_ups#landing', as: :group_landing
 
-    root 'home_pages#home'
+    root 'student_sign_ups#home'
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     #Catch Old URL
-    get '/:home_pages_public_url', to: 'home_pages#show'
+    get '/:public_url', to: 'student_sign_ups#landing'
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

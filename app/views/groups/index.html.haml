@@ -3,8 +3,18 @@
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
-          %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.groups.index.h1')
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'management_consoles/course_content_nav'
+
+      .row.l-margin-top
+        .col-md-12
+          =link_to 'New Group', new_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+      .row.l-margin-bottom
         .col-md-12.l-margin-top-big
           .corporate-box-item.table-box{data: {destination: groups_url}}
             .table-responsive
@@ -31,5 +41,3 @@
                       %td
                         %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
-      .row
-        =link_to t('views.general.new'), new_group_url, class: 'btn btn-red', title: t('views.general.new_tooltip')

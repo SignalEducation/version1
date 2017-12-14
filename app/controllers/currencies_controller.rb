@@ -17,7 +17,7 @@ class CurrenciesController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(system_requirements_access stripe_management_access))
   end
   before_action :get_variables
 
@@ -78,6 +78,7 @@ class CurrenciesController < ApplicationController
       @currency = Currency.where(id: params[:id]).first
     end
     seo_title_maker(@currency.try(:name) || 'Currencies', '', true)
+    @layout = 'management'
   end
 
   def allowed_params
