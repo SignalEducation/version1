@@ -52,7 +52,7 @@ class StudentAccess < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def trial_access?
