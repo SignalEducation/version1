@@ -91,7 +91,8 @@
                 .h3
                   Trial Started
                 .h6
-                  =humanize_datetime(@user.student_access.trial_started_date)
+                  -if @user.student_access && @user.student_access.trial_started_date
+                    =humanize_datetime(@user.student_access.trial_started_date)
 
 
 

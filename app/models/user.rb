@@ -272,7 +272,7 @@ class User < ActiveRecord::Base
   def create_student_access_record
     unless self.student_access
       if self.subscriptions.any?
-        active_sub = self.subscriptions.where(active: true).in_created_order.last || self.subscriptions.in_created_order.last
+        active_sub = self.subscriptions.in_created_order.last
 
         if Subscription::VALID_STATES.include?(active_sub.current_status)
           type = 'Subscription'
@@ -295,8 +295,8 @@ class User < ActiveRecord::Base
           trial_start = self.email_verified_at || self.created_at
           trial_ending_at = (trial_start + trial_days.days)
           trial_ended = self.free_trial_ended_at || active_sub.created_at
-          access = true
-          sub_id = nil
+          access = false
+          sub_id = active_sub.id
         end
 
       else
@@ -338,6 +338,19 @@ class User < ActiveRecord::Base
           trial_ending_at = (trial_start + trial_days.days)
           trial_ended = self.free_trial_ended_at
           access = false
+          sub_id = nil
+
+        else
+          # Expired Trial
+          type = 'Trial'
+          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+          seconds_consumed = self.trial_limit_in_seconds
+          user_id = self.id
+          trial_start = self.created_at
+          trial_ending_at = (self.created_at + trial_days.days)
+          trial_ended = nil
+          access = true
           sub_id = nil
 
         end
