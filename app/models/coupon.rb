@@ -135,23 +135,24 @@ class Coupon < ActiveRecord::Base
   def activate
     strip_coupon = Stripe::Coupon.retrieve(id: self.code)
     if strip_coupon && strip_coupon[:valid]
-      self.update_attribute(:active, true)
+      self.update_column(:active, true)
     end
   end
 
   def create_on_stripe
-    strip_coupon = Stripe::Coupon.create(id: self.code, currency: self.currency.try(:iso_code),
-                                         percent_off: self.percent_off, amount_off: self.amount_off,
-                                         duration: self.duration, duration_in_months: self.duration_in_months,
-                                         max_redemptions: self.max_redemptions, redeem_by: self.redeem_by.try(:to_i))
+    unless self.stripe_coupon_data
+      strip_coupon = Stripe::Coupon.create(id: self.code, currency: self.currency.try(:iso_code),
+                                           percent_off: self.percent_off, amount_off: self.amount_off,
+                                           duration: self.duration, duration_in_months: self.duration_in_months,
+                                           max_redemptions: self.max_redemptions, redeem_by: self.redeem_by.try(:to_i))
 
-    if strip_coupon
-      self.active = strip_coupon[:valid]
-      self.livemode = strip_coupon[:livemode]
-      self.times_redeemed = strip_coupon[:times_redeemed]
-      self.stripe_coupon_data = strip_coupon.to_hash.deep_dup
+      if strip_coupon
+        self.active = strip_coupon[:valid]
+        self.livemode = strip_coupon[:livemode]
+        self.times_redeemed = strip_coupon[:times_redeemed]
+        self.stripe_coupon_data = strip_coupon.to_hash.deep_dup
+      end
     end
-
   end
 
   def delete_on_stripe
