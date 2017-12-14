@@ -99,7 +99,7 @@
                   .h3
                     =t('views.users.user_subscription_status.trial_info.content_access')
                   .h6
-                    =@user.student_access.content_access.to_s
+                    =@user.student_access.content_access
 
                 .col-md-4.text-center
                   -if @user.student_user? && @user.trial_or_sub_user?
@@ -120,12 +120,14 @@
                     .h3
                       =t('views.users.user_subscription_status.trial_info.trial_ended_date')
                     .h6
-                      =humanize_datetime(@user.student_access.trial_ended_date)
+                      -if @user.student_access && @user.student_access.trial_ended_date
+                        =humanize_datetime(@user.student_access.trial_ended_date)
                   -elsif !@user.student_access.trial_ended_date && @user.student_access.trial_ending_at_date
                     .h3
                       =t('views.users.user_subscription_status.trial_info.trial_ending_at_date')
                     .h6
-                      =humanize_datetime(@user.student_access.trial_ending_at_date)
+                      -if @user.student_access && @user.student_access.trial_ending_at_date
+                        =humanize_datetime(@user.student_access.trial_ending_at_date)
 
 
               .col-sm-12.l-margin-top-big
@@ -154,20 +156,23 @@
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_status')
                   .h6
-                    =@subscription.current_status.camelcase
+                    -if @subscription.current_status
+                      =@subscription.current_status.camelcase
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_created')
                   .h6
-                    =humanize_datetime(@subscription.created_at)
+                    -if @subscription.created_at
+                      =humanize_datetime(@subscription.created_at)
 
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_plan')
                   .h6
-                    =@subscription.subscription_plan.name
+                    -if @subscription.subscription_plan
+                      =@subscription.subscription_plan.name
 
 
 
@@ -181,7 +186,7 @@
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.last_billing_date')
                   .h6
-                    -if @invoices.any? && @subscription.invoices.any?
+                    -if @invoices.any? && @subscription.invoices.any? && @subscription.invoices.last && @subscription.invoices.last.created_at
                       =humanize_datetime(@subscription.invoices.last.created_at)
                     -else
                       ='------'
@@ -203,7 +208,8 @@
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
                   .h6
-                    =@subscription.current_status.to_s.capitalize
+                    -if @subscription.current_status
+                      =@subscription.current_status.to_s.capitalize
 
 
                 .col-sm-4.col-xs-6.l-margin-top
@@ -218,100 +224,13 @@
                       =t('views.users.user_subscription_status.subscription_info.subscription_ending')
                     .h6
 
-                      =@subscription.next_renewal_date.to_s
+                      -if @subscription.next_renewal_date
+                        =@subscription.next_renewal_date.to_s
                   -elsif @subscription.canceled_status?
                     .h3
                       =t('views.users.user_subscription_status.subscription_info.subscription_ended')
                     .h6
-                      =@subscription.next_renewal_date.to_s
-
-
-
-
-
-
-
-
-    -#
-      .row.l-margin-top-huge.l-margin-bottom-huge
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                =@user_sessions_count
-              .h6
-                Sessions
-
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                =@enrollments.count
-              .h6
-                Enrollments
-
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                =humanize_datetime(@user.student_access.trial_started_date)
-              .h6
-                Signed Up
-
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                -if @user.last_login_at
-                  =humanize_datetime(@user.last_login_at)
-                -else
-                  ='-'
-              .h6
-                Last Active
-
-      .row.l-margin-top.l-margin-bottom-huge
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                =@user.student_access.account_type
-              .h6
-                Account Type
-
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                =@user.id
-              .h6
-                User ID
-
-        .col-md-3.col-sm-3.col-xs-6
-          .stats-box
-            .stats-box-inner
-              .h3
-                -if @user.enrollments.any?
-                  =@user.enrollments.first.student_number
-                -else
-                  ='-'
-              .h6
-                Student Number
-
-
-      .row.l-margin-top.l-margin-bottom-huge
-        -if !@user.email_verified && @user.email_verification_code
-          .col-md-3.col-sm-3.col-xs-6
-            =link_to 'Resend Verification Email', admin_resend_verification_mail_url(@user.email_verification_code), class: 'btn btn-purple '
-
-        -if @user.destroyable?
-          .col-md-3.col-sm-3.col-xs-6
-            =link_to 'Delete User', user_url(@user), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
-
-        -if @user.visits.any?
-          .col-md-3.col-sm-3.col-xs-6
-            =link_to 'User Visits', user_visits_url(@user), class: 'btn btn-cyan'
-
-        .col-md-3.col-sm-3.col-xs-6
-        .col-md-3.col-sm-3.col-xs-6
+                      -if @subscription.next_renewal_date
+                        =@subscription.next_renewal_date.to_s
 
 

@@ -54,7 +54,8 @@
             %h4
               Trial Started:
             %p
-              =humanize_datetime(@student_user.student_access.trial_started_date)
+              -if @student_user.student_access && @student_user.student_access.trial_started_date
+                =humanize_datetime(@student_user.student_access.trial_started_date)
 
 
   .row
