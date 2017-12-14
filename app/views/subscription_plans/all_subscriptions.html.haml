@@ -25,7 +25,7 @@
                     %th
                     %th
                 %tbody
-                  -@subscriptions.each do |subscription|
+                  -@subscriptions.reverse.each do |subscription|
                     %tr
                       %td=subscription.id
                       %td=subscription.user.full_name
