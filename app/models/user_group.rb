@@ -63,6 +63,43 @@ class UserGroup < ActiveRecord::Base
     self.users.empty?
   end
 
+  def set_new_attributes
+    if self.site_admin
+      self.system_requirements_access = true
+      self.content_management_access = true
+      self.stripe_management_access = true
+      self.user_management_access = true
+      self.developer_access = true
+      self.user_group_management_access = true
+
+    elsif self.content_manager
+      self.content_management_access = true
+
+    elsif self.complimentary
+      self.student_user = true
+      self.trial_or_sub_required = false
+      self.blocked_user = false
+
+    elsif self.customer_support
+      self.content_management_access = true
+      self.user_management_access = true
+
+    elsif self.marketing_support
+      self.home_pages_access = true
+
+    elsif self.individual_student
+      self.student_user = true
+      self.trial_or_sub_required = true
+
+    elsif self.name == 'Blocked User'
+      self.student_user = true
+      self.trial_or_sub_required = true
+      self.blocked_user = true
+    end
+
+    self.save
+  end
+
   protected
 
 end
