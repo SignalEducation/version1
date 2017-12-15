@@ -358,7 +358,7 @@ class User < ActiveRecord::Base
 
     if self.student_access
       student_access = self.student_access
-      student_access.update_attributes(account_type: type, trial_seconds_limit: trial_seconds, trial_days_limit: trial_start, trial_started_date: trial_days, trial_ending_at_date: trial_ending_at, trial_ended_date: trial_ended, content_seconds_consumed: seconds_consumed, subscription_id: sub_id, content_access: access)
+      student_access.update_attributes(account_type: type, trial_seconds_limit: trial_seconds, trial_days_limit: trial_days, trial_started_date: trial_start, trial_ending_at_date: trial_ending_at, trial_ended_date: trial_ended, content_seconds_consumed: seconds_consumed, subscription_id: sub_id, content_access: access)
 
     else
       student_access = StudentAccess.new(user_id: user_id, account_type: type,
