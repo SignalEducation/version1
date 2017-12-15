@@ -270,95 +270,102 @@ class User < ActiveRecord::Base
 
 
   def create_student_access_record
-    unless self.student_access
-      if self.subscriptions.any?
-        active_sub = self.subscriptions.in_created_order.last
 
-        if Subscription::VALID_STATES.include?(active_sub.current_status)
-          type = 'Subscription'
-          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-          seconds_consumed = self.trial_limit_in_seconds
-          user_id = self.id
-          trial_start = self.email_verified_at || self.created_at
-          trial_ending_at = (trial_start + trial_days.days)
-          trial_ended = self.free_trial_ended_at || self.created_at
-          access = true
-          sub_id = active_sub.id
+    if self.subscriptions.any?
+      active_sub = self.subscriptions.in_created_order.last
 
-        else
-          type = 'Subscription'
-          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-          seconds_consumed = self.trial_limit_in_seconds
-          user_id = self.id
-          trial_start = self.email_verified_at || self.created_at
-          trial_ending_at = (trial_start + trial_days.days)
-          trial_ended = self.free_trial_ended_at || active_sub.created_at
-          access = false
-          sub_id = active_sub.id
-        end
+      if Subscription::VALID_STATES.include?(active_sub.current_status)
+        type = 'Subscription'
+        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+        seconds_consumed = self.trial_limit_in_seconds
+        user_id = self.id
+        trial_start = self.email_verified_at || self.created_at
+        trial_ending_at = (trial_start + trial_days.days)
+        trial_ended = self.free_trial_ended_at || self.created_at
+        access = true
+        sub_id = active_sub.id
 
       else
-        if self.free_trial && !self.email_verified
-
-          # Not started Trial
-          type = 'Trial'
-          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-          seconds_consumed = self.trial_limit_in_seconds
-          user_id = self.id
-          trial_start = nil
-          trial_ending_at = nil
-          trial_ended = nil
-          access = false
-          sub_id = nil
-
-        elsif self.free_trial && self.days_or_seconds_valid? && self.email_verified
-          # Valid Trial
-          type = 'Trial'
-          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-          seconds_consumed = self.trial_limit_in_seconds
-          user_id = self.id
-          trial_start = self.email_verified_at || self.created_at
-          trial_ending_at = (trial_start + trial_days.days)
-          trial_ended = nil
-          access = true
-          sub_id = nil
-
-        elsif self.free_trial && !self.days_or_seconds_valid? && self.email_verified
-          # Expired Trial
-          type = 'Trial'
-          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-          seconds_consumed = self.trial_limit_in_seconds
-          user_id = self.id
-          trial_start = self.email_verified_at || self.created_at
-          trial_ending_at = (trial_start + trial_days.days)
-          trial_ended = self.free_trial_ended_at
-          access = false
-          sub_id = nil
-
-        else
-          # Expired Trial
-          type = 'Trial'
-          trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-          trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-          seconds_consumed = self.trial_limit_in_seconds
-          user_id = self.id
-          trial_start = self.created_at
-          trial_ending_at = (self.created_at + trial_days.days)
-          trial_ended = nil
-          access = true
-          sub_id = nil
-
-        end
+        type = 'Subscription'
+        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+        seconds_consumed = self.trial_limit_in_seconds
+        user_id = self.id
+        trial_start = self.email_verified_at || self.created_at
+        trial_ending_at = (trial_start + trial_days.days)
+        trial_ended = self.free_trial_ended_at || active_sub.created_at
+        access = false
+        sub_id = active_sub.id
       end
 
+    else
+      if self.free_trial && !self.email_verified
+
+        # Not started Trial
+        type = 'Trial'
+        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+        seconds_consumed = self.trial_limit_in_seconds
+        user_id = self.id
+        trial_start = nil
+        trial_ending_at = nil
+        trial_ended = nil
+        access = false
+        sub_id = nil
+
+      elsif self.free_trial && self.days_or_seconds_valid? && self.email_verified
+        # Valid Trial
+        type = 'Trial'
+        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+        seconds_consumed = self.trial_limit_in_seconds
+        user_id = self.id
+        trial_start = self.email_verified_at || self.created_at
+        trial_ending_at = (trial_start + trial_days.days)
+        trial_ended = nil
+        access = true
+        sub_id = nil
+
+      elsif self.free_trial && !self.days_or_seconds_valid? && self.email_verified
+        # Expired Trial
+        type = 'Trial'
+        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+        seconds_consumed = self.trial_limit_in_seconds
+        user_id = self.id
+        trial_start = self.email_verified_at || self.created_at
+        trial_ending_at = (trial_start + trial_days.days)
+        trial_ended = self.free_trial_ended_at
+        access = false
+        sub_id = nil
+
+      else
+        # Expired Trial
+        type = 'Trial'
+        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
+        seconds_consumed = self.trial_limit_in_seconds
+        user_id = self.id
+        trial_start = self.created_at
+        trial_ending_at = (self.created_at + trial_days.days)
+        trial_ended = nil
+        access = true
+        sub_id = nil
+
+      end
+    end
+
+    if self.student_access
+      student_access = self.student_access
+      student_access.update_attributes(account_type: type, trial_seconds_limit: trial_seconds, trial_days_limit: trial_start, trial_started_date: trial_days, trial_ending_at_date: trial_ending_at, trial_ended_date: trial_ended, content_seconds_consumed: seconds_consumed, subscription_id: sub_id, content_access: access)
+
+    else
       student_access = StudentAccess.new(user_id: user_id, account_type: type,
                                          trial_seconds_limit: trial_seconds,
-                                         trial_days_limit: trial_days,
+                                         trial_days_limit: trial_start,
+                                         trial_started_date: trial_days,
+                                         trial_ending_at_date: trial_ending_at,
                                          trial_ended_date: trial_ended,
                                          content_seconds_consumed: seconds_consumed,
                                          subscription_id: sub_id,

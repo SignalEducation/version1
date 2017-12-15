@@ -14,11 +14,19 @@ class Api::StripeV02Controller < Api::BaseController
       if existing_events.any?
         Rails.logger.error "INFO: Api/StripeV02#Create: Record already exists with that guid/id: event-id: #{event_json['id']}"
       else
-        StripeApiProcessorWorker.perform_at(2.minutes, event_json["id"],
-                                            event_json["api_version"],
-                                            account_url)
-      end
 
+        if %w(charge.failed charge.succeeded charge.refunded).include?(event_json["type"])
+          StripeApiProcessorWorker.perform_at(2.minutes, event_json["id"],
+                                              event_json["api_version"],
+                                              account_url)
+        else
+          StripeApiProcessorWorker.perform_async(event_json["id"],
+                                              event_json["api_version"],
+                                              account_url)
+
+        end
+
+      end
     end
     render text: nil, status: 204
   rescue => e

@@ -190,7 +190,7 @@ class Enrollment < ActiveRecord::Base
       end
 
       if yesterdays_log_ids.count >= 2 && scul.last_element && scul.last_element.next_element
-        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email') unless Rails.env.test?
+        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time_now.to_i, 'send_study_streak_email') unless Rails.env.test?
       end
     end
   end

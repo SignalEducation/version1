@@ -35,6 +35,8 @@
                     .h3
                       -if @user.student_access && @user.student_access.trial_started_date
                         =humanize_datetime(@user.student_access.trial_started_date)
+                      -else
+                        =humanize_datetime(@user.created_at)
                     .h6
                       Signed Up
 
@@ -62,10 +64,7 @@
                 .stats-box
                   .stats-box-inner
                     .h3
-                      -if @user.enrollments.any?
-                        =@user.enrollments.first.student_number
-                      -else
-                        ='-'
+                      =@user.student_number
                     .h6
                       Student Number
 
@@ -94,7 +93,7 @@
                     -if @user.student_access.trial_started_date
                       =humanize_datetime(@user.student_access.trial_started_date)
                     -else
-                      ='-----'
+                      =@user.created_at
                 .col-md-4
                   .h3
                     =t('views.users.user_subscription_status.trial_info.content_access')
