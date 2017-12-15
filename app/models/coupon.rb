@@ -71,7 +71,7 @@ class Coupon < ActiveRecord::Base
         discounted_price = sub_plan.currency.format_number(discounted_number)
         valid = true if (coupon.currency_id == sub_plan.currency_id) && (discounted_number > 0)
       elsif coupon.percent_off
-        discounted_number = (sub_plan.price.to_f/100)*coupon.percent_off
+        discounted_number = sub_plan.price.to_f - ((sub_plan.price.to_f/100)*coupon.percent_off)
         discounted_price = sub_plan.currency.format_number(discounted_number)
         valid = true if discounted_number > 0
       end
