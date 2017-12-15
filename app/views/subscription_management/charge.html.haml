@@ -99,14 +99,14 @@
 
               .col-sm-6.l-margin-bottom
                 .h3
-                  Refunded
+                  Refunded (Full)
                 .h6
                   =@charge.refunded
               .col-sm-6.l-margin-bottom
                 .h3
                   Refund Count
                 .h6
-                  =@charge.refunds.count if @charge.refunded
+                  =@charge.refunds.count if @charge.amount_refunded
 
 
             .col-md-3.col-sm-12.col-xs-12
