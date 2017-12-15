@@ -106,7 +106,7 @@
                 .h3
                   Refund Count
                 .h6
-                  =@charge.refunds.count if @charge.amount_refunded
+                  =@charge.refunds.count if @charge.amount_refunded >= 1
 
 
             .col-md-3.col-sm-12.col-xs-12
