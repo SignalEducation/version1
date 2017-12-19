@@ -83,7 +83,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   # callbacks
   before_validation :create_on_stripe_using_token, on: :create, if: :stripe_token
-  after_create :update_stripe_and_other_cards, if: :stripe_token
+  after_create :update_stripe_and_other_cards
   before_destroy :remove_card_from_stripe
 
   # scopes
