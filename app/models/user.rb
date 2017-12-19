@@ -300,7 +300,7 @@ class User < ActiveRecord::Base
       end
 
     else
-      if self.free_trial && !self.email_verified
+      if !self.email_verified
 
         # Not started Trial
         type = 'Trial'
@@ -363,8 +363,8 @@ class User < ActiveRecord::Base
     else
       student_access = StudentAccess.new(user_id: user_id, account_type: type,
                                          trial_seconds_limit: trial_seconds,
-                                         trial_days_limit: trial_start,
-                                         trial_started_date: trial_days,
+                                         trial_days_limit: trial_days,
+                                         trial_started_date: trial_start,
                                          trial_ending_at_date: trial_ending_at,
                                          trial_ended_date: trial_ended,
                                          content_seconds_consumed: seconds_consumed,
