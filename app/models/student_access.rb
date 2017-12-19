@@ -64,15 +64,16 @@ class StudentAccess < ActiveRecord::Base
   end
 
   def recalculate_access_from_limits
-    time_now =Proc.new{Time.now.to_datetime}.call
+    time_now = Proc.new{Time.now.to_datetime}.call
+    new_trial_ending = self.trial_started_date + self.trial_days_limit.days
 
     if self.trial_access?
 
-      if time_now >= self.trial_ending_at_date || self.content_seconds_consumed >= self.trial_seconds_limit
+      if time_now >= new_trial_ending || self.content_seconds_consumed >= self.trial_seconds_limit
         self.update_columns(trial_ended_date: time_now, content_access: false)
 
-      elsif time_now <= self.trial_ending_at_date || self.content_seconds_consumed <= self.trial_seconds_limit
-        self.update_columns(trial_ended_date: nil, content_access: true)
+      elsif time_now <= new_trial_ending || self.content_seconds_consumed <= self.trial_seconds_limit
+        self.update_columns(trial_ended_date: nil, content_access: true, trial_ending_at_date: new_trial_ending)
       end
 
     end

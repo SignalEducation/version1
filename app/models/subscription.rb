@@ -47,7 +47,6 @@ class Subscription < ActiveRecord::Base
   has_one :referred_signup
 
   # validation
-  validates :terms_and_conditions, presence: true
   validates :user_id, presence: true
   validates :subscription_plan_id, presence: true
   validates :next_renewal_date, presence: true
@@ -58,7 +57,7 @@ class Subscription < ActiveRecord::Base
 
 
   # callbacks
-  after_create :create_subscription_payment_card, unless: 'Rails.env.test?'
+  after_create :create_subscription_payment_card, if: :stripe_token
   after_save :update_student_access
 
   # scopes
@@ -286,7 +285,7 @@ class Subscription < ActiveRecord::Base
     latest_subscription.plan = self.subscription_plan.stripe_guid
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attributes(current_status: 'active', active: true)
+      self.update_attributes(current_status: 'active', active: true, terms_and_conditions: true)
 
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
