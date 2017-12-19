@@ -44,7 +44,7 @@ class StudentUserManagementController < ApplicationController
   def update
     @student_user.assign_attributes(allowed_params)
     if @student_user.save
-      @student_user.student_access.recalculate_access_from_limits if @student_user.trial_user?
+      @student_user.student_access.recalculate_access_from_limits
       flash[:success] = I18n.t('controllers.users.update.flash.success')
       redirect_to users_url
     else

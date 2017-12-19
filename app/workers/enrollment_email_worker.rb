@@ -18,7 +18,7 @@ class EnrollmentEmailWorker
 
 
     template_args = [@url, @course.name]
-    if @user && @user.email && @user.individual_student? && @enrollment
+    if @user && @user.email && @user.student_user? && @enrollment
       if !@subject_course_user_log.completed && (@enrollment.updated_at.to_i < datetime_triggered + 2.hours.to_i)
         mc = MandrillClient.new(@user)
         mc.send(method_name, *template_args)
