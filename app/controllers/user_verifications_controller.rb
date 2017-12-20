@@ -26,7 +26,7 @@ class UserVerificationsController < ApplicationController
 
   def account_verified
     #This is the post email verification page
-
+    redirect_to root_url unless current_user
   end
 
   def resend_verification_mail
