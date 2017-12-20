@@ -17,7 +17,7 @@
           -if current_user.trial_user?
             -if current_user.valid_trial_user?
               %li
-                =link_to "#{current_user.days_left} Days left in Trial", new_subscription_url, class: 'days-left', title: 'Upgrade your account'
+                =link_to "#{current_user.trial_days_left} Days left in Trial", new_subscription_url, class: 'days-left', title: 'Upgrade your account'
             -elsif current_user.expired_trial_user?
               %li
                 =link_to 'Upgrade Account', new_subscription_url, class: 'days-left', title: 'Upgrade your account'
