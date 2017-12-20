@@ -144,7 +144,7 @@ class UsersController < ApplicationController
   end
 
   def user_subscription_status
-    @subscriptions = @user.subscriptions.in_created_order
+    @subscriptions = @user.subscriptions.in_reverse_created_order
     @subscription = @user.current_subscription if @user.subscriptions.any?
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last
