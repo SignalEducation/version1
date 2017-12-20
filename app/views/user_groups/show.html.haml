@@ -56,7 +56,7 @@
                         =link_to user.full_name, user
                         %br/
                     -else
-                      =link_to user_management_index_url, title: t('views.general.tooltips.click_to_view') do
+                      =link_to users_url, title: t('views.general.tooltips.click_to_view') do
                         =@user_group.users.count
                         =t('views.users.index.h1').downcase
               %p

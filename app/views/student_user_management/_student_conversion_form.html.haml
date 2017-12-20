@@ -44,7 +44,7 @@
           .input-group.input-group-lg.full-width
             =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
 
-      -if @student_user.student_access && @student_user.student_access.trial_user?
+      -if @student_user.student_access && @student_user.trial_user?
         .col-md-6
           -unless @student_user.new_record?
             %h4
