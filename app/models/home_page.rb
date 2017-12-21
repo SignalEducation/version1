@@ -59,11 +59,11 @@ class HomePage < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true unless public_url == '/'
+    true unless self.home
   end
 
   def default_home_page
-    HomePage.where(subject_course: nil).where(subscription_plan_category_id: nil).where(public_url: '/').where(custom_file_name: 'home').first
+    HomePage.where(subject_course: nil).where(home: true).where(subscription_plan_category_id: nil).first
   end
 
   def course

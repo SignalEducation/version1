@@ -14,5 +14,6 @@ shared_context 'system_setup' do
 
   # homepages
   let!(:home) { FactoryGirl.create(:home) }
+  let!(:landing_page_1) { FactoryGirl.create(:landing_page_1) }
 
 end

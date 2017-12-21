@@ -9,7 +9,7 @@ RSpec.describe CoursesController, type: :controller do
   let!(:course_module_1) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
   let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id)}
 
-  #let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id, user_id: individual_student_user.id)}
+  #let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id, user_id: student_user.id)}
 
   #let!(:valid_params) { course_module_element_user_log.attributes.merge({time_taken_in_seconds: (Time.now.to_i * -1)}) }
 
@@ -30,7 +30,7 @@ RSpec.describe CoursesController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     xit 'should report OK for valid params' do

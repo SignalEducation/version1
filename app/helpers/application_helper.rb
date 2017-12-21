@@ -78,6 +78,10 @@ module ApplicationHelper
     date.strftime('%d %b %y')
   end
 
+  def humanize_stripe_date_full(date)  # Used in the library UI
+    date.strftime('%d %B %Y')
+  end
+
   def exam_sitting_date(date)  # Used in the library UI
     date.strftime("%B %Y")
   end

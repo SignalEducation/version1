@@ -5,16 +5,21 @@
         .col-md-12.text-center
           %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Users
+
       .row.l-margin-top.l-margin-bottom
         .col-md-12
-          =render partial: 'layouts/stats_navbar'
-
-
+          =render partial: 'management_consoles/user_management_nav'
 
       .row.l-margin-top.l-margin-bottom
-        .col-md-4.col-sm-4.l-margin-top
-          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
-        .col-md-offset-4.col-md-4.l-margin-top
+        .col-sm-8.l-margin-top
+          %a{data: {remodal: {target: 'csv-upload-modal'}}, class: 'btn btn-purple'}
+            Bulk Invite Users
+
+          =link_to t('views.general.add_student'), new_student_user_management_url, class: 'btn btn-cyan l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+          =link_to t('views.general.add_manager'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
+
+
+        .col-sm-4.l-margin-top
           =form_tag(users_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
               =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
@@ -30,7 +35,6 @@
                     %th=t('views.users.form.full_name')
                     %th=t('views.users.form.email')
                     %th=t('views.users.form.email_verified')
-                    %th=t('views.users.form.user_group_id')
                     %th=t('views.users.form.subscription_status')
                     %th
                     %th
@@ -39,15 +43,17 @@
                     %tr
                       %td=user.full_name
                       %td=user.email
-                      %td
-                        =tick_or_cross(user.email_verified)
-                      %td=user.user_group.try(:name)
-                      %td=user.user_account_status if user.individual_student?
+                      %td=tick_or_cross(user.email_verified)
+                      %td=user.user_account_status
                       %td
                         =link_to t('views.general.view'), user_url(user), class: 'btn btn-purple btn-small'
                       %td
-                        =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
+                        -if user.student_user? && user.trial_or_sub_user?
+                          =link_to t('views.general.edit'), edit_student_user_management_url(user), class: 'btn btn-cyan btn-small'
+                        -else
+                          =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
 
               .col-sm-10.user-pagination
                 =will_paginate @users, renderer: BootstrapPagination::Rails
 
+=render partial: 'student_user_management/csv_import_modal'

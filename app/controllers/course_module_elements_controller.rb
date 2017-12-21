@@ -25,7 +25,7 @@ class CourseModuleElementsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_has_access_rights(%w(content_management_access))
   end
   before_action :get_variables
 
@@ -199,6 +199,7 @@ class CourseModuleElementsController < ApplicationController
     @tutors = User.all_tutors.all_in_order
     @letters = ('A'..'Z').to_a
     @mathjax_required = true
+    @layout = 'management'
   end
 
   ## Vimeo Video Actions ##

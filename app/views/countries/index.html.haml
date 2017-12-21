@@ -5,8 +5,17 @@
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.countries.index.h1')
+
       .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
+        .col-md-12
+          =render partial: 'management_consoles/system_requirements_nav'
+
+      .row
+        .col-md-12
+          =link_to 'New Country', new_country_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top
           .table-box
             .table-responsive
               =will_paginate @countries, renderer: BootstrapPagination::Rails
@@ -32,5 +41,3 @@
                       %td
                         %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
-      .row
-        =link_to t('views.general.new'), new_country_url, class: 'btn btn-red', title: t('views.general.new_tooltip')

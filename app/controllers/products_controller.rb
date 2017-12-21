@@ -20,7 +20,7 @@ class ProductsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_has_access_rights(%w(stripe_management_access))
   end
   before_action :get_variables
 
@@ -80,6 +80,7 @@ class ProductsController < ApplicationController
     @mock_exams = MockExam.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
     seo_title_maker(@product.try(:name) || 'Products', '', true)
+    @layout = 'management'
   end
 
   def allowed_params

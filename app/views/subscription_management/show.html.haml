@@ -1,0 +1,114 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@subscription.user.full_name
+          %p
+            ='Subscription ID:'
+            =@subscription.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-md-9.col-sm-12.col-xs-12
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.subscription_status')
+                .h6
+                  =@subscription.current_status.camelcase
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.subscription_created')
+                .h6
+                  =humanize_datetime(@subscription.created_at)
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.subscription_plan')
+                .h6
+                  =@subscription.subscription_plan.name
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.billing_interval')
+                .h6
+                  =t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.last_billing_date')
+                .h6
+                  -if @subscription.invoices.any?
+                    =humanize_datetime(@subscription.invoices.last.created_at)
+                  -else
+                    ='------'
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.next_billing_date')
+                .h6
+                  =humanize_stripe_date(@subscription.next_renewal_date)
+
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.stripe_sub_guid')
+                .h6
+                  =@subscription.stripe_guid
+              .col-sm-6.l-margin-bottom
+                .h3
+                  =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
+                .h6
+                  =@subscription.current_status.to_s.capitalize
+
+
+              .col-sm-6.l-margin-bottom
+                -if @subscription.canceled_pending_status?
+                  .h3
+                    =t('views.users.user_subscription_status.subscription_info.subscription_ending')
+                  .h6
+
+                    =humanize_stripe_date(@subscription.next_renewal_date)
+                -elsif @subscription.canceled_status?
+                  .h3
+                    =t('views.users.user_subscription_status.subscription_info.subscription_ended')
+                  .h6
+                    =humanize_stripe_date(@subscription.next_renewal_date)
+
+
+            .col-md-3.col-sm-12.col-xs-12
+              -if @subscription.active_status? || @subscription.past_due_status?
+                =link_to subscription_management_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to cancel subscription?'} do
+                  .btn.btn-cyan.full-width
+                    =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
+
+                =link_to subscription_management_immediate_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to immediately cancel this subscription?'} do
+                  .btn.btn-red.full-width.l-margin-top
+                    =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
+
+              -elsif @subscription.canceled_pending_status?
+                =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_management_un_cancel_subscription_url(@subscription.id), method: :put, class: 'btn btn-red full-width', data: {confirm: 'Are you sure you want to Un-Cancel this subscription?'}
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
+                =t('views.users.user_subscription_status.subscription_info.invoices')
+              .table-responsive
+                -@invoices = @subscription.invoices.all_in_order
+                =render partial: 'subscription_management/invoices'
+
+
+
+
+

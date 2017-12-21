@@ -30,12 +30,15 @@ describe SubscriptionPlansController, type: :controller do
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
-  #Commented this out because creating the stripe_token fails to save the subscription
-  #let!(:subscription_1) { FactoryGirl.create(:subscription,
-  #                        subscription_plan_id: subscription_plan_1.id,
-  #                        stripe_token: stripe_helper.generate_card_token) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription, subscription_plan_id: subscription_plan_1.id) }
   let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
+  let!(:stripe_student_user) { FactoryGirl.create(:student_user,
+                                                  stripe_customer_id: (Stripe::Customer.create({email: student_user.email})).id) }
+
+  let!(:subscription_1) { FactoryGirl.create(:subscription,
+                          subscription_plan_id: subscription_plan_1.id,
+                          user_id: stripe_student_user.id,
+                          stripe_token: stripe_helper.generate_card_token) }
+
   let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
 
   #before { StripeMock.start }
@@ -95,11 +98,11 @@ describe SubscriptionPlansController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -216,64 +219,6 @@ describe SubscriptionPlansController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond ERROR not permitted' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
-        post :create, currency: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, currency: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
     end
 
     describe "GET 'index'" do

@@ -59,6 +59,19 @@ en:
           success: Country has been deleted
           error: Country was not deleted
 
+    coupons:
+      create:
+        flash:
+          success: Coupon has been created successfully
+      update:
+        flash:
+          success: Coupon details have been updated successfully
+      destroy:
+        flash:
+          success: Coupon has been deleted
+          error: Coupon was not deleted
+
+
     courses:
       show:
         warning: "Sorry, we couldn't find the thing you were looking for"
@@ -274,6 +287,19 @@ en:
         flash:
           success: Referred Signup details have been updated successfully
 
+    refunds:
+      create:
+        flash:
+          success: Refund has been created successfully
+          error: Refund was not created successfully
+      update:
+        flash:
+          success: Refund details have been updated successfully
+      destroy:
+        flash:
+          success: Refund has been deleted
+          error: Refund was not deleted
+
     subject_courses:
       create:
         flash:
@@ -337,10 +363,30 @@ en:
         flash:
           success: Your Subscription has been updated successfully
           error: Your Subscription has not been updated
+      un_cancel:
+        flash:
+          success: Your Subscription has been un-canceled
+          error: Your Subscription has not been un-canceled
       destroy:
         flash:
           success: Your Subscription has been cancelled
           error: Your Subscription has not been cancelled
+
+
+    subscription_management:
+      un_cancel_subscription:
+        flash:
+          success: Subscription has been un-canceled
+          error: Subscription has not been un-canceled
+          not_pending_sub: The Subscription must be Canceled-Pending!
+      cancel:
+        flash:
+          success: Subscription has been cancelled
+          error: Subscription has not been cancelled
+      immediately_cancel:
+        flash:
+          success: Subscription has been cancelled
+          error: Subscription has not been cancelled
 
     subscription_plan_categories:
       create:
@@ -376,6 +422,7 @@ en:
       update:
         flash:
           success: User details have been updated successfully
+          error: User details have not been updated
       destroy:
         flash:
           success: User has been deleted
@@ -383,7 +430,7 @@ en:
       change_password:
         flash:
           success: Your password has been updated successfully
-          error: Your password was not changed
+          error: Your password was not changed. Please try again!
       update_subjects:
         flash:
           success: User Courses have been updated successfully

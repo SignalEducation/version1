@@ -85,7 +85,7 @@ describe CourseModuleElement do
 
   # instance methods
   it { should respond_to(:array_of_sibling_ids) }
-  it { should respond_to(:completed_by_user_or_guid) }
+  it { should respond_to(:completed_by_user) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
   it { should respond_to(:my_position_among_siblings) }

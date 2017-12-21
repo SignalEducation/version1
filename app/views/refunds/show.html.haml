@@ -1,0 +1,86 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+          %p
+            ='Refund Id:'
+            =@refund.id
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-sm-12.col-xs-12.l-margin-bottom
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Refund ID
+                .h6
+                  =@refund.id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe ID
+                .h6
+                  =@refund.stripe_guid
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Charge ID
+                .h6
+                  =@refund.charge_id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe Charge ID
+                .h6
+                  =@refund.stripe_charge_guid
+
+            .col-sm-12.col-xs-12.l-margin-bottom
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Invoice ID
+                .h6
+                  =@refund.invoice_id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe Invoice ID
+                .h6
+                  =@refund.invoice.stripe_guid
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Subscription ID
+                .h6
+                  =@refund.subscription_id
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Stripe Sub ID
+                .h6
+                  =@refund.subscription.stripe_guid
+
+
+            .col-sm-12.col-xs-12.l-margin-bottom
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Status
+                .h6
+                  =@refund.status
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Manager
+                .h6
+                  =@refund.manager.full_name
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Amount
+                .h6
+                  =@refund.amount
+              .col-md-3.col-xs-6.l-margin-bottom
+                .h3
+                  Reason
+                .h6
+                  =@refund.reason
+

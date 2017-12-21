@@ -16,6 +16,7 @@
 #  livemode             :boolean          default(FALSE)
 #  active               :boolean          default(FALSE)
 #  terms_and_conditions :boolean          default(FALSE)
+#  coupon_id            :integer
 #
 
 require 'rails_helper'

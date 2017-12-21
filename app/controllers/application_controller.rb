@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :process_referral_code # not for Api::
-  before_action :set_navbar_and_footer
+  before_action :set_layout_variables
 
   helper_method :current_user_session, :current_user
 
@@ -53,7 +53,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_navbar_and_footer
+  def set_layout_variables
+    @layout = 'standard'
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'
@@ -92,20 +93,20 @@ class ApplicationController < ActionController::Base
     redirect_to(destination)
   end
 
-  def ensure_user_is_of_type(authorised_features)
+  def ensure_user_has_access_rights(authorised_features)
     logged_in_required
     the_user_group = current_user.user_group
-    # for a list of permitted features, see UserGroup::FEATURES
     permission_granted = false
     authorised_features.each do |permitted_thing|
-      if (the_user_group.individual_student && permitted_thing == 'individual_student') ||
-         (the_user_group.tutor              && permitted_thing == 'tutor') ||
-         (the_user_group.blogger            && permitted_thing == 'blogger') ||
-         (the_user_group.content_manager    && permitted_thing == 'content_manager') ||
-         (the_user_group.complimentary    && permitted_thing == 'complimentary') ||
-         (the_user_group.customer_support    && permitted_thing == 'customer_support_manager') ||
-         (the_user_group.marketing_support    && permitted_thing == 'marketing_manager') ||
-         (the_user_group.site_admin           && permitted_thing == 'admin')
+      if (the_user_group.system_requirements_access && permitted_thing == 'system_requirements_access') ||
+         (the_user_group.content_management_access && permitted_thing == 'content_management_access') ||
+         (the_user_group.stripe_management_access && permitted_thing == 'stripe_management_access') ||
+         (the_user_group.user_management_access && permitted_thing == 'user_management_access') ||
+         (the_user_group.developer_access && permitted_thing == 'developer_access') ||
+         (the_user_group.home_pages_access && permitted_thing == 'home_pages_access') ||
+         (the_user_group.student_user && the_user_group.trial_or_sub_required && permitted_thing == 'student_user') ||
+         (!the_user_group.student_user && permitted_thing == 'non_student_user') ||
+         (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access')
         permission_granted = true
       end
     end
@@ -115,7 +116,7 @@ class ApplicationController < ActionController::Base
       false
     end
   end
-  helper_method :ensure_user_is_of_type
+  helper_method :ensure_user_has_access_rights
 
   def paywall_checkpoint
     allowed     = {course_content: {view_all: true, reason: nil}}
@@ -181,10 +182,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def process_crush_offers_session_id
-    cookies.encrypted[:crush_offers] = { value: params[:co_id], expires: 30.days.from_now, httponly: true } if params[:co_id]
-  end
-
 
   #### General purpose code
 
@@ -208,7 +205,7 @@ class ApplicationController < ActionController::Base
     the_answer
   end
 
-  # tutor/admin-facing
+  # content management links (non-student)
   def course_module_special_link(the_thing)
     # used for tutor-facing links
 
@@ -285,20 +282,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
-  def subscription_special_link(user_id)
-    user = User.find(user_id)
-    if user.individual_student?
-      if user.subscriptions.any? && user.subscriptions.last.current_status == 'canceled'
-        user_reactivate_account_url(user_id)
-      else
-        user_new_subscription_url(user_id)
-      end
-    else
-      account_url
-    end
-  end
-  helper_method :subscription_special_link
-
   def seo_title_maker(seo_title, seo_description, seo_no_index)
     @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
     @seo_description = seo_description.to_s.truncate(156)
@@ -312,30 +295,6 @@ class ApplicationController < ActionController::Base
 
   def setup_mcapi
     @mc = Mailchimp::API.new(ENV['LEARNSIGNAL_MAILCHIMP_API_KEY'])
-  end
-
-  def verify_coupon(coupon, currency_id)
-    @user_currency = Currency.find(currency_id)
-    Rails.logger.debug "INFO: Started Coupon Verification Process with coupon #{coupon}"
-    verified_coupon = Stripe::Coupon.retrieve(coupon)
-    Rails.logger.debug "INFO: Stripe returned #{verified_coupon}."
-    if !verified_coupon.valid
-      flash[:error] = 'Sorry! The coupon code you entered has expired'
-      verified_coupon = 'bad_coupon'
-      return verified_coupon
-    elsif verified_coupon.currency && verified_coupon.currency != @user_currency.iso_code.downcase
-      flash[:error] = 'Sorry! The coupon code you entered is not in the correct currency'
-      verified_coupon = 'bad_coupon'
-      return verified_coupon
-    else
-      return verified_coupon.id
-    end
-
-  rescue => e
-    flash[:error] = 'The coupon code entered is not valid'
-    verified_coupon = 'bad_coupon'
-    Rails.logger.error("ERROR: UsersController#verify_coupon - failed to apply Stripe Coupon.  Details: #{e.inspect}")
-    return verified_coupon
   end
 
 

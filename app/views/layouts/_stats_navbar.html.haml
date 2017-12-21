@@ -1,20 +1,2 @@
 .admin-nav
   %ul.admin-nav-block
-    -if current_user.admin?
-      %li
-        =link_to 'Overview', admin_dashboard_url
-      %li
-        =link_to 'Reports', reports_dashboard_url
-    -elsif current_user.customer_support_manager?
-      %li
-        =link_to 'Overview', customer_support_manager_dashboard_url
-      %li
-        =link_to 'Reports', reports_dashboard_url
-    %li
-      =link_to 'Users', users_url
-    %li
-      -if current_user.admin?
-        =link_to 'Courses', subject_courses_url
-    %li
-      -if current_user.admin?
-        =link_to 'Products', products_url

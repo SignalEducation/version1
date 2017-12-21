@@ -23,7 +23,7 @@ class MockExamsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_has_access_rights(%w(content_management_access))
   end
   before_action :get_variables
 
@@ -84,6 +84,7 @@ class MockExamsController < ApplicationController
     @subject_courses = SubjectCourse.all_active.all_in_order
     @products = Product.all_in_order
     @currencies = Currency.all_in_order
+    @layout = 'management'
   end
 
   def allowed_params

@@ -14,9 +14,10 @@
 #
 
 class ReferredSignupsController < ApplicationController
+
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(user_management_access))
   end
 
   def index

@@ -1,0 +1,71 @@
+=form_for(@student_user, url: url_for(controller: 'student_user_management', action: 'update_to_student'), html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =render partial: '/layouts/error_messages', locals: {thing: @student_user, message: nil}
+  .row
+    .col-md-12
+      .col-md-6
+        =f.label :email, t('views.users.form.email'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :email, placeholder: t('views.users.form.email_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :user_group_id, t('views.users.form.user_group_id'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.collection_select :user_group_id, @user_groups, :id, :name, {}, {class: 'form-control', style: 'border-radius: 6px;'}
+        %br/
+        =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+      .col-md-6
+        =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :first_name, placeholder: t('views.users.form.first_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :last_name, placeholder: t('views.users.form.last_name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+
+
+    .col-md-12.l-margin-bottom-big.l-margin-top
+      %hr/
+      %h2='Free Trial Limits'
+      .col-md-6
+        =f.fields_for :student_access do |student_access|
+
+          =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+          %br/
+
+          =student_access.label :trial_days_limit, t('views.users.form.student_access.trial_days_limit'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+
+      -if @student_user.student_access && @student_user.trial_user?
+        .col-md-6
+          -unless @student_user.new_record?
+            %h4
+              Current Seconds Consumed:
+            %p
+              =@student_user.student_access.content_seconds_consumed
+            %h4
+              Trial Started:
+            %p
+              =humanize_datetime(@student_user.student_access.trial_started_date)
+
+
+  .row
+    .col-md-12.l-margin-top-big
+      .col-md-12
+        =f.submit t('views.general.save'), class: 'btn btn-red'
+        =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'
+
+
+:javascript
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });

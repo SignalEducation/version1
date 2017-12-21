@@ -24,7 +24,7 @@ class WhitePapersController < ApplicationController
 
   before_action :logged_in_required, except: [:show, :create_request, :media_library]
   before_action except: [:show, :create_request, :media_library] do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_has_access_rights(%w(content_management_access))
   end
   before_action :get_variables, except: [:show]
 
@@ -33,6 +33,7 @@ class WhitePapersController < ApplicationController
   end
 
   def media_library
+    @layout = 'standard'
     @white_papers = WhitePaper.all_in_order
 
     mock_exams = MockExam.all_in_order
@@ -45,6 +46,7 @@ class WhitePapersController < ApplicationController
   end
 
   def show
+    @layout = 'standard'
     @white_paper = WhitePaper.where(name_url: params[:white_paper_name_url]).first
     @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
   end
@@ -93,6 +95,7 @@ class WhitePapersController < ApplicationController
   end
 
   def create_request
+    @layout = 'standard'
     @white_paper_request = WhitePaperRequest.new(request_allowed_params)
     if @white_paper_request.save
       flash[:success] = I18n.t('controllers.white_paper_requests.create.flash.success')
@@ -114,6 +117,7 @@ class WhitePapersController < ApplicationController
       @white_paper = WhitePaper.where(id: params[:id]).first
     end
     @subject_courses = SubjectCourse.all_active.all_in_order
+    @layout = 'management'
   end
 
   def allowed_params

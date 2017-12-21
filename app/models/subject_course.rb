@@ -158,7 +158,7 @@ class SubjectCourse < ActiveRecord::Base
 
   ## Archivable ability ##
   def destroyable?
-    true
+    self.course_modules.empty?
   end
 
   def destroyable_children
@@ -206,20 +206,20 @@ class SubjectCourse < ActiveRecord::Base
     self.enrollments.all_active.map(&:user_id)
   end
 
-  def started_by_user_or_guid(user_id, session_guid)
-    self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+  def started_by_user(user_id)
+    self.subject_course_user_logs.for_user(user_id).first
   end
 
-  def completed_by_user_or_guid(user_id, session_guid)
-    self.percentage_complete_by_user_or_guid(user_id, session_guid) == 100
+  def completed_by_user(user_id)
+    self.percentage_complete_by_user(user_id) == 100
   end
 
-  def percentage_complete_by_user_or_guid(user_id, session_guid)
+  def percentage_complete_by_user(user_id)
     if cme_count.nil?
       0
     else
       if self.cme_count > 0
-        (self.number_complete_by_user_or_guid(user_id, session_guid).to_f / self.cme_count.to_f * 100).to_i
+        (self.number_complete_by_user(user_id).to_f / self.cme_count.to_f * 100).to_i
       else
         0
       end
@@ -227,8 +227,8 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  def number_complete_by_user_or_guid(user_id, session_guid)
-    log = self.subject_course_user_logs.for_user_or_session(user_id, session_guid).first
+  def number_complete_by_user(user_id)
+    log = self.subject_course_user_logs.for_user(user_id).first
     log.try(:count_of_cmes_completed)
   end
 

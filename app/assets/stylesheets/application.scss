@@ -64,7 +64,7 @@ $colour-34: #cedbe4; // Modal background
 
 
 html {
-  background: $white;
+  background: $colour-3;
   .margin-top {                   // These Ensure content is not hidden behind Navbar
     @include breakpoint(xs-min) {
       margin-top: 40px;
@@ -260,6 +260,13 @@ hr {
   }
 }
 
+.underline {
+  text-decoration: underline;
+}
+.invalid-code {
+  text-align: right;
+}
+.strike {text-decoration:line-through;}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3. Form Classes
@@ -299,6 +306,18 @@ label, .label {
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
 }
+.form-control.coupon-error {
+  border:2px solid $red1;
+}
+.form-control.coupon-success {
+  border:2px solid $colour-18;
+}
+
+.error-coupons{
+  width: 50%;
+  margin-right: -150px;
+}
+
 // Makes input fields fill entire with of the form div
 .full-width {
   width: 100%;
@@ -333,7 +352,7 @@ label, .label {
   margin-bottom: 0;
 }
 .alert.error {
-  background: $colour-12;
+  background: $colour-31;
   color: $white;
   border-radius: 0;
   margin-bottom: 0;
@@ -430,7 +449,7 @@ label, .label {
     background: $colour-7;
     color: $white;
     &:hover {
-      background: shade($colour-7, 10%);
+      background: darken($colour-7, 8%);
     }
     &:active {
       background: ($colour-7);
@@ -569,6 +588,16 @@ label, .label {
   background: $cyan1;
   color: #fff;
 }
+
+.lsbtn.change-plan {
+  background: $cyan1;
+  border-radius: 0.62em;
+}
+.lsbtn.change-plan:hover {
+  background: $cyan1;
+  color: #fff;
+}
+
 
 .pagination > li > a, .pagination > li > span {
   padding: 10px 18px;
@@ -1433,9 +1462,10 @@ a.image-link {
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: center;
+  border: 2px solid $colour-10;
   @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
+  //@include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  //@include transition(box-shadow .1s ease);
   @include breakpoint(sm-min) {
     margin: $gutter*.5 0 $gutter 0;
   }
@@ -2232,6 +2262,12 @@ spinner {
 #enrollment_form .check input + span .fa { opacity: 0; }
 #enrollment_form .check input:checked + span .fa { opacity: 1; }
 
+#student_details_modal .check { display: block; cursor: pointer; overflow: hidden; margin: 2em 0 3em 0; }
+#student_details_modal .check input { position: absolute; opacity: 0; left: -30px; top: -30px; }
+#student_details_modal .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
+#student_details_modal .check input + span .fa { opacity: 0; }
+#student_details_modal .check input:checked + span .fa { opacity: 1; }
+
 
 
 
@@ -2338,6 +2374,140 @@ spinner {
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+#console-wrapper {
+  padding-left: 0;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+#sidebar-wrapper {
+  position: fixed;
+  left: 250px;
+  width: 0;
+  height: 100%;
+  margin-left: -250px;
+  overflow-y: auto;
+  background: $colour-7;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.main-content {
+  //position: absolute;
+  overflow: auto;
+}
+
+.sidebar-nav {
+  position: fixed;
+  top: 0;
+  width: 250px;
+  margin-top: $gutter*8;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar-nav li {
+  //text-indent: 20px;
+  line-height: 40px;
+  border-bottom: 1px solid rgba(120,120,120,.5);
+  font-size: 17px;
+  &.first-li {
+    border-top: 1px solid rgba(120,120,120,.5);
+  }
+}
+
+.sidebar-nav li a {
+  display: block;
+  text-decoration: none;
+  color: rgba(255,255,255,0.8);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  &:hover, &:focus {
+    background: $colour-8;
+
+  }
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+
+.sidebar-brand {
+  height: 75px;
+  font-size: 18px;
+  line-height: 60px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  padding: 20px;
+  border-bottom: none;
+  a:hover, a:focus {
+    background: none;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+}
+.brand-logo {
+  a:hover, a:focus {
+    background: none;
+  }
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+}
+
+.sidebar-nav > .sidebar-brand a {
+  color: $white;
+
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+
+@media(min-width:768px) {
+  #console-wrapper {
+    padding-left: 250px;
+  }
+
+  #console-wrapper.toggled {
+    padding-left: 0;
+  }
+
+  #sidebar-wrapper {
+    width: 250px;
+  }
+
+  #console-wrapper.toggled #sidebar-wrapper {
+    width: 0;
+  }
+
+  #page-content-wrapper {
+    padding: 20px;
+    position: relative;
+  }
+
+  #console-wrapper.toggled #page-content-wrapper {
+    position: relative;
+    margin-right: 0;
+  }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 22. CSS Partials that depend on existing classes in this file so must be imported last
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

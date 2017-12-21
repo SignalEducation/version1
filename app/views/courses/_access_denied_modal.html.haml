@@ -1,5 +1,5 @@
 .remodal{"data-remodal-id" => "access-denied-modal"}
-  -if current_user && current_user.expired_free_member?
+  -if current_user && current_user.expired_trial_user?
     .row
       .col-md-12
         %button.remodal-close{"data-remodal-action" => "close"}
@@ -19,7 +19,7 @@
       %br/
       .col-sm-12#actions_btns
         .col-sm-4.col-sm-offset-4
-          =link_to user_new_subscription_url(current_user), class: 'btn btn-red' do
+          =link_to new_subscription_url, class: 'btn btn-red' do
             ='Upgrade Account'
 
 
@@ -44,7 +44,7 @@
       %br/
       .col-sm-12#actions_btns
         .col-sm-4.col-sm-offset-4
-          =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), user_reactivate_account_url(current_user), class: 'btn btn-red'
+          =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red'
 
   -elsif current_user && !@course.enrolled_user_ids.include?(current_user.id)
     .row

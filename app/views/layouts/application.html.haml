@@ -51,22 +51,43 @@
       =render partial: 'layouts/google_tag_manager'
       =render partial: 'layouts/linkedin_pixel'
 
-    -if @navbar
-      -if @navbar == 'transparent'
-        =render partial: 'layouts/transparent_navbar'
-      -else
-        =render partial: 'layouts/navbar'
+    -if @layout == 'standard'
+      -if @navbar
+        -if @navbar == 'transparent'
+          =render partial: 'layouts/transparent_navbar'
+        -else
+          =render partial: 'layouts/navbar'
 
-    -if @top_margin
-      .margin-top
+      -if @top_margin
+        .margin-top
 
-    -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'home_pages'
+      -unless controller_name == 'subscriptions' || controller_name == 'orders' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups' || controller_name == 'user_accounts'
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+
+      =yield
+
+      -if @footer
+        =render partial: 'layouts/footer'
+
+    -elsif @layout == 'management'
+      #console-wrapper
+        .hidden-xs
+          =render partial: 'layouts/management_side_navbar'
+
+        .main-content
+          -if flash[:success] || flash[:error] || flash[:warning]
+            =render partial: 'layouts/flash_messages'
+          =yield
+
+
+    -else
+      =render partial: 'layouts/navbar'
+      -if @top_margin
+        .margin-top
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
-
-    =yield
-
-    -if @footer
+      =yield
       =render partial: 'layouts/footer'
 
 

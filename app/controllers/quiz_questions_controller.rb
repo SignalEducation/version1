@@ -18,7 +18,7 @@ class QuizQuestionsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin content_manager))
+    ensure_user_has_access_rights(%w(content_management_access))
   end
   before_action :get_variables, except: :reorder
 
@@ -88,6 +88,7 @@ class QuizQuestionsController < ApplicationController
     end
     @quiz_questions = QuizQuestion.all_in_order
     seo_title_maker("Quiz Questions #{@quiz_question.try(:id)}", '', true)
+    @layout = 'management'
   end
 
   def allowed_params

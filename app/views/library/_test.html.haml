@@ -6,7 +6,7 @@
           .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_test_#{counter}"}, style: "background-color: #{child.try(:highlight_colour)}"}
             .col-xs-1.col-sm-1
               .left-side-meta
-                =image_tag(child.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                =image_tag(child.completed_by_user(current_user.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
             .col-xs-9.xs-padding
               .box-topic-item
                 =truncate(child.name, length: 50)
@@ -24,7 +24,7 @@
             .col-xs-1.col-sm-1
               .left-side-meta
                 .img-responsive
-                  =image_tag(child.completed_by_user_or_guid(current_user.try(:id), current_session_guid) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                  =image_tag(child.completed_by_user(current_user.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
             .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
               .box-topic-item
                 =truncate(child.name, length: 50)

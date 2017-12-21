@@ -10,10 +10,23 @@ class Api::StripeV02Controller < Api::BaseController
 
     if event_json && StripeApiEvent::KNOWN_PAYLOAD_TYPES.include?(event_json["type"]) && StripeApiEvent::KNOWN_API_VERSIONS.include?(event_json["api_version"])
 
-      StripeApiProcessorWorker.perform_at(5.minutes, event_json["id"],
-                                             event_json["api_version"],
-                                             account_url)
+      existing_events = StripeApiEvent.where(guid: event_json["id"])
+      if existing_events.any?
+        Rails.logger.error "INFO: Api/StripeV02#Create: Record already exists with that guid/id: event-id: #{event_json['id']}"
+      else
 
+        if %w(charge.failed charge.succeeded charge.refunded).include?(event_json["type"])
+          StripeApiProcessorWorker.perform_at(2.minutes, event_json["id"],
+                                              event_json["api_version"],
+                                              account_url)
+        else
+          StripeApiProcessorWorker.perform_async(event_json["id"],
+                                              event_json["api_version"],
+                                              account_url)
+
+        end
+
+      end
     end
     render text: nil, status: 204
   rescue => e
