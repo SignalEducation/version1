@@ -4,6 +4,7 @@ class UserSessionsController < ApplicationController
   before_filter :logged_in_required,  only: :destroy
   before_filter :set_variables
   before_filter :check_email_verification, only: [:create]
+  before_filter :check_user_group, only: [:create]
 
   def new
     @user_session = UserSession.new
@@ -38,11 +39,20 @@ class UserSessionsController < ApplicationController
   end
 
   def check_email_verification
+    #TODO review this
     user = User.find_by_email(params[:user_session][:email])
-    if user && user.individual_student? && !user.email_verified
+    if user && user.student_user? && !user.email_verified
       flash[:warning] = "The email for that account has not been verified. Please follow the instructions in the verification email we just sent you at #{user.email}"
       user.update_attribute(:email_verification_code, SecureRandom.hex(10)) unless user.email_verification_code
       MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))
+      redirect_to sign_in_url
+    end
+  end
+
+  def check_user_group
+    user = User.find_by_email(params[:user_session][:email])
+    if user && user.blocked_user?
+      flash[:error] = 'Sorry. That account is blocked. Please contact us for assistance.'
       redirect_to sign_in_url
     end
   end

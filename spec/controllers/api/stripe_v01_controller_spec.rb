@@ -11,10 +11,10 @@ describe Api::StripeV01Controller, type: :controller do
   let(:stripe_helper) { StripeMock.create_test_helper }
 
   let!(:usd) { FactoryGirl.create(:usd) }
-  let!(:student) { FactoryGirl.create(:individual_student_user) }
-  let!(:new_student) { FactoryGirl.create(:individual_student_user) }
-  let!(:reactivating_student) { FactoryGirl.create(:individual_student_user) }
-  let!(:referred_student) { FactoryGirl.create(:individual_student_user) }
+  let!(:student) { FactoryGirl.create(:student_user) }
+  let!(:new_student) { FactoryGirl.create(:student_user) }
+  let!(:reactivating_student) { FactoryGirl.create(:student_user) }
+  let!(:referred_student) { FactoryGirl.create(:student_user) }
 
   let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
 

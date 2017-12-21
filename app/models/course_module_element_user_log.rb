@@ -52,9 +52,13 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   accepts_nested_attributes_for :quiz_attempts
 
   # validation
-  validates :session_guid, presence: true, length: {maximum: 255}
-  validates :student_exam_track_id, allow_nil: true, numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true, numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :session_guid, allow_nil: true, length: {maximum: 255}
+  validates :student_exam_track_id, allow_nil: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_user_log_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
@@ -68,8 +72,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :all_in_order, -> { order(:course_module_element_id) }
   scope :all_completed, -> { where(element_completed: true) }
   scope :all_incomplete, -> { where(element_completed: false) }
-  scope :for_session_guid, lambda { |the_guid| where(session_guid: the_guid) }
-  scope :for_unknown_users, -> { where(user_id: nil) }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
@@ -82,33 +85,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :one_month_ago, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
   scope :two_months_ago, -> { where(created_at: 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
   scope :three_months_ago, -> { where(created_at: 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
-  scope :four_months_ago, -> { where(created_at: 4.month.ago.beginning_of_month..4.month.ago.end_of_month) }
-  scope :five_months_ago, -> { where(created_at: 5.month.ago.beginning_of_month..5.month.ago.end_of_month) }
 
   # class methods
-  def self.assign_user_to_session_guid(the_user_id, the_session_guid)
-    # activate this with the following:
-    # CourseModuleElementUserLog.assign_user_to_session_guid(123, 'abcde123')
-    cmeuls = CourseModuleElementUserLog.for_session_guid(the_session_guid).for_unknown_users
-    cmeuls.each do |cmeul|
-     cmeul.update_column(:user_id, the_user_id)
-     cmeul.quiz_attempts.where(course_module_element_user_log_id: cmeul.id, user_id: nil).update_all(user_id: the_user_id)
-    end
-    user_cmeuls = CourseModuleElementUserLog.where(user_id: the_user_id).order(course_module_element_id: :asc, updated_at: :desc)
-    user_cmeuls.update_all(latest_attempt: false)
-    cme_tracker = nil
-    user_cmeuls.each do |cmeul|
-      unless cmeul.course_module_element_id == cme_tracker
-        cmeul.update_column(:latest_attempt, true)
-        cme_tracker = cmeul.course_module_element_id
-      end
-    end
-    true
-  end
 
-  def self.for_user_or_session(the_user_id, the_session_guid)
-    the_user_id ? where(user_id: the_user_id) : where(session_guid: the_session_guid, user_id: nil)
-  end
+
 
   # instance methods
   def destroyable?
@@ -117,11 +97,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def recent_attempts
-    CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
   def old_set
-    StudentExamTrack.for_user_or_session(self.user_id, self.session_guid).where(course_module_id: self.course_module_id).first
+    StudentExamTrack.for_user(self.user_id).where(course_module_id: self.course_module_id).first
   end
 
   protected
@@ -143,7 +123,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       set.recalculate_completeness # Includes a save!
     else
       #Create SET and assign it id to this record
-      set = StudentExamTrack.new(user_id: self.user_id, session_guid: self.session_guid, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
+      set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
       set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
       saved_set = set.recalculate_completeness # Includes a save!
       self.update_column(:student_exam_track_id, saved_set.id)
@@ -152,12 +132,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def add_to_user_trial_limit
     user = self.user
-    if user.individual_student? && user.valid_free_member?
-      new_limit = user.trial_limit_in_seconds + self.try(:time_taken_in_seconds)
-      if new_limit > ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        user.update_columns(trial_limit_in_seconds: new_limit, free_trial_ended_at: Proc.new{Time.now }.call)
-      else
-        user.update_column(:trial_limit_in_seconds, new_limit)
+    if user.trial_or_sub_user? && user.trial_user?
+      new_limit = user.student_access.content_seconds_consumed + self.try(:time_taken_in_seconds)
+      user.student_access.update_attribute(:content_seconds_consumed, new_limit)
+      if new_limit > user.student_access.trial_seconds_limit
+        TrialExpirationWorker.perform_async(user.id)
       end
     end
   end
@@ -173,7 +152,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   def set_latest_attempt
     self.latest_attempt = true
-    others = CourseModuleElementUserLog.for_user_or_session(self.user_id, self.session_guid).where(course_module_element_id: self.course_module_element_id).latest_only
+    others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
     others.update_all(latest_attempt: false)
     true
   end
@@ -182,21 +161,5 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
   end
 
-  def check_for_enrollment_email_conditions
-    #Needs serious improvements and is failing in sidekiq with undefined method `enrollment' for #<SubjectCourseUserLog>
-    new_log_ids = []
-    time = Proc.new{Time.now}.call
-    if self.subject_course_user_log && self.subject_course_user_log.active_enrollment && !self.subject_course_user_log.active_enrollment.expired
-      scul = self.subject_course_user_log
-      scul.course_module_element_user_logs.each do |log|
-        if log.updated_at > (time - 1.day) && log.id != self.id
-          new_log_ids << log.id
-        end
-      end
-      if new_log_ids.any? && scul.last_element && scul.last_element.next_element
-        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time.to_i, 'send_study_streak_email') unless Rails.env.test?
-      end
-    end
-  end
 
 end

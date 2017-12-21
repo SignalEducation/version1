@@ -57,6 +57,7 @@
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
 #  student_number                   :string
+#  unsubscribed_from_emails         :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -90,13 +91,14 @@ describe User do
   it { should belong_to(:user_group) }
   it { should have_many(:user_notifications) }
   it { should have_one(:referral_code) }
+  it { should have_one(:student_access) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
   it { should have_and_belong_to_many(:subject_courses) }
 
   # validation
   context 'test uniqueness validation' do
-    subject { FactoryGirl.build(:individual_student_user) }
+    subject { FactoryGirl.build(:student_user) }
     it { should validate_uniqueness_of(:email).case_insensitive }
   end
 
@@ -122,7 +124,7 @@ describe User do
 
   context "user email validation" do
     before do
-      user_group = FactoryGirl.create(:individual_student_user_group)
+      user_group = FactoryGirl.create(:student_user_group)
       @user = FactoryGirl.create(:user, user_group_id: user_group.id)
     end
 
@@ -137,6 +139,7 @@ describe User do
   # callbacks
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:create_on_intercom).after(:create) }
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
@@ -144,24 +147,89 @@ describe User do
   it { expect(User).to respond_to(:sort_by_email) }
   it { expect(User).to respond_to(:sort_by_name) }
   it { expect(User).to respond_to(:sort_by_recent_registration) }
+  it { expect(User).to respond_to(:this_month) }
+  it { expect(User).to respond_to(:this_week) }
+  it { expect(User).to respond_to(:active_this_week) }
+  it { expect(User).to respond_to(:all_free_trial) }
 
   # class methods
-  it { expect(User).to respond_to(:all_admins) }
+  it { expect(User).to respond_to(:all_students) }
+  it { expect(User).to respond_to(:all_trial_or_sub_students) }
   it { expect(User).to respond_to(:all_tutors) }
   it { expect(User).to respond_to(:get_and_activate) }
+  it { expect(User).to respond_to(:get_and_verify) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:finish_password_reset_process) }
   it { expect(User).to respond_to(:sort_by) }
+  it { expect(User).to respond_to(:to_csv) }
+  it { expect(User).to respond_to(:to_csv_with_enrollments) }
+  it { expect(User).to respond_to(:to_csv_with_visits) }
+  it { expect(User).to respond_to(:parse_csv) }
+  it { expect(User).to respond_to(:bulk_create) }
+  it { expect(User).to respond_to(:create_csv_user) }
 
   # instance methods
-  it { should respond_to(:admin?) }
-  it { should respond_to(:assign_anonymous_logs_to_user) }
+  it { should respond_to(:student_user?) }
+  it { should respond_to(:non_student_user?) }
+  it { should respond_to(:trial_or_sub_user?) }
+  it { should respond_to(:complimentary_user?) }
+  it { should respond_to(:tutor_user?) }
+  it { should respond_to(:blocked_user?) }
+  it { should respond_to(:system_requirements_access?) }
+  it { should respond_to(:content_management_access?) }
+  it { should respond_to(:stripe_management_access?) }
+  it { should respond_to(:user_management_access?) }
+  it { should respond_to(:developer_access?) }
+  it { should respond_to(:home_pages_access?) }
+  it { should respond_to(:user_group_management_access?) }
+
+  it { should respond_to(:trial_user?) }
+  it { should respond_to(:valid_trial_user?) }
+  it { should respond_to(:not_started_trial_user?) }
+  it { should respond_to(:expired_trial_user?) }
+  it { should respond_to(:trial_limits_valid?) }
+  it { should respond_to(:trial_days_valid?) }
+  it { should respond_to(:trial_seconds_valid?) }
+  it { should respond_to(:trial_days_left) }
+  it { should respond_to(:trial_seconds_left) }
+  it { should respond_to(:trial_minutes_left) }
+
+  it { should respond_to(:subscription_user?) }
+  it { should respond_to(:valid_subscription?) }
+  it { should respond_to(:canceled_pending?) }
+  it { should respond_to(:canceled_member?) }
+  it { should respond_to(:current_subscription) }
+  it { should respond_to(:user_subscription_status) }
+  it { should respond_to(:user_account_status) }
+  it { should respond_to(:permission_to_see_content) }
+
+  it { should respond_to(:referred_user) }
+  it { should respond_to(:valid_order_ids) }
+  it { should respond_to(:valid_orders?) }
+  it { should respond_to(:purchased_products) }
+
   it { should respond_to(:change_the_password) }
-  it { should respond_to(:content_manager?) }
+  it { should respond_to(:activate_user) }
+  it { should respond_to(:validate_user) }
   it { should respond_to(:de_activate_user) }
+  it { should respond_to(:generate_email_verification_code) }
+  it { should respond_to(:create_referral) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:full_name) }
-  it { should respond_to(:individual_student?) }
-  it { should respond_to(:tutor?) }
+  it { should respond_to(:this_hour) }
+  it { should respond_to(:subject_course_user_log_course_ids) }
+  it { should respond_to(:enrolled_courses) }
+  it { should respond_to(:valid_enrolled_courses) }
+  it { should respond_to(:visit_campaigns) }
+  it { should respond_to(:visit_sources) }
+  it { should respond_to(:visit_landing_pages) }
+  it { should respond_to(:enrolled_course_ids) }
+
+  it { should respond_to(:resubscribe_account) }
+  it { should respond_to(:completed_course_module_element) }
+
+  it { should respond_to(:started_course_module_element) }
+  it { should respond_to(:update_from_stripe) }
+  it { should respond_to(:create_subscription_from_stripe) }
 
 end

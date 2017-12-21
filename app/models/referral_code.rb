@@ -80,7 +80,7 @@ class ReferralCode < ActiveRecord::Base
 
     usr = User.find(self.user_id)
     return false if usr.nil?
-    return false unless usr.individual_student? || usr.blogger?
+    return false unless usr.student_user?
 
     if usr
       new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}")[0..6]

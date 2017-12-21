@@ -57,6 +57,7 @@
 #  free_trial_ended_at              :datetime
 #  analytics_guid                   :string
 #  student_number                   :string
+#  unsubscribed_from_emails         :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -70,7 +71,7 @@ FactoryGirl.define do
     active                                    true
     locale                                    'en'
 
-    factory :individual_student_user do
+    factory :student_user do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
       active                            true
       free_trial                        true
@@ -82,14 +83,14 @@ FactoryGirl.define do
       email_verified_at               Time.now
 
 
-      factory :inactive_individual_student_user do
+      factory :inactive_student_user do
         sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
         active                          false
         account_activation_code         'abcde12345'
         account_activated_at            nil
       end
 
-      factory :active_individual_student_user do
+      factory :active_student_user do
         sequence(:email)                { |n| "active-student-#{n}@example.com" }
         active                          true
         account_activation_code         'abcde12345'
@@ -129,13 +130,6 @@ FactoryGirl.define do
 
     factory :tutor_user do
       sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
-      active                            true
-      user_group_id                     1
-      stripe_customer_id                nil
-    end
-
-    factory :blogger_user do
-      sequence(:email)                  { |n| "blogger.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil

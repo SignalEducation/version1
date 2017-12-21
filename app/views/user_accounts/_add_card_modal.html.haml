@@ -1,0 +1,120 @@
+.remodal{"data-remodal-id" => "add-card-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          =t('views.subscription_payment_cards.modal.h4')
+
+  .row.l-margin-top
+    .col-sm-12
+      -if flash[:error]
+        .alert.error{style: 'padding: 4px; margin-bottom: 5px;'}
+          =flash[:error]
+
+    .col-sm-12.text-left
+      =form_for(SubscriptionPaymentCard.new, method: :post, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
+        =f.hidden_field :user_id, value: current_user.id
+        =f.hidden_field :stripe_token
+
+        .payment-errors
+
+          .col-sm-10.col-sm-offset-1
+            .payment-errors
+              .form-group.cc
+                %label
+                  Credit or Debit card
+                .clearfix
+                  #card-element
+
+                  #card-errors{role: 'alert'}
+
+
+              .form-group.l-margin-top
+
+                %div.l-margin-top
+                  = f.button :submit, class: 'btn btn-red', id: 'card_submit' do
+                    %i.fa.fa-lock
+                    ='Add New Card'
+
+                  .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+                    .sk-circle1.sk-child
+                    .sk-circle2.sk-child
+                    .sk-circle3.sk-child
+                    .sk-circle4.sk-child
+                    .sk-circle5.sk-child
+                    .sk-circle6.sk-child
+                    .sk-circle7.sk-child
+                    .sk-circle8.sk-child
+                    .sk-circle9.sk-child
+                    .sk-circle10.sk-child
+                    .sk-circle11.sk-child
+                    .sk-circle12.sk-child
+
+
+
+:javascript
+
+  $(".sk-circle").hide();
+  // Custom styling can be passed to options when creating an Element.
+  var style = {
+    base: {
+      fontWeight: 300,
+      fontFamily: 'Rubik',
+      fontSize: '20px',
+      lineHeight: '24px'
+    }
+  };
+
+  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+  var elements = stripe.elements();
+
+  var card = elements.create('card', {hidePostalCode: true, style: style});
+  card.mount('#card-element');
+
+
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('new-subscription-payment-card-form');
+    $('#subscription_payment_card_stripe_token').val(token.id);
+
+    // Submit the form
+    form.submit();
+    $('#card_submit').hide();
+  }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        $('#card_submit').prop('disabled',false);
+        $('#card_submit').show();
+        $(".sk-circle").show();
+      } else {
+        // Send the token to your server
+        stripeTokenHandler(result.token);
+      }
+    });
+  };
+
+  // Create a token when the form is submitted.
+  var form = document.getElementById('new-subscription-payment-card-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    $('#card_submit').prop('disabled',true);
+    $('#card_submit').hide();
+    $(".sk-circle").show();
+
+    createToken();
+  });
+
+  card.addEventListener('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });

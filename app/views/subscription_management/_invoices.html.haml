@@ -1,0 +1,29 @@
+%table.table{style: 'font-size: 18px;'}
+  %thead
+    %tr
+      %th
+        =t('views.invoices.form.date')
+      %th
+        =t('views.invoices.form.line_total_inc_vat')
+      %th{colspan: 2}
+        =t('views.invoices.form.status')
+
+  %tbody
+    -@invoices.each do |invoice|
+      %tr
+        %td
+          -if invoice.issued_at
+            =humanize_datetime(invoice.issued_at)
+        %td
+          =number_in_local_currency(invoice.total, invoice.currency_id)
+        %td
+          =invoice.status
+        %td
+          .pull-right
+
+            =link_to subscription_management_pdf_invoice_url(@subscription, invoice.id, format: 'pdf'), target: '_blank' do
+              .btn.btn-red.btn-small
+                PDF
+            =link_to subscription_management_invoice_url(@subscription, invoice.id), style: 'padding-left: 5px;' do
+              .btn.btn-purple.btn-small
+                View

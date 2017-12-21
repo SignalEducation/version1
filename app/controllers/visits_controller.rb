@@ -34,11 +34,12 @@ class VisitsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(%w(admin))
+    ensure_user_has_access_rights(%w(user_management_access))
   end
-  before_action :get_variables, except: [:all_index, :all_show]
+  before_action :get_variables
 
   def index
+    @user = User.find(params[:user_id])
     @visits = @user.visits.all.paginate(per_page: 50, page: params[:page])
   end
 
@@ -51,6 +52,7 @@ class VisitsController < ApplicationController
   end
 
   def show
+    @user = User.find(params[:user_id])
     @visit = Visit.find(params[:id])
   end
 
@@ -61,8 +63,8 @@ class VisitsController < ApplicationController
   protected
 
   def get_variables
-    @user = User.find(params[:user_id])
     seo_title_maker('User Visits', nil, false)
+    @layout = 'management'
   end
 
 end

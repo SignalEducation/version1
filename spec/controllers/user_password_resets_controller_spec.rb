@@ -21,10 +21,10 @@ RSpec.describe UserPasswordResetsController, type: :controller do
 
     describe 'POST create' do
       it 'returns http success' do
-        post :create, email_address: individual_student_user.email
+        post :create, email_address: student_user.email
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        test_user = User.find(individual_student_user.id)
+        test_user = User.find(student_user.id)
         expect(test_user.active).to be_falsey
         expect(test_user.password_reset_token).to_not be_nil
         expect(response.status).to eq(200)
@@ -106,7 +106,7 @@ RSpec.describe UserPasswordResetsController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe 'GET new' do

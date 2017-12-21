@@ -24,7 +24,7 @@
               -else
                 =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn full-width btn-cyan resume'
             -else
-              =link_to 'Continue', subscription_special_link(current_user.id), class: 'btn full-width btn-cyan'
+              =link_to 'Continue', new_subscription_url, class: 'btn full-width btn-cyan'
 
           -unless @active_enrollment.expired
             .edit-enrollment.l-margin-top

@@ -18,8 +18,6 @@ describe ReferralCodesController, type: :controller do
 
   let!(:tutor) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id ) }
   let!(:tutor_referral_code) { FactoryGirl.create(:referral_code, user_id: tutor.id) }
-  let!(:blogger) { FactoryGirl.create(:blogger_user, user_group_id: blogger_user_group.id ) }
-  let!(:blogger_referral_code) { FactoryGirl.create(:referral_code, user_id: blogger.id) }
 
   context 'Not logged in: ' do
 
@@ -39,11 +37,11 @@ describe ReferralCodesController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
@@ -81,36 +79,6 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should bounce as not allowed' do
         get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        delete :destroy, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        delete :destroy, id: tutor_referral_code.id
         expect_bounce_as_not_allowed
       end
     end
@@ -178,16 +146,24 @@ describe ReferralCodesController, type: :controller do
     end
 
     describe "GET 'index'" do
-      it 'should bounce as not allowed' do
+      it 'should respond OK' do
         get :index
-        expect_bounce_as_not_allowed
+        expect_index_success_with_model('referral_codes', 1)
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
+      it 'should be ERROR as children exist' do
+        student_user = FactoryGirl.create(:student_user)
+        student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
+                                            subscription_id: 1)
         delete :destroy, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
+        expect_delete_error_with_model('referral_code', referral_codes_url)
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: tutor_referral_code.id
+        expect_delete_success_with_model('referral_code', referral_codes_url)
       end
     end
 
@@ -203,14 +179,14 @@ describe ReferralCodesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('referral_codes', 2)
+        expect_index_success_with_model('referral_codes', 1)
       end
     end
     
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        individual_student_user = FactoryGirl.create(:individual_student_user)
-        individual_student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
+        student_user = FactoryGirl.create(:student_user)
+        student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
                                                        subscription_id: 1)
         delete :destroy, id: tutor_referral_code.id
         expect_delete_error_with_model('referral_code', referral_codes_url)

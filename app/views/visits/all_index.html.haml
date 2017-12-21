@@ -5,6 +5,11 @@
         %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
           =t('views.visits.all_index.h1')
 
+    .row.l-margin-top.l-margin-bottom
+      .col-md-12
+        =render partial: 'management_consoles/user_management_nav'
+
+    .row.l-margin-top.l-margin-bottom
       .col-md-12.col-sm-12.col-xs-12
         =form_tag(visits_all_index_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
           .form-group.input-group.input-group-lg

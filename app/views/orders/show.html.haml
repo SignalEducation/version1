@@ -1,38 +1,35 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
-.l-margin-top
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .row.l-margin-bottom
-          .col-md-12.text-center
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              =t('views.orders.show.h1')
-              \#
-              =@order.id
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12.l-margin-top-big
-            .table-box
-              .table-responsive
-                %table.table.table-bordered.l-margin-top
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.product_id')
-                    %td.col-sm-8=@order.product.name
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.subject_course_id')
-                    -if @order.subject_course
-                      %td.col-sm-8=@order.subject_course.name
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.user_id')
-                    %td.col-sm-8=@order.user.full_name
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.stripe_guid')
-                    %td.col-sm-8=@order.stripe_guid
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.stripe_customer_id')
-                    %td.col-sm-8=@order.stripe_customer_id
-                  %tr
-                    %td.col-sm-4=t('views.orders.show.current_status')
-                    %td.col-sm-8=@order.current_status
-                %p
-                  =link_to t('views.general.back'), orders_url
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.orders.show.h1')
+            \#
+            =@order.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.orders.show.product_id')
+                  %td.col-sm-8=@order.product.name
+                %tr
+                  %td.col-sm-4=t('views.orders.show.subject_course_id')
+                  -if @order.subject_course
+                    %td.col-sm-8=@order.subject_course.name
+                %tr
+                  %td.col-sm-4=t('views.orders.show.user_id')
+                  %td.col-sm-8=@order.user.full_name
+                %tr
+                  %td.col-sm-4=t('views.orders.show.stripe_guid')
+                  %td.col-sm-8=@order.stripe_guid
+                %tr
+                  %td.col-sm-4=t('views.orders.show.stripe_customer_id')
+                  %td.col-sm-8=@order.stripe_customer_id
+                %tr
+                  %td.col-sm-4=t('views.orders.show.current_status')
+                  %td.col-sm-8=@order.current_status
+              %p
+                =link_to t('views.general.back'), orders_url

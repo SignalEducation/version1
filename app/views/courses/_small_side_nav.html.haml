@@ -19,7 +19,7 @@
               .glyphicon.glyphicon-chevron-right.side-nav-chevron
               =course_module_element.name
           -else
-            -if course_module_element.completed_by_user_or_guid(current_user.try(:id), current_session_guid)
+            -if course_module_element.completed_by_user(current_user.try(:id))
               =link_to course_special_link(course_module_element), class: 'list-group-item text-center' do
                 .glyphicon.glyphicon-ok-sign
                 =course_module_element.name

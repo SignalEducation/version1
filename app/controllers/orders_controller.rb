@@ -21,20 +21,24 @@
 
 class OrdersController < ApplicationController
 
+  #TODO Review this controller split student and admin actions
+
   before_action :logged_in_required
   before_action except: [:new, :create] do
-    ensure_user_is_of_type(%w(admin))
-  end
-  before_action only: [:new, :create] do
-    ensure_user_is_of_type(%w(individual_student))
+    ensure_user_has_access_rights(%w(user_management_access stripe_management_access))
   end
   before_action :get_variables
 
   def index
     @orders = Order.paginate(per_page: 50, page: params[:page]).all_in_order
+    @layout = 'management'
+    seo_title_maker('Orders', '', true)
+
   end
 
   def show
+    @layout = 'management'
+    seo_title_maker('Orders', '', true)
   end
 
   def new

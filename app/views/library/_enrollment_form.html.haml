@@ -7,7 +7,7 @@
             =@course.name
         .col-sm-4.col-xs-12.text-center.enroll-section
           -if @course.exam_body && @course.exam_sittings
-            -if current_user.individual_student?
+            -if current_user.student_user?
               %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width'}
                 Enrol Now
             -else

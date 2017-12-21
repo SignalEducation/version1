@@ -25,9 +25,8 @@ describe UserNotificationsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:user_notification_1) { FactoryGirl.create(:user_notification, user_id: individual_student_user.id) }
+  let!(:user_notification_1) { FactoryGirl.create(:user_notification, user_id: student_user.id) }
   let!(:user_notification_2) { FactoryGirl.create(:user_notification, user_id: tutor_user.id) }
-  let!(:user_notification_5) { FactoryGirl.create(:user_notification, user_id: blogger_user.id) }
   let!(:user_notification_7) { FactoryGirl.create(:user_notification, user_id: content_manager_user.id) }
   let!(:user_notification_8) { FactoryGirl.create(:user_notification, user_id: admin_user.id) }
   let!(:user_notification_9) { FactoryGirl.create(:user_notification, user_id: comp_user.id) }
@@ -89,24 +88,24 @@ describe UserNotificationsController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(student_user)
     end
 
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_1' do
         get :show, id: user_notification_1.id
-        expect_show_success_with_model('user_notification', user_notification_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
@@ -146,7 +145,7 @@ describe UserNotificationsController, type: :controller do
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_2' do
         put :update, id: user_notification_1.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
@@ -157,15 +156,14 @@ describe UserNotificationsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: user_notification_1.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should get OK' do
         delete :destroy, id: user_notification_1.id
-        expect_archive_success_with_model('user_notification', user_notification_1.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should get bounced as not allowed' do
@@ -186,14 +184,14 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_1' do
         get :show, id: user_notification_9.id
-        expect_show_success_with_model('user_notification', user_notification_9.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
@@ -233,7 +231,7 @@ describe UserNotificationsController, type: :controller do
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_2' do
         put :update, id: user_notification_9.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
@@ -244,15 +242,14 @@ describe UserNotificationsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: user_notification_9.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_9.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should get OK' do
         delete :destroy, id: user_notification_9.id
-        expect_archive_success_with_model('user_notification', user_notification_9.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should get bounced as not allowed' do
@@ -273,14 +270,14 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_2' do
         get :show, id: user_notification_2.id
-        expect_show_success_with_model('user_notification', user_notification_2.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
@@ -293,14 +290,14 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('user_notification')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/x'" do
       it 'should respond OK with user_notification_2' do
         get :edit, id: user_notification_2.id
-        expect_edit_success_with_model('user_notification', user_notification_2.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
@@ -313,19 +310,19 @@ describe UserNotificationsController, type: :controller do
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, user_notification: valid_params
-        expect_create_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, user_notification: {valid_params.keys.first => ''}
-        expect_create_error_with_model('user_notification')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_2' do
         put :update, id: user_notification_2.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
@@ -336,8 +333,7 @@ describe UserNotificationsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: user_notification_2.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -345,7 +341,7 @@ describe UserNotificationsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: user_notification_2.id
-        expect_archive_success_with_model('user_notification', user_notification_2.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should expect bounce as not allowed' do
@@ -354,84 +350,6 @@ describe UserNotificationsController, type: :controller do
       end
     end
 
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_index_success_with_model('user_notifications', 1)
-      end
-    end
-
-    describe "GET 'show/x'" do
-      it 'should see user_notification_5' do
-        get :show, id: user_notification_5.id
-        expect_show_success_with_model('user_notification', user_notification_5.id)
-      end
-
-      it 'should bounce as not allowed' do
-        get :show, id: user_notification_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should bounce as not allowed' do
-        get :new
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'edit/x'" do
-      it 'should bounce as not alloowed' do
-        get :edit, id: user_notification_5.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should bounce as not allowed' do
-        post :create, user_notification: valid_params
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'update/x'" do
-      it 'should respond OK to valid params for user_notification_1' do
-        put :update, id: user_notification_5.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
-      end
-
-      it 'should bounce as not allowed' do
-        put :update, id: user_notification_2.id, user_notification: valid_params
-        expect_bounce_as_not_allowed
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: user_notification_5.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_5.id)
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: user_notification_5.id
-        expect_archive_success_with_model('user_notification', user_notification_5.id, user_notifications_url)
-      end
-
-      it 'should bounce as not allowed' do
-        delete :destroy, id: user_notification_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
   end
 
   context 'Logged in as a content_manager_user: ' do
@@ -444,14 +362,14 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_7' do
         get :show, id: user_notification_7.id
-        expect_show_success_with_model('user_notification', user_notification_7.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
@@ -484,7 +402,7 @@ describe UserNotificationsController, type: :controller do
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_7' do
         put :update, id: user_notification_7.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
@@ -494,15 +412,14 @@ describe UserNotificationsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: user_notification_7.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_7.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: user_notification_7.id
-        expect_archive_success_with_model('user_notification', user_notification_7.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -518,14 +435,14 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_1' do
         get :show, id: user_notification_10.id
-        expect_show_success_with_model('user_notification', user_notification_10.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
@@ -565,7 +482,7 @@ describe UserNotificationsController, type: :controller do
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_2' do
         put :update, id: user_notification_10.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
@@ -576,15 +493,14 @@ describe UserNotificationsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: user_notification_10.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_10.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should get OK' do
         delete :destroy, id: user_notification_10.id
-        expect_archive_success_with_model('user_notification', user_notification_10.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should get bounced as not allowed' do
@@ -605,14 +521,14 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 1)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_1' do
         get :show, id: user_notification_11.id
-        expect_show_success_with_model('user_notification', user_notification_11.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional - some other object
@@ -652,7 +568,7 @@ describe UserNotificationsController, type: :controller do
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_2' do
         put :update, id: user_notification_11.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
@@ -663,15 +579,14 @@ describe UserNotificationsController, type: :controller do
 
       it 'should reject invalid params' do
         put :update, id: user_notification_11.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_11.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should get OK' do
         delete :destroy, id: user_notification_11.id
-        expect_archive_success_with_model('user_notification', user_notification_11.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should get bounced as not allowed' do
@@ -692,69 +607,67 @@ describe UserNotificationsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('user_notifications', 8)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/x'" do
       it 'should see user_notification_8' do
         get :show, id: user_notification_8.id
-        expect_show_success_with_model('user_notification', user_notification_8.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should see user_notification_2' do
         get :show, id: user_notification_2.id
-        expect_show_success_with_model('user_notification', user_notification_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('user_notification')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/x'" do
       it 'should respond OK with user_notification_8' do
         get :edit, id: user_notification_8.id
-        expect_edit_success_with_model('user_notification', user_notification_8.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should respond OK with user_notification_2' do
         get :edit, id: user_notification_2.id
-        expect_edit_success_with_model('user_notification', user_notification_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, user_notification: valid_params
-        expect_create_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, user_notification: {valid_params.keys.first => ''}
-        expect_create_error_with_model('user_notification')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/x'" do
       it 'should respond OK to valid params for user_notification_8' do
         put :update, id: user_notification_8.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should respond OK to valid params for user_notification_2' do
         put :update, id: user_notification_2.id, user_notification: valid_params
-        expect_update_success_with_model('user_notification', user_notifications_url)
-        expect(assigns(:user_notification).id).to eq(user_notification_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: user_notification_8.id, user_notification: {valid_params.keys.first => ''}
-        expect_update_error_with_model('user_notification')
-        expect(assigns(:user_notification).id).to eq(user_notification_8.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -762,12 +675,12 @@ describe UserNotificationsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: user_notification_8.id
-        expect_archive_success_with_model('user_notification', user_notification_8.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: user_notification_1.id
-        expect_archive_success_with_model('user_notification', user_notification_1.id, user_notifications_url)
+        expect_bounce_as_not_allowed
       end
     end
 

@@ -59,15 +59,11 @@ describe SubjectCourseUserLog do
 
   # scopes
   it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }
-  it { expect(SubjectCourseUserLog).to respond_to(:for_session_guid) }
-  it { expect(SubjectCourseUserLog).to respond_to(:for_unknown_users) }
   it { expect(SubjectCourseUserLog).to respond_to(:all_complete) }
   it { expect(SubjectCourseUserLog).to respond_to(:all_incomplete) }
   it { expect(SubjectCourseUserLog).to respond_to(:for_subject_course) }
 
   # class methods.
-  it { expect(SubjectCourseUserLog).to respond_to(:assign_user_to_session_guid) }
-  it { expect(SubjectCourseUserLog).to respond_to(:for_user_or_session) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

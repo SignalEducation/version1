@@ -48,10 +48,9 @@ describe SubscriptionPaymentCard do
 
   # Constants
   it { expect(SubscriptionPaymentCard.const_defined?(:STATUSES)).to eq(true) }
-  it { expect(SubscriptionPaymentCard.const_defined?(:CHECKING_STATUSES)).to eq(true) }
 
   # relationships
-  it { should have_many(:subscription_transactions) }
+  it { should have_many(:charges) }
   it { should belong_to(:user) }
   it { should belong_to(:account_address_country) }
 
@@ -95,7 +94,9 @@ describe SubscriptionPaymentCard do
 
   # callbacks
   it { should callback(:create_on_stripe_using_token).before(:validation).on(:create).if(:stripe_token) }
+  it { should callback(:update_stripe_and_other_cards).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:remove_card_from_stripe).before(:destroy) }
 
   # scopes
   it { expect(SubscriptionPaymentCard).to respond_to(:all_in_order) }
@@ -103,13 +104,11 @@ describe SubscriptionPaymentCard do
 
   # class methods
   it { expect(SubscriptionPaymentCard).to respond_to(:build_from_stripe_data) }
-  it { expect(SubscriptionPaymentCard).to respond_to(:get_updates_for_user) }
+  it { expect(SubscriptionPaymentCard).to respond_to(:create_from_stripe_array) }
 
   # instance methods
   it { should respond_to(:create_on_stripe_using_token) }
   it { should respond_to(:destroyable?) }
-  it { should respond_to(:make_default_card=) }
-  it { should respond_to(:make_default_card) }
   it { should respond_to(:status) }
   it { should respond_to(:stripe_token=) }
   it { should respond_to(:stripe_token) }

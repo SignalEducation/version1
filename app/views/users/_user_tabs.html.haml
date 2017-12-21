@@ -1,17 +1,17 @@
 .admin-nav
   %ul.user-nav-block
     %li
-      =link_to 'Overview', user_url(@user)
+      =link_to 'Account', user_url(@user)
     %li
-      =link_to 'Personal', user_personal_details_url(@user)
-    -if @user.tutor?
+      =link_to 'Personal', user_personal_url(@user)
+    -if @user.tutor_user?
       %li
-        =link_to 'Courses', user_courses_status_url(@user)
-    -else
+        =link_to 'Courses', user_courses_url(@user)
+    -elsif @user.subscription_user?
       %li
-        =link_to 'Subscription', user_subscription_status_url(@user)
+        =link_to 'Subscriptions', user_subscription_url(@user)
     %li
-      =link_to 'Enrolments', user_enrollments_details_url(@user)
+      =link_to 'Purchases', user_orders_url(@user)
     %li
-      =link_to 'Purchases', user_purchases_details_url(@user)
+      =link_to 'Enrolments', user_enrollments_url(@user)
 

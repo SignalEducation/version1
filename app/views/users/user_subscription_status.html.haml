@@ -1,0 +1,99 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'user_tabs'
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
+                Subscriptions
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
+                        Sub ID
+                      %th
+                        Sub Plan
+                      %th
+                        Created At
+                      %th
+                        Status
+                      %th
+
+                  %tbody
+                    -@subscriptions.each do |subscription|
+                      %tr
+                        %td
+                          =subscription.id
+                        %td
+                          =subscription.subscription_plan.name
+                        %td
+                          =humanize_datetime(subscription.created_at)
+                        %td
+                          =subscription.current_status.camelcase
+                        %td
+                          =link_to subscription_management_url(subscription) do
+                            .btn.btn-purple.btn-small.pull-right
+                              View
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
+                Subscription Payment Cards
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
+                        Ending In
+                      %th
+                        Expiration
+                      %th
+                        Stripe ID
+                      %th
+                        Status
+                      %th
+                        Default
+
+                  %tbody
+                    -@subscription_payment_cards.each do |card|
+                      %tr
+                        %td
+                          =card.last_4
+                        %td
+                          =card.expiry_month
+                          &#45;
+                          =card.expiry_year
+                        %td
+                          =card.stripe_card_guid
+                        %td
+                          =card.status
+
+                        %td
+                          =tick_or_cross(card.is_default_card?)
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom-big
+                =t('views.users.user_subscription_status.subscription_info.invoices')
+              .table-responsive
+                -@invoices = @user.invoices.all_in_order
+                =render partial: 'subscription_management/invoices'
+
+
