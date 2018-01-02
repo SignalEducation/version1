@@ -1,0 +1,27 @@
+-if flash[:success] || flash[:error] || flash[:warning]
+  =render partial: 'layouts/flash_messages'
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom#thank-you-message
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Order Complete
+        .col-md-8.col-md-offset-2.l-margin-bottom-6x
+          .box-item
+            .col-md-8.col-md-offset-2.l-margin-top.text-center
+              %p
+                Your Mock Exam will be emailed to you shortly. You can also download it below.
+
+            .col-md-10.col-md-offset-1.l-margin-top.text-center
+              %p{style: 'letter-spacing: 0.5px;'}
+                ='Visit your'
+                =link_to 'account page', account_url(anchor: 'orders')
+                ='to view your order details.'
+
+          %br/
+          -if @order && @order.product
+            .l-margin-top
+              =link_to @order.product.mock_exam.file.url, target: '_blank' do
+                .btn.btn-purple.btn-wide
+                  ='Download'

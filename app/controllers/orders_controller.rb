@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
   #TODO Review this controller split student and admin actions
 
   before_action :logged_in_required
-  before_action except: [:new, :create] do
+  before_action except: [:new, :create, :order_complete] do
     ensure_user_has_access_rights(%w(user_management_access stripe_management_access))
   end
   before_action :get_variables
@@ -46,7 +46,7 @@ class OrdersController < ApplicationController
     @mock_exam = @product.mock_exam
     @course = @mock_exam.subject_course
     @order = Order.new
-    @navbar = false
+    @layout = 'standard'
   end
 
   def create
@@ -95,11 +95,19 @@ class OrdersController < ApplicationController
     if @order.save
       flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
       MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file, @order.reference_guid)
-      redirect_to account_url(anchor: :orders)
+      redirect_to order_complete_url(@order.reference_guid)
     else
       render action: :new
     end
     @navbar = false
+  end
+
+  def order_complete
+    @order = Order.where(reference_guid: params[:reference_guid]).first
+    unless @order
+      redirect_to root_url
+      flash[:error] = 'Sorry something went wrong. Please try again or contact us for assistance.'
+    end
   end
 
   protected
