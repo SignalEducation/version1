@@ -1,47 +1,22 @@
--#TODO Can this be simplified?
+%script{:src => '//cdn.jsdelivr.net/npm/fingerprintjs2@latest/dist/fingerprint2.min.js'}
+
 :javascript
+
   dataLayer = [];
 
-
--if (controller_name == 'groups' && action_name == 'show') || (controller_name == 'library' && action_name == 'show')
-
-  -course = @tag_manager_course
-  -if current_user
-    :javascript
-      dataLayer.push({
-        'edu_pid': "#{course}",
-        'user_id': "#{current_user.id}"
-      });
-
-  -else
-    :javascript
-      dataLayer.push({
-        'edu_pid': "#{course}"
-      });
-
-
--elsif current_user && (controller_name == 'users' && action_name == 'personal_upgrade_complete')
-
-  :javascript
+  new Fingerprint2().get(function(result){
     dataLayer.push({
-      'user_id': "#{current_user.id}",
-      'event': 'checkout',
-      'ecommerce': {
-        'checkout': {
-          'products': [{
-            'name': "#{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan",
-            'id': "#{@subscription.subscription_plan.id}",
-            'price': "#{@subscription.subscription_plan.price}",
-          }]
-        }
-      }
+    'fingerprint': result,
+    'event': 'sendFingerprint'
     });
+  });
 
--elsif (controller_name == 'student_sign_ups' && action_name == 'show') && @user
-  :javascript
-    dataLayer.push({'user_id': "#{@user.id}"});
+  function(){
+    return new Date().getTime();
+  };
 
--elsif current_user
+
+-if current_user
   :javascript
     dataLayer.push({'user_id': "#{current_user.id}"});
 
