@@ -466,7 +466,7 @@ en:
           success: User Notification has been deleted
           error: User Notification was not deleted
 
-    user_password_resets:
+    user_passwords:
       create:
         flash:
           success: Your request has been received. Please check your email for further instructions

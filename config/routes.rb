@@ -71,11 +71,11 @@ Rails.application.routes.draw do
       get  '/orders', action: :user_purchases_details, as: :orders
       patch  '/update_courses', action: :update_courses, as: :update_courses
     end
-    resources :user_password_resets, only: [:new, :edit, :create, :update]
-    get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
-    get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
-    get 'set_password/:id', to: 'user_password_resets#set_password', as: :set_password
-    put 'create_password/:id', to: 'user_password_resets#create_password', as: :user_create_password
+    resources :user_passwords, only: [:new, :edit, :create, :update]
+    get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
+    get 'reset_password/:id', to: 'user_passwords#edit', as: :reset_password
+    get 'set_password/:id', to: 'user_passwords#set_password', as: :set_password
+    put 'create_password/:id', to: 'user_passwords#create_password', as: :user_create_password
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete

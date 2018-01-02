@@ -4,11 +4,11 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.user_password_resets.edit.h1')
+            =t('views.user_passwords.edit.h1')
         .col-md-8.col-md-offset-2.l-margin-bottom-6x
           .col-md-8.col-md-offset-2.l-margin-top-small
             %p
-              =t('views.user_password_resets.edit.paragraph_1')
+              =t('views.user_passwords.edit.paragraph_1')
           =form_tag(user_password_reset_url(id: @user.password_reset_token), {method: :put, class: 'form-horizontal', role: 'form'}) do
             .col-md-8.col-md-offset-2.l-margin-top-small
               =label_tag :password, t('views.users.form.password'), class: 'control-label'
