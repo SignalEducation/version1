@@ -6,8 +6,9 @@
           =image_tag('ls-logo-transparent.svg', class: 'logo')
 
 
-        .lsbtn-base
-          =link_to 'Become a member now', new_student_url, class: 'lsbtn pull-left'
+        -unless current_user
+          .lsbtn-base
+            =link_to 'Become a member now', new_student_url, class: 'lsbtn pull-left'
 
 
       .col-md-9

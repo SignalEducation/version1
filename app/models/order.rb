@@ -42,7 +42,8 @@ class Order < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :stripe_guid, presence: true
-  validates :reference_guid, presence: true
+  validates :reference_guid, presence: true,
+            uniqueness: true
   validates :terms_and_conditions, presence: true
   validates :stripe_customer_id, presence: true
   validates :current_status, presence: true

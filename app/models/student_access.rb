@@ -81,7 +81,7 @@ class StudentAccess < ActiveRecord::Base
   protected
 
   def create_on_intercom
-    #IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
+    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
   end
 
   def create_trial_expiration_worker

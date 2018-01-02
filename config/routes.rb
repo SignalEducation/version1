@@ -138,6 +138,7 @@ Rails.application.routes.draw do
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
+    get 'order/order_complete/:reference_guid', to: 'orders#order_complete', as: :order_complete
     resources :products
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
 
