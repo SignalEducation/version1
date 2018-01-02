@@ -186,7 +186,7 @@ class CoursesController < ApplicationController
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
     @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url]) if @course
 
-    if @course && current_user && current_user.permission_to_see_content(@course)
+    if @course && @course_module && current_user && current_user.permission_to_see_content(@course)
 
       @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id).last
       if @active_enrollment
