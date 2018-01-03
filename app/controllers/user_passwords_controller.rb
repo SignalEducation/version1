@@ -59,7 +59,6 @@ class UserPasswordsController < ApplicationController
     end
   end
 
-  #Admin invite allow user to input password
   def set_password
     if params[:id].to_s.length == 20
       @user = User.where(password_reset_token: params[:id].to_s).first
@@ -76,7 +75,6 @@ class UserPasswordsController < ApplicationController
     seo_title_maker('Set password for your account', 'Please enter a valid password to finish setting up your account.', true)
   end
 
-  #Admin invite update user to set the password
   def create_password
     if params[:password] == params[:password_confirmation]
       # in the params, params[:id] holds the reset_token.

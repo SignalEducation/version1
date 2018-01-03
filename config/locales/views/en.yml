@@ -1418,7 +1418,11 @@ en:
     user_passwords:
       new:
         h1: Password Reset
-        paragraph_1: Forgot password? No problem! Enter your email address and we will send you further instructions.
+        paragraph_1: Forgot password? No problem!
+        paragraph_2: Enter your email address and we will send you further instructions.
+        email: Email
+        email_placeholder: Enter Email Address Here
+        submit: Reset My Password
 
       create:
         h1: Reset your password...
