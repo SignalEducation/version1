@@ -1,7 +1,7 @@
+-# GA Fingerprinting Script
 %script{:src => '//cdn.jsdelivr.net/npm/fingerprintjs2@latest/dist/fingerprint2.min.js'}
 
 :javascript
-
   dataLayer = [];
 
   new Fingerprint2().get(function(result){
@@ -16,7 +16,29 @@
   };
 
 
--if current_user
+-if current_user && (controller_name == 'subscriptions' && action_name == 'personal_upgrade_complete')
+
+  :javascript
+    dataLayer.push({
+      'user_id': "#{current_user.id}",
+      'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'products': [{
+            'name': "#{t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")} plan",
+            'id': "#{@subscription.subscription_plan.id}",
+            'price': "#{@subscription.subscription_plan.price}",
+          }]
+        }
+      }
+    });
+
+-elsif (controller_name == 'student_sign_ups' && action_name == 'show') && @user
+  -#This is the post sign-up landing page - personal_sign_up_complete url
+  :javascript
+    dataLayer.push({'user_id': "#{@user.id}"});
+
+-elsif current_user
   :javascript
     dataLayer.push({'user_id': "#{current_user.id}"});
 
