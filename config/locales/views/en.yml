@@ -1398,6 +1398,7 @@ en:
         developer_access: Developer Access
         home_pages_access: Landing Pages Access
         user_group_management_access: User Group Management Access
+        tutor: Tutor User Access
         student_user: Student User
         trial_or_sub_required: Trial or Sub Required
         blocked_user: Blocked User
