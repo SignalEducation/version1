@@ -148,6 +148,9 @@
 
 
     -elsif @current_subscription.past_due_status?
+      =link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
+        .btn.btn-red.full-width.l-margin-bottom
+          =t('views.users.show.cancel_your_subscription_plan')
 
 
     -elsif @current_subscription.unpaid_status?
