@@ -31,13 +31,22 @@ class SubscriptionsController < ApplicationController
   def new
     @user = current_user
     if @user.trial_or_sub_user?
+
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : @user.country
-      @currency_id = @country.currency_id
+
+      # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
+      @existing_subscription = @user.current_subscription
+      if @existing_subscription && @existing_subscription.subscription_plan
+        @currency_id = @existing_subscription.subscription_plan.currency_id
+      else
+        @currency_id = @country.currency_id
+      end
 
       @subscription = Subscription.new(user_id: @user.id)
 
-      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order.limit(3)
+      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+
       IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name) unless Rails.env.test?
     else
       redirect_to root_url
