@@ -127,7 +127,8 @@ class SubjectCoursesController < ApplicationController
   ## Edit & Update Actions for Tutor Users associated with this SubjectCourse ##
   def edit_tutors
     @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
-    @tutors = User.where(user_group_id: UserGroup.default_tutor_user_group.id).all_in_order
+    @tutor_group = UserGroup.where(tutor: true).first
+    @tutors = @tutor_group.users
     all_tutors = @tutors.each_slice( (@tutors.size/2.0).round ).to_a
     @first_tutors = all_tutors.first
     @second_tutors = all_tutors.last

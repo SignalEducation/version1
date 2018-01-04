@@ -1,20 +1,5 @@
--# GA Fingerprinting Script
-%script{:src => '//cdn.jsdelivr.net/npm/fingerprintjs2@latest/dist/fingerprint2.min.js'}
-
 :javascript
   dataLayer = [];
-
-  new Fingerprint2().get(function(result){
-    dataLayer.push({
-    'fingerprint': result,
-    'event': 'sendFingerprint'
-    });
-  });
-
-  function(){
-    return new Date().getTime();
-  };
-
 
 -if current_user && (controller_name == 'subscriptions' && action_name == 'personal_upgrade_complete')
 
@@ -41,6 +26,23 @@
 -elsif current_user
   :javascript
     dataLayer.push({'user_id': "#{current_user.id}"});
+
+
+-# GA Fingerprinting Script
+%script{:src => '//cdn.jsdelivr.net/npm/fingerprintjs2@latest/dist/fingerprint2.min.js'}
+
+:javascript
+
+  new Fingerprint2().get(function(result){
+    dataLayer.push({
+    'fingerprint': result,
+    'event': 'sendFingerprint'
+    });
+  });
+
+  function(){
+    return new Date().getTime();
+  };
 
 
 -# Google Tag Manager

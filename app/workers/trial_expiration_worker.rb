@@ -12,7 +12,7 @@ class TrialExpirationWorker
 
       if student_access.trial_ending_at_date && student_access.trial_ended_date == nil && ((time_now >= student_access.trial_ending_at_date) || student_access.content_seconds_consumed >= student_access.trial_seconds_limit)
         user.student_access.update_attributes(trial_ended_date: time_now, content_access: false)
-      elsif student_access.trial_ended_date == nil
+      elsif student_access.trial_ended_date == nil && student_access.trial_ending_at_date
         trial_ending_at_date = student_access.trial_ending_at_date + 23.hours
         TrialExpirationWorker.perform_at(trial_ending_at_date, user.id)
       else
