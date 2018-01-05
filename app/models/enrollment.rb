@@ -157,7 +157,9 @@ class Enrollment < ActiveRecord::Base
 
     if self.exam_date
       current_date = Proc.new{Time.now.to_date}.call
-      (self.exam_date - current_date).to_i
+
+      self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
+
     else
       0
     end
