@@ -6,7 +6,7 @@
           .col-sm-8.col-xs-12
             %h3.h3{style: 'color: #3E3F5B'}
               =enrollment.subject_course.name
-            .card-info.hidden-sm.hidden-xs
+            .card-info.hidden-xs
               %p.p
                 ="#{enrollment.days_until_exam} days until this exam"
 
@@ -19,12 +19,18 @@
               .progress
                 .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
-          .col-sm-4.col-xs-12.text-center.resume-course
+          .col-sm-4.col-xs-12.text-center.resume-course.hidden-xs
             .col-sm-12.col-xs-6
               =link_to 'Resume Course', library_special_link(enrollment.subject_course), class: 'btn btn-cyan'
 
             .col-sm-12.col-xs-6
-              .card-info
+              .card-info.hidden-xs
                 .h3
                   =enrollment.percentage_complete
                   Complete
+
+
+          .col-sm-4.col-xs-12.text-center.resume-course.visible-xs
+            .col-xs-12.l-margin-top
+              =link_to 'Resume Course', library_special_link(enrollment.subject_course), class: 'btn btn-red'
+
