@@ -152,6 +152,17 @@ class Enrollment < ActiveRecord::Base
     self.expired ? 'Expired' : 'Active'
   end
 
+  def days_until_exam
+
+    if self.exam_date
+      current_date = Proc.new{Time.now.to_date}.call
+      (self.exam_date - current_date).to_i
+    else
+      0
+    end
+
+  end
+
   protected
 
   def check_dependencies
