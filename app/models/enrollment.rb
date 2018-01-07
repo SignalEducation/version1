@@ -51,6 +51,7 @@ class Enrollment < ActiveRecord::Base
   scope :all_in_order, -> { order(:active, :created_at) }
   scope :all_in_admin_order, -> { order(:subject_course_id, :created_at) }
   scope :all_in_exam_order, -> { order(:exam_date) }
+  scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_expired, -> { where(expired: true) }
   scope :all_valid, -> { where(active: true, expired: false) }
@@ -157,9 +158,7 @@ class Enrollment < ActiveRecord::Base
 
     if self.exam_date
       current_date = Proc.new{Time.now.to_date}.call
-
       self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
-
     else
       0
     end
