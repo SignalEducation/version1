@@ -1051,7 +1051,18 @@ a.card {
   text-overflow: ellipsis;
 }
 .card-info {
-  padding: $gutter/2 $gutter $gutter $gutter;
+  padding: $gutter/2;
+  .p {
+    margin: 30px 0px;
+  }
+  .h3 {
+    margin-top: 30px;
+    font-weight: normal;
+    color: $colour-7;
+    text-transform: none;
+    letter-spacing: 0;
+    @include font-size(2.4);
+  }
 }
 .card-form {
   padding: $gutter/2 $gutter $gutter $gutter;
