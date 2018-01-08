@@ -35,8 +35,7 @@ Rails.application.routes.draw do
         as: :user_verification
     get 'account_verified', to: 'user_verifications#account_verified',
         as: :account_verified
-    get 'send_verification/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
-    get 'resend_verification/:email_verification_code', to: 'user_verifications#admin_resend_verification_mail', as: :admin_resend_verification_mail
+    post 'resend_verification_mail/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
 
     # User Sessions
     get 'sign_in', to: 'user_sessions#new', as: :sign_in

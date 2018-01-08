@@ -73,14 +73,12 @@
             .col-md-3.col-sm-12.col-xs-12
               .l-margin-top-small
                 -if !@user.email_verified && @user.email_verification_code
-                  -# TODO Make this a post request
-                  =link_to 'Resend Verification Email', admin_resend_verification_mail_url(@user.email_verification_code), class: 'btn btn-purple full-width'
+                  =link_to 'Resend Verification Email', resend_verification_mail_url(@user.email_verification_code), method: :post, class: 'btn btn-purple full-width'
                 -if @user.visits.any?
                   =link_to 'User Visits', user_visits_url(@user), class: 'btn btn-purple full-width'
                 -if @user.destroyable?
                   =link_to 'Delete User', user_url(@user), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red full-width', style: 'margin-top: 10px;'
 
-                  -# TODO Add re-send PW Reset email if PW reset token exists for user
                 -if @user.email_verified && @user.password_reset_requested_at && @user.password_reset_token
                   =link_to 'Resend PW Reset Email', manager_resend_url(@user), method: :post, class: 'btn btn-red full-width', style: 'margin-top: 10px;'
 
