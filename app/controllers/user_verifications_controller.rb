@@ -19,8 +19,8 @@ class UserVerificationsController < ApplicationController
       set_current_visit
       redirect_to account_verified_url
     else
-      flash[:error] = I18n.t('controllers.user_activations.update.error')
-      redirect_to library_url
+      flash[:warning] = 'Sorry! That link has expired. Please try to sign in or contact us for assistance'
+      redirect_to sign_in_url
     end
   end
 
