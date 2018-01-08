@@ -184,7 +184,7 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user && !user.password_change_required?
-        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20))
         #Send reset password email from Mandrill
         MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
       elsif user && user.password_change_required?
@@ -192,6 +192,17 @@ class User < ActiveRecord::Base
         MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/set_password/#{user.password_reset_token}")
       end
     end
+  end
+
+  def self.resend_pw_reset_email(user_id, root_url)
+    user = User.where(id: user_id).first
+    if user && user.active && user.email_verified && user.password_reset_requested_at && user.password_reset_token && !user.password_change_required?
+      #Send reset password email from Mandrill
+      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+    else
+
+    end
+    user
   end
 
   def self.finish_password_reset_process(reset_token, new_password,

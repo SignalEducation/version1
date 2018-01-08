@@ -12,7 +12,7 @@
               %h3.h3{style: 'padding: 12px 20px;'}
                 ="Welcome back #{current_user.first_name}!"
                 -if current_user.enrollments.any? && current_user.next_enrollment && current_user.next_enrollment.exam_date
-                  ="Your next exam siting is in #{current_user.next_exam_date} days"
+                  ="Your next exam sitting is in #{current_user.next_exam_date} days"
 
         .row.tabs
           .col-sm-3

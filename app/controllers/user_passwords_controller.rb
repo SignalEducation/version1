@@ -1,6 +1,6 @@
 class UserPasswordsController < ApplicationController
 
-  before_action :logged_out_required
+  before_action :logged_out_required, except: [:manager_resend_email]
   before_action :get_variables
 
   def new
@@ -10,9 +10,14 @@ class UserPasswordsController < ApplicationController
     User.start_password_reset_process(params[:email_address].to_s, root_url)
   end
 
+  def manager_resend_email
+    user = User.resend_pw_reset_email(params[:id], root_url)
+    redirect_to user_url(user.id)
+  end
+
   def edit
     if params[:id].to_s.length == 20
-      @user = User.where(password_reset_token: params[:id].to_s, active: false).first
+      @user = User.where(password_reset_token: params[:id].to_s).first
       if @user
         render :edit
       else
