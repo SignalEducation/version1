@@ -6,7 +6,7 @@ class DashboardController < ApplicationController
 
   def show
     @default_group = Group.all_active.all_in_order.first
-    @enrollments = Enrollment.includes(:subject_course_user_log).where(user_id: current_user.id).all_valid.all_in_order
+    @enrollments = Enrollment.includes(:subject_course_user_log).where(user_id: current_user.id).all_valid.all_in_recent_order
 
     @expired_enrollments = Enrollment.includes(:subject_course_user_log).where(user_id: current_user.id).all_active.all_expired.all_in_order
   end

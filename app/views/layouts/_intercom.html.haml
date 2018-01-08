@@ -4,7 +4,6 @@
     email: current_user.email,
     name: current_user.full_name,
     created_at: current_user.created_at,
-    unsubscribed_from_emails: current_user.unsubscribed_from_emails,
     custom_data: {guid: current_user.guid,
     user_group: current_user.user_group.try(:name),
     account_status: current_user.try(:user_account_status),

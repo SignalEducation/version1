@@ -749,6 +749,14 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
+  def next_enrollment
+    self.enrollments.all_valid.all_in_exam_order.first
+  end
+
+  def next_exam_date
+    self.next_enrollment.days_until_exam
+  end
+
   def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)
 
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
