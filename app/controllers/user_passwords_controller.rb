@@ -19,14 +19,19 @@ class UserPasswordsController < ApplicationController
     if params[:id].to_s.length == 20
       @user = User.where(password_reset_token: params[:id].to_s).first
       if @user
-        render :edit
+        if @user.email_verified
+          render :edit
+        else
+          flash[:error] = I18n.t('controllers.user_passwords.edit.flash.error')
+          redirect_to sign_in_url
+        end
       else
-        flash[:warning] = I18n.t('controllers.user_passwords.edit.flash.error')
+        flash[:warning] = I18n.t('controllers.user_passwords.edit.flash.warning')
         redirect_to sign_in_url
       end
     else
-      flash[:warning] = I18n.t('controllers.user_passwords.edit.flash.error')
-      redirect_to root_url
+      flash[:warning] = I18n.t('controllers.user_passwords.edit.flash.warning')
+      redirect_to sign_in_url
     end
   end
 
