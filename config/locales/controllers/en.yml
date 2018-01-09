@@ -472,7 +472,7 @@ en:
           success: Your request has been received. Please check your email for further instructions
       edit:
         flash:
-          error: Sorry, that reset request is invalid. Please start again.
+          error: Sorry, that link has expired. Please try sign in again or restart the password reset process.
       update:
         flash:
           success: Your password has been successsfully set!

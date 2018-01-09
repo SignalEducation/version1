@@ -21,11 +21,11 @@ class UserPasswordsController < ApplicationController
       if @user
         render :edit
       else
-        flash[:error] = I18n.t('controllers.user_passwords.edit.flash.error')
-        redirect_to root_url
+        flash[:warning] = I18n.t('controllers.user_passwords.edit.flash.error')
+        redirect_to sign_in_url
       end
     else
-      flash[:error] = I18n.t('controllers.user_passwords.edit.flash.error')
+      flash[:warning] = I18n.t('controllers.user_passwords.edit.flash.error')
       redirect_to root_url
     end
   end
