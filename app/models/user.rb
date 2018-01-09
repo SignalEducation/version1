@@ -189,7 +189,7 @@ class User < ActiveRecord::Base
         MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
       elsif user && user.password_change_required?
         # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
-        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/set_password/#{user.password_reset_token}")
+        MandrillWorker.perform_async(user.id, 'set_password_email', "#{root_url}/set_password/#{user.password_reset_token}")
       end
     end
   end

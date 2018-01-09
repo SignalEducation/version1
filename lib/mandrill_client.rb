@@ -30,6 +30,12 @@ class MandrillClient
     send_template('password-reset-20-02-17', msg)
   end
 
+  def set_password_email(set_password_url)
+    msg = message_stub.merge({"subject" => "Learn Signal Set Password"})
+    msg["global_merge_vars"] << { "name" => "SETPASSWORDURL", "content" => set_password_url }
+    send_template('set-password-20-02-17', msg)
+  end
+
   # Subscription/Stripe/Purchase Emails
   def send_card_payment_failed_email(account_settings_url)
     msg = message_stub.merge({"subject" => "Payment Failed"})
