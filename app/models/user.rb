@@ -205,8 +205,7 @@ class User < ActiveRecord::Base
     user
   end
 
-  def self.finish_password_reset_process(reset_token, new_password,
-          new_password_confirmation)
+  def self.finish_password_reset_process(reset_token, new_password, new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
       user = User.where(password_reset_token: reset_token.to_s).first
       if user
@@ -664,7 +663,7 @@ class User < ActiveRecord::Base
   def activate_user
     self.active = true
     self.account_activated_at = Proc.new{Time.now}.call
-    self.account_activation_code = ApplicationController::generate_random_code(20)
+    self.account_activation_code = nil
   end
 
   def validate_user
