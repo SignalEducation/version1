@@ -511,7 +511,7 @@ class User < ActiveRecord::Base
   end
 
   def trial_minutes_left
-    self.trial_seconds_left.to_i / 60
+    self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
   end
 
 
