@@ -82,8 +82,13 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   validates_length_of :address_country, maximum: 255, allow_blank: true
 
   # callbacks
+  # Only if user adding another card not if creating with subscription
   before_validation :create_on_stripe_using_token, on: :create, if: :stripe_token
-  after_create :update_stripe_and_other_cards
+  # Only if user adding another card not if creating with subscription
+  after_create :update_stripe_and_other_cards, if: :stripe_token
+  # Only if creation from subscription creation
+  after_create :delete_existing_default_cards, unless: :stripe_token
+
   before_destroy :remove_card_from_stripe
 
   # scopes
@@ -130,9 +135,7 @@ class SubscriptionPaymentCard < ActiveRecord::Base
 
   # AfterCreate callback from Subscription model
   def self.create_from_stripe_array(stripe_card_array, user_id, default_card_guid)
-    #
-    # TODO: Should expired cards also be deleted here?
-    #
+
     old_default_cards = SubscriptionPaymentCard.where(user_id: user_id, is_default_card: true)
     # Delete any previous default cards
     old_default_cards.each do |card|
@@ -140,12 +143,11 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     end
 
     stripe_card_array.each do |data_item|
-      # Loop through the array if one item is equal to the customers default_card id then create a card record for it
+      # Loop through the stripe array of existing cards if one is equal to the new default_card id then create a card record for it
       if data_item[:object] == 'card' && data_item[:id] == default_card_guid
         SubscriptionPaymentCard.build_from_stripe_data(data_item, user_id)
       end
     end
-
   end
 
   # instance methods
@@ -274,12 +276,21 @@ class SubscriptionPaymentCard < ActiveRecord::Base
   end
 
   def update_stripe_and_other_cards
+    # Ensure only the new card record is default, all other existing records are updated to default: false
     stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
     stripe_customer.default_source = self.stripe_card_guid
     stripe_customer.save
 
     other_cards = SubscriptionPaymentCard.where(user_id: self.user_id, is_default_card: true).where.not(id: self.id)
     other_cards.update_all(status: 'not-live', is_default_card: false)
+  end
+
+  def delete_existing_default_cards
+    # Delete all default cards without triggering callbacks - stripe deletes when default source changes
+
+    other_cards = SubscriptionPaymentCard.where(user_id: self.user_id, is_default_card: true).where.not(id: self.id)
+    other_cards.delete_all
+
   end
 
 

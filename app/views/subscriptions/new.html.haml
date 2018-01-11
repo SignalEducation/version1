@@ -11,7 +11,7 @@
               .row
                 .col-lg-4.col-lg-offset-4.col-md-6.col-md-offset-3.col-sm-8.col-sm-offset-2
                   -#TODO Slow to load !!!
-                  -if @user.student_access.trial_ending_at_date
+                  -if @user.student_access.trial_ending_at_date && @user.trial_user? && @user.valid_trial_user?
                     #countdown
                       %h4
                         =t('views.subscriptions.new_subscription.time_h4')

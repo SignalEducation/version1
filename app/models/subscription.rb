@@ -57,7 +57,7 @@ class Subscription < ActiveRecord::Base
 
 
   # callbacks
-  after_create :create_subscription_payment_card, if: :stripe_token
+  after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_save :update_student_access
 
   # scopes
