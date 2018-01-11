@@ -29,6 +29,13 @@
                     %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
                       Expired Enrolments
 
+            -if current_user.trial_user?
+              .video.l-margin-top-huge.hidden-xs
+                %h4
+                  Welcome to LearnSignal
+                .play
+                  #vimeo-player.vimeo-player
+
           .col-sm-9
             .dashboard-tab-content
               .tab.dashboard-tab#enrollments
@@ -81,3 +88,5 @@
     $('.tabs').tabs();
 
   });
+
+  var player = new Vimeo.Player('vimeo-player', {id: '250621170'});
