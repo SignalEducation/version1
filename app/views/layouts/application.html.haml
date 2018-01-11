@@ -15,7 +15,7 @@
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
-    -if controller_name == 'courses' || controller_name == 'dashboard'
+    -if controller_name == 'courses' || controller_name == 'dashboard' || controller_name == 'user_verifications'
       %script{charset: 'ISO-8859-1', src: '//fast.wistia.com/assets/external/E-v1.js'}
       %script{src: 'https://player.vimeo.com/api/player.js'}
 
