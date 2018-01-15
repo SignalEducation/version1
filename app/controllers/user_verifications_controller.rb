@@ -6,7 +6,8 @@ class UserVerificationsController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user = User.get_and_verify(params[:email_verification_code], country.id)
-
+    @user.activate_user unless @user.active
+    
     if @user && @user.password_change_required?
       @user.update_attributes(password_reset_requested_at: Time.now, password_reset_token: SecureRandom.hex(10))
       set_password_url = set_password_url(id: @user.password_reset_token)
