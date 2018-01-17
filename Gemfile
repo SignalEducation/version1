@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.2.8'
+ruby '2.2.9'
 gem 'rails', '4.2.1'
 
 # Core gems - common to all environments
