@@ -1,15 +1,13 @@
 class UserVerificationsController < ApplicationController
 
-  before_action only: [:admin_resend_verification_mail] do
-    ensure_user_has_access_rights(%w(user_management_access))
-  end
   before_action :get_variables
 
   def update
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user = User.get_and_verify(params[:email_verification_code], country.id)
-
+    @user.activate_user unless @user.active
+    
     if @user && @user.password_change_required?
       @user.update_attributes(password_reset_requested_at: Time.now, password_reset_token: SecureRandom.hex(10))
       set_password_url = set_password_url(id: @user.password_reset_token)
@@ -19,8 +17,8 @@ class UserVerificationsController < ApplicationController
       set_current_visit
       redirect_to account_verified_url
     else
-      flash[:error] = I18n.t('controllers.user_activations.update.error')
-      redirect_to library_url
+      flash[:warning] = 'Sorry! That link has expired. Please try to sign in or contact us for assistance'
+      redirect_to sign_in_url
     end
   end
 
@@ -31,23 +29,13 @@ class UserVerificationsController < ApplicationController
 
   def resend_verification_mail
     @user = User.find_by_email_verification_code(params[:email_verification_code])
-    if @user
-      flash[:success] = I18n.t('controllers.home_pages.resend_verification_mail.flash.success')
+    if @user && !@user.email_verified
       MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+      flash[:success] = "Verification Email sent to #{@user.email}"
+      redirect_to request.referrer
     else
-      redirect_to(root_url)
-    end
-  end
-
-  def admin_resend_verification_mail
-    @user = User.find_by_email_verification_code(params[:email_verification_code])
-    if @user
-      flash[:success] = 'Verification Email sent'
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
-      redirect_to users_url
-    else
-      flash[:error] = 'Verification Email was not sent'
-      redirect_to users_url
+      flash[:error] = 'Verification Email was not sent.'
+      redirect_to request.referrer
     end
   end
 

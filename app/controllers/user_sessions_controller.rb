@@ -15,6 +15,7 @@ class UserSessionsController < ApplicationController
     if @user_session.save
       @user_session.user.update_attribute(:session_key, session[:session_id])
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
+      @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit
       flash[:error] = nil
       if session[:return_to]
@@ -39,12 +40,14 @@ class UserSessionsController < ApplicationController
   end
 
   def check_email_verification
-    #TODO review this
     user = User.find_by_email(params[:user_session][:email])
     if user && user.student_user? && !user.email_verified
-      flash[:warning] = "The email for that account has not been verified. Please follow the instructions in the verification email we just sent you at #{user.email}"
-      user.update_attribute(:email_verification_code, SecureRandom.hex(10)) unless user.email_verification_code
-      MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code))
+      flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for assistance.'
+      MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code)) if user.email_verification_code
+      redirect_to sign_in_url
+    elsif user && user.student_user? && user.email_verified && user.password_change_required
+      flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for help.'
+      MandrillWorker.perform_async(user.id, 'set_password_email', set_password_url(user.password_reset_token))
       redirect_to sign_in_url
     end
   end
