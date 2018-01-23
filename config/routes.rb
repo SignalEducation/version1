@@ -35,8 +35,7 @@ Rails.application.routes.draw do
         as: :user_verification
     get 'account_verified', to: 'user_verifications#account_verified',
         as: :account_verified
-    get 'send_verification/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
-    get 'resend_verification/:email_verification_code', to: 'user_verifications#admin_resend_verification_mail', as: :admin_resend_verification_mail
+    post 'resend_verification_mail/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
 
     # User Sessions
     get 'sign_in', to: 'user_sessions#new', as: :sign_in
@@ -71,11 +70,12 @@ Rails.application.routes.draw do
       get  '/orders', action: :user_purchases_details, as: :orders
       patch  '/update_courses', action: :update_courses, as: :update_courses
     end
-    resources :user_password_resets, only: [:new, :edit, :create, :update]
-    get 'forgot_password', to: 'user_password_resets#new', as: :forgot_password
-    get 'reset_password/:id', to: 'user_password_resets#edit', as: :reset_password
-    get 'set_password/:id', to: 'user_password_resets#set_password', as: :set_password
-    put 'create_password/:id', to: 'user_password_resets#create_password', as: :user_create_password
+    resources :user_passwords, only: [:new, :edit, :create, :update]
+    get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
+    get 'reset_password/:id', to: 'user_passwords#edit', as: :reset_password
+    get 'set_password/:id', to: 'user_passwords#set_password', as: :set_password
+    put 'create_password/:id', to: 'user_passwords#create_password', as: :user_create_password
+    post 'manager_resend/:id', to: 'user_passwords#manager_resend_email', as: :manager_resend
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete

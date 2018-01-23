@@ -137,7 +137,7 @@ class StudentSignUpsController < ApplicationController
     #If no user is found redirect - because analytics counts loading of
     # this page as new sign ups so we only want it to load once for each sign up
     @user = User.get_and_activate(params[:account_activation_code])
-    redirect_to root_url unless @user
+    redirect_to sign_in_url unless @user
   end
 
   protected

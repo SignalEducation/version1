@@ -466,13 +466,14 @@ en:
           success: User Notification has been deleted
           error: User Notification was not deleted
 
-    user_password_resets:
+    user_passwords:
       create:
         flash:
           success: Your request has been received. Please check your email for further instructions
       edit:
         flash:
-          error: Sorry, that reset request is invalid. Please start again.
+          error: Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for assistance.
+          warning: Sorry, that link has expired. Please try sign in again or restart the password reset process.
       update:
         flash:
           success: Your password has been successsfully set!
