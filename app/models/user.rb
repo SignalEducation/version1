@@ -174,6 +174,7 @@ class User < ActiveRecord::Base
     time_now = Proc.new{Time.now}.call
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
     if user
+      user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
       user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true) if user.student_access
       return user
@@ -184,18 +185,28 @@ class User < ActiveRecord::Base
     if the_email_address.to_s.length > 5 # a@b.co
       user = User.where(email: the_email_address.to_s).first
       if user && !user.password_change_required?
-        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20), active: false)
+        user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20))
         #Send reset password email from Mandrill
         MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
       elsif user && user.password_change_required?
         # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
-        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/set_password/#{user.password_reset_token}")
+        MandrillWorker.perform_async(user.id, 'set_password_email', "#{root_url}/set_password/#{user.password_reset_token}")
       end
     end
   end
 
-  def self.finish_password_reset_process(reset_token, new_password,
-          new_password_confirmation)
+  def self.resend_pw_reset_email(user_id, root_url)
+    user = User.where(id: user_id).first
+    if user && user.active && user.email_verified && user.password_reset_requested_at && user.password_reset_token && !user.password_change_required?
+      #Send reset password email from Mandrill
+      MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+    else
+
+    end
+    user
+  end
+
+  def self.finish_password_reset_process(reset_token, new_password, new_password_confirmation)
     if reset_token.to_s.length == 20 && new_password.to_s.length > 5 && new_password_confirmation.to_s.length > 5 && new_password.to_s == new_password_confirmation.to_s
       user = User.where(password_reset_token: reset_token.to_s).first
       if user
@@ -653,7 +664,7 @@ class User < ActiveRecord::Base
   def activate_user
     self.active = true
     self.account_activated_at = Proc.new{Time.now}.call
-    self.account_activation_code = ApplicationController::generate_random_code(20)
+    self.account_activation_code = nil
   end
 
   def validate_user
