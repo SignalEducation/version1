@@ -122,6 +122,8 @@ class StripeApiEvent < ActiveRecord::Base
       Rails.logger.debug "DEBUG: Invoice created with id - #{invoice.id}"
       self.processed = true
       self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
     else
       set_process_error(invoice ? invoice.errors.full_messages.inspect : 'Error creating invoice')
     end
@@ -137,6 +139,9 @@ class StripeApiEvent < ActiveRecord::Base
       invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
       self.processed = true
       self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
       #Update the subscription if it is in the past_due state
       if subscription.update_from_stripe
 
@@ -165,6 +170,12 @@ class StripeApiEvent < ActiveRecord::Base
     if user && invoice && subscription
       invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
       subscription.update_from_stripe
+
+      self.processed = true
+      self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
       if stripe_next_attempt
         #A NextPaymentAttempt Date value means that another payment attempt will be made
         MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
@@ -186,6 +197,9 @@ class StripeApiEvent < ActiveRecord::Base
       Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"
       self.processed = true
       self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
       subscription.update_from_stripe
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
@@ -201,6 +215,9 @@ class StripeApiEvent < ActiveRecord::Base
       Rails.logger.debug "DEBUG: Successful Create Charge - #{charge.id} for Invoice - #{invoice.id}"
       self.processed = true
       self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
     else
       set_process_error("Error creating charge. #{}")
     end
@@ -215,6 +232,9 @@ class StripeApiEvent < ActiveRecord::Base
 
       self.processed = true
       self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
     else
       set_process_error("Error creating charge. #{}")
     end
