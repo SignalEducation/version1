@@ -85,7 +85,7 @@ class SubjectCourse < ActiveRecord::Base
   before_validation { squish_fields(:name, :name_url) }
   before_save :sanitize_name_url, :set_count_fields
   before_destroy :check_dependencies
-  after_create :update_sitemap
+  #after_create :update_sitemap
 
   # scopes
   scope :all_active, -> { where(active: true).includes(:course_modules).where(course_modules: {active: true}) }
