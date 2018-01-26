@@ -37,7 +37,7 @@
 
       -ExamSitting.all_active.all_in_order.each do |sitting|
         .col-md-6.l-margin-bottom.l-margin-top-big
-          =link_to "#{sitting.name} Enrolments Report", export_enrollments_path(format: :xls, exam_sitting_date: sitting.date), class: 'btn btn-green btn-wide'
+          =link_to "#{sitting.name} Enrolments Report", export_enrollments_path(format: :xls, exam_sitting_id: sitting.id), class: 'btn btn-green btn-wide'
 
 
 

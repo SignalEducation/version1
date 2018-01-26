@@ -96,7 +96,7 @@ class Enrollment < ActiveRecord::Base
 
   def exam_sitting
     sitting = ExamSitting.where(date: self.exam_date, subject_course_id: self.subject_course_id).first
-    sitting.name
+    sitting.try(:name)
   end
 
   def user_email
