@@ -80,7 +80,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_sitting exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -92,6 +92,11 @@ class Enrollment < ActiveRecord::Base
 
   def course_name
     self.subject_course.try(:name)
+  end
+
+  def exam_sitting
+    sitting = ExamSitting.where(date: self.exam_date, subject_course_id: self.subject_course_id).first
+    sitting.name
   end
 
   def user_email
