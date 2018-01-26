@@ -15,16 +15,9 @@ class Api::StripeV02Controller < Api::BaseController
         Rails.logger.error "INFO: Api/StripeV02#Create: Record already exists with that guid/id: event-id: #{event_json['id']}"
       else
 
-        if %w(charge.failed charge.succeeded charge.refunded).include?(event_json["type"])
-          StripeApiProcessorWorker.perform_at(2.minutes, event_json["id"],
-                                              event_json["api_version"],
-                                              account_url)
-        else
-          StripeApiProcessorWorker.perform_async(event_json["id"],
-                                              event_json["api_version"],
-                                              account_url)
-
-        end
+        StripeApiProcessorWorker.perform_at(2.minutes, event_json["id"],
+                                            event_json["api_version"],
+                                            account_url)
 
       end
     end
