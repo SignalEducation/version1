@@ -146,7 +146,7 @@ class SubscriptionsController < ApplicationController
 
   #Upgrading current subscription to a new subscription plan
   def update
-    if @subscription
+    if @subscription && @subscription.user.default_card
       @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
       if @subscription && @subscription.errors.count == 0
         flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
@@ -156,7 +156,7 @@ class SubscriptionsController < ApplicationController
       end
       redirect_to account_url(anchor: 'subscriptions')
     else
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
+      flash[:error] = I18n.t('controllers.subscriptions.update.flash.invalid_card')
       redirect_to root_url
     end
   end

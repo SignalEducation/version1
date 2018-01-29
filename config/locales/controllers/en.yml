@@ -363,6 +363,7 @@ en:
         flash:
           success: Your Subscription has been updated successfully
           error: Your Subscription has not been updated
+          invalid_card: Your current payment card is not valid. Please add a new card and try again.
       un_cancel:
         flash:
           success: Your Subscription has been un-canceled
