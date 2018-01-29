@@ -13,21 +13,6 @@ class CoursesController < ApplicationController
 
       if @course_module_element.is_quiz
         set_up_quiz
-      elsif @course_module_element.is_video && !@course_module_element.course_module_element_video.vimeo_guid
-        #TODO Remove this once all Wistia videos are gone
-        @video_cme_user_log = CourseModuleElementUserLog.create!(
-            course_module_element_id: @course_module_element.id,
-            user_id: current_user.try(:id),
-            session_guid: current_session_guid,
-            element_completed: false,
-            time_taken_in_seconds: 0,
-            is_video: true,
-            is_quiz: false,
-            course_module_id: @course_module_element.course_module_id,
-            subject_course_id: @course.id,
-            student_exam_track_id: @student_exam_track.try(:id),
-            subject_course_user_log_id: @subject_course_user_log.id
-        )
       end
     else
       ## The URL params are wrong ##

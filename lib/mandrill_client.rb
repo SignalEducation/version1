@@ -25,31 +25,31 @@ class MandrillClient
   end
 
   def password_reset_email(password_reset_url)
-    msg = message_stub.merge({"subject" => "Learn Signal Password Reset"})
+    msg = message_stub.merge({"subject" => "LearnSignal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
     send_template('password-reset-09-01-18', msg)
   end
 
   def set_password_email(set_password_url)
-    msg = message_stub.merge({"subject" => "Learn Signal Set Password"})
+    msg = message_stub.merge({"subject" => "LearnSignal Set Password"})
     msg["global_merge_vars"] << { "name" => "SETPASSWORDURL", "content" => set_password_url }
     send_template('set-password-09-01-18', msg)
   end
 
   # Subscription/Stripe/Purchase Emails
   def send_card_payment_failed_email(account_settings_url)
-    msg = message_stub.merge({"subject" => "Payment Failed"})
+    msg = message_stub.merge({"subject" => "LearnSignal - Payment Failed"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
     send_template('card-payment-failed-20-02-17', msg)
   end
 
   def send_account_suspended_email
-    msg = message_stub.merge({"subject" => "Account Suspended"})
+    msg = message_stub.merge({"subject" => "LearnSignal - Account Suspended"})
     send_template('account-suspended-20-02-17', msg)
   end
 
   def send_successful_payment_email(account_url, invoice_url)
-    msg = message_stub.merge({"subject" => "LearnSignal Payment Invoice "})
+    msg = message_stub.merge({"subject" => "LearnSignal - Payment Invoice"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "INVOICEURL", "content" => invoice_url }
     send_template('successful-payment-20-02-17', msg)

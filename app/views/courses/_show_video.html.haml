@@ -4,9 +4,6 @@
   -if cme.course_module_element_video.vimeo_guid
     #vimeo-player-window.vimeo-player-window
 
-  -else
-    %div{id: "wistia_#{cme.course_module_element_video.video_id}",class: 'wistia_embed', style: 'height:360px;width:640px'}
-
 
   -#Nav buttons below video
   .l-margin-bottom.l-margin-top.hidden-xs
@@ -38,7 +35,7 @@
               .glyphicon.glyphicon-download{style: 'top: 3px;'}
 
 
--if cme.course_module_element_video.vimeo_guid
+-if cme.course_module_element_video.vimeo_guid && @subject_course_user_log
 
   :javascript
     var video_cme_id = #{@course_module_element.id};
@@ -94,26 +91,16 @@
 
 
 
--else
+-elsif cme.course_module_element_video.vimeo_guid && !@subject_course_user_log
 
   :javascript
-    var videoCmeUserLog = #{@video_cme_user_log ? @video_cme_user_log.id : 0};
 
-    wistiaEmbed = Wistia.embed("#{cme.course_module_element_video.try(:video_id)}", {
-      videoFoam: true,
-      stillUrl: 'https://dvetmi3t70548.cloudfront.net/video-still-image-2.png'
-    });
+    var options = {
+      id: "#{cme.course_module_element_video.vimeo_guid}",
+      frameborder: 0,
+      webkitAllowFullScreen: true,
+      mozallowfullscreen: true,
+      allowFullScreen: true
+    };
 
-    wistiaEmbed.bind("secondchange", function() {
-      var time1 = (wistiaEmbed.duration()/100*75);
-      var time2 = time1 + 2;
-      if (wistiaEmbed.secondsWatched() > time1 && wistiaEmbed.secondsWatched() < time2) {
-        $.ajax({
-          url: '#{video_watched_data_courses_path}',
-          dataType: 'json',
-          data: JSON.stringify({'videoLogId': videoCmeUserLog}),
-          method: 'PATCH',
-          contentType: "application/json; charset=utf-8"
-        });
-      }
-    })
+    var player = new Vimeo.Player('vimeo-player-window', options);
