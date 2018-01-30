@@ -36,6 +36,11 @@
             =@current_subscription.billing_amount
 
         .col-md-6.col-sm-12
+          -if @user.stripe_account_balance && @user.stripe_account_balance > 0
+            .h3
+              =t('views.user_accounts.subscription_info.stripe_account_balance')
+            .h6
+              =@current_subscription.subscription_plan.currency.format_number(@user.stripe_account_balance / 100)
 
 
 

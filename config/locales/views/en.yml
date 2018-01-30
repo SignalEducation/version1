@@ -1355,6 +1355,7 @@ en:
         subscription_ending: Current Billing Ends
         subscription_ended: Billing Ended
         next_billing_amount: Next Billing Amount
+        stripe_account_balance: Account Credit
         current_billing_ending: Current Billing Ending
         invoices: Invoices
 
