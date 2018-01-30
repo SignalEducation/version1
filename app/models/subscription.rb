@@ -116,6 +116,68 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def reactivate_canceled
+    # make sure sub plan is active
+    unless self.subscription_plan.active?
+      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.plan_is_inactive'))
+      return self
+    end
+    # ensure user is student user
+    unless self.user.trial_or_sub_user?
+      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_student_user'))
+      return self
+    end
+    # Make sure there is a default credit card in place
+    unless self.user.subscription_payment_cards.all_default_cards.length > 0
+      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.no_default_payment_card'))
+      return self
+    end
+    # Ensure this sub is the users current_sub associated the student_access
+    unless self.id == self.user.current_subscription.id
+      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_current_subscription'))
+      return self
+    end
+    # Ensure this sub is canceled
+    unless self.current_status == 'canceled'
+      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.sub_is_not_canceled'))
+      return self
+    end
+
+    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+
+    # Ensure no active sub object on stripe
+    if stripe_customer.subscriptions.data.any?
+      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.existing_sub_on_stripe'))
+      return self
+    end
+
+    if errors.messages.count == 0
+      stripe_subscription = Stripe::Subscription.create(
+          customer: self.user.stripe_customer_id,
+          plan: self.subscription_plan.stripe_guid,
+          trial_end: 'now'
+      )
+      stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id) #Reload the stripe_customer to get new Subscription details
+
+      if stripe_subscription && stripe_customer && stripe_subscription.status == 'active'
+
+        self.update_attributes(
+            current_status: stripe_subscription.status,
+            stripe_guid: stripe_subscription.id,
+            next_renewal_date: Time.at(stripe_subscription.current_period_end),
+            stripe_customer_data: stripe_customer.to_hash.deep_dup,
+            active: true
+        )
+        self.user.student_access.update_attributes(content_access: true)
+      end
+
+    end
+
+    # return true or false - if everything went well
+    errors.messages.count == 0
+
+  end
+
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&

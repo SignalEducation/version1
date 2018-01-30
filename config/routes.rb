@@ -59,6 +59,7 @@ Rails.application.routes.draw do
       put '/cancel', action: :cancel, as: :cancel
       put '/un_cancel', action: :un_cancel_subscription, as: :un_cancel_subscription
       put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
+      put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
     end
     get  'student_user_management/:id/convert_to_student', to: 'student_user_management#convert_to_student', as: :convert_to_student
     patch  'student_user_management/:id/update_to_student', to: 'student_user_management#update_to_student', as: :update_to_student

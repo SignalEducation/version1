@@ -97,6 +97,19 @@ class SubscriptionManagementController < ApplicationController
     redirect_to subscription_management_url(@subscription)
   end
 
+  def reactivate_subscription
+    # Set Subscription from canceled to active with new subscription record on stripe
+
+    @subscription = Subscription.where(id: params[:subscription_management_id]).first
+    if @subscription.reactivate_canceled
+      flash[:success] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.success')
+    else
+      Rails.logger.warn "WARN: SubscriptionManagement#reactivate_canceled failed to reactivate a subscription. Errors:#{@subscription.errors.inspect}"
+      flash[:error] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.error')
+    end
+    redirect_to subscription_management_url(@subscription)
+  end
+
 
   protected
 
