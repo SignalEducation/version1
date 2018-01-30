@@ -105,7 +105,7 @@ class SubscriptionManagementController < ApplicationController
       flash[:success] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#reactivate_canceled failed to reactivate a subscription. Errors:#{@subscription.errors.inspect}"
-      flash[:error] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.error')
+      flash[:error] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.error') << @subscription.errors[:base].to_s
     end
     redirect_to subscription_management_url(@subscription)
   end

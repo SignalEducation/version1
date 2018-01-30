@@ -391,7 +391,7 @@ en:
       reactivate_canceled:
         flash:
           success: Subscription has been reactivated
-          error: Subscription has not been reactivated
+          error: "Subscription has not been reactivated - "
 
     subscription_plan_categories:
       create:

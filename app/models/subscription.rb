@@ -120,35 +120,28 @@ class Subscription < ActiveRecord::Base
     # make sure sub plan is active
     unless self.subscription_plan.active?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.plan_is_inactive'))
-      return self
     end
     # ensure user is student user
     unless self.user.trial_or_sub_user?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_student_user'))
-      return self
     end
     # Make sure there is a default credit card in place
     unless self.user.subscription_payment_cards.all_default_cards.length > 0
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.no_default_payment_card'))
-      return self
     end
     # Ensure this sub is the users current_sub associated the student_access
     unless self.id == self.user.current_subscription.id
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_current_subscription'))
-      return self
     end
     # Ensure this sub is canceled
     unless self.current_status == 'canceled'
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.sub_is_not_canceled'))
-      return self
     end
 
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-
     # Ensure no active sub object on stripe
     if stripe_customer.subscriptions.data.any?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.existing_sub_on_stripe'))
-      return self
     end
 
     if errors.messages.count == 0
