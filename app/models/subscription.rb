@@ -262,7 +262,7 @@ class Subscription < ActiveRecord::Base
           begin
             stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
 
-            subscription = Subscription.find_by_stripe_guid(stripe_subscription.id)
+            subscription = Subscription.where(stripe_guid: stripe_subscription.id, active: true).first
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
             subscription.current_status = stripe_subscription.status
             subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
