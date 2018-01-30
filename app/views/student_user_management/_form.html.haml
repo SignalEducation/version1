@@ -14,6 +14,10 @@
         =f.label :student_number, t('views.users.form.student_number'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :stripe_account_balance, t('views.users.form.stripe_account_balance'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.number_field :stripe_account_balance, placeholder: t('views.users.form.stripe_account_balance_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
       .col-md-6
         =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
@@ -31,20 +35,20 @@
 
     .col-md-12.l-margin-bottom-big.l-margin-top
       %hr/
-      %h2='Free Trial Limits'
-      .col-md-6
-        =f.fields_for :student_access do |student_access|
-
-          =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-          %br/
-
-          =student_access.label :trial_days_limit, t('views.users.form.student_access.trial_days_limit'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-
       -if @student_user.student_access && @student_user.trial_user?
+        %h2='Free Trial Limits'
+        .col-md-6
+          =f.fields_for :student_access do |student_access|
+
+            =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+            %br/
+
+            =student_access.label :trial_days_limit, t('views.users.form.student_access.trial_days_limit'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+
         .col-md-6
           -unless @student_user.new_record?
             %h4
@@ -56,7 +60,6 @@
             %p
               -if @student_user.student_access && @student_user.student_access.trial_started_date
                 =humanize_datetime(@student_user.student_access.trial_started_date)
-
 
   .row
     .col-md-12.l-margin-top-big

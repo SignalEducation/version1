@@ -1202,6 +1202,8 @@ en:
         description_placeholder: Tutor Info
         student_number: Student Number
         student_number_placeholder: Student Number
+        stripe_account_balance: Stripe Account Balance (in Cents)
+        stripe_account_balance_placeholder: Student Number
 
         student_access:
           trial_seconds_limit: Trial Content Limit (Seconds)
