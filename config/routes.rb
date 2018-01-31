@@ -177,6 +177,7 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'profile/:id', to: 'footer_pages#profile', as: :profile
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
+    get 'welcome_video', to: 'footer_pages#welcome_video', as: :welcome_video
 
     resources :user_notifications
     resources :users, only: [:new, :create]
