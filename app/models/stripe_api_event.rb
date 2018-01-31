@@ -76,7 +76,7 @@ class StripeApiEvent < ActiveRecord::Base
           when 'customer.updated'
             process_customer_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:account_balance])
           else
-            set_process_error "Unknown event type - #{self.payload}"
+            set_process_error "Unknown event type - #{self.payload[:type]}"
         end
         self.save
       else
