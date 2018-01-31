@@ -33,12 +33,13 @@ class ReportsController < ApplicationController
   end
 
   def export_enrollments
-    @enrollments = Enrollment.all_active.all_in_admin_order
+    @exam_sitting = ExamSitting.find(params[:exam_sitting_id])
+    @enrollments = Enrollment.all_active.where(exam_date: @exam_sitting.date, subject_course_id: @exam_sitting.subject_course_id).all_in_admin_order
 
     respond_to do |format|
       format.html
       format.csv { send_data @enrollments.to_csv() }
-      format.xls { send_data @enrollments.to_csv(col_sep: "\t", headers: true), filename: "enrolments-#{Date.today}.xls" }
+      format.xls { send_data @enrollments.to_csv(col_sep: "\t", headers: true), filename: "#{@exam_sitting.name}-enrolments-#{Date.today}.xls" }
     end
   end
 
