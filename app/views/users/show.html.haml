@@ -68,6 +68,15 @@
                     .h6
                       Student Number
 
+              .col-md-4.col-sm-6.col-xs-12
+                -if @user.stripe_account_balance && @user.stripe_account_balance > 0
+                  .stats-box
+                    .stats-box-inner
+                      .h3
+                        =@user.stripe_account_balance / 100
+                      .h6
+                        Stripe Account Balance
+
 
 
             .col-md-3.col-sm-12.col-xs-12

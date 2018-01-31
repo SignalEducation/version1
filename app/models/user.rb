@@ -136,7 +136,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :create_on_intercom
-  after_update :update_email_on_stripe, if: :email_changed?
+  after_update :update_stripe_customer
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -280,116 +280,6 @@ class User < ActiveRecord::Base
   end
 
 
-
-  def create_student_access_record
-
-    if self.subscriptions.any?
-      active_sub = self.subscriptions.in_created_order.last
-
-      if Subscription::VALID_STATES.include?(active_sub.current_status)
-        type = 'Subscription'
-        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-        seconds_consumed = self.trial_limit_in_seconds
-        user_id = self.id
-        trial_start = self.email_verified_at || self.created_at
-        trial_ending_at = (trial_start + trial_days.days)
-        trial_ended = self.free_trial_ended_at || self.created_at
-        access = true
-        sub_id = active_sub.id
-
-      else
-        type = 'Subscription'
-        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-        seconds_consumed = self.trial_limit_in_seconds
-        user_id = self.id
-        trial_start = self.email_verified_at || self.created_at
-        trial_ending_at = (trial_start + trial_days.days)
-        trial_ended = self.free_trial_ended_at || active_sub.created_at
-        access = false
-        sub_id = active_sub.id
-      end
-
-    else
-      if !self.email_verified
-
-        # Not started Trial
-        type = 'Trial'
-        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-        seconds_consumed = self.trial_limit_in_seconds
-        user_id = self.id
-        trial_start = nil
-        trial_ending_at = nil
-        trial_ended = nil
-        access = false
-        sub_id = nil
-
-      elsif self.free_trial && self.days_or_seconds_valid? && self.email_verified
-        # Valid Trial
-        type = 'Trial'
-        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-        seconds_consumed = self.trial_limit_in_seconds
-        user_id = self.id
-        trial_start = self.email_verified_at || self.created_at
-        trial_ending_at = (trial_start + trial_days.days)
-        trial_ended = nil
-        access = true
-        sub_id = nil
-
-      elsif self.free_trial && !self.days_or_seconds_valid? && self.email_verified
-        # Expired Trial
-        type = 'Trial'
-        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-        seconds_consumed = self.trial_limit_in_seconds
-        user_id = self.id
-        trial_start = self.email_verified_at || self.created_at
-        trial_ending_at = (trial_start + trial_days.days)
-        trial_ended = self.free_trial_ended_at
-        access = false
-        sub_id = nil
-
-      else
-        # Expired Trial
-        type = 'Trial'
-        trial_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-        trial_days = ENV['FREE_TRIAL_DAYS'].to_i
-        seconds_consumed = self.trial_limit_in_seconds
-        user_id = self.id
-        trial_start = self.created_at
-        trial_ending_at = (self.created_at + trial_days.days)
-        trial_ended = nil
-        access = true
-        sub_id = nil
-
-      end
-    end
-
-    if self.student_access
-      student_access = self.student_access
-      student_access.update_attributes(account_type: type, trial_seconds_limit: trial_seconds, trial_days_limit: trial_days, trial_started_date: trial_start, trial_ending_at_date: trial_ending_at, trial_ended_date: trial_ended, content_seconds_consumed: seconds_consumed, subscription_id: sub_id, content_access: access)
-
-    else
-      student_access = StudentAccess.new(user_id: user_id, account_type: type,
-                                         trial_seconds_limit: trial_seconds,
-                                         trial_days_limit: trial_days,
-                                         trial_started_date: trial_start,
-                                         trial_ending_at_date: trial_ending_at,
-                                         trial_ended_date: trial_ended,
-                                         content_seconds_consumed: seconds_consumed,
-                                         subscription_id: sub_id,
-                                         content_access: access
-      )
-
-      student_access.save
-    end
-
-  end
-
-
   def days_or_seconds_valid?
     if free_trial_days_valid? && free_trial_minutes_valid?
       true
@@ -523,7 +413,7 @@ class User < ActiveRecord::Base
   end
 
   def trial_minutes_left
-    self.trial_seconds_left.to_i / 60
+    self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
   end
 
 
@@ -548,6 +438,10 @@ class User < ActiveRecord::Base
 
   def current_subscription
     self.student_access.subscription
+  end
+
+  def default_card
+    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
   end
 
 
@@ -769,74 +663,6 @@ class User < ActiveRecord::Base
     self.next_enrollment.days_until_exam
   end
 
-  def resubscribe_account(new_plan_id, stripe_token, terms_and_conditions)
-
-    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    user = self
-    old_sub = user.current_subscription
-
-    # compare the currencies of the old and new plans,
-    unless old_sub.subscription_plan.currency_id == new_subscription_plan.currency_id
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-    end
-    # make sure new plan is active
-    unless new_subscription_plan.active?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-    end
-    # make sure the current subscription is in "good standing"
-    unless %w(canceled).include?(old_sub.current_status)
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-    end
-    # only student_users are allowed to upgrade their plan
-    unless user.trial_or_sub_user?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-    end
-
-    #### if we're here, then we're good to go.
-    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.create(plan: new_subscription_plan.stripe_guid, source: stripe_token)
-
-    stripe_subscription.prorate = true
-    stripe_subscription.trial_end = 'now'
-    result = stripe_subscription.save # saves it on stripe
-
-    #### if we are here, the subscription creation on Stripe was successful
-    #### Now we need to create a new Subscription in our DB.
-    ActiveRecord::Base.transaction do
-      new_sub = Subscription.new(
-          user_id: user.id,
-          subscription_plan_id: new_subscription_plan.id,
-          complimentary: false,
-          active: true,
-          livemode: (result[:plan][:livemode]),
-          current_status: result[:status],
-      )
-      # mass-assign-protected attributes
-      new_sub.stripe_guid = result[:id]
-      new_sub.next_renewal_date = Time.at(result[:current_period_end])
-      new_sub.terms_and_conditions = terms_and_conditions
-      new_sub.stripe_customer_id = user.stripe_customer_id
-      new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-      new_sub.save(validate: false)
-
-      old_sub.update_attribute(:active, false)
-      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-
-      user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
-      user.student_access.update_attributes(subscription_id: new_sub.id, content_access: true)
-      return new_sub
-    end
-  rescue ActiveRecord::RecordInvalid => exception
-    Rails.logger.error("ERROR: Subscription#reactivation - AR.Transaction failed.  Details: #{exception.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  rescue => e
-    Rails.logger.error("ERROR: Subscription#reactivation - failed to create Subscription at Stripe.  Details: #{e.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-
-  end
-
 
   def completed_course_module_element(cme_id)
     cmeuls = self.completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
@@ -1019,11 +845,15 @@ class User < ActiveRecord::Base
     IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
   end
 
-  def update_email_on_stripe
-    Rails.logger.debug 'DEBUG: Updating stripe email'
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_customer.email = self.email
-    stripe_customer.save
+  def update_stripe_customer
+    if self.stripe_account_balance_changed? || self.email_changed?
+      Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
+      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+      stripe_customer.email = self.email
+      stripe_customer.account_balance = self.stripe_account_balance
+      stripe_customer.save
+      self.update_column(:stripe_account_balance, stripe_customer.account_balance)
+    end
   end
 
 
