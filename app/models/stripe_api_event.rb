@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded customer.updated)
 
   # relationships
   has_many :charges
@@ -73,8 +73,10 @@ class StripeApiEvent < ActiveRecord::Base
             process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
           when 'charge.refunded'
             process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'customer.updated'
+            process_customer_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:account_balance])
           else
-            set_process_error "Unknown event type - #{self.payload}"
+            set_process_error "Unknown event type - #{self.payload[:type]}"
         end
         self.save
       else
@@ -132,7 +134,7 @@ class StripeApiEvent < ActiveRecord::Base
   def process_invoice_payment_success(stripe_customer_guid, stripe_invoice_guid, stripe_subscription_guid)
     #This updates the existing Invoice record using the webhook payload data. The related subscription may need to be updated also if it is in a 'past_due' state.
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.all_active.find_by_stripe_guid(stripe_subscription_guid)
+    subscription = Subscription.where(stripe_guid: stripe_subscription_guid, active: true).first
     invoice = Invoice.find_by_stripe_guid(stripe_invoice_guid)
 
     if user && invoice && subscription
@@ -164,7 +166,7 @@ class StripeApiEvent < ActiveRecord::Base
   def process_invoice_payment_failed(stripe_customer_guid, stripe_next_attempt, stripe_subscription_guid, stripe_invoice_guid)
     #Latest attempt to charge a user has failed
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.all_active.find_by_stripe_guid(stripe_subscription_guid)
+    subscription = Subscription.where(stripe_guid: stripe_subscription_guid, active: true).first
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
@@ -191,7 +193,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   def process_customer_subscription_deleted(stripe_customer_guid, stripe_subscription_guid)
     user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.all_active.find_by_stripe_guid(stripe_subscription_guid)
+    subscription = Subscription.where(stripe_guid: stripe_subscription_guid, active: true).first
 
     if user && subscription
       Rails.logger.debug "DEBUG: Deleted Subscription-#{stripe_subscription_guid} for User-#{stripe_customer_guid}"
@@ -237,6 +239,20 @@ class StripeApiEvent < ActiveRecord::Base
 
     else
       set_process_error("Error creating charge. #{}")
+    end
+  end
+
+  def process_customer_updated(customer_guid, new_account_balance)
+    user = User.where(stripe_customer_id: customer_guid).first
+    if user
+      user.update_column(:stripe_account_balance, new_account_balance)
+      self.processed = true
+      self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
+    else
+      set_process_error("Error updating user account balance. #{}")
     end
   end
 

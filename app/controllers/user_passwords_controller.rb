@@ -101,9 +101,12 @@ class UserPasswordsController < ApplicationController
       end
     else
       @user = User.find_by_password_reset_token(params[:id])
-      redirect_to root_url if @user.nil?
       flash[:error] = I18n.t('controllers.user_passwords.update.flash.password_and_confirmation_do_not_match')
-      render :edit
+      if @user
+        render :edit
+      else
+        redirect_to root_url
+      end
     end
   end
 

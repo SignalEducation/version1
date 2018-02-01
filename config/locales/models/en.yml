@@ -38,6 +38,15 @@ en:
         you_have_no_default_payment_card: "You must first choose a default credit/debit card"
         processing_error_at_stripe: "Sorry, something went wrong with our payment provider. Please try again or contact us for help"
 
+      reactivate_canceled:
+        plan_is_inactive: The Subscription Plan is no longer active
+        not_student_user: The user is not a student user
+        no_default_payment_card: The user does not have a default payment card
+        not_current_subscription: This subscription is not the current subscription for this user
+        sub_is_not_canceled: This subscription is not canceled
+        existing_sub_on_stripe: A subscription exists on stripe
+
+
     subscription_payment_cards:
       card_has_expired: "Can't make this card the default as it has expired"
 
