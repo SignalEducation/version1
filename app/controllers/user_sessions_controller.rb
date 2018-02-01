@@ -47,7 +47,7 @@ class UserSessionsController < ApplicationController
       redirect_to sign_in_url
     elsif user && user.student_user? && user.email_verified && user.password_change_required
       flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for help.'
-      MandrillWorker.perform_async(user.id, 'set_password_email', set_password_url(user.password_reset_token))
+      MandrillWorker.perform_async(user.id, 'send_set_password_email', set_password_url(user.password_reset_token))
       redirect_to sign_in_url
     end
   end
