@@ -57,6 +57,12 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.new(allowed_params)
     stripe_token = params[:subscription][:stripe_token]
     coupon_code = params[:hidden_coupon_code] if params[:hidden_coupon_code].present?
+
+    unless stripe_token && @subscription && @subscription.subscription_plan
+      flash[:error] = 'Sorry! The data entered is not valid. Please contact us for assistance.'
+      redirect_to request.referrer and return
+    end
+
     user = @subscription.user
     subscription_plan_stripe_guid = @subscription.subscription_plan.stripe_guid
     stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
