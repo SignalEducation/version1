@@ -50,6 +50,8 @@ class OrdersController < ApplicationController
   end
 
   def create
+    #TODO - This is all too complicated. Needs simplification.
+
     if current_user && params[:order] && params[:order][:product_id] && params[:order][:stripe_token]
 
       user = current_user
@@ -62,43 +64,63 @@ class OrdersController < ApplicationController
       @order.user_id = user.id
       @order.product_id = @product.id
 
-      stripe_order = Stripe::Order.create(
-          currency: currency.iso_code,
-          customer: user.stripe_customer_id,
-          email: user.email,
-          items: [{
-                      amount: (@product.price.to_f * 100).to_i,
-                      currency: currency.iso_code,
-                      quantity: 1,
-                      parent: @product.stripe_sku_guid
-                  }]
-      )
+      begin
+        stripe_order = Stripe::Order.create(
+            currency: currency.iso_code,
+            customer: user.stripe_customer_id,
+            email: user.email,
+            items: [{
+                        amount: (@product.price.to_f * 100).to_i,
+                        currency: currency.iso_code,
+                        quantity: 1,
+                        parent: @product.stripe_sku_guid
+                    }]
+        )
 
-      @order.stripe_customer_id = stripe_order.customer
-      @order.stripe_guid = stripe_order.id
-      @order.live_mode = stripe_order.livemode
-      @order.current_status = stripe_order.status
-      random_guid = "Order_#{ApplicationController.generate_random_number(10)}"
-      @order.reference_guid = random_guid
+        @order.stripe_customer_id = stripe_order.customer
+        @order.stripe_guid = stripe_order.id
+        @order.live_mode = stripe_order.livemode
+        @order.current_status = stripe_order.status
+        random_guid = "Order_#{ApplicationController.generate_random_number(10)}"
+        @order.reference_guid = random_guid
 
-      if @order.valid?
+
+        if @order.valid?
+          order = Stripe::Order.retrieve(@order.stripe_guid)
+          @pay_order = order.pay(source: stripe_token)
+        end
         order = Stripe::Order.retrieve(@order.stripe_guid)
-        @pay_order = order.pay(source: stripe_token)
+        @order.current_status = order.status
+        @order.stripe_order_payment_data = @pay_order
+
+        if @order.save
+          flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+          MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file, @order.reference_guid)
+          redirect_to order_complete_url(@order.reference_guid)
+        else
+          redirect_to request.referrer
+        end
+
+
+      rescue Stripe::CardError => e
+        body = e.json_body
+        err  = body[:error]
+
+        Rails.logger.error "DEBUG: Order#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
+
+        flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
+        redirect_to request.referrer
+
+      rescue => e
+        Rails.logger.error "DEBUG: Order#create Failure for unknown reason - Error: #{e.inspect}"
+        flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
+        redirect_to request.referrer
       end
-      order = Stripe::Order.retrieve(@order.stripe_guid)
-      @order.current_status = order.status
-      @order.stripe_order_payment_data = @pay_order
+
     else
-      render action: :new
+      redirect_to request.referrer
     end
 
-    if @order.save
-      flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-      MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file, @order.reference_guid)
-      redirect_to order_complete_url(@order.reference_guid)
-    else
-      render action: :new
-    end
     @navbar = false
   end
 
