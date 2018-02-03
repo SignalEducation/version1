@@ -10,6 +10,7 @@
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
 #  active            :boolean          default(TRUE)
+#  computer_based    :boolean          default(FALSE)
 #
 
 FactoryGirl.define do

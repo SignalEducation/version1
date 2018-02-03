@@ -10,18 +10,20 @@
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
 #  active            :boolean          default(TRUE)
+#  computer_based    :boolean          default(FALSE)
 #
 
 class ExamSitting < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :date, :exam_body_id, :active
+  attr_accessible :name, :subject_course_id, :date, :exam_body_id, :active, :computer_based
 
   # Constants
 
   # relationships
   belongs_to :exam_body
   belongs_to :subject_course
+  has_many :enrollments
 
   # validation
   validates :exam_body_id, presence: true,
@@ -29,7 +31,6 @@ class ExamSitting < ActiveRecord::Base
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
-  validates :date, presence: true
 
   # callbacks
   before_destroy :check_dependencies
@@ -43,7 +44,7 @@ class ExamSitting < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    !self.active
+    false
   end
 
   def formatted_date

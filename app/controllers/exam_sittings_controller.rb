@@ -10,6 +10,7 @@
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
 #  active            :boolean          default(TRUE)
+#  computer_based    :boolean          default(FALSE)
 #
 
 class ExamSittingsController < ApplicationController
@@ -75,7 +76,7 @@ class ExamSittingsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id, :active)
+    params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id, :active, :computer_based)
   end
 
   def update_params

@@ -14,18 +14,22 @@
 #  expired                    :boolean          default(FALSE)
 #  paused                     :boolean          default(FALSE)
 #  notifications              :boolean          default(TRUE)
+#  exam_sitting_id            :integer
+#  computer_based_exam        :boolean          default(FALSE)
 #
 
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active,
-                  :exam_body_id, :exam_date, :expired, :notifications, :updated_at
+                  :exam_body_id, :exam_date, :expired, :notifications, :updated_at,
+                  :exam_sitting_id, :computer_based_exam
 
   # Constants
 
   # relationships
   belongs_to :exam_body
+  belongs_to :exam_sitting
   belongs_to :user
   belongs_to :subject_course
   belongs_to :subject_course_user_log
@@ -34,6 +38,8 @@ class Enrollment < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :exam_sitting_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
