@@ -31,14 +31,17 @@ class ExamSitting < ActiveRecord::Base
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
+  validates :date, presence: true, unless: :computer_based?
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_expiration_worker
+  after_create :create_expiration_worker, unless: :computer_based?
 
   # scopes
   scope :all_in_order, -> { order(:date, :name) }
   scope :all_active, -> { where(active: true) }
+  scope :all_computer_based, -> { where(computer_based: true) }
+  scope :all_standard, -> { where(computer_based: false) }
 
   # class methods
 

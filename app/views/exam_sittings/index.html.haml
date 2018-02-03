@@ -25,17 +25,19 @@
                 %thead
                   %tr
                     %th=t('views.exam_sittings.form.name')
-                    %th=t('views.exam_sittings.form.subject_course_id')
                     %th=t('views.exam_sittings.form.date')
                     %th=t('views.exam_sittings.form.active')
+                    %th=t('views.exam_sittings.form.computer_based')
                     %th
                 %tbody
                   -@exam_sittings.each do |exam_sitting|
                     %tr
                       %td=exam_sitting.name
-                      %td=exam_sitting.subject_course.name
-                      %td=exam_sitting.date.strftime("%B %Y")
+                      %td
+                        -if exam_sitting.date
+                          =exam_sitting.date.strftime("%B %Y")
                       %td=tick_or_cross(exam_sitting.active)
+                      %td=tick_or_cross(exam_sitting.computer_based)
                       %td
                         =link_to t('views.general.view'), exam_sitting, class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_exam_sitting_url(exam_sitting), class: 'btn btn-cyan btn-small'

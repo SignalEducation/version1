@@ -46,7 +46,7 @@ class ExamSittingsController < ApplicationController
   end
 
   def update
-    if @exam_sitting.update_attributes(allowed_params)
+    if @exam_sitting.update_attributes(update_params)
       flash[:success] = I18n.t('controllers.exam_sittings.update.flash.success')
       redirect_to exam_sittings_url
     else
