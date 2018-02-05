@@ -12,11 +12,17 @@
         =form_for(@new_enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
           =f.hidden_field :subject_course_id, value: @course.id
           =f.hidden_field :subject_course_user_log_id, value: nil, id: 'hidden_scul_id'
+
           .row.l-margin-top.text-left
             .col-sm-12
               .col-sm-6
                 =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
                 .input-group.input-group-lg.full-width
+                  =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+
+
+                -#=f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
+                -#.input-group.input-group-lg.full-width
                   =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {prompt: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_sitting_id'}
 
               .col-sm-6#custom_exam_date

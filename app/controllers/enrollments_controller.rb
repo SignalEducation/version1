@@ -24,8 +24,8 @@ class EnrollmentsController < ApplicationController
 
   #TODO Review this controller - move admin abilities to new controller
 
-  before_action only: [:admin_edit, :admin_update, :admin_show, :admin_create_new_scul] do
-    ensure_user_has_access_rights(%w(user_management_access))
+  before_action  do
+
   end
   before_action :get_variables
 
@@ -34,12 +34,7 @@ class EnrollmentsController < ApplicationController
 
     if @course
       @enrollment = Enrollment.new(allowed_params)
-      if params[:custom_exam_date].present? && !params[:exam_date].present?
-        date = params[:custom_exam_date]
-      elsif !params[:custom_exam_date].present? && params[:exam_date].present?
-        date = params[:exam_date]
-      end
-      @enrollment.exam_date = date
+
       @enrollment.user_id = current_user.id
       @enrollment.exam_body_id = @course.exam_body.id
       @enrollment.active = true
@@ -115,7 +110,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id)
+    params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id, :exam_sitting_id)
   end
 
   def get_variables
