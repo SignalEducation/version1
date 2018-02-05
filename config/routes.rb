@@ -27,7 +27,6 @@ Rails.application.routes.draw do
     end
 
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
-    get 'users/:user_id/new_subscription', to: 'subscriptions#new'
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
     #User Account Verification

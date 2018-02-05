@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded customer.updated)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded)
 
   # relationships
   has_many :charges
@@ -73,8 +73,6 @@ class StripeApiEvent < ActiveRecord::Base
             process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
           when 'charge.refunded'
             process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
-          when 'customer.updated'
-            process_customer_updated(self.payload[:data][:object][:id], self.payload[:data][:object][:account_balance])
           else
             set_process_error "Unknown event type - #{self.payload[:type]}"
         end
@@ -239,20 +237,6 @@ class StripeApiEvent < ActiveRecord::Base
 
     else
       set_process_error("Error creating charge. #{}")
-    end
-  end
-
-  def process_customer_updated(customer_guid, new_account_balance)
-    user = User.where(stripe_customer_id: customer_guid).first
-    if user
-      user.update_column(:stripe_account_balance, new_account_balance)
-      self.processed = true
-      self.processed_at = Time.now
-      self.error = false
-      self.error_message = nil
-
-    else
-      set_process_error("Error updating user account balance. #{}")
     end
   end
 

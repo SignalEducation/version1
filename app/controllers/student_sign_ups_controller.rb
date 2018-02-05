@@ -15,6 +15,7 @@ class StudentSignUpsController < ApplicationController
     end
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
+    render :home
   end
 
   def landing
