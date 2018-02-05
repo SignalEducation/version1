@@ -29,9 +29,11 @@ class ExamSitting < ActiveRecord::Base
   validates :exam_body_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0},
+            unless: :computer_based?
   validates :name, presence: true
-  validates :date, presence: true, unless: :computer_based?
+  validates :date, presence: true,
+            unless: :computer_based?
 
   # callbacks
   before_destroy :check_dependencies
@@ -51,7 +53,7 @@ class ExamSitting < ActiveRecord::Base
   end
 
   def formatted_date
-    date.strftime("%B %Y")
+    self.computer_based ? 'Computer Based Exam' : date.strftime("%B %Y")
   end
 
   protected
