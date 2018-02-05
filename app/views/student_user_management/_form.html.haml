@@ -35,8 +35,9 @@
 
     .col-md-12.l-margin-bottom-big.l-margin-top
       %hr/
-      -if @student_user.student_access && @student_user.trial_user?
+      -if @student_user.student_access
         %h2='Free Trial Limits'
+        %p='(Leave as standard for complimentary students)'
         .col-md-6
           =f.fields_for :student_access do |student_access|
 
