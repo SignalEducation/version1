@@ -69,9 +69,11 @@
     } else if ($('#exam_sitting_select option:selected').text() == 'Select...') {
       $('#enroll_submit_button').attr('disabled', true);
       $("#custom_exam_date").hide();
+      ($('#exam_date_timepicker').val(''))
     } else {
       $("#custom_exam_date").hide();
       $('#enroll_submit_button').attr('disabled', false);
+      ($('#exam_date_timepicker').val(''))
     }
   });
 

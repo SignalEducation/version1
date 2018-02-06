@@ -1018,6 +1018,7 @@ en:
         student_number: Student Number
         student_number_placeholder: Student Number
         notifications: Receive Notifications
+        expired: Cancel Enrolment
 
       admin_form:
         registered: Registered

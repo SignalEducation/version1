@@ -56,21 +56,16 @@ class EnrollmentsController < ApplicationController
     @enrollment = Enrollment.find(params[:id])
     @subject_course = @enrollment.subject_course
     @exam_body = @subject_course.exam_body if @subject_course
-    @exam_sittings = @subject_course.exam_sittings.all_active.all_in_order
+    standard_exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: @subject_course.id, exam_body_id: @exam_body.id).all_in_order
+    computer_based_exam_sittings = ExamSitting.where(active: true, computer_based: true, exam_body_id: @exam_body.id).all_in_order
+    @exam_sittings = standard_exam_sittings + computer_based_exam_sittings
   end
 
   def update
     @enrollment = Enrollment.find(params[:id])
 
-    if params[:custom_exam_date].present? && !params[:exam_date].present?
-      date = params[:custom_exam_date]
-    elsif !params[:custom_exam_date].present? && params[:exam_date].present?
-      date = params[:exam_date]
-    elsif params[:custom_exam_date].present? && params[:exam_date].present?
-      date = params[:exam_date]
-    end
 
-    if @enrollment.update_attributes(exam_date: date, notifications: params[:enrollment][:notifications])
+    if @enrollment.update_attributes(allowed_params)
       flash[:success] = t('controllers.enrollments.update.flash.success')
       redirect_to account_url(anchor: :enrollments)
     else
@@ -106,7 +101,7 @@ class EnrollmentsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id, :exam_sitting_id)
+    params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id, :exam_sitting_id, :notifications)
   end
 
   def get_variables
