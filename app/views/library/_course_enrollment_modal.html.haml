@@ -18,17 +18,13 @@
               .col-sm-6
                 =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+                  =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
 
-
-                -#=f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
-                -#.input-group.input-group-lg.full-width
-                  =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {prompt: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_sitting_id'}
 
               .col-sm-6#custom_exam_date
                 =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+                  =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
                   
 
 
@@ -66,24 +62,23 @@
 
 
   // Hide and show the datepicker depending on exam_date selection
-  $('select[name="exam_sitting_id"]').change(function () {
-    if ($('select[name="exam_sitting_id"] option:selected').text() == 'Computer Based Exam') {
+  $('#exam_sitting_select').change(function () {
+    if ($('#exam_sitting_select option:selected').text() == 'Computer Based Exam') {
       $("#custom_exam_date").show();
       $('#enroll_submit_button').attr('disabled', true);
-    } else if ($('select[name="exam_sitting_id"] option:selected').text() == 'Select...') {
+    } else if ($('#exam_sitting_select option:selected').text() == 'Select...') {
       $('#enroll_submit_button').attr('disabled', true);
       $("#custom_exam_date").hide();
     } else {
       $("#custom_exam_date").hide();
       $('#enroll_submit_button').attr('disabled', false);
     }
-
   });
 
-  $('#datetimepicker').focusout(function(){
-    if ($('#datetimepicker').val().length !=0) {
+  $('#exam_date_timepicker').focusout(function(){
+    if ($('#exam_date_timepicker').val().length !=0) {
       $('#enroll_submit_button').attr('disabled', false);
-    } else if ($('#datetimepicker').val().length == 0) {
+    } else if ($('#exam_date_timepicker').val().length == 0) {
       $('#enroll_submit_button').attr('disabled', true);
     }
   });
@@ -99,7 +94,7 @@
 
   // Date Picker
   $(function () {
-    $('#datetimepicker').datetimepicker();
+    $('#exam_date_timepicker').datetimepicker();
       format: 'DD/MM/YYYY'
   });
 

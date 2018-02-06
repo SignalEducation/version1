@@ -86,7 +86,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_sitting_name exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -100,9 +100,8 @@ class Enrollment < ActiveRecord::Base
     self.subject_course.try(:name)
   end
 
-  def exam_sitting
-    sitting = ExamSitting.where(date: self.exam_date, subject_course_id: self.subject_course_id).first
-    sitting.try(:name)
+  def exam_sitting_name
+    self.exam_sitting.try(:name)
   end
 
   def user_email
@@ -158,7 +157,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def sibling_enrollments
-    self.user.enrollments.where(subject_course_id: self.subject_course_id).where.not(id: self.id)
+    self.exam_sitting.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def status
@@ -194,11 +193,13 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) if self.user.student_user? && !Rails.env.test? && self.exam_date
+    if self.computer_based_exam && self.exam_date
+      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
+    end
   end
 
   def create_intercom_event
-    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date) if self.user.student_user? && !Rails.env.test?
+    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date)
   end
 
   def study_streak_email
