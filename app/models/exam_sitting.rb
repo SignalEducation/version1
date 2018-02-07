@@ -49,6 +49,7 @@ class ExamSitting < ActiveRecord::Base
 
   # instance methods
   def destroyable?
+    # Can never be destroyed because the CSV data files will not be available
     false
   end
 

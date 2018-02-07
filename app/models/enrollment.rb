@@ -78,7 +78,7 @@ class Enrollment < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    false # Can never be destroyed because the CSV data files will not be accurate
   end
 
   def valid_enrollment?
