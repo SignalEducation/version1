@@ -47,7 +47,7 @@
           .row.l-margin-top-huge
             .col-sm-12
               =f.submit t('views.general.save'), class: 'btn btn-red', id: 'enroll_now'
-              =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-cyan'
+              =link_to t('views.general.cancel'), enrollment_management_url(@enrollment), anchor: :enrollments, class: 'btn btn-cyan'
 
 
 

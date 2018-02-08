@@ -41,10 +41,10 @@ class EnrollmentManagementController < ApplicationController
 
     if @enrollment.update_attributes(allowed_params)
       flash[:success] = t('controllers.enrollments.admin_update.flash.success')
-      redirect_to user_url(@enrollment.user)
+      redirect_to enrollment_management_url(@enrollment)
     else
       flash[:error] = t('controllers.enrollments.admin_update.flash.error')
-      redirect_to user_url(@enrollment.user)
+      redirect_to enrollment_management_url(@enrollment)
     end
 
   end
@@ -76,7 +76,7 @@ class EnrollmentManagementController < ApplicationController
   end
 
   def create_course_user_log(course_id, user_id)
-    log = SubjectCourseUserLog.create!(user_id: user_id, subject_course_id: course_id)
+    SubjectCourseUserLog.create!(user_id: user_id, subject_course_id: course_id)
   end
 
 end
