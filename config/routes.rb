@@ -92,12 +92,9 @@ Rails.application.routes.draw do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
-    get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
-    get '/enrollments/admin_show/:id', to: 'enrollments#admin_show', as: :enrollment_admin_show
-    get '/enrollments/admin_edit/:id', to: 'enrollments#admin_edit', as: :enrollment_admin_edit
-    patch '/enrollments/admin_update/:id', to: 'enrollments#admin_update', as: :enrollment_admin_update
-    get '/enrollments/reset_progress/:id', to: 'enrollments#admin_create_new_scul', as: :admin_create_new_scul
     resources :enrollments, only: [:edit, :update, :create]
+    resources :enrollment_management, only: [:edit, :update, :show]
+    post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
