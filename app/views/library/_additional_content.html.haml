@@ -2,21 +2,17 @@
   %p.h4.l-margin-bottom.l-margin-top
     Contact Tutor
 
-    -if current_user
-      =link_to '#', class: 'btn btn-orange btn-wide l-margin-top', style: 'pointer-events: none;' do
+  -if current_user
+    -if current_user && current_user.permission_to_see_content
+      =render partial: 'courses/tutor_contact'
+      %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
         Ask The Tutor
     -else
-      -if current_user
-        -if current_user && current_user.permission_to_see_content
-          =render partial: 'courses/tutor_contact'
-          %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
-            Ask The Tutor
-        -else
-          %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange btn-wide'}
-            Ask The Tutor
-      -else
-        =link_to new_student_url, class: 'btn btn-orange btn-wide' do
-          Ask The Tutor
+      %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange btn-wide'}
+        Ask The Tutor
+  -else
+    =link_to new_student_url, class: 'btn btn-orange btn-wide' do
+      Ask The Tutor
 
 
   -if @products.any?
