@@ -923,6 +923,7 @@ en:
         name_url: Name URL
         name_url_placeholder: Name URL
         active: Active
+        preview: Preview Mode
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -951,7 +952,7 @@ en:
         manager_courses: Course Content
         add_course: Add Course
         edit_content: Edit Content
-        edit_tutors: Edit Tutors
+        edit_tutors: Tutors
 
 
       show:

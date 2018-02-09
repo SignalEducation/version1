@@ -1,17 +1,22 @@
 .l-margin-top-big
   %p.h4.l-margin-bottom.l-margin-top
     Contact Tutor
-  -if current_user
-    -if current_user && current_user.permission_to_see_content(@course)
-      =render partial: 'courses/tutor_contact'
-      %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
+
+    -if current_user
+      =link_to '#', class: 'btn btn-orange btn-wide l-margin-top', style: 'pointer-events: none;' do
         Ask The Tutor
     -else
-      %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange btn-wide'}
-        Ask The Tutor
-  -else
-    =link_to new_student_url, class: 'btn btn-orange btn-wide' do
-      Ask The Tutor
+      -if current_user
+        -if current_user && current_user.permission_to_see_content(@course)
+          =render partial: 'courses/tutor_contact'
+          %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
+            Ask The Tutor
+        -else
+          %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange btn-wide'}
+            Ask The Tutor
+      -else
+        =link_to new_student_url, class: 'btn btn-orange btn-wide' do
+          Ask The Tutor
 
 
   -if @products.any?
@@ -19,16 +24,22 @@
       Mock Exams
     %ul.course-resources
       -@products.each do |product|
-        -if current_user
+        -if @course.preview
           %li
-            =link_to new_order_url(product) do
+            =link_to '#', style: 'pointer-events: none;' do
               .btn.btn-secondary.btn-red.btn-list
                 =product.mock_exam.name
         -else
-          %li
-            =link_to new_student_url do
-              .btn.btn-secondary.btn-red.btn-list
-                =product.mock_exam.name
+          -if current_user
+            %li
+              =link_to new_order_url(product) do
+                .btn.btn-secondary.btn-red.btn-list
+                  =product.mock_exam.name
+          -else
+            %li
+              =link_to new_student_url do
+                .btn.btn-secondary.btn-red.btn-list
+                  =product.mock_exam.name
 
   -if @subject_course_resources
     %p.h4.l-margin-bottom.l-margin-top-huge

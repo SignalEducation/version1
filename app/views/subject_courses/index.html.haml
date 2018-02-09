@@ -29,6 +29,7 @@
                   %tr
                     %th Name
                     %th Active
+                    %th Preview
                     %th
                     %th
                     %th
@@ -39,6 +40,7 @@
                     %tr
                       %td=subject_course.name
                       %td=tick_or_cross(subject_course.active)
+                      %td=tick_or_cross(subject_course.preview)
                       %td
                         =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
                       %td

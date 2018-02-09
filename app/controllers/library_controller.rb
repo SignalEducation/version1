@@ -22,7 +22,7 @@ class LibraryController < ApplicationController
 
   def course_show
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    if @course && @course.active
+    if @course && @course.active && !@course.preview
       tag_manager_data_layer(@course.name)
       seo_title_maker(@course.name, @course.description, nil)
 
@@ -66,6 +66,29 @@ class LibraryController < ApplicationController
           get_enrollment_form_variables(@course.id, @course.exam_body_id)
         end
       end
+
+    elsif @course.active && @course.preview
+      redirect_to library_preview_url(@course)
+    else
+      redirect_to library_url
+    end
+  end
+
+  def course_preview
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    if @course && @course.active && @course.preview
+      tag_manager_data_layer(@course.name)
+      seo_title_maker(@course.name, @course.description, nil)
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+      mock_exam_ids = @course.mock_exams.map(&:id)
+      @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+
+      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
+      @tuition_course_modules = @course_modules.all_tuition.all_in_order
+      @test_course_modules = @course_modules.all_test.all_in_order
+      @revision_course_modules = @course_modules.all_revision.all_in_order
 
     else
       redirect_to library_url

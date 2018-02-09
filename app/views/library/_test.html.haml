@@ -37,12 +37,14 @@
       .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_test_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'} }
         -child.active_children.each do |grandchild|
 
-          -if current_user
-
-            =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+          -if @course.preview
+            =link_to '#', class: 'list-group-item link-purple box-topic-item', style: 'pointer-events: none;' do
               =render partial: 'panel_content', locals: {grandchild: grandchild}
-
 
           -else
-            =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
-              =render partial: 'panel_content', locals: {grandchild: grandchild}
+            -if current_user
+              =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+                =render partial: 'panel_content', locals: {grandchild: grandchild}
+            -else
+              =link_to new_student_url, class: 'list-group-item link-purple box-topic-item' do
+                =render partial: 'panel_content', locals: {grandchild: grandchild}

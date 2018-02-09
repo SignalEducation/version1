@@ -49,11 +49,19 @@
             =f.text_field :survey_url, placeholder: t('views.subject_courses.form.survey_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
         .col-md-12
-          .col-sm-6
-            .checkbox
-              %label
-                =f.check_box :active
-                =t('views.subject_courses.form.active')
+          .col-sm-6.l-margin-top-big
+            .col-sm-6
+              .checkbox
+                %label
+                  =f.check_box :active
+                  =t('views.subject_courses.form.active')
+
+            .col-sm-6
+              .checkbox
+                %label
+                  =f.check_box :preview
+                  =t('views.subject_courses.form.preview')
+
 
           .col-sm-6
             .image-label
