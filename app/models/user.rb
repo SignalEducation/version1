@@ -488,26 +488,31 @@ class User < ActiveRecord::Base
   end
 
 
-  def permission_to_see_content(course)
-    if self.trial_or_sub_user? && course.active_enrollment_user_ids.include?(self.id)
-      if course.active
-        if self.student_access.content_access
-          true
-        else
-          false
-        end
-      else
+  def permission_to_see_content
+    if self.trial_or_sub_user?
+      if self.student_access && self.student_access.content_access
         true
+      else
+        false
       end
-    elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
-      true
-    elsif self.non_student_user? && course.active_enrollment_user_ids.include?(self.id)
-      true
     else
-      false
+      true
     end
   end
 
+  def enrollment_for_course?(course_id)
+    #Returns true if an active enrollment exists for this user/course
+
+    self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
+
+  end
+
+  def enrolled_in_course?(course_id)
+    #Returns true if a non-expired active enrollment exists for this user/course
+
+    self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
+
+  end
 
 
   def referred_user

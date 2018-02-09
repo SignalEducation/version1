@@ -157,7 +157,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def sibling_enrollments
-    self.exam_sitting.enrollments.where(user_id: self.user_id).where.not(id: self.id)
+    self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def status

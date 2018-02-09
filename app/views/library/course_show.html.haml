@@ -67,7 +67,7 @@
           =render partial: 'additional_content'
 
 
-      -if current_user && @course.enrolled_user_ids.include?(current_user.id)
+      -if current_user && current_user.enrollment_for_course?(@course.id)
         .l-margin-top-huge
           =render partial: 'course_info'
 

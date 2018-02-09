@@ -21,11 +21,12 @@ class LibraryController < ApplicationController
   end
 
   def course_show
+
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     if @course && @course.active && !@course.preview
+      # Course is active Data necessary for logged out state
       tag_manager_data_layer(@course.name)
       seo_title_maker(@course.name, @course.description, nil)
-
       @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
       @tuition_course_modules = @course_modules.all_tuition.all_in_order
       @test_course_modules = @course_modules.all_test.all_in_order
@@ -37,32 +38,41 @@ class LibraryController < ApplicationController
       mock_exam_ids = @course.mock_exams.map(&:id)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
+
+
       if current_user
+        # User Session present
 
-        #Enrollment(s) and SubjectCourseUserLog
-        if current_user.permission_to_see_content(@course)
-          @subject_course_resources = @course.subject_course_resources
-          @form_type = "Course Tutor Question. Course: #{@course.name}"
+        if current_user.permission_to_see_content && current_user.enrollment_for_course?(@course.id)
+          # User has a valid trial or valid sub
+          # User has an enrollment for this course
 
-          @active_enrollment = Enrollment.where(user_id: current_user.id, subject_course_id: @course.id, active: true).last
+          @active_enrollment = current_user.enrollments.for_subject_course(@course.id).all_active.all_in_order.last
           @subject_course_user_log = @active_enrollment.subject_course_user_log
 
-          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-          @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-          @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+            if @active_enrollment.expired
+              # User's enrollment is expired - needs to create a new one
+              # User can view all links/buttons but they trigger the enrollment modal
+              get_enrollment_form_variables(@course.id, @course.exam_body_id)
+            else
+              # User's enrollment is not expired - full access allowed
+              # User can view and click on all links/buttons
 
-          if @active_enrollment.expired
-            #Active Enrollment is expired - new enrollment needed
-            get_enrollment_form_variables(@course.id, @course.exam_body_id)
-          else
-            #Generate @next_element variable for Resume button
-            @latest_element_id = @subject_course_user_log.latest_course_module_element_id
-            @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-          end
+              @latest_element_id = @subject_course_user_log.latest_course_module_element_id
+              @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+            end
+
+
+            @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+            @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+            @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+            @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+            @subject_course_resources = @course.subject_course_resources
+            @form_type = "Course Tutor Question. Course: #{@course.name}"
 
         else
-          #No Enrollments - make form variable and try find a SCUL
+          # Both modals need rendering
+          # Enrollment and permission-denied
           get_enrollment_form_variables(@course.id, @course.exam_body_id)
         end
       end
