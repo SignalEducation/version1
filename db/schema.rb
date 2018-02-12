@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180209100643) do
+ActiveRecord::Schema.define(version: 20180212125230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -263,6 +263,7 @@ ActiveRecord::Schema.define(version: 20180209100643) do
     t.boolean  "notifications",              default: true
     t.integer  "exam_sitting_id"
     t.boolean  "computer_based_exam",        default: false
+    t.integer  "percentage_complete",        default: 0
   end
 
   create_table "exam_bodies", force: :cascade do |t|

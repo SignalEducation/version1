@@ -16,6 +16,7 @@
 #  notifications              :boolean          default(TRUE)
 #  exam_sitting_id            :integer
 #  computer_based_exam        :boolean          default(FALSE)
+#  percentage_complete        :integer          default(0)
 #
 
 class Enrollment < ActiveRecord::Base
