@@ -15,14 +15,16 @@
             Progress
           %th
       %tbody
-        -@enrollments.all_in_order.each do |enrollment|
+        -@enrollments.each do |enrollment|
           %tr
             %td
               -if enrollment.subject_course
                 =enrollment.subject_course.name
             %td
-              -if enrollment.exam_date
+              -if enrollment.computer_based_exam && enrollment.exam_date
                 =exam_sitting_date(enrollment.exam_date)
+              -else
+                =enrollment.exam_sitting.date
             %td
               =tick_or_cross(enrollment.notifications)
             %td

@@ -56,6 +56,8 @@ class Enrollment < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:active, :created_at) }
   scope :all_in_admin_order, -> { order(:subject_course_id, :created_at) }
+  scope :all_in_exam_sitting_order, -> { order(:exam_sitting_id) }
+  scope :all_reverse_order, -> { order(:created_at).reverse }
   scope :all_in_exam_order, -> { order(:exam_date) }
   scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
