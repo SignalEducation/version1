@@ -17,9 +17,7 @@
 
         .col-sm-6
           =form_tag(exam_sittings_url, method: :get, role: 'form', class: 'form-horizontal') do
-            .col-sm-2
-              =label_tag :sort_by, 'Filter'
-            .col-sm-10
+            .col-sm-10.col-sm-offset-2
               .input-group.input-group-lg.full-width
                 =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
 
