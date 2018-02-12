@@ -23,6 +23,7 @@ en:
       course_content: Course Content
       course_tuition: Tuition
       course_revision: Revision
+      question_bank: Question Bank
       course_test: Test
       final_exam: Final Exam
       back: Back
@@ -366,6 +367,7 @@ en:
         tuition: Tuition
         test: Test
         revision: Revision
+        question_bank: Question Bank
 
       edit:
         h1: Edit Course Module

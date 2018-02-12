@@ -190,7 +190,7 @@ class CourseModule < ActiveRecord::Base
 
   def category
     if self.revision
-      'Revision'
+      'Question Bank'
     elsif self.tuition
       'Tuition'
     elsif self.test
