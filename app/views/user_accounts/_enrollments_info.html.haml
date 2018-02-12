@@ -30,7 +30,7 @@
             %td
               =enrollment.status
             %td
-              =enrollment.percentage_complete
+              =enrollment.percentage_complete.to_s + '%'
             %td
               -unless enrollment.expired
                 =link_to edit_enrollment_url(enrollment) do

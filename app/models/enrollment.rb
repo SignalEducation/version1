@@ -24,7 +24,7 @@ class Enrollment < ActiveRecord::Base
   # attr-accessible
   attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active,
                   :exam_body_id, :exam_date, :expired, :notifications, :updated_at,
-                  :exam_sitting_id, :computer_based_exam
+                  :exam_sitting_id, :computer_based_exam, :percentage_complete
 
   # Constants
 
@@ -62,6 +62,7 @@ class Enrollment < ActiveRecord::Base
   scope :all_in_exam_order, -> { order(:exam_date) }
   scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
+  scope :all_not_active, -> { includes(:subject_course).where(active: false) }
   scope :all_expired, -> { where(expired: true) }
   scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
@@ -89,7 +90,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting_name exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_sitting_name exam_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -119,29 +120,8 @@ class Enrollment < ActiveRecord::Base
     self.user.try(:date_of_birth)
   end
 
-  def percentage_complete
-    course_log = self.subject_course_user_log
-    if course_log
-      percentage = course_log.percentage_complete
-      percentage.to_s << '%' if percentage
-    end
-  end
-
-  def rounded_percentage_complete
-    course_log = self.subject_course_user_log
-    if course_log
-      percentage = course_log.percentage_complete
-      percentage.between?(25,50)
-      if percentage && (percentage.between?(25,49))
-        '25%'
-      elsif percentage && (percentage.between?(50,74))
-        '50%'
-      elsif percentage && (percentage.between?(75,99))
-        '75%'
-      elsif percentage && (percentage == 100)
-        '100%'
-      end
-    end
+  def display_percentage_complete
+    self.percentage_complete.to_s << '%'
   end
 
   def elements_complete_count

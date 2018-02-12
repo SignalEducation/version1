@@ -9,7 +9,7 @@
             .card-info.hidden-sm.hidden-xs
               -total_lesson = log.subject_course.cme_count
               -complete_lesson = log.try(:count_of_cmes_completed) || 0
-              -complete_percent = log.try(:percentage_complete)
+              -complete_percent = log.try(:display_percentage_complete)
               %p{style: 'color: #3E3F5B; margin-bottom: 10px; margin-top: 10px;'}
                 ="#{complete_lesson} out of #{total_lesson} lessons completed"
               .progress
