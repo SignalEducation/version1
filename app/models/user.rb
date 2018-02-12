@@ -660,8 +660,20 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
+  def valid_enrollments_in_sitting_order
+    self.enrollments.all_valid.by_sitting_date
+  end
+
+  def expired_enrollments_in_sitting_order
+    self.enrollments.all_active.all_expired.by_sitting_date
+  end
+
+  def active_enrollments_in_sitting_order
+    self.enrollments.all_active.by_sitting_date
+  end
+
   def next_enrollment
-    self.enrollments.all_valid.all_in_exam_order.first
+    self.valid_enrollments_in_sitting_order.first
   end
 
   def next_exam_date

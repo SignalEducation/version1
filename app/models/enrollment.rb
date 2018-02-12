@@ -59,7 +59,8 @@ class Enrollment < ActiveRecord::Base
   scope :all_in_admin_order, -> { order(:subject_course_id, :created_at) }
   scope :all_in_exam_sitting_order, -> { order(:exam_sitting_id) }
   scope :all_reverse_order, -> { order(:created_at).reverse }
-  scope :all_in_exam_order, -> { order(:exam_date) }
+  scope :all_in_exam_order, -> { order(:exam_sitting_id) }
+  scope :by_sitting_date, -> { order('exam_sittings.date').includes(:exam_sitting).reverse }
   scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_not_active, -> { includes(:subject_course).where(active: false) }
@@ -87,6 +88,14 @@ class Enrollment < ActiveRecord::Base
 
   def valid_enrollment?
     self.active && !self.expired
+  end
+
+  def enrollment_date
+    if self.exam_date && self.computer_based_exam
+      self.exam_date
+    else
+      self.exam_sitting.date
+    end
   end
 
   def self.to_csv(options = {})
@@ -148,12 +157,11 @@ class Enrollment < ActiveRecord::Base
   end
 
   def days_until_exam
-
-    if self.exam_date
-      current_date = Proc.new{Time.now.to_date}.call
+    current_date = Proc.new{Time.now.to_date}.call
+    if self.exam_date && self.computer_based_exam
       self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
     else
-      0
+      self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
     end
 
   end

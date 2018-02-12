@@ -6,9 +6,8 @@ class UserAccountsController < ApplicationController
 
   def account_show
     @orders = @user.orders
-    active_enrollments = @user.enrollments.all_active
-    non_active_enrollments = @user.enrollments.all_not_active.all_in_exam_sitting_order.all_reverse_order
-    @enrollments = active_enrollments + non_active_enrollments
+    @enrollments = current_user.active_enrollments_in_sitting_order
+
     #@enrollments = @user.enrollments.all_in_account_order.sort_by { |enrollment| enrollment.active ? 0 : 1 }
     if current_user.student_access
       @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
