@@ -90,22 +90,22 @@ class Enrollment < ActiveRecord::Base
     self.active && !self.expired
   end
 
-  def enrollment_date
-    if self.exam_date && self.computer_based_exam
-      self.exam_date
-    else
-      self.exam_sitting.date
-    end
-  end
-
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting_name exam_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
       all.each do |user|
         csv << attributes.map{ |attr| user.send(attr) }
       end
+    end
+  end
+
+  def enrollment_date
+    if self.exam_date && self.computer_based_exam
+      self.exam_date
+    else
+      self.exam_sitting.date
     end
   end
 
