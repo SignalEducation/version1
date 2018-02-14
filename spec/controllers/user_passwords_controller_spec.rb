@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 
-RSpec.describe UserPasswordResetsController, type: :controller do
+RSpec.describe UserPasswordsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 

@@ -437,7 +437,7 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
       end
     end
 
@@ -710,7 +710,7 @@ describe ExamSittingsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: exam_sitting_2.id
-        expect_delete_success_with_model('exam_sitting', exam_sittings_url)
+        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
       end
     end
 
