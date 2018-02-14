@@ -50,8 +50,6 @@ describe Subscription do
   # validation
   it { should validate_presence_of(:user_id).on(:update) }
 
-  it { should validate_presence_of(:terms_and_conditions).on(:update) }
-
   it { should validate_presence_of(:subscription_plan_id) }
 
   it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES).on(:update) }

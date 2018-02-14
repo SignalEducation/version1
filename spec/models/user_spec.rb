@@ -225,7 +225,6 @@ describe User do
   it { should respond_to(:visit_landing_pages) }
   it { should respond_to(:enrolled_course_ids) }
 
-  it { should respond_to(:resubscribe_account) }
   it { should respond_to(:completed_course_module_element) }
 
   it { should respond_to(:started_course_module_element) }
