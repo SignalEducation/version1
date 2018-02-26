@@ -85,7 +85,7 @@ class StudentAccess < ActiveRecord::Base
   end
 
   def create_trial_expiration_worker
-    if self.user.student_user? && self.user.trial_user? && self.trial_ending_at_date && !self.trial_ended_date
+    if self.trial_access? && self.trial_ending_at_date && !self.trial_ended_date
       TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)  unless Rails.env.test?
     end
   end
