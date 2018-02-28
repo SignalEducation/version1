@@ -176,7 +176,7 @@ class User < ActiveRecord::Base
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true) if user.student_access
+      user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
       return user
     end
   end

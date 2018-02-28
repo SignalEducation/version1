@@ -7,7 +7,7 @@ en:
         thousands_separator: ","
         decimal_separator: "."
       active: Active
-      add_user: Add a user
+      add_user: Add User
       add_student: Add Student
       add_manager: Add Manager
       add_group: Add Team
@@ -1213,6 +1213,7 @@ en:
         stripe_account_balance_placeholder: Student Number
 
         student_access:
+          account_type: Account Type
           trial_seconds_limit: Trial Content Limit (Seconds)
           trial_seconds_limit_placeholder: Trial Content Limit (Seconds)
           trial_days_limit: Trial Day Limit (Days)

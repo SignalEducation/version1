@@ -50,7 +50,6 @@ Rails.application.routes.draw do
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
     resources :user_groups
-    resources :student_user_management
     resources :subscription_management do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice
       get '/pdf_invoice/:invoice_id', action: :pdf_invoice, as: :pdf_invoice
@@ -60,8 +59,6 @@ Rails.application.routes.draw do
       put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
       put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
     end
-    get  'student_user_management/:id/convert_to_student', to: 'student_user_management#convert_to_student', as: :convert_to_student
-    patch  'student_user_management/:id/update_to_student', to: 'student_user_management#update_to_student', as: :update_to_student
     resources :users do
       get  '/personal', action: :user_personal_details, as: :personal
       get  '/subscription', action: :user_subscription_status, as: :subscription
@@ -179,8 +176,8 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :users, only: [:new, :create]
 
-    post :preview_csv_upload, to: 'student_user_management#preview_csv_upload'
-    post :import_csv_upload, to: 'student_user_management#import_csv_upload'
+    post :preview_csv_upload, to: 'users#preview_csv_upload'
+    post :import_csv_upload, to: 'users#import_csv_upload'
 
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index

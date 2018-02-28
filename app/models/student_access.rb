@@ -26,7 +26,7 @@ class StudentAccess < ActiveRecord::Base
                   :content_access
 
   # Constants
-  ACCOUNT_TYPES = %w(Trial Subscription)
+  ACCOUNT_TYPES = %w(Trial Subscription Complimentary)
 
   # relationships
   belongs_to :user
@@ -47,6 +47,7 @@ class StudentAccess < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id) }
   scope :all_trial, -> { where(account_type: 'Trial') }
   scope :all_sub, -> { where(account_type: 'Subscription') }
+  scope :all_comp, -> { where(account_type: 'Complimentary') }
 
   # class methods
 
@@ -63,6 +64,10 @@ class StudentAccess < ActiveRecord::Base
     self.account_type == 'Subscription'
   end
 
+  def complimentary_access?
+    self.account_type == 'Complimentary'
+  end
+
   def recalculate_access_from_limits
     if self.trial_access? && self.trial_started_date
       time_now = Proc.new{Time.now.to_datetime}.call
@@ -75,6 +80,8 @@ class StudentAccess < ActiveRecord::Base
         self.update_columns(trial_ended_date: nil, content_access: true, trial_ending_at_date: new_trial_ending)
       end
 
+    elsif self.complimentary_access?
+      self.update_columns(trial_ended_date: nil, trial_ending_at_date: nil, content_access: true)
     end
   end
 
@@ -85,7 +92,7 @@ class StudentAccess < ActiveRecord::Base
   end
 
   def create_trial_expiration_worker
-    if self.user.student_user? && self.user.trial_user? && self.trial_ending_at_date && !self.trial_ended_date
+    if self.user.student_user? && self.trial_access? && self.trial_ending_at_date && !self.trial_ended_date
       TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)  unless Rails.env.test?
     end
   end

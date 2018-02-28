@@ -96,6 +96,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i)
   end
 
   def create
@@ -122,6 +123,10 @@ class UsersController < ApplicationController
   end
 
   def update
+
+    #TODO Review this. Is it needed?
+    #@user.student_access.recalculate_access_from_limits
+
     if @user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
       redirect_to users_url
@@ -139,6 +144,28 @@ class UsersController < ApplicationController
     end
     redirect_to users_url
   end
+
+  def preview_csv_upload
+    if params[:upload] && params[:upload].respond_to?(:read)
+      @csv_data, @has_errors = User.parse_csv(params[:upload].read)
+    else
+      flash[:error] = t('controllers.dashboard.preview_csv.flash.error')
+      redirect_to users_url
+    end
+  end
+
+  def import_csv_upload
+    if params[:csvdata]
+
+      @new_users, @existing_users = User.bulk_create(params[:csvdata], root_url)
+
+      flash[:success] = t('controllers.dashboard.import_csv.flash.success')
+    else
+      flash[:error] = t('controllers.dashboard.import_csv.flash.error')
+      redirect_to users_url
+    end
+  end
+
 
   def user_personal_details
   end
@@ -184,13 +211,16 @@ class UsersController < ApplicationController
   protected
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image, :date_of_birth, :description, :student_number)
+    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image,
+                                 :date_of_birth, :description, :student_number,
+                                 student_access_attributes: [:id, :trial_seconds_limit, :trial_days_limit, :account_type]
+    )
   end
 
 
   def get_variables
     @user = User.where(id: params[:id]).first
-    @user_groups = UserGroup.all_not_student
+    @user_groups = UserGroup.all_not_admin
     @countries = Country.all_in_order
     seo_title_maker('Users Management', '', true)
   end
