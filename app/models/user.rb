@@ -135,7 +135,6 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :create_on_intercom
   after_update :update_stripe_customer
 
   # scopes
@@ -797,15 +796,22 @@ class User < ActiveRecord::Base
     time_now = Proc.new{Time.now}.call
     user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
 
-    user = self.where(email: email, first_name: first_name, last_name: last_name).first_or_create
-    StudentAccess.create(user_id: user.id, trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+    user = User.new(email: email, first_name: first_name, last_name: last_name)
+    user.assign_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true,
+                           locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false,
+                           email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
+    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
 
-    stripe_customer = Stripe::Customer.create(email: user.email)
+    if user.valid? && user.save
+      stripe_customer = Stripe::Customer.create(email: user.email)
 
-    user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id, stripe_customer_id: stripe_customer.id)
+      user.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-    MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+      MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
 
+    else
+
+    end
 
   end
 
@@ -856,10 +862,6 @@ class User < ActiveRecord::Base
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-  end
-
-  def create_on_intercom
-    IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
   end
 
   def update_stripe_customer
