@@ -42,11 +42,6 @@
       .col-md-6
         =f.fields_for :student_access do |student_access|
 
-          =student_access.label :account_type, t('views.users.form.student_access.account_type'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =student_access.select :account_type, StudentAccess::ACCOUNT_TYPES, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-          %br/
-
           =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
           .input-group.input-group-lg.full-width
             =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
