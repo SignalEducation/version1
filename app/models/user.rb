@@ -488,14 +488,16 @@ class User < ActiveRecord::Base
 
 
   def permission_to_see_content
-    if self.trial_or_sub_user?
-      if self.student_access && self.student_access.content_access
-        true
-      else
-        false
-      end
-    else
+    # After successful update of all users to have a
+    # StudentAccess record change this to be only one line
+    # self.student_access.content_access
+
+    if self.student_user?
+      self.student_access.content_access
+    elsif self.non_student_user?
       true
+    else
+      false
     end
   end
 

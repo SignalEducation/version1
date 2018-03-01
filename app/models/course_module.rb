@@ -188,9 +188,13 @@ class CourseModule < ActiveRecord::Base
   end
 
   def percentage_complete_for_enrollment(enrollment_id)
-    enrollment = Enrollment.find(enrollment_id)
-    set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).first
-    set.try(:percentage_complete) || 0
+    enrollment = Enrollment.where(id: enrollment_id).first
+    if enrollment
+      set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).first
+      set.try(:percentage_complete) || 0
+    else
+      0
+    end
   end
 
 

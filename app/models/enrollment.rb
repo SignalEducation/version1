@@ -104,6 +104,9 @@ class Enrollment < ActiveRecord::Base
   def enrollment_date
     if self.exam_date && self.computer_based_exam
       self.exam_date
+    elsif self.exam_date && !self.exam_sitting_id
+      #For Old Enrollments without ExamSittingIds
+      self.exam_date
     else
       self.exam_sitting.date
     end
@@ -159,6 +162,9 @@ class Enrollment < ActiveRecord::Base
   def days_until_exam
     current_date = Proc.new{Time.now.to_date}.call
     if self.exam_date && self.computer_based_exam
+      self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
+    elsif self.exam_date && !self.exam_sitting_id
+      #For Old Enrollments without ExamSittingIds
       self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
     else
       self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
