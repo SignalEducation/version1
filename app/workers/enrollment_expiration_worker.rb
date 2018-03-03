@@ -7,10 +7,10 @@ class EnrollmentExpirationWorker
     enrollment = Enrollment.find(enrollment_id)
     if enrollment && !enrollment.expired
       if enrollment.computer_based_exam && enrollment.exam_date
-        if enrollment.exam_date.to_datetime <= Proc.new{Time.now.to_datetime}.call
+        if Proc.new{Time.now.to_datetime}.call <= enrollment.exam_date.to_datetime
           #ComputerBased Enrollment triggered by after_create callback
-          #Enrollment exam_date is not greater than the current datetime
-          #So should not be expired
+          #Current datetime is less than the Enrollment exam_date
+          #So should not be expired but trigger a new expiration worker
           EnrollmentExpirationWorker.perform_at(enrollment.exam_date.to_datetime + 23.hours, enrollment.id)
         else
           enrollment.update_attributes(expired: true, notifications: false)
