@@ -26,7 +26,7 @@ class StudentAccess < ActiveRecord::Base
                   :content_access
 
   # Constants
-  ACCOUNT_TYPES = %w(Trial Subscription)
+  ACCOUNT_TYPES = %w(Trial Subscription Complimentary)
 
   # relationships
   belongs_to :user
@@ -41,12 +41,13 @@ class StudentAccess < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_save :create_on_intercom, :create_trial_expiration_worker, :recalculate_access_from_limits
+  after_save :create_on_intercom, :recalculate_access_from_limits, :create_trial_expiration_worker
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
   scope :all_trial, -> { where(account_type: 'Trial') }
   scope :all_sub, -> { where(account_type: 'Subscription') }
+  scope :all_comp, -> { where(account_type: 'Complimentary') }
 
   # class methods
 
@@ -63,6 +64,10 @@ class StudentAccess < ActiveRecord::Base
     self.account_type == 'Subscription'
   end
 
+  def complimentary_access?
+    self.account_type == 'Complimentary'
+  end
+
   def recalculate_access_from_limits
     if self.user.student_user?
       if self.user.trial_or_sub_user?
@@ -74,12 +79,20 @@ class StudentAccess < ActiveRecord::Base
           elsif time_now <= new_trial_ending || self.content_seconds_consumed <= self.trial_seconds_limit
             self.update_columns(trial_ended_date: nil, content_access: true, trial_ending_at_date: new_trial_ending)
           end
+        elsif self.subscription_access?
+          if self.subscription.active
+            if %w(unpaid suspended canceled).include?(self.subscription.current_status)
+              self.update_column(:content_access, false)
+            elsif %w(active past_due canceled-pending).include?(self.subscription.current_status)
+              self.update_column(:content_access, true)
+            end
+          end
         end
       elsif self.user.complimentary_user?
-        self.update_columns(content_access: true)
+        self.update_columns(content_access: true, account_type: 'Complimentary')
       end
     else
-      self.update_columns(content_access: true)
+      self.update_columns(content_access: true, account_type: 'Complimentary')
     end
   end
 

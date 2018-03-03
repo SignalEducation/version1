@@ -482,7 +482,11 @@ class User < ActiveRecord::Base
         'Unknown'
       end
     else
-      self.user_group.name
+      if self.user_group_id
+        self.user_group.name
+      else
+        'Unknown'
+      end
     end
   end
 
@@ -495,7 +499,7 @@ class User < ActiveRecord::Base
     if self.student_user?
       self.student_access.content_access
     elsif self.non_student_user?
-      true
+      self.student_access.content_access
     else
       false
     end
@@ -856,6 +860,47 @@ class User < ActiveRecord::Base
       end
     end
 
+  end
+
+  def update_or_create_student_access
+    if self.student_access
+      self.student_access.recalculate_access_from_limits
+    else
+
+      if self.student_user?
+        days_limit = ENV['FREE_TRIAL_DAYS'].to_i
+
+        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
+        ending_date = started_date + days_limit.days
+
+        subs = self.subscriptions.in_created_order
+        sub_id = subs.any? ? subs.last.id : nil
+        type = sub_id ? 'Subscription' : 'Trial'
+
+        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                                  trial_days_limit: days_limit,
+                                  trial_started_date: started_date,
+                                  trial_ending_at_date: ending_date,
+                                  subscription_id: sub_id,
+                                  account_type: type,
+                                  content_access: false)
+
+        self.save
+        self.student_access.recalculate_access_from_limits
+
+      else
+
+        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
+
+        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                                  trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
+                                  trial_started_date: started_date,
+                                  account_type: 'Complimentary', content_access: true)
+        self.save
+        self.student_access.recalculate_access_from_limits
+      end
+
+    end
   end
 
 
