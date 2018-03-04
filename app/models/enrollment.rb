@@ -172,6 +172,35 @@ class Enrollment < ActiveRecord::Base
 
   end
 
+
+
+  def find_and_set_exam_sitting_id
+    if self.exam_date
+      exam_sitting = ExamSitting.where(subject_course_id: self.subject_course_id, date: self.exam_date, computer_based: false).first
+
+      if exam_sitting
+        sitting_id = exam_sitting.id
+        percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+        expiration = exam_sitting.active ? false : true
+        self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
+      else
+        sitting = ExamSitting.where(subject_course_id: self.subject_course_id, computer_based: false).first
+
+        sitting_id = sitting.id
+        percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+        expiration = sitting.active ? false : true
+        self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
+
+      end
+    else
+      exam_sitting = ExamSitting.where(name: 'Missing date value enrolments').first
+      percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+      self.update_columns(expired: true, exam_sitting_id: exam_sitting.id, percentage_complete: percentage)
+    end
+
+  end
+
+
   protected
 
   def check_dependencies
