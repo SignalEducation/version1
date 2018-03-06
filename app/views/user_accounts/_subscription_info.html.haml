@@ -11,6 +11,8 @@
         .h3
           =t('views.user_accounts.subscription_info.member_since')
         .h6
+          -# Create a account started date that uses account_create if
+          -# not trial_started_date value
           =humanize_datetime(@user.student_access.trial_started_date)
 
 

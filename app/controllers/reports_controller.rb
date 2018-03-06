@@ -34,7 +34,7 @@ class ReportsController < ApplicationController
 
   def export_enrollments
     @exam_sitting = ExamSitting.find(params[:exam_sitting_id])
-    @enrollments = Enrollment.all_active.where(exam_date: @exam_sitting.date, subject_course_id: @exam_sitting.subject_course_id).all_in_admin_order
+    @enrollments = @exam_sitting.enrollments.all_active.all_in_admin_order
 
     respond_to do |format|
       format.html

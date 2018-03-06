@@ -31,6 +31,7 @@
 #  background_image_content_type           :string
 #  background_image_file_size              :integer
 #  background_image_updated_at             :datetime
+#  preview                                 :boolean          default(FALSE)
 #
 
 FactoryGirl.define do
@@ -56,6 +57,11 @@ FactoryGirl.define do
 
     factory :inactive_subject_course do
       active                       false
+    end
+
+    factory :preview_subject_course do
+      active                       false
+      preview                       false
     end
   end
 

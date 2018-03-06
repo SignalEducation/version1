@@ -12,18 +12,20 @@
         =form_for(@new_enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
           =f.hidden_field :subject_course_id, value: @course.id
           =f.hidden_field :subject_course_user_log_id, value: nil, id: 'hidden_scul_id'
+
           .row.l-margin-top.text-left
             .col-sm-12
               .col-sm-6
-                =f.label :exam_date, t('views.enrollments.form.exam_date'), class: 'control-label'
+                =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =f.collection_select :exam_date, @exam_sittings, :date, :formatted_date, {prompt: t('views.general.select'), include_blank: 'Computer Based Exam'}, {class: 'form-control', style: 'border-radius: 6px;', name: 'exam_date'}
+                  =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
+
 
               .col-sm-6#custom_exam_date
-                %label{class: 'control-label'}
-                  ='Enter Computer Based Exam Date'
+                =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  %input{type: "text", placeholder: 'Select Date ', class: 'form-control', name: 'custom_exam_date', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'}
+                  =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
+                  
 
 
             -if @active_enrollment && @active_enrollment.expired
@@ -46,7 +48,7 @@
           .col-sm-12#actions_btns
             .col-sm-4.col-sm-offset-8
               #enroll_now
-                =submit_tag 'Enrol Now', class: 'btn btn-cyan'
+                =submit_tag 'Enrol Now', class: 'btn btn-cyan', id: 'enroll_submit_button'
 
 
 :javascript
@@ -54,26 +56,32 @@
   // Hide specific sections on page load
   $( document ).ready(function() {
     $("#custom_exam_date").hide();
-    $('#enroll_now').attr('disabled', true);
+    $('#enroll_submit_button').attr('disabled', true);
   });
+
+
 
   // Hide and show the datepicker depending on exam_date selection
-  $('select[name="exam_date"]').change(function () {
-    if ((this).selectedIndex == 1) {
+  $('#exam_sitting_select').change(function () {
+    if ($('#exam_sitting_select option:selected').text() == 'Computer Based Exam') {
       $("#custom_exam_date").show();
-      $('#enroll_now').attr('disabled', true);
-    } else if ($('select[name="exam_date"]').val() != '') {
-      $('#enroll_now').attr('disabled', false);
+      $('#enroll_submit_button').attr('disabled', true);
+    } else if ($('#exam_sitting_select option:selected').text() == 'Select...') {
+      $('#enroll_submit_button').attr('disabled', true);
       $("#custom_exam_date").hide();
+      ($('#exam_date_timepicker').val(''))
     } else {
       $("#custom_exam_date").hide();
-      $('#enroll_now').attr('disabled', true);
+      $('#enroll_submit_button').attr('disabled', false);
+      ($('#exam_date_timepicker').val(''))
     }
-
   });
-  $('#datetimepicker').focusout(function(){
-    if ($('#datetimepicker').val().length !=0) {
-      $('#enroll_now').attr('disabled', false);
+
+  $('#exam_date_timepicker').focusout(function(){
+    if ($('#exam_date_timepicker').val().length !=0) {
+      $('#enroll_submit_button').attr('disabled', false);
+    } else if ($('#exam_date_timepicker').val().length == 0) {
+      $('#enroll_submit_button').attr('disabled', true);
     }
   });
 
@@ -88,7 +96,7 @@
 
   // Date Picker
   $(function () {
-    $('#datetimepicker').datetimepicker();
+    $('#exam_date_timepicker').datetimepicker();
       format: 'DD/MM/YYYY'
   });
 

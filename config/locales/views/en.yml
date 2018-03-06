@@ -7,7 +7,7 @@ en:
         thousands_separator: ","
         decimal_separator: "."
       active: Active
-      add_user: Add a user
+      add_user: Add User
       add_student: Add Student
       add_manager: Add Manager
       add_group: Add Team
@@ -23,6 +23,7 @@ en:
       course_content: Course Content
       course_tuition: Tuition
       course_revision: Revision
+      question_bank: Question Bank
       course_test: Test
       final_exam: Final Exam
       back: Back
@@ -366,6 +367,7 @@ en:
         tuition: Tuition
         test: Test
         revision: Revision
+        question_bank: Question Bank
 
       edit:
         h1: Edit Course Module
@@ -595,6 +597,7 @@ en:
         subject_course_id: Course
         exam_body_id: Exam Body
         active: Active
+        computer_based: Computer Based
         date: Date
         date_placeholder: "2015-01-01"
 
@@ -922,6 +925,7 @@ en:
         name_url: Name URL
         name_url_placeholder: Name URL
         active: Active
+        preview: Preview Mode
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -950,7 +954,7 @@ en:
         manager_courses: Course Content
         add_course: Add Course
         edit_content: Edit Content
-        edit_tutors: Edit Tutors
+        edit_tutors: Tutors
 
 
       show:
@@ -1012,9 +1016,12 @@ en:
       form:
         registered: Registered
         exam_date: Select your Exam Date
+        computer_based_exam_date: Select Computer Based Exam Date
+        exam_sitting_id: Select your Exam Sitting
         student_number: Student Number
         student_number_placeholder: Student Number
         notifications: Receive Notifications
+        expired: Cancel Enrolment
 
       admin_form:
         registered: Registered
@@ -1206,6 +1213,7 @@ en:
         stripe_account_balance_placeholder: Student Number
 
         student_access:
+          account_type: Account Type
           trial_seconds_limit: Trial Content Limit (Seconds)
           trial_seconds_limit_placeholder: Trial Content Limit (Seconds)
           trial_days_limit: Trial Day Limit (Days)

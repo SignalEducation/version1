@@ -1,8 +1,9 @@
 .l-margin-top-big
   %p.h4.l-margin-bottom.l-margin-top
     Contact Tutor
+
   -if current_user
-    -if current_user && current_user.permission_to_see_content(@course)
+    -if current_user && current_user.permission_to_see_content
       =render partial: 'courses/tutor_contact'
       %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
         Ask The Tutor
@@ -19,16 +20,22 @@
       Mock Exams
     %ul.course-resources
       -@products.each do |product|
-        -if current_user
+        -if @course.preview
           %li
-            =link_to new_order_url(product) do
+            =link_to '#', style: 'pointer-events: none;' do
               .btn.btn-secondary.btn-red.btn-list
                 =product.mock_exam.name
         -else
-          %li
-            =link_to new_student_url do
-              .btn.btn-secondary.btn-red.btn-list
-                =product.mock_exam.name
+          -if current_user
+            %li
+              =link_to new_order_url(product) do
+                .btn.btn-secondary.btn-red.btn-list
+                  =product.mock_exam.name
+          -else
+            %li
+              =link_to new_student_url do
+                .btn.btn-secondary.btn-red.btn-list
+                  =product.mock_exam.name
 
   -if @subject_course_resources
     %p.h4.l-margin-bottom.l-margin-top-huge
@@ -36,7 +43,7 @@
     %ul.course-resources
       -@subject_course_resources.each do |resource|
         -if current_user
-          -if current_user && current_user.permission_to_see_content(@course)
+          -if current_user && current_user.permission_to_see_content
             %li
               =link_to resource.file_upload.url, target: '_blank' do
                 .btn.btn-secondary.btn-red.btn-list

@@ -14,18 +14,23 @@
 #  expired                    :boolean          default(FALSE)
 #  paused                     :boolean          default(FALSE)
 #  notifications              :boolean          default(TRUE)
+#  exam_sitting_id            :integer
+#  computer_based_exam        :boolean          default(FALSE)
+#  percentage_complete        :integer          default(0)
 #
 
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active,
-                  :exam_body_id, :exam_date, :expired, :notifications, :updated_at
+                  :exam_body_id, :exam_date, :expired, :notifications, :updated_at,
+                  :exam_sitting_id, :computer_based_exam, :percentage_complete
 
   # Constants
 
   # relationships
   belongs_to :exam_body
+  belongs_to :exam_sitting
   belongs_to :user
   belongs_to :subject_course
   belongs_to :subject_course_user_log
@@ -34,6 +39,8 @@ class Enrollment < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :exam_sitting_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
@@ -50,9 +57,13 @@ class Enrollment < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:active, :created_at) }
   scope :all_in_admin_order, -> { order(:subject_course_id, :created_at) }
-  scope :all_in_exam_order, -> { order(:exam_date) }
+  scope :all_in_exam_sitting_order, -> { order(:exam_sitting_id) }
+  scope :all_reverse_order, -> { order(:created_at).reverse }
+  scope :all_in_exam_order, -> { order(:exam_sitting_id) }
+  scope :by_sitting_date, -> { order('exam_sittings.date').includes(:exam_sitting).reverse }
   scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
+  scope :all_not_active, -> { includes(:subject_course).where(active: false) }
   scope :all_expired, -> { where(expired: true) }
   scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
@@ -72,7 +83,7 @@ class Enrollment < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    false # Can never be destroyed because the CSV data files will not be accurate
   end
 
   def valid_enrollment?
@@ -80,7 +91,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting exam_date user_email date_of_birth student_number percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -90,13 +101,23 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
+  def enrollment_date
+    if self.exam_date && self.computer_based_exam
+      self.exam_date
+    elsif self.exam_date && !self.exam_sitting_id
+      #For Old Enrollments without ExamSittingIds
+      self.exam_date
+    else
+      self.exam_sitting.date
+    end
+  end
+
   def course_name
     self.subject_course.try(:name)
   end
 
-  def exam_sitting
-    sitting = ExamSitting.where(date: self.exam_date, subject_course_id: self.subject_course_id).first
-    sitting.try(:name)
+  def exam_sitting_name
+    self.exam_sitting.try(:name)
   end
 
   def user_email
@@ -111,29 +132,8 @@ class Enrollment < ActiveRecord::Base
     self.user.try(:date_of_birth)
   end
 
-  def percentage_complete
-    course_log = self.subject_course_user_log
-    if course_log
-      percentage = course_log.percentage_complete
-      percentage.to_s << '%' if percentage
-    end
-  end
-
-  def rounded_percentage_complete
-    course_log = self.subject_course_user_log
-    if course_log
-      percentage = course_log.percentage_complete
-      percentage.between?(25,50)
-      if percentage && (percentage.between?(25,49))
-        '25%'
-      elsif percentage && (percentage.between?(50,74))
-        '50%'
-      elsif percentage && (percentage.between?(75,99))
-        '75%'
-      elsif percentage && (percentage == 100)
-        '100%'
-      end
-    end
+  def display_percentage_complete
+    self.percentage_complete.to_s << '%'
   end
 
   def elements_complete_count
@@ -152,7 +152,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def sibling_enrollments
-    self.user.enrollments.where(subject_course_id: self.subject_course_id).where.not(id: self.id)
+    self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def status
@@ -160,15 +160,48 @@ class Enrollment < ActiveRecord::Base
   end
 
   def days_until_exam
-
-    if self.exam_date
-      current_date = Proc.new{Time.now.to_date}.call
+    current_date = Proc.new{Time.now.to_date}.call
+    if self.exam_date && self.computer_based_exam
+      self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
+    elsif self.exam_date && !self.exam_sitting_id
+      #For Old Enrollments without ExamSittingIds
       self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
     else
-      0
+      self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
     end
 
   end
+
+
+
+  def find_and_set_exam_sitting_id
+    if self.exam_date
+      exam_sitting = ExamSitting.where(subject_course_id: self.subject_course_id, date: self.exam_date, computer_based: false).first
+
+      if exam_sitting
+        sitting_id = exam_sitting.id
+        percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+        expiration = exam_sitting.active ? false : true
+        self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
+      else
+        sitting = ExamSitting.where(subject_course_id: self.subject_course_id, computer_based: false).first
+
+        if sitting
+          sitting_id = sitting.id
+          percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+          expiration = sitting.active ? false : true
+          self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
+        end
+
+      end
+    else
+      exam_sitting = ExamSitting.where(name: 'Missing date value enrolments').first
+      percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+      self.update_columns(expired: true, exam_sitting_id: exam_sitting.id, percentage_complete: percentage)
+    end
+
+  end
+
 
   protected
 
@@ -188,11 +221,13 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) if self.user.student_user? && !Rails.env.test? && self.exam_date
+    if self.computer_based_exam && self.exam_date
+      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
+    end
   end
 
   def create_intercom_event
-    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date) if self.user.student_user? && !Rails.env.test?
+    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date)
   end
 
   def study_streak_email

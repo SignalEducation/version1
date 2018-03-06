@@ -183,6 +183,20 @@ class CourseModule < ActiveRecord::Base
     set.try(:percentage_complete) || 0
   end
 
+  def completed_for_enrollment(enrollment_id)
+    self.percentage_complete_for_enrollment(enrollment_id) == 100
+  end
+
+  def percentage_complete_for_enrollment(enrollment_id)
+    enrollment = Enrollment.where(id: enrollment_id).first
+    if enrollment
+      set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).first
+      set.try(:percentage_complete) || 0
+    else
+      0
+    end
+  end
+
 
   ########################################################################
 
@@ -190,7 +204,7 @@ class CourseModule < ActiveRecord::Base
 
   def category
     if self.revision
-      'Revision'
+      'Question Bank'
     elsif self.tuition
       'Tuition'
     elsif self.test

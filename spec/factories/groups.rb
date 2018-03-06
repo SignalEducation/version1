@@ -25,7 +25,7 @@ FactoryGirl.define do
   factory :group do
     sequence(:name)           { |n| "Group #{n}" }
     sequence(:name_url)           { |n| "group-#{n}" }
-    description 'MyText'
+    description 'Basic Description of the Course'
     active true
     sorting_order 1
   end

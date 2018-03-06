@@ -50,7 +50,6 @@ Rails.application.routes.draw do
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
     resources :user_groups
-    resources :student_user_management
     resources :subscription_management do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice
       get '/pdf_invoice/:invoice_id', action: :pdf_invoice, as: :pdf_invoice
@@ -60,8 +59,6 @@ Rails.application.routes.draw do
       put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
       put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
     end
-    get  'student_user_management/:id/convert_to_student', to: 'student_user_management#convert_to_student', as: :convert_to_student
-    patch  'student_user_management/:id/update_to_student', to: 'student_user_management#update_to_student', as: :update_to_student
     resources :users do
       get  '/personal', action: :user_personal_details, as: :personal
       get  '/subscription', action: :user_subscription_status, as: :subscription
@@ -92,12 +89,9 @@ Rails.application.routes.draw do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
-    get '/enrollments/basic_create/:subject_course_name_url', to: 'enrollments#basic_create', as: :enrollment_basic_create
-    get '/enrollments/admin_show/:id', to: 'enrollments#admin_show', as: :enrollment_admin_show
-    get '/enrollments/admin_edit/:id', to: 'enrollments#admin_edit', as: :enrollment_admin_edit
-    patch '/enrollments/admin_update/:id', to: 'enrollments#admin_update', as: :enrollment_admin_update
-    get '/enrollments/reset_progress/:id', to: 'enrollments#admin_create_new_scul', as: :admin_create_new_scul
     resources :enrollments, only: [:edit, :update, :create]
+    resources :enrollment_management, only: [:edit, :update, :show]
+    post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
@@ -132,6 +126,7 @@ Rails.application.routes.draw do
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
+    get 'library/:group_name_url/preview/:subject_course_name_url', to: 'library#course_preview', as: :library_preview
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
@@ -181,8 +176,8 @@ Rails.application.routes.draw do
     resources :user_notifications
     resources :users, only: [:new, :create]
 
-    post :preview_csv_upload, to: 'student_user_management#preview_csv_upload'
-    post :import_csv_upload, to: 'student_user_management#import_csv_upload'
+    post :preview_csv_upload, to: 'users#preview_csv_upload'
+    post :import_csv_upload, to: 'users#import_csv_upload'
 
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index

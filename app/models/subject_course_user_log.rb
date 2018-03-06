@@ -72,7 +72,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def update_enrollment
-    self.active_enrollment.touch if self.active_enrollment && !self.active_enrollment.expired
+    if self.active_enrollment && !self.active_enrollment.expired
+      #self.active_enrollment.touch
+      self.active_enrollment.update_attribute(:percentage_complete, self.percentage_complete)
+    end
   end
 
   def last_element

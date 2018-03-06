@@ -135,7 +135,6 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :create_on_intercom
   after_update :update_stripe_customer
 
   # scopes
@@ -176,7 +175,7 @@ class User < ActiveRecord::Base
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true) if user.student_access
+      user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
       return user
     end
   end
@@ -483,31 +482,42 @@ class User < ActiveRecord::Base
         'Unknown'
       end
     else
-      self.user_group.name
+      if self.user_group_id
+        self.user_group.name
+      else
+        'Unknown'
+      end
     end
   end
 
 
-  def permission_to_see_content(course)
-    if self.trial_or_sub_user? && course.active_enrollment_user_ids.include?(self.id)
-      if course.active
-        if self.student_access.content_access
-          true
-        else
-          false
-        end
-      else
-        true
-      end
-    elsif self.complimentary_user? && course.active_enrollment_user_ids.include?(self.id)
-      true
-    elsif self.non_student_user? && course.active_enrollment_user_ids.include?(self.id)
-      true
+  def permission_to_see_content
+    # After successful update of all users to have a
+    # StudentAccess record change this to be only one line
+    # self.student_access.content_access
+
+    if self.student_user?
+      self.student_access.content_access
+    elsif self.non_student_user?
+      self.student_access.content_access
     else
       false
     end
   end
 
+  def enrollment_for_course?(course_id)
+    #Returns true if an active enrollment exists for this user/course
+
+    self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
+
+  end
+
+  def enrolled_in_course?(course_id)
+    #Returns true if a non-expired active enrollment exists for this user/course
+
+    self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
+
+  end
 
 
   def referred_user
@@ -655,8 +665,20 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
+  def valid_enrollments_in_sitting_order
+    self.enrollments.all_valid.by_sitting_date
+  end
+
+  def expired_enrollments_in_sitting_order
+    self.enrollments.all_active.all_expired.by_sitting_date
+  end
+
+  def active_enrollments_in_sitting_order
+    self.enrollments.all_active.by_sitting_date
+  end
+
   def next_enrollment
-    self.enrollments.all_valid.all_in_exam_order.first
+    self.valid_enrollments_in_sitting_order.first
   end
 
   def next_exam_date
@@ -780,15 +802,22 @@ class User < ActiveRecord::Base
     time_now = Proc.new{Time.now}.call
     user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
 
-    user = self.where(email: email, first_name: first_name, last_name: last_name).first_or_create
-    StudentAccess.create(user_id: user.id, trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+    user = User.new(email: email, first_name: first_name, last_name: last_name)
+    user.assign_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true,
+                           locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false,
+                           email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
+    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
 
-    stripe_customer = Stripe::Customer.create(email: user.email)
+    if user.valid? && user.save
+      stripe_customer = Stripe::Customer.create(email: user.email)
 
-    user.update_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true, locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false, email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id, stripe_customer_id: stripe_customer.id)
+      user.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-    MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+      MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
 
+    else
+
+    end
 
   end
 
@@ -833,16 +862,53 @@ class User < ActiveRecord::Base
 
   end
 
+  def update_or_create_student_access
+    if self.student_access
+      self.student_access.recalculate_access_from_limits
+    else
+
+      if self.student_user?
+        days_limit = ENV['FREE_TRIAL_DAYS'].to_i
+
+        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
+        ending_date = started_date + days_limit.days
+
+        subs = self.subscriptions.in_created_order
+        sub_id = subs.any? ? subs.last.id : nil
+        type = sub_id ? 'Subscription' : 'Trial'
+
+        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                                  trial_days_limit: days_limit,
+                                  trial_started_date: started_date,
+                                  trial_ending_at_date: ending_date,
+                                  subscription_id: sub_id,
+                                  account_type: type,
+                                  content_access: false)
+
+        self.save
+        self.student_access.recalculate_access_from_limits
+
+      else
+
+        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
+
+        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                                  trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
+                                  trial_started_date: started_date,
+                                  account_type: 'Complimentary', content_access: true)
+        self.save
+        self.student_access.recalculate_access_from_limits
+      end
+
+    end
+  end
+
 
   protected
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
-  end
-
-  def create_on_intercom
-    IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
   end
 
   def update_stripe_customer
