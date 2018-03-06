@@ -9,7 +9,7 @@
             .card-info.hidden-xs
               %p.p{style: 'color: #EF5153;'}
                 ='Enrolment Expired - '
-                -if enrollment.exam_sitting_id || enrollment.exam_date
+                -if enrollment.exam_sitting_id && enrollment.exam_sitting.date
                   =exam_sitting_date(enrollment.enrollment_date)
 
           .col-sm-4.col-xs-12.text-center.resume-course.hidden-xs
