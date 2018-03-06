@@ -122,7 +122,7 @@ class ApplicationController < ActionController::Base
     allowed     = {course_content: {view_all: true, reason: nil}}
     not_allowed     = {course_content: {view_all: false, reason: nil}}
 
-    if current_user && current_user.permission_to_see_content(@course)
+    if current_user && current_user.permission_to_see_content
       result = allowed
     else
       result = not_allowed
@@ -237,10 +237,17 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
       if the_thing.parent
-        library_course_url(
-            the_thing.parent.name_url,
-            the_thing.name_url
-        )
+        if the_thing.preview
+          library_preview_url(
+              the_thing.parent.name_url,
+              the_thing.name_url
+          )
+        else
+          library_course_url(
+              the_thing.parent.name_url,
+              the_thing.name_url
+          )
+        end
       else
         library_url
       end
@@ -263,19 +270,33 @@ class ApplicationController < ActionController::Base
               the_thing.subject_course
       )
     elsif the_thing.class == CourseModuleElement
-      if current_user.permission_to_see_content(the_thing.parent.parent)
-        course_url(
-            the_thing.course_module.subject_course.name_url,
-            the_thing.course_module.name_url,
-            the_thing.name_url
-        )
+      if current_user
+        if current_user.permission_to_see_content
+          if current_user.enrolled_in_course?(the_thing.course_module.subject_course.id)
+            course_url(
+                the_thing.course_module.subject_course.name_url,
+                the_thing.course_module.name_url,
+                the_thing.name_url
+            )
+          else
+            library_course_url(
+                the_thing.parent.parent.parent.name_url,
+                the_thing.parent.parent.name_url,
+                anchor: 'enrollment-modal'
+            )
+          end
+
+        else
+          library_course_url(
+              the_thing.parent.parent.parent.name_url,
+              the_thing.parent.parent.name_url,
+              anchor: 'access-denied-modal'
+          )
+        end
       else
-        library_course_url(
-            the_thing.parent.parent.parent.name_url,
-            the_thing.parent.parent.name_url,
-            anchor: 'access-denied-modal'
-        )
+        new_student_url
       end
+
     else
       library_special_link(the_thing)
     end

@@ -12,9 +12,14 @@
 
 
       .row.l-margin-top.l-margin-bottom
-        .col-sm-12
+        .col-sm-6
           =link_to 'New Exam Sitting', new_exam_sitting_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
+        .col-sm-6
+          =form_tag(exam_sittings_url, method: :get, role: 'form', class: 'form-horizontal') do
+            .col-sm-10.col-sm-offset-2
+              .input-group.input-group-lg.full-width
+                =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
 
       .row
         .col-md-12.l-margin-top
@@ -25,17 +30,19 @@
                 %thead
                   %tr
                     %th=t('views.exam_sittings.form.name')
-                    %th=t('views.exam_sittings.form.subject_course_id')
                     %th=t('views.exam_sittings.form.date')
                     %th=t('views.exam_sittings.form.active')
+                    %th=t('views.exam_sittings.form.computer_based')
                     %th
                 %tbody
                   -@exam_sittings.each do |exam_sitting|
                     %tr
                       %td=exam_sitting.name
-                      %td=exam_sitting.subject_course.name
-                      %td=exam_sitting.date.strftime("%B %Y")
+                      %td
+                        -if exam_sitting.date
+                          =exam_sitting.date.strftime("%B %Y")
                       %td=tick_or_cross(exam_sitting.active)
+                      %td=tick_or_cross(exam_sitting.computer_based)
                       %td
                         =link_to t('views.general.view'), exam_sitting, class: 'btn btn-purple btn-small'
                         =link_to t('views.general.edit'), edit_exam_sitting_url(exam_sitting), class: 'btn btn-cyan btn-small'

@@ -3,15 +3,6 @@ require 'rails_helper'
 shared_context 'users_and_groups_setup' do
 
 
-  # user groups
-  let!(:student_user_group ) { FactoryGirl.create(:student_user_group ) }
-  let(:tutor_user_group) { FactoryGirl.create(:tutor_user_group) }
-  let(:content_manager_user_group) { FactoryGirl.create(:content_manager_user_group) }
-  let(:admin_user_group) { FactoryGirl.create(:admin_user_group) }
-  let(:complimentary_user_group) { FactoryGirl.create(:complimentary_user_group) }
-  let(:marketing_manager_user_group) { FactoryGirl.create(:marketing_manager_user_group) }
-  let(:customer_support_user_group) { FactoryGirl.create(:customer_support_user_group) }
-
   # users
   let!(:student_user) { FactoryGirl.create(:student_user, user_group_id: student_user_group.id) }
   let(:student_access_1) { FactoryGirl.create(:valid_trial_student_access, user_id: student_user.id) }

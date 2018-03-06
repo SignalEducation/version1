@@ -10,6 +10,7 @@
 #  updated_at        :datetime         not null
 #  exam_body_id      :integer
 #  active            :boolean          default(TRUE)
+#  computer_based    :boolean          default(FALSE)
 #
 
 class ExamSittingsController < ApplicationController
@@ -22,6 +23,21 @@ class ExamSittingsController < ApplicationController
 
   def index
     @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
+
+    @sort_choices = ExamSitting::SORT_OPTIONS
+
+    if params[:sort_by].to_s.blank?
+      @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
+    elsif params[:sort_by] == 'all'
+      @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
+    elsif params[:sort_by] == 'active'
+      @exam_sittings = ExamSitting.all_active.paginate(per_page: 50, page: params[:page]).all_in_order
+    elsif params[:sort_by] == 'not-active'
+      @exam_sittings = ExamSitting.all_not_active.paginate(per_page: 50, page: params[:page]).all_in_order
+    else
+      @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
+    end
+
   end
 
   def show
@@ -45,7 +61,7 @@ class ExamSittingsController < ApplicationController
   end
 
   def update
-    if @exam_sitting.update_attributes(allowed_params)
+    if @exam_sitting.update_attributes(update_params)
       flash[:success] = I18n.t('controllers.exam_sittings.update.flash.success')
       redirect_to exam_sittings_url
     else
@@ -75,7 +91,7 @@ class ExamSittingsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id, :active)
+    params.require(:exam_sitting).permit(:name, :subject_course_id, :date, :exam_body_id, :active, :computer_based)
   end
 
   def update_params

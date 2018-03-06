@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171206164823) do
+ActiveRecord::Schema.define(version: 20180212125230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -261,6 +261,9 @@ ActiveRecord::Schema.define(version: 20171206164823) do
     t.boolean  "expired",                    default: false
     t.boolean  "paused",                     default: false
     t.boolean  "notifications",              default: true
+    t.integer  "exam_sitting_id"
+    t.boolean  "computer_based_exam",        default: false
+    t.integer  "percentage_complete",        default: 0
   end
 
   create_table "exam_bodies", force: :cascade do |t|
@@ -276,10 +279,11 @@ ActiveRecord::Schema.define(version: 20171206164823) do
     t.string   "name"
     t.integer  "subject_course_id"
     t.date     "date"
-    t.datetime "created_at",                       null: false
-    t.datetime "updated_at",                       null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "exam_body_id"
     t.boolean  "active",            default: true
+    t.boolean  "computer_based",    default: false
   end
 
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
@@ -487,7 +491,6 @@ ActiveRecord::Schema.define(version: 20171206164823) do
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
-    t.integer  "subject_course_id"
     t.integer  "mock_exam_id"
     t.string   "stripe_guid"
     t.boolean  "live_mode",         default: false
@@ -497,12 +500,12 @@ ActiveRecord::Schema.define(version: 20171206164823) do
     t.integer  "currency_id"
     t.decimal  "price"
     t.string   "stripe_sku_guid"
+    t.integer  "subject_course_id"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
-  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
@@ -742,6 +745,7 @@ ActiveRecord::Schema.define(version: 20171206164823) do
     t.string   "background_image_content_type"
     t.integer  "background_image_file_size"
     t.datetime "background_image_updated_at"
+    t.boolean  "preview",                                 default: false
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

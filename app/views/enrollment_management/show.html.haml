@@ -27,7 +27,7 @@
                     =@enrollment.subject_course.name
 
               .col-sm-2.l-margin-top
-                =link_to 'Edit Details', enrollment_admin_edit_url(@enrollment), class: 'btn btn-cyan'
+                =link_to 'Edit Details', edit_enrollment_management_url(@enrollment), class: 'btn btn-cyan'
 
 
               .col-sm-10.l-margin-top-big
@@ -59,11 +59,11 @@
                     .h3
                       Course progress
                     .h6
-                      =@enrollment.percentage_complete
+                      =@enrollment.display_percentage_complete
 
                 .col-sm-2.l-margin-top
                   -if @enrollment.valid_enrollment?
-                    =link_to 'Reset Progress', admin_create_new_scul_url(@enrollment), class: 'btn btn-red', data: { confirm: t('views.general.delete_confirmation') }
+                    =link_to 'Reset Progress', reset_enrollment_scul_url(@enrollment.id), method: :post, class: 'btn btn-red', data: { confirm: t('views.general.delete_confirmation') }
 
 
                 .col-sm-10.l-margin-top

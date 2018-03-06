@@ -139,7 +139,6 @@ describe User do
   # callbacks
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:create_on_intercom).after(:create) }
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
@@ -225,7 +224,6 @@ describe User do
   it { should respond_to(:visit_landing_pages) }
   it { should respond_to(:enrolled_course_ids) }
 
-  it { should respond_to(:resubscribe_account) }
   it { should respond_to(:completed_course_module_element) }
 
   it { should respond_to(:started_course_module_element) }

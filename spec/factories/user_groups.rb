@@ -86,5 +86,10 @@ FactoryGirl.define do
       home_pages_access                true
     end
 
+    factory :blocked_user_group do
+      name 'Blocked Users User Group'
+      blocked_user_group                true
+    end
+
   end
 end

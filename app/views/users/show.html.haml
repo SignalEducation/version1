@@ -93,72 +93,8 @@
 
 
 
-      -if @user.trial_user?
-        .row.l-margin-top.l-margin-bottom
-          .col-sm-12
-            .box-item
-              .col-sm-12
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.trial_started_date')
-                  .h6
-                    -if @user.student_access.trial_started_date
-                      =humanize_datetime(@user.student_access.trial_started_date)
-                    -else
-                      =@user.created_at
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.content_access')
-                  .h6
-                    =@user.student_access.content_access
 
-                .col-md-4.text-center
-                  -if @user.student_user? && @user.trial_or_sub_user?
-                    =link_to 'Edit Details', edit_student_user_management_url(@user), class: 'btn btn-red'
-                  -else
-                    =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
-
-
-              .col-sm-12.l-margin-top-big
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.trial_days_limit')
-                  .h6
-                    =@user.student_access.trial_days_limit
-
-                .col-md-4
-                  -if @user.student_access.trial_ended_date
-                    .h3
-                      =t('views.users.user_subscription_status.trial_info.trial_ended_date')
-                    .h6
-                      -if @user.student_access && @user.student_access.trial_ended_date
-                        =humanize_datetime(@user.student_access.trial_ended_date)
-                  -elsif !@user.student_access.trial_ended_date && @user.student_access.trial_ending_at_date
-                    .h3
-                      =t('views.users.user_subscription_status.trial_info.trial_ending_at_date')
-                    .h6
-                      -if @user.student_access && @user.student_access.trial_ending_at_date
-                        =humanize_datetime(@user.student_access.trial_ending_at_date)
-
-
-              .col-sm-12.l-margin-top-big
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.trial_seconds_limit')
-                  .h6
-                    =@user.student_access.trial_seconds_limit
-
-                .col-md-4
-                  .h3
-                    =t('views.users.user_subscription_status.trial_info.content_seconds_consumed')
-                  .h6
-                    =@user.student_access.content_seconds_consumed
-
-                .col-md-4
-
-
-
-      -elsif @user.subscriptions.any?
+      -if @user.subscriptions.any?
         .row.l-margin-top.l-margin-bottom
           .col-md-12
             .box-item
@@ -243,5 +179,69 @@
                     .h6
                       -if @subscription.next_renewal_date
                         =@subscription.next_renewal_date.to_s
+
+
+
+
+
+      -else
+        .row.l-margin-top.l-margin-bottom
+          .col-sm-12
+            .box-item
+              .col-sm-12
+                .col-md-4
+                  .h3
+                    Account Type
+                  .h6
+                    =@user.user_account_status
+                .col-md-4
+                  .h3
+                    =t('views.users.user_subscription_status.trial_info.content_access')
+                  .h6
+                    =@user.student_access.content_access
+
+                .col-md-4.text-center
+                  =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
+
+
+              .col-sm-12.l-margin-top-big
+                .col-md-4
+                  .h3
+                    =t('views.users.user_subscription_status.trial_info.trial_started_date')
+                  .h6
+                    =humanize_datetime(@user.student_access.trial_started_date) if @user.student_access.trial_started_date
+                .col-md-4
+                  .h3
+                    =t('views.users.user_subscription_status.trial_info.trial_days_limit')
+                  .h6
+                    =@user.student_access.trial_days_limit
+
+
+
+              .col-sm-12.l-margin-top-big
+                .col-md-4
+                  -if @user.student_access.trial_ended_date
+                    .h3
+                      =t('views.users.user_subscription_status.trial_info.trial_ended_date')
+                    .h6
+                      -if @user.student_access && @user.student_access.trial_ended_date
+                        =humanize_datetime(@user.student_access.trial_ended_date)
+                  -elsif !@user.student_access.trial_ended_date && @user.student_access.trial_ending_at_date
+                    .h3
+                      =t('views.users.user_subscription_status.trial_info.trial_ending_at_date')
+                    .h6
+                      -if @user.student_access && @user.student_access.trial_ending_at_date
+                        =humanize_datetime(@user.student_access.trial_ending_at_date)
+                .col-md-4
+                  .h3
+                    =t('views.users.user_subscription_status.trial_info.trial_seconds_limit')
+                  .h6
+                    =@user.student_access.trial_seconds_limit
+
+                .col-md-4
+                  .h3
+                    =t('views.users.user_subscription_status.trial_info.content_seconds_consumed')
+                  .h6
+                    =@user.student_access.content_seconds_consumed
 
 

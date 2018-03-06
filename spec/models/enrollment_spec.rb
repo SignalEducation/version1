@@ -14,6 +14,9 @@
 #  expired                    :boolean          default(FALSE)
 #  paused                     :boolean          default(FALSE)
 #  notifications              :boolean          default(TRUE)
+#  exam_sitting_id            :integer
+#  computer_based_exam        :boolean          default(FALSE)
+#  percentage_complete        :integer          default(0)
 #
 
 require 'rails_helper'
@@ -34,6 +37,7 @@ describe Enrollment do
 
   # relationships
   it { should belong_to(:exam_body) }
+  it { should belong_to(:exam_sitting) }
   it { should belong_to(:user) }
   it { should belong_to(:subject_course) }
   it { should belong_to(:subject_course_user_log) }
@@ -41,6 +45,9 @@ describe Enrollment do
   # validation
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
+
+  it { should validate_presence_of(:exam_sitting_id) }
+  it { should validate_numericality_of(:exam_sitting_id) }
 
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
@@ -53,6 +60,7 @@ describe Enrollment do
   it { should callback(:create_expiration_worker).after(:create) }
   it { should callback(:deactivate_siblings).after(:create) }
   it { should callback(:create_expiration_worker).after(:update), if: :exam_date_changed? }
+  it { should callback(:study_streak_email).after(:update) }
 
   # scopes
   it { expect(Enrollment).to respond_to(:all_in_order) }
@@ -76,15 +84,17 @@ describe Enrollment do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:valid_enrollment?) }
   it { should respond_to(:course_name) }
+  it { should respond_to(:enrollment_date) }
+  it { should respond_to(:exam_sitting_name) }
   it { should respond_to(:user_email) }
   it { should respond_to(:student_number) }
   it { should respond_to(:date_of_birth) }
-  it { should respond_to(:percentage_complete) }
-  it { should respond_to(:rounded_percentage_complete) }
+  it { should respond_to(:display_percentage_complete) }
   it { should respond_to(:elements_complete_count) }
   it { should respond_to(:course_elements_count) }
   it { should respond_to(:sibling_enrollments) }
   it { should respond_to(:status) }
+  it { should respond_to(:days_until_exam) }
 
 
 end

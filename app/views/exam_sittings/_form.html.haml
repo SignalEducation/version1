@@ -22,11 +22,20 @@
           =f.text_field :date, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
 
       %br/
-      .form-group
-        .col-sm-12
-          %label.check
-            =f.check_box :active
-            =t('views.exam_sittings.form.active')
+      .col-sm-12.l-margin-top-big
+        .col-sm-6
+          .form-group
+            .col-sm-12
+              %label.check
+                =f.check_box :active
+                =t('views.exam_sittings.form.active')
+        .col-sm-6
+          -if @exam_sitting.new_record?
+            .form-group
+              .col-sm-12
+                %label.check
+                  =f.check_box :computer_based
+                  =t('views.exam_sittings.form.computer_based')
 
 
   .row.l-margin-top-big

@@ -1118,6 +1118,22 @@ a.card {
     color: $red1;
   }
 }
+.notice.preview {
+  background: $colour-15;
+  color: $text-color;
+  border-radius: 4px;
+  margin-bottom: $gutter/2;
+  padding: $gutter/1.5;
+  .icon {
+    margin-right: $gutter/2;
+  }
+  .p {
+    margin: 0;
+  }
+  a {
+    color: $red1;
+  }
+}
 
 
 .course-topics-list {
