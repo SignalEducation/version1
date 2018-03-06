@@ -186,10 +186,12 @@ class Enrollment < ActiveRecord::Base
       else
         sitting = ExamSitting.where(subject_course_id: self.subject_course_id, computer_based: false).first
 
-        sitting_id = sitting.id
-        percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
-        expiration = sitting.active ? false : true
-        self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
+        if sitting
+          sitting_id = sitting.id
+          percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
+          expiration = sitting.active ? false : true
+          self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
+        end
 
       end
     else
