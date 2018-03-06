@@ -139,7 +139,6 @@ describe User do
   # callbacks
   it { should callback(:add_guid).before(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:create_on_intercom).after(:create) }
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
