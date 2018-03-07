@@ -166,7 +166,11 @@ class Enrollment < ActiveRecord::Base
       #For Old Enrollments without ExamSittingIds
       self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
     else
-      self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
+      if self.exam_sitting && self.exam_sitting.date
+        self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
+      else
+        0
+      end
     end
 
   end
