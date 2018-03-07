@@ -96,7 +96,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i)
+    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
   end
 
   def create
@@ -212,7 +212,7 @@ class UsersController < ApplicationController
 
   def allowed_params
     params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image,
-                                 :date_of_birth, :description, :student_number,
+                                 :date_of_birth, :description, :student_number, :stripe_account_balance,
                                  student_access_attributes: [:id, :trial_seconds_limit, :trial_days_limit, :account_type]
     )
   end

@@ -46,7 +46,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   after_save :update_enrollment
-  after_save :check_for_completion
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -73,8 +72,8 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def update_enrollment
     if self.active_enrollment && !self.active_enrollment.expired
-      #self.active_enrollment.touch
       self.active_enrollment.update_attribute(:percentage_complete, self.percentage_complete)
+      self.update_attribute(:completed_at, Proc.new{Time.now}.call) if self.completed && !self.completed_at
     end
   end
 
@@ -125,13 +124,5 @@ class SubjectCourseUserLog < ActiveRecord::Base
     end
   end
 
-  def check_for_completion
-    unless Rails.env.test?
-      if self.completed && !self.completed_at && self.subject_course.survey_url
-        self.update_attribute(:completed_at, Proc.new{Time.now}.call)
-        MandrillWorker.perform_async(self.user_id, 'send_survey_email', self.subject_course.survey_url)
-      end
-    end
-  end
 
 end

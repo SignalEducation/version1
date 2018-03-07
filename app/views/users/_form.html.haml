@@ -41,6 +41,7 @@
       %h2='Trial Limits'
       .col-md-6
         =f.fields_for :student_access do |student_access|
+          =student_access.hidden_field :account_type
 
           =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
           .input-group.input-group-lg.full-width
