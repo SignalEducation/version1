@@ -14,10 +14,12 @@ class EnrollmentExpirationWorker
           EnrollmentExpirationWorker.perform_at(enrollment.exam_date.to_datetime + 23.hours, enrollment.id)
         else
           enrollment.update_attributes(expired: true, notifications: false)
+          MandrillWorker.perform_async(enrollment.user_id, 'send_survey_email', enrollment.subject_course.survey_url) if enrollment.subject_course.survey_url
         end
       else
         #Triggered by ExamSittingExpirationWorker
         enrollment.update_attributes(expired: true, notifications: false)
+        MandrillWorker.perform_async(enrollment.user_id, 'send_survey_email', enrollment.subject_course.survey_url) if enrollment.subject_course.survey_url
       end
     end
   end
