@@ -32,7 +32,7 @@
 #  address_country     :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription_payment_card do
     user_id               1
     stripe_card_guid      'card_FACTORY-abc123'

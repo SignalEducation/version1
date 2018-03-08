@@ -29,16 +29,16 @@ describe HomePagesController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'system_setup'
 
-  let!(:landing_page_1) { FactoryGirl.create(:landing_page_1) }
-  let!(:landing_page_2) { FactoryGirl.create(:landing_page_2) }
+  let!(:landing_page_1) { FactoryBot.create(:landing_page_1) }
+  let!(:landing_page_2) { FactoryBot.create(:landing_page_2) }
 
-  let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
+  let!(:valid_params) { FactoryBot.attributes_for(:home_page) }
 
   let!(:sign_up_params) { { first_name: 'Test', last_name: 'Student', locale: 'en',
                             email: 'test.student@example.com', password: 'dummy_pass',
                             password_confirmation: 'dummy_pass' } }
-  let!(:default_plan) { FactoryGirl.create(:subscription_plan) }
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student_user.id) }
+  let!(:default_plan) { FactoryBot.create(:subscription_plan) }
+  let!(:referral_code) { FactoryBot.create(:referral_code, user_id: student_user.id) }
 
   context 'Not logged in: ' do
 

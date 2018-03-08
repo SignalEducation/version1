@@ -20,9 +20,9 @@ describe ExamSittingsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting) }
-  let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:exam_sitting) }
+  let!(:exam_sitting_1) { FactoryBot.create(:exam_sitting) }
+  let!(:exam_sitting_2) { FactoryBot.create(:exam_sitting) }
+  let!(:valid_params) { FactoryBot.attributes_for(:exam_sitting) }
 
   context 'Not logged in: ' do
 

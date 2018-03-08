@@ -11,8 +11,8 @@ describe 'The student orders process', type: :feature do
   include_context 'subscription_plans_setup'
   include_context 'system_setup'
 
-  let!(:product_1)  { FactoryGirl.create(:product) }
-  let!(:mock_exam_1)  { FactoryGirl.create(:mock_exam, subject_course_id: SubjectCourse.first.id, product_id: product_1.id) }
+  let!(:product_1)  { FactoryBot.create(:product) }
+  let!(:mock_exam_1)  { FactoryBot.create(:mock_exam, subject_course_id: SubjectCourse.first.id, product_id: product_1.id) }
 
   before(:each) do
     activate_authlogic

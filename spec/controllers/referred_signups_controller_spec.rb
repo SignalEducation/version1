@@ -20,11 +20,11 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:tutor) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id ) }
-  let!(:tutor_referral_code) { FactoryGirl.create(:referral_code, user_id: tutor.id) }
-  let!(:referred_student) { FactoryGirl.create(:student_user) }
-  let!(:subscription) { FactoryGirl.create(:subscription, user_id: referred_student.id) }
-  let!(:referred_signup) { FactoryGirl.create(:referred_signup,
+  let!(:tutor) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id ) }
+  let!(:tutor_referral_code) { FactoryBot.create(:referral_code, user_id: tutor.id) }
+  let!(:referred_student) { FactoryBot.create(:student_user) }
+  let!(:subscription) { FactoryBot.create(:subscription, user_id: referred_student.id) }
+  let!(:referred_signup) { FactoryBot.create(:referred_signup,
                                               user_id: referred_student.id,
                                               subscription_id: subscription.id,
                                               referral_code_id: tutor_referral_code.id) }
@@ -183,9 +183,9 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
     describe "GET 'index'" do
       it 'should respond OK by default with referred signups that are not payed' do
-        referred_student_2 = FactoryGirl.create(:student_user)
-        subscription_2 = FactoryGirl.create(:subscription, user_id: referred_student_2.id)
-        referred_signup_2 = FactoryGirl.create(:referred_signup,
+        referred_student_2 = FactoryBot.create(:student_user)
+        subscription_2 = FactoryBot.create(:subscription, user_id: referred_student_2.id)
+        referred_signup_2 = FactoryBot.create(:referred_signup,
                                                user_id: referred_student_2.id,
                                                subscription_id: subscription_2.id,
                                                referral_code_id: tutor_referral_code.id,
@@ -273,9 +273,9 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
     describe "GET 'index'" do
       it 'should respond OK by default with referred signups that are not payed' do
-        referred_student_2 = FactoryGirl.create(:student_user)
-        subscription_2 = FactoryGirl.create(:subscription, user_id: referred_student_2.id)
-        referred_signup_2 = FactoryGirl.create(:referred_signup,
+        referred_student_2 = FactoryBot.create(:student_user)
+        subscription_2 = FactoryBot.create(:subscription, user_id: referred_student_2.id)
+        referred_signup_2 = FactoryBot.create(:referred_signup,
                                               user_id: referred_student_2.id,
                                               subscription_id: subscription_2.id,
                                               referral_code_id: tutor_referral_code.id,

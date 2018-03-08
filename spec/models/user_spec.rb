@@ -98,7 +98,7 @@ describe User do
 
   # validation
   context 'test uniqueness validation' do
-    subject { FactoryGirl.build(:student_user) }
+    subject { FactoryBot.build(:student_user) }
     it { should validate_uniqueness_of(:email).case_insensitive }
   end
 
@@ -124,8 +124,8 @@ describe User do
 
   context "user email validation" do
     before do
-      user_group = FactoryGirl.create(:student_user_group)
-      @user = FactoryGirl.create(:user, user_group_id: user_group.id)
+      user_group = FactoryBot.create(:student_user_group)
+      @user = FactoryBot.create(:user, user_group_id: user_group.id)
     end
 
     it "validates uniqueness of email" do

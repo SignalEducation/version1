@@ -28,9 +28,9 @@ describe CouponsController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for coupon_1
-  let!(:coupon_1) { FactoryGirl.create(:coupon) }
-  let!(:coupon_2) { FactoryGirl.create(:coupon) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:coupon) }
+  let!(:coupon_1) { FactoryBot.create(:coupon) }
+  let!(:coupon_2) { FactoryBot.create(:coupon) }
+  let!(:valid_params) { FactoryBot.attributes_for(:coupon) }
 
   context 'Not logged in: ' do
 

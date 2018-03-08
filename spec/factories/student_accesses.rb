@@ -17,7 +17,7 @@
 #  updated_at               :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :student_access do
     user_id 1
     trial_seconds_limit 1

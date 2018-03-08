@@ -13,7 +13,7 @@
 #  updated_at       :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :referred_signup do
     referral_code_id 1
     user_id 1

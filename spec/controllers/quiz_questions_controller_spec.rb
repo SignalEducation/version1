@@ -228,7 +228,7 @@ describe QuizQuestionsController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      let!(:quiz_attempt) { FactoryGirl.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
@@ -319,7 +319,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "DELETE 'destroy'" do
 
-      let!(:quiz_attempt) { FactoryGirl.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id
@@ -512,7 +512,7 @@ describe QuizQuestionsController, type: :controller do
 
     describe "DELETE 'destroy'" do
 
-      let!(:quiz_attempt) { FactoryGirl.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
 
       it 'should be ERROR as children exist' do
         delete :destroy, id: quiz_question_1.id

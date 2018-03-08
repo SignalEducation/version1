@@ -76,12 +76,12 @@ describe UsersController, type: :controller do
 
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
-  let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:upgrading_user) { FactoryGirl.create(:student_user) }
-  let!(:student_user_1) { FactoryGirl.create(:student_user) }
-  let!(:subscription_payment_card) { FactoryGirl.create(:subscription_payment_card, user_id: student_user_1.id) }
-  let!(:subscription_1) { x = FactoryGirl.create(:subscription,
+  let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
+  let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
+  let!(:upgrading_user) { FactoryBot.create(:student_user) }
+  let!(:student_user_1) { FactoryBot.create(:student_user) }
+  let!(:subscription_payment_card) { FactoryBot.create(:subscription_payment_card, user_id: student_user_1.id) }
+  let!(:subscription_1) { x = FactoryBot.create(:subscription,
                                                  user_id: student_user_1.id,
                                                  subscription_plan_id: subscription_plan_1.id,
                                                  active: true,
@@ -90,7 +90,7 @@ describe UsersController, type: :controller do
   student_user_1.stripe_customer_id = x.stripe_customer_id
   student_user_1.save
   x }
-  let!(:valid_params) { FactoryGirl.attributes_for(:student_user, user_group_id: student_user_group.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
 
   context 'Not logged in...' do

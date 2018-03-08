@@ -35,7 +35,7 @@ describe Group do
     end
   end
 
-  subject { FactoryGirl.build(:group) }
+  subject { FactoryBot.build(:group) }
 
   # Constants
 

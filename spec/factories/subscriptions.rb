@@ -19,7 +19,7 @@
 #  coupon_id            :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription do
     user_id               1
     subscription_plan_id  1

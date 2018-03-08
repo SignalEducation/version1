@@ -16,8 +16,8 @@ describe ReferralCodesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:tutor) { FactoryGirl.create(:tutor_user, user_group_id: tutor_user_group.id ) }
-  let!(:tutor_referral_code) { FactoryGirl.create(:referral_code, user_id: tutor.id) }
+  let!(:tutor) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id ) }
+  let!(:tutor_referral_code) { FactoryBot.create(:referral_code, user_id: tutor.id) }
 
   context 'Not logged in: ' do
 
@@ -154,7 +154,7 @@ describe ReferralCodesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        student_user = FactoryGirl.create(:student_user)
+        student_user = FactoryBot.create(:student_user)
         student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
                                             subscription_id: 1)
         delete :destroy, id: tutor_referral_code.id
@@ -185,7 +185,7 @@ describe ReferralCodesController, type: :controller do
     
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        student_user = FactoryGirl.create(:student_user)
+        student_user = FactoryBot.create(:student_user)
         student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
                                                        subscription_id: 1)
         delete :destroy, id: tutor_referral_code.id

@@ -16,7 +16,7 @@
 #  updated_at           :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :invoice_line_item do
     invoice_id 1
 amount "9.99"

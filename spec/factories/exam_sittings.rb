@@ -13,7 +13,7 @@
 #  computer_based    :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :exam_sitting do
     sequence(:name)           { |n| "Exam Sitting #{n}" }
     subject_course_id 1

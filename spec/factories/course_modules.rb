@@ -27,7 +27,7 @@
 #  discourse_topic_id        :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :course_module do
     association               :subject_course
     sequence(:name)           { |n| "Course Module #{n}" }

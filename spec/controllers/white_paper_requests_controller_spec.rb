@@ -19,9 +19,9 @@ describe WhitePaperRequestsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:white_paper_request_1) { FactoryGirl.create(:white_paper_request) }
-  let!(:white_paper_request_2) { FactoryGirl.create(:white_paper_request) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:white_paper_request) }
+  let!(:white_paper_request_1) { FactoryBot.create(:white_paper_request) }
+  let!(:white_paper_request_2) { FactoryBot.create(:white_paper_request) }
+  let!(:valid_params) { FactoryBot.attributes_for(:white_paper_request) }
 
   context 'Not logged in: ' do
 

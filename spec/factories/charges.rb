@@ -28,7 +28,7 @@
 #  original_event_data          :text
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :charge do
     subscription_id 1
     invoice_id 1

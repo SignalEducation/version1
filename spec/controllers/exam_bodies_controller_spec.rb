@@ -18,15 +18,15 @@ describe ExamBodiesController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:exam_body_1) { FactoryGirl.create(:exam_body) }
-  let!(:exam_body_2) { FactoryGirl.create(:exam_body) }
-  let!(:exam_sitting_1) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
-  let!(:exam_sitting_2) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
-  let!(:enrollment_1) {FactoryGirl.create(:enrollment, user_id: student_user.id,
+  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
+  let!(:exam_body_2) { FactoryBot.create(:exam_body) }
+  let!(:exam_sitting_1) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id)}
+  let!(:exam_sitting_2) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id)}
+  let!(:enrollment_1) {FactoryBot.create(:enrollment, user_id: student_user.id,
                                           exam_body_id: exam_body_1.id,
                                           subject_course_id: subject_course_1.id,
                                           exam_sitting_id: exam_sitting_1.id)}
-  let!(:valid_params) { FactoryGirl.attributes_for(:exam_body) }
+  let!(:valid_params) { FactoryBot.attributes_for(:exam_body) }
 
   context 'Not logged in: ' do
 

@@ -4,11 +4,11 @@ RSpec.describe '<%= table_name -%>/edit', type: :view do
   before(:each) do
     <%- attributes.map(&:name).each do |attr_name| -%>
     <%- if attr_name[-3..-1] == '_id' -%>
-    x = FactoryGirl.create(:<%= attr_name[0..-4] -%>)
+    x = FactoryBot.create(:<%= attr_name[0..-4] -%>)
     @<%= attr_name[0..-4].pluralize -%> = <%= attr_name[0..-4].camelcase -%>.all
     <%- end -%>
     <%- end -%>
-    @<%= singular_table_name -%> = FactoryGirl.create(:<%= singular_table_name %>)
+    @<%= singular_table_name -%> = FactoryBot.create(:<%= singular_table_name %>)
   end
 
   it 'renders new <%= singular_table_name -%> form' do

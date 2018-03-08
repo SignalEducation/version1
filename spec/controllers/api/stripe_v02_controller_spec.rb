@@ -11,22 +11,22 @@ describe Api::StripeV02Controller, type: :controller do
 
   let!(:start_stripe_mock) { StripeMock.start }
   let(:stripe_helper) { StripeMock.create_test_helper }
-  let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
-  let!(:subscription_plan_q) { FactoryGirl.create(:student_subscription_plan_q) }
+  let!(:subscription_plan_m) { FactoryBot.create(:student_subscription_plan_m) }
+  let!(:subscription_plan_q) { FactoryBot.create(:student_subscription_plan_q) }
 
-  let!(:student) { FactoryGirl.create(:student_user) }
-  let!(:student_2) { FactoryGirl.create(:student_user) }
-  let!(:reactivating_student) { FactoryGirl.create(:student_user) }
-  let!(:canceled_pending_student) { FactoryGirl.create(:student_user) }
+  let!(:student) { FactoryBot.create(:student_user) }
+  let!(:student_2) { FactoryBot.create(:student_user) }
+  let!(:reactivating_student) { FactoryBot.create(:student_user) }
+  let!(:canceled_pending_student) { FactoryBot.create(:student_user) }
   let!(:card_details_1) { {number: '4242424242424242', cvc: '123', exp_month: '12', exp_year: '2019'} }
   let!(:card_details_2) { {number: '4242424242424242', cvc: '123', exp_month: '11', exp_year: '2019'} }
   let!(:card_token_1)   { Stripe::Token.create(card: card_details_1) }
   let!(:card_token_2)   { Stripe::Token.create(card: card_details_2) }
 
-  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id, active: true) }
-  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: student_2.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id, active: true) }
-  let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: reactivating_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
-  let!(:subscription_4) { FactoryGirl.create(:subscription, user_id: canceled_pending_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'canceled-pending', active: true) }
+  let!(:subscription_1) { FactoryBot.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id, active: true) }
+  let!(:subscription_2) { FactoryBot.create(:subscription, user_id: student_2.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id, active: true) }
+  let!(:subscription_3) { FactoryBot.create(:subscription, user_id: reactivating_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
+  let!(:subscription_4) { FactoryBot.create(:subscription, user_id: canceled_pending_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'canceled-pending', active: true) }
 
   #Stripe Webhook objects
   let!(:invoice_created_event_1) {

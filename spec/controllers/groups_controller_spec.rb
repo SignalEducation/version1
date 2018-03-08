@@ -30,9 +30,9 @@ describe GroupsController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:group_1) { FactoryGirl.create(:group) }
-  let!(:group_2) { FactoryGirl.create(:group) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:group) }
+  let!(:group_1) { FactoryBot.create(:group) }
+  let!(:group_2) { FactoryBot.create(:group) }
+  let!(:valid_params) { FactoryBot.attributes_for(:group) }
 
   context 'Not logged in: ' do
 

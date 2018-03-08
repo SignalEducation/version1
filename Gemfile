@@ -87,7 +87,7 @@ group :development, :test do
   gem 'pry-stack_explorer'
   gem 'capybara' # Runs tests in a browser
   gem 'capybara-webkit'
-  gem 'factory_girl_rails' # FactoryGirl generates fake objects
+  gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'poltergeist'
   gem 'rspec-rails' # our core testing environment
   gem 'selenium-webdriver', '>=2.53.4'

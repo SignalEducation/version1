@@ -41,7 +41,7 @@ describe UserGroup do
     end
   end
 
-  subject { FactoryGirl.build(:user_group) }
+  subject { FactoryBot.build(:user_group) }
 
   # Constants
 

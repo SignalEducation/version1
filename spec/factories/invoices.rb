@@ -34,7 +34,7 @@
 #  original_stripe_data        :text
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :invoice do
     user_id 1
     subscription_transaction_id 1

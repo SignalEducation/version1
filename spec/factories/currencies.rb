@@ -13,7 +13,7 @@
 #  updated_at      :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :currency do
     sequence(:iso_code)       { |n| "CCY#{n}" }
     sequence(:name)           { |n| "Currency #{n}" }

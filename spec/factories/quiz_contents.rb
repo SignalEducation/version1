@@ -17,7 +17,7 @@
 #  destroyed_at       :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :quiz_content do
     text_content 'MyText'
     sorting_order 1

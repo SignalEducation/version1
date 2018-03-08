@@ -5,8 +5,8 @@ describe 'User changing their name', type: :feature do
 
   include_context 'users_and_groups_setup'
 
-  let!(:country_1) { try(:country) || FactoryGirl.create(:ireland)}
-  let!(:country_2) { FactoryGirl.create(:uk)}
+  let!(:country_1) { try(:country) || FactoryBot.create(:ireland)}
+  let!(:country_2) { FactoryBot.create(:uk)}
 
   before(:each) do
     a = admin_user

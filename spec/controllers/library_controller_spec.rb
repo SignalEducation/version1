@@ -11,8 +11,8 @@ RSpec.describe LibraryController, type: :controller do
   include_context 'system_setup'
 
 
-  let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
-  let!(:product_1) { FactoryGirl.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id) }
+  let!(:mock_exam_1) { FactoryBot.create(:mock_exam) }
+  let!(:product_1) { FactoryBot.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id) }
 
   context 'Not logged in: ' do
 

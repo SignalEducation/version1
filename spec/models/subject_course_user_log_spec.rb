@@ -55,7 +55,6 @@ describe SubjectCourseUserLog do
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:update_enrollment).after(:save) }
-  it { should callback(:check_for_completion).after(:save) }
 
   # scopes
   it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }

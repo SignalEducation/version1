@@ -15,7 +15,7 @@
 #  destroyed_at             :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :course_module_element_resource do
     course_module_element_id 1
     name 'MyString'

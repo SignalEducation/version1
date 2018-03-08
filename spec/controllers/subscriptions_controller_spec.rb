@@ -32,12 +32,12 @@ describe SubscriptionsController, type: :controller do
 
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
-  let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:student_user_2) { FactoryGirl.create(:student_user, country_id: Country.first.id) }
-  let!(:student_user_3) { FactoryGirl.create(:student_user, country_id: Country.first.id) }
-  let!(:subscription_payment_card) { FactoryGirl.create(:subscription_payment_card, user_id: student_user.id) }
-  let!(:subscription_1) { x = FactoryGirl.create(:subscription,
+  let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
+  let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
+  let!(:student_user_2) { FactoryBot.create(:student_user, country_id: Country.first.id) }
+  let!(:student_user_3) { FactoryBot.create(:student_user, country_id: Country.first.id) }
+  let!(:subscription_payment_card) { FactoryBot.create(:subscription_payment_card, user_id: student_user.id) }
+  let!(:subscription_1) { x = FactoryBot.create(:subscription,
                              user_id: student_user.id,
                              active: true,
                              subscription_plan_id: subscription_plan_1.id,
@@ -45,14 +45,14 @@ describe SubscriptionsController, type: :controller do
   student_user.stripe_customer_id = x.stripe_customer_id
   student_user.save
                              x }
-  let!(:subscription_2) { x = FactoryGirl.create(:subscription,
+  let!(:subscription_2) { x = FactoryBot.create(:subscription,
                              user_id: student_user_2.id,
                              subscription_plan_id: subscription_plan_1.id,
                              stripe_token: stripe_helper.generate_card_token)
   student_user_2.stripe_customer_id = x.stripe_customer_id
   student_user_2.save
                              x }
-  let!(:subscription_3) { x = FactoryGirl.create(:subscription,
+  let!(:subscription_3) { x = FactoryBot.create(:subscription,
                              user_id: student_user_3.id,
                              subscription_plan_id: subscription_plan_1.id,
                              stripe_token: stripe_helper.generate_card_token)}

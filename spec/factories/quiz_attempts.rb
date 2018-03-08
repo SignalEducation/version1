@@ -14,7 +14,7 @@
 #  answer_array                      :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :quiz_attempt do
     user_id 1
     quiz_question_id 1

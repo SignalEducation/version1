@@ -60,7 +60,7 @@
 #  unsubscribed_from_emails         :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     sequence(:email)      { |n| "horace.smyth-#{n}@example.com" }
     first_name            'John'

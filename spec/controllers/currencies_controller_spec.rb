@@ -20,9 +20,9 @@ describe CurrenciesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:currency_1) { FactoryGirl.create(:gbp) }
-  let!(:currency_2) { FactoryGirl.create(:usd) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:currency) }
+  let!(:currency_1) { FactoryBot.create(:gbp) }
+  let!(:currency_2) { FactoryBot.create(:usd) }
+  let!(:valid_params) { FactoryBot.attributes_for(:currency) }
 
   context 'Not logged in: ' do
 

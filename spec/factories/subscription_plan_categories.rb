@@ -12,7 +12,7 @@
 #  trial_period_in_days :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription_plan_category do
     sequence(:name)     { |n| "Subscription Plan Category #{n}" }
     available_from      { 1.week.ago }

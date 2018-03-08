@@ -11,7 +11,7 @@
 #  destroyed_at        :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :quiz_answer do
     quiz_question_id 1
     correct false

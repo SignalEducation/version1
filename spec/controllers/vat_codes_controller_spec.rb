@@ -18,10 +18,10 @@ describe VatCodesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:vat_code_1) { FactoryGirl.create(:vat_code) }
-  let!(:vat_rate) { FactoryGirl.create(:vat_rate, vat_code_id: vat_code_1.id) }
-  let!(:vat_code_2) { FactoryGirl.create(:vat_code) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:vat_code) }
+  let!(:vat_code_1) { FactoryBot.create(:vat_code) }
+  let!(:vat_rate) { FactoryBot.create(:vat_rate, vat_code_id: vat_code_1.id) }
+  let!(:vat_code_2) { FactoryBot.create(:vat_code) }
+  let!(:valid_params) { FactoryBot.attributes_for(:vat_code) }
 
   context 'Not logged in: ' do
 

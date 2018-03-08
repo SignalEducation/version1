@@ -19,7 +19,7 @@
 #  completed_at                    :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subject_course_user_log do
     user_id 1
     session_guid "MyString"

@@ -60,7 +60,6 @@ describe Enrollment do
   it { should callback(:create_expiration_worker).after(:create) }
   it { should callback(:deactivate_siblings).after(:create) }
   it { should callback(:create_expiration_worker).after(:update), if: :exam_date_changed? }
-  it { should callback(:study_streak_email).after(:update) }
 
   # scopes
   it { expect(Enrollment).to respond_to(:all_in_order) }

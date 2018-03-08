@@ -19,7 +19,7 @@
 #  percentage_complete        :integer          default(0)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :enrollment do
     user_id 1
     subject_course_id 1

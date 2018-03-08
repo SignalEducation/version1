@@ -28,11 +28,11 @@ RSpec.describe EnrollmentsController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
-  let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_1) { FactoryBot.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_2) { FactoryBot.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
 
-  let!(:enrollment_1) { FactoryGirl.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
-  let!(:enrollment_2) { FactoryGirl.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:enrollment_1) { FactoryBot.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:enrollment_2) { FactoryBot.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
 
   let!(:valid_params) { {enrollment: {subject_course_id: subject_course_1.id}, exam_date: exam_sitting_1.date, custom_exam_date: ''} }
   let!(:invalid_params) { {enrollment: {subject_course_id: nil}, exam_date: exam_sitting_1.date, custom_exam_date: ''} }

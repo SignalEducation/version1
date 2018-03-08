@@ -30,12 +30,12 @@ describe OrdersController, type: :controller do
   include_context 'course_content'
   include_context 'system_setup'
 
-  let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
-  let!(:product_1) { FactoryGirl.create(:product, currency_id: gbp.id, mock_exam_id: mock_exam_1.id, price: '99.9') }
-  let!(:product_2) { FactoryGirl.create(:product, currency_id: gbp.id) }
-  let!(:order_1) { FactoryGirl.create(:order, product_id: product_1.id) }
-  let!(:order_2) { FactoryGirl.create(:order) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:order) }
+  let!(:mock_exam_1) { FactoryBot.create(:mock_exam) }
+  let!(:product_1) { FactoryBot.create(:product, currency_id: gbp.id, mock_exam_id: mock_exam_1.id, price: '99.9') }
+  let!(:product_2) { FactoryBot.create(:product, currency_id: gbp.id) }
+  let!(:order_1) { FactoryBot.create(:order, product_id: product_1.id) }
+  let!(:order_2) { FactoryBot.create(:order) }
+  let!(:valid_params) { FactoryBot.attributes_for(:order) }
 
 
   context 'Not logged in: ' do

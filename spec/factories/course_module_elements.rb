@@ -21,7 +21,7 @@
 #  duration                  :float            default(0.0)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :course_module_element do
     sequence(:name)             { |n| "Course Module Element #{n}" }
     sequence(:name_url)         { |n| "course-module-element-#{n}" }

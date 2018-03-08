@@ -17,7 +17,7 @@
 #  subscription_payment_card_id :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription_transaction do
     user_id                       1
     subscription_id               1

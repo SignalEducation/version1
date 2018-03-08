@@ -20,7 +20,7 @@
 #  stripe_coupon_data :text
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :coupon do
     stripe_id "MyString"
 currency_id 1

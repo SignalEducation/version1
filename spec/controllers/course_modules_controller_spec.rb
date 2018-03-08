@@ -34,11 +34,11 @@ describe CourseModulesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:subject_course) {FactoryGirl.create(:active_subject_course) }
-  let!(:course_module_1) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
-  let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id) }
-  let!(:course_module_2) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:course_module, subject_course_id: subject_course.id) }
+  let!(:subject_course) {FactoryBot.create(:active_subject_course) }
+  let!(:course_module_1) { FactoryBot.create(:course_module, subject_course_id: subject_course.id) }
+  let!(:course_module_element) { FactoryBot.create(:course_module_element, course_module_id: course_module_1.id) }
+  let!(:course_module_2) { FactoryBot.create(:course_module, subject_course_id: subject_course.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:course_module, subject_course_id: subject_course.id) }
 
   context 'Not logged in: ' do
 

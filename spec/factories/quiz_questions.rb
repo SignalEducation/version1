@@ -14,7 +14,7 @@
 #  custom_styles                 :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :quiz_question do
     course_module_element_quiz_id 1
     course_module_element_id 1
