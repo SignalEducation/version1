@@ -82,6 +82,4 @@ shared_context 'course_content' do
                              quiz_answer_id: quiz_answer_4.id) }
 
 
-  let!(:home) { FactoryBot.create(:home_page, public_url: '/', home: true, group_id: course_group_1.id) }
-
 end

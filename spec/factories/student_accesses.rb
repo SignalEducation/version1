@@ -49,6 +49,11 @@ FactoryBot.define do
       content_access true
     end
 
+    factory :complimentary_student_access do
+      account_type 'Complimentary'
+      content_access true
+    end
+
   end
 
 end

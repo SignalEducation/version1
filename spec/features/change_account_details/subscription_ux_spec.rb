@@ -1,6 +1,6 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
-require 'support/subscription_plans_setup'
+
 require 'support/course_content'
 require 'support/system_setup'
 
@@ -8,7 +8,7 @@ describe 'Subscription UX:', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
-  include_context 'subscription_plans_setup'
+
   include_context 'system_setup'
 
   let(:stripe_helper) { StripeMock.create_test_helper }

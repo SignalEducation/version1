@@ -34,13 +34,11 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
-require 'support/subscription_plans_setup'
 require 'stripe_mock'
 
 RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
   include_context 'users_and_groups_setup'
-  include_context 'subscription_plans_setup'
   include_context 'system_setup'
 
   before { StripeMock.start }

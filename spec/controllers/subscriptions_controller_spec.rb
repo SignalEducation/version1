@@ -21,13 +21,12 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
-require 'support/subscription_plans_setup'
 require 'stripe_mock'
 
 describe SubscriptionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
-  include_context 'subscription_plans_setup'
+
   include_context 'system_setup'
 
   let(:stripe_helper) { StripeMock.create_test_helper }

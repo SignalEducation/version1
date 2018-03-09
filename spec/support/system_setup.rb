@@ -9,6 +9,9 @@ shared_context 'system_setup' do
   let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
                                                 group_id: group_1.id,
                                                 exam_body_id: exam_body_1.id) }
+  let!(:subject_course_2)  { FactoryBot.create(:active_subject_course,
+                                                group_id: group_1.id,
+                                                exam_body_id: exam_body_1.id) }
   let!(:preview_subject_course)  { FactoryBot.create(:preview_subject_course,
                                                       group_id: group_1.id,
                                                       exam_body_id: exam_body_1.id) }
@@ -36,17 +39,6 @@ shared_context 'system_setup' do
   let!(:uk_vat_code) { FactoryBot.create(:vat_code, country_id: uk.id) }
   let!(:ireland_vat_code) { FactoryBot.create(:vat_code, country_id: ireland.id) }
   let!(:usa_vat_code) { FactoryBot.create(:vat_code, country_id: usa.id) }
-
-
-  # user groups
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
-  let(:content_manager_user_group) { FactoryBot.create(:content_manager_user_group) }
-  let(:admin_user_group) { FactoryBot.create(:admin_user_group) }
-  let(:complimentary_user_group) { FactoryBot.create(:complimentary_user_group) }
-  let(:marketing_manager_user_group) { FactoryBot.create(:marketing_manager_user_group) }
-  let(:customer_support_user_group) { FactoryBot.create(:customer_support_user_group) }
-  let(:blocked_user_group) { FactoryBot.create(:blocked_user_group) }
 
 
 
