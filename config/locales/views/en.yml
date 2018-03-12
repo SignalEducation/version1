@@ -926,6 +926,7 @@ en:
         name_url_placeholder: Name URL
         active: Active
         preview: Preview Mode
+        computer_based: Computer Based
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100

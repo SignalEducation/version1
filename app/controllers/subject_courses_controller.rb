@@ -32,6 +32,7 @@
 #  background_image_file_size              :integer
 #  background_image_updated_at             :datetime
 #  preview                                 :boolean          default(FALSE)
+#  computer_based                          :boolean          default(FALSE)
 #
 
 class SubjectCoursesController < ApplicationController
@@ -192,7 +193,9 @@ class SubjectCoursesController < ApplicationController
                                            :email_content, :external_url,
                                            :external_url_name, :exam_body_id,
                                            :background_image, :survey_url,
-                                           :quiz_pass_rate, :group_id, :preview)
+                                           :quiz_pass_rate, :group_id, :preview,
+                                           :computer_based
+    )
   end
 
   def resource_allowed_params

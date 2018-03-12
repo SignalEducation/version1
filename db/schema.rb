@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180212125230) do
+ActiveRecord::Schema.define(version: 20180312114004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -746,6 +746,7 @@ ActiveRecord::Schema.define(version: 20180212125230) do
     t.integer  "background_image_file_size"
     t.datetime "background_image_updated_at"
     t.boolean  "preview",                                 default: false
+    t.boolean  "computer_based",                          default: false
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

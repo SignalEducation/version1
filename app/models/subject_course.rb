@@ -32,6 +32,7 @@
 #  background_image_file_size              :integer
 #  background_image_updated_at             :datetime
 #  preview                                 :boolean          default(FALSE)
+#  computer_based                          :boolean          default(FALSE)
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -47,7 +48,7 @@ class SubjectCourse < ActiveRecord::Base
                   :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url,
                   :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
-                  :background_image, :preview
+                  :background_image, :preview, :computer_based
 
   # Constants
 
@@ -92,6 +93,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :all_live, -> { where(active: true, preview: false).includes(:course_modules).where(course_modules: {active: true}) }
   scope :all_active, -> { where(active: true).includes(:course_modules).where(course_modules: {active: true}) }
   scope :all_preview, -> { where(preview: true) }
+  scope :all_computer_based, -> { where(computer_based: true) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
