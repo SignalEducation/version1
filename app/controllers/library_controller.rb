@@ -77,7 +77,7 @@ class LibraryController < ApplicationController
         end
       end
 
-    elsif @course.active && @course.preview
+    elsif @course && @course.active && @course.preview
       redirect_to library_preview_url(@course)
     else
       redirect_to library_url

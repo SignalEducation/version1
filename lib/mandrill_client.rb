@@ -87,21 +87,6 @@ class MandrillClient
     send_template('enrolment_welcome_170811', msg)
   end
 
-  def send_we_havent_seen_you_in_a_while_email(url, course_name, days)
-    msg = message_stub.merge({"subject" => "#{course_name} Study"})
-    msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
-    msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
-    msg["global_merge_vars"] << { "name" => "DAYS_SINCE_LAST_SEEN", "content" => days }
-    send_template('we_havent_seen_you_in_a_while_170811', msg)
-  end
-
-  def send_study_streak_email(url, course_name)
-    msg = message_stub.merge({"subject" => "#{course_name} Study"})
-    msg["global_merge_vars"] << { "name" => "COURSE_URL", "content" => url }
-    msg["global_merge_vars"] << { "name" => "COURSE_NAME", "content" => course_name }
-    send_template('study_streak_170811', msg)
-  end
-
 
 
   #Free Trial Emails

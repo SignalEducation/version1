@@ -34,7 +34,7 @@
         %br/
         =f.label :reason, t('views.refunds.form.reason'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.select :reason, Refund::REASONS, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+          =f.select :reason, Refund::REASONS, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', required: true}
         %br/
 
     .row

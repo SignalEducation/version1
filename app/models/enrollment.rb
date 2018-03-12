@@ -52,7 +52,6 @@ class Enrollment < ActiveRecord::Base
   before_destroy :check_dependencies
   after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event
   after_update :create_expiration_worker, if: :exam_date_changed?
-  after_update :study_streak_email
 
   # scopes
   scope :all_in_order, -> { order(:active, :created_at) }
@@ -167,7 +166,11 @@ class Enrollment < ActiveRecord::Base
       #For Old Enrollments without ExamSittingIds
       self.exam_date >= current_date ? (self.exam_date - current_date).to_i : 0
     else
-      self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
+      if self.exam_sitting && self.exam_sitting.date
+        self.exam_sitting.date >= current_date ? (self.exam_sitting.date - current_date).to_i : 0
+      else
+        0
+      end
     end
 
   end
@@ -228,24 +231,6 @@ class Enrollment < ActiveRecord::Base
 
   def create_intercom_event
     IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date)
-  end
-
-  def study_streak_email
-    if !self.expired && self.active && self.subject_course_user_log_id
-      yesterdays_log_ids = []
-      time_now = Proc.new{Time.now}.call
-      scul = self.subject_course_user_log
-
-      scul.course_module_element_user_logs.each do |log|
-        if log.updated_at > (time_now - 1.day)
-          yesterdays_log_ids << log.id
-        end
-      end
-
-      if yesterdays_log_ids.count >= 2 && scul.last_element && scul.last_element.next_element
-        EnrollmentEmailWorker.perform_at(24.hours, self.user.email, scul.id, time_now.to_i, 'send_study_streak_email') unless Rails.env.test?
-      end
-    end
   end
 
 end

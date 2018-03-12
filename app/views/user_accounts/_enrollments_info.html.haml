@@ -21,7 +21,8 @@
               -if enrollment.subject_course
                 =enrollment.subject_course.name
             %td
-              =exam_sitting_date(enrollment.enrollment_date)
+              -if enrollment.exam_sitting_id && enrollment.exam_sitting.date
+                =exam_sitting_date(enrollment.enrollment_date)
             %td
               =tick_or_cross(enrollment.notifications)
             %td
