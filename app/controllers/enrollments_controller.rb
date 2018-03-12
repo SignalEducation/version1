@@ -22,7 +22,6 @@
 class EnrollmentsController < ApplicationController
 
   before_action :logged_in_required
-
   before_action :get_variables
 
   def create
@@ -33,7 +32,7 @@ class EnrollmentsController < ApplicationController
 
       @enrollment.user_id = current_user.id
       @enrollment.exam_body_id = @course.exam_body.id
-      @enrollment.computer_based_exam = true if @enrollment.exam_date
+      @enrollment.computer_based_exam = true if @enrollment.exam_date && @course.computer_based
       @enrollment.active = true
 
       #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
