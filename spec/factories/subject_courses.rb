@@ -32,6 +32,7 @@
 #  background_image_file_size              :integer
 #  background_image_updated_at             :datetime
 #  preview                                 :boolean          default(FALSE)
+#  computer_based                          :boolean          default(FALSE)
 #
 
 FactoryBot.define do
