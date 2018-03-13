@@ -123,10 +123,6 @@ class UsersController < ApplicationController
   end
 
   def update
-
-    #TODO Review this. Is it needed?
-    #@user.student_access.recalculate_access_from_limits
-
     if @user.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
       redirect_to users_url
@@ -166,7 +162,6 @@ class UsersController < ApplicationController
     end
   end
 
-
   def user_personal_details
   end
 
@@ -205,8 +200,6 @@ class UsersController < ApplicationController
     flash[:success] = I18n.t('controllers.users.update_subjects.flash.success')
     redirect_to users_url
   end
-
-
 
   protected
 

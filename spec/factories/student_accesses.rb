@@ -34,11 +34,11 @@ FactoryBot.define do
       content_seconds_consumed 0
       account_type 'Trial'
 
-      factory :valid_trial_student_access do
+      factory :valid_free_trial_student_access do
         content_access true
       end
 
-      factory :expired_trial_student_access do
+      factory :invalid_free_trial_student_access do
         content_access false
       end
 

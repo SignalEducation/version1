@@ -24,7 +24,7 @@ require 'rails_helper'
 describe Enrollment do
 
   # attr-accessible
-  black_list = %w(id created_at paused)
+  black_list = %w(id created_at paused notifications)
   Enrollment.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

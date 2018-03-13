@@ -62,14 +62,35 @@
 
 FactoryBot.define do
   factory :user do
-    sequence(:email)      { |n| "horace.smyth-#{n}@example.com" }
+    sequence(:email)      { |n| "john.smith-#{n}@example.com" }
     first_name            'John'
     last_name             'Smith'
     country_id            { Country.first.try(:id) || 1 }
-    password              'letSomeone1n'
-    password_confirmation 'letSomeone1n'
+    password              '123123123'
+    password_confirmation '123123123'
     active                                    true
+    terms_and_conditions                      true
     locale                                    'en'
+
+    factory :free_trial_student do
+      sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
+      email_verified                  true
+      email_verification_code         nil
+      email_verified_at               Time.now
+
+      factory :valid_free_trial_student do
+        sequence(:email)                  { |n| "valid.trial.student-#{n}@example.com" }
+        free_trial                        true
+      end
+      factory :invalid_free_trial_student do
+        sequence(:email)                  { |n| "invalid.trial.student-#{n}@example.com" }
+        free_trial                        false
+      end
+    end
+
 
     factory :student_user do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
