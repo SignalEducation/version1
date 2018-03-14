@@ -63,14 +63,11 @@
 require 'rails_helper'
 require 'support/system_setup'
 require 'support/users_and_groups_setup'
-require 'stripe_mock'
 
 describe UsersController, type: :controller do
 
   include_context 'system_setup'
   include_context 'users_and_groups_setup'
-
-  #TODO Must Add Stripe Subscriptions for Valid and Invalid Sub Students
 
   trial_limits_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
   trial_limits_days = ENV['FREE_TRIAL_DAYS'].to_i
@@ -321,6 +318,244 @@ describe UsersController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should redirect to root' do
+        get :show, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should redirect to root' do
+        get :edit, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to root' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params' do
+        put :update, id: student_user.id, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: student_user.id, user: {email: 'a'}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'preview_csv_upload'" do
+      it 'should redirect to root' do
+        post :preview_csv_upload, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'import_csv_upload'" do
+      it 'should redirect to root' do
+        post :import_csv_upload, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_personal_details'" do
+      it 'should redirect to root' do
+        get :user_personal_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_subscription_status'" do
+      it 'should redirect to root' do
+        get :user_subscription_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_enrollments_details'" do
+      it 'should redirect to root' do
+        get :user_enrollments_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_purchases_details'" do
+      it 'should redirect to root' do
+        get :user_purchases_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_courses_status'" do
+      it 'should redirect to root' do
+        get :user_courses_status, user_id: tutor_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'update_courses'" do
+      it 'should redirect to root' do
+        patch :update_courses, user_id: tutor_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription student_user' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should redirect to root' do
+        get :show, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should redirect to root' do
+        get :edit, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to root' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params' do
+        put :update, id: student_user.id, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: student_user.id, user: {email: 'a'}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'preview_csv_upload'" do
+      it 'should redirect to root' do
+        post :preview_csv_upload, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'import_csv_upload'" do
+      it 'should redirect to root' do
+        post :import_csv_upload, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_personal_details'" do
+      it 'should redirect to root' do
+        get :user_personal_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_subscription_status'" do
+      it 'should redirect to root' do
+        get :user_subscription_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_enrollments_details'" do
+      it 'should redirect to root' do
+        get :user_enrollments_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_purchases_details'" do
+      it 'should redirect to root' do
+        get :user_purchases_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_courses_status'" do
+      it 'should redirect to root' do
+        get :user_courses_status, user_id: tutor_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'update_courses'" do
+      it 'should redirect to root' do
+        patch :update_courses, user_id: tutor_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription student_user' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do

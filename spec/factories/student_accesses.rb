@@ -47,6 +47,16 @@ FactoryBot.define do
     factory :subscription_student_access do
       account_type 'Subscription'
       content_access true
+
+      factory :valid_subscription_student_access do
+        content_access true
+      end
+
+      factory :invalid_subscription_student_access do
+        content_access false
+      end
+
+
     end
 
     factory :complimentary_student_access do

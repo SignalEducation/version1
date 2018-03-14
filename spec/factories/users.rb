@@ -91,6 +91,25 @@ FactoryBot.define do
       end
     end
 
+    factory :subscription_student do
+      sequence(:email)                  { |n| "subscription.student-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
+      email_verified                  true
+      email_verification_code         nil
+      email_verified_at               Time.now
+
+      factory :valid_subscription_student do
+        sequence(:email)                  { |n| "valid.subscription.student-#{n}@example.com" }
+        free_trial                        false
+      end
+      factory :invalid_subscription_student do
+        sequence(:email)                  { |n| "invalid.subscription.student-#{n}@example.com" }
+        free_trial                        false
+      end
+    end
+
 
     factory :student_user do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }

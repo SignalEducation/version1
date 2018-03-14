@@ -29,6 +29,48 @@ FactoryBot.define do
     current_status        'active'
     livemode              false
     terms_and_conditions              true
+
+
+    factory :valid_subscription do
+      current_status        'active'
+      active                true
+    end
+
+    factory :invalid_subscription do
+      current_status        'canceled'
+      active                true
+    end
+
+    factory :active_subscription do
+      current_status        'active'
+      active                true
+    end
+
+    factory :past_due_subscription do
+      current_status        'past_due'
+      active                true
+
+    end
+
+    factory :canceled_pending_subscription do
+      current_status        'canceled-pending'
+      active                true
+
+    end
+
+    factory :canceled_subscription do
+      current_status        'canceled'
+      active                true
+
+    end
+
+    factory :unpaid_subscription do
+      current_status        'unpaid'
+      active                true
+
+    end
+
+
   end
 
 end

@@ -34,6 +34,23 @@ shared_context 'users_and_groups_setup' do
 
 
   ## Sub Student Users
+  let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student,
+                                                 user_group_id: student_user_group.id) }
+
+  let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
+                                                stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
+
+  let!(:valid_subscription_student_access) { FactoryBot.create(:valid_subscription_student_access,
+                                                        user_id: valid_subscription_student.id,
+                                                        subscription_id: valid_subscription.id) }
+
+  let!(:invalid_subscription_student) { FactoryBot.create(:invalid_subscription_student,
+                                                   user_group_id: student_user_group.id) }
+  let!(:invalid_subscription) { FactoryBot.create(:valid_subscription, user_id: invalid_subscription_student.id,
+                                                stripe_customer_id: invalid_subscription_student.stripe_customer_id ) }
+  let!(:invalid_subscription_student_access) { FactoryBot.create(:invalid_subscription_student_access,
+                                                          user_id: invalid_subscription_student.id,
+                                                          subscription_id: invalid_subscription.id) }
 
 
 
@@ -60,7 +77,10 @@ shared_context 'users_and_groups_setup' do
   let(:admin_user) { FactoryBot.create(:admin_user, user_group_id: admin_user_group.id) }
   let!(:admin_student_access) { FactoryBot.create(:complimentary_student_access, user_id: admin_user.id) }
 
-  let(:user_list) {[valid_trial_student, invalid_trial_student, admin_user, tutor_user, content_manager_user, comp_user,
-                    customer_support_manager_user, marketing_manager_user] }
+
+
+  let(:user_list) {[valid_trial_student, invalid_trial_student, valid_subscription_student,
+                    invalid_subscription_student, admin_user, tutor_user, content_manager_user,
+                    comp_user, customer_support_manager_user, marketing_manager_user] }
 
 end
