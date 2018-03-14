@@ -50,7 +50,7 @@ class Country < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.subscription_payment_cards.empty? && self.users.empty? && self.vat_codes.empty?
+    false
   end
 
   protected

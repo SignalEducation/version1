@@ -55,13 +55,6 @@ describe CouponsController, type: :controller do
       end
     end
 
-    describe "GET 'edit/1'" do
-      it 'should redirect to sign_in' do
-        get :edit, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
     describe "POST 'create'" do
       it 'should redirect to sign_in' do
         post :create, user: valid_params
@@ -69,15 +62,14 @@ describe CouponsController, type: :controller do
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
-        put :update, id: 1, user: valid_params
+        delete :destroy, id: 1
         expect_bounce_as_not_signed_in
       end
     end
 
-
-    describe "DELETE 'destroy'" do
+    describe "POST JSON to 'validate_coupon'" do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
         expect_bounce_as_not_signed_in
