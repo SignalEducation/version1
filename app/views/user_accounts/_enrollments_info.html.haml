@@ -23,7 +23,7 @@
                 -if enrollment.computer_based_exam && enrollment.subject_course.computer_based
                   =exam_sitting_date(enrollment.exam_date)
                 -else
-                  =exam_sitting_date(enrollment.exam_sitting.date)
+                  =exam_sitting_date(enrollment.exam_sitting.date) if enrollment.exam_sitting.date
             %td
               =enrollment.status
             %td
