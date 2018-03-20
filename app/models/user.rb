@@ -908,7 +908,7 @@ class User < ActiveRecord::Base
 
   def create_on_intercom
     if self.date_of_birth_changed? || self.email_changed? || self.student_number_changed?
-      IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
+      IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
     end
   end
 
