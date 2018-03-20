@@ -22,7 +22,6 @@
 class EnrollmentsController < ApplicationController
 
   before_action :logged_in_required
-
   before_action :get_variables
 
   def create
@@ -33,7 +32,7 @@ class EnrollmentsController < ApplicationController
 
       @enrollment.user_id = current_user.id
       @enrollment.exam_body_id = @course.exam_body.id
-      @enrollment.computer_based_exam = true if @enrollment.exam_date
+      @enrollment.computer_based_exam = true if @enrollment.exam_date && @course.computer_based
       @enrollment.active = true
 
       #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
@@ -57,9 +56,10 @@ class EnrollmentsController < ApplicationController
     @enrollment = Enrollment.find(params[:id])
     @subject_course = @enrollment.subject_course
     @exam_body = @subject_course.exam_body if @subject_course
-    standard_exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: @subject_course.id, exam_body_id: @exam_body.id).all_in_order
-    computer_based_exam_sittings = ExamSitting.where(active: true, computer_based: true, exam_body_id: @exam_body.id).all_in_order
-    @exam_sittings = standard_exam_sittings + computer_based_exam_sittings
+
+    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: @subject_course.id, exam_body_id: @subject_course.exam_body_id).all_in_order
+
+
   end
 
   def update
@@ -103,7 +103,7 @@ class EnrollmentsController < ApplicationController
 
   def allowed_params
     params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id,
-                                       :exam_sitting_id, :notifications, :percentage_complete)
+                                       :exam_sitting_id, :percentage_complete)
   end
 
   def get_variables

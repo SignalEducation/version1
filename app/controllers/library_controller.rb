@@ -115,11 +115,9 @@ class LibraryController < ApplicationController
   def get_enrollment_form_variables(course_id, exam_body_id)
     subject_course = SubjectCourse.find(course_id)
 
-    standard_exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: course_id, exam_body_id: subject_course.exam_body_id).all_in_order
+    @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true, exam_body_id: subject_course.exam_body_id).all_in_order.first #Should only be one
 
-    computer_based_exam_sittings = ExamSitting.where(active: true, computer_based: true, exam_body_id: subject_course.exam_body_id).all_in_order
-
-    @exam_sittings = standard_exam_sittings + computer_based_exam_sittings
+    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: course_id, exam_body_id: subject_course.exam_body_id).all_in_order
 
     @new_enrollment = Enrollment.new(subject_course_id: course_id, exam_body_id: exam_body_id)
   end
