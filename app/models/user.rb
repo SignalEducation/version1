@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_update :update_stripe_customer
+  after_update :update_stripe_customer, :create_on_intercom
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -905,6 +905,12 @@ class User < ActiveRecord::Base
 
 
   protected
+
+  def create_on_intercom
+    if self.date_of_birth_changed? || self.email_changed? || self.student_number_changed?
+      IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
+    end
+  end
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
