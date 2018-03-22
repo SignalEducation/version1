@@ -6,6 +6,7 @@ shared_context 'system_setup' do
   # Top-level Course Content
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group) }
+  let!(:group_2) { FactoryBot.create(:group) }
   let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
                                                 group_id: group_1.id,
                                                 exam_body_id: exam_body_1.id) }
