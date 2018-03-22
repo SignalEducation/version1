@@ -29,6 +29,10 @@ Rails.application.routes.draw do
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
+    get 'new_subscription_africa', to: 'subscription_sign_ups#new', as: :new_subscription_sign_up
+    post 'create_subscription_sign_up', to: 'subscription_sign_ups#create', as: :create_subscription_sign_up
+    get 'new_subscription_sign_up_complete', to: 'subscription_sign_ups#show', as: :new_subscription_sign_up_complete
+
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
