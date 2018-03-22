@@ -86,7 +86,7 @@ describe CountriesController, type: :controller do
 
   end
 
-  context 'Logged in as a valid_trial student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
@@ -144,7 +144,7 @@ describe CountriesController, type: :controller do
 
   end
 
-  context 'Logged in as a invalid_trial student_user: ' do
+  context 'Logged in as a invalid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
@@ -202,7 +202,7 @@ describe CountriesController, type: :controller do
 
   end
 
-  context 'Logged in as a valid_subscription student_user: ' do
+  context 'Logged in as a valid_subscription_student: ' do
 
     before(:each) do
       activate_authlogic
@@ -260,7 +260,7 @@ describe CountriesController, type: :controller do
 
   end
 
-  context 'Logged in as a invalid_subscription student_user: ' do
+  context 'Logged in as a invalid_subscription_student: ' do
 
     before(:each) do
       activate_authlogic
