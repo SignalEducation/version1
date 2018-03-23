@@ -48,12 +48,17 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   ## Checks for num. of Questions created is more than the num. to be asked ##
 
   def enough_questions?
-    if self.question_selection_strategy == 'random'
-      lowest_number_of_questions = self.quiz_questions.count
-    else
-      lowest_number_of_questions = 1
-    end
-    lowest_number_of_questions >= self.number_of_questions
+    #if self.question_selection_strategy == 'random'
+    #  lowest_number_of_questions = self.quiz_questions.count
+    #else
+    #  lowest_number_of_questions = 1
+    #end
+    #lowest_number_of_questions >= self.number_of_questions
+    #
+    # Can't recall why I needed it different for ordered, ordered was always
+    # failing because it was asking if 1 was greater then the number asked ???
+    #
+    self.quiz_questions.count >= self.number_of_questions
   end
 
   #######################################################################
