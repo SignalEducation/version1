@@ -15,7 +15,9 @@ class Api::StripeV02Controller < Api::BaseController
         Rails.logger.error "INFO: Api/StripeV02#Create: Record already exists with that guid/id: event-id: #{event_json['id']}"
       else
 
-        StripeApiProcessorWorker.perform_at(2.minutes, event_json["id"],
+        processing_delay = StripeApiEvent::DELAYED_TYPES.include?(event_json["type"]) ? 3.minutes : 1.minutes
+
+        StripeApiProcessorWorker.perform_at(processing_delay, event_json["id"],
                                             event_json["api_version"],
                                             account_url)
 

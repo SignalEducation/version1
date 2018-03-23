@@ -1,6 +1,7 @@
 class SubscriptionSignUpsController < ApplicationController
 
-  before_action :check_logged_in_status
+  before_action :check_logged_in_status, except: [:show]
+  before_action :logged_in_required, only: [:show]
 
 
   def new
@@ -29,13 +30,20 @@ class SubscriptionSignUpsController < ApplicationController
     @user.email_verified_at = time_now
     @user.email_verified = true
 
+
     subscription = @user.subscriptions.first
-    coupon_code = params[:hidden_coupon_code]
     stripe_token = subscription.stripe_token
     subscription_plan_stripe_guid = subscription.subscription_plan.stripe_guid
 
     unless stripe_token && subscription_plan_stripe_guid
       flash[:error] = 'Sorry! The data entered is not valid. Please contact us for assistance.'
+      redirect_to request.referrer and return
+    end
+
+    coupon_code = params[:hidden_coupon_code] if params[:hidden_coupon_code].present?
+    @coupon = Coupon.get_and_verify(coupon_code, subscription.subscription_plan_id) if coupon_code
+    if coupon_code && !@coupon
+      flash[:error] = 'Sorry! That is not a valid coupon code.'
       redirect_to request.referrer and return
     end
 
@@ -46,12 +54,13 @@ class SubscriptionSignUpsController < ApplicationController
           customer: stripe_customer.id,
           plan: subscription_plan_stripe_guid,
           source: stripe_token,
-          #coupon: @coupon.try(:code),
+          coupon: @coupon.try(:code),
           trial_end: 'now'
       )
 
       @user.stripe_customer_id = stripe_customer.id
-
+      #Reload the stripe_customer to get new Subscription details
+      stripe_customer = Stripe::Customer.retrieve(@user.stripe_customer_id)
 
       subscription.assign_attributes(
           complimentary: false,
@@ -61,24 +70,21 @@ class SubscriptionSignUpsController < ApplicationController
           stripe_guid: stripe_subscription.id,
           next_renewal_date: Time.at(stripe_subscription.current_period_end),
           stripe_customer_id: stripe_customer.id,
-          #coupon_id: @coupon.try(:id),
+          coupon_id: @coupon.try(:id),
           stripe_customer_data: stripe_customer.to_hash.deep_dup
       )
 
       @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Subscription', trial_started_date: time_now, trial_ended_date: time_now, content_access: true)
 
       if @user.save
-
         @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
-        @user.student_access.update_attribute(:subscription_id, @user.subscriptions.first.id)
-        UserSession.create(@user)
+        @user.student_access.update_attribute(:subscription_id, subscription.id)
+        @user_session = UserSession.create!(@user)
         set_current_visit
         redirect_to new_subscription_sign_up_complete_url
       else
         render action: :new
       end
-
-
 
 
     rescue Stripe::CardError => e
@@ -96,12 +102,11 @@ class SubscriptionSignUpsController < ApplicationController
       redirect_to request.referrer
     end
 
-
   end
 
   def show
     #This is the post sign-up landing page
-
+    @subscription = current_user.current_subscription
   end
 
 

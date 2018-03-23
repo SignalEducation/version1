@@ -28,6 +28,7 @@ class StripeApiEvent < ActiveRecord::Base
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
   KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded)
+  DELAYED_TYPES = %w(invoice.payment_succeeded invoice.payment_failed charge.failed charge.succeeded)
 
   # relationships
   has_many :charges
