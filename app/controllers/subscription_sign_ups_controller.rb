@@ -65,6 +65,7 @@ class SubscriptionSignUpsController < ApplicationController
       subscription.assign_attributes(
           complimentary: false,
           active: true,
+          terms_and_conditions: @user.terms_and_conditions,
           livemode: stripe_subscription[:plan][:livemode],
           current_status: stripe_subscription.status,
           stripe_guid: stripe_subscription.id,
