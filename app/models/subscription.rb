@@ -47,7 +47,8 @@ class Subscription < ActiveRecord::Base
   has_one :referred_signup
 
   # validation
-  validates :user_id, presence: true
+  validates :user_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :subscription_plan_id, presence: true
   validates :next_renewal_date, presence: true
   validates :current_status, inclusion: {in: STATUSES}

@@ -44,7 +44,7 @@
 
 
 
-      =f.fields_for :subscription do |subscription|
+      =f.fields_for :subscriptions do |subscription|
         =subscription.hidden_field :subscription_plan_id
         =subscription.hidden_field :stripe_token
         =hidden_field_tag :hidden_coupon_code
@@ -130,10 +130,10 @@
   function choosePlan(theThing) {
     $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
-    $('#user_subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
+    $('#user_subscriptions_attributes_0_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
     $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
     //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
-    plan_id = $('#user_subscription_subscription_plan_id').val();
+    plan_id = $('#user_subscriptions_attributes_0_subscription_plan_id').val();
 
     // Need to trigger Ajax call here if the coupon field already has a value
     if ($('#coupon_code').val()) {

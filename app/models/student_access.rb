@@ -79,7 +79,7 @@ class StudentAccess < ActiveRecord::Base
           elsif time_now <= new_trial_ending || self.content_seconds_consumed <= self.trial_seconds_limit
             self.update_columns(trial_ended_date: nil, content_access: true, trial_ending_at_date: new_trial_ending)
           end
-        elsif self.subscription_access?
+        elsif self.subscription_access? && self.subscription_id
           if self.subscription.active
             if %w(unpaid suspended canceled).include?(self.subscription.current_status)
               self.update_column(:content_access, false)
