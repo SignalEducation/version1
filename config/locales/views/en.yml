@@ -1154,16 +1154,17 @@ en:
     users:
       form:
         email: Email
+        email_confirmation: Email Confirmation
         your_email: Your email address
         email_placeholder: user@example.com
         phone_number: Phone Number
         interest: Topic
         topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
-        first_name: First name
+        first_name: First Name
         your_first_name: Your first name
         first_name_placeholder: John
-        last_name: Last name
+        last_name: Last Name
         your_last_name: Your last name
         username: Community Username
         username_placeholder: Username for LearnSignal Community Forum
@@ -1176,8 +1177,8 @@ en:
         password_placeholder: Password
         new_password: New Password
         new_password_placeholder: New Password
-        password_confirmation: Password confirmation
-        password_confirmation_placeholder: Password confirmation
+        password_confirmation: Password Confirmation
+        password_confirmation_placeholder: Password Confirmation
         address: Address
         address_placeholder: Billing address
         name_url: Name URL

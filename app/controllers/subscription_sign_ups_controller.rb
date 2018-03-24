@@ -47,60 +47,63 @@ class SubscriptionSignUpsController < ApplicationController
       redirect_to request.referrer and return
     end
 
+    if @user.valid?
+      begin
+        stripe_customer = Stripe::Customer.create(email: @user.email)
+        stripe_subscription = Stripe::Subscription.create(
+            customer: stripe_customer.id,
+            plan: subscription_plan_stripe_guid,
+            source: stripe_token,
+            coupon: @coupon.try(:code),
+            trial_end: 'now'
+        )
 
-    begin
-      stripe_customer = Stripe::Customer.create(email: @user.email)
-      stripe_subscription = Stripe::Subscription.create(
-          customer: stripe_customer.id,
-          plan: subscription_plan_stripe_guid,
-          source: stripe_token,
-          coupon: @coupon.try(:code),
-          trial_end: 'now'
-      )
+        @user.stripe_customer_id = stripe_customer.id
+        #Reload the stripe_customer to get new Subscription details
+        stripe_customer = Stripe::Customer.retrieve(@user.stripe_customer_id)
 
-      @user.stripe_customer_id = stripe_customer.id
-      #Reload the stripe_customer to get new Subscription details
-      stripe_customer = Stripe::Customer.retrieve(@user.stripe_customer_id)
+        subscription.assign_attributes(
+            complimentary: false,
+            active: true,
+            terms_and_conditions: @user.terms_and_conditions,
+            livemode: stripe_subscription[:plan][:livemode],
+            current_status: stripe_subscription.status,
+            stripe_guid: stripe_subscription.id,
+            next_renewal_date: Time.at(stripe_subscription.current_period_end),
+            stripe_customer_id: stripe_customer.id,
+            coupon_id: @coupon.try(:id),
+            stripe_customer_data: stripe_customer.to_hash.deep_dup
+        )
 
-      subscription.assign_attributes(
-          complimentary: false,
-          active: true,
-          terms_and_conditions: @user.terms_and_conditions,
-          livemode: stripe_subscription[:plan][:livemode],
-          current_status: stripe_subscription.status,
-          stripe_guid: stripe_subscription.id,
-          next_renewal_date: Time.at(stripe_subscription.current_period_end),
-          stripe_customer_id: stripe_customer.id,
-          coupon_id: @coupon.try(:id),
-          stripe_customer_data: stripe_customer.to_hash.deep_dup
-      )
+        @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Subscription', trial_started_date: time_now, trial_ended_date: time_now, content_access: true)
 
-      @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Subscription', trial_started_date: time_now, trial_ended_date: time_now, content_access: true)
+        if @user.save
+          @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
+          @user.student_access.update_attribute(:subscription_id, subscription.id)
+          @user_session = UserSession.create!(@user)
+          set_current_visit
+          redirect_to new_subscription_sign_up_complete_url
+        else
+          render action: :new
+        end
 
-      if @user.save
-        @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
-        @user.student_access.update_attribute(:subscription_id, subscription.id)
-        @user_session = UserSession.create!(@user)
-        set_current_visit
-        redirect_to new_subscription_sign_up_complete_url
-      else
+
+      rescue Stripe::CardError => e
+        body = e.json_body
+        err  = body[:error]
+
+        Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
+
+        flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
+        render action: :new
+
+      rescue => e
+        Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
+        flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
         render action: :new
       end
-
-
-    rescue Stripe::CardError => e
-      body = e.json_body
-      err  = body[:error]
-
-      Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-
-      flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
-      redirect_to request.referrer
-
-    rescue => e
-      Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
-      flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
-      redirect_to request.referrer
+    else
+      render action: :new
     end
 
   end
