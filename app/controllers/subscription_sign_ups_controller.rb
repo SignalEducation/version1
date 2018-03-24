@@ -15,6 +15,10 @@ class SubscriptionSignUpsController < ApplicationController
 
 
   def create
+    #NOTE: If form submission fails because the card details are rejected by stripe,
+    # a customer object will still have been created on stripe, empty with a failed
+    # charge event. 
+
     time_now = Proc.new{Time.now}.call
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -75,7 +79,9 @@ class SubscriptionSignUpsController < ApplicationController
             stripe_customer_data: stripe_customer.to_hash.deep_dup
         )
 
-        @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Subscription', trial_started_date: time_now, trial_ended_date: time_now, content_access: true)
+        @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                                   trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Subscription',
+                                   trial_started_date: time_now, trial_ended_date: time_now, content_access: true)
 
         if @user.save
           @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
