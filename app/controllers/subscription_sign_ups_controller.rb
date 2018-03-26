@@ -17,7 +17,7 @@ class SubscriptionSignUpsController < ApplicationController
   def create
     #NOTE: If form submission fails because the card details are rejected by stripe,
     # a customer object will still have been created on stripe, empty with a failed
-    # charge event. 
+    # charge event.
 
     time_now = Proc.new{Time.now}.call
     ip_country = IpAddress.get_country(request.remote_ip)
