@@ -44,6 +44,11 @@ class SubscriptionSignUpsController < ApplicationController
       redirect_to request.referrer and return
     end
 
+    unless params[:user][:email] == params[:email_confirmation].first
+      flash[:error] = "Sorry! Email and Email Confirmation don't match."
+      render action: :new and return
+    end
+
     coupon_code = params[:hidden_coupon_code] if params[:hidden_coupon_code].present?
     @coupon = Coupon.get_and_verify(coupon_code, subscription.subscription_plan_id) if coupon_code
     if coupon_code && !@coupon
