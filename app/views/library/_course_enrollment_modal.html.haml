@@ -33,16 +33,16 @@
 
 
 
-            -if @active_enrollment && @active_enrollment.expired
-              %br/
-              .col-sm-12
-                .col-sm-10
-                  .l-margin-top-big
-                    %label.check
-                      %input{type: "checkbox", id: 'use_old_log'}
-                        %span
-                          %i.fa.fa-check
-                        ='Keep progress from previous Enrolment'
+          -if @active_enrollment && @active_enrollment.expired
+            %br/
+            .col-sm-12
+              .col-sm-10
+                .l-margin-top-big
+                  %label.check
+                    %input{type: "checkbox", id: 'use_old_log'}
+                      %span
+                        %i.fa.fa-check
+                      ='Keep progress from previous Enrolment'
 
           .col-sm-12.l-margin-top
             %p.p
