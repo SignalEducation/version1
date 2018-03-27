@@ -5,10 +5,11 @@ class SubscriptionSignUpsController < ApplicationController
 
 
   def new
+    @africa_subscription_plan = SubscriptionPlan.includes(:currency).where(name: 'Africa Quarterly Plan').first
+    redirect_to root_url unless @africa_subscription_plan
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country.currency_id
-    @africa_subscription_plan = SubscriptionPlan.includes(:currency).where(name: 'Africa Quarterly Plan').first
     @user = User.new(country_id: @country.id)
     @user.subscriptions.build
   end
