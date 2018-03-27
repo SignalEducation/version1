@@ -22,7 +22,7 @@
           %i.fa.fa-angle-down
       .bottom-arrow
 
-    #sign_up
+    #sign_up{style: 'max-width: 1200px;'}
       =form_for @user, url: create_subscription_sign_up_url, html: { id: 'upgrade-form', role: 'form'} do |f|
         =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
         =f.hidden_field :locale, value: (params[:locale] || 'en')
