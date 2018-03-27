@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :referral_code do
     sequence(:code) { |n| "rc#{n}" }
     user_id { User.first.try(:id) || 1 }

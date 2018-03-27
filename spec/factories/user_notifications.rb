@@ -18,7 +18,7 @@
 #  updated_at     :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user_notification do
     user_id 1
     subject_line "MyString"

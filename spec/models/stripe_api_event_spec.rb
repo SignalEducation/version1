@@ -29,7 +29,7 @@ describe StripeApiEvent do
   end
   it { should allow_mass_assignment_of(:account_url) }
 
-  subject { FactoryGirl.build(:stripe_api_event) }
+  subject { FactoryBot.build(:stripe_api_event) }
 
   # Constants
   it { expect(StripeApiEvent.const_defined?(:KNOWN_API_VERSIONS)).to eq(true) }

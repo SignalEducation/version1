@@ -6,10 +6,10 @@ RSpec.describe '<%= table_name -%>/index', type: :view do
     allow(view).to receive(:tick_or_cross).and_return('nice_boolean')
     <%- attributes.map(&:name).each do |attr_name| -%>
     <%- if attr_name[-3..-1] == '_id' -%><%- list_of_associations << attr_name -%>
-    @<%= attr_name[0..-4] -%> = FactoryGirl.create(:<%= attr_name[0..-4] -%>)
+    @<%= attr_name[0..-4] -%> = FactoryBot.create(:<%= attr_name[0..-4] -%>)
     <%- end -%>
     <%- end -%>
-    temp_<%= table_name -%> = FactoryGirl.create_list(:<%= singular_table_name %>, 2<%= list_of_associations.map { |a| ', ' + a + ': @' + a.gsub('_id','.id') }.join('') -%>)
+    temp_<%= table_name -%> = FactoryBot.create_list(:<%= singular_table_name %>, 2<%= list_of_associations.map { |a| ', ' + a + ': @' + a.gsub('_id','.id') }.join('') -%>)
     @<%= table_name %> = <%= singular_table_name.camelcase -%>.paginate(page: 1, per_page: 10)
   end
 

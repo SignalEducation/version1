@@ -24,7 +24,7 @@
 #  subject_course_user_log_id :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :course_module_element_user_log do
     course_module_element_id 1
     user_id 1

@@ -12,7 +12,7 @@
 #  vimeo_guid               :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :course_module_element_video do
     course_module_element_id 1
     duration 10

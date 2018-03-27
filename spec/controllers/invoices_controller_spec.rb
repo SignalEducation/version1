@@ -41,17 +41,17 @@ describe InvoicesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:student_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:student_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: student_user.id) }
-  let!(:tutor_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:tutor_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: tutor_user.id) }
-  let!(:content_manager_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:content_manager_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: content_manager_user.id) }
-  let!(:admin_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:admin_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: admin_user.id) }
-  let!(:comp_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:comp_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: comp_user.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:invoice) }
+  let!(:valid_params) { FactoryBot.attributes_for(:invoice) }
 
   context 'Not logged in: ' do
 

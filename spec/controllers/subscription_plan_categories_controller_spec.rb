@@ -19,11 +19,11 @@ describe SubscriptionPlanCategoriesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:subscription_plan_category_1) { FactoryGirl.create(:subscription_plan_category) }
-  let!(:subscription_plan) { FactoryGirl.create(:subscription_plan,
+  let!(:subscription_plan_category_1) { FactoryBot.create(:subscription_plan_category) }
+  let!(:subscription_plan) { FactoryBot.create(:subscription_plan,
                 subscription_plan_category_id: subscription_plan_category_1.id) }
-  let!(:subscription_plan_category_2) { FactoryGirl.create(:subscription_plan_category) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan_category) }
+  let!(:subscription_plan_category_2) { FactoryBot.create(:subscription_plan_category) }
+  let!(:valid_params) { FactoryBot.attributes_for(:subscription_plan_category) }
 
   context 'Not logged in: ' do
 

@@ -26,10 +26,10 @@ describe MockExamsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:mock_exam_1) { FactoryGirl.create(:mock_exam) }
-  let!(:mock_exam_2) { FactoryGirl.create(:mock_exam) }
-  let!(:order_1) {FactoryGirl.create(:order, mock_exam_id: mock_exam_1.id)}
-  let!(:valid_params) { FactoryGirl.attributes_for(:mock_exam) }
+  let!(:mock_exam_1) { FactoryBot.create(:mock_exam) }
+  let!(:mock_exam_2) { FactoryBot.create(:mock_exam) }
+  let!(:order_1) {FactoryBot.create(:order, mock_exam_id: mock_exam_1.id)}
+  let!(:valid_params) { FactoryBot.attributes_for(:mock_exam) }
 
   context 'Not logged in: ' do
 

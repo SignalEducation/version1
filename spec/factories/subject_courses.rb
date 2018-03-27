@@ -35,7 +35,7 @@
 #  computer_based                          :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subject_course do
     sequence(:name)      { |x| "Subject Course #{x}" }
     sequence(:name_url)  { |x| "subject-course-#{x}" }

@@ -21,7 +21,7 @@
 #  background_image_updated_at   :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :group do
     sequence(:name)           { |n| "Group #{n}" }
     sequence(:name_url)           { |n| "group-#{n}" }

@@ -14,7 +14,7 @@
 #  updated_at    :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :stripe_api_event do
     sequence(:guid)           { |n| "abjO5 #{n}" }
     api_version '2015-02-18'

@@ -6,7 +6,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
-require 'factory_girl_rails'       # suggested by stack overflow
+require 'factory_bot_rails'       # suggested by stack overflow
 #require 'rspec/autorun'
 require 'authlogic/test_case'     # required for Authlogic
 include Authlogic::TestCase       # required for Authlogic

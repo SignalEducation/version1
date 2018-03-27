@@ -14,7 +14,7 @@
 #  continent     :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :country do
     sequence(:name)           { |n| "Country #{n}" }
     sequence(:iso_code)       { |n| "CTY-#{n}" }

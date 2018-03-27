@@ -13,7 +13,7 @@
 #  transcript               :text
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :video_resource do
     question "MyText"
     answer "MyText"

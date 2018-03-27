@@ -19,7 +19,7 @@
 #  reference_guid            :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :order do
     product_id 1
     subject_course_id 1

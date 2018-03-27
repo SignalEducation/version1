@@ -7,9 +7,9 @@ describe <%= table_name.camelcase -%>Controller, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for <%= singular_table_name -%>_1
-  let!(:<%= singular_table_name -%>_1) { FactoryGirl.create(:<%= singular_table_name -%>) }
-  let!(:<%= singular_table_name -%>_2) { FactoryGirl.create(:<%= singular_table_name -%>) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:<%= singular_table_name -%>) }
+  let!(:<%= singular_table_name -%>_1) { FactoryBot.create(:<%= singular_table_name -%>) }
+  let!(:<%= singular_table_name -%>_2) { FactoryBot.create(:<%= singular_table_name -%>) }
+  let!(:valid_params) { FactoryBot.attributes_for(:<%= singular_table_name -%>) }
 
   context 'Not logged in: ' do
 

@@ -1042,7 +1042,7 @@ en:
         h2a: Thank you so much for trialling LearnSignal, we hope you found it valuable.
         h2b: Now just imagine how much easier it could be to pass your ACCA exams with all this support and expertise at your fingertips. We’d love to see you inside!
         h2c: Some great savings can be made.
-        h2d: Pick which plan suits you best.
+        h2d: Pick which plan suits you best
         h2e: Reactivate your Membership.
         most_popular_plan: Our most popular payment plan
         get_unlimited_access: Get unlimited access
@@ -1051,7 +1051,7 @@ en:
         and_dont_forget: And don’t forget,
         you_can_cancel_anytime: you can cancel anytime.
         no_commitments: No lengthy commitments or obligations.
-        enter_payment_details: Simply enter your payment details.
+        enter_payment_details: Simply enter your payment details
         continue_right_away: And you can continue your studying straight away, without wasting a moment.
         credit_card: Credit/Debit Card
         coupon_code: Coupon Code
@@ -1154,16 +1154,17 @@ en:
     users:
       form:
         email: Email
+        email_confirmation: Email Confirmation
         your_email: Your email address
         email_placeholder: user@example.com
         phone_number: Phone Number
         interest: Topic
         topic_interest: Select the topic you are interested in..
         phone_number_placeholder: Phone Number
-        first_name: First name
+        first_name: First Name
         your_first_name: Your first name
         first_name_placeholder: John
-        last_name: Last name
+        last_name: Last Name
         your_last_name: Your last name
         username: Community Username
         username_placeholder: Username for LearnSignal Community Forum
@@ -1176,8 +1177,8 @@ en:
         password_placeholder: Password
         new_password: New Password
         new_password_placeholder: New Password
-        password_confirmation: Password confirmation
-        password_confirmation_placeholder: Password confirmation
+        password_confirmation: Password Confirmation
+        password_confirmation_placeholder: Password Confirmation
         address: Address
         address_placeholder: Billing address
         name_url: Name URL

@@ -41,7 +41,7 @@ class StudentAccess < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_save :create_on_intercom, :recalculate_access_from_limits, :create_trial_expiration_worker
+  after_save :post_save_callbacks
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -79,7 +79,7 @@ class StudentAccess < ActiveRecord::Base
           elsif time_now <= new_trial_ending || self.content_seconds_consumed <= self.trial_seconds_limit
             self.update_columns(trial_ended_date: nil, content_access: true, trial_ending_at_date: new_trial_ending)
           end
-        elsif self.subscription_access?
+        elsif self.subscription_access? && self.subscription_id
           if self.subscription.active
             if %w(unpaid suspended canceled).include?(self.subscription.current_status)
               self.update_column(:content_access, false)
@@ -98,13 +98,13 @@ class StudentAccess < ActiveRecord::Base
 
   protected
 
-  def create_on_intercom
-    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
-  end
-
-  def create_trial_expiration_worker
-    if self.user.student_user? && self.trial_access? && self.trial_ending_at_date && !self.trial_ended_date
-      TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)  unless Rails.env.test?
+  def post_save_callbacks
+    unless Rails.env.test?
+      IntercomCreateUserWorker.perform_async(self.user_id)
+      self.recalculate_access_from_limits
+      if self.user.student_user? && self.trial_access? && self.trial_ending_at_date && !self.trial_ended_date
+        TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)  unless Rails.env.test?
+      end
     end
   end
 

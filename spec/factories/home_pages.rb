@@ -17,7 +17,7 @@
 #  home                          :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :home_page do
     sequence(:name)                { |n| "homepage-#{n}" }
     sequence(:seo_title)           { |n| "title-#{n}" }

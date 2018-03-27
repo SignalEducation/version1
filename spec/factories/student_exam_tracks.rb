@@ -20,7 +20,7 @@
 #  subject_course_user_log_id      :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :student_exam_track do
     user_id 1
     latest_course_module_element_id 1

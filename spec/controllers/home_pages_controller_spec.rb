@@ -29,16 +29,10 @@ describe HomePagesController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'system_setup'
 
-  let!(:landing_page_1) { FactoryGirl.create(:landing_page_1) }
-  let!(:landing_page_2) { FactoryGirl.create(:landing_page_2) }
+  let!(:landing_page_1) { FactoryBot.create(:landing_page_1) }
+  let!(:landing_page_2) { FactoryBot.create(:landing_page_2) }
 
-  let!(:valid_params) { FactoryGirl.attributes_for(:home_page) }
-
-  let!(:sign_up_params) { { first_name: 'Test', last_name: 'Student', locale: 'en',
-                            email: 'test.student@example.com', password: 'dummy_pass',
-                            password_confirmation: 'dummy_pass' } }
-  let!(:default_plan) { FactoryGirl.create(:subscription_plan) }
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student_user.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:home_page) }
 
   context 'Not logged in: ' do
 
@@ -87,11 +81,230 @@ describe HomePagesController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to sign_in' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with landing_page_1' do
+        get :edit, id: landing_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with landing_page_2' do
+        get :edit, id: landing_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for landing_page_1' do
+        put :update, id: landing_page_1.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for landing_page_2' do
+        put :update, id: landing_page_2.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: landing_page_1.id, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'destroy'" do
+      it 'should redirect to sign_in' do
+        put :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to sign_in' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with landing_page_1' do
+        get :edit, id: landing_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with landing_page_2' do
+        get :edit, id: landing_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for landing_page_1' do
+        put :update, id: landing_page_1.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for landing_page_2' do
+        put :update, id: landing_page_2.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: landing_page_1.id, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'destroy'" do
+      it 'should redirect to sign_in' do
+        put :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to sign_in' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with landing_page_1' do
+        get :edit, id: landing_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with landing_page_2' do
+        get :edit, id: landing_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for landing_page_1' do
+        put :update, id: landing_page_1.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for landing_page_2' do
+        put :update, id: landing_page_2.id, home_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: landing_page_1.id, home_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'destroy'" do
+      it 'should redirect to sign_in' do
+        put :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do
@@ -463,7 +676,7 @@ describe HomePagesController, type: :controller do
     describe "GET 'index'" do
       it 'should render index' do
         get :index
-        expect_index_success_with_model('home_pages', 4)
+        expect_index_success_with_model('home_pages', 3)
       end
     end
 
@@ -539,7 +752,7 @@ describe HomePagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('home_pages', 4)
+        expect_index_success_with_model('home_pages', 3)
       end
     end
 

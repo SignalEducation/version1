@@ -69,8 +69,8 @@ describe SubjectCourse do
   it { should have_and_belong_to_many(:users) }
 
   # validation
-  # Build a FactoryGirl record for Rspec to test the uniqueness validations against
-  subject { FactoryGirl.build(:subject_course) }
+  # Build a FactoryBot record for Rspec to test the uniqueness validations against
+  subject { FactoryBot.build(:subject_course) }
 
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }

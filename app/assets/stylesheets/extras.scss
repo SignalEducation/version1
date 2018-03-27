@@ -208,11 +208,54 @@
 #plans .plans .plan.paya .base .box .price:after,
 #plans .plans .plan.paya .base .lsbtn { background: #3D3F5B !important; }
 
-
 .hasMouse #plans .plans:hover .plan { opacity: 0.3; }
 .hasMouse #plans .plans:hover .plan .base .lsbtn { opacity: 1; }
 .hasMouse #plans .plans:hover .plan:hover { opacity: 1; z-index: 500; }
 .hasMouse #plans .plans:hover .plan:hover .base:after { visibility: visible; opacity: 1; transform: scale(1.15); }
+
+
+#africaplans { padding: 75px 0; text-align: center; position: relative; }
+#africaplans .title1 { }
+#africaplans .subtitle1 { margin: 0 0 3.125em 0; }
+#africaplans .subtitle2 { margin: 0 0 4em 0; }
+#africaplans .plans { }
+#africaplans .plans .plan { width: 90%;  }
+#africaplans .plans .plan .base { position: relative; padding: 0 25px; }
+#africaplans .plans .plan .base:after { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.3); visibility: hidden; opacity: 0; z-index: 100; transition: all 0.2s; }
+#africaplans .plans .plan .base .topbox { z-index: 199; position: relative; }
+#africaplans .plans .plan .base .topbox span { display: block; background: #EF5153; color: #fff; line-height: 1.222em; padding: 0.889em 0.4em; border-radius: 6px 6px 0 0; z-index: 199; position: relative; }
+#africaplans .plans .plan .base .topbox + .box { margin-top: -6px; }
+
+
+#africaplans .plans .plan .base .box { border: solid 2px #EF5153; border-radius: 6px; background: #fff; padding: 1.222em 1.222em 5.5em 1.222em; color: #F15353; overflow: hidden; position: relative; z-index: 200; margin-bottom: 1.556em; }
+#africaplans .plans .plan .base .box .name { font-size: 1.667em; line-height: 1.2em; margin: 0 0 2.5em 0; }
+#africaplans .plans .plan .base .box .details { text-align: left; margin-bottom: 1.8em; }
+#africaplans .plans .plan .base .box .details li { margin-bottom: 0.4em; }
+#africaplans .plans .plan .base .box .price { font-weight: 500; font-size: 1.667em; line-height: 1.2em; padding: 1em 0 0 0; position: relative; }
+#africaplans .plans .plan .base .box .price:after { position: absolute; content: ""; display: block; top: 0; width: 20%; left: 40%; height: 1px; background: #EF5153; }
+#africaplans .plans .plan .base .box .promo { position: absolute; background: #EF5153; width: 100%; text-align: center; line-height: 1.1em; padding: 0.8em 0; color: #fff; position: absolute; right: 0; bottom: 0; }
+#africaplans .plans .plan .base .box .promo { transform: rotate(-45deg); right: -34%; bottom: 1em; }
+#africaplans .plans .plan .base .box .promo .line1 { font-weight: bold; font-size: 1.111em; line-height: 1.1em; }
+#africaplans .plans .plan .base .lsbtn-base { position: relative; z-index: 200; }
+#africaplans .plans .plan .base .lsbtn { display: block; padding-left: 0; padding-right: 0; width: 100%; }
+// This line stops the plan button being hidden without hover
+//.hasMouse #africaplans .plans .plan .base .lsbtn { opacity: 0; }
+
+#africaplans .plans .plan.paym .box { border-color: #35B9D0; color: #35B8CF; }
+#africaplans .plans .plan.paym .base .box .promo,
+#africaplans .plans .plan.paym .base .box .price:after,
+#africaplans .plans .plan.paym .base .lsbtn { background: #35B9D0 !important; }
+
+#africaplans .plans .plan.paya .box { border-color: #3D3F5B; color: #3D3D5B; }
+#africaplans .plans .plan.paya .base .box .promo,
+#africaplans .plans .plan.paya .base .box .price:after,
+#africaplans .plans .plan.paya .base .lsbtn { background: #3D3F5B !important; }
+
+
+.hasMouse #africaplans .plans:hover .plan {  }
+.hasMouse #africaplans .plans:hover .plan .base .lsbtn {  }
+.hasMouse #africaplans .plans:hover .plan:hover {  }
+.hasMouse #africaplans .plans:hover .plan:hover .base:after {  }
 
 
 #cancel { padding: 4.25em 0; color: #fff; position: relative; }
@@ -288,6 +331,7 @@
 /* UPGRADE PAGE */
 
 .upgrade #header { background: #3D3D5B; }
+.upgrade.africa { background: #EFF3F6; }
 .upgrade #menu ul li.acca { width: 61px; position: relative; }
 .upgrade #menu ul li.acca img { position: absolute; left: 0; top: -35px; display: block; width: 100%; }
 
@@ -304,6 +348,14 @@
 .upgrade #free .subtitle { font-size: 1.333em; line-height: 1.333em; margin: 0 auto; font-weight: 300; max-width: 880px; }
 .upgrade #free .go-down { position: absolute; left: 0; bottom: 3.5em; width: 100%; z-index: 1100; text-align: center; }
 .upgrade #free .go-down a { font-size: 2.5em; line-height: 1.1em; }
+
+.upgrade #africa { background: asset-url('testimonial-image.jpg') center center no-repeat; background-size: cover; overflow: hidden; color: #EFF3F6; position: relative; }
+.upgrade #africa .tmain { height: auto; padding: 90px 0 140px 0; }
+.upgrade #africa .title1 { margin: 0 auto 0.7em auto; max-width: 880px; }
+.upgrade #africa .subtitle { font-size: 1.333em; line-height: 1.333em; margin: 0 auto; font-weight: 300; max-width: 880px; color: #fff; }
+.upgrade #africa .go-down { position: absolute; left: 0; bottom: 3.5em; width: 100%; z-index: 1100; text-align: center; }
+.upgrade #africa .go-down a { font-size: 2.5em; line-height: 1.1em; }
+.upgrade #africa .bottom-arrow { position: absolute; left: 0; bottom: 2.3em; width: 100%; height: 0; z-index: 1000; background: #EFF3F6; }
 
 .upgrade .bottom-arrow { position: absolute; left: 0; bottom: 2.3em; width: 100%; height: 0; z-index: 1000; background: #fff; }
 .upgrade .bottom-arrow:before,
@@ -328,6 +380,7 @@
 #community .inner { max-width: 630px; margin: auto; }
 
 #simply { background: #f6f6f6; padding: 70px 0 120px 0; position: relative; }
+#simply.africa { background: #EFF3F6; padding: 70px 0 120px 0; position: relative; }
 #simply .subtitle1 { margin: 0 0 2.7em 0; }
 #simply .cc { overflow: hidden; margin-bottom: 2.333em; }
 #simply .cc label { font-weight: inherit; display: block; margin: 0 0 0.5em 0; }

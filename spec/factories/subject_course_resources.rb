@@ -14,7 +14,7 @@
 #  file_upload_updated_at   :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subject_course_resource do
     name "MyString"
     subject_course_id 1

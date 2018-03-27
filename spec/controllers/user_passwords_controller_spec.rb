@@ -5,7 +5,7 @@ RSpec.describe UserPasswordsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:reset_user) { FactoryGirl.create(:user_with_reset_requested)}
+  let!(:reset_user) { FactoryBot.create(:user_with_reset_requested)}
 
   context 'Nobody logged in: ' do
 

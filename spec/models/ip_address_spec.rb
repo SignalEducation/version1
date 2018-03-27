@@ -26,7 +26,7 @@ describe IpAddress do
     end
   end
 
-  subject { FactoryGirl.build(:ip_address) }
+  subject { FactoryBot.build(:ip_address) }
 
   # Constants
   #it { expect(IpAddress.const_defined?(:CONSTANT_NAME)).to eq(true) }

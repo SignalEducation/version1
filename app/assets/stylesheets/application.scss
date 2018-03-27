@@ -2405,7 +2405,19 @@ spinner {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+.number {
+  display: inline-block;
+  border: 2px solid $colour-7;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  margin-right: $gutter/2;
+  @include border-radius(100%);
+  color: $colour-7;
+}
+.subtext {
+  font-size: 36px;
+}
 #console-wrapper {
   padding-left: 0;
   -webkit-transition: all 0.5s ease;

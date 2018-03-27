@@ -10,7 +10,7 @@
 #  updated_at                       :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :system_default do
     individual_student_user_group_id 1
     corporate_student_user_group_id 1

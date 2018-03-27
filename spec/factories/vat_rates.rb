@@ -10,7 +10,7 @@
 #  updated_at      :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :vat_rate do
     vat_code_id 1
     percentage_rate 1.5

@@ -25,14 +25,14 @@ describe UserNotificationsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:user_notification_1) { FactoryGirl.create(:user_notification, user_id: student_user.id) }
-  let!(:user_notification_2) { FactoryGirl.create(:user_notification, user_id: tutor_user.id) }
-  let!(:user_notification_7) { FactoryGirl.create(:user_notification, user_id: content_manager_user.id) }
-  let!(:user_notification_8) { FactoryGirl.create(:user_notification, user_id: admin_user.id) }
-  let!(:user_notification_9) { FactoryGirl.create(:user_notification, user_id: comp_user.id) }
-  let!(:user_notification_10) { FactoryGirl.create(:user_notification, user_id: customer_support_manager_user.id) }
-  let!(:user_notification_11) { FactoryGirl.create(:user_notification, user_id: marketing_manager_user.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:user_notification) }
+  let!(:user_notification_1) { FactoryBot.create(:user_notification, user_id: student_user.id) }
+  let!(:user_notification_2) { FactoryBot.create(:user_notification, user_id: tutor_user.id) }
+  let!(:user_notification_7) { FactoryBot.create(:user_notification, user_id: content_manager_user.id) }
+  let!(:user_notification_8) { FactoryBot.create(:user_notification, user_id: admin_user.id) }
+  let!(:user_notification_9) { FactoryBot.create(:user_notification, user_id: comp_user.id) }
+  let!(:user_notification_10) { FactoryBot.create(:user_notification, user_id: customer_support_manager_user.id) }
+  let!(:user_notification_11) { FactoryBot.create(:user_notification, user_id: marketing_manager_user.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:user_notification) }
 
   context 'Not logged in: ' do
 

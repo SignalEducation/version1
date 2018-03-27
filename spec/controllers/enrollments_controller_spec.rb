@@ -20,19 +20,21 @@
 #
 
 require 'rails_helper'
+require 'support/system_setup'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 
 RSpec.describe EnrollmentsController, type: :controller do
 
+  include_context 'system_setup'
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:exam_sitting_1) { FactoryGirl.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
-  let!(:exam_sitting_2) { FactoryGirl.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_1) { FactoryBot.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_2) { FactoryBot.create(:exam_sitting, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
 
-  let!(:enrollment_1) { FactoryGirl.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
-  let!(:enrollment_2) { FactoryGirl.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:enrollment_1) { FactoryBot.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
+  let!(:enrollment_2) { FactoryBot.create(:enrollment, user_id: student_user.id, subject_course_id: subject_course_1.id, exam_body_id: exam_body_1.id) }
 
   let!(:valid_params) { {enrollment: {subject_course_id: subject_course_1.id}, exam_date: exam_sitting_1.date, custom_exam_date: ''} }
   let!(:invalid_params) { {enrollment: {subject_course_id: nil}, exam_date: exam_sitting_1.date, custom_exam_date: ''} }
@@ -42,79 +44,37 @@ RSpec.describe EnrollmentsController, type: :controller do
 
   context 'Not logged in: ' do
 
-    describe "GET 'edit'" do
-      it 'should redirect to sign_in' do
-        get :edit, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should redirect to sign_in' do
         post :create, enrollment: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "PUT 'update'" do
+    describe 'GET edit' do
+      it 'should redirect to sign_in' do
+        get :edit, id: 1
+        expect_bounce_as_not_signed_in
+      end
+    end
+
+    describe 'PUT update' do
       it 'should redirect to sign_in' do
         put :update, id: 1, enrollment: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "GET 'basic_create'" do
-      it 'should redirect to sign_in' do
-        get :basic_create, subject_course_name_url: subject_course_1.name_url
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'admin_create_new_scul'" do
-      it 'should redirect to sign_in' do
-        get :admin_create_new_scul, id: enrollment_1.id
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'admin_edit'" do
-      it 'should redirect to sign_in' do
-        get :admin_edit, id: enrollment_2.id
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "PUT 'admin_update'" do
-      it 'should redirect to sign_in' do
-        post :admin_update, id: enrollment_2.id
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "GET 'admin_show'" do
-      it 'should redirect to sign_in' do
-        get :admin_show, id: enrollment_2.id
-        expect_bounce_as_not_signed_in
-      end
-    end
-
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
     end
 
-    describe "GET 'edit/1'" do
-      it 'should respond OK with enrollment_1' do
-        get :edit, id: enrollment_1.id
-        expect_edit_success_with_model('enrollment', enrollment_1.id)
-      end
-    end
-
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should report OK for valid_params' do
         post :create, valid_params
         expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
@@ -125,7 +85,7 @@ RSpec.describe EnrollmentsController, type: :controller do
         expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
 
-      xit 'should report OK for attaching previous enrollment scul_id' do
+      it 'should report OK for attaching previous enrollment scul_id' do
         post :create, scul_id_params
         expect_create_success_with_model('enrollment', library_course_url(subject_course_1.parent.name_url, subject_course_1.name_url))
       end
@@ -140,7 +100,14 @@ RSpec.describe EnrollmentsController, type: :controller do
 
     end
 
-    describe "PUT 'update/1'" do
+    describe 'GET edit' do
+      it 'should respond OK with enrollment_1' do
+        get :edit, id: enrollment_1.id
+        expect_edit_success_with_model('enrollment', enrollment_1.id)
+      end
+    end
+
+    describe 'PUT update' do
       it 'should respond OK with new params' do
         put :update, id: enrollment_1.id, enrollment: {notifications: false}
         expect(flash[:error]).to be_nil
@@ -150,41 +117,6 @@ RSpec.describe EnrollmentsController, type: :controller do
       end
     end
 
-    describe "GET 'basic_create'" do
-      it 'should respond OK' do
-        get :basic_create, subject_course_name_url: subject_course_1.name_url
-        #This should fail as only non-student users can do this
-        expect_create_success_with_model('enrollment', course_url(subject_course_1.name_url, subject_course_1.first_active_cme.course_module.name_url, subject_course_1.first_active_cme.name_url))
-      end
-    end
-
-    describe "GET 'admin_create_new_scul'" do
-      it 'should bounce as not allowed' do
-        get :admin_create_new_scul, id: enrollment_1.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'admin_edit'" do
-      it 'should bounce as not allowed' do
-        get :admin_edit, id: enrollment_1.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "PUT 'admin_update'" do
-      it 'should bounce as not allowed' do
-        post :admin_update, id: enrollment_2.id, enrollment: {active: true, expired: false, notifications: false}
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'admin_show'" do
-      it 'should bounce as not allowed' do
-        get :admin_show, id: enrollment_2.id
-        expect_bounce_as_not_allowed
-      end
-    end
 
   end
 

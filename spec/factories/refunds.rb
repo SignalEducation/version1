@@ -19,7 +19,7 @@
 #  updated_at         :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :refund do
     stripe_charge_guid 'Stripe-charge-001'
     charge_id 1

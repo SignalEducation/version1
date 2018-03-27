@@ -12,7 +12,7 @@
 #  updated_at     :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :white_paper_request do
     name "MyString"
     email "MyString"

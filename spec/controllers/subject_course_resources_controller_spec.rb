@@ -23,9 +23,9 @@ describe SubjectCourseResourcesController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:subject_course_resource_1) { FactoryGirl.create(:subject_course_resource, subject_course_id: subject_course_1.id) }
-  let!(:subject_course_resource_2) { FactoryGirl.create(:subject_course_resource) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:subject_course_resource) }
+  let!(:subject_course_resource_1) { FactoryBot.create(:subject_course_resource, subject_course_id: subject_course_1.id) }
+  let!(:subject_course_resource_2) { FactoryBot.create(:subject_course_resource) }
+  let!(:valid_params) { FactoryBot.attributes_for(:subject_course_resource) }
 
   context 'Not logged in: ' do
 

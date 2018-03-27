@@ -10,7 +10,7 @@ RSpec.configure do |config|
 
   config.before(:each, :js => true) do
     DatabaseCleaner.strategy = :truncation
-    FactoryGirl.reload
+    FactoryBot.reload
   end
 
   config.before(:each) do

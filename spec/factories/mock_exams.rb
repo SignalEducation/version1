@@ -19,7 +19,7 @@
 #  cover_image_updated_at   :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :mock_exam do
     subject_course_id 1
     name "MyString"
