@@ -11,6 +11,8 @@ class ManagementConsolesController < ApplicationController
 
 
   def index
+    #TODO allow tutor users navigate to this page
+    #TODO and have it display general stats on their courses
     #Default view for all management users. General stats on site - user number, sub numbers, enrollment numbers, course numbers
     @users_count = StudentAccess.count
     @subscriptions = Subscription.where(current_status: Subscription::VALID_STATES).count
@@ -29,7 +31,6 @@ class ManagementConsolesController < ApplicationController
 
   def system_requirements
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
-
   end
 
 

@@ -65,11 +65,176 @@ RSpec.describe LibraryController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe 'GET index' do
+      it 'renders the index view as 2 groups are active' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+        expect(Group.count).to eq(2)
+      end
+
+      it 'redirects to render to group_show as 1 group is active' do
+        group_2.update_attribute(:active, false)
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: group_1.name_url))
+        expect(Group.all_active.count).to eq(1)
+      end
+    end
+
+    describe 'GET group_show' do
+      it 'returns http success' do
+        get :group_show, group_name_url: group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group_show)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
+      end
+    end
+
+    describe 'GET course_show' do
+      it 'returns http success' do
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:course_show)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
+      end
+    end
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe 'GET index' do
+      it 'renders the index view as 2 groups are active' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+        expect(Group.count).to eq(2)
+      end
+
+      it 'redirects to render to group_show as 1 group is active' do
+        group_2.update_attribute(:active, false)
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: group_1.name_url))
+        expect(Group.all_active.count).to eq(1)
+      end
+    end
+
+    describe 'GET group_show' do
+      it 'returns http success' do
+        get :group_show, group_name_url: group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group_show)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
+      end
+    end
+
+    describe 'GET course_show' do
+      it 'returns http success' do
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:course_show)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
+      end
+    end
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe 'GET index' do
+      it 'renders the index view as 2 groups are active' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+        expect(Group.count).to eq(2)
+      end
+
+      it 'redirects to render to group_show as 1 group is active' do
+        group_2.update_attribute(:active, false)
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(library_group_url(group_name_url: group_1.name_url))
+        expect(Group.all_active.count).to eq(1)
+      end
+    end
+
+    describe 'GET group_show' do
+      it 'returns http success' do
+        get :group_show, group_name_url: group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:group_show)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
+      end
+    end
+
+    describe 'GET course_show' do
+      it 'returns http success' do
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url
+        expect(response).to have_http_status(:success)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:course_show)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
+      end
+    end
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe 'GET index' do
@@ -351,39 +516,49 @@ RSpec.describe LibraryController, type: :controller do
     end
 
     describe 'GET index' do
-      it 'returns http success' do
+      it 'renders the index view as 2 groups are active' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+        expect(Group.count).to eq(2)
+      end
+
+      it 'redirects to render to group_show as 1 group is active' do
+        group_2.update_attribute(:active, false)
         get :index
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
-        expect(Group.count).to eq(1)
+        expect(response).to redirect_to(library_group_url(group_name_url: group_1.name_url))
+        expect(Group.all_active.count).to eq(1)
       end
     end
 
     describe 'GET group_show' do
       it 'returns http success' do
-        get :group_show, group_name_url: course_group_1.name_url
+        get :group_show, group_name_url: group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(1)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
       end
     end
 
     describe 'GET course_show' do
       it 'returns http success' do
-        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(1)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
       end
     end
 
@@ -397,39 +572,49 @@ RSpec.describe LibraryController, type: :controller do
     end
 
     describe 'GET index' do
-      it 'returns http success' do
+      it 'renders the index view as 2 groups are active' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+        expect(Group.count).to eq(2)
+      end
+
+      it 'redirects to render to group_show as 1 group is active' do
+        group_2.update_attribute(:active, false)
         get :index
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(library_group_url(group_name_url: course_group_1.name_url))
-        expect(Group.count).to eq(1)
+        expect(response).to redirect_to(library_group_url(group_name_url: group_1.name_url))
+        expect(Group.all_active.count).to eq(1)
       end
     end
 
     describe 'GET group_show' do
       it 'returns http success' do
-        get :group_show, group_name_url: course_group_1.name_url
+        get :group_show, group_name_url: group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:group_show)
-        expect(Group.count).to eq(1)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
       end
     end
 
     describe 'GET course_show' do
       it 'returns http success' do
-        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: course_group_1.name_url
+        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:course_show)
-        expect(Group.count).to eq(1)
-        expect(SubjectCourse.count).to eq(2)
+        expect(Group.all_active.count).to eq(2)
+        expect(SubjectCourse.count).to eq(3)
       end
     end
 
