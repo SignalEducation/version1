@@ -1066,7 +1066,7 @@ en:
       form:
         name: Name
         name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
-        available_to_students: Available to students
+        available_to_students: Available Standard Students
         all_you_can_eat: All you can eat
         payment_frequency_in_months: Payment frequency in months
         currency_id: Currency

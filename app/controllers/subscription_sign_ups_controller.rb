@@ -5,7 +5,7 @@ class SubscriptionSignUpsController < ApplicationController
 
 
   def new
-    @africa_subscription_plan = SubscriptionPlan.includes(:currency).where(name: 'Africa Quarterly Plan').first
+    @africa_subscription_plan = SubscriptionPlan.includes(:currency).for_non_standard_students.where(name: 'Africa Quarterly Plan').first
     redirect_to root_url unless @africa_subscription_plan
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -24,7 +24,7 @@ class SubscriptionSignUpsController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country.currency_id
-    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order.limit(3)
+    @africa_subscription_plan = SubscriptionPlan.includes(:currency).for_non_standard_students.where(name: 'Africa Quarterly Plan').first
 
     @user = User.new(allowed_params)
     student_user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
