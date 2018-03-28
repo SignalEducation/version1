@@ -1,17 +1,15 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
 .l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom#thank-you-message
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.subscriptions.upgrade_complete.h1')
+            ='Thanks for joining LearnSignal'
         .col-md-8.col-md-offset-2.l-margin-bottom-6x
           .box-item
             .col-md-8.col-md-offset-2.l-margin-top.text-center
               %p
-                ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
+                ="You have subscribed to a #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
               %p
                 ="An email containing your first invoice will be sent to #{@subscription.user.email}"
 
@@ -23,6 +21,6 @@
 
           %br/
           .l-margin-top
-            =link_to student_dashboard_url do
+            =link_to library_url do
               .btn.btn-red.btn-wide
-                ='Continue Learning'
+                ='Start Learning'
