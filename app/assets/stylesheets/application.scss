@@ -37,7 +37,7 @@ $colour-8: #4E3F5B;
 $colour-9: rgb(83, 84, 112);
 $colour-10: #9E9FAD;
 $colour-11: lighten($colour-7, 5%);
-$colour-12: #EF5153;
+$colour-12: #ef475d;
 $colour-13: #3EB9CE;
 $colour-14: #FAFEC0;
 $colour-15: #54a4ee;
@@ -1132,6 +1132,22 @@ a.card {
   }
   a {
     color: $red1;
+  }
+}
+.notice.africa {
+  background: $colour-10;
+  color: $text-color;
+  border-radius: 4px;
+  margin-bottom: $gutter/2;
+  padding: $gutter/1.5;
+  .icon {
+    margin-right: $gutter/2;
+  }
+  .p {
+    margin: 0;
+  }
+  a {
+    color: #CA2439;
   }
 }
 
