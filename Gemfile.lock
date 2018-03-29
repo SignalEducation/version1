@@ -201,8 +201,8 @@ GEM
       ruby_parser (~> 3.5)
     i18n (0.7.0)
     inflection (1.0.0)
-    intercom (3.2.0)
-      json (~> 1.8)
+    intercom (3.5.23)
+      json (>= 1.8)
     intercom-rails (0.2.29)
       activesupport (> 3.0)
     jbuilder (2.4.0)
@@ -524,7 +524,7 @@ DEPENDENCIES
   guard-rspec
   haml-rails
   hirb
-  intercom (~> 3.2.0)
+  intercom (~> 3.5.23)
   intercom-rails (~> 0.2.27)
   jbuilder (~> 2.0)
   jquery-rails

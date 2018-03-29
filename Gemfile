@@ -24,7 +24,7 @@ gem 'faraday', '~> 0.9.2'
 gem 'geocoder', '~> 1.3', '>= 1.3.7'#  a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails', '~> 0.2.27' # communicate with Intercom.io
-gem 'intercom', '~> 3.2.0' # Intercom API
+gem 'intercom', '~> 3.5.23' # Intercom API
 gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
