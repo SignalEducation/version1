@@ -21,11 +21,62 @@ describe RoutesController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'root'" do
+      it 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'root'" do
+      it 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'root'" do
+      it 'should redirect to dashboard#index' do
+        get :root
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'root'" do

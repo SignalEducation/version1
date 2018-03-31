@@ -1,11 +1,11 @@
 require 'rails_helper'
-require 'support/users_and_groups_setup'
 require 'support/system_setup'
+require 'support/users_and_groups_setup'
 
 RSpec.describe StudentSignUpsController, type: :controller do
 
-  include_context 'users_and_groups_setup'
   include_context 'system_setup'
+  include_context 'users_and_groups_setup'
 
   let!(:unverified_user) { FactoryBot.create(:student_user, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
   let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
@@ -111,11 +111,176 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user' do
+  context 'Logged in as a valid_trial_student' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'home'" do
+      it 'should see home' do
+        get :home, public_url: '/'
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'landing'" do
+      it 'should see landing page' do
+        get :landing, public_url: landing_page_1.public_url
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'show'" do
+      it 'should bounce as signed in' do
+        get :show, account_activation_code: unverified_user.account_activation_code
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as signed in' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as signed in' do
+        post :create, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'home'" do
+      it 'should see home' do
+        get :home, public_url: '/'
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'landing'" do
+      it 'should see landing page' do
+        get :landing, public_url: landing_page_1.public_url
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'show'" do
+      it 'should bounce as signed in' do
+        get :show, account_activation_code: unverified_user.account_activation_code
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as signed in' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as signed in' do
+        post :create, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'home'" do
+      it 'should see home' do
+        get :home, public_url: '/'
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'landing'" do
+      it 'should see landing page' do
+        get :landing, public_url: landing_page_1.public_url
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'show'" do
+      it 'should bounce as signed in' do
+        get :show, account_activation_code: unverified_user.account_activation_code
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should bounce as signed in' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as signed in' do
+        post :create, user: sign_up_params
+        expect(flash[:success]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(student_dashboard_url)
+      end
+
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'home'" do

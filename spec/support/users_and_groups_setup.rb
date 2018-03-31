@@ -79,8 +79,8 @@ shared_context 'users_and_groups_setup' do
 
 
 
-  let(:user_list) {[valid_trial_student, invalid_trial_student, valid_subscription_student,
-                    invalid_subscription_student, admin_user, tutor_user, content_manager_user,
-                    comp_user, customer_support_manager_user, marketing_manager_user] }
+  let(:user_list) {[valid_trial_student, invalid_trial_student, valid_subscription_student, invalid_subscription_student,
+                    comp_user, tutor_user, content_manager_user, customer_support_manager_user, marketing_manager_user, admin_user] }
+
 
 end
