@@ -5,12 +5,16 @@ shared_context 'users_and_groups_setup' do
 
   # User Groups
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
-  let(:content_manager_user_group) { FactoryBot.create(:content_manager_user_group) }
-  let(:admin_user_group) { FactoryBot.create(:admin_user_group) }
   let(:complimentary_user_group) { FactoryBot.create(:complimentary_user_group) }
+  let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
+  let(:system_requirements_user_group) { FactoryBot.create(:system_requirements_user_group) }
+  let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
+  let(:stripe_management_user_group) { FactoryBot.create(:stripe_management_user_group) }
+  let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
+  let(:developers_user_group) { FactoryBot.create(:developers_user_group) }
   let(:marketing_manager_user_group) { FactoryBot.create(:marketing_manager_user_group) }
-  let(:customer_support_user_group) { FactoryBot.create(:customer_support_user_group) }
+  let(:user_group_manager_user_group) { FactoryBot.create(:user_group_manager_user_group) }
+  let(:admin_user_group) { FactoryBot.create(:admin_user_group) }
   let(:blocked_user_group) { FactoryBot.create(:blocked_user_group) }
 
 
@@ -65,22 +69,38 @@ shared_context 'users_and_groups_setup' do
   let(:tutor_user) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id) }
   let!(:tutor_student_access) { FactoryBot.create(:complimentary_student_access, user_id: tutor_user.id) }
 
-  let(:content_manager_user) { FactoryBot.create(:content_manager_user, user_group_id: content_manager_user_group.id) }
-  let!(:content_manager_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_manager_user.id) }
+  let(:system_requirements_user) { FactoryBot.create(:system_requirements_user, user_group_id: system_requirements_user_group.id) }
+  let!(:system_requirements_student_access) { FactoryBot.create(:complimentary_student_access, user_id: system_requirements_user.id) }
+
+  let(:content_management_user) { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
+  let!(:content_management_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_management_user.id) }
+
+  let(:stripe_management_user) { FactoryBot.create(:stripe_management_user, user_group_id: stripe_management_user_group.id) }
+  let!(:stripe_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: stripe_management_user.id) }
+
+  let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let!(:user_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_management_user.id) }
+
+  let(:developers_user) { FactoryBot.create(:developers_user, user_group_id: developers_user_group.id) }
+  let!(:developers_student_access) { FactoryBot.create(:complimentary_student_access, user_id: developers_user.id) }
 
   let(:marketing_manager_user) { FactoryBot.create(:marketing_manager_user, user_group_id: marketing_manager_user_group.id) }
   let!(:marketing_manager_student_access) { FactoryBot.create(:complimentary_student_access, user_id: marketing_manager_user.id) }
 
-  let(:customer_support_manager_user) { FactoryBot.create(:customer_support_manager_user, user_group_id: customer_support_user_group.id) }
-  let!(:customer_support_student_access) { FactoryBot.create(:complimentary_student_access, user_id: customer_support_manager_user.id) }
+  let(:user_group_manager_user) { FactoryBot.create(:user_group_manager_user, user_group_id: user_group_manager_user_group.id) }
+  let!(:user_group_manager_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_group_manager_user.id) }
 
   let(:admin_user) { FactoryBot.create(:admin_user, user_group_id: admin_user_group.id) }
   let!(:admin_student_access) { FactoryBot.create(:complimentary_student_access, user_id: admin_user.id) }
 
+  let(:blocked_user) { FactoryBot.create(:blocked_user, user_group_id: blocked_user_group.id) }
+  let!(:blocked_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: blocked_user.id) }
+
 
 
   let(:user_list) {[valid_trial_student, invalid_trial_student, valid_subscription_student, invalid_subscription_student,
-                    comp_user, tutor_user, content_manager_user, customer_support_manager_user, marketing_manager_user, admin_user] }
+                    comp_user, tutor_user, system_requirements_user, content_management_user, stripe_management_user, user_management_user,
+                    developers_user, marketing_manager_user, user_group_manager_user, admin_user, blocked_user] }
 
 
 end

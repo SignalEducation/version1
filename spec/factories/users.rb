@@ -110,7 +110,6 @@ FactoryBot.define do
       end
     end
 
-
     factory :student_user do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
       active                            true
@@ -168,27 +167,6 @@ FactoryBot.define do
       end
     end
 
-    factory :tutor_user do
-      sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
-      active                            true
-      user_group_id                     1
-      stripe_customer_id                nil
-    end
-
-    factory :content_manager_user do
-      sequence(:email)                  { |n| "content.manager-#{n}@example.com" }
-      active                            true
-      user_group_id                     1
-      stripe_customer_id                nil
-    end
-
-    factory :admin_user do
-      sequence(:email)                  { |n| "admin.user-#{n}@example.com" }
-      active                            true
-      user_group_id                     1
-      stripe_customer_id                nil
-    end
-
     factory :comp_user do
       sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
       active                            true
@@ -207,19 +185,76 @@ FactoryBot.define do
       password_change_required        true
     end
 
-    factory :customer_support_manager_user do
-      sequence(:email)                  { |n| "customer_support_manager-#{n}@example.com" }
+    factory :tutor_user do
+      sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :system_requirements_user do
+      sequence(:email)                  { |n| "system.requirements.manager-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :content_management_user do
+      sequence(:email)                  { |n| "content.management.user-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :stripe_management_user do
+      sequence(:email)                  { |n| "stripe.manager-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :user_management_user do
+      sequence(:email)                  { |n| "user.manager-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :developers_user do
+      sequence(:email)                  { |n| "developer.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :marketing_manager_user do
-      sequence(:email)                  { |n| "marketing_manager_user-#{n}@example.com" }
+      sequence(:email)                  { |n| "marketing.manager-#{n}@example.com" }
       active                            true
       user_group_id                     1
       stripe_customer_id                nil
     end
+
+    factory :user_group_manager_user do
+      sequence(:email)                  { |n| "user.group.manager-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :admin_user do
+      sequence(:email)                  { |n| "admin.user-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
+    factory :blocked_user do
+      sequence(:email)                  { |n| "blocked.user-#{n}@example.com" }
+      active                            true
+      user_group_id                     1
+      stripe_customer_id                nil
+    end
+
 
   end
 
