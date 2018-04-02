@@ -30,9 +30,12 @@
       %li
         =link_to 'System Requirements', system_requirements_url
 
-    -if current_user.home_pages_access?
+    -if current_user.marketing_resources_access?
       %li
         =link_to 'Landing Pages', home_pages_url
+
+      %li
+        =link_to 'White Papers', white_papers_url
 
     -if current_user.developer_access?
       %li

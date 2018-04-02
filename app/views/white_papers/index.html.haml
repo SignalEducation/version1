@@ -6,9 +6,10 @@
           %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.white_papers.index.h1')
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'management_consoles/course_content_nav'
+      -if current_user.content_management_access?
+        .row.l-margin-top.l-margin-bottom
+          .col-md-12
+            =render partial: 'management_consoles/course_content_nav'
 
       .row
         .col-md-12
