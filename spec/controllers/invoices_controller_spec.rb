@@ -41,17 +41,17 @@ describe InvoicesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:student_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:student_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: student_user.id) }
-  let!(:tutor_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:tutor_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: tutor_user.id) }
-  let!(:content_manager_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:content_manager_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: content_manager_user.id) }
-  let!(:admin_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:admin_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: admin_user.id) }
-  let!(:comp_user_invoice) { FactoryGirl.create(:invoice,
+  let!(:comp_user_invoice) { FactoryBot.create(:invoice,
                                   user_id: comp_user.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:invoice) }
+  let!(:valid_params) { FactoryBot.attributes_for(:invoice) }
 
   context 'Not logged in: ' do
 
@@ -71,11 +71,98 @@ describe InvoicesController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      xit'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      xit'should see invoice' do
+        get :show, id: student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      xit'should return ERROR and redirect' do
+        get :show, id: tutor_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      xit'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      xit'should see invoice' do
+        get :show, id: student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      xit'should return ERROR and redirect' do
+        get :show, id: tutor_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      xit'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      xit'should see invoice' do
+        get :show, id: student_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      xit'should return ERROR and redirect' do
+        get :show, id: tutor_user_invoice.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do

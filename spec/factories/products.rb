@@ -16,7 +16,7 @@
 #  stripe_sku_guid   :string
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :product do
     sequence(:name)      { |n| "Product-00#{n}" }
     mock_exam_id 1

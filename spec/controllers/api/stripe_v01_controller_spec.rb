@@ -10,29 +10,29 @@ describe Api::StripeV01Controller, type: :controller do
   let!(:start_stripe_mock) { StripeMock.start }
   let(:stripe_helper) { StripeMock.create_test_helper }
 
-  let!(:usd) { FactoryGirl.create(:usd) }
-  let!(:student) { FactoryGirl.create(:student_user) }
-  let!(:new_student) { FactoryGirl.create(:student_user) }
-  let!(:reactivating_student) { FactoryGirl.create(:student_user) }
-  let!(:referred_student) { FactoryGirl.create(:student_user) }
+  let!(:usd) { FactoryBot.create(:usd) }
+  let!(:student) { FactoryBot.create(:student_user) }
+  let!(:new_student) { FactoryBot.create(:student_user) }
+  let!(:reactivating_student) { FactoryBot.create(:student_user) }
+  let!(:referred_student) { FactoryBot.create(:student_user) }
 
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student.id) }
+  let!(:referral_code) { FactoryBot.create(:referral_code, user_id: student.id) }
 
-  let!(:subscription_plan_m) { FactoryGirl.create(:student_subscription_plan_m) }
-  let!(:subscription_plan_q) { FactoryGirl.create(:student_subscription_plan_q) }
+  let!(:subscription_plan_m) { FactoryBot.create(:student_subscription_plan_m) }
+  let!(:subscription_plan_q) { FactoryBot.create(:student_subscription_plan_q) }
   let!(:card_details_1) { {number: '4242424242424242', cvc: '123', exp_month: '12', exp_year: '2019'} }
   let!(:card_details_2) { {number: '4242424242424242', cvc: '123', exp_month: '11', exp_year: '2019'} }
   let!(:card_token_1)   { Stripe::Token.create(card: card_details_1) }
   let!(:card_token_2)   { Stripe::Token.create(card: card_details_2) }
-  let!(:subscription_1) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id) }
-  let!(:subscription_2) { FactoryGirl.create(:subscription, user_id: referred_student.id,
+  let!(:subscription_1) { FactoryBot.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id, stripe_token: card_token_1.id) }
+  let!(:subscription_2) { FactoryBot.create(:subscription, user_id: referred_student.id,
 subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: 'true', stripe_token: card_token_2.id) }
-  let!(:subscription_3) { FactoryGirl.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id) }
-  let!(:subscription_5) { FactoryGirl.create(:subscription, user_id: new_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
-  let!(:subscription_6) { FactoryGirl.create(:subscription, user_id: reactivating_student.id,
+  let!(:subscription_3) { FactoryBot.create(:subscription, user_id: student.id, subscription_plan_id: subscription_plan_m.id) }
+  let!(:subscription_5) { FactoryBot.create(:subscription, user_id: new_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
+  let!(:subscription_6) { FactoryBot.create(:subscription, user_id: reactivating_student.id,
 subscription_plan_id: subscription_plan_m.id, current_status: 'canceled', active: true) }
-  let!(:subscription_7) { FactoryGirl.create(:subscription, user_id: reactivating_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
-  let!(:referred_signup) { FactoryGirl.create(:referred_signup, referral_code_id: referral_code.id) }
+  let!(:subscription_7) { FactoryBot.create(:subscription, user_id: reactivating_student.id, subscription_plan_id: subscription_plan_m.id, current_status: 'active', active: true) }
+  let!(:referred_signup) { FactoryBot.create(:referred_signup, referral_code_id: referral_code.id) }
 
   xit describe "POST 'create'" do
     describe 'preliminary functionality: ' do

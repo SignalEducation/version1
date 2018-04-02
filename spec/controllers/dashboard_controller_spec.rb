@@ -7,8 +7,8 @@ RSpec.describe DashboardController, :type => :controller do
 
   context 'Not logged in: ' do
 
-    describe "GET show" do
-      it "bounces user as not signed in" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect_bounce_as_not_signed_in
       end
@@ -16,15 +16,66 @@ RSpec.describe DashboardController, :type => :controller do
 
   end
 
-  context 'Logged in as a show_user: ' do
+  context 'Logged in as a valid_trial student_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial student_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
@@ -40,8 +91,8 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(comp_user)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
@@ -57,8 +108,8 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
@@ -74,8 +125,8 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(content_manager_user)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
@@ -92,8 +143,8 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(marketing_manager_user)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
@@ -109,8 +160,8 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(customer_support_manager_user)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)
@@ -126,15 +177,8 @@ RSpec.describe DashboardController, :type => :controller do
       UserSession.create!(admin_user)
     end
 
-    describe "GET show" do
-      it "bounces user as not allowed" do
-        get :show
-        expect(response).to have_http_status(:success)
-        expect(response).to render_template(:show)
-      end
-    end
-    describe "GET show" do
-      it "bounces user as not allowed" do
+    describe 'GET show' do
+      it 'should respond OK' do
         get :show
         expect(response).to have_http_status(:success)
         expect(response).to render_template(:show)

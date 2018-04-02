@@ -34,7 +34,7 @@ describe WhitePaper do
     end
   end
 
-  subject { FactoryGirl.build(:white_paper) }
+  subject { FactoryBot.build(:white_paper) }
 
   # relationships
   it { should have_many(:white_paper_requests) }

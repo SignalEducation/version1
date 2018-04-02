@@ -6,10 +6,10 @@ RSpec.describe '<%= table_name -%>/show', type: :view do
     allow(view).to receive(:tick_or_cross).and_return('nice_boolean')
     <%- attributes.map(&:name).each do |attr_name| -%>
     <%- if attr_name[-3..-1] == '_id' -%><%- list_of_associations << attr_name -%>
-    @<%= attr_name[0..-4] -%> = FactoryGirl.create(:<%= attr_name[0..-4] -%>)
+    @<%= attr_name[0..-4] -%> = FactoryBot.create(:<%= attr_name[0..-4] -%>)
     <%- end -%>
     <%- end -%>
-    @<%= singular_table_name -%> = FactoryGirl.create(:<%= singular_table_name %><%= list_of_associations.map {|a| ', ' + a + ': @' + a[0..-4] + '.id' }.join('') -%>)
+    @<%= singular_table_name -%> = FactoryBot.create(:<%= singular_table_name %><%= list_of_associations.map {|a| ', ' + a + ': @' + a[0..-4] + '.id' }.join('') -%>)
   end
 
   it 'renders attributes' do

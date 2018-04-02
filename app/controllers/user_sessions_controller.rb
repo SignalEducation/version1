@@ -21,6 +21,8 @@ class UserSessionsController < ApplicationController
       flash[:error] = nil
       if session[:return_to]
         redirect_back_or_default(student_dashboard_url)
+      elsif params[:user_session][:upgrade_redirect]
+        redirect_to new_subscription_url(coupon: true)
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end

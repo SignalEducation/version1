@@ -1,18 +1,18 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
-require 'support/subscription_plans_setup'
+
 require 'support/system_setup'
 
 describe 'The student orders process', type: :feature do
 
   include_context 'users_and_groups_setup'
   include_context 'course_content'
-  include_context 'subscription_plans_setup'
+
   include_context 'system_setup'
 
-  let!(:product_1)  { FactoryGirl.create(:product) }
-  let!(:mock_exam_1)  { FactoryGirl.create(:mock_exam, subject_course_id: SubjectCourse.first.id, product_id: product_1.id) }
+  let!(:product_1)  { FactoryBot.create(:product) }
+  let!(:mock_exam_1)  { FactoryBot.create(:mock_exam, subject_course_id: SubjectCourse.first.id, product_id: product_1.id) }
 
   before(:each) do
     activate_authlogic

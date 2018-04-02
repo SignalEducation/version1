@@ -19,16 +19,19 @@
 #  percentage_complete        :integer          default(0)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :enrollment do
     user_id 1
     subject_course_id 1
     subject_course_user_log_id 11
-    exam_date "2017-01-17"
+    exam_date '2017-01-17'
     exam_body_id 1
     expired false
     paused false
+    exam_sitting_id 1
     notifications true
+    computer_based_exam false
+    percentage_complete 0
   end
 
 end

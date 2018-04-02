@@ -27,7 +27,7 @@ describe Currency do
     end
   end
 
-  subject { FactoryGirl.build(:currency) }
+  subject { FactoryBot.build(:currency) }
 
   # Constants
 

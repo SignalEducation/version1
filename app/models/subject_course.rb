@@ -220,7 +220,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def completed_by_user(user_id)
-    self.percentage_complete_by_user(user_id) == 100
+    self.percentage_complete_by_user(user_id) >= 100
   end
 
   def percentage_complete_by_user(user_id)

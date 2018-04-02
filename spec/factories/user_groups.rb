@@ -27,7 +27,7 @@
 #  blocked_user                 :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user_group do
     sequence(:name)                      { |n| "User Group #{n}" }
     description                          'Lorem ipsum'

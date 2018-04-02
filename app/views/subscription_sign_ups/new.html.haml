@@ -1,0 +1,187 @@
+.upgrade.africa
+  #wrapper
+    %section#africa
+      .tmain
+        .tbase
+          -if flash[:success] || flash[:error] || flash[:warning]
+            .col-sm-8.col-sm-offset-2.col-xs-12
+              =render partial: 'layouts/flash_messages'
+          .container
+            .row
+              .col-md-10.col-md-offset-1.text-center
+                %h1.title1
+                  ACCA Africa Exam Study Special Offer
+                %h2.subtitle
+                  Worried about failing your ACCA exams?
+                %h2.subtitle
+                  LearnSignal, in association with ACCA Africa, is delighted to help you pass your exams with full access to our online exam preparation courses for 3 months at 50% off the usual price.
+
+      .go-down
+        -#TODO can the first name field autofocus on this click???
+        %a.anchor{:href => "#sign_up"}
+          %i.fa.fa-angle-down
+      .bottom-arrow
+
+    #sign_up{style: 'max-width: 1200px;'}
+      =form_for @user, url: create_subscription_sign_up_url, html: { id: 'upgrade-form', role: 'form'} do |f|
+        =f.hidden_field :locale, value: (params[:locale] || 'en')
+        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+
+
+        .row.l-margin-bottom
+          .col-sm-12
+            .col-xs-10.col-xs-offset-1
+              .notice.africa
+                .fa.fa-info-circle.icon
+                ='If you already have a LearnSignal account please follow'
+                =link_to sign_in_url(upgrade: true) do
+                  ='this link'
+
+
+
+
+        %section
+          .row
+            .col-md-10.col-md-offset-1
+              =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.users.upgrade_subscription.error_panel_caption')}
+              %h2.title1
+                %span.number.subtext
+                  1
+                ='Enter your personal details'
+
+
+          .row.l-margin-top
+            .col-sm-10.col-sm-offset-1
+              .col-sm-6
+                .form-group
+                  =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
+                  =f.text_field :first_name, required: true, class: 'form-control', id: 'user_first_name'
+              .col-sm-6
+                .form-group
+                  =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
+                  =f.text_field :last_name, class: 'form-control', id: 'user_last_name'
+              .col-sm-6
+                .form-group
+                  =f.label :email, t('views.users.form.email'), class: 'control-label'
+                  =f.email_field :email, class: 'form-control', required: true, id: 'user_email'
+              .col-sm-6
+                .form-group
+                  =f.label :email_confirmation, t('views.users.form.email_confirmation'), class: 'control-label'
+                  =email_field :email_confirmation, nil, class: 'form-control', required: true, id: 'user_email_confirm'
+              .col-sm-6
+                .form-group
+                  =f.label :password, t('views.users.form.password'), class: 'control-label'
+                  =f.password_field :password, required: true, class: 'form-control', id: 'user_password'
+              .col-sm-6
+                .form-group
+                  =f.label :password_confirmation, t('views.users.form.password_confirmation'), class: 'control-label'
+                  =f.password_field :password_confirmation, required: true, class: 'form-control', id: 'user_password_confirmation'
+
+
+
+
+        =f.fields_for :subscriptions do |subscription|
+          =subscription.hidden_field :subscription_plan_id, value: @africa_subscription_plan.id
+          =subscription.hidden_field :stripe_token
+          =hidden_field_tag :hidden_coupon_code
+
+        .row.l-margin-top-huge
+          .col-md-10.col-md-offset-1
+            %h2.title1.l-margin-bottom
+              %span.number.subtext
+                2
+              Enter your payment details
+
+
+            =render partial: 'subscription_sign_ups_card_form', locals: {f: f}
+
+
+
+:javascript
+
+
+  var couponCode = $('#coupon_code');
+  var plan_id = $('#user_subscriptions_attributes_0_subscription_plan_id').val();
+
+
+  // Trigger Ajax call on every input into the coupon field.
+  // Ajax call params are the coupon field value and selected_plan_id
+  // If response contains 'valid:true' add green border to field input
+  // If response contains 'valid:false' add red border to field and show error text
+  //
+  //
+  function validateCoupon() {
+
+      if(!couponCode.value){
+        $.ajax({
+          url: '#{coupon_validation_path}',
+
+          dataType: 'json',
+          data: JSON.stringify({'coupon_code': couponCode.val(), 'plan_id': plan_id }),
+          method: 'POST',
+          contentType: "application/json; charset=utf-8",
+
+          success: function(data,status,xhr){
+            var validCoupon = data.valid;
+            var discountedPrice = data.discounted_price;
+
+            if(validCoupon === false){
+              $('#coupon_code').removeClass("coupon-success");
+              $('#coupon_code').addClass("coupon-error");
+              $('.invalid-code').show();
+              $('.discounted-price').hide();
+              $('#total-value').removeClass('strike');
+
+            } else if(validCoupon === true){
+              $('#coupon_code').removeClass("coupon-error");
+              $('#coupon_code').addClass("coupon-success");
+              $('.invalid-code').hide();
+
+              $('.discounted-price').show();
+              $('#total-value').addClass('strike');
+              $('#discounted-value').text(discountedPrice);
+
+            } else {
+              $('#coupon_code').removeClass("coupon-error");
+              $('#coupon_code').removeClass("coupon-success");
+              $('.invalid-code').hide();
+            }
+
+
+
+          },
+          error: function(xhr,status,error){
+            console.log(xhr);
+            alert(error);
+          }
+
+        });
+
+    } else  {
+      couponCode.removeClass("coupon-error");
+      couponCode.removeClass("coupon-success");
+      couponCode.hide();
+    }
+
+  }
+
+  $('#coupon_code').on('input',function(e) {
+    validateCoupon();
+  });
+
+  // Hide green/red border and coupon error text if input has no value
+  $('#coupon_code').blur(function() {
+    if ($('#coupon_code').val() === '') {
+      $('#coupon_code').removeClass("coupon-error");
+      $('#coupon_code').removeClass("coupon-success");
+      $('.invalid-code').hide();
+    }
+  });
+
+  $(document).on('ready', function() {
+    $(".sk-circle").hide();
+    $('.invalid-code').hide();
+    $('.discounted-price').hide();
+  })
+
+

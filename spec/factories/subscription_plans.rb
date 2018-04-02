@@ -19,12 +19,12 @@
 #  livemode                      :boolean          default(FALSE)
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :subscription_plan do
     sequence(:name)                 { |n| "Test #{n}" }
     all_you_can_eat                 true
     payment_frequency_in_months     1
-    currency_id                     { Currency.first.try(:id) || FactoryGirl.create(:euro).id }
+    currency_id                     { Currency.first.try(:id) || FactoryBot.create(:euro).id }
     price                           9.99
     available_from                  { 14.days.ago }
     available_to                    { 7.days.from_now }

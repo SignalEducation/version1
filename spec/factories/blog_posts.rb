@@ -16,7 +16,7 @@
 #  image_updated_at   :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :blog_post do
     home_page_id 1
     sorting_order 1

@@ -41,7 +41,7 @@ describe CourseModule do
     end
   end
 
-  subject { FactoryGirl.build(:course_module) }
+  subject { FactoryBot.build(:course_module) }
 
   # Constants
 

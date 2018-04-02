@@ -17,7 +17,7 @@
 #  updated_at               :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :student_access do
     user_id 1
     trial_seconds_limit 1
@@ -34,11 +34,11 @@ FactoryGirl.define do
       content_seconds_consumed 0
       account_type 'Trial'
 
-      factory :valid_trial_student_access do
+      factory :valid_free_trial_student_access do
         content_access true
       end
 
-      factory :expired_trial_student_access do
+      factory :invalid_free_trial_student_access do
         content_access false
       end
 
@@ -46,6 +46,21 @@ FactoryGirl.define do
 
     factory :subscription_student_access do
       account_type 'Subscription'
+      content_access true
+
+      factory :valid_subscription_student_access do
+        content_access true
+      end
+
+      factory :invalid_subscription_student_access do
+        content_access false
+      end
+
+
+    end
+
+    factory :complimentary_student_access do
+      account_type 'Complimentary'
       content_access true
     end
 

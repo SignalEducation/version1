@@ -14,7 +14,7 @@
 #  updated_at         :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :order_item do
     order_id 1
     user_id 1

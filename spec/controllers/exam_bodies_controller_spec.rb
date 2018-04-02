@@ -10,23 +10,24 @@
 #
 
 require 'rails_helper'
+require 'support/system_setup'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 
 describe ExamBodiesController, type: :controller do
 
+  include_context 'system_setup'
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  let!(:exam_body_1) { FactoryGirl.create(:exam_body) }
-  let!(:exam_body_2) { FactoryGirl.create(:exam_body) }
-  let!(:exam_sitting_1) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
-  let!(:exam_sitting_2) {FactoryGirl.create(:exam_sitting, exam_body_id: exam_body_1.id)}
-  let!(:enrollment_1) {FactoryGirl.create(:enrollment, user_id: student_user.id,
+  let!(:exam_body_2) { FactoryBot.create(:exam_body) }
+  let!(:exam_sitting_1) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id)}
+  let!(:exam_sitting_2) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id)}
+  let!(:enrollment_1) {FactoryBot.create(:enrollment, user_id: student_user.id,
                                           exam_body_id: exam_body_1.id,
                                           subject_course_id: subject_course_1.id,
                                           exam_sitting_id: exam_sitting_1.id)}
-  let!(:valid_params) { FactoryGirl.attributes_for(:exam_body) }
+  let!(:valid_params) { FactoryBot.attributes_for(:exam_body) }
 
   context 'Not logged in: ' do
 
@@ -82,11 +83,287 @@ describe ExamBodiesController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_body_1' do
+        get :show, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see exam_body_2' do
+        get :show, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_body_1' do
+        get :edit, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with exam_body_2' do
+        get :edit, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_body: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_body_1' do
+        put :update, id: exam_body_1.id, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_body_2' do
+        put :update, id: exam_body_2.id, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_body_1.id, exam_body: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_body_1' do
+        get :show, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see exam_body_2' do
+        get :show, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_body_1' do
+        get :edit, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with exam_body_2' do
+        get :edit, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_body: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_body_1' do
+        put :update, id: exam_body_1.id, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_body_2' do
+        put :update, id: exam_body_2.id, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_body_1.id, exam_body: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_body_1' do
+        get :show, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see exam_body_2' do
+        get :show, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_body_1' do
+        get :edit, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with exam_body_2' do
+        get :edit, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_body: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_body_1' do
+        put :update, id: exam_body_1.id, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_body_2' do
+        put :update, id: exam_body_2.id, exam_body: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_body_1.id, exam_body: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: exam_body_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_body_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do

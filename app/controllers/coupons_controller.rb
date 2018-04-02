@@ -22,7 +22,7 @@
 
 class CouponsController < ApplicationController
 
-  before_action :logged_in_required
+  before_action :logged_in_required, except: [:validate_coupon]
   before_action except: [:validate_coupon] do
     ensure_user_has_access_rights(%w(stripe_management_access))
   end

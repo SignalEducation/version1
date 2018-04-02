@@ -175,7 +175,7 @@ class CourseModule < ActiveRecord::Base
   ## User Course Tracking ##
 
   def completed_by_user(user_id)
-    self.percentage_complete_by_user(user_id) == 100
+    self.percentage_complete_by_user(user_id) >= 100
   end
 
   def percentage_complete_by_user(user_id)
@@ -184,7 +184,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def completed_for_enrollment(enrollment_id)
-    self.percentage_complete_for_enrollment(enrollment_id) == 100
+    self.percentage_complete_for_enrollment(enrollment_id) >= 100
   end
 
   def percentage_complete_for_enrollment(enrollment_id)

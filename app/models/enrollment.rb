@@ -230,7 +230,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def create_intercom_event
-    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date)
+    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.exam_date) unless Rails.env.test?
   end
 
 end

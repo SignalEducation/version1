@@ -12,7 +12,7 @@
 #  updated_at  :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :ip_address do
     ip_address "MyString"
 latitude 1.5

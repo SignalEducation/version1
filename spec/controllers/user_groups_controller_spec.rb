@@ -34,7 +34,7 @@ describe UserGroupsController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:valid_params) { FactoryGirl.attributes_for(:user_group) }
+  let!(:valid_params) { FactoryBot.attributes_for(:user_group) }
 
   context 'Not logged in...' do
 

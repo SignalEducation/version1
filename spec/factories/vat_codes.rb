@@ -11,7 +11,7 @@
 #  updated_at :datetime
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :vat_code do
     country_id 1
     name 'Standard'

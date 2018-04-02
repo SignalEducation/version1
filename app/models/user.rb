@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
                   :trial_ended_notification_sent_at, :terms_and_conditions,
                   :date_of_birth, :description, :free_trial_ended_at,
                   :student_number, :student_access_attributes,
-                  :unsubscribed_from_emails
+                  :unsubscribed_from_emails, :subscriptions_attributes
 
   # Constants
   LOCALES = %w(en)
@@ -120,6 +120,7 @@ class User < ActiveRecord::Base
   has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :student_access
+  accepts_nested_attributes_for :subscriptions
 
   # validation
   validates :email, presence: true, uniqueness: true, length: {within: 5..50}
@@ -135,7 +136,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_update :update_stripe_customer, :create_on_intercom
+  after_update :update_stripe_customer, :update_intercom_user, :recalculate_student_access
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -906,7 +907,7 @@ class User < ActiveRecord::Base
 
   protected
 
-  def create_on_intercom
+  def update_intercom_user
     if self.date_of_birth_changed? || self.email_changed? || self.student_number_changed?
       IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
     end
@@ -917,14 +918,20 @@ class User < ActiveRecord::Base
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
   end
 
+  def recalculate_student_access
+    self.student_access.recalculate_access_from_limits
+  end
+
   def update_stripe_customer
-    if self.stripe_account_balance_changed? || self.email_changed?
-      Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
-      stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-      stripe_customer.email = self.email
-      stripe_customer.account_balance = self.stripe_account_balance
-      stripe_customer.save
-      self.update_column(:stripe_account_balance, stripe_customer.account_balance)
+    unless Rails.env.test?
+      if self.stripe_account_balance_changed? || self.email_changed?
+        Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
+        stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
+        stripe_customer.email = self.email
+        stripe_customer.account_balance = self.stripe_account_balance
+        stripe_customer.save
+        self.update_column(:stripe_account_balance, stripe_customer.account_balance)
+      end
     end
   end
 

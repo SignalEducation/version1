@@ -5,11 +5,11 @@ RSpec.describe CoursesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:subject_course) { FactoryGirl.create(:active_subject_course) }
-  let!(:course_module_1) { FactoryGirl.create(:course_module, subject_course_id: subject_course.id) }
-  let!(:course_module_element) { FactoryGirl.create(:course_module_element, course_module_id: course_module_1.id)}
+  let!(:subject_course) { FactoryBot.create(:active_subject_course) }
+  let!(:course_module_1) { FactoryBot.create(:course_module, subject_course_id: subject_course.id) }
+  let!(:course_module_element) { FactoryBot.create(:course_module_element, course_module_id: course_module_1.id)}
 
-  #let!(:course_module_element_user_log) { FactoryGirl.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id, user_id: student_user.id)}
+  #let!(:course_module_element_user_log) { FactoryBot.create(:course_module_element_user_log, course_module_element_id: course_module_element.id, course_module_id: course_module_1.id, user_id: student_user.id)}
 
   #let!(:valid_params) { course_module_element_user_log.attributes.merge({time_taken_in_seconds: (Time.now.to_i * -1)}) }
 

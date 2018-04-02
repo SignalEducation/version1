@@ -7,11 +7,11 @@ RSpec.describe StudentSignUpsController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'system_setup'
 
-  let!(:unverified_user) { FactoryGirl.create(:student_user, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:student_user, user_group_id: student_user_group.id) }
+  let!(:unverified_user) { FactoryBot.create(:student_user, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
+  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
   let!(:sign_up_params) { { first_name: "Test", last_name: "Student", country_id: Country.first.id, locale: 'en', email: 'test.student@example.com', password: "dummy_pass", password_confirmation: "dummy_pass" } }
-  let!(:referral_code) { FactoryGirl.create(:referral_code, user_id: student_user.id) }
+  let!(:referral_code) { FactoryBot.create(:referral_code, user_id: student_user.id) }
 
 
   context 'Not logged in...' do

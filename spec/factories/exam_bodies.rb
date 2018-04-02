@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :exam_body do
     sequence(:name)           { |n| "ACCA #{n}" }
     url 'accaglobal.com/ie/en.html'

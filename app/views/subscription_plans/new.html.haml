@@ -7,7 +7,6 @@
             =t('views.subscription_plans.new.h1')
 
       =form_for(@subscription_plan, html: {class: 'form-horizontal', role: 'form'}) do |f|
-        =f.hidden_field :available_to_students, value: true
         =f.hidden_field :all_you_can_eat, value: true
         .row
           .col-md-6
@@ -40,6 +39,13 @@
             =f.label :available_to, t('views.subscription_plans.form.available_to'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker2'
+
+          .col-sm-6.l-margin-top-big
+            .col-sm-8
+              .checkbox
+                %label
+                  =f.check_box :available_to_students
+                  =t('views.subscription_plans.form.available_to_students')
 
         .row.l-margin-top-big
           =f.submit t('views.general.save'), class: 'btn btn-red'

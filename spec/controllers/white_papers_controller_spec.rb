@@ -27,10 +27,10 @@ describe WhitePapersController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:white_paper_1) { FactoryGirl.create(:white_paper) }
-  let!(:white_paper_2) { FactoryGirl.create(:white_paper) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:white_paper) }
-  let!(:request_params) { FactoryGirl.attributes_for(:white_paper_request, white_paper_id: white_paper_1.id) }
+  let!(:white_paper_1) { FactoryBot.create(:white_paper) }
+  let!(:white_paper_2) { FactoryBot.create(:white_paper) }
+  let!(:valid_params) { FactoryBot.attributes_for(:white_paper) }
+  let!(:request_params) { FactoryBot.attributes_for(:white_paper_request, white_paper_id: white_paper_1.id) }
 
   context 'Not logged in: ' do
 

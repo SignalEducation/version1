@@ -25,9 +25,9 @@ RSpec.describe ProductsController, type: :controller do
   include_context 'users_and_groups_setup'
   include_context 'system_setup'
 
-  let!(:product_1) { FactoryGirl.create(:product, currency_id: gbp.id) }
-  let!(:product_2) { FactoryGirl.create(:product, currency_id: gbp.id) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:product, active: false) }
+  let!(:product_1) { FactoryBot.create(:product, currency_id: gbp.id) }
+  let!(:product_2) { FactoryBot.create(:product, currency_id: gbp.id) }
+  let!(:valid_params) { FactoryBot.attributes_for(:product, active: false) }
 
 
   context 'Not logged in: ' do

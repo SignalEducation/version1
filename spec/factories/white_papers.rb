@@ -20,7 +20,7 @@
 #  subject_course_id        :integer
 #
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :white_paper do
     sequence(:name) { |n| "Title#{n}" }
     sequence(:name_url) { |n| "title_#{n}" }

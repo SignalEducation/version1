@@ -24,7 +24,7 @@ require 'rails_helper'
 describe Enrollment do
 
   # attr-accessible
-  black_list = %w(id created_at paused)
+  black_list = %w(id created_at paused notifications)
   Enrollment.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -60,7 +60,6 @@ describe Enrollment do
   it { should callback(:create_expiration_worker).after(:create) }
   it { should callback(:deactivate_siblings).after(:create) }
   it { should callback(:create_expiration_worker).after(:update), if: :exam_date_changed? }
-  it { should callback(:study_streak_email).after(:update) }
 
   # scopes
   it { expect(Enrollment).to respond_to(:all_in_order) }

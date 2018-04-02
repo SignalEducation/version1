@@ -29,17 +29,17 @@ describe SubscriptionPlansController, type: :controller do
 
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:start_stripe_mock) { StripeMock.start }
-  let!(:subscription_plan_1) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:subscription_plan_2) { FactoryGirl.create(:student_subscription_plan) }
-  let!(:stripe_student_user) { FactoryGirl.create(:student_user,
+  let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
+  let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
+  let!(:stripe_student_user) { FactoryBot.create(:student_user,
                                                   stripe_customer_id: (Stripe::Customer.create({email: student_user.email})).id) }
 
-  let!(:subscription_1) { FactoryGirl.create(:subscription,
+  let!(:subscription_1) { FactoryBot.create(:subscription,
                           subscription_plan_id: subscription_plan_1.id,
                           user_id: stripe_student_user.id,
                           stripe_token: stripe_helper.generate_card_token) }
 
-  let!(:valid_params) { FactoryGirl.attributes_for(:subscription_plan) }
+  let!(:valid_params) { FactoryBot.attributes_for(:subscription_plan) }
 
   #before { StripeMock.start }
   after { StripeMock.stop }

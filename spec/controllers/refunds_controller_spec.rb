@@ -27,9 +27,9 @@ describe RefundsController, type: :controller do
   include_context 'users_and_groups_setup'
 
   # todo: Try to create children for refund_1
-  let!(:refund_1) { FactoryGirl.create(:refund) }
-  let!(:refund_2) { FactoryGirl.create(:refund) }
-  let!(:valid_params) { FactoryGirl.attributes_for(:refund) }
+  let!(:refund_1) { FactoryBot.create(:refund) }
+  let!(:refund_2) { FactoryBot.create(:refund) }
+  let!(:valid_params) { FactoryBot.attributes_for(:refund) }
 
   context 'Not logged in: ' do
 

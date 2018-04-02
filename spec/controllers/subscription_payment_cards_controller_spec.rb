@@ -34,13 +34,11 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
-require 'support/subscription_plans_setup'
 require 'stripe_mock'
 
 RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
   include_context 'users_and_groups_setup'
-  include_context 'subscription_plans_setup'
   include_context 'system_setup'
 
   before { StripeMock.start }
@@ -52,7 +50,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
   let(:stripe_card_token) { stripe_helper.generate_card_token(card_params) }
   let(:stripe_bad_token) { StripeMock.prepare_card_error(:incorrect_number) }
 
-  let(:student_user_2) { FactoryGirl.create(:student_user)}
+  let(:student_user_2) { FactoryBot.create(:student_user)}
   let!(:stripe_customer_1) { customer = Stripe::Customer.create({
                   email: student_user.email,
                   card: stripe_helper.generate_card_token})
@@ -68,11 +66,11 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
                   customer
   }
 
-  let(:card_1) { FactoryGirl.create(:subscription_payment_card,
+  let(:card_1) { FactoryBot.create(:subscription_payment_card,
                   stripe_token: stripe_helper.generate_card_token(card_params),
                   user_id: student_user.id,
                   customer_guid: student_user.stripe_customer_id) }
-  let(:card_2) { FactoryGirl.create(:subscription_payment_card,
+  let(:card_2) { FactoryBot.create(:subscription_payment_card,
                   stripe_token: stripe_helper.generate_card_token(card_params),
                   user_id: student_user_2.id,
                   customer_guid: student_user_2.stripe_customer_id) }
