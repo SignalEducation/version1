@@ -102,11 +102,122 @@ RSpec.describe UserPasswordsController, type: :controller do
 
   end
 
-  context 'Individual student user logged in: ' do
+  context 'Logged in as valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe 'GET new' do
@@ -144,6 +255,191 @@ RSpec.describe UserPasswordsController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(comp_user)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as tutor_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(tutor_user)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as content_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_manager_user)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as customer_support_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(customer_support_manager_user)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe 'GET new' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'GET edit' do
+      it 'redirects because logged_out_required' do
+        get :edit, id: 1
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'post create' do
+      it 'redirects because logged_out_required' do
+        post :create
+        expect_bounce_as_signed_in
+      end
+    end
+
+    describe 'put update' do
+      it 'redirects because logged_out_required' do
+        put :update, id: '123'
+        expect_bounce_as_signed_in
+      end
+    end
+
+  end
+
+  context 'Logged in as admin_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(admin_user)
     end
 
     describe 'GET new' do

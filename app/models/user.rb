@@ -357,8 +357,8 @@ class User < ActiveRecord::Base
     self.user_group.developer_access
   end
 
-  def home_pages_access?
-    self.user_group.home_pages_access
+  def marketing_resources_access?
+    self.user_group.marketing_resources_access
   end
 
   def user_group_management_access?

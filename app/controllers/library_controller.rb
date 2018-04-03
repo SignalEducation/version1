@@ -37,6 +37,7 @@ class LibraryController < ApplicationController
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
       mock_exam_ids = @course.mock_exams.map(&:id)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+      @subject_course_resources = @course.subject_course_resources
 
 
 
@@ -67,7 +68,6 @@ class LibraryController < ApplicationController
             @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
             @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
             @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
-            @subject_course_resources = @course.subject_course_resources
             @form_type = "Course Tutor Question. Course: #{@course.name}"
 
         else

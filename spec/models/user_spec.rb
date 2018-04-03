@@ -179,7 +179,7 @@ describe User do
   it { should respond_to(:stripe_management_access?) }
   it { should respond_to(:user_management_access?) }
   it { should respond_to(:developer_access?) }
-  it { should respond_to(:home_pages_access?) }
+  it { should respond_to(:marketing_resources_access?) }
   it { should respond_to(:user_group_management_access?) }
 
   it { should respond_to(:trial_user?) }

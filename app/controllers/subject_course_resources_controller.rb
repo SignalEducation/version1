@@ -12,6 +12,7 @@
 #  file_upload_content_type :string
 #  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
+#  external_url             :string
 #
 
 class SubjectCourseResourcesController < ApplicationController
@@ -74,7 +75,8 @@ class SubjectCourseResourcesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description, :file_upload)
+    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description,
+                                                    :file_upload, :external_url)
   end
 
 end

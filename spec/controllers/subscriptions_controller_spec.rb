@@ -117,7 +117,7 @@ describe SubscriptionsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     ##TODO
     ## Testing for student users must test each account type a user can have
@@ -127,7 +127,7 @@ describe SubscriptionsController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
       stripe_plan = Stripe::Plan.create(
           amount: (subscription_plan_1.price.to_f * 100).to_i,
           interval: 'month',
@@ -140,9 +140,519 @@ describe SubscriptionsController, type: :controller do
       )
       subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
       stripe_customer = Stripe::Customer.create(
-          email: student_user.email
+          email: valid_trial_student.email
       )
-      student_user.update_attributes(stripe_customer_id: stripe_customer.id, country_id: Country.first.id)
+      valid_trial_student.update_attributes(stripe_customer_id: stripe_customer.id, country_id: Country.first.id)
+
+      valid_coupon = Stripe::Coupon.create(percent_off: 25, duration: 'repeating', duration_in_months: 3, id: 'valid_coupon_code', currency: subscription_plan_1.currency.try(:iso_code).try(:downcase))
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond okay with correct params and valid coupon' do
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+        post :create, user: upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(SubscriptionTransaction.count).to eq(1)
+        expect(SubscriptionPaymentCard.count).to eq(2)
+      end
+
+      it 'should respond with Error coupon is invalid' do
+        post :create, user: upgrade_params, hidden_coupon_code: 'abc123', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('The coupon code entered is not valid')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_url(coupon: true))
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+
+      end
+
+      it 'should respond okay with correct params without coupon' do
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+        post :create, user: upgrade_params, hidden_coupon_code: '', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(SubscriptionTransaction.count).to eq(1)
+        expect(SubscriptionPaymentCard.count).to eq(2)
+      end
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create, user: invalid_upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_url)
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+      end
+
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should successfully render the change_plan form' do
+        get :change_plan
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:change_plan)
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should create a new subscription then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_1.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        old_sub = Subscription.find(subscription_1.id)
+        expect(old_sub.current_status).to eq('canceled')
+        expect(student_user.current_subscription.id).not_to eq(old_sub.id)
+        expect(student_user.current_subscription.current_status).to eq('active')
+        expect(student_user.current_subscription.subscription_plan_id).to eq(subscription_plan_2.id)
+
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+
+      it 'should fail to create a new subscription then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_1.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+        subscription_1.update_attribute(:current_status, 'canceled')
+
+        put :update, id: subscription_1.id, subscription: valid_params
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.update.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page updating to canceled-pending' do
+        stripe_customer = Stripe::Customer.create(email: student_user_3.email)
+        student_user_3.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_3.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_3.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_3.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+        expect(subscription_3.current_status).to eq('active')
+
+        delete :destroy, id: subscription_3.id
+        sub = Subscription.find(subscription_3.id)
+        expect(sub.current_status).to eq('canceled-pending')
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    ##TODO
+    ## Testing for student users must test each account type a user can have
+    ## [not-started-trial, valid-trial, expired-trial]
+    ## [valid-sub, past-due-sub, canceled-pending-sub, canceled-sub]
+    ##TODO
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+      stripe_plan = Stripe::Plan.create(
+          amount: (subscription_plan_1.price.to_f * 100).to_i,
+          interval: 'month',
+          interval_count: subscription_plan_1.payment_frequency_in_months.to_i,
+          trial_period_days: subscription_plan_1.trial_period_in_days.to_i,
+          name: 'LearnSignal ' + subscription_plan_1.name.to_s,
+          statement_descriptor: 'LearnSignal',
+          currency: subscription_plan_1.currency.try(:iso_code).try(:downcase),
+          id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+      subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
+      stripe_customer = Stripe::Customer.create(
+          email: invalid_trial_student.email
+      )
+      invalid_trial_student.update_attributes(stripe_customer_id: stripe_customer.id, country_id: Country.first.id)
+
+      valid_coupon = Stripe::Coupon.create(percent_off: 25, duration: 'repeating', duration_in_months: 3, id: 'valid_coupon_code', currency: subscription_plan_1.currency.try(:iso_code).try(:downcase))
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond okay with correct params and valid coupon' do
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+        post :create, user: upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(SubscriptionTransaction.count).to eq(1)
+        expect(SubscriptionPaymentCard.count).to eq(2)
+      end
+
+      it 'should respond with Error coupon is invalid' do
+        post :create, user: upgrade_params, hidden_coupon_code: 'abc123', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('The coupon code entered is not valid')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_url(coupon: true))
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+
+      end
+
+      it 'should respond okay with correct params without coupon' do
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+        post :create, user: upgrade_params, hidden_coupon_code: '', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(SubscriptionTransaction.count).to eq(1)
+        expect(SubscriptionPaymentCard.count).to eq(2)
+      end
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create, user: invalid_upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_url)
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+      end
+
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should successfully render the change_plan form' do
+        get :change_plan
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:change_plan)
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should create a new subscription then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_1.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        old_sub = Subscription.find(subscription_1.id)
+        expect(old_sub.current_status).to eq('canceled')
+        expect(student_user.current_subscription.id).not_to eq(old_sub.id)
+        expect(student_user.current_subscription.current_status).to eq('active')
+        expect(student_user.current_subscription.subscription_plan_id).to eq(subscription_plan_2.id)
+
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+
+      it 'should fail to create a new subscription then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_1.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+        subscription_1.update_attribute(:current_status, 'canceled')
+
+        put :update, id: subscription_1.id, subscription: valid_params
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.update.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page updating to canceled-pending' do
+        stripe_customer = Stripe::Customer.create(email: student_user_3.email)
+        student_user_3.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_3.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_3.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_3.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+        expect(subscription_3.current_status).to eq('active')
+
+        delete :destroy, id: subscription_3.id
+        sub = Subscription.find(subscription_3.id)
+        expect(sub.current_status).to eq('canceled-pending')
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    ##TODO
+    ## Testing for student users must test each account type a user can have
+    ## [not-started-trial, valid-trial, expired-trial]
+    ## [valid-sub, past-due-sub, canceled-pending-sub, canceled-sub]
+    ##TODO
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+      stripe_plan = Stripe::Plan.create(
+          amount: (subscription_plan_1.price.to_f * 100).to_i,
+          interval: 'month',
+          interval_count: subscription_plan_1.payment_frequency_in_months.to_i,
+          trial_period_days: subscription_plan_1.trial_period_in_days.to_i,
+          name: 'LearnSignal ' + subscription_plan_1.name.to_s,
+          statement_descriptor: 'LearnSignal',
+          currency: subscription_plan_1.currency.try(:iso_code).try(:downcase),
+          id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+      subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
+      stripe_customer = Stripe::Customer.create(
+          email: valid_subscription_student.email
+      )
+      valid_subscription_student.update_attributes(stripe_customer_id: stripe_customer.id, country_id: Country.first.id)
+
+      valid_coupon = Stripe::Coupon.create(percent_off: 25, duration: 'repeating', duration_in_months: 3, id: 'valid_coupon_code', currency: subscription_plan_1.currency.try(:iso_code).try(:downcase))
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:new)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond okay with correct params and valid coupon' do
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+        post :create, user: upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(SubscriptionTransaction.count).to eq(1)
+        expect(SubscriptionPaymentCard.count).to eq(2)
+      end
+
+      it 'should respond with Error coupon is invalid' do
+        post :create, user: upgrade_params, hidden_coupon_code: 'abc123', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('The coupon code entered is not valid')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_url(coupon: true))
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+
+      end
+
+      it 'should respond okay with correct params without coupon' do
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+        post :create, user: upgrade_params, hidden_coupon_code: '', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(SubscriptionTransaction.count).to eq(1)
+        expect(SubscriptionPaymentCard.count).to eq(2)
+      end
+
+      it 'should respond with Error Your request was declined. With Bad params' do
+        post :create, user: invalid_upgrade_params, hidden_coupon_code: 'valid_coupon_code', user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq('Sorry! Your request was declined. Please check that all details are valid and try again. Or contact us for assistance.')
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(new_url)
+        expect(SubscriptionTransaction.count).to eq(0)
+        expect(SubscriptionPaymentCard.count).to eq(1)
+      end
+
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should successfully render the change_plan form' do
+        get :change_plan
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:change_plan)
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should create a new subscription then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_1.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        old_sub = Subscription.find(subscription_1.id)
+        expect(old_sub.current_status).to eq('canceled')
+        expect(student_user.current_subscription.id).not_to eq(old_sub.id)
+        expect(student_user.current_subscription.current_status).to eq('active')
+        expect(student_user.current_subscription.subscription_plan_id).to eq(subscription_plan_2.id)
+
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+
+      it 'should fail to create a new subscription then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_1.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+        subscription_1.update_attribute(:current_status, 'canceled')
+
+        put :update, id: subscription_1.id, subscription: valid_params
+
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.update.flash.error'))
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page updating to canceled-pending' do
+        stripe_customer = Stripe::Customer.create(email: student_user_3.email)
+        student_user_3.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_3.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_3.update_attribute(:stripe_customer_id, stripe_customer.id)
+        subscription_3.update_attribute(:stripe_customer_data, stripe_customer.to_hash.deep_dup)
+        expect(subscription_3.current_status).to eq('active')
+
+        delete :destroy, id: subscription_3.id
+        sub = Subscription.find(subscription_3.id)
+        expect(sub.current_status).to eq('canceled-pending')
+        expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+      end
+    end
+
+  end
+
+  context 'Logged in as a student_user: ' do
+
+    ##TODO
+    ## Testing for student users must test each account type a user can have
+    ## [not-started-trial, valid-trial, expired-trial]
+    ## [valid-sub, past-due-sub, canceled-pending-sub, canceled-sub]
+    ##TODO
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
+      stripe_plan = Stripe::Plan.create(
+          amount: (subscription_plan_1.price.to_f * 100).to_i,
+          interval: 'month',
+          interval_count: subscription_plan_1.payment_frequency_in_months.to_i,
+          trial_period_days: subscription_plan_1.trial_period_in_days.to_i,
+          name: 'LearnSignal ' + subscription_plan_1.name.to_s,
+          statement_descriptor: 'LearnSignal',
+          currency: subscription_plan_1.currency.try(:iso_code).try(:downcase),
+          id: Rails.env + '-' + ApplicationController::generate_random_code(20)
+      )
+      subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
+      stripe_customer = Stripe::Customer.create(
+          email: invalid_subscription_student.email
+      )
+      invalid_subscription_student.update_attributes(stripe_customer_id: stripe_customer.id, country_id: Country.first.id)
 
       valid_coupon = Stripe::Coupon.create(percent_off: 25, duration: 'repeating', duration_in_months: 3, id: 'valid_coupon_code', currency: subscription_plan_1.currency.try(:iso_code).try(:downcase))
     end

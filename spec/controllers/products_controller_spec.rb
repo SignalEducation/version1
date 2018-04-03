@@ -17,13 +17,13 @@
 #
 
 require 'rails_helper'
-require 'support/users_and_groups_setup'
 require 'support/system_setup'
+require 'support/users_and_groups_setup'
 
 RSpec.describe ProductsController, type: :controller do
 
-  include_context 'users_and_groups_setup'
   include_context 'system_setup'
+  include_context 'users_and_groups_setup'
 
   let!(:product_1) { FactoryBot.create(:product, currency_id: gbp.id) }
   let!(:product_2) { FactoryBot.create(:product, currency_id: gbp.id) }
@@ -76,11 +76,245 @@ RSpec.describe ProductsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with product_1' do
+        get :edit, id: product_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with product_2' do
+        get :edit, id: product_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, product: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for product_1' do
+        put :update, id: product_1.id, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for product_2' do
+        put :update, id: product_2.id, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: product_1.id, product: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: product_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: product_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with product_1' do
+        get :edit, id: product_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with product_2' do
+        get :edit, id: product_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, product: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for product_1' do
+        put :update, id: product_1.id, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for product_2' do
+        put :update, id: product_2.id, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: product_1.id, product: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: product_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: product_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with product_1' do
+        get :edit, id: product_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with product_2' do
+        get :edit, id: product_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, product: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for product_1' do
+        put :update, id: product_1.id, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for product_2' do
+        put :update, id: product_2.id, product: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: product_1.id, product: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: product_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: product_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do

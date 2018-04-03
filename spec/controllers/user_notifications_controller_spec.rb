@@ -88,11 +88,269 @@ describe UserNotificationsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/x'" do
+      it 'should see user_notification_1' do
+        get :show, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should bounce as not allowed' do
+        get :show, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/x'" do
+      it 'should respond OK with user_notification_1' do
+        get :edit, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        get :edit, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/x'" do
+      it 'should respond OK to valid params for user_notification_2' do
+        put :update, id: user_notification_1.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        put :update, id: user_notification_2.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: user_notification_1.id, user_notification: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should get OK' do
+        delete :destroy, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should get bounced as not allowed' do
+        delete :destroy, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/x'" do
+      it 'should see user_notification_1' do
+        get :show, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should bounce as not allowed' do
+        get :show, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/x'" do
+      it 'should respond OK with user_notification_1' do
+        get :edit, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        get :edit, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/x'" do
+      it 'should respond OK to valid params for user_notification_2' do
+        put :update, id: user_notification_1.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        put :update, id: user_notification_2.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: user_notification_1.id, user_notification: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should get OK' do
+        delete :destroy, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should get bounced as not allowed' do
+        delete :destroy, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/x'" do
+      it 'should see user_notification_1' do
+        get :show, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should bounce as not allowed' do
+        get :show, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/x'" do
+      it 'should respond OK with user_notification_1' do
+        get :edit, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        get :edit, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/x'" do
+      it 'should respond OK to valid params for user_notification_2' do
+        put :update, id: user_notification_1.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should bounce as not allowed' do
+        put :update, id: user_notification_2.id, user_notification: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: user_notification_1.id, user_notification: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should get OK' do
+        delete :destroy, id: user_notification_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should get bounced as not allowed' do
+        delete :destroy, id: user_notification_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do

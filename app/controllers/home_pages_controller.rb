@@ -21,7 +21,7 @@ class HomePagesController < ApplicationController
 
   before_action :logged_in_required
   before_action  do
-    ensure_user_has_access_rights(%w(system_requirements_access home_pages_access))
+    ensure_user_has_access_rights(%w(system_requirements_access marketing_resources_access))
   end
   before_action :get_variables
 

@@ -176,11 +176,557 @@ describe UserAccountsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user' do
+  context 'Logged in as a valid_trial_student' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'account'" do
+      xit 'should see my own profile' do
+        get :account, id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+    end
+
+    describe "GET 'index'" do
+      xit 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      xit 'should redirect to root' do
+        get :show, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_personal_details'" do
+      xit 'should redirect to root' do
+        get :user_personal_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_subscription_status'" do
+      xit 'should redirect to root' do
+        get :user_subscription_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_enrollments_details'" do
+      xit 'should redirect to root' do
+        get :user_enrollments_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_purchases_details'" do
+      xit 'should redirect to root' do
+        get :user_purchases_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_courses_status'" do
+      xit 'should redirect to root' do
+        get :user_courses_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      xit 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edxit/1'" do
+      xit 'should redirect to root' do
+        get :edxit, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      xit 'should redirect to root' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      xit 'should respond OK to valid params' do
+        put :update, id: student_user.id, user: valid_params
+        expect_update_success_wxith_model('user', account_url)
+        expect(assigns(:user).id).to eq(student_user.id)
+      end
+
+      xit 'should respond OK to valid params and insist on their own user ID being updated' do
+        put :update, id: admin_user.id, user: valid_params
+        expect_update_success_wxith_model('user', account_url)
+        expect(assigns(:user).id).to eq(student_user.id)
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: student_user.id, user: {email: 'a'}
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      xit 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'reactivate_account'" do
+      xit 'should redirect to root as no subscription exists for user' do
+        get :reactivate_account, user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: :subscriptions)
+      end
+
+      xit 'successfully render reactivate_account view' do
+        get :reactivate_account, user_id: student_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:reactivate_account)
+      end
+    end
+
+    describe "POST 'reactivate_account_subscription'" do
+      xit 'create new subscription for the user' do
+        stripe_customer = Stripe::Customer.create(email: student_user_1.email)
+        student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_condxitions: 'true'}, coupon: ''
+        expect(student_user_1.current_subscription.current_status).to eq('active')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(reactivation_complete_url)
+      end
+    end
+
+    describe "GET 'reactivation_complete'" do
+      xit 'should redirect to root' do
+        post :reactivation_complete, user_id: student_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:reactivation_complete)
+      end
+    end
+
+    describe "GET 'subscription_invoice'" do
+      xit 'should redirect to root' do
+        post :subscription_invoice, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      xit 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_wxith_model(account_url)
+      end
+
+      xit 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_wxith_model(account_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'account'" do
+      xit 'should see my own profile' do
+        get :account, id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+    end
+
+    describe "GET 'index'" do
+      xit 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      xit 'should redirect to root' do
+        get :show, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_personal_details'" do
+      xit 'should redirect to root' do
+        get :user_personal_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_subscription_status'" do
+      xit 'should redirect to root' do
+        get :user_subscription_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_enrollments_details'" do
+      xit 'should redirect to root' do
+        get :user_enrollments_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_purchases_details'" do
+      xit 'should redirect to root' do
+        get :user_purchases_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_courses_status'" do
+      xit 'should redirect to root' do
+        get :user_courses_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      xit 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edxit/1'" do
+      xit 'should redirect to root' do
+        get :edxit, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      xit 'should redirect to root' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      xit 'should respond OK to valid params' do
+        put :update, id: student_user.id, user: valid_params
+        expect_update_success_wxith_model('user', account_url)
+        expect(assigns(:user).id).to eq(student_user.id)
+      end
+
+      xit 'should respond OK to valid params and insist on their own user ID being updated' do
+        put :update, id: admin_user.id, user: valid_params
+        expect_update_success_wxith_model('user', account_url)
+        expect(assigns(:user).id).to eq(student_user.id)
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: student_user.id, user: {email: 'a'}
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      xit 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'reactivate_account'" do
+      xit 'should redirect to root as no subscription exists for user' do
+        get :reactivate_account, user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: :subscriptions)
+      end
+
+      xit 'successfully render reactivate_account view' do
+        get :reactivate_account, user_id: student_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:reactivate_account)
+      end
+    end
+
+    describe "POST 'reactivate_account_subscription'" do
+      xit 'create new subscription for the user' do
+        stripe_customer = Stripe::Customer.create(email: student_user_1.email)
+        student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_condxitions: 'true'}, coupon: ''
+        expect(student_user_1.current_subscription.current_status).to eq('active')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(reactivation_complete_url)
+      end
+    end
+
+    describe "GET 'reactivation_complete'" do
+      xit 'should redirect to root' do
+        post :reactivation_complete, user_id: student_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:reactivation_complete)
+      end
+    end
+
+    describe "GET 'subscription_invoice'" do
+      xit 'should redirect to root' do
+        post :subscription_invoice, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      xit 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_wxith_model(account_url)
+      end
+
+      xit 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_wxith_model(account_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'account'" do
+      xit 'should see my own profile' do
+        get :account, id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account)
+      end
+    end
+
+    describe "GET 'index'" do
+      xit 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      xit 'should redirect to root' do
+        get :show, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_personal_details'" do
+      xit 'should redirect to root' do
+        get :user_personal_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_subscription_status'" do
+      xit 'should redirect to root' do
+        get :user_subscription_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_enrollments_details'" do
+      xit 'should redirect to root' do
+        get :user_enrollments_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_purchases_details'" do
+      xit 'should redirect to root' do
+        get :user_purchases_details, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'user_courses_status'" do
+      xit 'should redirect to root' do
+        get :user_courses_status, user_id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      xit 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edxit/1'" do
+      xit 'should redirect to root' do
+        get :edxit, id: student_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      xit 'should redirect to root' do
+        post :create, user: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      xit 'should respond OK to valid params' do
+        put :update, id: student_user.id, user: valid_params
+        expect_update_success_wxith_model('user', account_url)
+        expect(assigns(:user).id).to eq(student_user.id)
+      end
+
+      xit 'should respond OK to valid params and insist on their own user ID being updated' do
+        put :update, id: admin_user.id, user: valid_params
+        expect_update_success_wxith_model('user', account_url)
+        expect(assigns(:user).id).to eq(student_user.id)
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: student_user.id, user: {email: 'a'}
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: 'personal-details-modal'))
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      xit 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'reactivate_account'" do
+      xit 'should redirect to root as no subscription exists for user' do
+        get :reactivate_account, user_id: student_user.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to account_url(anchor: :subscriptions)
+      end
+
+      xit 'successfully render reactivate_account view' do
+        get :reactivate_account, user_id: student_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:reactivate_account)
+      end
+    end
+
+    describe "POST 'reactivate_account_subscription'" do
+      xit 'create new subscription for the user' do
+        stripe_customer = Stripe::Customer.create(email: student_user_1.email)
+        student_user_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        post :reactivate_account_subscription, user_id: student_user_1.id, subscription: {subscription_plan_id: subscription_plan_2.id, stripe_token: stripe_helper.generate_card_token, terms_and_condxitions: 'true'}, coupon: ''
+        expect(student_user_1.current_subscription.current_status).to eq('active')
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(reactivation_complete_url)
+      end
+    end
+
+    describe "GET 'reactivation_complete'" do
+      xit 'should redirect to root' do
+        post :reactivation_complete, user_id: student_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:reactivation_complete)
+      end
+    end
+
+    describe "GET 'subscription_invoice'" do
+      xit 'should redirect to root' do
+        post :subscription_invoice, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST: 'change_password'" do
+      xit 'should respond OK to correct details' do
+        post :change_password, user: {current_password: 'letSomeone1n', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_success_wxith_model(account_url)
+      end
+
+      xit 'should respond ERROR to incorrect details' do
+        post :change_password, user: {current_password: 'oops', password: '456456456', password_confirmation: '456456456'}
+        expect_change_password_error_wxith_model(account_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'account'" do
@@ -673,7 +1219,6 @@ describe UserAccountsController, type: :controller do
     end
 
   end
-
 
   context 'Logged in as a content_manager_user' do
 

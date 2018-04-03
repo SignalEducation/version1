@@ -5,26 +5,20 @@
 #  id                           :integer          not null, primary key
 #  name                         :string
 #  description                  :text
-#  individual_student           :boolean          default(FALSE), not null
 #  tutor                        :boolean          default(FALSE), not null
-#  content_manager              :boolean          default(FALSE), not null
-#  blogger                      :boolean          default(FALSE), not null
 #  site_admin                   :boolean          default(FALSE), not null
 #  created_at                   :datetime
 #  updated_at                   :datetime
-#  complimentary                :boolean          default(FALSE)
-#  customer_support             :boolean          default(FALSE)
-#  marketing_support            :boolean          default(FALSE)
 #  system_requirements_access   :boolean          default(FALSE)
 #  content_management_access    :boolean          default(FALSE)
 #  stripe_management_access     :boolean          default(FALSE)
 #  user_management_access       :boolean          default(FALSE)
 #  developer_access             :boolean          default(FALSE)
-#  home_pages_access            :boolean          default(FALSE)
 #  user_group_management_access :boolean          default(FALSE)
 #  student_user                 :boolean          default(FALSE)
 #  trial_or_sub_required        :boolean          default(FALSE)
 #  blocked_user                 :boolean          default(FALSE)
+#  marketing_resources_access   :boolean          default(FALSE)
 #
 
 require 'rails_helper'
@@ -89,11 +83,185 @@ describe UserGroupsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user' do
+  context 'Logged in as a valid_trial_student' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should redirect to root' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should redirect to root' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to root' do
+        post :create, user_group: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should redirect to root' do
+        put :update, id: 1, user_group: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should redirect to root' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should redirect to root' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to root' do
+        post :create, user_group: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should redirect to root' do
+        put :update, id: 1, user_group: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should redirect to root' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should redirect to root' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should redirect to root' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should redirect to root' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should redirect to root' do
+        post :create, user_group: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should redirect to root' do
+        put :update, id: 1, user_group: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to root' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'index'" do

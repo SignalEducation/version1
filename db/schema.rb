@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180312114004) do
+ActiveRecord::Schema.define(version: 20180403093716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -690,6 +690,7 @@ ActiveRecord::Schema.define(version: 20180312114004) do
     t.string   "file_upload_content_type"
     t.integer  "file_upload_file_size"
     t.datetime "file_upload_updated_at"
+    t.string   "external_url"
   end
 
   add_index "subject_course_resources", ["name"], name: "index_subject_course_resources_on_name", using: :btree
@@ -720,15 +721,15 @@ ActiveRecord::Schema.define(version: 20180312114004) do
     t.string   "name"
     t.string   "name_url"
     t.integer  "sorting_order"
-    t.boolean  "active",                                  default: false, null: false
+    t.boolean  "active",                                  default: false,     null: false
     t.integer  "cme_count"
     t.integer  "video_count"
     t.integer  "quiz_count"
     t.integer  "question_count"
     t.text     "description"
     t.string   "short_description"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.float    "best_possible_first_attempt_score"
     t.integer  "default_number_of_possible_exam_answers"
     t.float    "total_video_duration",                    default: 0.0
@@ -747,6 +748,7 @@ ActiveRecord::Schema.define(version: 20180312114004) do
     t.datetime "background_image_updated_at"
     t.boolean  "preview",                                 default: false
     t.boolean  "computer_based",                          default: false
+    t.string   "highlight_colour",                        default: "#ef475d"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
@@ -891,26 +893,20 @@ ActiveRecord::Schema.define(version: 20180312114004) do
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
-    t.boolean  "individual_student",           default: false, null: false
     t.boolean  "tutor",                        default: false, null: false
-    t.boolean  "content_manager",              default: false, null: false
-    t.boolean  "blogger",                      default: false, null: false
     t.boolean  "site_admin",                   default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "complimentary",                default: false
-    t.boolean  "customer_support",             default: false
-    t.boolean  "marketing_support",            default: false
     t.boolean  "system_requirements_access",   default: false
     t.boolean  "content_management_access",    default: false
     t.boolean  "stripe_management_access",     default: false
     t.boolean  "user_management_access",       default: false
     t.boolean  "developer_access",             default: false
-    t.boolean  "home_pages_access",            default: false
     t.boolean  "user_group_management_access", default: false
     t.boolean  "student_user",                 default: false
     t.boolean  "trial_or_sub_required",        default: false
     t.boolean  "blocked_user",                 default: false
+    t.boolean  "marketing_resources_access",   default: false
   end
 
   create_table "user_notifications", force: :cascade do |t|

@@ -12,6 +12,7 @@
 #  file_upload_content_type :string
 #  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
+#  external_url             :string
 #
 
 require 'rails_helper'

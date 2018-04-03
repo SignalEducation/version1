@@ -15,11 +15,13 @@
 #
 
 require 'rails_helper'
+require 'support/system_setup'
 require 'support/users_and_groups_setup'
 require 'support/course_content'
 
 describe QuizQuestionsController, type: :controller do
 
+  include_context 'system_setup'
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
@@ -78,11 +80,164 @@ describe QuizQuestionsController, type: :controller do
 
   end
 
-  context 'Logged in as a student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(student_user)
+      UserSession.create!(valid_trial_student)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
     end
 
     describe "GET 'show/1'" do
