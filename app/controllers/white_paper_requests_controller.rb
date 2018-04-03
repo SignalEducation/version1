@@ -16,7 +16,7 @@ class WhitePaperRequestsController < ApplicationController
 
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(user_management_access))
+    ensure_user_has_access_rights(%w(user_management_access marketing_resources_access))
   end
   before_action :get_variables
 
@@ -43,6 +43,7 @@ class WhitePaperRequestsController < ApplicationController
       @white_paper_request = WhitePaperRequest.where(id: params[:id]).first
     end
     @white_papers = WhitePaper.all_in_order
+    @layout = 'management'
   end
 
   def allowed_params

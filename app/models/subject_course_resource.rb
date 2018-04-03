@@ -12,12 +12,13 @@
 #  file_upload_content_type :string
 #  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
+#  external_url             :string
 #
 
 class SubjectCourseResource < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :description, :file_upload
+  attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url
 
   # Constants
 

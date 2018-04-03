@@ -43,11 +43,16 @@
     %ul.course-resources
       -@subject_course_resources.each do |resource|
         -if current_user
-          -if current_user && current_user.permission_to_see_content
+          -if current_user && current_user.permission_to_see_content && current_user.enrolled_in_course?(@course.id)
             %li
-              =link_to resource.file_upload.url, target: '_blank' do
-                .btn.btn-secondary.btn-red.btn-list
-                  =resource.name
+              -if resource.external_url
+                =link_to resource.external_url, target: '_blank' do
+                  .btn.btn-secondary.btn-red.btn-list
+                    =resource.name
+              -else
+                =link_to resource.file_upload.url, target: '_blank' do
+                  .btn.btn-secondary.btn-red.btn-list
+                    =resource.name
           -else
             %li
               %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-secondary btn-red btn-list'}

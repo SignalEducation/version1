@@ -103,7 +103,7 @@ class ApplicationController < ActionController::Base
          (the_user_group.stripe_management_access && permitted_thing == 'stripe_management_access') ||
          (the_user_group.user_management_access && permitted_thing == 'user_management_access') ||
          (the_user_group.developer_access && permitted_thing == 'developer_access') ||
-         (the_user_group.home_pages_access && permitted_thing == 'home_pages_access') ||
+         (the_user_group.marketing_resources_access && permitted_thing == 'marketing_resources_access') ||
          (the_user_group.student_user && the_user_group.trial_or_sub_required && permitted_thing == 'student_user') ||
          (!the_user_group.student_user && permitted_thing == 'non_student_user') ||
          (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access')

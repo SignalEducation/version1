@@ -33,6 +33,7 @@
 #  background_image_updated_at             :datetime
 #  preview                                 :boolean          default(FALSE)
 #  computer_based                          :boolean          default(FALSE)
+#  highlight_colour                        :string           default("#ef475d")
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -48,7 +49,7 @@ class SubjectCourse < ActiveRecord::Base
                   :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url,
                   :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
-                  :background_image, :preview, :computer_based
+                  :background_image, :preview, :computer_based, :highlight_colour
 
   # Constants
 
@@ -79,6 +80,7 @@ class SubjectCourse < ActiveRecord::Base
   validates :description, presence: true
   #validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
+  validates :survey_url, presence: true, length: {maximum: 255}
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 

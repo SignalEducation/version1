@@ -33,6 +33,7 @@
 #  background_image_updated_at             :datetime
 #  preview                                 :boolean          default(FALSE)
 #  computer_based                          :boolean          default(FALSE)
+#  highlight_colour                        :string           default("#ef475d")
 #
 
 class SubjectCoursesController < ApplicationController
@@ -194,13 +195,14 @@ class SubjectCoursesController < ApplicationController
                                            :external_url_name, :exam_body_id,
                                            :background_image, :survey_url,
                                            :quiz_pass_rate, :group_id, :preview,
-                                           :computer_based
+                                           :computer_based, :highlight_colour
     )
   end
 
   def resource_allowed_params
     params.require(:subject_course_resource).permit(:name, :subject_course_id,
-                                                    :description, :file_upload)
+                                                    :description, :file_upload,
+                                                    :external_url)
   end
 
 end

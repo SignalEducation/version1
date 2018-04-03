@@ -5,7 +5,7 @@ class ManagementConsolesController < ApplicationController
     ensure_user_has_access_rights(%w(non_student_user))
   end
   before_action only: [:system_requirements] do
-    ensure_user_has_access_rights(%w(home_pages_access system_requirements_access))
+    ensure_user_has_access_rights(%w(marketing_resources_access system_requirements_access))
   end
   before_action :get_variables
 

@@ -927,6 +927,7 @@ en:
         active: Active
         preview: Preview Mode
         computer_based: Computer Based
+        highlight_colour: Highlight Colour
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
@@ -979,11 +980,13 @@ en:
     subject_course_resources:
       form:
         name: Name
-        name_placeholder: Course name
+        name_placeholder: Link/Button Name
         description: Description
         description_placeholder: Description
         subject_course_id: Course
         subject_course_id_placeholder: Course
+        external_url: External URL
+        external_url_placeholder: External Web URL
 
       index:
         h1: Course Resources
@@ -1410,7 +1413,7 @@ en:
         stripe_management_access: Sub Plan & Product Access
         user_management_access: User Management Access
         developer_access: Developer Access
-        home_pages_access: Landing Pages Access
+        marketing_resources_access: Marketing Management Access
         user_group_management_access: User Group Management Access
         tutor: Tutor User Access
         student_user: Student User

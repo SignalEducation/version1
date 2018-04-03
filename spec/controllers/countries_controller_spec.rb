@@ -21,63 +21,68 @@ describe CountriesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  let!(:country_1) { FactoryBot.create(:uk) }
-  let!(:country_2) { FactoryBot.create(:usa) }
-  let!(:country_3) { FactoryBot.create(:ireland) }
+  let!(:gbp) { FactoryBot.create(:gbp) }
+  let!(:eur) { FactoryBot.create(:euro) }
+  let!(:usd) { FactoryBot.create(:usd) }
+
+  let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
+  let!(:ireland) { FactoryBot.create(:ireland, currency_id: eur.id) }
+  let!(:usa) { FactoryBot.create(:usa, currency_id: usd.id) }
+
   let!(:valid_params) { FactoryBot.attributes_for(:fr) }
 
   context 'Not logged in: ' do
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should redirect to sign_in' do
         get :index
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should redirect to sign_in' do
         get :show, id: 1
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should redirect to sign_in' do
         get :new
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should redirect to sign_in' do
         get :edit, id: 1
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should redirect to sign_in' do
         post :create, country: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should redirect to sign_in' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+    describe 'POST reorder' do
+      it 'should redirect to sign_in' do
         post :create, array_of_ids: [1,2]
         expect_bounce_as_not_signed_in
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'DELETE destroy' do
       it 'should redirect to sign_in' do
         delete :destroy, id: 1
         expect_bounce_as_not_signed_in
@@ -93,49 +98,56 @@ describe CountriesController, type: :controller do
       UserSession.create!(valid_trial_student)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -151,49 +163,56 @@ describe CountriesController, type: :controller do
       UserSession.create!(invalid_trial_student)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -209,49 +228,56 @@ describe CountriesController, type: :controller do
       UserSession.create!(valid_subscription_student)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -267,49 +293,56 @@ describe CountriesController, type: :controller do
       UserSession.create!(invalid_subscription_student)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -325,49 +358,56 @@ describe CountriesController, type: :controller do
       UserSession.create!(comp_user)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -383,49 +423,56 @@ describe CountriesController, type: :controller do
       UserSession.create!(tutor_user)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -434,56 +481,155 @@ describe CountriesController, type: :controller do
 
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
+      it 'should respond OK' do
+        get :index
+        expect_index_success_with_model('countries', 3)
+      end
+    end
+
+    describe 'GET show' do
+      it 'should see uk' do
+        get :show, id: uk.id
+        expect_show_success_with_model('country', uk.id)
+      end
+
+      it 'should see ireland' do
+        get :show, id: ireland.id
+        expect_show_success_with_model('country', ireland.id)
+      end
+    end
+
+    describe 'GET new' do
+      it 'should respond OK' do
+        get :new
+        expect_new_success_with_model('country')
+      end
+    end
+
+    describe 'GET edit' do
+      it 'should respond OK with uk' do
+        get :edit, id: uk.id
+        expect_edit_success_with_model('country', uk.id)
+      end
+
+      it 'should respond OK with ireland' do
+        get :edit, id: ireland.id
+        expect_edit_success_with_model('country', ireland.id)
+      end
+    end
+
+    describe 'POST create' do
+      it 'should report OK for valid params' do
+        post :create, country: valid_params
+        expect_create_success_with_model('country', countries_url)
+      end
+
+      it 'should report error for invalid params' do
+        post :create, country: {valid_params.keys.first => ''}
+        expect_create_error_with_model('country')
+      end
+    end
+
+    describe 'PUT update' do
+      it 'should respond OK to valid params for uk' do
+        put :update, id: uk.id, country: valid_params
+        expect_update_success_with_model('country', countries_url)
+      end
+
+      it 'should respond OK to valid params for ireland' do
+        put :update, id: ireland.id, country: valid_params
+        expect_update_success_with_model('country', countries_url)
+        expect(assigns(:country).id).to eq(ireland.id)
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: uk.id, country: {valid_params.keys.first => ''}
+        expect_update_error_with_model('country')
+        expect(assigns(:country).id).to eq(uk.id)
+      end
+    end
+
+    describe 'POST reorder' do
+      it 'should be OK with valid_array' do
+        post :reorder, array_of_ids: [ireland.id, uk.id]
+        expect_reorder_success
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: uk.id
+        expect_delete_error_with_model('country', countries_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a content_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_management_user)
+    end
+
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -492,56 +638,193 @@ describe CountriesController, type: :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a stripe_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(stripe_management_user)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe 'GET index' do
+      it 'should respond ERROR not permitted' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET show' do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET new' do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET edit' do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'POST create' do
+      it 'should respond ERROR not permitted' do
+        post :create, country: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'PUT update' do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, country: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe 'GET index' do
+      it 'should respond ERROR not permitted' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET show' do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET new' do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET edit' do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'POST create' do
+      it 'should respond ERROR not permitted' do
+        post :create, country: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'PUT update' do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, country: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -557,49 +840,121 @@ describe CountriesController, type: :controller do
       UserSession.create!(marketing_manager_user)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond ERROR not permitted' do
         get :index
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'show/1'" do
+    describe 'GET show' do
       it 'should respond ERROR not permitted' do
         get :show, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond ERROR not permitted' do
         get :new
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "GET 'edit/1'" do
+    describe 'GET edit' do
       it 'should respond ERROR not permitted' do
         get :edit, id: 1
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should respond ERROR not permitted' do
         post :create, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "PUT 'update/1'" do
+    describe 'PUT update' do
       it 'should respond ERROR not permitted' do
         put :update, id: 1, country: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_group_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_group_manager_user)
+    end
+
+    describe 'GET index' do
+      it 'should respond ERROR not permitted' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET show' do
+      it 'should respond ERROR not permitted' do
+        get :show, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET new' do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'GET edit' do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'POST create' do
+      it 'should respond ERROR not permitted' do
+        post :create, country: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'PUT update' do
+      it 'should respond ERROR not permitted' do
+        put :update, id: 1, country: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'POST reorder' do
+      it 'should respond ERROR not permitted' do
+        post :create, array_of_ids: [1,2]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe 'DELETE destroy' do
       it 'should respond ERROR not permitted' do
         delete :destroy, id: 1
         expect_bounce_as_not_allowed
@@ -615,47 +970,45 @@ describe CountriesController, type: :controller do
       UserSession.create!(admin_user)
     end
 
-    describe "GET 'index'" do
+    describe 'GET index' do
       it 'should respond OK' do
         get :index
         expect_index_success_with_model('countries', 3)
       end
     end
 
-    describe "GET 'show/1'" do
-      it 'should see country_1' do
-        get :show, id: country_1.id
-        expect_show_success_with_model('country', country_1.id)
+    describe 'GET show' do
+      it 'should see uk' do
+        get :show, id: uk.id
+        expect_show_success_with_model('country', uk.id)
       end
 
-      # optional - some other object
-      it 'should see country_2' do
-        get :show, id: country_2.id
-        expect_show_success_with_model('country', country_2.id)
+      it 'should see ireland' do
+        get :show, id: ireland.id
+        expect_show_success_with_model('country', ireland.id)
       end
     end
 
-    describe "GET 'new'" do
+    describe 'GET new' do
       it 'should respond OK' do
         get :new
         expect_new_success_with_model('country')
       end
     end
 
-    describe "GET 'edit/1'" do
-      it 'should respond OK with country_1' do
-        get :edit, id: country_1.id
-        expect_edit_success_with_model('country', country_1.id)
+    describe 'GET edit' do
+      it 'should respond OK with uk' do
+        get :edit, id: uk.id
+        expect_edit_success_with_model('country', uk.id)
       end
 
-      # optional
-      it 'should respond OK with country_2' do
-        get :edit, id: country_2.id
-        expect_edit_success_with_model('country', country_2.id)
+      it 'should respond OK with ireland' do
+        get :edit, id: ireland.id
+        expect_edit_success_with_model('country', ireland.id)
       end
     end
 
-    describe "POST 'create'" do
+    describe 'POST create' do
       it 'should report OK for valid params' do
         post :create, country: valid_params
         expect_create_success_with_model('country', countries_url)
@@ -667,36 +1020,35 @@ describe CountriesController, type: :controller do
       end
     end
 
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for country_1' do
-        put :update, id: country_1.id, country: valid_params
+    describe 'PUT update' do
+      it 'should respond OK to valid params for uk' do
+        put :update, id: uk.id, country: valid_params
         expect_update_success_with_model('country', countries_url)
       end
 
-      # optional
-      it 'should respond OK to valid params for country_2' do
-        put :update, id: country_2.id, country: valid_params
+      it 'should respond OK to valid params for ireland' do
+        put :update, id: ireland.id, country: valid_params
         expect_update_success_with_model('country', countries_url)
-        expect(assigns(:country).id).to eq(country_2.id)
+        expect(assigns(:country).id).to eq(ireland.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: country_1.id, country: {valid_params.keys.first => ''}
+        put :update, id: uk.id, country: {valid_params.keys.first => ''}
         expect_update_error_with_model('country')
-        expect(assigns(:country).id).to eq(country_1.id)
+        expect(assigns(:country).id).to eq(uk.id)
       end
     end
 
-    describe "POST 'reorder'" do
+    describe 'POST reorder' do
       it 'should be OK with valid_array' do
-        post :reorder, array_of_ids: [country_2.id, country_1.id]
+        post :reorder, array_of_ids: [ireland.id, uk.id]
         expect_reorder_success
       end
     end
 
-    describe "DELETE 'destroy'" do
+    describe 'DELETE destroy' do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: country_1.id
+        delete :destroy, id: uk.id
         expect_delete_error_with_model('country', countries_url)
       end
     end
