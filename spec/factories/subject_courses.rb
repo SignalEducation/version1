@@ -33,6 +33,7 @@
 #  background_image_updated_at             :datetime
 #  preview                                 :boolean          default(FALSE)
 #  computer_based                          :boolean          default(FALSE)
+#  highlight_colour                        :string           default("#ef475d")
 #
 
 FactoryBot.define do

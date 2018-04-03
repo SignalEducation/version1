@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180331102433) do
+ActiveRecord::Schema.define(version: 20180403090622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -720,15 +720,15 @@ ActiveRecord::Schema.define(version: 20180331102433) do
     t.string   "name"
     t.string   "name_url"
     t.integer  "sorting_order"
-    t.boolean  "active",                                  default: false, null: false
+    t.boolean  "active",                                  default: false,     null: false
     t.integer  "cme_count"
     t.integer  "video_count"
     t.integer  "quiz_count"
     t.integer  "question_count"
     t.text     "description"
     t.string   "short_description"
-    t.datetime "created_at",                                              null: false
-    t.datetime "updated_at",                                              null: false
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.float    "best_possible_first_attempt_score"
     t.integer  "default_number_of_possible_exam_answers"
     t.float    "total_video_duration",                    default: 0.0
@@ -747,6 +747,7 @@ ActiveRecord::Schema.define(version: 20180331102433) do
     t.datetime "background_image_updated_at"
     t.boolean  "preview",                                 default: false
     t.boolean  "computer_based",                          default: false
+    t.string   "highlight_colour",                        default: "#ef475d"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
