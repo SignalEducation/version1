@@ -80,6 +80,7 @@ class SubjectCourse < ActiveRecord::Base
   validates :description, presence: true
   #validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
+  validates :survey_url, presence: true, length: {maximum: 255}
   validates :short_description, allow_nil: true, length: {maximum: 255}
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
