@@ -85,7 +85,7 @@ describe CourseModulesController, type: :controller do
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should redirect to sign_in' do
         post :create, array_of_ids: [1,2]
         expect_bounce_as_not_signed_in
       end
