@@ -631,11 +631,11 @@ describe ExamSittingsController, type: :controller do
 
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
     end
 
     describe "GET 'index'" do
@@ -720,11 +720,187 @@ describe ExamSittingsController, type: :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a content_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(content_management_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_index_success_with_model('exam_sittings', 2)
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_sitting_1' do
+        get :show, id: exam_sitting_1.id
+        expect_show_success_with_model('exam_sitting', exam_sitting_1.id)
+      end
+
+      # optional - some other object
+      it 'should see exam_sitting_2' do
+        get :show, id: exam_sitting_2.id
+        expect_show_success_with_model('exam_sitting', exam_sitting_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_new_success_with_model('exam_sitting')
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_sitting_1' do
+        get :edit, id: exam_sitting_1.id
+        expect_edit_success_with_model('exam_sitting', exam_sitting_1.id)
+      end
+
+      # optional
+      it 'should respond OK with exam_sitting_2' do
+        get :edit, id: exam_sitting_2.id
+        expect_edit_success_with_model('exam_sitting', exam_sitting_2.id)
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_sitting: valid_params
+        expect_create_success_with_model('exam_sitting', exam_sittings_url)
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_sitting: {valid_params.keys.first => ''}
+        expect_create_error_with_model('exam_sitting')
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_sitting_1' do
+        put :update, id: exam_sitting_1.id, exam_sitting: valid_params
+        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_sitting_2' do
+        put :update, id: exam_sitting_2.id, exam_sitting: valid_params
+        expect_update_success_with_model('exam_sitting', exam_sittings_url)
+        expect(assigns(:exam_sitting).id).to eq(exam_sitting_2.id)
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
+        expect_update_error_with_model('exam_sitting')
+        expect(assigns(:exam_sitting).id).to eq(exam_sitting_1.id)
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_sitting_2.id
+        expect_delete_error_with_model('exam_sitting', exam_sittings_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a stripe_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(stripe_management_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_sitting_1' do
+        get :show, id: exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see exam_sitting_2' do
+        get :show, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_sitting_1' do
+        get :edit, id: exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with exam_sitting_2' do
+        get :edit, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_sitting_1' do
+        put :update, id: exam_sitting_1.id, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_sitting_2' do
+        put :update, id: exam_sitting_2.id, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
     end
 
     describe "GET 'index'" do
@@ -812,11 +988,185 @@ describe ExamSittingsController, type: :controller do
 
   end
 
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_sitting_1' do
+        get :show, id: exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see exam_sitting_2' do
+        get :show, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_sitting_1' do
+        get :edit, id: exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with exam_sitting_2' do
+        get :edit, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_sitting_1' do
+        put :update, id: exam_sitting_1.id, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_sitting_2' do
+        put :update, id: exam_sitting_2.id, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a marketing_manager_user: ' do
 
     before(:each) do
       activate_authlogic
       UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see exam_sitting_1' do
+        get :show, id: exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional - some other object
+      it 'should see exam_sitting_2' do
+        get :show, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with exam_sitting_1' do
+        get :edit, id: exam_sitting_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with exam_sitting_2' do
+        get :edit, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for exam_sitting_1' do
+        put :update, id: exam_sitting_1.id, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for exam_sitting_2' do
+        put :update, id: exam_sitting_2.id, exam_sitting: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: exam_sitting_1.id, exam_sitting: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: exam_sitting_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_group_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_group_manager_user)
     end
 
     describe "GET 'index'" do
