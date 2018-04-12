@@ -250,7 +250,7 @@ RSpec.describe ManagementConsolesController, :type => :controller do
     describe 'GET index' do
       it 'should redirect to sign_in' do
         get :index
-        expect_bounce_as_not_allowed
+        expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:index)
