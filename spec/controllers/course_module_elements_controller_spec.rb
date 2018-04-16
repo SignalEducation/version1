@@ -37,7 +37,7 @@ describe CourseModuleElementsController, type: :controller do
   context 'Not logged in: ' do
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should redirect to sign_in' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_signed_in
       end
@@ -72,7 +72,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "POST 'reorder'" do
-      it 'should be OK with valid_array' do
+      it 'should redirect to sign_in' do
         post :create, array_of_ids: [1,2]
         expect_bounce_as_not_signed_in
       end
@@ -86,7 +86,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'quiz_questions_order'" do
-      it 'should respond ERROR not permitted' do
+      it 'should redirect to sign_in' do
         get :quiz_questions_order, id: course_module_element_1_1.id
         expect_bounce_as_not_signed_in
       end
@@ -102,7 +102,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -160,7 +160,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -218,7 +218,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -276,7 +276,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -334,7 +334,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -392,7 +392,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -442,15 +442,103 @@ describe CourseModuleElementsController, type: :controller do
 
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
+        get :show, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new, cm_id: course_module_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with course_module_element_1_1 - quiz' do
+        get :edit, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with course_module_element_1_2 - video' do
+        get :edit, id: course_module_element_1_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, course_module_element: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for course_module_element_1_1' do
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for course_module_element_1_2' do
+        put :update, id: course_module_element_1_2.id, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: course_module_element_1_1.id, course_module_element: {name_url: ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'reorder'" do
+      it 'should be OK with valid_array' do
+        post :reorder, array_of_ids: [course_module_element_2_1.id, course_module_element_2_2.id]
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: course_module_element_2_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'quiz_questions_order'" do
+      it 'should respond ERROR not permitted' do
+        get :quiz_questions_order, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a content_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_management_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond OK' do
         get :show, id: course_module_element_1_1.id
         expect_show_success_with_model('course_module_element', course_module_element_1_1.id)
       end
@@ -539,15 +627,131 @@ describe CourseModuleElementsController, type: :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a stripe_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(stripe_management_user)
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
+        get :show, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'quiz_questions_order'" do
+      it 'should respond ERROR not permitted' do
+        get :quiz_questions_order, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
+        get :show, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'quiz_questions_order'" do
+      it 'should respond ERROR not permitted' do
+        get :quiz_questions_order, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -605,7 +809,65 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond ERROR not permitted' do
+        get :show, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond ERROR not permitted' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond ERROR not permitted' do
+        get :edit, id: 1
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should respond ERROR not permitted' do
+        post :create, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond ERROR not permitted' do
+        put :update, id: course_module_element_1_1.id, course_module_element: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should respond ERROR not permitted' do
+        delete :destroy, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'quiz_questions_order'" do
+      it 'should respond ERROR not permitted' do
+        get :quiz_questions_order, id: course_module_element_1_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_group_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_group_manager_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should respond ERROR not permitted' do
         get :show, id: course_module_element_1_1.id
         expect_bounce_as_not_allowed
       end
@@ -663,7 +925,7 @@ describe CourseModuleElementsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should redirect to root' do
+      it 'should respond OK' do
         get :show, id: course_module_element_1_1.id
         expect_show_success_with_model('course_module_element', course_module_element_1_1.id)
       end

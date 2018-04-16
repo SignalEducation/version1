@@ -1,4 +1,3 @@
-
 require 'rails_helper'
 require 'support/system_setup'
 require 'support/users_and_groups_setup'
@@ -163,11 +162,114 @@ RSpec.describe ManagementConsolesController, :type => :controller do
     end
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
+    end
+
+    describe 'GET index' do
+      it 'should redirect to sign_in' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+      end
+    end
+
+    describe 'GET system_requirements' do
+      it 'should redirect to sign_in' do
+        get :system_requirements
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:system_requirements)
+      end
+    end
+  end
+
+  context 'Logged in as a content_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_management_user)
+    end
+
+    describe 'GET index' do
+      it 'should redirect to sign_in' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+      end
+    end
+
+    describe 'GET system_requirements' do
+      it 'should redirect to sign_in' do
+        get :system_requirements
+        expect_bounce_as_not_allowed
+      end
+    end
+  end
+
+  context 'Logged in as a stripe_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(stripe_management_user)
+    end
+
+    describe 'GET index' do
+      it 'should redirect to sign_in' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+      end
+    end
+
+    describe 'GET system_requirements' do
+      it 'should redirect to sign_in' do
+        get :system_requirements
+        expect_bounce_as_not_allowed
+      end
+    end
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe 'GET index' do
+      it 'should redirect to sign_in' do
+        get :index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
+      end
+    end
+
+    describe 'GET system_requirements' do
+      it 'should redirect to sign_in' do
+        get :system_requirements
+        expect_bounce_as_not_allowed
+      end
+    end
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
     end
 
     describe 'GET index' do
@@ -216,11 +318,11 @@ RSpec.describe ManagementConsolesController, :type => :controller do
     end
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a user_group_manager_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(user_group_manager_user)
     end
 
     describe 'GET index' do

@@ -520,11 +520,11 @@ describe FooterPagesController, type: :controller do
 
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
     end
 
     describe "GET 'privacy_policy'" do
@@ -593,11 +593,376 @@ describe FooterPagesController, type: :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a content_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(content_management_user)
+    end
+
+    describe "GET 'privacy_policy'" do
+      it 'should render with 200' do
+        get :privacy_policy
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:privacy_policy)
+      end
+    end
+
+    describe "GET 'acca_info'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+      end
+    end
+
+    describe "Get 'contact'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+
+      end
+    end
+
+    describe "Get 'terms_and_conditions'" do
+      it 'should render with 200' do
+        get :terms_and_conditions
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:terms_and_conditions)
+
+      end
+    end
+
+    describe "Get 'profile'" do
+      it 'should render with 200' do
+        get :profile, id: tutor_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile)
+
+      end
+    end
+
+    describe "Get 'profile_index'" do
+      it 'should render with 200' do
+        get :profile_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile_index)
+
+      end
+    end
+
+  end
+
+  context 'Logged in as a stripe_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(stripe_management_user)
+    end
+
+    describe "GET 'privacy_policy'" do
+      it 'should render with 200' do
+        get :privacy_policy
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:privacy_policy)
+      end
+    end
+
+    describe "GET 'acca_info'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+      end
+    end
+
+    describe "Get 'contact'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+
+      end
+    end
+
+    describe "Get 'terms_and_conditions'" do
+      it 'should render with 200' do
+        get :terms_and_conditions
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:terms_and_conditions)
+
+      end
+    end
+
+    describe "Get 'profile'" do
+      it 'should render with 200' do
+        get :profile, id: tutor_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile)
+
+      end
+    end
+
+    describe "Get 'profile_index'" do
+      it 'should render with 200' do
+        get :profile_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile_index)
+
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe "GET 'privacy_policy'" do
+      it 'should render with 200' do
+        get :privacy_policy
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:privacy_policy)
+      end
+    end
+
+    describe "GET 'acca_info'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+      end
+    end
+
+    describe "Get 'contact'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+
+      end
+    end
+
+    describe "Get 'terms_and_conditions'" do
+      it 'should render with 200' do
+        get :terms_and_conditions
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:terms_and_conditions)
+
+      end
+    end
+
+    describe "Get 'profile'" do
+      it 'should render with 200' do
+        get :profile, id: tutor_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile)
+
+      end
+    end
+
+    describe "Get 'profile_index'" do
+      it 'should render with 200' do
+        get :profile_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile_index)
+
+      end
+    end
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe "GET 'privacy_policy'" do
+      it 'should render with 200' do
+        get :privacy_policy
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:privacy_policy)
+      end
+    end
+
+    describe "GET 'acca_info'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+      end
+    end
+
+    describe "Get 'contact'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+
+      end
+    end
+
+    describe "Get 'terms_and_conditions'" do
+      it 'should render with 200' do
+        get :terms_and_conditions
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:terms_and_conditions)
+
+      end
+    end
+
+    describe "Get 'profile'" do
+      it 'should render with 200' do
+        get :profile, id: tutor_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile)
+
+      end
+    end
+
+    describe "Get 'profile_index'" do
+      it 'should render with 200' do
+        get :profile_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile_index)
+
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
+    end
+
+    describe "GET 'privacy_policy'" do
+      it 'should render with 200' do
+        get :privacy_policy
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:privacy_policy)
+      end
+    end
+
+    describe "GET 'acca_info'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+      end
+    end
+
+    describe "Get 'contact'" do
+      it 'should render with 200' do
+        get :acca_info
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:acca_info)
+
+      end
+    end
+
+    describe "Get 'terms_and_conditions'" do
+      it 'should render with 200' do
+        get :terms_and_conditions
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:terms_and_conditions)
+
+      end
+    end
+
+    describe "Get 'profile'" do
+      it 'should render with 200' do
+        get :profile, id: tutor_user_1.id
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile)
+
+      end
+    end
+
+    describe "Get 'profile_index'" do
+      it 'should render with 200' do
+        get :profile_index
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:profile_index)
+
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_group_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_group_manager_user)
     end
 
     describe "GET 'privacy_policy'" do
