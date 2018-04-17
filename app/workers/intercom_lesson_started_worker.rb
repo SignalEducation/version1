@@ -3,30 +3,11 @@ class IntercomLessonStartedWorker
 
   sidekiq_options queue: 'low'
 
-  def perform(user_id, course_name, module_name, type, lesson_name, wistia_id, quiz_score)
-    user = User.where(id: user_id).first
-    if user
+  def perform(user_id, course_name, module_name, type, lesson_name, video_id, quiz_score)
 
-      intercom_user = $intercom_client.users.find(user_id: user_id)
+    IntercomNewLessonService.new({user_id: user_id, course_name: course_name, module_name: module_name,
+                                  type: type, lesson_name: lesson_name, video_id: video_id, quiz_score: quiz_score}).perform
 
-      if intercom_user
-        $intercom_client.events.create(
-            :event_name => "Lesson Event",
-            :created_at => Time.now.to_i,
-            :user_id => user_id,
-            :email => user.email,
-            :metadata => {
-                "lesson_name" => lesson_name,
-                "lesson_type" => type,
-                "module_name" => module_name,
-                "course_name" => course_name,
-                "vimeo_guid" => wistia_id,
-                "quiz_score" => quiz_score
-            }
-        )
-      end
-
-    end
   end
 
 end

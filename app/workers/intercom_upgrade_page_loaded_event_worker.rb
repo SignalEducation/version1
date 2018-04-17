@@ -4,20 +4,7 @@ class IntercomUpgradePageLoadedEventWorker
   sidekiq_options queue: 'low'
 
   def perform(user_id, country_name)
-    user = User.where(id: user_id).first
-    if user
-
-      $intercom_client.events.create(
-          :event_name => 'Upgrade Page Load',
-          :created_at => Time.now.to_i,
-          :user_id => user_id,
-          :email => user.email,
-          :metadata => {
-              "Ip Country" => country_name
-          }
-
-      )
-    end
+    IntercomNewSubscriptionLoadService.new({user_id: user_id, country_name: country_name}).perform
   end
 
 end
