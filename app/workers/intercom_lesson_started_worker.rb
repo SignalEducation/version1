@@ -6,16 +6,11 @@ class IntercomLessonStartedWorker
   def perform(user_id, course_name, module_name, type, lesson_name, wistia_id, quiz_score)
     user = User.where(id: user_id).first
     if user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
-      begin
-        intercom_user = intercom.users.find(user_id: user_id)
-      rescue Intercom::ResourceNotFound
-        intercom_user = nil
-      end
+      intercom_user = $intercom_client.users.find(user_id: user_id)
 
       if intercom_user
-        intercom.events.create(
+        $intercom_client.events.create(
             :event_name => "Lesson Event",
             :created_at => Time.now.to_i,
             :user_id => user_id,

@@ -6,9 +6,8 @@ class IntercomCreateUserWorker
   def perform(user_id)
     user = User.where(id: user_id).first
     if user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
-      intercom.users.create(user_id: user_id,
+      $intercom_client.users.create(user_id: user_id,
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,

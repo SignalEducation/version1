@@ -6,9 +6,8 @@ class IntercomUpgradePageLoadedEventWorker
   def perform(user_id, country_name)
     user = User.where(id: user_id).first
     if user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
-      intercom.events.create(
+      $intercom_client.events.create(
           :event_name => 'Upgrade Page Load',
           :created_at => Time.now.to_i,
           :user_id => user_id,

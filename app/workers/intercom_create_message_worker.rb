@@ -4,12 +4,11 @@ class IntercomCreateMessageWorker
   sidekiq_options queue: 'low'
 
   def perform(user_id, email, full_name, message, type)
-    intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
     if user_id
       user = User.where(id: user_id).first
       if user
-        intercom.messages.create(
+        $intercom_client.messages.create(
             :from => {
                 :type => "user",
                 :email => email,
@@ -19,9 +18,9 @@ class IntercomCreateMessageWorker
         )
       end
     else
-      contact = intercom.contacts.create(email: email)
+      contact = $intercom_client.contacts.create(email: email)
 
-      intercom.messages.create(
+      $intercom_client.messages.create(
           :from => {
               :type => "contact",
               :id => contact.id
