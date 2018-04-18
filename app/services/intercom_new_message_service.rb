@@ -1,6 +1,7 @@
 class IntercomNewMessageService
 
   def initialize(params)
+    @intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
     @user = User.where(id: params[:user_id]).first
     @email = params[:email]
     @type = params[:type]
@@ -16,10 +17,9 @@ class IntercomNewMessageService
   private
 
   def create_intercom_message
-    intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
     if @user
-      intercom.messages.create(
+      @intercom.messages.create(
           :from => {
               :type => "user",
               :email => @email,
@@ -29,8 +29,8 @@ class IntercomNewMessageService
       )
 
     else
-      contact = intercom.contacts.create(email: @email)
-      intercom.messages.create(
+      contact = @intercom.contacts.create(email: @email)
+      @intercom.messages.create(
           :from => {
               :type => "contact",
               :id => contact.id
