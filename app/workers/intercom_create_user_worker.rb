@@ -11,7 +11,7 @@ class IntercomCreateUserWorker
 
     if user
 
-      user = intercom.users.create(user_id: user_id,
+      intercom.users.create(user_id: user_id,
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,
@@ -23,8 +23,6 @@ class IntercomCreateUserWorker
                                           student_number: user.student_number,
                                           date_of_birth: user.date_of_birth,
                             })
-
-      logger.info "User Creation Return Object - #{user.inspect}"
 
     end
   end
