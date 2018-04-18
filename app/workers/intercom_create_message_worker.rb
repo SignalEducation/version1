@@ -4,7 +4,32 @@ class IntercomCreateMessageWorker
   sidekiq_options queue: 'low'
 
   def perform(user_id, email, full_name, message, type)
-    IntercomNewMessageService.new({user_id: user_id, email: email, full_name: full_name, message: message, type: type}).perform
+    intercom = InitializeIntercomClientService.new().perform
+
+    if user_id
+      user = User.where(id: user_id).first
+      if user
+        intercom.messages.create(
+            :from => {
+                :type => "user",
+                :email => email,
+                :user_id => user_id,
+            },
+            :body => "Type: #{type}. Name: #{full_name}. Message: #{message}"
+        )
+      end
+    else
+      contact = intercom.contacts.create(email: email)
+
+      intercom.messages.create(
+          :from => {
+              :type => "contact",
+              :id => contact.id
+
+          },
+          :body => "Type: #{type}. Name: #{full_name}. Email: #{email}. Message: #{message}."
+      )
+    end
   end
 
 end
