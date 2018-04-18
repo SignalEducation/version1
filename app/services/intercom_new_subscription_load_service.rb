@@ -1,6 +1,7 @@
 class IntercomNewSubscriptionLoadService
 
   def initialize(params)
+    @intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
     @user = User.where(id: params[:user_id]).first
     @country_name = params[:country_name]
   end
@@ -13,11 +14,10 @@ class IntercomNewSubscriptionLoadService
 
   def create_intercom_upgrade_load_event
     if @user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
-      intercom_user = intercom.users.find(user_id: @user.id)
+      intercom_user = @intercom.users.find(user_id: @user.id)
 
       if intercom_user
-        intercom.events.create(
+        @intercom.events.create(
             :event_name => 'Upgrade Page Load',
             :created_at => Time.now.to_i,
             :user_id => @user.id,

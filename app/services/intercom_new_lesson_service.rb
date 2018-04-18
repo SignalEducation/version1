@@ -1,6 +1,7 @@
 class IntercomNewLessonService
 
   def initialize(params)
+    @intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
     @user = User.where(id: params[:user_id]).first
     @course_name = params[:course_name]
     @module_name = params[:module_name]
@@ -18,12 +19,15 @@ class IntercomNewLessonService
 
   def create_intercom_lesson_event
     if @user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
-      intercom_user = intercom.users.find(user_id: @user.id)
+      begin
+        intercom_user = @intercom.users.find(user_id: @user.id)
+      rescue Intercom::ResourceNotFound
+        intercom_user = nil
+      end
 
       if intercom_user
-        intercom.events.create(
+        @intercom.events.create(
             :event_name => "Lesson Event",
             :created_at => Time.now.to_i,
             :user_id => @user.id,

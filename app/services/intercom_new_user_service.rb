@@ -1,6 +1,7 @@
 class IntercomNewUserService
 
   def initialize(params)
+    @intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
     @user = User.where(id: params[:user_id]).first
   end
 
@@ -12,9 +13,8 @@ class IntercomNewUserService
 
   def create_intercom_user
     if @user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
-      intercom.users.create(user_id: @user.id,
+      @intercom.users.create(user_id: @user.id,
                                     email: @user.email,
                                     name: @user.full_name,
                                     created_at: @user.created_at,
