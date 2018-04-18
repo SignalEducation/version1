@@ -5,12 +5,13 @@ class IntercomCreateUserWorker
 
   def perform(user_id)
     intercom = InitializeIntercomClientService.new().perform
+    logger.info "Initialize Intercom Client - #{intercom.inspect}"
 
     user = User.where(id: user_id).first
 
     if user
 
-      intercom.users.create(user_id: user_id,
+      user = intercom.users.create(user_id: user_id,
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,
@@ -22,6 +23,9 @@ class IntercomCreateUserWorker
                                           student_number: user.student_number,
                                           date_of_birth: user.date_of_birth,
                             })
+
+      logger.info "User Creation Return Object - #{user.inspect}"
+
     end
   end
 

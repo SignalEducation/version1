@@ -5,6 +5,7 @@ class IntercomLessonStartedWorker
 
   def perform(user_id, course_name, module_name, type, lesson_name, video_id, quiz_score)
     intercom = InitializeIntercomClientService.new().perform
+    logger.info "Initialize Intercom Client - #{intercom.inspect}"
     user = User.where(id: user_id).first
 
     begin
