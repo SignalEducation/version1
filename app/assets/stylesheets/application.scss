@@ -1086,6 +1086,21 @@ a.card {
 
 
 
+.notice.external-banner {
+  background: #ff954b;
+  color: $text-color;
+  border-radius: 0;
+  padding: $gutter/2.5;
+  a {
+    //color: $colour-18;
+  }
+  .p {
+    padding: 0 10px;
+    margin: 0;
+  }
+}
+
+
 .notice.warning {
   background: #FFD466;
   color: $text-color;
