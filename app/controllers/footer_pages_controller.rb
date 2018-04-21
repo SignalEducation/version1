@@ -17,6 +17,7 @@ class FooterPagesController < ApplicationController
   def contact
     @form_type = 'Contact Us'
     seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
+    @faq_section = FaqSection.all_active.all_in_order
   end
 
   def terms_and_conditions

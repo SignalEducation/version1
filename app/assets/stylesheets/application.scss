@@ -1882,15 +1882,14 @@ a.list-group-item {
 }
 .faq-inner {
   padding: $gutter/1.5 $gutter/1.5;
+  min-height: 80px;
 }
 .narrow {
-  height: 100px;
+  height: 80px;
 }
 
 .faq-title {
-  &.h6 {
-    margin-top: 2px;
-  }
+  margin-bottom: 5px;
 }
 .closed {
   white-space: nowrap;
