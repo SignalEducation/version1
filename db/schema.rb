@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180421103742) do
+ActiveRecord::Schema.define(version: 20180421121254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -304,6 +304,24 @@ ActiveRecord::Schema.define(version: 20180421103742) do
   add_index "faq_sections", ["name"], name: "index_faq_sections_on_name", using: :btree
   add_index "faq_sections", ["name_url"], name: "index_faq_sections_on_name_url", using: :btree
   add_index "faq_sections", ["sorting_order"], name: "index_faq_sections_on_sorting_order", using: :btree
+
+  create_table "faqs", force: :cascade do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.boolean  "active",         default: true
+    t.integer  "sorting_order"
+    t.integer  "faq_section_id"
+    t.text     "question_text"
+    t.text     "answer_text"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "faqs", ["active"], name: "index_faqs_on_active", using: :btree
+  add_index "faqs", ["faq_section_id"], name: "index_faqs_on_faq_section_id", using: :btree
+  add_index "faqs", ["name"], name: "index_faqs_on_name", using: :btree
+  add_index "faqs", ["name_url"], name: "index_faqs_on_name_url", using: :btree
+  add_index "faqs", ["question_text"], name: "index_faqs_on_question_text", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"

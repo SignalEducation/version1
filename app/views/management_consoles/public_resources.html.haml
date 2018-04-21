@@ -27,7 +27,7 @@
                       .pull-right
                         =tick_or_cross(faq_section.active)
 
-                    %table.table.sorted_table
+                    %table.table.sorted_table{data: {destination: faqs_url}, id: faq_section.id, style: 'font-size: 18px;'}
                       %thead
                         %tr
                           %th=t('views.faq_sections.form.name')
@@ -35,18 +35,19 @@
                           %th
                           %th
                       %tbody
-                        -#faq_section.children.all_in_order.each do |faq|
-                          %tr
+                        -faq_section.faqs.all_in_order.each do |faq|
+                          %tr{id: faq.id, data: {parent: faq_section.id, destination: faqs_url}}
                             %td=faq.name
                             %td=tick_or_cross(faq.active)
                             %td
                               =link_to t('views.general.edit'), edit_faq_url(faq), class: 'btn btn-cyan btn-small'
                               -if faq.destroyable?
                                 =link_to t('views.general.delete'), faq, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                            %td
+                              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
                     .col-md-6
-                      =link_to t('views.course_module_elements.form.new_video'), '#', class: 'btn btn-purple'
-                      =link_to t('views.course_module_elements.form.new_quiz'), '#', class: 'btn btn-purple'
+                      =link_to t('views.faqs.new.h1'), new_faq_url(faq_section_id: faq_section.id), class: 'btn btn-purple'
                     .col-md-6
                       .pull-right
                         =link_to t('views.faq_sections.edit.h1'), edit_faq_section_url(faq_section), class: 'btn btn-purple'

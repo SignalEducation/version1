@@ -613,6 +613,35 @@ en:
       new:
         h1: New Exam Sitting
 
+    faqs:
+      form:
+        name: Name
+        name_placeholder: FAQ Name
+        name_url: Name URL
+        name_url_placeholder: FAQ Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        faq_section_id: FAQ Section
+        faq_section_id_placeholder: FAQ Section - Parent
+        question_text: Question
+        question_text_placeholder: Question Text
+        answer_text: Answer
+        answer_text_placeholder: Answer Text
+
+      index:
+        h1: FAQs
+        delete: Delete FAQ
+
+      show:
+        h1: FAQ
+
+      edit:
+        h1: Edit FAQ
+
+      new:
+        h1: New FAQ
+
     faq_sections:
       form:
         name: Name

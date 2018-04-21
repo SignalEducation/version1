@@ -20,6 +20,7 @@ class FaqSection < ActiveRecord::Base
   # Constants
 
   # relationships
+  has_many :faqs
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
