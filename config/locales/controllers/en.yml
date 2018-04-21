@@ -172,6 +172,19 @@ en:
           success: ExamSitting has been deleted
           error: ExamSitting was not deleted
 
+
+    faq_sections:
+      create:
+        flash:
+          success: FAQ Section has been created successfully
+      update:
+        flash:
+          success: FAQ Section details have been updated successfully
+      destroy:
+        flash:
+          success: FAQ Section has been deleted
+          error: FAQ Section was not deleted
+
     groups:
       create:
         flash:

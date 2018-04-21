@@ -110,6 +110,7 @@ Rails.application.routes.draw do
 
     resources :exam_bodies
     resources :exam_sittings
+    resources :faq_sections, concerns: :supports_reordering
     resources :groups, concerns: :supports_reordering
 
     #Sign Up Actions
@@ -134,6 +135,7 @@ Rails.application.routes.draw do
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
+    get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
