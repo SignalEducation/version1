@@ -2,22 +2,24 @@
 #
 # Table name: faqs
 #
-#  id             :integer          not null, primary key
-#  name           :string
-#  name_url       :string
-#  active         :boolean          default(TRUE)
-#  sorting_order  :integer
-#  faq_section_id :integer
-#  question_text  :text
-#  answer_text    :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id              :integer          not null, primary key
+#  name            :string
+#  name_url        :string
+#  active          :boolean          default(TRUE)
+#  sorting_order   :integer
+#  faq_section_id  :integer
+#  question_text   :text
+#  answer_text     :text
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  pre_answer_text :text
 #
 
 class Faq < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :faq_section_id, :question_text, :answer_text
+  attr_accessible :name, :name_url, :active, :sorting_order, :faq_section_id, :question_text,
+                  :answer_text, :pre_answer_text
 
   # Constants
 
@@ -31,6 +33,7 @@ class Faq < ActiveRecord::Base
   validates :faq_section_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :question_text, presence: true
+  validates :pre_answer_text, presence: true
   validates :answer_text, presence: true
 
   # callbacks

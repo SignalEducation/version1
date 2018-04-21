@@ -624,10 +624,12 @@ en:
         sorting_order_placeholder: 100
         faq_section_id: FAQ Section
         faq_section_id_placeholder: FAQ Section - Parent
-        question_text: Question
+        question_text: Question Text
         question_text_placeholder: Question Text
-        answer_text: Answer
+        answer_text: Answer Text
         answer_text_placeholder: Answer Text
+        pre_answer_text: Basic Answer Text
+        pre_answer_text_placeholder: Basic Version of the Answer Text without any Text Formatting or HTML elements
 
       index:
         h1: FAQs

@@ -15,19 +15,18 @@
 
       .col-md-6
         %br/
-        .form-group.l-margin-top
+        .form-group.l-margin-top-big
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label
                 =f.check_box :active
                 =t('views.faq_sections.form.active')
 
-    .col-md-12.l-margin-top
-
-      .col-md-12
+      .col-md-6
+        %br/
         =f.label :description, t('views.faq_sections.form.description'), class: 'control-label'
         .input-group.input-group-lg.full-width
-          =f.text_area :description, placeholder: t('views.faq_sections.form.description_placeholder'), as: :summernote, rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
+          =f.text_area :description, placeholder: t('views.faq_sections.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
 
 
   .row.l-margin-top-huge
@@ -36,10 +35,3 @@
 
 
 
-
-:javascript
-
-  $('#editor').summernote({
-    disableDragAndDrop: true,
-    height: 150
-  });

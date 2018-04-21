@@ -2,16 +2,17 @@
 #
 # Table name: faqs
 #
-#  id             :integer          not null, primary key
-#  name           :string
-#  name_url       :string
-#  active         :boolean          default(TRUE)
-#  sorting_order  :integer
-#  faq_section_id :integer
-#  question_text  :text
-#  answer_text    :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id              :integer          not null, primary key
+#  name            :string
+#  name_url        :string
+#  active          :boolean          default(TRUE)
+#  sorting_order   :integer
+#  faq_section_id  :integer
+#  question_text   :text
+#  answer_text     :text
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  pre_answer_text :text
 #
 
 class FaqsController < ApplicationController
@@ -76,7 +77,8 @@ class FaqsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:faq).permit(:name, :name_url, :active, :sorting_order, :faq_section_id, :question_text, :answer_text)
+    params.require(:faq).permit(:name, :name_url, :active, :sorting_order, :faq_section_id,
+                                :question_text, :answer_text, :pre_answer_text)
   end
 
 end

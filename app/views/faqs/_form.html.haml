@@ -35,6 +35,10 @@
         =f.label :answer_text, t('views.faqs.form.answer_text'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_area :answer_text, placeholder: t('views.faqs.form.answer_text_placeholder'), as: :summernote, rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'answer_editor'
+      .col-md-12.l-margin-top
+        =f.label :pre_answer_text, t('views.faqs.form.pre_answer_text'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :pre_answer_text, placeholder: t('views.faqs.form.pre_answer_text_placeholder'), rows: 3, class: 'form-control', style: 'border-radius: 6px;'
 
         .row.l-margin-top-big
           =f.submit t('views.general.save'), class: 'btn btn-red'

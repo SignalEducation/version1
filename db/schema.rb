@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180421121254) do
+ActiveRecord::Schema.define(version: 20180421134418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -308,13 +308,14 @@ ActiveRecord::Schema.define(version: 20180421121254) do
   create_table "faqs", force: :cascade do |t|
     t.string   "name"
     t.string   "name_url"
-    t.boolean  "active",         default: true
+    t.boolean  "active",          default: true
     t.integer  "sorting_order"
     t.integer  "faq_section_id"
     t.text     "question_text"
     t.text     "answer_text"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.text     "pre_answer_text"
   end
 
   add_index "faqs", ["active"], name: "index_faqs_on_active", using: :btree
