@@ -4,9 +4,12 @@ class IntercomCreateUserWorker
   sidekiq_options queue: 'medium'
 
   def perform(user_id)
+    intercom = InitializeIntercomClientService.new().perform
+    logger.info "Initialize Intercom Client - #{intercom.inspect}"
+
     user = User.where(id: user_id).first
+
     if user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
       intercom.users.create(user_id: user_id,
                             email: user.email,
@@ -20,6 +23,7 @@ class IntercomCreateUserWorker
                                           student_number: user.student_number,
                                           date_of_birth: user.date_of_birth,
                             })
+
     end
   end
 

@@ -4,10 +4,11 @@ class IntercomUpgradePageLoadedEventWorker
   sidekiq_options queue: 'low'
 
   def perform(user_id, country_name)
+    intercom = InitializeIntercomClientService.new().perform
+    logger.info "Initialize Intercom Client - #{intercom.inspect}"
     user = User.where(id: user_id).first
-    if user
-      intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
 
+    if user
       intercom.events.create(
           :event_name => 'Upgrade Page Load',
           :created_at => Time.now.to_i,
@@ -19,6 +20,8 @@ class IntercomUpgradePageLoadedEventWorker
 
       )
     end
+
+
   end
 
 end

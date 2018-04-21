@@ -399,11 +399,75 @@ describe QuizQuestionsController, type: :controller do
 
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see quiz_question_1' do
+        get :show, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with quiz_question_1' do
+        get :edit, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for quiz_question_1' do
+        put :update, id: quiz_question_1.id, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
+        delete :destroy, id: quiz_question_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a content_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_management_user)
     end
 
     describe "GET 'show/1'" do
@@ -490,51 +554,192 @@ describe QuizQuestionsController, type: :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a stripe_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(stripe_management_user)
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
+      it 'should see quiz_question_1' do
+        get :show, id: quiz_question_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
-        get :new
+      it 'should respond OK' do
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
+      it 'should respond OK with quiz_question_1' do
+        get :edit, id: quiz_question_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
+      it 'should report OK for valid params' do
         post :create, quiz_question: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, quiz_question: valid_params
+      it 'should respond OK to valid params for quiz_question_1' do
+        put :update, id: quiz_question_1.id, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
+        delete :destroy, id: quiz_question_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see quiz_question_1' do
+        get :show, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with quiz_question_1' do
+        get :edit, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for quiz_question_1' do
+        put :update, id: quiz_question_1.id, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
+        delete :destroy, id: quiz_question_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see quiz_question_1' do
+        get :show, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with quiz_question_1' do
+        get :edit, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for quiz_question_1' do
+        put :update, id: quiz_question_1.id, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
+        delete :destroy, id: quiz_question_2.id
         expect_bounce_as_not_allowed
       end
     end
@@ -549,43 +754,120 @@ describe QuizQuestionsController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should respond ERROR not permitted' do
-        get :show, id: 1
+      it 'should see quiz_question_1' do
+        get :show, id: quiz_question_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'new'" do
-      it 'should respond ERROR not permitted' do
-        get :new
+      it 'should respond OK' do
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
-      it 'should respond ERROR not permitted' do
-        get :edit, id: 1
+      it 'should respond OK with quiz_question_1' do
+        get :edit, id: quiz_question_1.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
-      it 'should respond ERROR not permitted' do
+      it 'should report OK for valid params' do
         post :create, quiz_question: valid_params
         expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond ERROR not permitted' do
-        put :update, id: 1, quiz_question: valid_params
+      it 'should respond OK to valid params for quiz_question_1' do
+        put :update, id: quiz_question_1.id, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
         expect_bounce_as_not_allowed
       end
     end
 
     describe "DELETE 'destroy'" do
-      it 'should respond ERROR not permitted' do
-        delete :destroy, id: 1
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
+        delete :destroy, id: quiz_question_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_group_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_group_manager_user)
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see quiz_question_1' do
+        get :show, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new, cme_quiz_id: course_module_element_quiz_2_2_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with quiz_question_1' do
+        get :edit, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for quiz_question_1' do
+        put :update, id: quiz_question_1.id, quiz_question: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      xit 'should reject invalid params' do
+        put :update, id: quiz_question_1.id, quiz_question: { difficulty_level: 'Bad' }
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      let!(:quiz_attempt) { FactoryBot.create(:quiz_attempt, quiz_question_id: quiz_question_1.id) }
+
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: quiz_question_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        quiz_question_2.quiz_attempts.destroy_all
+        delete :destroy, id: quiz_question_2.id
         expect_bounce_as_not_allowed
       end
     end

@@ -525,7 +525,7 @@ DEPENDENCIES
   haml-rails
   hirb
   intercom (~> 3.5.23)
-  intercom-rails (~> 0.2.27)
+  intercom-rails
   jbuilder (~> 2.0)
   jquery-rails
   jquery-ui-rails

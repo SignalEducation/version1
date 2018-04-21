@@ -8,7 +8,7 @@ RSpec.describe DashboardController, :type => :controller do
   context 'Not logged in: ' do
 
     describe 'GET show' do
-      it 'should respond OK' do
+      it 'should bounce as not signed in' do
         get :show
         expect_bounce_as_not_signed_in
       end
@@ -118,11 +118,83 @@ RSpec.describe DashboardController, :type => :controller do
 
   end
 
-  context 'Logged in as a content_manager_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(system_requirements_user)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+
+  end
+
+  context 'Logged in as a content_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_management_user)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+
+  end
+
+  context 'Logged in as a stripe_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(stripe_management_user)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe 'GET show' do
+      it 'should respond OK' do
+        get :show
+        expect(response).to have_http_status(:success)
+        expect(response).to render_template(:show)
+      end
+    end
+
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
     end
 
     describe 'GET show' do
@@ -153,11 +225,11 @@ RSpec.describe DashboardController, :type => :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a user_group_manager_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(user_group_manager_user)
     end
 
     describe 'GET show' do

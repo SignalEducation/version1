@@ -52,6 +52,7 @@ FactoryBot.define do
     default_number_of_possible_exam_answers 4
     quiz_pass_rate 10
     group_id 1
+    survey_url 'SurveyURL'
 
     factory :active_subject_course do
       active                       true

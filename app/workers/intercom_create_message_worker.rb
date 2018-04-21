@@ -4,7 +4,8 @@ class IntercomCreateMessageWorker
   sidekiq_options queue: 'low'
 
   def perform(user_id, email, full_name, message, type)
-    intercom = Intercom::Client.new(token: ENV['INTERCOM_ACCESS_TOKEN'])
+    intercom = InitializeIntercomClientService.new().perform
+    logger.info "Initialize Intercom Client - #{intercom.inspect}"
 
     if user_id
       user = User.where(id: user_id).first
