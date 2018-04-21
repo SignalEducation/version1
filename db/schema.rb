@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180421134418) do
+ActiveRecord::Schema.define(version: 20180421163923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,6 +289,19 @@ ActiveRecord::Schema.define(version: 20180421134418) do
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
   add_index "exam_sittings", ["name"], name: "index_exam_sittings_on_name", using: :btree
   add_index "exam_sittings", ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id", using: :btree
+
+  create_table "external_banners", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "sorting_order"
+    t.boolean  "active",            default: false
+    t.string   "background_colour"
+    t.text     "text_content"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "external_banners", ["active"], name: "index_external_banners_on_active", using: :btree
+  add_index "external_banners", ["name"], name: "index_external_banners_on_name", using: :btree
 
   create_table "faq_sections", force: :cascade do |t|
     t.string   "name"

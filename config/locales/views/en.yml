@@ -613,6 +613,34 @@ en:
       new:
         h1: New Exam Sitting
 
+    external_banners:
+      form:
+        name: Name
+        name_placeholder: Banner Name
+        name_url: Name URL
+        name_url_placeholder: Banner Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        background_colour: Background Colour
+        background_colour_placeholder: "eg. #fff"
+        text_content: Banner Text
+        text_content_placeholder: Banner Text
+
+      index:
+        h1: External Banners
+        delete: Delete
+
+      show:
+        h1: Banner
+
+      edit:
+        h1: Edit Banner
+
+      new:
+        h1: New Banner
+
+
     faqs:
       form:
         name: Name

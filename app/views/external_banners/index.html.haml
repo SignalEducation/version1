@@ -1,0 +1,44 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.external_banners.index.h1')
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'management_consoles/public_resources_nav'
+
+      .row
+        .col-md-12
+          =link_to 'New Banner', new_external_banner_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              =will_paginate @external_banners, renderer: BootstrapPagination::Rails
+              %table.table.sorted_table{data: {destination: external_banners_url}}
+                %thead
+                  %tr
+                    %th=t('views.external_banners.form.name')
+                    %th=t('views.external_banners.form.active')
+                    %th=t('views.external_banners.form.background_colour')
+                    %th
+                    %th
+                %tbody
+                  -@external_banners.each do |external_banner|
+                    %tr{id: external_banner.id}
+                      %td=external_banner.name
+                      %td=tick_or_cross(external_banner.active)
+                      %td=external_banner.background_colour
+                      %td
+                        =link_to t('views.general.view'), external_banner, class: 'btn btn-purple btn-small'
+                        =link_to t('views.general.edit'), edit_external_banner_url(external_banner), class: 'btn btn-cyan btn-small'
+                        -if external_banner.destroyable?
+                          =link_to t('views.general.delete'), external_banner, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+

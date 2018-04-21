@@ -110,6 +110,7 @@ Rails.application.routes.draw do
 
     resources :exam_bodies
     resources :exam_sittings
+    resources :external_banners, concerns: :supports_reordering
     resources :faqs, except: [:show, :index], concerns: :supports_reordering
     resources :faq_sections, concerns: :supports_reordering
     resources :groups, concerns: :supports_reordering

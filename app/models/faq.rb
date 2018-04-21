@@ -29,7 +29,8 @@ class Faq < ActiveRecord::Base
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :sorting_order, presence: true
+  validates :sorting_order, presence: true,
+            numericality: {only_integer: true}
   validates :faq_section_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :question_text, presence: true

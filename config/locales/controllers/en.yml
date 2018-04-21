@@ -173,6 +173,18 @@ en:
           error: ExamSitting was not deleted
 
 
+    external_banners:
+      create:
+        flash:
+          success: Banner has been created successfully
+      update:
+        flash:
+          success: Banner details have been updated successfully
+      destroy:
+        flash:
+          success: Banner has been deleted
+          error: Banner was not deleted
+
     faqs:
       create:
         flash:
@@ -182,7 +194,7 @@ en:
           success: FAQ details have been updated successfully
       destroy:
         flash:
-          success: FAQhas been deleted
+          success: FAQ has been deleted
           error: FAQ was not deleted
 
     faq_sections:
