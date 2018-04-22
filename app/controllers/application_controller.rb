@@ -59,6 +59,11 @@ class ApplicationController < ActionController::Base
     @top_margin = true
     @footer = 'standard'
     @groups = Group.all_active.all_in_order
+
+    if ExternalBanner::BANNER_CONTROLLERS.include?(controller_name)
+      @banner = ExternalBanner.render_for(controller_name).all_in_order.first
+    end
+
   end
 
   def logged_in_required

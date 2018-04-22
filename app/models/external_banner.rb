@@ -2,22 +2,29 @@
 #
 # Table name: external_banners
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  sorting_order     :integer
-#  active            :boolean          default(FALSE)
-#  background_colour :string
-#  text_content      :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                 :integer          not null, primary key
+#  name               :string
+#  sorting_order      :integer
+#  active             :boolean          default(FALSE)
+#  background_colour  :string
+#  text_content       :text
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  user_sessions      :boolean          default(FALSE)
+#  library            :boolean          default(FALSE)
+#  subscription_plans :boolean          default(FALSE)
+#  footer_pages       :boolean          default(FALSE)
+#  student_sign_ups   :boolean          default(FALSE)
 #
 
 class ExternalBanner < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :sorting_order, :active, :background_colour, :text_content
+  attr_accessible :name, :sorting_order, :active, :background_colour, :text_content, :user_sessions,
+                  :library, :subscription_plans, :footer_pages, :student_sign_ups
 
   # Constants
+  BANNER_CONTROLLERS = %w(user_sessions library subscription_plans footer_pages student_sign_ups)
 
   # relationships
 
@@ -34,6 +41,7 @@ class ExternalBanner < ActiveRecord::Base
   # scopes
   scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :render_for, lambda { |controller_name| where("#{controller_name}" => true, 'active' => true) }
 
   # class methods
 

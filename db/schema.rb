@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180421163923) do
+ActiveRecord::Schema.define(version: 20180422065546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -293,11 +293,16 @@ ActiveRecord::Schema.define(version: 20180421163923) do
   create_table "external_banners", force: :cascade do |t|
     t.string   "name"
     t.integer  "sorting_order"
-    t.boolean  "active",            default: false
+    t.boolean  "active",             default: false
     t.string   "background_colour"
     t.text     "text_content"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "user_sessions",      default: false
+    t.boolean  "library",            default: false
+    t.boolean  "subscription_plans", default: false
+    t.boolean  "footer_pages",       default: false
+    t.boolean  "student_sign_ups",   default: false
   end
 
   add_index "external_banners", ["active"], name: "index_external_banners_on_active", using: :btree

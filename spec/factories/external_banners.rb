@@ -2,14 +2,19 @@
 #
 # Table name: external_banners
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  sorting_order     :integer
-#  active            :boolean          default(FALSE)
-#  background_colour :string
-#  text_content      :text
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
+#  id                 :integer          not null, primary key
+#  name               :string
+#  sorting_order      :integer
+#  active             :boolean          default(FALSE)
+#  background_colour  :string
+#  text_content       :text
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  user_sessions      :boolean          default(FALSE)
+#  library            :boolean          default(FALSE)
+#  subscription_plans :boolean          default(FALSE)
+#  footer_pages       :boolean          default(FALSE)
+#  student_sign_ups   :boolean          default(FALSE)
 #
 
 FactoryBot.define do

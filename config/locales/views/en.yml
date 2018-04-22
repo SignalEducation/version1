@@ -626,6 +626,11 @@ en:
         background_colour_placeholder: "eg. #fff"
         text_content: Banner Text
         text_content_placeholder: Banner Text
+        user_sessions: Sign In Page
+        library: Library Pages
+        subscription_plans: Pricing Page
+        footer_pages: Footer Pages [Contact, Privacy, T+C, ACCA, Lecturers, Media]
+        student_sign_ups: Sign Up Page
 
       index:
         h1: External Banners

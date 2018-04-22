@@ -67,13 +67,30 @@ html {
   background: $colour-3;
   .margin-top {                   // These Ensure content is not hidden behind Navbar
     @include breakpoint(xs-min) {
-      margin-top: 40px;
+      margin-top: 60px;
     }
     @include breakpoint(sm-min) {
       margin-top: 60px;
     }
+    @include breakpoint(md-min) {
+      margin-top: 60px;
+    }
     @include breakpoint(lg-min) {
       margin-top: 60px;
+    }
+  }
+  .margin-top-lg {                   // These Ensure content is not hidden behind Navbar
+    @include breakpoint(xs-min) {
+      margin-top: 100px;
+    }
+    @include breakpoint(sm-min) {
+      margin-top: 100px;
+    }
+    @include breakpoint(md-min) {
+      margin-top: 100px;
+    }
+    @include breakpoint(lg-min) {
+      margin-top: 80px;
     }
   }
 
@@ -1087,17 +1104,8 @@ a.card {
 
 
 .notice.external-banner {
-  background: #ff954b;
-  color: $text-color;
   border-radius: 0;
   padding: $gutter/2.5;
-  a {
-    //color: $colour-18;
-  }
-  .p {
-    padding: 0 10px;
-    margin: 0;
-  }
 }
 
 
