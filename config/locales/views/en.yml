@@ -578,6 +578,10 @@ en:
         name_placeholder: Name of Examining Body
         url: Url
         url_placeholder: Home URL of Examining Body
+        modal_heading: Modal Heading
+        modal_heading_placeholder: Heading for Student No. & DOB Modal
+        modal_text: Modal Text
+        modal_text_placeholder: Text for Student No. & DOB Modal
 
       index:
         h1: Exam Bodies

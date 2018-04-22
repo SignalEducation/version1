@@ -9,6 +9,14 @@
       =f.label :url, t('views.exam_bodies.form.url'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.text_field :url, placeholder: t('views.exam_bodies.form.url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :modal_heading, t('views.exam_bodies.form.modal_heading'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :modal_heading, placeholder: t('views.exam_bodies.form.modal_heading_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      %br/
+      =f.label :modal_text, t('views.exam_bodies.form.modal_text'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_area :modal_text, placeholder: t('views.exam_bodies.form.modal_text_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
   .row.l-margin-top-big
     =f.submit t('views.general.save'), class: 'btn btn-red'

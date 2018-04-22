@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180422065546) do
+ActiveRecord::Schema.define(version: 20180422114106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,8 +269,10 @@ ActiveRecord::Schema.define(version: 20180422065546) do
   create_table "exam_bodies", force: :cascade do |t|
     t.string   "name"
     t.string   "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "modal_heading"
+    t.text     "modal_text"
   end
 
   add_index "exam_bodies", ["name"], name: "index_exam_bodies_on_name", using: :btree
