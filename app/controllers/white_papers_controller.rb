@@ -22,33 +22,18 @@
 
 class WhitePapersController < ApplicationController
 
-  before_action :logged_in_required, except: [:show, :create_request, :media_library]
-  before_action except: [:show, :create_request, :media_library] do
+  before_action :logged_in_required, except: [:create_request]
+  before_action except: [:create_request] do
     ensure_user_has_access_rights(%w(content_management_access marketing_resources_access))
   end
-  before_action :get_variables, except: [:show]
+  before_action :get_variables
 
   def index
     @white_papers = WhitePaper.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def media_library
-    @layout = 'standard'
-    @white_papers = WhitePaper.all_in_order
-
-    mock_exams = MockExam.all_in_order
-    mock_exam_ids = mock_exams.map(&:id)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : current_user.country
-    @currency_id = @country.currency_id
-    @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-
-  end
-
   def show
-    @layout = 'standard'
     @white_paper = WhitePaper.where(name_url: params[:white_paper_name_url]).first
-    @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
   end
 
   def new
@@ -105,7 +90,7 @@ class WhitePapersController < ApplicationController
       WhitePaperEmailWorker.perform_async(@white_paper_request.name ,@white_paper_request.email, 'send_white_paper_request_email', @white_paper_request.name, white_paper.name, file.url) unless Rails.env.test?
       redirect_to public_white_paper_url(white_paper.name_url)
     else
-      render action: :new
+      redirect_to request.referrer
     end
 
   end
