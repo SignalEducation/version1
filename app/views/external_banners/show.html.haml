@@ -4,30 +4,42 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.external_banners.show.h1')
-            \#
-            =@external_banner.id
+            =@external_banner.name
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-sm-8.col-sm-offset-2
+          %h3
+            ='Standard Navbar'
+          =render partial: 'nav_preview'
+
+
+      .row.l-margin-top-huge
+        .col-sm-8.col-sm-offset-2
+          %h3
+            ='Transparent Navbar'
+
+          -if @banner
+            .notice.external-banner.text-center{style: "background-color: #{@banner.background_colour};"}
+              =@banner.text_content.html_safe
+          .hero-library
+            .l-wrap-small
+              =render partial: 'layouts/transparent_navbar'
+              .l-section-footer-pages
+                .container-fluid
+                  .row
+                    .col-md-6.col-md-offset-3
+                      %h1.h1.h-white.h-separator.h-separator-center.text-center
+                        Contact Us
+
+
+
+
+
+
+
+
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              %table.table.table-bordered.l-margin-top
-                %tr
-                  %td.col-sm-4=t('views.external_banners.form.name')
-                  %td.col-sm-8=@external_banner.name
-                %tr
-                  %td.col-sm-4=t('views.external_banners.form.sorting_order')
-                  %td.col-sm-8=@external_banner.sorting_order
-                %tr
-                  %td.col-sm-4=t('views.external_banners.form.active')
-                  %td.col-sm-8=tick_or_cross(@external_banner.active)
-                %tr
-                  %td.col-sm-4=t('views.external_banners.form.background_colour')
-                  %td.col-sm-8=@external_banner.background_colour
-                %tr
-                  %td.col-sm-4=t('views.external_banners.form.text_content')
-                  %td.col-sm-8=@external_banner.text_content
-              %p
-                =link_to t('views.general.back'), external_banners_url
-                |
-                =link_to t('views.general.edit'), edit_external_banner_url(id: @external_banner.id), title: t('views.general.edit_tooltip')
+          =link_to t('views.general.back'), external_banners_url, class: 'btn btn-red'

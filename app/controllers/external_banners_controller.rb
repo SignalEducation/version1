@@ -30,6 +30,8 @@ class ExternalBannersController < ApplicationController
   end
 
   def show
+    #Preview for managers
+    @banner = @external_banner
   end
 
   def new
