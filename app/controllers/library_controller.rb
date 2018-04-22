@@ -43,6 +43,12 @@ class LibraryController < ApplicationController
 
       if current_user
         # User Session present
+        @user = current_user
+        if session[:user_exam_body_errors]
+          @user.errors.add(:base, 'Details entered are not valid!')
+          session[:user_exam_body_errors] = nil
+        end
+
 
         if current_user.permission_to_see_content && current_user.enrollment_for_course?(@course.id)
           # User has a valid trial or valid sub

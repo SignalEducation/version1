@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     get 'account', to: 'user_accounts#account_show', as: :account
     post 'change_password', to: 'user_accounts#change_password', as: :change_password
     patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
+    patch 'update_exam_body_user_details', to: 'user_accounts#update_exam_body_user_details', as: :update_exam_body_user_details
     get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription

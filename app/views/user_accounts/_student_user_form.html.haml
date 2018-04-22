@@ -29,7 +29,7 @@
               %br/
               =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth'), class: 'control-label'
               .input-group.input-group-lg.full-width
-                =f.text_field :date_of_birth, class: 'form-control', style: 'border-radius: 6px;', id: 'dob', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+                =f.date_field :date_of_birth, class: 'form-control', style: 'border-radius: 6px;'
               %br/
 
           .col-md-12
@@ -39,13 +39,6 @@
                 =f.text_field :student_number, class: 'form-control', style: 'border-radius: 6px;'
               %br/
 
-            -#.col-md-6
-              =f.hidden_field :unsubscribed_from_emails, id: 'hidden_unsubscribe_from_emails'
-              %label.check
-                %input{type: 'checkbox', id: 'unsubscribe_checkbox'}
-                  %span
-                    %i.fa.fa-check
-                  =t('views.user_accounts.student_user_form.unsubscribed_from_emails')
 
           .col-sm-12.l-margin-top
             .col-md-12
@@ -58,11 +51,6 @@
 
   $(document).on('confirmation', '.remodal', function () {
     document.forms['personal_details_form'].submit();
-  });
-
-  $(function () {
-    $('#dob').datetimepicker();
-      format: 'DD/MM/YYYY'
   });
 
 

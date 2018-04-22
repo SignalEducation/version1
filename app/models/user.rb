@@ -130,6 +130,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
+  validate :date_of_birth_is_possible?
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
@@ -149,6 +150,14 @@ class User < ActiveRecord::Base
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i}") }
+
+  def date_of_birth_is_possible?
+    return if self.date_of_birth.blank?
+    tens_years_ago = 10.years.ago
+    if self.date_of_birth > tens_years_ago
+      errors.add(:date_of_birth, 'is invalid')
+    end
+  end
 
   ### class methods
   def self.all_students

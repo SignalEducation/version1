@@ -59,7 +59,7 @@
           =render partial: 'layouts/navbar'
 
       -if @top_margin
-        -if @banner
+        -if @banner && !current_user
           .margin-top-lg
         -else
           .margin-top
