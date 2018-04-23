@@ -4,8 +4,9 @@
 -@faq_section.each do |faq_section|
   -if faq_section.faqs.any?
     .col-sm-12.l-margin-bottom.l-margin-top
-      %h3
-        =faq_section.name
+      -if faq_section.description
+        %h3
+          =faq_section.name
       -if faq_section.description
         %p
           =faq_section.description
