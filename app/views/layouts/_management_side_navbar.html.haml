@@ -34,9 +34,6 @@
       %li
         =link_to 'External Content', public_resources_url
 
-      %li
-        =link_to 'White Papers', white_papers_url
-
     -if current_user.developer_access?
       %li
         =link_to'Sidekiq', sidekiq_web_path, target: '_blank'
