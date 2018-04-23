@@ -1,0 +1,36 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            ='Reorder FAQ Sections'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'management_consoles/public_resources_nav'
+
+      .row.l-margin-top.l-margin-bottom
+        .pull-right
+          =link_to t('views.subject_courses.course_modules_order.return'), public_resources_url, class: 'btn btn-red'
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.sorted_table{data: {destination: faq_sections_url}, style: 'font-size: 18px;'}
+                %thead
+                  %tr
+                    %th Name
+                    %th Active
+                    %th
+                    %th
+                %tbody
+                  -@faq_sections.all_in_order.each do |faq_section|
+                    %tr{id: faq_section.id}
+                      %td
+                        =faq_section.name
+                      %td
+                        =tick_or_cross(faq_section.active)
+                      %td
+                        =link_to t('views.general.edit'), edit_faq_section_url(faq_section.id), class: 'btn btn-small btn-purple'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}

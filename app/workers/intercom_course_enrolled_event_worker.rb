@@ -5,7 +5,6 @@ class IntercomCourseEnrolledEventWorker
 
   def perform(user_id, course_name, exam_date)
     intercom = InitializeIntercomClientService.new().perform
-    logger.info "Initialize Intercom Client - #{intercom.inspect}"
 
     @user = User.where(id: user_id).first
 

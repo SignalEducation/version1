@@ -33,6 +33,10 @@ class ManagementConsolesController < ApplicationController
     @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
   end
 
+  def public_resources
+    @faq_sections = FaqSection.paginate(per_page: 50, page: params[:page]).all_in_order
+  end
+
 
 
   protected

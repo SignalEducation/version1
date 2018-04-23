@@ -2,11 +2,13 @@
 #
 # Table name: exam_bodies
 #
-#  id         :integer          not null, primary key
-#  name       :string
-#  url        :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string
+#  url           :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  modal_heading :string
+#  modal_text    :text
 #
 
 class ExamBodiesController < ApplicationController
@@ -70,7 +72,7 @@ class ExamBodiesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_body).permit(:name, :url)
+    params.require(:exam_body).permit(:name, :url, :modal_heading, :modal_text)
   end
 
 end

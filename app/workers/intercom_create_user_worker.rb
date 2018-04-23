@@ -5,7 +5,6 @@ class IntercomCreateUserWorker
 
   def perform(user_id)
     intercom = InitializeIntercomClientService.new().perform
-    logger.info "Initialize Intercom Client - #{intercom.inspect}"
 
     user = User.where(id: user_id).first
 

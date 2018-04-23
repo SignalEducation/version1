@@ -13,7 +13,8 @@
         .h6
           -# Create a account started date that uses account_create if
           -# not trial_started_date value
-          =humanize_datetime(@user.student_access.trial_started_date)
+          -if @user.student_access && @user.student_access.trial_started_date
+            =humanize_datetime(@user.student_access.trial_started_date)
 
 
     -if @current_subscription.active_status?

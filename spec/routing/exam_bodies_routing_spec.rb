@@ -2,11 +2,13 @@
 #
 # Table name: exam_bodies
 #
-#  id         :integer          not null, primary key
-#  name       :string
-#  url        :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string
+#  url           :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  modal_heading :string
+#  modal_text    :text
 #
 
 require 'rails_helper'

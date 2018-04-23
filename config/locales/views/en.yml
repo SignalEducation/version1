@@ -578,6 +578,10 @@ en:
         name_placeholder: Name of Examining Body
         url: Url
         url_placeholder: Home URL of Examining Body
+        modal_heading: Modal Heading
+        modal_heading_placeholder: Heading for Student No. & DOB Modal
+        modal_text: Modal Text
+        modal_text_placeholder: Text for Student No. & DOB Modal
 
       index:
         h1: Exam Bodies
@@ -612,6 +616,95 @@ en:
 
       new:
         h1: New Exam Sitting
+
+    external_banners:
+      form:
+        name: Name
+        name_placeholder: Banner Name
+        name_url: Name URL
+        name_url_placeholder: Banner Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        background_colour: Background Colour
+        background_colour_placeholder: "eg. #fff"
+        text_content: Banner Text
+        text_content_placeholder: Banner Text
+        user_sessions: Sign In Page
+        library: Library Pages
+        subscription_plans: Pricing Page
+        footer_pages: Footer Pages [Contact, Privacy, T+C, ACCA, Lecturers, Media]
+        student_sign_ups: Sign Up Page
+
+      index:
+        h1: External Banners
+        delete: Delete
+
+      show:
+        h1: Banner
+
+      edit:
+        h1: Edit Banner
+
+      new:
+        h1: New Banner
+
+
+    faqs:
+      form:
+        name: Name
+        name_placeholder: FAQ Name
+        name_url: Name URL
+        name_url_placeholder: FAQ Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        faq_section_id: FAQ Section
+        faq_section_id_placeholder: FAQ Section - Parent
+        question_text: Question Text
+        question_text_placeholder: Question Text
+        answer_text: Answer Text
+        answer_text_placeholder: Answer Text
+        pre_answer_text: Basic Answer Text
+        pre_answer_text_placeholder: Basic Version of the Answer Text without any Text Formatting or HTML elements
+
+      index:
+        h1: FAQs
+        delete: Delete FAQ
+
+      show:
+        h1: FAQ
+
+      edit:
+        h1: Edit FAQ
+
+      new:
+        h1: New FAQ
+
+    faq_sections:
+      form:
+        name: Name
+        name_placeholder: Section Name
+        name_url: Name URL
+        name_url_placeholder: Section Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        description: Description
+        description_placeholder: Description - Optional
+
+      index:
+        h1: FAQ Sections
+        delete: Delete Section
+
+      show:
+        h1: FAQ Section
+
+      edit:
+        h1: Edit Section
+
+      new:
+        h1: New FAQ Section
 
 
     groups:

@@ -19,6 +19,10 @@
 
         -elsif @active_enrollment && !@active_enrollment.expired
           =render partial: 'enrollment_info'
+
+          -if current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
+            =render partial: 'user_exam_body_details_modal'
+
         -else
           =render partial: 'enrollment_form'
           =render partial: 'course_enrollment_modal'
@@ -72,9 +76,17 @@
           =render partial: 'course_info'
 
 =render partial: 'courses/access_denied_modal'
+
 :javascript
 
   $('.lib-panel').click(function(){
     if($(this).is('.radius')){$(this).removeClass('radius'); return;}
     $(this).addClass('radius').siblings().removeClass('radius');
   });
+
+-if current_user && current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
+  :javascript
+    $(document).ready(function() {
+      var inst = $('[data-remodal-id=user-exam-body-modal]').remodal();
+      inst.open();
+    });

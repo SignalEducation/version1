@@ -172,6 +172,43 @@ en:
           success: ExamSitting has been deleted
           error: ExamSitting was not deleted
 
+
+    external_banners:
+      create:
+        flash:
+          success: Banner has been created successfully
+      update:
+        flash:
+          success: Banner details have been updated successfully
+      destroy:
+        flash:
+          success: Banner has been deleted
+          error: Banner was not deleted
+
+    faqs:
+      create:
+        flash:
+          success: FAQ has been created successfully
+      update:
+        flash:
+          success: FAQ details have been updated successfully
+      destroy:
+        flash:
+          success: FAQ has been deleted
+          error: FAQ was not deleted
+
+    faq_sections:
+      create:
+        flash:
+          success: FAQ Section has been created successfully
+      update:
+        flash:
+          success: FAQ Section details have been updated successfully
+      destroy:
+        flash:
+          success: FAQ Section has been deleted
+          error: FAQ Section was not deleted
+
     groups:
       create:
         flash:
@@ -439,6 +476,9 @@ en:
       update_subjects:
         flash:
           success: User Courses have been updated successfully
+      update_exam_body_details:
+        flash:
+          success: Thank You! Your Student Number and D.O.B have successfully been updated
 
 
     user_activations:
