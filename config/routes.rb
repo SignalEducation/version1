@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     get 'account', to: 'user_accounts#account_show', as: :account
     post 'change_password', to: 'user_accounts#change_password', as: :change_password
     patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
+    patch 'update_exam_body_user_details', to: 'user_accounts#update_exam_body_user_details', as: :update_exam_body_user_details
     get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
@@ -110,6 +111,9 @@ Rails.application.routes.draw do
 
     resources :exam_bodies
     resources :exam_sittings
+    resources :external_banners, concerns: :supports_reordering
+    resources :faqs, except: [:show, :index], concerns: :supports_reordering
+    resources :faq_sections, concerns: :supports_reordering
     resources :groups, concerns: :supports_reordering
 
     #Sign Up Actions
@@ -134,6 +138,7 @@ Rails.application.routes.draw do
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
+    get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
     resources :mock_exams, concerns: :supports_reordering
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
@@ -171,6 +176,7 @@ Rails.application.routes.draw do
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
+    get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'profile/:id', to: 'footer_pages#profile', as: :profile
@@ -192,9 +198,9 @@ Rails.application.routes.draw do
     end
     resources :refunds
 
-    resources :white_papers, except: [:show, :media_library], concerns: :supports_reordering
-    get 'media_library', to: 'white_papers#media_library', as: :media_library
-    get 'white_paper/:white_paper_name_url', to: 'white_papers#show', as: :public_white_paper
+    resources :white_papers, concerns: :supports_reordering
+    get 'media_library', to: 'footer_pages#media_library', as: :media_library
+    get 'white_paper/:white_paper_name_url', to: 'footer_pages#white_paper_request', as: :public_white_paper
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 

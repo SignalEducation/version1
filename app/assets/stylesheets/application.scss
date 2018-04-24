@@ -70,10 +70,27 @@ html {
       margin-top: 40px;
     }
     @include breakpoint(sm-min) {
+      margin-top: 40px;
+    }
+    @include breakpoint(md-min) {
       margin-top: 60px;
     }
     @include breakpoint(lg-min) {
       margin-top: 60px;
+    }
+  }
+  .margin-top-lg {                   // These Ensure content is not hidden behind Navbar
+    @include breakpoint(xs-min) {
+      margin-top: 100px;
+    }
+    @include breakpoint(sm-min) {
+      margin-top: 100px;
+    }
+    @include breakpoint(md-min) {
+      margin-top: 100px;
+    }
+    @include breakpoint(lg-min) {
+      margin-top: 80px;
     }
   }
 
@@ -1086,6 +1103,12 @@ a.card {
 
 
 
+.notice.external-banner {
+  border-radius: 0;
+  padding: $gutter/2.5;
+}
+
+
 .notice.warning {
   background: #FFD466;
   color: $text-color;
@@ -1882,15 +1905,14 @@ a.list-group-item {
 }
 .faq-inner {
   padding: $gutter/1.5 $gutter/1.5;
+  min-height: 80px;
 }
 .narrow {
-  height: 100px;
+  height: 80px;
 }
 
 .faq-title {
-  &.h6 {
-    margin-top: 2px;
-  }
+  margin-bottom: 5px;
 }
 .closed {
   white-space: nowrap;

@@ -5,7 +5,6 @@ class IntercomUpgradePageLoadedEventWorker
 
   def perform(user_id, country_name)
     intercom = InitializeIntercomClientService.new().perform
-    logger.info "Initialize Intercom Client - #{intercom.inspect}"
     user = User.where(id: user_id).first
 
     if user

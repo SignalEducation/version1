@@ -1,3 +1,4 @@
+=render partial: 'layouts/external_banner'
 .hero-library
   .l-wrap-small
     =render partial: 'layouts/transparent_navbar'
@@ -48,17 +49,10 @@
             %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'btn btn-purple btn-wide'}
               Contact Us
 
-        .col-md-12.l-margin-top-huge
-          %hr/
-          =render partial: 'layouts/faq'
 
 
 
-
-
-
-
-        .col-md-10.col-md-offset-1
+        .col-md-12
           %hr/
           %h2.h-separator.h-separator-center.text-center
             LearnSignal Newsletter

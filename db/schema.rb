@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180403093716) do
+ActiveRecord::Schema.define(version: 20180422114106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,8 +269,10 @@ ActiveRecord::Schema.define(version: 20180403093716) do
   create_table "exam_bodies", force: :cascade do |t|
     t.string   "name"
     t.string   "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "modal_heading"
+    t.text     "modal_text"
   end
 
   add_index "exam_bodies", ["name"], name: "index_exam_bodies_on_name", using: :btree
@@ -289,6 +291,58 @@ ActiveRecord::Schema.define(version: 20180403093716) do
   add_index "exam_sittings", ["date"], name: "index_exam_sittings_on_date", using: :btree
   add_index "exam_sittings", ["name"], name: "index_exam_sittings_on_name", using: :btree
   add_index "exam_sittings", ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id", using: :btree
+
+  create_table "external_banners", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "sorting_order"
+    t.boolean  "active",             default: false
+    t.string   "background_colour"
+    t.text     "text_content"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "user_sessions",      default: false
+    t.boolean  "library",            default: false
+    t.boolean  "subscription_plans", default: false
+    t.boolean  "footer_pages",       default: false
+    t.boolean  "student_sign_ups",   default: false
+  end
+
+  add_index "external_banners", ["active"], name: "index_external_banners_on_active", using: :btree
+  add_index "external_banners", ["name"], name: "index_external_banners_on_name", using: :btree
+
+  create_table "faq_sections", force: :cascade do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.text     "description"
+    t.boolean  "active",        default: true
+    t.integer  "sorting_order"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "faq_sections", ["active"], name: "index_faq_sections_on_active", using: :btree
+  add_index "faq_sections", ["name"], name: "index_faq_sections_on_name", using: :btree
+  add_index "faq_sections", ["name_url"], name: "index_faq_sections_on_name_url", using: :btree
+  add_index "faq_sections", ["sorting_order"], name: "index_faq_sections_on_sorting_order", using: :btree
+
+  create_table "faqs", force: :cascade do |t|
+    t.string   "name"
+    t.string   "name_url"
+    t.boolean  "active",          default: true
+    t.integer  "sorting_order"
+    t.integer  "faq_section_id"
+    t.text     "question_text"
+    t.text     "answer_text"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.text     "pre_answer_text"
+  end
+
+  add_index "faqs", ["active"], name: "index_faqs_on_active", using: :btree
+  add_index "faqs", ["faq_section_id"], name: "index_faqs_on_faq_section_id", using: :btree
+  add_index "faqs", ["name"], name: "index_faqs_on_name", using: :btree
+  add_index "faqs", ["name_url"], name: "index_faqs_on_name_url", using: :btree
+  add_index "faqs", ["question_text"], name: "index_faqs_on_question_text", using: :btree
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"

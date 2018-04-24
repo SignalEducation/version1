@@ -2,17 +2,19 @@
 #
 # Table name: exam_bodies
 #
-#  id         :integer          not null, primary key
-#  name       :string
-#  url        :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :integer          not null, primary key
+#  name          :string
+#  url           :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  modal_heading :string
+#  modal_text    :text
 #
 
 class ExamBody < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :url
+  attr_accessible :name, :url, :modal_heading, :modal_text
 
   # Constants
 

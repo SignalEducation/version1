@@ -1,0 +1,79 @@
+=form_for(@external_banner, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  =f.hidden_field :sorting_order
+  =render partial: '/layouts/error_messages', locals: {thing: @external_banner, message: nil}
+  .row
+    .col-md-12
+      .col-md-6
+        =f.label :name, t('views.external_banners.form.name'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :name, placeholder: t('views.external_banners.form.name_placeholder'), class: 'form-control', autofocus: true, style: 'border-radius: 6px;'
+
+      .col-md-6
+        =f.label :background_colour, t('views.external_banners.form.background_colour'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.color_field :background_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+      .col-md-6.l-margin-top-big
+        .col-sm-8.col-sm-offset-4
+          .checkbox
+            %label
+              =f.check_box :active
+              =t('views.external_banners.form.active')
+
+      .col-md-12.l-margin-top-big
+        =f.label :text_content, t('views.external_banners.form.text_content'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
+
+      .col-md-12.l-margin-top-big
+        %hr/
+        %h3.l-margin-bottom
+          ='Pages to render the banner'
+
+        .col-sm-3
+          .checkbox
+            %label
+              =f.check_box :user_sessions
+              =t('views.external_banners.form.user_sessions')
+
+
+        .col-sm-3
+          .checkbox
+            %label
+              =f.check_box :subscription_plans
+              =t('views.external_banners.form.subscription_plans')
+
+        .col-sm-3
+          .checkbox
+            %label
+              =f.check_box :student_sign_ups
+              =t('views.external_banners.form.student_sign_ups')
+
+
+        .col-sm-3
+          .checkbox
+            %label
+              =f.check_box :library
+              =t('views.external_banners.form.library')
+
+        .col-sm-12.l-margin-top
+          .checkbox
+            %label
+              =f.check_box :footer_pages
+              =t('views.external_banners.form.footer_pages')
+
+
+  .row.l-margin-top-huge
+    .col-md-12
+      =f.submit t('views.general.save'), class: 'btn btn-red'
+      =link_to t('views.general.cancel'), external_banners_path, class: 'btn btn-cyan'
+
+
+
+
+:javascript
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

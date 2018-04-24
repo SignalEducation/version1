@@ -40,6 +40,16 @@ class UserAccountsController < ApplicationController
     end
   end
 
+  def update_exam_body_user_details
+    if @user && @user.update_attributes(exam_body_user_allowed_params)
+      flash[:success] = I18n.t('controllers.users.update_exam_body_details.flash.success')
+      redirect_to course_special_link(@user.enrollments.last.subject_course)
+    else
+      session[:user_exam_body_errors] = @user.errors unless @user.errors.empty?
+      redirect_to request.referrer
+    end
+  end
+
   def change_password
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
@@ -83,6 +93,10 @@ class UserAccountsController < ApplicationController
   def allowed_params
     params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number,
     :unsubscribed_from_emails)
+  end
+
+  def exam_body_user_allowed_params
+    params.require(:user).permit(:date_of_birth, :student_number)
   end
 
   def get_variables
