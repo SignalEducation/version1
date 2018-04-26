@@ -1474,6 +1474,9 @@ en:
       enrollments_info:
         tab_heading: Enrolments Info
 
+      referral_info:
+        tab_heading: Referral Program
+
       student_user_form:
         button_label: Edit Details
         heading: Edit Personal Details
