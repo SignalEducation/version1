@@ -124,7 +124,6 @@ class StudentSignUpsController < ApplicationController
           cookies.delete(:referral_data)
         end
       end
-      @user.create_referral_code
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
     else
       session[:sign_up_errors] = @user.errors unless @user.errors.empty?
@@ -138,7 +137,6 @@ class StudentSignUpsController < ApplicationController
     #If no user is found redirect - because analytics counts loading of
     # this page as new sign ups so we only want it to load once for each sign up
     @user = User.get_and_activate(params[:account_activation_code])
-    @faq_section = FaqSection.all_active.all_in_order
     @banner = nil
     redirect_to sign_in_url unless @user
   end

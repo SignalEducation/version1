@@ -137,6 +137,7 @@ class User < ActiveRecord::Base
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
+  after_create :create_referral_code_record
   after_update :update_stripe_customer, :update_intercom_user, :recalculate_student_access
 
   # scopes
@@ -925,6 +926,11 @@ class User < ActiveRecord::Base
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
     Rails.logger.debug "DEBUG: User#add_guid - FINISH at #{Proc.new{Time.now}.call.strftime('%H:%M:%S.%L')}"
+  end
+
+  def create_referral_code_record
+
+    self.create_referral_code
   end
 
   def recalculate_student_access

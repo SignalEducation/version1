@@ -192,6 +192,7 @@ Rails.application.routes.draw do
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
     get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show
+    get '/referral', to: 'referral_codes#referral', as: :refer_a_friend
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
