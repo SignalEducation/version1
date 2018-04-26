@@ -13,12 +13,8 @@ class ReferralCodesController < ApplicationController
   include ApplicationHelper
 
   before_action :logged_in_required, except: [:referral]
-  before_action :logged_out_required, only: [:referral]
-  before_action only: [:index, :destroy] do
+  before_action except: [:referral] do
     ensure_user_has_access_rights(%w(user_management_access))
-  end
-  before_action only: [:show] do
-    ensure_user_has_access_rights(%w(student_user))
   end
 
   def index
@@ -29,6 +25,16 @@ class ReferralCodesController < ApplicationController
     @referral_code = ReferralCode.find(params[:id])
     @user = User.find(@referral_code.user_id)
     @referral_url = referral_code_sharing_url(@user.referral_code)
+  end
+
+  def destroy
+    @referral_code = ReferralCode.where(id: params[:id]).first
+    if @referral_code.destroy
+      flash[:success] = I18n.t('controllers.referral_codes.destroy.flash.success')
+    else
+      flash[:error] = I18n.t('controllers.referral_codes.destroy.flash.error')
+    end
+    redirect_to referral_codes_url
   end
 
   def referral
@@ -47,14 +53,5 @@ class ReferralCodesController < ApplicationController
     redirect_to root_url
   end
 
-  def destroy
-    @referral_code = ReferralCode.where(id: params[:id]).first
-    if @referral_code.destroy
-      flash[:success] = I18n.t('controllers.referral_codes.destroy.flash.success')
-    else
-      flash[:error] = I18n.t('controllers.referral_codes.destroy.flash.error')
-    end
-    redirect_to referral_codes_url
-  end
 
 end
