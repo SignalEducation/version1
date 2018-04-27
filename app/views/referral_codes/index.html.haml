@@ -10,6 +10,13 @@
         .col-md-12
           =#render partial: 'management_consoles/referrals_nav'
 
+          =form_tag(referral_codes_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
+
+
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
           .table-box
@@ -24,14 +31,26 @@
                     %th=t('views.referral_codes.index.total_referred_signups')
                     %th
                 %tbody
-                  -@referral_codes.each do |referral_code|
+                  -@codes.each do |referral_code|
                     %tr{id: referral_code.id}
                       %td=referral_code.code
-                      %td=referral_code.user.email
+                      %td=referral_code.try(:user).try(:email)
                       %td=referral_code.try(:trial_referred_signups).try(:count)
                       %td=referral_code.try(:subscription_referred_signups).try(:count)
                       %td=referral_code.try(:referred_signups).try(:count)
                       %td
                         =link_to t('views.general.view'), referral_code_url(referral_code), class: 'btn btn-small btn-purple'
 
-              =will_paginate @referral_codes, renderer: BootstrapPagination::Rails
+              =will_paginate @codes, renderer: BootstrapPagination::Rails
+
+
+
+
+
+:javascript
+  $(document).ready(function() {
+    $("#search").on('blur', function() {
+      $(this).parents('form').submit();
+    });
+
+  });

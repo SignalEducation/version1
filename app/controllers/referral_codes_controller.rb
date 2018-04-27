@@ -19,7 +19,12 @@ class ReferralCodesController < ApplicationController
   before_action :get_variables, except: [:referral]
 
   def index
-    @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).all_in_order
+    @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).with_children.all_in_order
+
+    @codes = params[:search].to_s.blank? ?
+                 @codes = @referral_codes.with_children.all_in_order :
+                 @codes = @referral_codes.with_children.search(params[:search])
+
   end
 
   def show
