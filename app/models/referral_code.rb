@@ -38,12 +38,12 @@ class ReferralCode < ActiveRecord::Base
     referred_signups.empty?
   end
 
-  def payed_referred_signups
-    referred_signups.where("payed_at is not null")
+  def trial_referred_signups
+    referred_signups.where(subscription_id: nil)
   end
 
-  def unpayed_referred_signups
-    referred_signups.where(payed_at: nil)
+  def subscription_referred_signups
+    referred_signups.where.not(subscription_id: nil)
   end
 
   protected

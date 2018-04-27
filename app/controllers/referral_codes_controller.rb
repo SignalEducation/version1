@@ -16,6 +16,7 @@ class ReferralCodesController < ApplicationController
   before_action except: [:referral] do
     ensure_user_has_access_rights(%w(user_management_access))
   end
+  before_action :get_variables, except: [:referral]
 
   def index
     @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -53,5 +54,11 @@ class ReferralCodesController < ApplicationController
     redirect_to root_url
   end
 
+
+  protected
+
+  def get_variables
+    @layout = 'management'
+  end
 
 end
