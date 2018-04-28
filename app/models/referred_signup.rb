@@ -16,7 +16,7 @@
 class ReferredSignup < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :referral_code_id, :user_id, :referrer_url, :payed_at
+  attr_accessible :referral_code_id, :user_id, :referrer_url, :payed_at, :subscription_id
 
   # Constants
 
@@ -41,6 +41,16 @@ class ReferredSignup < ActiveRecord::Base
 
 
   # class methods
+  def self.to_csv(options = {})
+    #attributes are either model attributes or data generate in methods below
+    attributes = %w{referral_email created_at subscription_id referrer_url}
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
+      end
+    end
+  end
 
   # instance methods
   def destroyable?
@@ -50,6 +60,15 @@ class ReferredSignup < ActiveRecord::Base
   def referrer_user
     self.referral_code.user
   end
+
+  def subscription_referral
+    self.subscription_id
+  end
+
+  def referral_email
+    self.user.email
+  end
+
 
   protected
 

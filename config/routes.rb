@@ -153,6 +153,8 @@ Rails.application.routes.draw do
     get '/export_visits', to: 'reports#export_visits', as: :export_visits
     get '/export_courses', to: 'reports#export_courses', as: :export_courses
     get '/export_enrollments', to: 'reports#export_enrollments', as: :export_enrollments
+    get '/export_referral_codes', to: 'referral_codes#export_referral_codes', as: :export_referral_codes
+    get '/export_referral_codes/:id', to: 'referred_signups#export_referred_signups', as: :export_referred_signups
 
 
     resources :subject_courses, concerns: :supports_reordering do

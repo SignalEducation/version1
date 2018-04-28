@@ -11,8 +11,11 @@
             =@referral_code.user.email
 
       .row.l-margin-top.l-margin-bottom
-        .pull-right
+        .col-sm-6
           =link_to t('views.subject_courses.course_modules_order.return'), referral_codes_url, class: 'btn btn-red'
+        .col-sm-6
+          .pull-right
+            =link_to 'CSV Download', export_referred_signups_path(format: :xls, id: @referral_code.id), class: 'btn btn-cyan'
         .col-md-12.l-margin-top-big
           .table-box
             .table-responsive

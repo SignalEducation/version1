@@ -60,6 +60,15 @@ class ReferralCodesController < ApplicationController
   end
 
 
+  def export_referral_codes
+    @referral_codes = ReferralCode.with_children.all_in_order
+    respond_to do |format|
+      format.html
+      format.csv { send_data @referral_codes.to_csv() }
+      format.xls { send_data @referral_codes.to_csv(col_sep: "\t", headers: true), filename: "referral-codes-#{Date.today}.xls" }
+    end
+  end
+
   protected
 
   def get_variables

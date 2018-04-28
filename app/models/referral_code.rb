@@ -43,10 +43,21 @@ class ReferralCode < ActiveRecord::Base
     end
   end
 
+  ## Structures data in CSV format for Excel downloads ##
+  def self.to_csv(options = {})
+    #attributes are either model attributes or data generate in methods below
+    attributes = %w{code referrer_email trial_referrals subscription_referrals total_referrals referrals_this_month referrals_last_month total_referrals}
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
+      end
+    end
+  end
 
   # instance methods
   def destroyable?
-    referred_signups.empty?
+    true
   end
 
   def trial_referred_signups
@@ -55,6 +66,31 @@ class ReferralCode < ActiveRecord::Base
 
   def subscription_referred_signups
     referred_signups.where.not(subscription_id: nil)
+  end
+
+
+  def referrals_this_month
+    referred_signups.this_month.count
+  end
+
+  def referrals_last_month
+    referred_signups.last_month.count
+  end
+
+  def total_referrals
+    referred_signups.count
+  end
+
+  def trial_referrals
+    referred_signups.where(subscription_id: nil).count
+  end
+
+  def subscription_referrals
+    referred_signups.where.not(subscription_id: nil).count
+  end
+
+  def referrer_email
+    self.user.email
   end
 
   protected
