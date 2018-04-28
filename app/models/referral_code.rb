@@ -31,13 +31,13 @@ class ReferralCode < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:user_id) }
   scope :with_children, -> { joins(:referred_signups).uniq.all }
-  scope :by_user_email, lambda { |search| joins(:user).where('user.email = ?', search) }
+  scope :by_user_email, lambda { |search| joins(:user).where('users.email = ?', search) }
 
   # class methods
 
   def self.search(search)
     if search
-      ReferralCode.where('code ILIKE ? ', "%#{search}%")
+      ReferralCode.joins(:user).where('code ILIKE ? OR users.email ILIKE ? ', "%#{search}%", "%#{search}%")
     else
       ReferralCode.paginate(per_page: 50, page: params[:page]).with_children.all_in_order
     end
