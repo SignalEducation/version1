@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       get  '/courses', action: :user_courses_status, as: :courses
       get  '/enrollments', action: :user_enrollments_details, as: :enrollments
       get  '/orders', action: :user_purchases_details, as: :orders
+      get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]

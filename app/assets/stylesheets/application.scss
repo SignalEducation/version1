@@ -2396,8 +2396,8 @@ spinner {
     margin-right: 2%;
     @include breakpoint(sm-min) {
       padding: $gutter/2;
-      margin-left: 4%;
-      margin-right: 4%;
+      margin-left: 3%;
+      margin-right: 3%;
     }
   }
   & a {

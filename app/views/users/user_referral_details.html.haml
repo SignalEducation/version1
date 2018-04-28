@@ -1,0 +1,43 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@user.full_name
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'user_tabs'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-sm-6
+          %h3.h-dark.l-margin-bottom
+            ='Referred SignUps: '
+            =@referral_code.referred_signups.count
+        .col-sm-6
+          .pull-right
+            =link_to 'CSV Download', export_referred_signups_path(format: :xls, id: @referral_code.id), class: 'btn btn-cyan'
+
+        .col-md-12
+          -if @referral_code
+            .corporate-box-item.table-box
+              .col-sm-12
+                .table-responsive
+                  %table.table{style: 'font-size: 18px;'}
+                    %thead
+                      %tr
+                        %th Referral Users
+                        %th Creation Date
+                        %th Subscription
+                        %th Referral URL
+                    %tbody
+                      -@referral_code.referred_signups.each do |referral|
+                        %tr
+                          %td
+                            =referral.user.email
+                          %td
+                            =humanize_datetime(referral.created_at)
+                          %td
+                            =tick_or_cross(referral.subscription_id)
+                          %td
+                            =referral.referrer_url
