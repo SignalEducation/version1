@@ -24,7 +24,26 @@ class EnrollmentManagementController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w(user_management_access))
   end
+  before_action :get_variables
 
+  def index
+    @enrollments = Enrollment.all_in_recent_order
+
+
+    @sort_choices = ExamSitting.all_active.all_in_order
+
+    if params[:enrollment] && [:exam_sittings_id].to_s.blank?
+      @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_recent_order
+    elsif params[:enrollment] && params[:enrollment][:exam_sittings_id] == 'Select...'
+      @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_recent_order
+    elsif params[:enrollment] && params[:enrollment][:exam_sittings_id]
+      @enrollments = Enrollment.where(exam_sitting_id: params[:enrollment][:exam_sittings_id]).paginate(per_page: 50, page: params[:page]).all_in_recent_order
+    else
+      @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_recent_order
+    end
+
+
+  end
 
   def edit
     @enrollment = Enrollment.find(params[:id])
@@ -70,6 +89,10 @@ class EnrollmentManagementController < ApplicationController
   end
 
   protected
+
+  def get_variables
+    @layout = 'management'
+  end
 
   def allowed_params
     params.require(:enrollment).permit(:exam_date, :subject_course_user_log_id, :exam_sitting_id, :notifications, :expired, :active)

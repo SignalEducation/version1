@@ -1,0 +1,47 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            ='Enrolments'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'enrollment_management/enrollment_management_navbar'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-sm-6
+
+        .col-sm-6
+          =form_tag(enrollments_management_url, method: :get, role: 'form', class: 'form-horizontal') do
+            .col-sm-10.col-sm-offset-2
+              .input-group.input-group-lg.full-width
+                -#=select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
+                -#=collection_select :sort_by, @sort_choices, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', onchange: 'this.form.submit(); return false;'}
+
+                =collection_select(:enrollment, :exam_sitting_id, @sort_choices, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', onchange: 'this.form.submit(); return false;'})
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.sorted_table
+                %thead
+                  %tr
+                    %th Name
+                    %th Sitting
+                    %th Active
+                    %th
+                    %th
+                %tbody
+                  -@enrollments.each do |enrollment|
+                    %tr
+                      %td
+                        =enrollment.user.full_name
+                      %td
+                        =enrollment.try(:exam_sitting).try(:name)
+                      %td
+                        =tick_or_cross(!enrollment.expired)
+                      %td
+                        =link_to t('views.general.view'), '#', class: 'btn btn-small btn-purple'

@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     resources :enrollments, only: [:edit, :update, :create]
+    get '/enrollments_management', to: 'enrollment_management#index', as: :enrollments_management
     resources :enrollment_management, only: [:edit, :update, :show]
     post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
