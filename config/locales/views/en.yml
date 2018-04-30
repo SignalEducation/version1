@@ -1474,6 +1474,9 @@ en:
       enrollments_info:
         tab_heading: Enrolments Info
 
+      referral_info:
+        tab_heading: Referral Program
+
       student_user_form:
         button_label: Edit Details
         heading: Edit Personal Details
@@ -1638,10 +1641,13 @@ en:
         h1: Referral Codes
         code: Code
         name: Name
-        email: Email
+        email: Referrer Email
         paid_referred_no: Paid referred no.
         unpaid_referred_no: Unpaid referred no.
         for_paying_no: For paying no.
+        trial_referred_signups: Trial
+        subscription_referred_signups: Sub
+        total_referred_signups: Total
 
       modal:
         h1: Get $25

@@ -57,6 +57,7 @@
         $.ajax({
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
           data: JSON.stringify({'videoLogId': logId}),
           method: 'PATCH',
           contentType: "application/json; charset=utf-8"
@@ -73,11 +74,12 @@
           dataType: 'json',
           data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'set_id': exam_track_id }),
           method: 'POST',
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
           contentType: "application/json; charset=utf-8",
-          success: function(data,status,xhr){
+          success: function(data,status){
             logId = data.video_log_id;
           },
-          error: function(xhr,status,error){
+          error: function(status,error){
             console.log(xhr);
             alert(error);
           }

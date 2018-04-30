@@ -16,7 +16,7 @@
 class ReferredSignup < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :referral_code_id, :user_id, :referrer_url, :maturing_on, :payed_at
+  attr_accessible :referral_code_id, :user_id, :referrer_url, :payed_at, :subscription_id
 
   # Constants
 
@@ -32,20 +32,25 @@ class ReferredSignup < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_update :check_conversion_count
 
   # scopes
   scope :all_in_order, -> { order(:referral_code_id) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
   scope :last_month, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
   scope :all_payed, -> { where.not(payed_at: nil) }
-  scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
-  scope :one_month_ago, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
-  scope :two_months_ago, -> { where(created_at: 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
-  scope :three_months_ago, -> { where(created_at: 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
 
 
   # class methods
+  def self.to_csv(options = {})
+    #attributes are either model attributes or data generate in methods below
+    attributes = %w{referral_email created_at subscription_id referrer_url}
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
+      end
+    end
+  end
 
   # instance methods
   def destroyable?
@@ -56,32 +61,16 @@ class ReferredSignup < ActiveRecord::Base
     self.referral_code.user
   end
 
+  def subscription_referral
+    self.subscription_id
+  end
+
+  def referral_email
+    self.user.email
+  end
+
+
   protected
-
-  def check_conversion_count
-    if referrer_user.student_user?
-      current_referrals = ReferredSignup.this_month.where(referral_code_id: self.referral_code_id)
-      current_payed_referrals = current_referrals.where.not(payed_at: nil)
-      if current_payed_referrals.count == 5
-        credit_stripe_account
-      end
-    else
-      return nil
-    end
-  end
-
-  def credit_stripe_account
-    currency = referrer_user.country.currency
-    monthly_plan = SubscriptionPlan.in_currency(currency).where(payment_frequency_in_months: 1).last
-    monthly_plan_price = monthly_plan.price
-    price_in_cents = (monthly_plan_price.to_d * 100).to_i
-    stripe_customer = Stripe::Customer.retrieve(self.referral_code.user.stripe_customer_id)
-    stripe_customer.account_balance = price_in_cents * (-1)
-    stripe_customer.save
-    referrer_user.update_attribute(:stripe_account_balance, stripe_customer.account_balance)
-    amount = monthly_plan.currency.format_number(monthly_plan.price)
-    ReferralsWorker.perform_async(referrer_user.id, 'send_referral_discount_email', amount) unless Rails.env.test?
-  end
 
   def check_dependencies
     unless self.destroyable?

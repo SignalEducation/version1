@@ -31,6 +31,10 @@
           %a{href: '#enrollments', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.user_accounts.enrollments_info.tab_heading')
 
+          -if @user.referral_code
+            %a{href: '#referral', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+              =t('views.user_accounts.referral_info.tab_heading')
+
 
 
       .tab-content
@@ -76,6 +80,12 @@
               .content-box-inner
                 =render partial: 'enrollments_info'
 
+        -if @user.referral_code
+          .tab-pane.fade#referral{role: 'tabpanel'}
+            .col-md-12
+              .content-box.content-box-outer.l-margin-bottom-huge
+                .content-box-inner
+                  =render partial: 'referral_details'
 
 
 

@@ -1,0 +1,34 @@
+-if @referral_code
+  .row
+    .col-sm-8
+      %h4
+        ='Help Your Friends Pass Their ACCA Exams'
+      %p.l-margin-top
+        ='Help grow the community of successful ACCA students around the world.'
+      %p
+        ="As more students join the LearnSignal community, the more community learning events we can run, and the more you'll learn."
+      %p
+        ="Here's your special LearnSignal link:"
+
+      %h6.l-margin-bottom
+        =referral_code_sharing_url(@user.referral_code)
+
+
+      %p
+        You're welcome to share your link with friends, family, and colleagues via email, SMS, WhatsApp, and social media.
+
+      %p
+        ='Thanks for being part of the LearnSignal community.'
+
+      .col-xs-6
+        .tutor-header.pull-left
+          =image_tag('PhilipTutorBW.jpg', class: 'profile-pic profile-pic-small')
+          .h6.text-center
+            ='Philip'
+          .h6
+            ='Philip Meagher, CEO'
+
+    .col-sm-4
+      .h3
+        ='Successful Referrals: '
+        =@referral_code.referred_signups.count

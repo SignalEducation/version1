@@ -97,7 +97,11 @@ class UserPasswordsController < ApplicationController
       else
         @user = User.find_by_password_reset_token(params[:id])
         flash[:error] = I18n.t('controllers.user_passwords.update.flash.error')
-        render :set_password
+        if @user
+          render :set_password
+        else
+          redirect_to root_url
+        end
       end
     else
       @user = User.find_by_password_reset_token(params[:id])

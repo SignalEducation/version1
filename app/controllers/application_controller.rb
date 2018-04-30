@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
-  before_action :process_referral_code # not for Api::
   before_action :set_layout_variables
 
   helper_method :current_user_session, :current_user
@@ -169,22 +168,6 @@ class ApplicationController < ActionController::Base
 
   def reset_post_sign_up_redirect_path(new_path)
     cookies.encrypted[:post_sign_up_redirect_path] = {value: new_path, httponly: true} if new_path
-  end
-
-  def process_referral_code
-    # TODO We should probably check also whether request.path matches valid paths (library for students and author page for tutors)
-    referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
-    if referral_code
-      referral_data = request.referrer ? "#{referral_code.code};#{request.referrer}" : referral_code.code
-
-      # Browsers do not send back cookie attributes so we cannot update only value
-      # without altering expiration date. Therefore if we detect difference between
-      # current referral data and data stored in the cookie we will always save new
-      # data and set expiration to next 30 days.
-      if referral_code && referral_data != cookies.encrypted[:referral_data]
-        cookies.encrypted[:referral_data] = { value: referral_data, expires: 30.days.from_now, httponly: true }
-      end
-    end
   end
 
 

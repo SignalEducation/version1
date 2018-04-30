@@ -6,6 +6,7 @@ class UserAccountsController < ApplicationController
 
   def account_show
     @orders = @user.orders
+    @referral_code = @user.referral_code
     @enrollments = current_user.active_enrollments_in_sitting_order
 
     #@enrollments = @user.enrollments.all_in_account_order.sort_by { |enrollment| enrollment.active ? 0 : 1 }

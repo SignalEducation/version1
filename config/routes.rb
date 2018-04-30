@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       get  '/courses', action: :user_courses_status, as: :courses
       get  '/enrollments', action: :user_enrollments_details, as: :enrollments
       get  '/orders', action: :user_purchases_details, as: :orders
+      get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]
@@ -153,6 +154,8 @@ Rails.application.routes.draw do
     get '/export_visits', to: 'reports#export_visits', as: :export_visits
     get '/export_courses', to: 'reports#export_courses', as: :export_courses
     get '/export_enrollments', to: 'reports#export_enrollments', as: :export_enrollments
+    get '/export_referral_codes', to: 'referral_codes#export_referral_codes', as: :export_referral_codes
+    get '/export_referral_codes/:id', to: 'referred_signups#export_referred_signups', as: :export_referred_signups
 
 
     resources :subject_courses, concerns: :supports_reordering do
@@ -192,6 +195,7 @@ Rails.application.routes.draw do
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
     get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show
+    get '/referral', to: 'referral_codes#referral', as: :refer_a_friend
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
       get  '/filter/:payed', on: :collection, action: :index, as: :filtered
