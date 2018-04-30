@@ -44,6 +44,18 @@ class ReferredSignupsController < ApplicationController
     end
   end
 
+
+  def export_referred_signups
+    referral_code = ReferralCode.find(params[:id])
+    @referred_signups = ReferredSignup.where(referral_code_id: params[:id]).all_in_order
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @referred_signups.to_csv() }
+      format.xls { send_data @referred_signups.to_csv(col_sep: "\t", headers: true), filename: "RefCode-#{referral_code.code}-referred-signups-#{Date.today}.xls" }
+    end
+  end
+
   private
 
   def allowed_params

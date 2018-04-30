@@ -99,7 +99,7 @@ class SubscriptionsController < ApplicationController
         trial_ended_date = user.student_access.trial_ended_date ? user.student_access.trial_ended_date : Proc.new{Time.now}.call
         user.student_access.update_attributes(subscription_id: @subscription.id, trial_ended_date: trial_ended_date, account_type: 'Subscription', content_access: true)
 
-        user.referred_signup.update_attribute(:payed_at, Proc.new{Time.now}.call) if user.referred_user
+        user.referred_signup.update_attributes(payed_at: Proc.new{Time.now}.call, subscription_id: @subscription.id) if user.referred_user
         redirect_to personal_upgrade_complete_url
       else
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
