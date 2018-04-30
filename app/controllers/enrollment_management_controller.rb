@@ -29,19 +29,11 @@ class EnrollmentManagementController < ApplicationController
   def index
     @enrollments = Enrollment.all_in_recent_order
 
-
-    @sort_choices = ExamSitting.all_active.all_in_order
-
-    if params[:enrollment] && [:exam_sittings_id].to_s.blank?
-      @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_recent_order
-    elsif params[:enrollment] && params[:enrollment][:exam_sittings_id] == 'Select...'
-      @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_recent_order
-    elsif params[:enrollment] && params[:enrollment][:exam_sittings_id]
-      @enrollments = Enrollment.where(exam_sitting_id: params[:enrollment][:exam_sittings_id]).paginate(per_page: 50, page: params[:page]).all_in_recent_order
-    else
-      @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_recent_order
+    if params[:exam_sitting] && params[:exam_sitting][:id]
+      @enrollments = Enrollment.by_sitting(params[:exam_sitting][:id]).all_in_recent_order
+    elsif params[:search]
+      @enrollments = Enrollment.search(params[:search]).all_in_recent_order
     end
-
 
   end
 

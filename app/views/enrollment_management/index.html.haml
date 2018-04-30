@@ -17,10 +17,14 @@
           =form_tag(enrollments_management_url, method: :get, role: 'form', class: 'form-horizontal') do
             .col-sm-10.col-sm-offset-2
               .input-group.input-group-lg.full-width
-                -#=select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), class: 'form-control', onchange: 'this.form.submit(); return false;'
-                -#=collection_select :sort_by, @sort_choices, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', onchange: 'this.form.submit(); return false;'}
+                =collection_select(:exam_sitting, :id, ExamSitting.all_active.all_in_order, :id, :name, {include_blank: 'Exam Sitting Filter'}, {class: 'form-control', onchange: 'this.form.submit(); return false;'})
 
-                =collection_select(:enrollment, :exam_sitting_id, @sort_choices, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', onchange: 'this.form.submit(); return false;'})
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
+
+
 
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
