@@ -29,10 +29,10 @@ class EnrollmentManagementController < ApplicationController
   def index
     @enrollments = Enrollment.all_in_recent_order
 
-    if params[:exam_sitting] && params[:exam_sitting][:id]
-      @enrollments = Enrollment.by_sitting(params[:exam_sitting][:id]).all_in_recent_order
-    elsif params[:search]
+    if params[:search] && !params[:search].empty?
       @enrollments = Enrollment.search(params[:search]).all_in_recent_order
+    elsif params[:exam_sitting] && params[:exam_sitting][:id]
+      @enrollments = Enrollment.by_sitting(params[:exam_sitting][:id]).all_in_recent_order
     end
 
   end
