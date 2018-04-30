@@ -12,53 +12,25 @@
 class ReferralCodesController < ApplicationController
   include ApplicationHelper
 
-  before_action :logged_in_required
-  before_action only: [:index, :destroy] do
+  before_action :logged_in_required, except: [:referral]
+  before_action except: [:referral] do
     ensure_user_has_access_rights(%w(user_management_access))
   end
-  before_action only: [:show] do
-    ensure_user_has_access_rights(%w(student_user))
-  end
+  before_action :get_variables, except: [:referral]
 
   def index
-    @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).all_in_order
+    @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).with_children.all_in_order
+
+    @codes = params[:search].to_s.blank? ?
+                 @codes = @referral_codes.with_children.all_in_order :
+                 @codes = @referral_codes.with_children.search(params[:search])
+
   end
 
   def show
     @referral_code = ReferralCode.find(params[:id])
     @user = User.find(@referral_code.user_id)
-    if @user.student_user?
-      sub_plan_currency = @user.subscriptions.first.subscription_plan.currency
-      @current_monthly_sub = SubscriptionPlan.in_currency(sub_plan_currency).where(payment_frequency_in_months: 1).last
-    end
-    url = request.original_url.split("/")
-    new_url = url[2] + "/" + url[3] + "/"
-    @ref_page = new_url + "library/?ref_code="
-    @referral_url = referral_code_sharing_url(current_user.referral_code)
-    if current_user == @user
-      #Graph Dates Data
-      date_to  = Date.parse("#{Proc.new{Time.now}.call}")
-      date_from = date_to - 2.months
-      date_range = date_from..date_to
-      date_months = date_range.map {|d| Date.new(d.year, d.month, 1) }.uniq
-      @labels = date_months.map {|d| d.strftime "%B" }
-
-      #Referral Data
-      referral_code = ReferralCode.where(user_id: @user.id).last
-      total_referrals = ReferredSignup.where(referral_code_id: referral_code.id)
-      initial_referrals = total_referrals.where(payed_at: nil)
-      converted_referrals = total_referrals.where.not(payed_at: nil)
-      @initial_referrals_this_month = initial_referrals.this_month.count
-      @initial_referrals_one_month_ago = initial_referrals.one_month_ago.count
-      @initial_referrals_two_months_ago = initial_referrals.two_months_ago.count
-      @initial_referrals_three_months_ago = initial_referrals.three_months_ago.count
-      @converted_referrals_this_month = converted_referrals.this_month.count
-      @converted_referrals_one_month_ago = converted_referrals.one_month_ago.count
-      @converted_referrals_two_months_ago = converted_referrals.two_months_ago.count
-      @converted_referrals_three_months_ago = converted_referrals.three_months_ago.count
-    else
-      redirect_to root_url
-    end
+    @referral_url = referral_code_sharing_url(@user.referral_code)
   end
 
   def destroy
@@ -69,6 +41,38 @@ class ReferralCodesController < ApplicationController
       flash[:error] = I18n.t('controllers.referral_codes.destroy.flash.error')
     end
     redirect_to referral_codes_url
+  end
+
+  def referral
+    referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
+    if referral_code
+      referral_data = request.referrer ? "#{referral_code.code};#{request.referrer}" : referral_code.code
+
+      # Browsers do not send back cookie attributes so we cannot update only value
+      # without altering expiration date. Therefore if we detect difference between
+      # current referral data and data stored in the cookie we will always save new
+      # data and set expiration to next 30 days.
+      if referral_code && referral_data != cookies.encrypted[:referral_data]
+        cookies.encrypted[:referral_data] = { value: referral_data, expires: 30.days.from_now, httponly: true }
+      end
+    end
+    redirect_to root_url
+  end
+
+
+  def export_referral_codes
+    @referral_codes = ReferralCode.with_children.all_in_order
+    respond_to do |format|
+      format.html
+      format.csv { send_data @referral_codes.to_csv() }
+      format.xls { send_data @referral_codes.to_csv(col_sep: "\t", headers: true), filename: "referral-codes-#{Date.today}.xls" }
+    end
+  end
+
+  protected
+
+  def get_variables
+    @layout = 'management'
   end
 
 end

@@ -68,9 +68,11 @@ class UsersController < ApplicationController
   end
   before_action :layout_variables
   before_action :get_variables, except: [:user_personal_details, :user_subscription_status,
-                                         :user_enrollments_details, :user_purchases_details, :user_courses_status]
+                                         :user_enrollments_details, :user_purchases_details,
+                                         :user_courses_status, :user_referral_details]
   before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status,
-                                            :user_enrollments_details, :user_purchases_details, :user_courses_status]
+                                            :user_enrollments_details, :user_purchases_details,
+                                            :user_courses_status, :user_referral_details]
 
 
   def index
@@ -179,6 +181,10 @@ class UsersController < ApplicationController
 
   def user_purchases_details
     @orders = @user.orders
+  end
+
+  def user_referral_details
+    @referral_code = @user.referral_code
   end
 
   def user_courses_status

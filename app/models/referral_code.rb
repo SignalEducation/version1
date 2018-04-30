@@ -21,10 +21,8 @@ class ReferralCode < ActiveRecord::Base
   has_many :referred_signups
 
   # validation
-  validates :user_id, presence: true,
-            uniqueness: true
-  validates :code, presence: true,
-            uniqueness: true
+  validates :user_id, presence: true, uniqueness: true
+  validates :code, presence: true, uniqueness: true
 
   # callbacks
   before_destroy :check_dependencies
@@ -32,32 +30,67 @@ class ReferralCode < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
+  scope :with_children, -> { joins(:referred_signups).uniq.all }
+  scope :by_user_email, lambda { |search| joins(:user).where('users.email = ?', search) }
 
   # class methods
-  def generate_referral_code(user_id)
-    usr = User.find(user_id)
-    if usr
-      new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}")[0..6]
-      while ReferralCode.where(code: new_code).count > 0
-        new_code = Digest::SHA1.hexdigest("#{usr.id}#{usr.email}#{Time.now.to_i}")[0..6]
+
+  def self.search(search)
+    if search
+      ReferralCode.joins(:user).where('code ILIKE ? OR users.email ILIKE ? ', "%#{search}%", "%#{search}%")
+    else
+      ReferralCode.paginate(per_page: 50, page: params[:page]).with_children.all_in_order
+    end
+  end
+
+  ## Structures data in CSV format for Excel downloads ##
+  def self.to_csv(options = {})
+    #attributes are either model attributes or data generate in methods below
+    attributes = %w{code referrer_email trial_referrals subscription_referrals total_referrals referrals_this_month referrals_last_month total_referrals}
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
       end
-      self.user_id = user_id
-      self.code = new_code
-      self.save!
     end
   end
 
   # instance methods
   def destroyable?
-    referred_signups.empty?
+    true
   end
 
-  def payed_referred_signups
-    referred_signups.where("payed_at is not null")
+  def trial_referred_signups
+    referred_signups.where(subscription_id: nil)
   end
 
-  def unpayed_referred_signups
-    referred_signups.where(payed_at: nil)
+  def subscription_referred_signups
+    referred_signups.where.not(subscription_id: nil)
+  end
+
+
+  def referrals_this_month
+    referred_signups.this_month.count
+  end
+
+  def referrals_last_month
+    referred_signups.last_month.count
+  end
+
+  def total_referrals
+    referred_signups.count
+  end
+
+  def trial_referrals
+    referred_signups.where(subscription_id: nil).count
+  end
+
+  def subscription_referrals
+    referred_signups.where.not(subscription_id: nil).count
+  end
+
+  def referrer_email
+    self.user.email
   end
 
   protected
