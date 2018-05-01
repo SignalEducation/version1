@@ -34,7 +34,7 @@
               %table.table.sorted_table
                 %thead
                   %tr
-                    %th Name
+                    %th User
                     %th Sitting
                     %th Expired
                     %th
@@ -50,6 +50,8 @@
                         =tick_or_cross(enrollment.expired)
                       %td
                         =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-small btn-purple'
+                      %td
+                        =link_to 'CSV', '#', class: 'btn btn-small btn-cyan'
 
 
 
