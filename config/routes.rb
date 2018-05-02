@@ -115,6 +115,7 @@ Rails.application.routes.draw do
 
     resources :exam_bodies
     resources :exam_sittings
+    get '/export_exam_sitting_enrollments/:id', to: 'exam_sittings#export_exam_sitting_enrollments', as: :export_exam_sitting_enrollments
     resources :external_banners, concerns: :supports_reordering
     resources :faqs, except: [:show, :index], concerns: :supports_reordering
     resources :faq_sections, concerns: :supports_reordering

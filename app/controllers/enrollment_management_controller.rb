@@ -27,7 +27,8 @@ class EnrollmentManagementController < ApplicationController
   before_action :get_variables
 
   def index
-    @enrollments = Enrollment.all_in_recent_order
+    #@enrollments = Enrollment.all_in_recent_order
+    @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_order
 
     if params[:search] && !params[:search].empty?
       @enrollments = Enrollment.search(params[:search]).all_in_recent_order

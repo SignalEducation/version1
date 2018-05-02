@@ -7,21 +7,47 @@
             =t('views.exam_sittings.show.h1')
             \#
             =@exam_sitting.id
+          %h4
+            =@exam_sitting.name
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-sm-6
+          -#=form_tag(referral_codes_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+            .form-group.input-group.input-group-lg
+              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                %span.glyphicon.glyphicon-search
+        .col-sm-6
+          .pull-right
+            = link_to 'CSV Download', export_exam_sitting_enrollments_path(format: :xls), class: 'btn btn-red '
+
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
           .table-box
             .table-responsive
-              %table.table.table-bordered.l-margin-top
-                %tr
-                  %td.col-sm-4=t('views.exam_sittings.form.name')
-                  %td.col-sm-8=@exam_sitting.name
-                %tr
-                  %td.col-sm-4=t('views.exam_sittings.form.subject_course_id')
-                  %td.col-sm-8=@exam_sitting.subject_course.name
-                %tr
-                  %td.col-sm-4=t('views.exam_sittings.form.date')
-                  %td.col-sm-8=@exam_sitting.date
-              %p
-                =link_to t('views.general.back'), exam_sittings_url
-                |
-                =link_to t('views.general.edit'), edit_exam_sitting_url(id: @exam_sitting.id), title: t('views.general.edit_tooltip')
+              %table.table.sorted_table
+                %thead
+                  %tr
+                    %th User
+                    %th Sitting
+                    %th Expired
+                    %th
+                    %th
+                %tbody
+                  -@exam_sitting.enrollments.each do |enrollment|
+                    %tr
+                      %td
+                        =enrollment.user.full_name
+                      %td
+                        =enrollment.try(:exam_sitting).try(:name)
+                      %td
+                        =tick_or_cross(enrollment.expired)
+                      %td
+                        =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-small btn-purple'
+                      %td
+                        =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-cyan btn-small'
+
+
+
+

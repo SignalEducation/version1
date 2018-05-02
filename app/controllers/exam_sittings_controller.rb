@@ -79,6 +79,18 @@ class ExamSittingsController < ApplicationController
     redirect_to exam_sittings_url
   end
 
+  def export_exam_sitting_enrollments
+    @exam_sitting = ExamSitting.find(params[:id])
+    @enrollments = @exam_sitting.enrollments
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @enrollments.to_csv() }
+      format.xls { send_data @enrollments.to_csv(col_sep: "\t", headers: true), filename: "exam-sitting-#{@exam_sitting.id}-#{Date.today}.xls" }
+    end
+
+  end
+
   protected
 
   def get_variables
