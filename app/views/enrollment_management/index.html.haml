@@ -51,7 +51,7 @@
                       %td
                         =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-small btn-purple'
                       %td
-                        =link_to 'CSV', '#', class: 'btn btn-small btn-cyan'
+                        =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-cyan btn-small'
 
 
 

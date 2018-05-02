@@ -80,6 +80,19 @@ class EnrollmentManagementController < ApplicationController
     end
   end
 
+
+  def export_enrollment_log_data
+    @enrollment = Enrollment.find(params[:id])
+    @scul = @enrollment.subject_course_user_log
+    @course_module_element_user_logs = @scul.course_module_element_user_logs
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @course_module_element_user_logs.to_csv() }
+      format.xls { send_data @course_module_element_user_logs.to_csv(col_sep: "\t", headers: true), filename: "enrolment-#{@enrollment.id}-#{Date.today}.xls" }
+    end
+  end
+
   protected
 
   def get_variables

@@ -44,7 +44,7 @@
                     =@enrollment.exam_body.name
 
               .col-sm-2.l-margin-top
-                =link_to 'CSV - Excel', '#', class: 'btn btn-cyan'
+                =link_to 'CSV - Excel', export_enrollment_log_data_path(id: @enrollment.id, format: :xls), class: 'btn btn-cyan'
 
 
 
