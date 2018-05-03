@@ -4,11 +4,11 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@exam_sitting.name
+          %h4
             =t('views.exam_sittings.show.h1')
             \#
             =@exam_sitting.id
-          %h4
-            =@exam_sitting.name
 
 
       .row.l-margin-top.l-margin-bottom

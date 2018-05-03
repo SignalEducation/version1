@@ -106,7 +106,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def cme
-    self.course_module_element.name
+    self.course_module_element.try(:name)
   end
 
   def completed
