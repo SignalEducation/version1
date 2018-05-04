@@ -99,7 +99,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count logs}
+    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -122,10 +122,6 @@ class Enrollment < ActiveRecord::Base
 
   def course_name
     self.subject_course.try(:name)
-  end
-
-  def logs
-    self.subject_course_user_log.course_module_element_user_logs.map{|cmeul| [name: cmeul.cme, complete: cmeul.completed, type: cmeul.type, latest: cmeul.latest, score: cmeul.score, seconds: cmeul.seconds, date: cmeul.created_at]}
   end
 
   def exam_sitting_name
