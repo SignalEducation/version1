@@ -24,7 +24,19 @@ class EnrollmentManagementController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w(user_management_access))
   end
+  before_action :get_variables
 
+  def index
+    #@enrollments = Enrollment.all_in_recent_order
+    @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_order
+
+    if params[:search] && !params[:search].empty?
+      @enrollments = Enrollment.search(params[:search]).all_in_recent_order
+    elsif params[:exam_sitting] && params[:exam_sitting][:id]
+      @enrollments = Enrollment.by_sitting(params[:exam_sitting][:id]).all_in_recent_order
+    end
+
+  end
 
   def edit
     @enrollment = Enrollment.find(params[:id])
@@ -69,7 +81,24 @@ class EnrollmentManagementController < ApplicationController
     end
   end
 
+
+  def export_enrollment_log_data
+    @enrollment = Enrollment.find(params[:id])
+    @scul = @enrollment.subject_course_user_log
+    @course_module_element_user_logs = @scul.course_module_element_user_logs
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @course_module_element_user_logs.to_csv() }
+      format.xls { send_data @course_module_element_user_logs.to_csv(col_sep: "\t", headers: true), filename: "enrolment-#{@enrollment.id}-#{Date.today}.xls" }
+    end
+  end
+
   protected
+
+  def get_variables
+    @layout = 'management'
+  end
 
   def allowed_params
     params.require(:enrollment).permit(:exam_date, :subject_course_user_log_id, :exam_sitting_id, :notifications, :expired, :active)
