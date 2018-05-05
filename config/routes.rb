@@ -223,8 +223,8 @@ Rails.application.routes.draw do
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
-    #Catch Old URL
     get '/:public_url', to: 'student_sign_ups#landing'
+    get 'content/:content_public_url', to: 'content_pages#show'
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

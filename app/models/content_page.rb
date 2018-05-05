@@ -46,6 +46,14 @@ class ContentPage < ActiveRecord::Base
     true
   end
 
+  def standard_nav?
+    nav_type == 'solid'
+  end
+
+  def transparent_nav?
+    nav_type == 'transparent'
+  end
+
   protected
 
   def check_dependencies

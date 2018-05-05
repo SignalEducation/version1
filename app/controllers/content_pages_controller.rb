@@ -19,7 +19,7 @@
 class ContentPagesController < ApplicationController
 
   before_action :logged_in_required, except: [:show]
-  before_action do
+  before_action except: [:show] do
     ensure_user_has_access_rights(%w(system_requirements_access marketing_resources_access))
   end
   before_action :get_variables, except: [:show]
@@ -29,7 +29,16 @@ class ContentPagesController < ApplicationController
   end
 
   def show
-    @content_page = ContentPage.where(public_url: params[:public_url]).first
+    @content_page = ContentPage.where(public_url: params[:content_public_url]).first
+    seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
+    if @content_page.standard_nav?
+      @navbar = true
+      @top_margin = true
+    else
+      @navbar = false
+      @top_margin = false
+    end
+    @footer = true
   end
 
   def new
