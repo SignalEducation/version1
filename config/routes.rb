@@ -224,7 +224,7 @@ Rails.application.routes.draw do
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     get '/:public_url', to: 'student_sign_ups#landing'
-    get 'content/:content_public_url', to: 'content_pages#show'
+    get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

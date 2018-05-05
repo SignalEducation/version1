@@ -47,6 +47,9 @@
               =link_to 'Privacy Policy', privacy_policy_url
             %li
               =link_to 'Terms & Conditions', terms_and_conditions_url
+            -@footer_content_pages.each do |content_page|
+              %li
+                =link_to content_page.name, footer_content_page_url(content_page.public_url)
 
         .col-md-3.col-sm-3.col-xs-6
           %ul.fmenu

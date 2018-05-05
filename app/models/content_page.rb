@@ -38,6 +38,7 @@ class ContentPage < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:name) }
+  scope :for_footer, -> { where(footer_link: true) }
 
   # class methods
 
