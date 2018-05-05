@@ -17,6 +17,8 @@
     -if current_user.content_management_access?
       %li
         =link_to 'Course Content', subject_courses_url
+      %li
+        =link_to 'Sittings + Enrolments', exam_sittings_url
 
     -if current_user.stripe_management_access?
       %li

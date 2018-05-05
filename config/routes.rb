@@ -96,7 +96,10 @@ Rails.application.routes.draw do
       match :video_watched_data, on: :collection, via: [:put, :patch]
     end
     resources :enrollments, only: [:edit, :update, :create]
+    get '/enrollments_management', to: 'enrollment_management#index', as: :enrollments_management
     resources :enrollment_management, only: [:edit, :update, :show]
+    resources :enrollment_management, only: [:edit, :update, :show]
+    get '/export_enrollment_log_data/:id', to: 'enrollment_management#export_enrollment_log_data', as: :export_enrollment_log_data
     post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
@@ -112,6 +115,7 @@ Rails.application.routes.draw do
 
     resources :exam_bodies
     resources :exam_sittings
+    get '/export_exam_sitting_enrollments/:id', to: 'exam_sittings#export_exam_sitting_enrollments', as: :export_exam_sitting_enrollments
     resources :external_banners, concerns: :supports_reordering
     resources :faqs, except: [:show, :index], concerns: :supports_reordering
     resources :faq_sections, concerns: :supports_reordering

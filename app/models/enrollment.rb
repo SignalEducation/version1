@@ -73,12 +73,21 @@ class Enrollment < ActiveRecord::Base
   scope :all_for_notifications, -> { where(notifications: true) }
   scope :all_not_for_notifications, -> { where(notifications: false) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
+  scope :by_sitting, lambda { |sitting_id| where(exam_sitting_id: sitting_id) }
 
   scope :all_completed, ->() {
     joins(:subject_course_user_log).where('subject_course_user_logs.percentage_complete > 99')
   }
 
   # class methods
+  def self.search(search)
+    if search
+      Enrollment.joins(:user).where('users.email ILIKE ? ', "%#{search}%")
+    else
+      Enrollment.paginate(per_page: 50, page: params[:page])
+    end
+  end
+
 
   # instance methods
   def destroyable?

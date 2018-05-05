@@ -4,11 +4,11 @@
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            ="Enrolment #{@enrollment.id}"
+            ="Enrolment ID:#{@enrollment.id}"
 
 
 
-        .row.l-margin-top
+        .row.l-margin-top.l-margin-bottom-huge
           .col-md-12
             .box-item
               .col-sm-10.l-margin-top
@@ -27,7 +27,7 @@
                     =@enrollment.subject_course.name
 
               .col-sm-2.l-margin-top
-                =link_to 'Edit Details', edit_enrollment_management_url(@enrollment), class: 'btn btn-cyan'
+                =link_to 'Edit Details', edit_enrollment_management_url(@enrollment), class: 'btn btn-red'
 
 
               .col-sm-10.l-margin-top-big
@@ -43,40 +43,45 @@
                   .h6
                     =@enrollment.exam_body.name
 
+              .col-sm-2.l-margin-top
+                =link_to 'CSV - Excel', export_enrollment_log_data_path(id: @enrollment.id, format: :xls), class: 'btn btn-cyan'
+
+
 
         -if @enrollment.subject_course_user_log
-          .row.l-margin-bottom
-            .col-md-12
-              .box-item
-                .col-sm-10.l-margin-top
-                  .col-sm-6
-                    .h3
-                      Course Log ID
-                    .h6
-                      =@enrollment.subject_course_user_log.id
-
-                  .col-sm-6
-                    .h3
-                      Course progress
-                    .h6
-                      =@enrollment.display_percentage_complete
-
-                .col-sm-2.l-margin-top
-                  -if @enrollment.valid_enrollment?
-                    =link_to 'Reset Progress', reset_enrollment_scul_url(@enrollment.id), method: :post, class: 'btn btn-red', data: { confirm: t('views.general.delete_confirmation') }
-
-
-                .col-sm-10.l-margin-top
-                  .col-sm-6
-                    .h3
-                      Videos Count
-                    .h6
-                      =@enrollment.subject_course_user_log.count_of_videos_taken
-
-                  .col-sm-6
-                    .h3
-                      Quiz Count
-                    .h6
-                      =@enrollment.subject_course_user_log.count_of_quizzes_taken
+          .row.l-margin-top.l-margin-bottom
+            -@enrollment.subject_course_user_log.student_exam_tracks.each do |set|
+              .col-md-12
+                .table-box
+                  %h4
+                    =set.course_module.name
+                  .table-responsive
+                    %table.table.sorted_table
+                      %thead
+                        %tr
+                          %th Element
+                          %th Completed
+                          %th Type
+                          %th Latest Attempt
+                          %th Score
+                          %th Seconds
+                          %th Date
+                      %tbody
+                        -set.course_module_element_user_logs.each do |log|
+                          %tr
+                            %td
+                              =log.course_module_element.name
+                            %td
+                              =tick_or_cross(log.element_completed)
+                            %td
+                              =log.is_video ? 'Video' : 'Quiz'
+                            %td
+                              =tick_or_cross(log.latest_attempt)
+                            %td
+                              =log.quiz_score_actual
+                            %td
+                              =log.seconds_watched
+                            %td
+                              =humanize_datetime(log.created_at)
 
 

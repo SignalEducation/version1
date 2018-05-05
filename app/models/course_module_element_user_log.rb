@@ -88,7 +88,46 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # class methods
 
+  ## Structures data in CSV format for Excel downloads ##
+  def self.to_csv(options = {})
+    #attributes are either model attributes or data generate in methods below
+    attributes = %w{cm cme completed type latest score seconds created_at}
+    CSV.generate(options) do |csv|
+      csv << attributes
+      all.each do |course|
+        csv << attributes.map{ |attr| course.send(attr) }
+      end
+    end
+  end
 
+
+  def cm
+    self.course_module.name
+  end
+
+  def cme
+    self.course_module_element.try(:name)
+  end
+
+  def completed
+    self.element_completed
+  end
+
+  def type
+    self.is_quiz ? 'Quiz' : 'Video'
+  end
+
+  def latest
+    self.latest_attempt
+  end
+
+  def score
+    self.quiz_score_actual
+  end
+
+  def seconds
+    self.seconds_watched
+  end
 
   # instance methods
   def destroyable?
