@@ -43,6 +43,11 @@
         .input-group.input-group-lg.full-width
           =f.text_area :text_content, as: :summernote, placeholder: t('views.content_pages.form.text_content_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
 
+
+  .row.l-margin-top-big
+    =render partial: 'external_banners/fields_for_banners', locals: {f: f}
+
+
   .row.l-margin-top-huge
     =f.submit t('views.general.save'), class: 'btn btn-red'
     =link_to t('views.general.cancel'), content_pages_path, class: 'btn btn-cyan'

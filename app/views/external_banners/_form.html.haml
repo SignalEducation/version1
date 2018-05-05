@@ -25,42 +25,43 @@
         .input-group.input-group-lg.full-width
           =f.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
 
-      .col-md-12.l-margin-top-big
-        %hr/
-        %h3.l-margin-bottom
-          ='Pages to render the banner'
+      -if !@external_banner.new_record? && !@external_banner.content_page_id
+        .col-md-12.l-margin-top-big
+          %hr/
+          %h3.l-margin-bottom
+            ='Pages to render the banner'
 
-        .col-sm-3
-          .checkbox
-            %label
-              =f.check_box :user_sessions
-              =t('views.external_banners.form.user_sessions')
-
-
-        .col-sm-3
-          .checkbox
-            %label
-              =f.check_box :subscription_plans
-              =t('views.external_banners.form.subscription_plans')
-
-        .col-sm-3
-          .checkbox
-            %label
-              =f.check_box :student_sign_ups
-              =t('views.external_banners.form.student_sign_ups')
+          .col-sm-3
+            .checkbox
+              %label
+                =f.check_box :user_sessions
+                =t('views.external_banners.form.user_sessions')
 
 
-        .col-sm-3
-          .checkbox
-            %label
-              =f.check_box :library
-              =t('views.external_banners.form.library')
+          .col-sm-3
+            .checkbox
+              %label
+                =f.check_box :subscription_plans
+                =t('views.external_banners.form.subscription_plans')
 
-        .col-sm-12.l-margin-top
-          .checkbox
-            %label
-              =f.check_box :footer_pages
-              =t('views.external_banners.form.footer_pages')
+          .col-sm-3
+            .checkbox
+              %label
+                =f.check_box :student_sign_ups
+                =t('views.external_banners.form.student_sign_ups')
+
+
+          .col-sm-3
+            .checkbox
+              %label
+                =f.check_box :library
+                =t('views.external_banners.form.library')
+
+          .col-sm-12.l-margin-top
+            .checkbox
+              %label
+                =f.check_box :footer_pages
+                =t('views.external_banners.form.footer_pages')
 
 
   .row.l-margin-top-huge

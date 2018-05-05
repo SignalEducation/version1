@@ -30,6 +30,7 @@ class ContentPagesController < ApplicationController
 
   def show
     @content_page = ContentPage.where(public_url: params[:content_public_url]).first
+    @banner = @content_page.external_banners.first
     seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
     if @content_page.standard_nav?
       @navbar = true
@@ -43,9 +44,11 @@ class ContentPagesController < ApplicationController
 
   def new
     @content_page = ContentPage.new
+    @content_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF')
   end
 
   def edit
+    @content_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF') unless @content_page.external_banners.any?
   end
 
   def create
@@ -88,7 +91,9 @@ class ContentPagesController < ApplicationController
 
   def allowed_params
     params.require(:content_page).permit(:name, :public_url, :seo_title, :seo_description, :text_content,
-                                         :h1_text, :h1_subtext, :nav_type, :footer_link)
+                                         :h1_text, :h1_subtext, :nav_type, :footer_link,
+                                         external_banners_attributes: [:id, :name, :background_colour,
+                                                                       :text_content, :sorting_order])
   end
 
 end

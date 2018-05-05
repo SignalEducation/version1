@@ -1,0 +1,40 @@
+.col-md-12
+  =f.fields_for :external_banners do |banner|
+    =banner.hidden_field :sorting_order
+    .question-box-item.l-margin-top
+      -if banner.object.new_record?
+        %h4
+          Add Banner - Optional!
+
+      .col-sm-12
+        .col-md-6
+          =banner.label :name, t('views.external_banners.form.name'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =banner.text_field :name, placeholder: t('views.external_banners.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+        .col-md-6
+          =banner.label :background_colour, t('views.external_banners.form.background_colour'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =banner.color_field :background_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+
+
+      .col-md-12.l-margin-top-big
+        =banner.label :text_content, t('views.external_banners.form.text_content'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =banner.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'banner_editor'
+
+
+
+
+-# ADD REMOVAL/DELETE BUTTON
+
+
+
+
+:javascript
+
+  $('#banner_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

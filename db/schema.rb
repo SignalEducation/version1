@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180505082606) do
+ActiveRecord::Schema.define(version: 20180505101754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -323,6 +323,8 @@ ActiveRecord::Schema.define(version: 20180505082606) do
     t.boolean  "subscription_plans", default: false
     t.boolean  "footer_pages",       default: false
     t.boolean  "student_sign_ups",   default: false
+    t.integer  "home_page_id"
+    t.integer  "content_page_id"
   end
 
   add_index "external_banners", ["active"], name: "index_external_banners_on_active", using: :btree

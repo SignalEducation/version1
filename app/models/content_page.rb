@@ -20,12 +20,15 @@ class ContentPage < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :public_url, :seo_title, :seo_description, :text_content,
-                  :h1_text, :h1_subtext, :nav_type, :footer_link
+                  :h1_text, :h1_subtext, :nav_type, :footer_link, :external_banners_attributes
 
   # Constants
   NAV_OPTIONS = %w(solid transparent)
 
   # relationships
+  has_many :external_banners
+
+  accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :name, presence: true, length: {maximum: 255}, uniqueness: true
@@ -56,6 +59,14 @@ class ContentPage < ActiveRecord::Base
   end
 
   protected
+
+  def self.banner_nested_resource_is_blank?(attributes)
+    attributes['name'].blank? &&
+        attributes['background_colour'].blank? &&
+        attributes['text_content'].blank? &&
+        attributes['sorting_order'].blank?
+  end
+
 
   def check_dependencies
     unless self.destroyable?
