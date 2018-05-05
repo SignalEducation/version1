@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180422114106) do
+ActiveRecord::Schema.define(version: 20180505082606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,24 @@ ActiveRecord::Schema.define(version: 20180422114106) do
   add_index "charges", ["subscription_id"], name: "index_charges_on_subscription_id", using: :btree
   add_index "charges", ["subscription_payment_card_id"], name: "index_charges_on_subscription_payment_card_id", using: :btree
   add_index "charges", ["user_id"], name: "index_charges_on_user_id", using: :btree
+
+  create_table "content_pages", force: :cascade do |t|
+    t.string   "name"
+    t.string   "public_url"
+    t.string   "seo_title"
+    t.text     "seo_description"
+    t.text     "text_content"
+    t.string   "h1_text"
+    t.string   "h1_subtext"
+    t.string   "nav_type"
+    t.boolean  "footer_link",     default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "content_pages", ["footer_link"], name: "index_content_pages_on_footer_link", using: :btree
+  add_index "content_pages", ["name"], name: "index_content_pages_on_name", using: :btree
+  add_index "content_pages", ["public_url"], name: "index_content_pages_on_public_url", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "name"

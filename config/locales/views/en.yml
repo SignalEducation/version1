@@ -208,6 +208,37 @@ en:
         replace: Replace Image
 
 
+    content_pages:
+      form:
+        name: Name
+        name_placeholder: Name
+        public_url: URL
+        public_url_placeholder: Page URL
+        seo_title: SEO Title
+        seo_title_placeholder: SEO/Meta Title Tag
+        seo_description: SEO Description
+        seo_description_placeholder: SEO/Meta Description Tag
+        text_content: Text Content
+        text_content_placeholder: Text Content
+        h1_text: H1
+        h1_text_placeholder: H1 Text
+        h1_subtext: H1 Subtext
+        h1_subtext_placeholder: H1 Subtext
+        nav_type: Navigation Bar
+        footer_link: Footer Link
+
+      index:
+        h1: Content Pages
+
+      show:
+        h1: Content Page
+
+      edit:
+        h1: Edit Content Page
+
+      new:
+        h1: New Content Page
+
     corporate_requests:
       form:
         name: Name

@@ -1,0 +1,45 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =t('views.content_pages.show.h1')
+            \#
+            =@content_page.id
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12.l-margin-top-big
+          .table-box
+            .table-responsive
+              %table.table.table-bordered.l-margin-top
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.name')
+                  %td.col-sm-8=@content_page.name
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.public_url')
+                  %td.col-sm-8=@content_page.public_url
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.seo_title')
+                  %td.col-sm-8=@content_page.seo_title
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.seo_description')
+                  %td.col-sm-8=@content_page.seo_description
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.text_content')
+                  %td.col-sm-8=@content_page.text_content
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.h1_text')
+                  %td.col-sm-8=@content_page.h1_text
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.h1_subtext')
+                  %td.col-sm-8=@content_page.h1_subtext
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.nav_type')
+                  %td.col-sm-8=@content_page.nav_type
+                %tr
+                  %td.col-sm-4=t('views.content_pages.form.footer_link')
+                  %td.col-sm-8=tick_or_cross(@content_page.footer_link)
+              %p
+                =link_to t('views.general.back'), content_pages_url
+                |
+                =link_to t('views.general.edit'), edit_content_page_url(id: @content_page.id), title: t('views.general.edit_tooltip')

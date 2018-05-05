@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
+    resources :content_pages, except: [:show]
     resources :user_groups
     resources :subscription_management do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice
