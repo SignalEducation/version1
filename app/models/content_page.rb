@@ -28,7 +28,7 @@ class ContentPage < ActiveRecord::Base
   # relationships
   has_many :external_banners
 
-  accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :external_banners, allow_destroy: true, limit: 1
 
   # validation
   validates :name, presence: true, length: {maximum: 255}, uniqueness: true
@@ -37,6 +37,7 @@ class ContentPage < ActiveRecord::Base
   validates :seo_description, presence: true
 
   # callbacks
+  before_validation :remove_empty_banner
   before_destroy :check_dependencies
 
   # scopes
@@ -60,11 +61,13 @@ class ContentPage < ActiveRecord::Base
 
   protected
 
-  def self.banner_nested_resource_is_blank?(attributes)
-    attributes['name'].blank? &&
-        attributes['background_colour'].blank? &&
-        attributes['text_content'].blank? &&
-        attributes['sorting_order'].blank?
+  def remove_empty_banner
+    #Since the editor will always populate the text_content field
+    #we must clear the entire record when no name attribute is present
+    #to allow content_page records be created without nested banners
+    if self.external_banners[0].name.blank?
+      self.external_banners[0].destroy
+    end
   end
 
 

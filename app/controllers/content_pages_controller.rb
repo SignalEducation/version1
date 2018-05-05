@@ -93,7 +93,8 @@ class ContentPagesController < ApplicationController
     params.require(:content_page).permit(:name, :public_url, :seo_title, :seo_description, :text_content,
                                          :h1_text, :h1_subtext, :nav_type, :footer_link,
                                          external_banners_attributes: [:id, :name, :background_colour,
-                                                                       :text_content, :sorting_order])
+                                                                       :text_content, :sorting_order,
+                                                                       :_destroy])
   end
 
 end
