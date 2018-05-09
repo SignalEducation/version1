@@ -28,7 +28,7 @@ class ExternalBannersController < ApplicationController
   before_action :get_variables
 
   def index
-    @external_banners = ExternalBanner.paginate(per_page: 50, page: params[:page]).all_in_order
+    @external_banners = ExternalBanner.all_without_parent.all_in_order
   end
 
   def show

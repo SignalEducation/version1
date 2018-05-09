@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
     @footer_content_pages = ContentPage.for_footer
 
     if ExternalBanner::BANNER_CONTROLLERS.include?(controller_name)
-      @banner = ExternalBanner.render_for(controller_name).all_in_order.first
+      @banner = ExternalBanner.all_without_parent.render_for(controller_name).all_in_order.first
     end
 
   end

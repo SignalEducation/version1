@@ -45,6 +45,9 @@ class ExternalBanner < ActiveRecord::Base
   # scopes
   scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_without_parent, -> { where(home_page_id: nil, content_page_id: nil) }
+  scope :for_home_page, -> { where.not(home_page_id: nil) }
+  scope :for_content_page, -> { where.not(content_page_id: nil) }
   scope :render_for, lambda { |controller_name| where("#{controller_name}" => true, 'active' => true) }
 
   # class methods
