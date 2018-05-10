@@ -13,6 +13,8 @@
 #  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
 #  external_url             :string
+#  active                   :boolean          default(FALSE)
+#  sorting_order            :integer
 #
 
 class SubjectCourseResourcesController < ApplicationController
@@ -56,6 +58,14 @@ class SubjectCourseResourcesController < ApplicationController
     end
   end
 
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      SubjectCourseResource.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
+  end
+
   def destroy
     if @subject_course_resource.destroy
       flash[:success] = I18n.t('controllers.subject_course_resources.destroy.flash.success')
@@ -75,8 +85,8 @@ class SubjectCourseResourcesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description,
-                                                    :file_upload, :external_url)
+    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description,:file_upload,
+                                                    :external_url, :active, :sorting_order)
   end
 
 end

@@ -106,7 +106,7 @@ class SubjectCoursesController < ApplicationController
   ## Index, New & Create Actions for SubjectCourseResources that belong_to this SubjectCourse ##
   def subject_course_resources
     @subject_course = SubjectCourse.find(params[:id])
-    @subject_course_resources = @subject_course.subject_course_resources
+    @subject_course_resources = @subject_course.subject_course_resources.all_in_order
   end
 
   def new_subject_course_resources

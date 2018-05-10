@@ -178,7 +178,7 @@ Rails.application.routes.draw do
     get '/all_subscriptions', to: 'subscription_plans#all_subscriptions', as: :all_subscriptions
     get '/subscription_show/:id', to: 'subscription_plans#subscription_show', as: :subscription_show
 
-    resources :subject_course_resources
+    resources :subject_course_resources, concerns: :supports_reordering
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'

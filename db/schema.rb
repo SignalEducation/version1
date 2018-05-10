@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180505101754) do
+ActiveRecord::Schema.define(version: 20180510132032) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -758,13 +758,15 @@ ActiveRecord::Schema.define(version: 20180505101754) do
     t.string   "name"
     t.integer  "subject_course_id"
     t.text     "description"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "file_upload_file_name"
     t.string   "file_upload_content_type"
     t.integer  "file_upload_file_size"
     t.datetime "file_upload_updated_at"
     t.string   "external_url"
+    t.boolean  "active",                   default: false
+    t.integer  "sorting_order"
   end
 
   add_index "subject_course_resources", ["name"], name: "index_subject_course_resources_on_name", using: :btree
