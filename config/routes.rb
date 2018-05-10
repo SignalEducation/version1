@@ -29,9 +29,6 @@ Rails.application.routes.draw do
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
-    get 'new_subscription_africa', to: 'subscription_sign_ups#new', as: :new_subscription_sign_up
-    post 'create_subscription_sign_up', to: 'subscription_sign_ups#create', as: :create_subscription_sign_up
-    get 'new_subscription_sign_up_complete', to: 'subscription_sign_ups#show', as: :new_subscription_sign_up_complete
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
@@ -54,6 +51,7 @@ Rails.application.routes.draw do
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
+    resources :content_pages, except: [:show]
     resources :user_groups
     resources :subscription_management do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice
@@ -83,6 +81,7 @@ Rails.application.routes.draw do
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'new_subscription_africa', to: 'student_sign_ups#home'
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
@@ -222,8 +221,8 @@ Rails.application.routes.draw do
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
-    #Catch Old URL
     get '/:public_url', to: 'student_sign_ups#landing'
+    get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end

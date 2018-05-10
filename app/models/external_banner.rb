@@ -15,18 +15,22 @@
 #  subscription_plans :boolean          default(FALSE)
 #  footer_pages       :boolean          default(FALSE)
 #  student_sign_ups   :boolean          default(FALSE)
+#  home_page_id       :integer
+#  content_page_id    :integer
 #
 
 class ExternalBanner < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :sorting_order, :active, :background_colour, :text_content, :user_sessions,
-                  :library, :subscription_plans, :footer_pages, :student_sign_ups
+                  :library, :subscription_plans, :footer_pages, :student_sign_ups, :home_page_id, :content_page_id
 
   # Constants
   BANNER_CONTROLLERS = %w(user_sessions library subscription_plans footer_pages student_sign_ups)
 
   # relationships
+  belongs_to :content_page
+  belongs_to :home_page
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
@@ -41,6 +45,9 @@ class ExternalBanner < ActiveRecord::Base
   # scopes
   scope :all_active, -> { where(active: true) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_without_parent, -> { where(home_page_id: nil, content_page_id: nil) }
+  scope :for_home_page, -> { where.not(home_page_id: nil) }
+  scope :for_content_page, -> { where.not(content_page_id: nil) }
   scope :render_for, lambda { |controller_name| where("#{controller_name}" => true, 'active' => true) }
 
   # class methods

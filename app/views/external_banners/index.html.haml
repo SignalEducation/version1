@@ -19,7 +19,6 @@
         .col-md-12.l-margin-top-big
           .table-box
             .table-responsive
-              =will_paginate @external_banners, renderer: BootstrapPagination::Rails
               %table.table.sorted_table{data: {destination: external_banners_url}}
                 %thead
                   %tr
