@@ -14,13 +14,15 @@
 #  footer_link     :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  active          :boolean          default(FALSE)
 #
 
 class ContentPage < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :public_url, :seo_title, :seo_description, :text_content,
-                  :h1_text, :h1_subtext, :nav_type, :footer_link, :external_banners_attributes
+                  :h1_text, :h1_subtext, :nav_type, :footer_link, :active,
+                  :external_banners_attributes
 
   # Constants
   NAV_OPTIONS = %w(solid transparent)
@@ -42,6 +44,7 @@ class ContentPage < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:name) }
+  scope :all_active, -> { where(active: true) }
   scope :for_footer, -> { where(footer_link: true) }
 
   # class methods
