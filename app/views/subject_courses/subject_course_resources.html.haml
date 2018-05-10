@@ -15,19 +15,22 @@
         .col-md-12.l-margin-top
           .corporate-box-item.table-box
             .table-responsive
-              %table.table.sorted_table{style: 'font-size: 18px;'}
+              %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: subject_course_resources_url}}
                 %thead
                   %tr
                     %th=t('views.subject_course_resources.form.name')
                     %th=t('views.subject_course_resources.form.subject_course_id')
+                    %th='Active'
+                    %th
                     %th
                     %th
                     %th
                 %tbody
                   -@subject_course_resources.each do |subject_course_resource|
-                    %tr
+                    %tr{id: subject_course_resource.id}
                       %td=subject_course_resource.name
                       %td=subject_course_resource.subject_course.name
+                      %td=tick_or_cross(subject_course_resource.active)
                       %td
                         =link_to t('views.general.edit'), edit_subject_course_resource_url(subject_course_resource), class: 'btn btn-cyan btn-small'
                       %td
@@ -38,6 +41,8 @@
                       -if subject_course_resource.destroyable?
                         %td
                           =link_to t('views.general.delete'), subject_course_resource, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 
       .row.l-margin-top-big

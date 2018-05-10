@@ -226,6 +226,7 @@ en:
         h1_subtext_placeholder: H1 Subtext
         nav_type: Navigation Bar
         footer_link: Footer Link
+        active: Active
 
       index:
         h1: Content Pages

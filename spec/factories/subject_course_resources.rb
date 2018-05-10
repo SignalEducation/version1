@@ -13,6 +13,8 @@
 #  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
 #  external_url             :string
+#  active                   :boolean          default(FALSE)
+#  sorting_order            :integer
 #
 
 FactoryBot.define do

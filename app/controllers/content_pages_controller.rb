@@ -14,6 +14,7 @@
 #  footer_link     :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  active          :boolean          default(FALSE)
 #
 
 class ContentPagesController < ApplicationController
@@ -30,6 +31,7 @@ class ContentPagesController < ApplicationController
 
   def show
     @content_page = ContentPage.where(public_url: params[:content_public_url]).first
+    redirect_to root_url unless @content_page.active
     @banner = @content_page.external_banners.first
     seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
     if @content_page.standard_nav?
@@ -91,7 +93,7 @@ class ContentPagesController < ApplicationController
 
   def allowed_params
     params.require(:content_page).permit(:name, :public_url, :seo_title, :seo_description, :text_content,
-                                         :h1_text, :h1_subtext, :nav_type, :footer_link,
+                                         :h1_text, :h1_subtext, :nav_type, :footer_link, :active,
                                          external_banners_attributes: [:id, :name, :background_colour,
                                                                        :text_content, :sorting_order,
                                                                        :_destroy])

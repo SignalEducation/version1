@@ -14,6 +14,7 @@
 #  footer_link     :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  active          :boolean          default(FALSE)
 #
 
 FactoryBot.define do
