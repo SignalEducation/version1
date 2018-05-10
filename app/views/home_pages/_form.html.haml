@@ -43,6 +43,9 @@
   .row.l-margin-top
     =render partial: 'fields_for_blog_posts', locals: {f: f}
 
+  .row.l-margin-top-huge
+    =render partial: 'external_banners/fields_for_banners', locals: {f: f}
+
 
   .row.l-margin-top-huge
     =f.submit t('views.general.save'), class: 'btn btn-red'

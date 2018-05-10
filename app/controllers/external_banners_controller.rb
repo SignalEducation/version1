@@ -15,6 +15,8 @@
 #  subscription_plans :boolean          default(FALSE)
 #  footer_pages       :boolean          default(FALSE)
 #  student_sign_ups   :boolean          default(FALSE)
+#  home_page_id       :integer
+#  content_page_id    :integer
 #
 
 class ExternalBannersController < ApplicationController
@@ -26,7 +28,7 @@ class ExternalBannersController < ApplicationController
   before_action :get_variables
 
   def index
-    @external_banners = ExternalBanner.paginate(per_page: 50, page: params[:page]).all_in_order
+    @external_banners = ExternalBanner.all_without_parent.all_in_order
   end
 
   def show

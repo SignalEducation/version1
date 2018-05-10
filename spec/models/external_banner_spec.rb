@@ -15,6 +15,8 @@
 #  subscription_plans :boolean          default(FALSE)
 #  footer_pages       :boolean          default(FALSE)
 #  student_sign_ups   :boolean          default(FALSE)
+#  home_page_id       :integer
+#  content_page_id    :integer
 #
 
 require 'rails_helper'

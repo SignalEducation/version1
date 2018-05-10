@@ -32,10 +32,12 @@ class HomePagesController < ApplicationController
   def new
     @home_page = HomePage.new
     @home_page.blog_posts.build
+    @home_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF')
   end
 
   def edit
     @home_page.blog_posts.build
+    @home_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF') unless @home_page.external_banners.any?
   end
 
   def create
@@ -91,7 +93,10 @@ class HomePagesController < ApplicationController
                                                               :image_content_type,
                                                               :image_file_size,
                                                               :image_updated_at
-                                      ]
+                                      ],
+                                      external_banners_attributes: [:id, :name, :background_colour,
+                                                                    :text_content, :sorting_order,
+                                                                    :_destroy]
     )
 
   end

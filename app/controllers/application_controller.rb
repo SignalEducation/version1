@@ -58,9 +58,10 @@ class ApplicationController < ActionController::Base
     @top_margin = true
     @footer = 'standard'
     @groups = Group.all_active.all_in_order
+    @footer_content_pages = ContentPage.for_footer
 
     if ExternalBanner::BANNER_CONTROLLERS.include?(controller_name)
-      @banner = ExternalBanner.render_for(controller_name).all_in_order.first
+      @banner = ExternalBanner.all_without_parent.render_for(controller_name).all_in_order.first
     end
 
   end

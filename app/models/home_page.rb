@@ -24,7 +24,7 @@ class HomePage < ActiveRecord::Base
   # attr-accessible
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
                   :public_url, :subject_course_id, :custom_file_name,
-                  :blog_posts_attributes, :group_id, :name, :home
+                  :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes
 
   # Constants
 
@@ -33,8 +33,10 @@ class HomePage < ActiveRecord::Base
   belongs_to :group
   belongs_to :subject_course
   has_many :blog_posts
+  has_many :external_banners
 
-  accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| blog_nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :name, presence: true, length: {maximum: 255}, uniqueness: true
@@ -72,11 +74,18 @@ class HomePage < ActiveRecord::Base
 
   protected
 
-  def self.nested_resource_is_blank?(attributes)
+  def self.blog_nested_resource_is_blank?(attributes)
     attributes['title'].blank? &&
         attributes['description'].blank? &&
         attributes['image'].blank? &&
         attributes['url'].blank?
+  end
+
+  def self.banner_nested_resource_is_blank?(attributes)
+    attributes['name'].blank? &&
+        attributes['background_colour'].blank? &&
+        attributes['text_content'].blank? &&
+        attributes['sorting_order'].blank?
   end
 
   def check_dependencies

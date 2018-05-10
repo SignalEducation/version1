@@ -54,6 +54,7 @@ Rails.application.routes.draw do
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
+    resources :content_pages, except: [:show]
     resources :user_groups
     resources :subscription_management do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice
@@ -222,8 +223,8 @@ Rails.application.routes.draw do
     # Catch-all
     get '404', to: 'footer_pages#missing_page', first_element: '404-page'
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
-    #Catch Old URL
     get '/:public_url', to: 'student_sign_ups#landing'
+    get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
   end
