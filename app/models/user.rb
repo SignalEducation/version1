@@ -84,7 +84,7 @@ class User < ActiveRecord::Base
                   :trial_ended_notification_sent_at, :terms_and_conditions,
                   :date_of_birth, :description, :free_trial_ended_at,
                   :student_number, :student_access_attributes,
-                  :unsubscribed_from_emails, :subscriptions_attributes
+                  :unsubscribed_from_emails
 
   # Constants
   LOCALES = %w(en)
@@ -120,7 +120,6 @@ class User < ActiveRecord::Base
   has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :student_access
-  accepts_nested_attributes_for :subscriptions
 
   # validation
   validates :email, presence: true, uniqueness: true, length: {within: 5..50}
@@ -130,7 +129,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
-  validate :date_of_birth_is_possible?
+  #validate :date_of_birth_is_possible?
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 

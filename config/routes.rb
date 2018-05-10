@@ -29,9 +29,6 @@ Rails.application.routes.draw do
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
-    get 'new_subscription_africa', to: 'subscription_sign_ups#new', as: :new_subscription_sign_up
-    post 'create_subscription_sign_up', to: 'subscription_sign_ups#create', as: :create_subscription_sign_up
-    get 'new_subscription_sign_up_complete', to: 'subscription_sign_ups#show', as: :new_subscription_sign_up_complete
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
@@ -84,6 +81,7 @@ Rails.application.routes.draw do
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'new_subscription_africa', to: 'student_sign_ups#home'
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
     get 'courses/:subject_course_name_url',
