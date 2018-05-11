@@ -37,7 +37,7 @@ class LibraryController < ApplicationController
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
       mock_exam_ids = @course.mock_exams.map(&:id)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-      @subject_course_resources = @course.subject_course_resources
+      @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
 
 
 

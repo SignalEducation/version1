@@ -27,12 +27,18 @@
         .input-group.input-group-lg.full-width
           =f.text_field :seo_title, placeholder: t('views.content_pages.form.seo_title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
       .col-md-6.l-margin-bottom
-        .col-sm-8.col-sm-offset-4
+        .col-sm-6
           %br/
           .checkbox
             %label
               =f.check_box :footer_link
               =t('views.content_pages.form.footer_link')
+        .col-sm-6
+          %br/
+          .checkbox
+            %label
+              =f.check_box :active
+              =t('views.content_pages.form.active')
       .col-md-6.l-margin-bottom
         =f.label :seo_description, t('views.content_pages.form.seo_description'), class: 'control-label'
         .input-group.input-group-lg.full-width

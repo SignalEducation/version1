@@ -13,12 +13,15 @@
 #  file_upload_file_size    :integer
 #  file_upload_updated_at   :datetime
 #  external_url             :string
+#  active                   :boolean          default(FALSE)
+#  sorting_order            :integer
 #
 
 class SubjectCourseResource < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url
+  attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url,
+                  :active, :sorting_order
 
   # Constants
 
@@ -37,7 +40,8 @@ class SubjectCourseResource < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
 

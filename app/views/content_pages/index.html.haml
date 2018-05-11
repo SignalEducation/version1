@@ -25,6 +25,7 @@
                     %th=t('views.content_pages.form.name')
                     %th=t('views.content_pages.form.public_url')
                     %th=t('views.content_pages.form.nav_type')
+                    %th=t('views.content_pages.form.active')
                     %th=t('views.content_pages.form.footer_link')
                     %th
                     %th
@@ -34,6 +35,7 @@
                       %td=content_page.name
                       %td=content_page.public_url
                       %td=content_page.nav_type
+                      %td=tick_or_cross(content_page.active)
                       %td=tick_or_cross(content_page.footer_link)
                       %td=link_to t('views.general.edit'), edit_content_page_url(content_page), class: 'btn btn-cyan btn-small'
                       -if content_page.destroyable?
