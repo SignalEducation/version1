@@ -17,24 +17,18 @@
       .row
         -if @courses
           -@courses.each do |course|
-            .col-sm-6.col-md-4
+            .col-sm-4
               =link_to library_special_link(course), class: 'card card-course' do
-                .card-outer
-                  .card-inner
-                    %h3.h3.card-title.l-margin-bottom
-                      =course.try(:name)
-                    -if course.short_description
-                      %p.card-desc
-                        =course.short_description.truncate(185)
+                .card-inner.text-center
+                  %h3.h3.card-title
+                    =course.try(:name)
+                .card-info.text-center
+                  %p.h5{style: 'color: #f092b0; '}
+                    ='Previously F1'
 
                 .card-label{style: "background: #{course.highlight_colour};"}
                   .row
-                    .col-md-12.col-xs-12
-                      .col-md-6.col-xs-6
-                        %h6
-                          =t('views.general.browse')
-                      .col-md-6.col-xs-6.text-right
-                        -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
-                          %h6.pull-right
-                            =simple_hour_time(course.total_estimated_time_in_seconds)
+                    .col-md-12.col-xs-12.text-center
+                      %h4{style: 'color: #fff;'}
 
+                        ='Applied Knowledge'
