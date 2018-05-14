@@ -31,7 +31,7 @@ class ContentPagesController < ApplicationController
 
   def show
     @content_page = ContentPage.where(public_url: params[:content_public_url]).first
-    redirect_to root_url unless @content_page.active
+    redirect_to root_url unless @content_page && @content_page.active
     @banner = @content_page.external_banners.first
     seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
     if @content_page.standard_nav?
