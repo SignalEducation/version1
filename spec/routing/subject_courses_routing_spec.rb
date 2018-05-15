@@ -34,6 +34,8 @@
 #  preview                                 :boolean          default(FALSE)
 #  computer_based                          :boolean          default(FALSE)
 #  highlight_colour                        :string           default("#ef475d")
+#  category_label                          :string
+#  additional_text_label                   :string
 #
 
 require 'rails_helper'

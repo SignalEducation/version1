@@ -1073,6 +1073,10 @@ en:
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         email_content: Welcome Email Content
         email_content_placeholder: Content for Enrollment Welcome Email
+        additional_text_label: Additional Text Label
+        additional_text_label_placeholder: Additional Text Label [Previously F4]
+        category_label: Category Label
+        category_label_placeholder: Category Label [Applied Knowledge]
 
 
       index:

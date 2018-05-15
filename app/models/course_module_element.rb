@@ -19,6 +19,7 @@
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
 #  duration                  :float            default(0.0)
+#  temporary_label           :string
 #
 
 class CourseModuleElement < ActiveRecord::Base

@@ -34,6 +34,8 @@
 #  preview                                 :boolean          default(FALSE)
 #  computer_based                          :boolean          default(FALSE)
 #  highlight_colour                        :string           default("#ef475d")
+#  category_label                          :string
+#  additional_text_label                   :string
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -49,7 +51,8 @@ class SubjectCourse < ActiveRecord::Base
                   :quiz_count, :question_count, :video_count,
                   :total_video_duration, :exam_body_id, :survey_url,
                   :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
-                  :background_image, :preview, :computer_based, :highlight_colour
+                  :background_image, :preview, :computer_based, :highlight_colour,
+                  :category_label, :additional_text_label
 
   # Constants
 

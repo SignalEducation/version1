@@ -14,7 +14,7 @@
 
   .l-wrap.l-margin-top-big
     .container-fluid
-      .row
+      .row.l-margin-bottom-huge
         -if @courses
           -@courses.each do |course|
             .col-sm-4
@@ -24,11 +24,10 @@
                     =course.try(:name)
                 .card-info.text-center
                   %p.h5{style: 'color: #f092b0; '}
-                    ='Previously F1'
+                    =course.try(:additional_text_label)
 
                 .card-label{style: "background: #{course.highlight_colour};"}
                   .row
                     .col-md-12.col-xs-12.text-center
                       %h4{style: 'color: #fff;'}
-
-                        ='Applied Knowledge'
+                        =course.category_label ? course.category_label : 'Enrol Now'

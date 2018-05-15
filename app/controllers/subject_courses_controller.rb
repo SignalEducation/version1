@@ -34,6 +34,8 @@
 #  preview                                 :boolean          default(FALSE)
 #  computer_based                          :boolean          default(FALSE)
 #  highlight_colour                        :string           default("#ef475d")
+#  category_label                          :string
+#  additional_text_label                   :string
 #
 
 class SubjectCoursesController < ApplicationController
@@ -195,7 +197,8 @@ class SubjectCoursesController < ApplicationController
                                            :external_url_name, :exam_body_id,
                                            :background_image, :survey_url,
                                            :quiz_pass_rate, :group_id, :preview,
-                                           :computer_based, :highlight_colour
+                                           :computer_based, :highlight_colour,
+                                           :category_label, :additional_text_label
     )
   end
 
