@@ -424,6 +424,8 @@ en:
         name_placeholder: Give a title that users will see
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
+        temporary_label: Label
+        temporary_label_placeholder: Temp Label
         active: Active
         delete: Delete File
         description: Description

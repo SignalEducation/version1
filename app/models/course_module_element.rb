@@ -35,7 +35,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
                   :number_of_questions, :video_resource_attributes,
-                  :_destroy
+                  :_destroy, :temporary_label
 
   # Constants
 
