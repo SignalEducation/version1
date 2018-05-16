@@ -1,0 +1,45 @@
+.remodal{"data-remodal-id" => "confirm-cancellation-modal"}
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          ='Are you really sure you want to cancel?'
+
+  .row{style: 'text-align: left;'}
+    .col-sm-12.l-margin-top
+      .col-sm-12
+        .col-sm-12
+          %p.h4
+            ='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+          %ul
+            %li
+              ='Mauris ut ex dignissim, mollis orci id, mattis turpis.'
+            %li
+              ='Suspendisse placerat elit nec dui finibus consectetur.'
+            %li
+              ='Aenean faucibus massa ac semper sodales.'
+            %li
+              ='Mauris ut ex dignissim, mollis orci id, mattis turpis.'
+            %li
+              ='Nulla eu nibh et est lacinia commodo nec ac dolor.'
+            %li
+              ='Curabitur pharetra massa eu elementum ultrices.'
+
+
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top
+      .col-sm-6
+        %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
+          =t('views.users.show.keep_subscription')
+
+      .col-sm-6
+        =link_to @current_subscription, method: :delete, id: 'confirm_cancellation_button' do
+          .btn.btn-red.full-width.l-margin-bottom
+            =t('views.users.show.confirm_subscription_cancellation')
+      .col-sm-12
+        %p
+          =t('views.users.show.confirm_cancellation_modal') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"
+
+

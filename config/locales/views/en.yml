@@ -1377,12 +1377,15 @@ en:
           link: Change password
           h4: Change your password
         cancel_your_subscription_plan: Cancel Recurring Payments
+        confirm_subscription_cancellation: Cancel My Subscription
+        keep_subscription: Keep my subscription
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
         card_no: "Card No.:"
         confirm_deletion: "If you cancel your subscription, you may continue to use LearnSignal until your current billing period expires. After that, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
         confirm_immediate_deletion: "Cancel Your Membership? Cancellation will be effective at the end of your current billing period on "
+        confirm_cancellation_modal: "Cancellation will be effective at the end of your current billing period on "
         no_upgrade_options_available: "You are on the best Subscription Plan we offer."
         reactivate_subscription:
           h3: Reactivate Your Account
