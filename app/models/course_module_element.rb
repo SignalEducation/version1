@@ -19,6 +19,7 @@
 #  destroyed_at              :datetime
 #  number_of_questions       :integer          default(0)
 #  duration                  :float            default(0.0)
+#  temporary_label           :string
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -34,7 +35,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_resources_attributes,
                   :seo_description, :seo_no_index,
                   :number_of_questions, :video_resource_attributes,
-                  :_destroy
+                  :_destroy, :temporary_label
 
   # Constants
 
