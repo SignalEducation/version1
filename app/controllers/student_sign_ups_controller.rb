@@ -29,11 +29,12 @@ class StudentSignUpsController < ApplicationController
       #TODO Remove limit(3)
       @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
 
-      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-
+      referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
+      drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
       # This is for sticky sub plans
       cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
 
+      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
     else
       redirect_to root_url
     end
