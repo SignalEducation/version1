@@ -424,6 +424,8 @@ en:
         name_placeholder: Give a title that users will see
         name_url: Name URL
         name_url_placeholder: auto-populated-for-you
+        temporary_label: Label
+        temporary_label_placeholder: Temp Label
         active: Active
         delete: Delete File
         description: Description
@@ -1073,6 +1075,10 @@ en:
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
         email_content: Welcome Email Content
         email_content_placeholder: Content for Enrollment Welcome Email
+        additional_text_label: Additional Text Label
+        additional_text_label_placeholder: Additional Text Label [Previously F4]
+        category_label: Category Label
+        category_label_placeholder: Category Label [Applied Knowledge]
 
 
       index:

@@ -1006,7 +1006,7 @@ a.card {
     margin-top: $gutter;
     & .card-inner {
       padding: $gutter $gutter;
-      height: 200px;
+      height: 100px;
       position: relative;
       border-top-left-radius: 5px;
       border-top-right-radius: 5px;
@@ -1037,9 +1037,9 @@ a.card {
   }
 }
 .card-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  //white-space: nowrap;
+  //overflow: hidden;
+  //text-overflow: ellipsis;
   display: block;
   margin: 0 auto;
 }
@@ -1068,7 +1068,8 @@ a.card {
   text-overflow: ellipsis;
 }
 .card-info {
-  padding: $gutter/2;
+  height: 24px;
+  padding: $gutter;
   .p {
     margin: 30px 0px;
   }
@@ -1092,7 +1093,8 @@ a.card {
 .card-label {
   background: $colour-12;
   color: $white;
-  padding: $gutter/1.45;
+  //padding: $gutter/1.45;
+  padding: $gutter/2;
   @include transition(background-color .2s ease);
   @include border-bottom-radius(4px);
   @include font-size(1.1);

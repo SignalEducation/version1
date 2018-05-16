@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180510142700) do
+ActiveRecord::Schema.define(version: 20180515100944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(version: 20180510142700) do
     t.datetime "destroyed_at"
     t.integer  "number_of_questions",       default: 0
     t.float    "duration",                  default: 0.0
+    t.string   "temporary_label"
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -826,6 +827,8 @@ ActiveRecord::Schema.define(version: 20180510142700) do
     t.boolean  "preview",                                 default: false
     t.boolean  "computer_based",                          default: false
     t.string   "highlight_colour",                        default: "#ef475d"
+    t.string   "category_label"
+    t.string   "additional_text_label"
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
