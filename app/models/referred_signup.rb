@@ -43,7 +43,7 @@ class ReferredSignup < ActiveRecord::Base
   # class methods
   def self.to_csv(options = {})
     #attributes are either model attributes or data generate in methods below
-    attributes = %w{referral_email created_at subscription_id referrer_url}
+    attributes = %w{referral_email referral_country created_at subscription_id referrer_url}
     CSV.generate(options) do |csv|
       csv << attributes
       all.each do |course|
@@ -67,6 +67,10 @@ class ReferredSignup < ActiveRecord::Base
 
   def referral_email
     self.user.email
+  end
+
+  def referral_country
+    self.user.try(:country).try(:name)
   end
 
 

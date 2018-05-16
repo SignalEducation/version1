@@ -1683,6 +1683,7 @@ en:
         paid_referred_no: Paid referred no.
         unpaid_referred_no: Unpaid referred no.
         for_paying_no: For paying no.
+        country: Country
         trial_referred_signups: Trial
         subscription_referred_signups: Sub
         total_referred_signups: Total
