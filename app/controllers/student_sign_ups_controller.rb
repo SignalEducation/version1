@@ -22,6 +22,7 @@ class StudentSignUpsController < ApplicationController
   def landing
     @home_page = HomePage.find_by_public_url(params[:public_url])
     if @home_page
+      @public_url = params[:public_url]
       @group = @home_page.group
       @subject_course = @home_page.subject_course
       @banner = @home_page.external_banners.first
