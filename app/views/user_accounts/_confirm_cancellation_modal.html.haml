@@ -1,30 +1,54 @@
 .remodal{"data-remodal-id" => "confirm-cancellation-modal"}
   .row
     .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
+      .col-xs-11
         %h2
           ='Are you really sure you want to cancel?'
+      .col-xs-1
+        %button.remodal-close{"data-remodal-action" => "close"}
 
   .row{style: 'text-align: left;'}
     .col-sm-12.l-margin-top
       .col-sm-12
         .col-sm-12
           %p.h4
-            ='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-          %ul
-            %li
-              ='Mauris ut ex dignissim, mollis orci id, mattis turpis.'
-            %li
-              ='Suspendisse placerat elit nec dui finibus consectetur.'
-            %li
-              ='Aenean faucibus massa ac semper sodales.'
-            %li
-              ='Mauris ut ex dignissim, mollis orci id, mattis turpis.'
-            %li
-              ='Nulla eu nibh et est lacinia commodo nec ac dolor.'
-            %li
-              ='Curabitur pharetra massa eu elementum ultrices.'
+            ="Here's what you'll be missing:"
+          .cancel-sub-list
+            %ul
+              %li
+                %span.strong
+                  ='Stuck on a study question?'
+                ='Get a real answer, 24 hours a day.'
+              %li
+                ='Our bigger and better'
+                %span.strong
+                  ='ACCA Study Bootcamp'
+                ='coming soon!'
+              %li
+                ='New online'
+                %span.strong
+                  ='Question & Answer sessions'
+                ='coming soon.'
+              %li
+                %span.strong
+                  ='Busy at work or home?'
+                ='Study at any time in any place.'
+              %li
+                ='Tired of studying alone?'
+                %span.strong
+                  ='New student community'
+                ='coming soon!'
+              %li
+                ='Keep your study notes, MCQs and corrected mock exams.'
+              %li
+                ='New'
+                %span.strong
+                  ='online Computer Based Exam practice'
+                ='coming soon!'
+              %li
+                %span.strong
+                  ="Don't try to memorise an entire textbook."
+                ='Use our bite-sized learning.'
 
 
 
@@ -40,6 +64,6 @@
             =t('views.users.show.confirm_subscription_cancellation')
       .col-sm-12
         %p
-          =t('views.users.show.confirm_cancellation_modal') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"
+          =t('views.users.show.confirm_cancellation_modal') + "#{humanize_stripe_date_full(@current_subscription.next_renewal_date)}"
 
 
