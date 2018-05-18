@@ -7,7 +7,7 @@
         #logo
           =link_to home_url do
             =image_tag('ls-logo-transparent.svg', class: 'nav-logo')
-
+        =image_tag('kele_corporate_logo.png', class: 'pull-right hidden-xs')
 
     %section#free.diag-r-down
       .tmain
@@ -15,8 +15,11 @@
           .container
             .row
               .col-md-10
-                %h1.title1 Want to pass your ACCA exams first time?
-                %h2.subtitle Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.
+                %h1.title1
+                  ='LearnSignal For Kele Students'
+                %h2.subtitle
+                  ='Congratulations on your ACCA progress so far with Kele and welcome to LearnSignal!'
+                  ='For your next set of exams, you will now have everything you need right up to the morning of the exam.'
 
                 .lsbtn-base
                   =link_to new_student_url, class: 'lsbtn' do
@@ -25,6 +28,7 @@
                 .obs-nocc No credit card details needed!
 
               .col-md-2
+                =image_tag('kele_corporate_logo.png', class: 'visible-xs l-margin-top')
                 .approved
                   =image_tag('acca_approved.png')
 
