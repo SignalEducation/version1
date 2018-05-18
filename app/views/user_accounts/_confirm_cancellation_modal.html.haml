@@ -17,6 +17,11 @@
             %ul
               %li
                 %span.strong
+                  ='Tired of studying alone?'
+                ='New student community'
+                ='coming soon!'
+              %li
+                %span.strong
                   ='Stuck on a study question?'
                 ='Get a real answer, 24 hours a day.'
               %li
@@ -25,30 +30,27 @@
                   ='ACCA Study Bootcamp'
                 ='coming soon!'
               %li
-                ='New online'
+                ='More online'
                 %span.strong
                   ='Question & Answer sessions'
-                ='coming soon.'
-              %li
+                ='to help you.'
+              %li.hidden-xs
                 %span.strong
                   ='Busy at work or home?'
                 ='Study at any time in any place.'
-              %li
-                ='Tired of studying alone?'
-                %span.strong
-                  ='New student community'
-                ='coming soon!'
-              %li
-                ='Keep your study notes, MCQs and corrected mock exams.'
               %li
                 ='New'
                 %span.strong
                   ='online Computer Based Exam practice'
                 ='coming soon!'
+              %li.hidden-xs
+                %span.strong
+                  ='Trying to memorise an entire textbook?'
+                ='Use our bite-sized learning.'
               %li
                 %span.strong
-                  ="Don't try to memorise an entire textbook."
-                ='Use our bite-sized learning.'
+                  ='Prices may rise.'
+                ='Lock in your low rate.'
 
 
 
@@ -64,6 +66,6 @@
             =t('views.users.show.confirm_subscription_cancellation')
       .col-sm-12
         %p
-          =t('views.users.show.confirm_cancellation_modal') + "#{humanize_stripe_date_full(@current_subscription.next_renewal_date)}"
+          =t('views.users.show.confirm_cancellation_modal') + "#{humanize_stripe_date_full(@current_subscription.next_renewal_date)} and you will then lose access to all the benefits shown above."
 
 

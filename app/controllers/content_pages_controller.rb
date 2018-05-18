@@ -31,17 +31,20 @@ class ContentPagesController < ApplicationController
 
   def show
     @content_page = ContentPage.where(public_url: params[:content_public_url]).first
-    redirect_to root_url unless @content_page && @content_page.active
-    @banner = @content_page.external_banners.first
-    seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
-    if @content_page.standard_nav?
-      @navbar = true
-      @top_margin = true
+    if @content_page && @content_page.active
+      @banner = @content_page.external_banners.first if @content_page.external_banners.any?
+      seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
+      if @content_page.standard_nav?
+        @navbar = true
+        @top_margin = true
+      else
+        @navbar = false
+        @top_margin = false
+      end
+      @footer = true
     else
-      @navbar = false
-      @top_margin = false
+      redirect_to root_url
     end
-    @footer = true
   end
 
   def new
