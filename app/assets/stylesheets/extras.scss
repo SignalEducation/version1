@@ -68,6 +68,15 @@
 #free .approved img { max-width: 100%; }
 #free .form { padding-bottom: 15px; padding-top: 10px; display: none; }
 
+#africa { background: asset-url('free.jpg') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#africa .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#africa .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#africa .subtitle { color: inherit; }
+#africa .lsbtn-base { margin: 0 0 28px 0; }
+#africa .approved { padding: 6em 0 0 0; margin: auto; }
+#africa .approved img { max-width: 100%; }
+#africa .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
 
 #explore { text-align: center; padding: 65px 0 46px 0; position: relative; }
 #explore .title1 { margin: 0 0 0.5em 0; }
@@ -280,6 +289,12 @@
 .landing #free .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
 .landing #free .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
 
+.landing #africa { text-align: left; background-image: asset-url('africa_landing_page_background.png'); }
+.landing #africa * { text-align: left; }
+.landing #africa .tmain { }
+.landing #africa .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #africa .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
 .landing #tips { padding-bottom: 15px; }
 
 .landing #cancel { padding-bottom: 9em; }
@@ -349,13 +364,6 @@
 .upgrade #free .go-down { position: absolute; left: 0; bottom: 3.5em; width: 100%; z-index: 1100; text-align: center; }
 .upgrade #free .go-down a { font-size: 2.5em; line-height: 1.1em; }
 
-.upgrade #africa { background: asset-url('africa-background.png') center center no-repeat; background-size: cover; overflow: hidden; color: #EFF3F6; position: relative; }
-.upgrade #africa .tmain { height: auto; padding: 90px 0 140px 0; }
-.upgrade #africa .title1 { margin: 0 auto 0.7em auto; max-width: 880px; }
-.upgrade #africa .subtitle { font-size: 1.333em; line-height: 1.333em; margin: 0 auto; font-weight: 300; max-width: 880px; color: #fff; }
-.upgrade #africa .go-down { position: absolute; left: 0; bottom: 3.5em; width: 100%; z-index: 1100; text-align: center; }
-.upgrade #africa .go-down a { font-size: 2.5em; line-height: 1.1em; }
-.upgrade #africa .bottom-arrow { position: absolute; left: 0; bottom: 2.3em; width: 100%; height: 0; z-index: 1000; background: #EFF3F6; }
 
 .upgrade .bottom-arrow { position: absolute; left: 0; bottom: 2.3em; width: 100%; height: 0; z-index: 1000; background: #fff; }
 .upgrade .bottom-arrow:before,
