@@ -41,6 +41,8 @@
     -if Rails.env.production?
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/cookie_banner'
+      =render partial: 'layouts/survicate_pixel'
+      =render partial: 'layouts/quora_js_pixel'
 
   %body
     %noscript
