@@ -26,6 +26,7 @@
                   %tr
                     %th=t('views.referral_codes.index.code')
                     %th=t('views.referral_codes.index.email')
+                    %th=t('views.referral_codes.index.country')
                     %th=t('views.referral_codes.index.trial_referred_signups')
                     %th=t('views.referral_codes.index.subscription_referred_signups')
                     %th=t('views.referral_codes.index.total_referred_signups')
@@ -36,6 +37,7 @@
                     %tr{id: referral_code.id}
                       %td=referral_code.code
                       %td=referral_code.try(:user).try(:email)
+                      %td=referral_code.try(:user).try(:country).try(:name)
                       %td=referral_code.try(:trial_referred_signups).try(:count)
                       %td=referral_code.try(:subscription_referred_signups).try(:count)
                       %td=referral_code.try(:referred_signups).try(:count)

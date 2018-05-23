@@ -46,7 +46,7 @@ class ReferralCode < ActiveRecord::Base
   ## Structures data in CSV format for Excel downloads ##
   def self.to_csv(options = {})
     #attributes are either model attributes or data generate in methods below
-    attributes = %w{code referrer_email trial_referrals subscription_referrals total_referrals referrals_this_month referrals_last_month total_referrals}
+    attributes = %w{code referrer_email referrer_country trial_referrals subscription_referrals total_referrals referrals_this_month referrals_last_month total_referrals}
     CSV.generate(options) do |csv|
       csv << attributes
       all.each do |course|
@@ -91,6 +91,10 @@ class ReferralCode < ActiveRecord::Base
 
   def referrer_email
     self.user.email
+  end
+
+  def referrer_country
+    self.user.try(:country).try(:name)
   end
 
   protected

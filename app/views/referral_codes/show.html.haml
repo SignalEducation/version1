@@ -24,6 +24,7 @@
                   %tr
                     %th Referral Users
                     %th Creation Date
+                    %th Country
                     %th Subscription
                     %th Referral URL
                 %tbody
@@ -33,6 +34,8 @@
                         =referral.user.email
                       %td
                         =humanize_datetime(referral.created_at)
+                      %td
+                        =referral.user.try(:country).try(:name)
                       %td
                         =tick_or_cross(referral.subscription_id)
                       %td

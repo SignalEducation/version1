@@ -45,17 +45,7 @@ class ReferralCodesController < ApplicationController
 
   def referral
     referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
-    if referral_code
-      referral_data = request.referrer ? "#{referral_code.code};#{request.referrer}" : referral_code.code
-
-      # Browsers do not send back cookie attributes so we cannot update only value
-      # without altering expiration date. Therefore if we detect difference between
-      # current referral data and data stored in the cookie we will always save new
-      # data and set expiration to next 30 days.
-      if referral_code && referral_data != cookies.encrypted[:referral_data]
-        cookies.encrypted[:referral_data] = { value: referral_data, expires: 30.days.from_now, httponly: true }
-      end
-    end
+    drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
     redirect_to root_url
   end
 

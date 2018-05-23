@@ -171,6 +171,19 @@ class ApplicationController < ActionController::Base
     cookies.encrypted[:post_sign_up_redirect_path] = {value: new_path, httponly: true} if new_path
   end
 
+  def drop_referral_code_cookie(referral_code)
+    referral_data = request.referrer ? "#{referral_code.code};#{request.referrer}" : referral_code.code
+
+    # Browsers do not send back cookie attributes so we cannot update only value
+    # without altering expiration date. Therefore if we detect difference between
+    # current referral data and data stored in the cookie we will always save new
+    # data and set expiration to next 30 days.
+    if referral_code && referral_data != cookies.encrypted[:referral_data]
+      cookies.encrypted[:referral_data] = { value: referral_data, expires: 30.days.from_now, httponly: true }
+    end
+
+  end
+
 
   #### General purpose code
 
