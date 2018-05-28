@@ -27,7 +27,7 @@ class StripeApiEvent < ActiveRecord::Base
 
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
-  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded)
+  KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded coupon.updated)
   DELAYED_TYPES = %w(invoice.payment_succeeded invoice.payment_failed charge.failed charge.succeeded)
 
   # relationships
@@ -74,6 +74,8 @@ class StripeApiEvent < ActiveRecord::Base
             process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
           when 'charge.refunded'
             process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'coupon.updated'
+            process_coupon_updated(self.payload[:data][:object][:id])
           else
             set_process_error "Unknown event type - #{self.payload[:type]}"
         end
@@ -238,6 +240,21 @@ class StripeApiEvent < ActiveRecord::Base
 
     else
       set_process_error("Error creating charge. #{}")
+    end
+  end
+
+  def process_coupon_updated(coupon_code)
+    coupon = Coupon.where(code: coupon_code).first
+    if coupon
+      coupon.deactivate
+
+      self.processed = true
+      self.processed_at = Time.now
+      self.error = false
+      self.error_message = nil
+
+    else
+      set_process_error("Error updating Coupon. Code: #{coupon_code}")
     end
   end
 
