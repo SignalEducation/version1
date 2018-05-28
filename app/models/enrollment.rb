@@ -99,7 +99,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count quiz_logs_count cme_quiz_count}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -157,6 +157,14 @@ class Enrollment < ActiveRecord::Base
     if course_log
       course_log.elements_total
     end
+  end
+
+  def quiz_logs_count
+    self.subject_course_user_log.course_module_element_user_logs.quizzes.count if self.subject_course_user_log
+  end
+
+  def cme_quiz_count
+    self.subject_course.quiz_count
   end
 
   def sibling_enrollments
