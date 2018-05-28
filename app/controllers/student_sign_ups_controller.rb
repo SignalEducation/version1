@@ -95,6 +95,8 @@ class StudentSignUpsController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
+    time_now = Proc.new{Time.now}.call
+    @user.communication_approval_datetime = time_now
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password
@@ -152,7 +154,8 @@ class StudentSignUpsController < ApplicationController
         :email, :first_name, :last_name,
         :country_id, :locale,
         :password, :password_confirmation,
-        :topic_interest, :terms_and_conditions
+        :topic_interest, :terms_and_conditions,
+        :communication_approval
     )
   end
 

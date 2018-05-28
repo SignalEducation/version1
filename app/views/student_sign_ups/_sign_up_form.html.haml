@@ -1,6 +1,7 @@
 =form_for @user, url: create_student_url do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+  =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
 
   #sign_up.form
     .row
@@ -21,7 +22,17 @@
       .col-sm-6
         .form-group.l-margin-top
           %label.check{style: 'color: #fff;'}
-            %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+            %input{type: 'checkbox', id: 'communication_approval', required: true}
+              %span
+                %i.fa.fa-check
+              %span
+                ='I agree to receiving communication from LearnSignal, you can unsubscribe at any time'
+
+      .col-sm-6
+        .form-group.l-margin-top
+          %label.check{style: 'color: #fff;'}
+            -#=f.checkbox :terms_and_conditions, required: true
+            %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
               %span
                 %i.fa.fa-check
               ='I Agree to LearnSignal'
@@ -43,6 +54,14 @@
       $("#hidden_term_and_conditions").val('true');
     } else if($('#terms_and_conditions').prop('checked') == false) {
       $("#hidden_term_and_conditions").val('false');
+    }
+  });
+
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#communication_approval').prop('checked') == true) {
+      $("#hidden_communication_approval").val('true');
+    } else if($('#communication_approval').prop('checked') == false) {
+      $("#hidden_communication_approval").val('false');
     }
   });
 
