@@ -122,6 +122,10 @@ class Coupon < ActiveRecord::Base
     end
   end
 
+  def update_redeems
+    self.update_attribute(:times_redeemed, self.subscriptions.count)
+  end
+
 
   protected
 
