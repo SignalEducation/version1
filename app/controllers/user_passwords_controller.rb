@@ -87,7 +87,6 @@ class UserPasswordsController < ApplicationController
 
   def create_password
     time_now = params[:hidden][:communication_approval] ? Proc.new{Time.now}.call : nil
-    
     if params[:password] == params[:password_confirmation]
       # in the params, params[:id] holds the reset_token.
       @user = User.finish_password_reset_process(params[:id], params[:password], params[:password_confirmation])
