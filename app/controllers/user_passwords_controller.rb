@@ -86,13 +86,18 @@ class UserPasswordsController < ApplicationController
   end
 
   def create_password
+    time_now = params[:hidden][:communication_approval] ? Proc.new{Time.now}.call : nil
+    
     if params[:password] == params[:password_confirmation]
       # in the params, params[:id] holds the reset_token.
       @user = User.finish_password_reset_process(params[:id], params[:password], params[:password_confirmation])
       if @user
         @user_session = UserSession.create(@user)
         flash[:success] = I18n.t('controllers.user_passwords.update.flash.success')
-        @user.update_attributes(password_change_required: nil, session_key: session[:session_id])
+        @user.update_attributes(password_change_required: nil, session_key: session[:session_id],
+                                terms_and_conditions: params[:hidden][:terms_and_conditions],
+                                communication_approval: params[:hidden][:communication_approval],
+                                communication_approval_datetime: time_now)
         redirect_back_or_default library_url
       else
         @user = User.find_by_password_reset_token(params[:id])

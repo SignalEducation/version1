@@ -39,7 +39,6 @@ class EnrollmentsController < ApplicationController
       @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id) unless @enrollment.subject_course_user_log_id
 
       if @enrollment.save
-        send_welcome_email(current_user.id, @course.name)
         redirect_to library_special_link(@course)
         flash[:success] = t('controllers.enrollments.create.flash.success')
       else
@@ -80,6 +79,7 @@ class EnrollmentsController < ApplicationController
   protected
 
   def send_welcome_email(user_id, course_name)
+    #Turned Off until emails are all moved back from intercom
     MandrillWorker.perform_at(5.minute.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
   end
 

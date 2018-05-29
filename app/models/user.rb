@@ -58,6 +58,8 @@
 #  analytics_guid                   :string
 #  student_number                   :string
 #  unsubscribed_from_emails         :boolean          default(FALSE)
+#  communication_approval           :boolean          default(FALSE)
+#  communication_approval_datetime  :datetime
 #
 
 class User < ActiveRecord::Base
@@ -84,7 +86,8 @@ class User < ActiveRecord::Base
                   :trial_ended_notification_sent_at, :terms_and_conditions,
                   :date_of_birth, :description, :free_trial_ended_at,
                   :student_number, :student_access_attributes,
-                  :unsubscribed_from_emails
+                  :unsubscribed_from_emails, :communication_approval_datetime,
+                  :communication_approval
 
   # Constants
   LOCALES = %w(en)

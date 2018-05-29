@@ -122,6 +122,17 @@ class Coupon < ActiveRecord::Base
     end
   end
 
+  def update_redeems
+    self.update_attribute(:times_redeemed, self.subscriptions.count)
+  end
+
+
+  def deactivate
+    stripe_coupon = Stripe::Coupon.retrieve(id: self.code)
+    if stripe_coupon && !stripe_coupon[:valid]
+      self.update_column(:active, false)
+    end
+  end
 
   protected
 
@@ -133,31 +144,31 @@ class Coupon < ActiveRecord::Base
   end
 
   def activate
-    strip_coupon = Stripe::Coupon.retrieve(id: self.code)
-    if strip_coupon && strip_coupon[:valid]
+    stripe_coupon = Stripe::Coupon.retrieve(id: self.code)
+    if stripe_coupon && stripe_coupon[:valid]
       self.update_column(:active, true)
     end
   end
 
   def create_on_stripe
     unless self.stripe_coupon_data
-      strip_coupon = Stripe::Coupon.create(id: self.code, currency: self.currency.try(:iso_code),
+      stripe_coupon = Stripe::Coupon.create(id: self.code, currency: self.currency.try(:iso_code),
                                            percent_off: self.percent_off, amount_off: self.amount_off,
                                            duration: self.duration, duration_in_months: self.duration_in_months,
                                            max_redemptions: self.max_redemptions, redeem_by: self.redeem_by.try(:to_i))
 
-      if strip_coupon
-        self.active = strip_coupon[:valid]
-        self.livemode = strip_coupon[:livemode]
-        self.times_redeemed = strip_coupon[:times_redeemed]
-        self.stripe_coupon_data = strip_coupon.to_hash.deep_dup
+      if stripe_coupon
+        self.active = stripe_coupon[:valid]
+        self.livemode = stripe_coupon[:livemode]
+        self.times_redeemed = stripe_coupon[:times_redeemed]
+        self.stripe_coupon_data = stripe_coupon.to_hash.deep_dup
       end
     end
   end
 
   def delete_on_stripe
-    strip_coupon = Stripe::Coupon.retrieve(id: self.code)
-    strip_coupon.delete if strip_coupon
+    stripe_coupon = Stripe::Coupon.retrieve(id: self.code)
+    stripe_coupon.delete if stripe_coupon
   end
 
 end

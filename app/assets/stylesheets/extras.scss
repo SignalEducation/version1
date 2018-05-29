@@ -411,6 +411,12 @@
 #simply .obs { font-style: italic; }
 
 
+#setpassword .check { display: block; cursor: pointer; overflow: hidden; margin: 0 0 1.5em 0; }
+#setpassword .check input { position: absolute; opacity: 0; left: -30px; top: -30px; }
+#setpassword .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
+#setpassword .check input + span .fa { opacity: 0; }
+#setpassword .check input:checked + span .fa { opacity: 1; }
+
 
 /* FOOTER */
 

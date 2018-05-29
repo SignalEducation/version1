@@ -59,6 +59,7 @@ class Subscription < ActiveRecord::Base
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
+  after_create :update_coupon_count
   after_save :update_student_access
 
   # scopes
@@ -356,6 +357,12 @@ class Subscription < ActiveRecord::Base
     stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
     array_of_cards = stripe_customer.sources.data
     SubscriptionPaymentCard.create_from_stripe_array(array_of_cards, self.user_id, stripe_customer.default_source)
+  end
+
+  def update_coupon_count
+    if self.coupon_id
+      self.coupon.update_redeems
+    end
   end
 
   def update_student_access
