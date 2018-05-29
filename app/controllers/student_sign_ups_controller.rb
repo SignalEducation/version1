@@ -96,7 +96,7 @@ class StudentSignUpsController < ApplicationController
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @user.country_id = @country.id
     time_now = Proc.new{Time.now}.call
-    @user.communication_approval_datetime = time_now
+    @user.communication_approval_datetime = time_now if @user.communication_approval
     @user.account_activation_code = SecureRandom.hex(10)
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password
