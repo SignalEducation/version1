@@ -58,6 +58,8 @@
 #  analytics_guid                   :string
 #  student_number                   :string
 #  unsubscribed_from_emails         :boolean          default(FALSE)
+#  communication_approval           :boolean          default(FALSE)
+#  communication_approval_datetime  :datetime
 #
 
 class UsersController < ApplicationController

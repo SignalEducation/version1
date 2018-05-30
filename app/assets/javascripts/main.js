@@ -27,6 +27,18 @@ $(document).ready(function(){
         return false;
     });
 
+    $("#free .open-form").click(function(){
+        var $a = $(this);
+        $a.addClass("form-open");
+        $a.addClass("hidden");
+        $("#free .form").slideDown(300);
+
+        var $b = $("#free .submit");
+        $b.removeClass("hidden");
+
+        return false;
+    });
+
 
     //basic form validation
     $("form").submit(function(){

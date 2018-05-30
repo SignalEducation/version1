@@ -99,7 +99,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def self.to_csv(options = {})
-    attributes = %w{id user_id status course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count}
+    attributes = %w{id user_id status f_name l_name course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count }
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -136,6 +136,14 @@ class Enrollment < ActiveRecord::Base
     self.user.student_number
   end
 
+  def f_name
+    self.user.first_name
+  end
+
+  def l_name
+    self.user.last_name
+  end
+
   def date_of_birth
     self.user.try(:date_of_birth)
   end
@@ -158,6 +166,14 @@ class Enrollment < ActiveRecord::Base
       course_log.elements_total
     end
   end
+
+  #def quiz_logs_count
+  #  self.subject_course_user_log.course_module_element_user_logs.quizzes.count if self.subject_course_user_log
+  #end
+
+  #def cme_quiz_count
+  #  self.subject_course.quiz_count
+  #end
 
   def sibling_enrollments
     self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
