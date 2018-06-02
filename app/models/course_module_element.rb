@@ -20,6 +20,7 @@
 #  number_of_questions       :integer          default(0)
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
+#  is_constructed_response   :boolean          default(FALSE), not null
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -30,12 +31,12 @@ class CourseModuleElement < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
+                  :is_constructed_response, :seo_description, :seo_no_index,
+                  :temporary_label, :number_of_questions, :_destroy,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
-                  :seo_description, :seo_no_index,
-                  :number_of_questions, :video_resource_attributes,
-                  :_destroy, :temporary_label
+                  :video_resource_attributes
 
   # Constants
 
@@ -53,6 +54,7 @@ class CourseModuleElement < ActiveRecord::Base
 
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video
+  accepts_nested_attributes_for :constructed_response
   accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
   accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
@@ -74,7 +76,7 @@ class CourseModuleElement < ActiveRecord::Base
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_videos, -> { where(is_video: true) }
   scope :all_quizzes, -> { where(is_quiz: true) }
-  #scope :all_constructed_response, -> { where(is_constructed_response: true) }
+  scope :all_constructed_response, -> { where(is_constructed_response: true) }
 
   # class methods
 
@@ -143,6 +145,7 @@ class CourseModuleElement < ActiveRecord::Base
     the_list = []
     the_list << self.course_module_element_video if self.course_module_element_video
     the_list << self.course_module_element_quiz if self.course_module_element_quiz
+    the_list << self.constructed_response if self.constructed_response
     the_list += self.course_module_element_resources.to_a
     the_list += self.quiz_questions.to_a
     the_list
@@ -171,11 +174,13 @@ class CourseModuleElement < ActiveRecord::Base
 
   def type_name
     if is_quiz
-      "Quiz"
+      'Quiz'
     elsif is_video
       "Video"
+    elsif constructed_response
+      'Constructed Response'
     else
-      "Unknown"
+      'Unknown'
     end
   end
 

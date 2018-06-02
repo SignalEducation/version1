@@ -20,6 +20,7 @@
 #  number_of_questions       :integer          default(0)
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
+#  is_constructed_response   :boolean          default(FALSE), not null
 #
 
 FactoryBot.define do

@@ -442,6 +442,7 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_constructed_response: New CR
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
@@ -461,6 +462,7 @@ en:
         h1: New Course Module Element
         video: New Video
         quiz: New Quiz
+        constructed_response: New Constructed Response
 
       show:
         h1: Course Module Element
@@ -496,6 +498,14 @@ en:
         h3:
           question_number: "Question #"
           question_new: New Question
+
+    constructed_responses:
+      form:
+        time_allowed: Time Allowed
+        time_allowed_placeholder: Time in Seconds
+        new_scenario: New Scenario
+        scenario_number: "Scenario #"
+        text_content: Scenarion Text
 
     course_module_element_resources:
       form:

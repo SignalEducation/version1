@@ -22,7 +22,7 @@ class Scenario < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :constructed_response
   has_many :scenario_questions
-  has_many :scenario_answers
+  has_many :scenario_answer_templates
 
 
   # validation

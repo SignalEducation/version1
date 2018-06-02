@@ -20,6 +20,7 @@
 #  number_of_questions       :integer          default(0)
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
+#  is_constructed_response   :boolean          default(FALSE), not null
 #
 
 class CourseModuleElementsController < ApplicationController
@@ -82,6 +83,8 @@ class CourseModuleElementsController < ApplicationController
 
     elsif params[:type] == 'quiz'
       spawn_quiz_children
+    elsif params[:type] == 'constructed_response'
+      spawn_constructed_response_children
     end
     set_related_cmes
   end
@@ -256,6 +259,12 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
   end
 
+  def spawn_constructed_response_children
+    @course_module_element.is_constructed_response = true
+    @course_module_element.build_constructed_response
+    @course_module_element.constructed_response.add_an_empty_scenario
+  end
+
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
       @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
@@ -358,6 +367,10 @@ class CourseModuleElementsController < ApplicationController
             :answer,
             :notes,
             :transcript,
+        ],
+        constructed_response_attributes:  [
+            :id,
+            :time_allowed
         ]
     )
   end

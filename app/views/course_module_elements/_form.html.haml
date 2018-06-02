@@ -5,6 +5,7 @@
     =f.hidden_field :course_module_id
     =f.hidden_field :is_quiz
     =f.hidden_field :is_video
+    =f.hidden_field :is_constructed_response
 
 
     .col-md-6
@@ -70,6 +71,11 @@
     -if @course_module_element.course_module_element_resources.size > 0
       =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
+  -elsif @course_module_element.constructed_response
+    %br/
+    %hr/
+    %br/
+    =render partial: 'constructed_responses/fields_for', locals: {f: f}
 
   .row
     .col-md-12

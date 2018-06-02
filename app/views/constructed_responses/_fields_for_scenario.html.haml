@@ -1,0 +1,13 @@
+.question-box-item.question
+  .row
+    %h3.l-margin-bottom
+      =scenario.object.id.nil? ? t('views.constructed_responses.form.new_scenario') : t('views.constructed_responses.form.scenario_number') + scenario.object.id.to_s
+    .col-sm-12
+      .form-group
+        =scenario.hidden_field :constructed_response_id
+        =scenario.fields_for :scenario_questions do |scenario_questions|
+          =scenario_questions.hidden_field :sorting_order
+          .quiz-question
+            =scenario_questions.text_area :text_content, placeholder: t('views.constructed_responses.form.text_content'), class: 'form-control', rows: 8
+          %br/
+

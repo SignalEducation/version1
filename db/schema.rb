@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180602115921) do
+ActiveRecord::Schema.define(version: 20180602144203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 20180602115921) do
     t.integer  "course_module_element_id"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.integer  "time_allowed"
   end
 
   add_index "constructed_responses", ["course_module_element_id"], name: "index_constructed_responses_on_course_module_element_id", using: :btree
@@ -229,6 +230,7 @@ ActiveRecord::Schema.define(version: 20180602115921) do
     t.integer  "number_of_questions",       default: 0
     t.float    "duration",                  default: 0.0
     t.string   "temporary_label"
+    t.boolean  "is_constructed_response",   default: false, null: false
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
