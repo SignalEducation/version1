@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: scenario_answers
+# Table name: scenario_answer_templates
 #
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
@@ -9,11 +9,12 @@
 #  scenario_question_id     :integer
 #  sorting_order            :integer
 #  type                     :string
+#  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #
 
-class ScenarioAnswer < ActiveRecord::Base
+class ScenarioAnswerTemplate < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :course_module_element_id, :constructed_response_id,

@@ -24,7 +24,7 @@ class ScenarioQuestion < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :constructed_response
   belongs_to :scenario
-  has_many :scenario_answers
+  has_many :scenario_answer_templates
 
   # validation
   validates :course_module_element_id, presence: true,

@@ -702,21 +702,22 @@ ActiveRecord::Schema.define(version: 20180602115921) do
   add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
   add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
 
-  create_table "scenario_answers", force: :cascade do |t|
+  create_table "scenario_answer_templates", force: :cascade do |t|
     t.integer  "course_module_element_id"
     t.integer  "constructed_response_id"
     t.integer  "scenario_id"
     t.integer  "scenario_question_id"
     t.integer  "sorting_order"
     t.string   "type"
+    t.text     "text_content"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
 
-  add_index "scenario_answers", ["constructed_response_id"], name: "index_scenario_answers_on_constructed_response_id", using: :btree
-  add_index "scenario_answers", ["course_module_element_id"], name: "index_scenario_answers_on_course_module_element_id", using: :btree
-  add_index "scenario_answers", ["scenario_id"], name: "index_scenario_answers_on_scenario_id", using: :btree
-  add_index "scenario_answers", ["scenario_question_id"], name: "index_scenario_answers_on_scenario_question_id", using: :btree
+  add_index "scenario_answer_templates", ["constructed_response_id"], name: "index_scenario_answer_templates_on_constructed_response_id", using: :btree
+  add_index "scenario_answer_templates", ["course_module_element_id"], name: "index_scenario_answer_templates_on_course_module_element_id", using: :btree
+  add_index "scenario_answer_templates", ["scenario_id"], name: "index_scenario_answer_templates_on_scenario_id", using: :btree
+  add_index "scenario_answer_templates", ["scenario_question_id"], name: "index_scenario_answer_templates_on_scenario_question_id", using: :btree
 
   create_table "scenario_questions", force: :cascade do |t|
     t.integer  "course_module_element_id"

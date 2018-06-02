@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: scenario_answers
+# Table name: scenario_answer_templates
 #
 #  id                       :integer          not null, primary key
 #  course_module_element_id :integer
@@ -9,17 +9,18 @@
 #  scenario_question_id     :integer
 #  sorting_order            :integer
 #  type                     :string
+#  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #
 
 require 'rails_helper'
 
-describe ScenarioAnswer do
+describe ScenarioAnswerTemplate do
 
   # attr-accessible
   black_list = %w(id created_at updated_at)
-  ScenarioAnswer.column_names.each do |column_name|
+  ScenarioAnswerTemplate.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
     else
@@ -28,7 +29,7 @@ describe ScenarioAnswer do
   end
 
   # Constants
-  it { expect(ScenarioAnswer.const_defined?(:FORMAT_TYPE)).to eq(true) }
+  it { expect(ScenarioAnswerTemplate.const_defined?(:FORMAT_TYPE)).to eq(true) }
 
   # relationships
   it { should belong_to(:course_module_element) }
@@ -57,7 +58,7 @@ describe ScenarioAnswer do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
-  it { expect(ScenarioAnswer).to respond_to(:all_in_order) }
+  it { expect(ScenarioAnswerTemplate).to respond_to(:all_in_order) }
 
   # class methods
 
