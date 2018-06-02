@@ -43,6 +43,7 @@ class CourseModuleElement < ActiveRecord::Base
   belongs_to :course_module
   has_one :course_module_element_quiz
   has_one :course_module_element_video
+  has_one :constructed_response
   has_one :video_resource, inverse_of: :course_module_element
   has_many :quiz_questions
   has_many :course_module_element_resources
@@ -73,6 +74,7 @@ class CourseModuleElement < ActiveRecord::Base
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
   scope :all_videos, -> { where(is_video: true) }
   scope :all_quizzes, -> { where(is_quiz: true) }
+  #scope :all_constructed_response, -> { where(is_constructed_response: true) }
 
   # class methods
 
