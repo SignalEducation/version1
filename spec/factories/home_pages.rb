@@ -18,6 +18,7 @@
 #  header_heading                :string
 #  header_paragraph              :text
 #  header_button_text            :string
+#  background_image              :string
 #
 
 FactoryBot.define do

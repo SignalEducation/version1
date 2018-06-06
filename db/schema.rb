@@ -411,6 +411,7 @@ ActiveRecord::Schema.define(version: 20180606133327) do
     t.string   "header_heading"
     t.text     "header_paragraph"
     t.string   "header_button_text"
+    t.string   "background_image"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree

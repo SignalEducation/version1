@@ -18,6 +18,7 @@
 #  header_heading                :string
 #  header_paragraph              :text
 #  header_button_text            :string
+#  background_image              :string
 #
 
 class HomePagesController < ApplicationController
@@ -88,7 +89,7 @@ class HomePagesController < ApplicationController
     params.require(:home_page).permit(:seo_title, :seo_description,
                                       :subscription_plan_category_id, :public_url,
                                       :subject_course_id, :custom_file_name,
-                                      :name, :home, :group_id,
+                                      :name, :home, :group_id, :background_image,
                                       :header_heading, :header_paragraph, :header_button_text,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
