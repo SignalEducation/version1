@@ -15,6 +15,9 @@
 #  name                          :string
 #  discourse_ids                 :string
 #  home                          :boolean          default(FALSE)
+#  header_heading                :string
+#  header_paragraph              :text
+#  header_button_text            :string
 #
 
 class HomePagesController < ApplicationController
@@ -86,6 +89,7 @@ class HomePagesController < ApplicationController
                                       :subscription_plan_category_id, :public_url,
                                       :subject_course_id, :custom_file_name,
                                       :name, :home, :group_id,
+                                      :header_heading, :header_paragraph, :header_button_text,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

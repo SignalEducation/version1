@@ -787,6 +787,12 @@ en:
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
         blog_posts: Blog Posts
+        header_heading: Header H1
+        header_heading_placeholder: Header H1 Text
+        header_paragraph: Header Paragraph
+        header_paragraph_placeholder: Header Paragraph Text
+        header_button_text: Header Button
+        header_button_text_placeholder: Header Button Text
 
       index:
         h1: Landing Pages

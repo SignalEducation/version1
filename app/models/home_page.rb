@@ -15,6 +15,9 @@
 #  name                          :string
 #  discourse_ids                 :string
 #  home                          :boolean          default(FALSE)
+#  header_heading                :string
+#  header_paragraph              :text
+#  header_button_text            :string
 #
 
 class HomePage < ActiveRecord::Base
@@ -24,7 +27,8 @@ class HomePage < ActiveRecord::Base
   # attr-accessible
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
                   :public_url, :subject_course_id, :custom_file_name,
-                  :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes
+                  :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes,
+                  :header_heading, :header_paragraph, :header_button_text
 
   # Constants
 

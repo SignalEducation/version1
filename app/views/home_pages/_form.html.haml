@@ -14,6 +14,18 @@
         =f.label :seo_description, t('views.home_pages.form.seo_description'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :header_heading, t('views.home_pages.form.header_heading'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :header_heading, placeholder: t('views.home_pages.form.header_heading_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :header_paragraph, t('views.home_pages.form.header_paragraph'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_area :header_paragraph, placeholder: t('views.home_pages.form.header_paragraph_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :header_button_text, t('views.home_pages.form.header_button_text'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :header_button_text, placeholder: t('views.home_pages.form.header_button_text_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
       .col-md-6
         =f.label :public_url, t('views.home_pages.form.public_url'), class: 'control-label'
@@ -33,11 +45,6 @@
         .input-group.input-group-lg.full-width
           =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
-      .col-sm-6
-        .checkbox
-          %label
-            =f.check_box :home
-            ='Home'
 
 
   .row.l-margin-top

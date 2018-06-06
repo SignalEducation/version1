@@ -15,12 +15,24 @@
           .container
             .row
               .col-md-10
-                %h1.title1 Want to pass your ACCA exams first time?
-                %h2.subtitle Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.
+                %h1.title1
+                  -if @home_page && @home_page.header_heading
+                    =@home_page.header_heading
+                  -else
+                    ='Want to pass your ACCA exams first time?'
+
+                %h2.subtitle
+                  -if @home_page && @home_page.header_paragraph
+                    =@home_page.header_paragraph
+                  -else
+                    ='Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.'
 
                 .lsbtn-base
                   =link_to new_student_url, class: 'lsbtn' do
-                    Get free course access
+                    -if @home_page && @home_page.header_button_text
+                      =@home_page.header_button_text
+                    -else
+                      ='Get free course access'
                     %i.fa.fa-chevron-right
                 .obs-nocc No credit card details needed!
 
@@ -28,15 +40,6 @@
                 .approved
                   =image_tag('acca_approved.png')
 
-
-    -#%section#tips
-      .container
-        %h2.title1 Get Jamie’s 3 free tips on passing your ACCA.
-        .video
-          .play
-            #vimeo-player.vimeo-player
-
-          .about Meet course tutor Jamie. He’s helped learners all over the world pass their ACCA.
 
 
     %section#homeblog
