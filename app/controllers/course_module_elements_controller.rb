@@ -284,6 +284,7 @@ class CourseModuleElementsController < ApplicationController
         :active,
         :is_video,
         :is_quiz,
+        :is_constructed_response,
         :seo_description,
         :seo_no_index,
         :number_of_questions,
@@ -370,7 +371,34 @@ class CourseModuleElementsController < ApplicationController
         ],
         constructed_response_attributes:  [
             :id,
-            :time_allowed
+            :course_module_element_id,
+            :time_allowed,
+            scenarios_attributes: [
+                :id,
+                :course_module_element_id,
+                :constructed_response_id,
+                :sorting_order,
+                :text_content,
+                scenario_questions_attributes: [
+                    :id,
+                    :course_module_element_id,
+                    :constructed_response_id,
+                    :scenario_id,
+                    :sorting_order,
+                    :text_content,
+                    scenario_answer_templates_attributes: [
+                        :id,
+                        :course_module_element_id,
+                        :constructed_response_id,
+                        :scenario_id,
+                        :scenario_question_id,
+                        :sorting_order,
+                        :editor_type,
+                        :text_content
+                    ]
+
+                ]
+            ]
         ]
     )
   end

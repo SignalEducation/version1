@@ -14,7 +14,8 @@
 class Scenario < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :constructed_response_id, :sorting_order, :text_content
+  attr_accessible :course_module_element_id, :constructed_response_id, :sorting_order, :text_content,
+                  :scenario_questions_attributes
 
   # Constants
 
@@ -24,13 +25,15 @@ class Scenario < ActiveRecord::Base
   has_many :scenario_questions
   has_many :scenario_answer_templates
 
+  accepts_nested_attributes_for :scenario_questions
+
 
   # validation
-  validates :course_module_element_id, presence: true,
+  validates :course_module_element_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_id, presence: true,
+  validates :constructed_response_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
-  validates :text_content, presence: true
+  validates :text_content, presence: true, on: :update
 
   # callbacks
   before_destroy :check_dependencies

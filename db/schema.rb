@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180602144203) do
+ActiveRecord::Schema.define(version: 20180607200629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -710,7 +710,7 @@ ActiveRecord::Schema.define(version: 20180602144203) do
     t.integer  "scenario_id"
     t.integer  "scenario_question_id"
     t.integer  "sorting_order"
-    t.string   "type"
+    t.string   "editor_type"
     t.text     "text_content"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false

@@ -505,7 +505,15 @@ en:
         time_allowed_placeholder: Time in Seconds
         new_scenario: New Scenario
         scenario_number: "Scenario #"
-        text_content: Scenarion Text
+        scenario_number: "Scenario #"
+        type: Answer Template Type
+
+        scenarios:
+          text_content: Scenario Text
+        scenario_question:
+          text_content: Scenario Question Text
+        scenario_answer_template:
+          text_content: Answer Template Text
 
     course_module_element_resources:
       form:

@@ -1,10 +1,5 @@
 =f.fields_for :constructed_response do |constructed_response|
   .col-sm-12
-    .col-sm-6
-      =constructed_response.label :time_allowed, t('views.constructed_responses.form.time_allowed'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =constructed_response.text_field :time_allowed, placeholder: t('views.constructed_responses.form.time_allowed_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
 
-    =constructed_response.fields_for :scenario do |scenario|
+    =constructed_response.fields_for :scenarios do |scenario|
       =render partial: 'constructed_responses/fields_for_scenario', locals: {f: f, constructed_response: constructed_response, scenario: scenario}

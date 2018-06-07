@@ -8,7 +8,7 @@
 #  scenario_id              :integer
 #  scenario_question_id     :integer
 #  sorting_order            :integer
-#  type                     :string
+#  editor_type              :string
 #  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
@@ -19,10 +19,10 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
   # attr-accessible
   attr_accessible :course_module_element_id, :constructed_response_id,
                   :scenario_id, :scenario_question_id,
-                  :sorting_order, :type
+                  :sorting_order, :editor_type, :text_content
 
   # Constants
-  FORMAT_TYPE = %w(text_editor spreadsheet_editor)
+  FORMAT_TYPES = %w(text_editor spreadsheet_editor)
 
 
   # relationships
@@ -32,16 +32,16 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
   belongs_to :scenario_question
 
   # validation
-  validates :course_module_element_id, presence: true,
+  validates :course_module_element_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_id, presence: true,
+  validates :constructed_response_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_scenario_id, presence: true,
+  validates :scenario_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_question_id, presence: true,
+  validates :scenario_question_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
-  validates :sorting_order, presence: true
-  validates :type, presence: true, inclusion: {in: FORMAT_TYPE}, length: {maximum: 255}
+  validates :editor_type, presence: true, inclusion: {in: FORMAT_TYPES},
+            on: :update, length: {maximum: 255}
 
   # callbacks
   before_destroy :check_dependencies

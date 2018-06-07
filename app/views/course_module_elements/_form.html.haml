@@ -14,6 +14,9 @@
         =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
       -elsif @course_module_element.course_module_element_quiz
         =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+      -elsif @course_module_element.constructed_response
+        =render partial: 'constructed_responses/basic_fields_for', locals: {f: f}
+
 
       -# Dropdown list of other CourseModules in the SubjectCourse
       =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'

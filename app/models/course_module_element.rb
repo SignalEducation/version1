@@ -36,7 +36,7 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
-                  :video_resource_attributes
+                  :video_resource_attributes, :constructed_response_attributes
 
   # Constants
 

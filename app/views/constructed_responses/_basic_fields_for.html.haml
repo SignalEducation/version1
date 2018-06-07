@@ -1,0 +1,5 @@
+=f.fields_for :constructed_response do |constructed_response|
+  =constructed_response.label :time_allowed, t('views.constructed_responses.form.time_allowed'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =constructed_response.text_field :time_allowed, placeholder: t('views.constructed_responses.form.time_allowed_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+  %br/

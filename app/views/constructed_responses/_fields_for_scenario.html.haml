@@ -5,9 +5,24 @@
     .col-sm-12
       .form-group
         =scenario.hidden_field :constructed_response_id
-        =scenario.fields_for :scenario_questions do |scenario_questions|
-          =scenario_questions.hidden_field :sorting_order
+        =scenario.hidden_field :sorting_order
+
+        .quiz-question
+          =scenario.text_area :text_content, placeholder: t('views.constructed_responses.form.scenarios.text_content'), class: 'form-control', rows: 8
+        %br/
+        =scenario.fields_for :scenario_questions do |scenario_question|
+          =scenario_question.hidden_field :sorting_order
           .quiz-question
-            =scenario_questions.text_area :text_content, placeholder: t('views.constructed_responses.form.text_content'), class: 'form-control', rows: 8
+            =scenario_question.text_area :text_content, placeholder: t('views.constructed_responses.form.scenario_question.text_content'), class: 'form-control', rows: 8
           %br/
+          =scenario_question.fields_for :scenario_answer_templates do |scenario_answer_template|
+            =scenario_answer_template.hidden_field :sorting_order
+
+            =scenario_answer_template.label :editor_type, t('views.constructed_responses.form.type'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =scenario_answer_template.select :editor_type, ScenarioAnswerTemplate::FORMAT_TYPES, {include_blank: t('views.general.select')}, {class: 'form-control'}
+            %br/
+
+            .quiz-question
+              =scenario_answer_template.text_area :text_content, placeholder: t('views.constructed_responses.form.scenario_answer_template.text_content'), class: 'form-control', rows: 8
 

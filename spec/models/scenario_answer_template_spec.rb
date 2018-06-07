@@ -8,7 +8,7 @@
 #  scenario_id              :integer
 #  scenario_question_id     :integer
 #  sorting_order            :integer
-#  type                     :string
+#  editor_type              :string
 #  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
