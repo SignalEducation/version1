@@ -32,7 +32,7 @@ class HomePage < ActiveRecord::Base
                   :header_heading, :header_paragraph, :header_button_text, :background_image
 
   # Constants
-  BACKGROUND_IMAGES = %w(watch_person highlighters_person lamp_person glasses_person)
+  BACKGROUND_IMAGES = %w(watch_person.png highlighter_person.png lamp_person.png glasses_person.png meeting_persons.png)
 
   # relationships
   belongs_to :subscription_plan_category
