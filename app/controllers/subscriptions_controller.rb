@@ -129,8 +129,12 @@ class SubscriptionsController < ApplicationController
   end
 
   def change_plan
-    @current_subscription = current_user.current_subscription
-    @subscription_plans = @current_subscription.upgrade_options
+    if current_user && current_user.current_subscription && !current_user.current_subscription.active_status?
+      redirect_to account_url(anchor: :subscriptions)
+    else
+      @current_subscription = current_user.current_subscription
+      @subscription_plans = @current_subscription.upgrade_options
+    end
   end
 
   def un_cancel_subscription
@@ -202,7 +206,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def check_subscriptions
-    if current_user && current_user.valid_subscription?
+    if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
       redirect_to account_url(anchor: :subscriptions)
     elsif current_user && !current_user.trial_or_sub_user?
       redirect_to root_url

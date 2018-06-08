@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180528150728) do
+ActiveRecord::Schema.define(version: 20180606133327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -408,6 +408,10 @@ ActiveRecord::Schema.define(version: 20180528150728) do
     t.string   "name"
     t.string   "discourse_ids"
     t.boolean  "home",                          default: false
+    t.string   "header_heading"
+    t.text     "header_paragraph"
+    t.string   "header_button_text"
+    t.string   "background_image"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
