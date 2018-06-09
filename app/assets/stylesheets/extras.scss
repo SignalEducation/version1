@@ -68,6 +68,51 @@
 #free .approved img { max-width: 100%; }
 #free .form { padding-bottom: 15px; padding-top: 10px; display: none; }
 
+#watch_person { background: asset-url('watch_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#watch_person .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#watch_person .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#watch_person .subtitle { color: inherit; }
+#watch_person .lsbtn-base { margin: 0 0 28px 0; }
+#watch_person .approved { padding: 6em 0 0 0; margin: auto; }
+#watch_person .approved img { max-width: 100%; }
+#watch_person .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
+#highlighter_person { background: asset-url('highlighter_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#highlighter_person .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#highlighter_person .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#highlighter_person .subtitle { color: inherit; }
+#highlighter_person .lsbtn-base { margin: 0 0 28px 0; }
+#highlighter_person .approved { padding: 6em 0 0 0; margin: auto; }
+#highlighter_person .approved img { max-width: 100%; }
+#highlighter_person .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
+#lamp_person { background: asset-url('lamp_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#lamp_person .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#lamp_person .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#lamp_person .subtitle { color: inherit; }
+#lamp_person .lsbtn-base { margin: 0 0 28px 0; }
+#lamp_person .approved { padding: 6em 0 0 0; margin: auto; }
+#lamp_person .approved img { max-width: 100%; }
+#lamp_person .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
+#glasses_person { background: asset-url('glasses_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#glasses_person .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#glasses_person .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#glasses_person .subtitle { color: inherit; }
+#glasses_person .lsbtn-base { margin: 0 0 28px 0; }
+#glasses_person .approved { padding: 6em 0 0 0; margin: auto; }
+#glasses_person .approved img { max-width: 100%; }
+#glasses_person .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
+#meeting_persons { background: asset-url('meeting_persons.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#meeting_persons .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#meeting_persons .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#meeting_persons .subtitle { color: inherit; }
+#meeting_persons .lsbtn-base { margin: 0 0 28px 0; }
+#meeting_persons .approved { padding: 6em 0 0 0; margin: auto; }
+#meeting_persons .approved img { max-width: 100%; }
+#meeting_persons .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
 #africa { background: asset-url('free.jpg') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
 #africa .tmain { height: 790px; padding: 140px 0; text-align: center; }
 #africa .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
@@ -294,6 +339,36 @@
 .landing #africa .tmain { }
 .landing #africa .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
 .landing #africa .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #watch_person { text-align: left; background-image: asset-url('watch_person.png'); }
+.landing #watch_person * { text-align: left; }
+.landing #watch_person .tmain { }
+.landing #watch_person .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #watch_person .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #highlighter_person { text-align: left; background-image: asset-url('highlighter_person.png'); }
+.landing #highlighter_person * { text-align: left; }
+.landing #highlighter_person .tmain { }
+.landing #highlighter_person .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #highlighter_person .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #lamp_person { text-align: left; background-image: asset-url('lamp_person.png'); }
+.landing #lamp_person * { text-align: left; }
+.landing #lamp_person .tmain { }
+.landing #lamp_person .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #lamp_person .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #glasses_person { text-align: left; background-image: asset-url('glasses_person.png'); }
+.landing #glasses_person * { text-align: left; }
+.landing #glasses_person .tmain { }
+.landing #glasses_person .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #glasses_person .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #meeting_persons { text-align: left; background-image: asset-url('meeting_persons.png'); }
+.landing #meeting_persons * { text-align: left; }
+.landing #meeting_persons .tmain { }
+.landing #meeting_persons .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #meeting_persons .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
 
 .landing #tips { padding-bottom: 15px; }
 

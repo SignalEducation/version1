@@ -9,7 +9,7 @@
             =image_tag('ls-logo-transparent.svg', class: 'nav-logo')
 
 
-    %section#free.diag-r-down{style: (@home_page.background_image && !@home_page.background_image.empty?) ? "background-image: url(assets/#{@home_page.background_image});" : ''}
+    %section.diag-r-down{id: (@home_page.background_image && !@home_page.background_image.empty?) ? @home_page.background_image : 'free'}
       .tmain
         .tbase
           .container
