@@ -4,7 +4,6 @@
       =scenario.object.id.nil? ? t('views.constructed_responses.form.new_scenario') : t('views.constructed_responses.form.scenario_number') + scenario.object.id.to_s
     .col-sm-12
       .form-group
-        =scenario.hidden_field :constructed_response_id
         =scenario.hidden_field :sorting_order
 
         .quiz-question

@@ -29,10 +29,6 @@ class ScenarioQuestion < ActiveRecord::Base
   accepts_nested_attributes_for :scenario_answer_templates
 
   # validation
-  validates :course_module_element_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
   validates :scenario_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
   validates :text_content, presence: true

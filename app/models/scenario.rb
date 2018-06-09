@@ -29,8 +29,6 @@ class Scenario < ActiveRecord::Base
 
 
   # validation
-  validates :course_module_element_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
   validates :constructed_response_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
   validates :text_content, presence: true, on: :update
