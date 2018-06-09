@@ -13,6 +13,8 @@ class CoursesController < ApplicationController
 
       if @course_module_element.is_quiz
         set_up_quiz
+      elsif @course_module_element.is_constructed_response
+        set_up_constructed_response
       end
     else
       ## The URL params are wrong ##
@@ -163,6 +165,13 @@ class CoursesController < ApplicationController
       @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
     end
     @mathjax_required = true
+  end
+
+  def set_up_constructed_response
+    @mathjax_required = true
+    @time_allowed = @course_module_element.constructed_response.time_allowed
+    @constructed_response = @course_module_element.constructed_response
+
   end
 
   protected

@@ -1,0 +1,19 @@
+.col-md-12
+
+  %h2
+    =@course_module_element.try(:name).try(:html_safe)
+
+  -@constructed_response.scenarios.each do |scenario|
+    .col-md-12
+      .box-item.question-box.border-same-backcolor
+        .col-md-6
+          %p
+            =scenario.text_content.try(:html_safe)
+        .col-md-6
+          -scenario.scenario_questions.each do |scenario_question|
+            %p
+              =scenario_question.text_content.try(:html_safe)
+
+            -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
+              %p
+                =scenario_answer_template.text_content.try(:html_safe)
