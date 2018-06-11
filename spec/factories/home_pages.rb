@@ -15,6 +15,12 @@
 #  name                          :string
 #  discourse_ids                 :string
 #  home                          :boolean          default(FALSE)
+#  header_heading                :string
+#  header_paragraph              :text
+#  header_button_text            :string
+#  background_image              :string
+#  header_button_link            :string
+#  header_button_subtext         :string
 #
 
 FactoryBot.define do

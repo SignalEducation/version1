@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180528150728) do
+ActiveRecord::Schema.define(version: 20180611112421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -408,6 +408,12 @@ ActiveRecord::Schema.define(version: 20180528150728) do
     t.string   "name"
     t.string   "discourse_ids"
     t.boolean  "home",                          default: false
+    t.string   "header_heading"
+    t.text     "header_paragraph"
+    t.string   "header_button_text"
+    t.string   "background_image"
+    t.string   "header_button_link"
+    t.string   "header_button_subtext"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
@@ -693,6 +699,7 @@ ActiveRecord::Schema.define(version: 20180528150728) do
   add_index "refunds", ["status"], name: "index_refunds_on_status", using: :btree
   add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
   add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
+
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"
