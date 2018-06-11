@@ -19,6 +19,8 @@
 #  header_paragraph              :text
 #  header_button_text            :string
 #  background_image              :string
+#  header_button_link            :string
+#  header_button_subtext         :string
 #
 
 class HomePage < ActiveRecord::Base
@@ -29,7 +31,8 @@ class HomePage < ActiveRecord::Base
   attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
                   :public_url, :subject_course_id, :custom_file_name,
                   :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes,
-                  :header_heading, :header_paragraph, :header_button_text, :background_image
+                  :header_heading, :header_paragraph, :header_button_text, :background_image,
+                  :header_button_link, :header_button_subtext
 
   # Constants
   BACKGROUND_IMAGES = %w(watch_person highlighter_person lamp_person glasses_person meeting_persons)

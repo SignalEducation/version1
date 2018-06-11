@@ -27,7 +27,15 @@
         .input-group.input-group-lg.full-width
           =f.text_field :header_button_text, placeholder: t('views.home_pages.form.header_button_text_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
         %br/
-        =f.label :background_image, t('views.home_pages.form.subject_course_id'), class: 'control-label'
+        =f.label :header_button_link, t('views.home_pages.form.header_button_link'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :header_button_link, placeholder: t('views.home_pages.form.header_button_link_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :header_button_subtext, t('views.home_pages.form.header_button_subtext'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :header_button_subtext, placeholder: t('views.home_pages.form.header_button_subtext_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :background_image, t('views.home_pages.form.background_image'), class: 'control-label'
         .input-group.input-group-lg.full-width
           =f.select :background_image, HomePage::BACKGROUND_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control'}
 

@@ -19,6 +19,8 @@
 #  header_paragraph              :text
 #  header_button_text            :string
 #  background_image              :string
+#  header_button_link            :string
+#  header_button_subtext         :string
 #
 
 require 'rails_helper'

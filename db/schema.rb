@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180606133327) do
+ActiveRecord::Schema.define(version: 20180611112421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -412,6 +412,8 @@ ActiveRecord::Schema.define(version: 20180606133327) do
     t.text     "header_paragraph"
     t.string   "header_button_text"
     t.string   "background_image"
+    t.string   "header_button_link"
+    t.string   "header_button_subtext"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
@@ -697,6 +699,49 @@ ActiveRecord::Schema.define(version: 20180606133327) do
   add_index "refunds", ["status"], name: "index_refunds_on_status", using: :btree
   add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
   add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
+
+  create_table "scenario_answer_templates", force: :cascade do |t|
+    t.integer  "course_module_element_id"
+    t.integer  "constructed_response_id"
+    t.integer  "scenario_id"
+    t.integer  "scenario_question_id"
+    t.integer  "sorting_order"
+    t.string   "editor_type"
+    t.text     "text_content"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "scenario_answer_templates", ["constructed_response_id"], name: "index_scenario_answer_templates_on_constructed_response_id", using: :btree
+  add_index "scenario_answer_templates", ["course_module_element_id"], name: "index_scenario_answer_templates_on_course_module_element_id", using: :btree
+  add_index "scenario_answer_templates", ["scenario_id"], name: "index_scenario_answer_templates_on_scenario_id", using: :btree
+  add_index "scenario_answer_templates", ["scenario_question_id"], name: "index_scenario_answer_templates_on_scenario_question_id", using: :btree
+
+  create_table "scenario_questions", force: :cascade do |t|
+    t.integer  "course_module_element_id"
+    t.integer  "constructed_response_id"
+    t.integer  "scenario_id"
+    t.integer  "sorting_order"
+    t.text     "text_content"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "scenario_questions", ["constructed_response_id"], name: "index_scenario_questions_on_constructed_response_id", using: :btree
+  add_index "scenario_questions", ["course_module_element_id"], name: "index_scenario_questions_on_course_module_element_id", using: :btree
+  add_index "scenario_questions", ["scenario_id"], name: "index_scenario_questions_on_scenario_id", using: :btree
+
+  create_table "scenarios", force: :cascade do |t|
+    t.integer  "course_module_element_id"
+    t.integer  "constructed_response_id"
+    t.integer  "sorting_order"
+    t.text     "text_content"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
+
+  add_index "scenarios", ["constructed_response_id"], name: "index_scenarios_on_constructed_response_id", using: :btree
+  add_index "scenarios", ["course_module_element_id"], name: "index_scenarios_on_course_module_element_id", using: :btree
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"

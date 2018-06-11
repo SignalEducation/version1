@@ -28,13 +28,27 @@
                     ='Study whenever and wherever you want. Get the right instructions from expert tutors. Access expert guidance whenever you need it.'
 
                 .lsbtn-base
-                  =link_to new_student_url, class: 'lsbtn' do
-                    -if @home_page && @home_page.header_button_text && !@home_page.header_button_text.empty?
-                      =@home_page.header_button_text
-                    -else
-                      ='Get free course access'
-                    %i.fa.fa-chevron-right
-                .obs-nocc No credit card details needed!
+                  -if @home_page && @home_page.header_button_link && !@home_page.header_button_link.empty?
+                    =link_to @home_page.header_button_link, class: 'lsbtn', target: '_blank' do
+                      -if @home_page && @home_page.header_button_text && !@home_page.header_button_text.empty?
+                        =@home_page.header_button_text
+                      -else
+                        ='Get free course access'
+                        %i.fa.fa-chevron-right
+
+                  -else
+                    =link_to new_student_url, class: 'lsbtn' do
+                      -if @home_page && @home_page.header_button_text && !@home_page.header_button_text.empty?
+                        =@home_page.header_button_text
+                      -else
+                        ='Get free course access'
+                        %i.fa.fa-chevron-right
+
+                .obs-nocc
+                  -if @home_page && @home_page.header_button_subtext
+                    =@home_page.header_button_subtext
+                  -else
+                    ='No credit card details needed!'
 
               .col-md-2
                 .approved

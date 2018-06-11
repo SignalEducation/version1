@@ -19,6 +19,8 @@
 #  header_paragraph              :text
 #  header_button_text            :string
 #  background_image              :string
+#  header_button_link            :string
+#  header_button_subtext         :string
 #
 
 class HomePagesController < ApplicationController
@@ -91,6 +93,7 @@ class HomePagesController < ApplicationController
                                       :subject_course_id, :custom_file_name,
                                       :name, :home, :group_id, :background_image,
                                       :header_heading, :header_paragraph, :header_button_text,
+                                      :header_button_link, :header_button_subtext,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,
