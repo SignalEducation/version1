@@ -791,8 +791,13 @@ en:
         header_heading_placeholder: Header H1 Text
         header_paragraph: Header Paragraph
         header_paragraph_placeholder: Header Paragraph Text
-        header_button_text: Header Button
+        header_button_text: Header Button Text
         header_button_text_placeholder: Header Button Text
+        header_button_link: Header Button Link
+        header_button_link_placeholder: Header Button Link
+        header_button_subtext: Header Button Subtext
+        header_button_subtext_placeholder: Header Button Subtext
+        background_image: Background Image
 
       index:
         h1: Landing Pages
