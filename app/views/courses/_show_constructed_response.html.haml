@@ -6,22 +6,14 @@
   -@constructed_response.scenarios.each do |scenario|
     .col-md-12
       .box-item.question-box.border-same-backcolor
-        .col-md-6
+        .col-md-5
           %p
             =scenario.text_content.try(:html_safe)
-        .col-md-6
+        .col-md-7
           -scenario.scenario_questions.each do |scenario_question|
             %p
               =scenario_question.text_content.try(:html_safe)
 
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
-              %p
-                -#=scenario_answer_template.text_content.try(:html_safe)
-
-  .col-md-12
-    .box-item.question-box.border-same-backcolor
-      #spreadsheet{style: 'width: 100%;'}
-
-:javascript
-  $("#spreadsheet").kendoSpreadsheet();
+              =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
 
