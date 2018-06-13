@@ -16,4 +16,12 @@
 
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
               %p
-                =scenario_answer_template.text_content.try(:html_safe)
+                -#=scenario_answer_template.text_content.try(:html_safe)
+
+  .col-md-12
+    .box-item.question-box.border-same-backcolor
+      #spreadsheet{style: 'width: 100%;'}
+
+:javascript
+  $("#spreadsheet").kendoSpreadsheet();
+

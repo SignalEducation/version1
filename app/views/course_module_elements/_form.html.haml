@@ -87,7 +87,7 @@
       -if @course_module_element.course_module_element_video
         =f.submit t('views.general.save'), class: 'btn btn-red', disabled: false
       -else
-        =f.submit t('views.general.save'), class: 'btn btn-red clear-question'
+        =f.submit t('views.general.save'), class: 'btn btn-red clear-question', id: 'submit_button'
       -if f.object.course_module_element_quiz
         =t('views.general.or')
         =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'

@@ -87,5 +87,6 @@
         =render partial: 'resources'
 
 
-=render partial: 'shared/activate_tab'
+-unless @course_module_element.constructed_response
+  =render partial: 'shared/activate_tab'
 

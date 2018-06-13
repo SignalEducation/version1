@@ -16,6 +16,8 @@
 
 class ScenarioAnswerTemplate < ActiveRecord::Base
 
+  serialize :text_content, JSON
+
   # attr-accessible
   attr_accessible :course_module_element_id, :constructed_response_id,
                   :scenario_id, :scenario_question_id,
@@ -32,12 +34,6 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
   belongs_to :scenario_question
 
   # validation
-  validates :course_module_element_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :scenario_id, presence: true, on: :update,
-            numericality: {only_integer: true, greater_than: 0}
   validates :scenario_question_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
   validates :editor_type, presence: true, inclusion: {in: FORMAT_TYPES},
