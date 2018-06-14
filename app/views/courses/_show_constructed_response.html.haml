@@ -4,12 +4,13 @@
     =@course_module_element.try(:name).try(:html_safe)
 
   -@constructed_response.scenarios.each do |scenario|
-    .col-md-12
-      .box-item.question-box.border-same-backcolor
-        .col-md-5
+    .box-item.question-box.scenario-box
+      #splitter
+        .pane-content
           %p
             =scenario.text_content.try(:html_safe)
-        .col-md-7
+
+        .pane-content{style: 'padding: 6px;'}
           -scenario.scenario_questions.each do |scenario_question|
             %p
               =scenario_question.text_content.try(:html_safe)
@@ -17,3 +18,21 @@
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
               =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
 
+
+
+
+:javascript
+
+
+  $(document).ready(function() {
+
+    $("#splitter").kendoSplitter({
+      orientation: "horizontal",
+      panes: [
+        { collapsible: true, scrollable: true },
+        { collapsible: true, scrollable: true }
+        ]
+    });
+
+
+  });

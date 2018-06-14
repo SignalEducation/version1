@@ -2,14 +2,17 @@
   =spreadsheet_json
 
 .col-md-12
-  .box-item.question-box.border-same-backcolor
-    #spreadsheet{style: 'width: 100%;'}
+  #spreadsheet{style: 'width: 90%;'}
 
 :javascript
   var templateJson = $('#sheet_json').text();
   var paredJson = JSON.parse(templateJson);
 
-  $("#spreadsheet").kendoSpreadsheet({sheetsbar: false});
+  $("#spreadsheet").kendoSpreadsheet({
+    sheetsbar: false,
+    scrollable: false,
+    toolbar: {insert: false, data: false }
+   });
 
   var spreadsheet = $("#spreadsheet").data("kendoSpreadsheet");
   spreadsheet.fromJSON(paredJson);
