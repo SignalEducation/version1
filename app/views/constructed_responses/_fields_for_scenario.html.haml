@@ -5,7 +5,7 @@
     .quiz-question
       =scenario.label :text_content, t('views.constructed_responses.form.scenarios.text_content'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =scenario.text_area :text_content, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'scenario_text_area'
+        =scenario.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: 'scenario_text_area'
       %br/
 
     =scenario.fields_for :scenario_questions do |scenario_question|
