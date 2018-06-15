@@ -52,6 +52,14 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
     false
   end
 
+  def spreadsheet_editor?
+    editor_type == 'spreadsheet_editor'
+  end
+
+  def text_editor?
+    editor_type == 'text_editor'
+  end
+
   protected
 
   def check_dependencies

@@ -16,7 +16,10 @@
               =scenario_question.text_content.try(:html_safe)
 
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
-              =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
+              -if scenario_answer_template.spreadsheet_editor?
+                =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
+              -elsif scenario_answer_template.text_editor?
+                =render partial: 'courses/text_editor_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
 
 
 

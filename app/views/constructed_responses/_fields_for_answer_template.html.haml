@@ -1,0 +1,33 @@
+=scenario_answer_template.hidden_field :sorting_order
+=scenario_answer_template.label :editor_type, t('views.constructed_responses.form.type'), class: 'control-label'
+.input-group.input-group-lg.full-width
+  =scenario_answer_template.select :editor_type, ScenarioAnswerTemplate::FORMAT_TYPES, {include_blank: t('views.general.select')}, {class: 'form-control'}
+%br/
+
+.l-margin-top-big
+  =scenario_answer_template.hidden_field :text_content
+  =link_to 'Update Hidden Field', '#', class: 'btn btn-cyan', id: 'update_button'
+
+  #spreadsheet{style: 'width: 100%;'}
+
+
+:javascript
+  var storedJson = $("#course_module_element_constructed_response_attributes_scenarios_attributes_0_scenario_questions_attributes_0_scenario_answer_templates_attributes_0_text_content").val();
+  var paredJson = JSON.parse(storedJson);
+
+  $("#spreadsheet").kendoSpreadsheet({sheetsbar: false});
+
+  var spreadsheet = $("#spreadsheet").data("kendoSpreadsheet");
+  spreadsheet.fromJSON(paredJson);
+
+
+
+  $('#update_button').click(function() {
+    var data = spreadsheet.toJSON();
+    var json = JSON.stringify(data, null, 2);
+
+
+    $("#course_module_element_constructed_response_attributes_scenarios_attributes_0_scenario_questions_attributes_0_scenario_answer_templates_attributes_0_text_content").val(json);
+
+  });
+
