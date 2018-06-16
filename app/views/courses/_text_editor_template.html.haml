@@ -1,0 +1,39 @@
+.l-margin-top-big
+  =text_area :scenario_answer_template, :text_content, id: 'answer_template_editor', style: 'width: 90%;'
+
+
+
+:javascript
+  $(document).ready(function(){
+    $("#answer_template_editor").kendoEditor({
+      encoded: false,
+      tools: [
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "justifyFull",
+        "insertUnorderedList",
+        "insertOrderedList",
+        "indent",
+        "outdent",
+        "subscript",
+        "superscript",
+        "tableWizard",
+        "createTable",
+        "addRowAbove",
+        "addRowBelow",
+        "addColumnLeft",
+        "addColumnRight",
+        "deleteRow",
+        "deleteColumn",
+        "formatting",
+        "cleanFormatting"
+      ]
+    });
+
+
+  });

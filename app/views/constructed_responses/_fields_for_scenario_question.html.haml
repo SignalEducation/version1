@@ -2,7 +2,7 @@
 .quiz-question
   =scenario_question.label :text_content, t('views.constructed_responses.form.scenario_question.text_content'), class: 'control-label'
   .input-group.input-group-lg.full-width
-    =scenario_question.text_area :text_content, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'scenario_question_text_area'
+    =scenario_question.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: 'scenario_question_text_area'
   %br/
 =scenario_question.fields_for :scenario_answer_templates do |scenario_answer_template|
   =scenario_answer_template.hidden_field :sorting_order
@@ -21,6 +21,7 @@
 :javascript
   $(document).ready(function(){
     $("#scenario_question_text_area").kendoEditor({
+      encoded: false,
       tools: [
         "bold",
         "italic",
