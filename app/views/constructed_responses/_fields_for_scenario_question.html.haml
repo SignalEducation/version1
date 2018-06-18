@@ -1,16 +1,18 @@
-=scenario_question.hidden_field :sorting_order
-.quiz-question
-  =scenario_question.label :text_content, t('views.constructed_responses.form.scenario_question.text_content'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =scenario_question.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: 'scenario_question_text_area'
-  %br/
-=scenario_question.fields_for :scenario_answer_templates do |scenario_answer_template|
-  =scenario_answer_template.hidden_field :sorting_order
-  =scenario_answer_template.label :editor_type, t('views.constructed_responses.form.type'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =scenario_answer_template.select :editor_type, ScenarioAnswerTemplate::FORMAT_TYPES, {include_blank: t('views.general.select')}, {class: 'form-control', id: 'answer_template_type'}
-
-  =render partial: 'constructed_responses/fields_for_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, scenario_answer_template: scenario_answer_template}
+.question-box-item.question.l-margin-top
+  .row
+    =scenario_question.hidden_field :sorting_order
+    .quiz-question
+      =scenario_question.label :text_content, t('views.constructed_responses.form.scenario_question.text_content'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =scenario_question.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: "scenario_question_text_area_#{scenario_question.options[:child_index]}"
+      %br/
+    =scenario_question.fields_for :scenario_answer_templates do |scenario_answer_template|
+      =scenario_answer_template.hidden_field :sorting_order
+      =scenario_answer_template.hidden_field :editor_type
+      -if scenario_answer_template.object.text_editor?
+        =render partial: 'constructed_responses/fields_for_texteditor_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, scenario_answer_template: scenario_answer_template}
+      -elsif scenario_answer_template.object.spreadsheet_editor?
+        =render partial: 'constructed_responses/fields_for_spreadsheet_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, scenario_answer_template: scenario_answer_template}
 
 
 
@@ -20,34 +22,8 @@
 
 :javascript
   $(document).ready(function(){
-    $("#scenario_question_text_area").kendoEditor({
-      encoded: false,
-      tools: [
-        "bold",
-        "italic",
-        "underline",
-        "strikethrough",
-        "justifyLeft",
-        "justifyCenter",
-        "justifyRight",
-        "justifyFull",
-        "insertUnorderedList",
-        "insertOrderedList",
-        "indent",
-        "outdent",
-        "subscript",
-        "superscript",
-        "tableWizard",
-        "createTable",
-        "addRowAbove",
-        "addRowBelow",
-        "addColumnLeft",
-        "addColumnRight",
-        "deleteRow",
-        "deleteColumn",
-        "formatting",
-        "cleanFormatting"
-      ]
+    $("#scenario_question_text_area_#{scenario_question.options[:child_index]}").kendoEditor({
+      encoded: false
     });
 
   });

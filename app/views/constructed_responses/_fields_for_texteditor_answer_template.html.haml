@@ -1,0 +1,14 @@
+#text_editor.editors.l-margin-top
+  %h6='Answer Template Text Editor'
+  =scenario_answer_template.text_area :text_content, id: "answer_template_type_texteditor_#{scenario_answer_template.options[:child_index]}"
+
+
+:javascript
+  $(document).ready(function(){
+    $("#answer_template_type_texteditor_#{scenario_question.options[:child_index]}").kendoEditor({
+      encoded: false
+    });
+
+  });
+
+

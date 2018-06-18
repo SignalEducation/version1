@@ -12,17 +12,17 @@
 class ConstructedResponse < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :time_allowed, :scenarios_attributes
+  attr_accessible :course_module_element_id, :time_allowed, :scenario_attributes
 
   # Constants
 
   # relationships
   belongs_to :course_module_element
-  has_many :scenarios
+  has_one :scenario
   has_many :scenario_questions
   has_many :scenario_answer_templates
 
-  accepts_nested_attributes_for :scenarios
+  accepts_nested_attributes_for :scenario
 
   # validation
   validates :course_module_element_id, presence: true, on: :update,
@@ -42,10 +42,10 @@ class ConstructedResponse < ActiveRecord::Base
   end
 
   def add_an_empty_scenario
-    self.scenarios.build
-    self.scenarios.last.constructed_response_id = self.id
-    self.scenarios.last.scenario_questions.build(sorting_order: 1)
-    self.scenarios.last.scenario_questions.last.scenario_answer_templates.build(sorting_order: 1)
+    self.build_scenario
+    self.scenario.constructed_response_id = self.id
+    self.scenario.scenario_questions.build(sorting_order: 1)
+    self.scenario.scenario_questions.last.scenario_answer_templates.build(sorting_order: 1)
   end
 
   protected

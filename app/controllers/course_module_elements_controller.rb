@@ -96,6 +96,8 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
         @course_module_element.course_module_element_resources.build
+      elsif @course_module_element.is_constructed_response
+        @course_module_element.constructed_response.scenario.add_an_empty_scenario_question
         unless @course_module_element.video_resource
           @course_module_element.build_video_resource
         end
@@ -373,7 +375,7 @@ class CourseModuleElementsController < ApplicationController
             :id,
             :course_module_element_id,
             :time_allowed,
-            scenarios_attributes: [
+            scenario_attributes: [
                 :id,
                 :course_module_element_id,
                 :constructed_response_id,

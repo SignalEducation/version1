@@ -1,5 +1,5 @@
 =f.fields_for :constructed_response do |constructed_response|
   .col-sm-12
 
-    =constructed_response.fields_for :scenarios do |scenario|
+    =constructed_response.fields_for :scenario do |scenario|
       =render partial: 'constructed_responses/fields_for_scenario', locals: {f: f, constructed_response: constructed_response, scenario: scenario}

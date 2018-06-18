@@ -2,22 +2,21 @@
   %h2
     =@course_module_element.try(:name).try(:html_safe)
 
-  -@constructed_response.scenarios.each do |scenario|
-    .box-item.question-box.scenario-box
-      #splitter
-        .pane-content
-          =scenario.text_content.try(:html_safe)
+  .box-item.question-box.scenario-box
+    #splitter
+      .pane-content
+        =@constructed_response.scenario.text_content.try(:html_safe)
 
-        .pane-content
-          -scenario.scenario_questions.each do |scenario_question|
-            =scenario_question.text_content.try(:html_safe)
+      .pane-content
+        -@constructed_response.scenario.scenario_questions.each do |scenario_question|
+          =scenario_question.text_content.try(:html_safe)
 
-            -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
-              .col-sm-12
-                -if scenario_answer_template.spreadsheet_editor?
-                  =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
-                -elsif scenario_answer_template.text_editor?
-                  =render partial: 'courses/text_editor_template', locals: {scenario_answer_template: scenario_answer_template}
+          -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
+            .col-sm-12
+              -if scenario_answer_template.spreadsheet_editor?
+                =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
+              -elsif scenario_answer_template.text_editor?
+                =render partial: 'courses/text_editor_template', locals: {scenario_answer_template: scenario_answer_template}
 
 
 
