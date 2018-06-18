@@ -25,7 +25,7 @@ class Scenario < ActiveRecord::Base
   has_many :scenario_questions
   has_many :scenario_answer_templates
 
-  accepts_nested_attributes_for :scenario_questions
+  accepts_nested_attributes_for :scenario_questions, reject_if: lambda { |attributes| scenario_nested_question_is_blank?(attributes) }
 
 
   # validation
@@ -40,6 +40,10 @@ class Scenario < ActiveRecord::Base
   scope :all_in_order, -> { order(:course_module_element_id) }
 
   # class methods
+  def self.scenario_nested_question_is_blank?(attributes)
+    attributes['text_content'].blank?
+  end
+
 
   # instance methods
   def destroyable?

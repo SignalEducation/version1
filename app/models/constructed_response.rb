@@ -44,8 +44,7 @@ class ConstructedResponse < ActiveRecord::Base
   def add_an_empty_scenario
     self.build_scenario
     self.scenario.constructed_response_id = self.id
-    self.scenario.scenario_questions.build(sorting_order: 1)
-    self.scenario.scenario_questions.last.scenario_answer_templates.build(sorting_order: 1)
+    self.scenario.add_an_empty_scenario_question
   end
 
   protected

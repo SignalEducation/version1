@@ -49,7 +49,7 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def spreadsheet_editor?
