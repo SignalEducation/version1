@@ -1,14 +1,17 @@
 #text_editor.editors.l-margin-top
-  %h6='Answer Template Text Editor'
-
+  .col-sm-6
+    %h6='Answer Template Text Editor'
+  .col-sm-6
+    .btn.btn-red.btn-small.pull-right{onclick: '$(this).parent().parent().remove();'}
+      ='Remove Me!'
   =texteditor_scenario_answer_template.text_area :text_content, id: "scenario_question_#{scenario_question.options[:child_index]}_answer_template_type_texteditor_#{texteditor_scenario_answer_template.options[:child_index]}"
 
 
-:javascript
-  $(document).ready(function(){
-    $("#scenario_question_#{scenario_question.options[:child_index]}_answer_template_type_texteditor_#{texteditor_scenario_answer_template.options[:child_index]}").kendoEditor({
-      encoded: false
-    });
+  :javascript
+    $(document).ready(function(){
+      $("#scenario_question_#{scenario_question.options[:child_index]}_answer_template_type_texteditor_#{texteditor_scenario_answer_template.options[:child_index]}").kendoEditor({
+        encoded: false
+      });
 
-  });
+    });
 
