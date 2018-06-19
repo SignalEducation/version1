@@ -665,6 +665,12 @@ label, .label {
 .l-section-extra-small {
   background: $colour-3;
   padding: 2rem 0;
+  @include breakpoint(xs-min) {
+    padding: 4rem 0;
+  }
+  @include breakpoint(md-min) {
+    padding: 2rem 0;
+  }
 }
 .l-section-footer-pages {
   padding: 3rem 0;
