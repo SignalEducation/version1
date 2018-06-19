@@ -171,7 +171,8 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     @time_allowed = @course_module_element.constructed_response.time_allowed
     @constructed_response = @course_module_element.constructed_response
-
+    @all_questions = @constructed_response.scenario.scenario_questions
+    @all_question_ids = @constructed_response.scenario.scenario_questions.map(&:id)
   end
 
   protected

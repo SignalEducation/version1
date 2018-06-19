@@ -2606,17 +2606,27 @@ spinner {
 
 
 .scenario-box {
+  padding: 10px 0px 0px 0px;
   height: 600px;
 }
+.scenario-box-nav-footer {
+  border-radius: 0;
+  padding: $gutter/2.5;
+  background-color: $purple1;
+  color: $white;
+}
+.cr-question {
 
+}
 #splitter {
-  height:100%;
+  height: 100%;
   border:0;
-  margin:0;
-  padding:0;
+
   .pane-content{
-    padding: 10px;
+
+    padding: 10px 10px 10px 10px;
   }
+
 }
 
 
