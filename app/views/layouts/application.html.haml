@@ -104,7 +104,8 @@
 
     -#General partials
     =render partial: 'layouts/misc_javascript'
-    =render partial: 'layouts/intercom'
+    -unless Rails.env.development?
+      =render partial: 'layouts/intercom'
 
     -unless current_user
       =render partial: 'layouts/provely_widget_display'

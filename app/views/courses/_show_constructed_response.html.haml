@@ -1,8 +1,12 @@
 .col-md-12
-  %h2
-    =@course_module_element.try(:name).try(:html_safe)
 
-  .box-item.scenario-box
+  .scenario-box-nav-header
+    =@course_module_element.try(:name)
+    .cr-nav-link.pull-right
+      ='Exit'
+
+
+  .scenario-box
     #splitter
       .pane-content
         =@constructed_response.scenario.text_content.try(:html_safe)
@@ -21,8 +25,11 @@
                 =render partial: 'courses/text_editor_template', locals: {scenario_answer_template: scenario_answer_template}
 
 
-    .scenario-box-nav-footer
-      ='Navigation Bar'
+  .scenario-box-nav-footer
+    ='Bottom Navigation Bar'
+    .cr-nav-link.pull-right{onclick: 'revealQuestion(); return false;'}
+      ='Next'
+
 
 
 
@@ -34,30 +41,42 @@
 
   $(document).ready(function() {
 
-    function onResize(e) {
-        console.log("Resized :: Splitter <b>#" + this.element[0].id + "</b>");
-        $('.cr-question').parent().width(function(i, w) { return w - 20; });
-    }
-
     $("#splitter").kendoSplitter({
       panes: [
         { scrollable: true },
         { scrollable: true, size: "60%" }
         ],
-        resize: onResize
+
     });
+
+    var outerBox = $("#splitter").parent();
+    var outerSplitter = $("#splitter").data("kendoSplitter");
+    var browserWindow = $(window);
+    var headerFooterHeight = $(".nav-header").height() + $("#footer").height();
+
+    function resizeSplitter() {
+        outerBox.height(browserWindow.height() - headerFooterHeight);
+        outerSplitter.wrapper.height(browserWindow.height() - headerFooterHeight);
+        outerSplitter.resize();
+    }
+
+    resizeSplitter();
+    browserWindow.resize(resizeSplitter);
+
   });
 
 
     var questionsList = #{@all_question_ids},
+        currentQuestion = 1,
         questionCount = $('.cr-question-heading');
 
     //Triggered by next navigation button
-    function revealQuestion(questionNumber) {
+    function revealQuestion() {
       $('.cr-question').hide();
-      $('#cr_question_' + questionsList[questionNumber - 1]).fadeIn();
+      $('#cr_question_' + questionsList[currentQuestion - 1]).fadeIn();
+      currentQuestion++;
     }
 
     $(document).on('ready page:load', function() {
-      revealQuestion(1); // 1 is the first question
+      revealQuestion(currentQuestion); // 1 is the first question
     });

@@ -662,6 +662,10 @@ label, .label {
     padding: 4rem 0;
   }
 }
+.l-section-extra-small {
+  background: $colour-3;
+  padding: 2rem 0;
+}
 .l-section-footer-pages {
   padding: 3rem 0;
   @include breakpoint(md-min) {
@@ -2606,12 +2610,29 @@ spinner {
 
 
 .scenario-box {
-  padding: 10px 0px 0px 0px;
-  height: 600px;
+  display: block;
+  position: relative;
+  height: 300px;
+  padding: $gutter;
+  border-radius: 0;
+  background: $white;
+  color: $colour-7;
+
+  @include clearfix();
+
+
+}
+.scenario-box-nav-header {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  padding: $gutter/2.5 $gutter;
+  background-color: $purple1;
+  color: $white;
 }
 .scenario-box-nav-footer {
-  border-radius: 0;
-  padding: $gutter/2.5;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: $gutter/2.5 $gutter;
   background-color: $purple1;
   color: $white;
 }
@@ -2624,11 +2645,18 @@ spinner {
 
   .pane-content{
 
-    padding: 10px 10px 10px 10px;
+
   }
 
 }
 
+.cr-nav-link {
+  color: darken($white, 5);
+  &:hover {
+    cursor: pointer;
+    color: darken($white, 15);
+  }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
