@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
 
+  skip_after_filter :intercom_rails_auto_include, only: :show
   before_action :logged_in_required
   before_action :check_permission, only: :show
 

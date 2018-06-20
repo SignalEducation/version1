@@ -104,7 +104,7 @@
 
     -#General partials
     =render partial: 'layouts/misc_javascript'
-    -unless Rails.env.development?
+    -unless controller_name == 'courses'
       =render partial: 'layouts/intercom'
 
     -unless current_user
