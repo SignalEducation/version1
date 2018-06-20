@@ -1,18 +1,16 @@
-.hidden{id: 'sheet_json'}
+.hidden{id: "scenario_question_#{scenario_question.id}_answer_#{scenario_answer_template.id}_spreadsheet_json"}
   =spreadsheet_json
 
-#spreadsheet
+.answer_spreadsheet{id: "scenario_question_#{scenario_question.id}_answer_#{scenario_answer_template.id}_spreadsheet"}
 
 :javascript
-  var templateJson = $('#sheet_json').text();
+  var templateJson = $("#scenario_question_#{scenario_question.id}_answer_#{scenario_answer_template.id}_spreadsheet_json").text();
   var paredJson = JSON.parse(templateJson);
 
-  $("#spreadsheet").kendoSpreadsheet({
+  $("#scenario_question_#{scenario_question.id}_answer_#{scenario_answer_template.id}_spreadsheet").kendoSpreadsheet({
     sheetsbar: false,
     scrollable: false,
     toolbar: {insert: false, data: false }
    });
-
-  var spreadsheet = $("#spreadsheet").data("kendoSpreadsheet");
-  spreadsheet.fromJSON(paredJson);
+  $("#scenario_question_#{scenario_question.id}_answer_#{scenario_answer_template.id}_spreadsheet").data("kendoSpreadsheet").fromJSON(paredJson);
 

@@ -23,15 +23,14 @@
 
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
               -if scenario_answer_template.spreadsheet_editor?
-                =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
+                =render partial: 'courses/spread_sheet_template', locals: {scenario_question: scenario_question, scenario_answer_template: scenario_answer_template, spreadsheet_json: scenario_answer_template.text_content}
               -elsif scenario_answer_template.text_editor?
-
-                -#TODO Make editor ID dynamic
-                =render partial: 'courses/text_editor_template', locals: {scenario_answer_template: scenario_answer_template}
+                =render partial: 'courses/text_editor_template', locals: {scenario_question: scenario_question, scenario_answer_template: scenario_answer_template}
 
 
   .scenario-box-nav.scenario-box-nav-footer
     .cr-resources
+      -# TODO
       ='Resources Will Go Here!'
 
     .cr-navigation

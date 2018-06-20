@@ -1,11 +1,11 @@
-#texteditor
-  =text_area :scenario_answer_template, :text_content, id: 'answer_template_editor'
+.answer_texteditor
+  =text_area :scenario_answer_template, :text_content, id: "scenario_question_#{scenario_question.id}_answer_template_#{scenario_answer_template.id}_texteditor"
 
 
 
 :javascript
   $(document).ready(function(){
-    $("#answer_template_editor").kendoEditor({
+    $("#scenario_question_#{scenario_question.id}_answer_template_#{scenario_answer_template.id}_texteditor").kendoEditor({
       encoded: false,
       tools: [
         "bold",
