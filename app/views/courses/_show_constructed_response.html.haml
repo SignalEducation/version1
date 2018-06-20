@@ -16,7 +16,7 @@
           =@constructed_response.scenario.text_content.try(:html_safe)
 
       .pane-content
-        -@constructed_response.scenario.scenario_questions.each do |scenario_question|
+        -@constructed_response.scenario.scenario_questions.each_with_index do |scenario_question, index|
           .cr-question{id: "cr_question_#{scenario_question.id}"}
 
             =scenario_question.text_content.try(:html_safe)
@@ -39,16 +39,23 @@
           .glyphicon.glyphicon-arrow-left
           ='Previous'
         &#124;
-        %li.cr-nav-link.cr-nav-modal-link
-
+        %li.cr-nav-link#open-navigation-dialog
           .glyphicon.glyphicon-screenshot
           ='Navigation'
-          &#124;
+        %li.cr-nav-link#close-navigation-dialog.hidden
+          .glyphicon.glyphicon-screenshot
+          ='Navigation'
+        &#124;
         %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
           ='Next'
           .glyphicon.glyphicon-arrow-right
 
-
+  #navigation-dialog
+    -@constructed_response.scenario.scenario_questions.each do |scenario_question|
+      %ul
+        %li{onclick: "revealQuestion(#{scenario_question.id}); return false;", class: 'dialog-link'}
+          ='Question '
+          =scenario_question.sorting_order
 
 
 
@@ -106,13 +113,40 @@
 
     function revealQuestion(questionNumber) {
       $('.cr-question').hide();
-      currentQuestion = questionNumber;
+      currentQuestion = questionsList.indexOf(questionNumber);
       $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     };
 
+
     $(document).on('ready page:load', function() {
-      questionNumber = (currentQuestion - 1);
+      questionNumber = questionsList[0];
       revealQuestion(questionNumber);
     });
 
 
+    $("#navigation-dialog").kendoDialog({
+      width: "400px",
+      title: "Navigation",
+      closable: true,
+      modal: false,
+      visible: false
+    });
+
+    $("#open-navigation-dialog").click(function(){
+      var dialog = $("#navigation-dialog").data("kendoDialog");
+      dialog.open();
+      $("#open-navigation-dialog").addClass('hidden');
+      $("#close-navigation-dialog").removeClass('hidden');
+    });
+
+    $("#close-navigation-dialog").click(function(){
+      var dialog = $("#navigation-dialog").data("kendoDialog");
+      dialog.close();
+      $("#open-navigation-dialog").removeClass('hidden');
+      $("#close-navigation-dialog").addClass('hidden');
+    });
+
+    $(".dialog-link").click(function(){
+      var dialog = $("#navigation-dialog").data("kendoDialog");
+      dialog.close();
+    });
