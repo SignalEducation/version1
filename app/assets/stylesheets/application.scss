@@ -2660,6 +2660,20 @@ spinner {
   width: 100%;
   margin-top: 20px;
 }
+
+.cr-resources {
+  display: inline-block
+}
+.cr-navigation {
+  float: right;
+}
+.cr-nav-block {
+  list-style: none;
+  & li {
+    position: relative;
+    display: inline-block;
+  }
+}
 .cr-nav-link {
   color: darken($white, 5);
   &:hover {

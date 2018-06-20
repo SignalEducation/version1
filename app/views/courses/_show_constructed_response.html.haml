@@ -31,9 +31,23 @@
 
 
   .scenario-box-nav.scenario-box-nav-footer
-    ='Bottom Navigation Bar'
-    .cr-nav-link.pull-right{onclick: 'revealQuestion(); return false;'}
-      ='Next'
+    .cr-resources
+      ='Resources Will Go Here!'
+
+    .cr-navigation
+      %ul.cr-nav-block
+        %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
+          .glyphicon.glyphicon-arrow-left
+          ='Previous'
+        &#124;
+        %li.cr-nav-link.cr-nav-modal-link
+
+          .glyphicon.glyphicon-screenshot
+          ='Navigation'
+          &#124;
+        %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
+          ='Next'
+          .glyphicon.glyphicon-arrow-right
 
 
 
@@ -72,16 +86,34 @@
 
 
     var questionsList = #{@all_question_ids},
-        currentQuestion = 1,
-        questionCount = $('.cr-question-heading');
+        currentQuestion = 1;
 
-    //Triggered by next navigation button
-    function revealQuestion() {
+
+    function nextQuestion() {
       $('.cr-question').hide();
-      $('#cr_question_' + questionsList[currentQuestion - 1]).fadeIn();
-      currentQuestion++;
-    }
+      if(currentQuestion < (questionsList.length -1 )) {
+        currentQuestion++;
+      }
+      $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    };
+
+    function previousQuestion() {
+      $('.cr-question').hide();
+      if(currentQuestion != 0) {
+        currentQuestion--;
+      }
+      $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    };
+
+    function revealQuestion(questionNumber) {
+      $('.cr-question').hide();
+      currentQuestion = questionNumber;
+      $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    };
 
     $(document).on('ready page:load', function() {
-      revealQuestion(currentQuestion); // 1 is the first question
+      questionNumber = (currentQuestion - 1);
+      revealQuestion(questionNumber);
     });
+
+
