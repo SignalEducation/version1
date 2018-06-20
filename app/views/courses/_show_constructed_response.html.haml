@@ -1,31 +1,36 @@
 .col-md-12
 
-  .scenario-box-nav-header
+  .scenario-box-nav.scenario-box-nav-header
     =@course_module_element.try(:name)
-    .cr-nav-link.pull-right
-      ='Exit'
+
+    =link_to library_special_link(@course_module.parent) do
+      .cr-nav-link.pull-right
+        -# Add 'Confirm' Modal
+        ='Exit'
 
 
   .scenario-box
     #splitter
       .pane-content
-        =@constructed_response.scenario.text_content.try(:html_safe)
+        .scenario-content
+          =@constructed_response.scenario.text_content.try(:html_safe)
 
       .pane-content
         -@constructed_response.scenario.scenario_questions.each do |scenario_question|
           .cr-question{id: "cr_question_#{scenario_question.id}"}
 
-            .col-sm-12
-              =scenario_question.text_content.try(:html_safe)
+            =scenario_question.text_content.try(:html_safe)
 
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
               -if scenario_answer_template.spreadsheet_editor?
                 =render partial: 'courses/spread_sheet_template', locals: {spreadsheet_json: scenario_answer_template.text_content}
               -elsif scenario_answer_template.text_editor?
+
+                -#TODO Make editor ID dynamic
                 =render partial: 'courses/text_editor_template', locals: {scenario_answer_template: scenario_answer_template}
 
 
-  .scenario-box-nav-footer
+  .scenario-box-nav.scenario-box-nav-footer
     ='Bottom Navigation Bar'
     .cr-nav-link.pull-right{onclick: 'revealQuestion(); return false;'}
       ='Next'
@@ -45,14 +50,14 @@
       panes: [
         { scrollable: true },
         { scrollable: true, size: "60%" }
-        ],
+        ]
 
     });
 
     var outerBox = $("#splitter").parent();
     var outerSplitter = $("#splitter").data("kendoSplitter");
     var browserWindow = $(window);
-    var headerFooterHeight = $(".nav-header").height() + $("#footer").height();
+    var headerFooterHeight = $(".nav-header").height() + ($("#footer").height() - '30');
 
     function resizeSplitter() {
         outerBox.height(browserWindow.height() - headerFooterHeight);

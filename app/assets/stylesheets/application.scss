@@ -2619,7 +2619,7 @@ spinner {
   display: block;
   position: relative;
   height: 300px;
-  padding: $gutter;
+  //padding: $gutter;
   border-radius: 0;
   background: $white;
   color: $colour-7;
@@ -2628,34 +2628,38 @@ spinner {
 
 
 }
-.scenario-box-nav-header {
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+.scenario-box-nav {
   padding: $gutter/2.5 $gutter;
-  background-color: $purple1;
+  background-color: $colour-21;
   color: $white;
-}
-.scenario-box-nav-footer {
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  padding: $gutter/2.5 $gutter;
-  background-color: $purple1;
-  color: $white;
+  &.scenario-box-nav-header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  &.scenario-box-nav-footer {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
 }
 .cr-question {
-
+  padding: $gutter;
+}
+.scenario-content {
+  padding: $gutter;
 }
 #splitter {
   height: 100%;
   border:0;
 
-  .pane-content{
-
-
-  }
-
 }
-
+#spreadsheet {
+  width: 100%;
+  margin-top: 20px;
+}
+#texteditor {
+  width: 100%;
+  margin-top: 20px;
+}
 .cr-nav-link {
   color: darken($white, 5);
   &:hover {
