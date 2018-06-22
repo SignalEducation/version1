@@ -39,10 +39,10 @@
           .glyphicon.glyphicon-arrow-left
           ='Previous'
         &#124;
-        %li.cr-nav-link#open-navigation-dialog
+        %li.cr-nav-link#open-navigation-dialog{onclick: 'openDialog(); return false;'}
           .glyphicon.glyphicon-screenshot
           ='Navigation'
-        %li.cr-nav-link#close-navigation-dialog.hidden
+        %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeDialog(); return false;'}
           .glyphicon.glyphicon-screenshot
           ='Navigation'
         &#124;
@@ -50,10 +50,10 @@
           ='Next'
           .glyphicon.glyphicon-arrow-right
 
-  #navigation-dialog
+  #navigation-dialog.nav-dialog
     -@constructed_response.scenario.scenario_questions.each do |scenario_question|
       %ul
-        %li{onclick: "revealQuestion(#{scenario_question.id}); return false;", class: 'dialog-link'}
+        %li{onclick: "revealQuestion(#{scenario_question.id}); return false;"}
           ='Question '
           =scenario_question.sorting_order
 
@@ -90,63 +90,69 @@
 
   });
 
+  // Navigation Dialog & Buttons
+  $("#navigation-dialog").kendoDialog({
+    width: "400px",
+    title: "Navigation",
+    closable: true,
+    modal: false,
+    visible: false,
+    close: onClose
+  });
 
-    var questionsList = #{@all_question_ids},
-        currentQuestion = 1;
-
-
-    function nextQuestion() {
-      $('.cr-question').hide();
-      if(currentQuestion < (questionsList.length -1 )) {
-        currentQuestion++;
-      }
-      $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
-    };
-
-    function previousQuestion() {
-      $('.cr-question').hide();
-      if(currentQuestion != 0) {
-        currentQuestion--;
-      }
-      $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
-    };
-
-    function revealQuestion(questionNumber) {
-      $('.cr-question').hide();
-      currentQuestion = questionsList.indexOf(questionNumber);
-      $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
-    };
+  var dialog = $("#navigation-dialog").data("kendoDialog");
 
 
-    $(document).on('ready page:load', function() {
-      questionNumber = questionsList[0];
-      revealQuestion(questionNumber);
-    });
+  var questionsList = #{@all_question_ids},
+      currentQuestion = 1;
 
 
-    $("#navigation-dialog").kendoDialog({
-      width: "400px",
-      title: "Navigation",
-      closable: true,
-      modal: false,
-      visible: false
-    });
 
-    $("#open-navigation-dialog").click(function(){
-      var dialog = $("#navigation-dialog").data("kendoDialog");
-      dialog.open();
-      $("#open-navigation-dialog").addClass('hidden');
-      $("#close-navigation-dialog").removeClass('hidden');
-    });
+  function openDialog() {
+    dialog.open();
+    $("#open-navigation-dialog").addClass('hidden');
+    $("#close-navigation-dialog").removeClass('hidden');
+  };
 
-    $("#close-navigation-dialog").click(function(){
-      var dialog = $("#navigation-dialog").data("kendoDialog");
-      dialog.close();
-      $("#open-navigation-dialog").removeClass('hidden');
-      $("#close-navigation-dialog").addClass('hidden');
-    });
+  function closeDialog() {
+    dialog.close();
+    $("#open-navigation-dialog").removeClass('hidden');
+    $("#close-navigation-dialog").addClass('hidden');
+  };
 
-    $(".dialog-link").click(function(){
-      var dialog = $("#navigation-dialog").data("kendoDialog");
-      dialog.close();
-    });
+  function onClose() {
+    $("#open-navigation-dialog").removeClass('hidden');
+    $("#close-navigation-dialog").addClass('hidden');
+  }
+
+  function nextQuestion() {
+    $('.cr-question').hide();
+    if(currentQuestion < (questionsList.length -1 )) {
+      currentQuestion++;
+    }
+    $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    closeDialog();
+  };
+
+  function previousQuestion() {
+    $('.cr-question').hide();
+    if(currentQuestion != 0) {
+      currentQuestion--;
+    }
+    $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    closeDialog();
+  };
+
+  function revealQuestion(questionNumber) {
+    $('.cr-question').hide();
+    currentQuestion = questionsList.indexOf(questionNumber);
+    $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    closeDialog();
+  };
+
+
+  $(document).on('ready page:load', function() {
+    questionNumber = questionsList[0];
+    revealQuestion(questionNumber);
+  });
+

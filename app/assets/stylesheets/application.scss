@@ -2682,6 +2682,20 @@ spinner {
   }
 }
 
+.nav-dialog {
+
+  ul, li {
+    padding: 0;
+    display: list-item;
+    border-bottom: 1px solid rgba(120,120,120,.5);
+    @include font-size(1.6);
+    &:hover {
+      cursor: pointer;
+      color: darken($white, 25);
+    }
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 23. CSS Partials that depend on existing classes in this file so must be imported last
