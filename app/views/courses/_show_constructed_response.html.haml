@@ -1,12 +1,25 @@
 .col-md-12
 
   .scenario-box-nav.scenario-box-nav-header
-    =@course_module_element.try(:name)
+    .cr-resources
+      =@course_module_element.try(:name)
 
-    =link_to library_special_link(@course_module.parent) do
-      .cr-nav-link.pull-right
-        -# Add 'Confirm' Modal
-        ='Exit'
+    .cr-navigation
+      %ul.cr-nav-block
+        %li.cr-nav-link
+          -# Add to a Start-screen with list of any previous attempts
+          ='Start'
+
+        &#124;
+        %li.cr-nav-link{onclick: 'submitForm(); return false;'}
+          -# Add to an End-screen  with list of question status and flagged_for_review
+          ='Submit'
+
+        &#124;
+        %li
+          =link_to library_special_link(@course_module.parent), class: 'cr-nav-link' do
+            -# Add 'Confirm' Modal
+            ='Exit'
 
 
   .scenario-box
@@ -57,7 +70,21 @@
           ='Question '
           =scenario_question.sorting_order
 
-
+  =form_for @course_module_element_user_log, url: update_constructed_response_user_log_courses_url, remote: true, html: {style: 'display: none;'} do |f|
+    =f.hidden_field :id
+    =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
+    =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
+    =f.text_field :user_id
+    =f.text_field :course_module_id
+    =f.text_field :course_module_element_id
+    =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
+    =f.fields_for :constructed_response_attempt do |constructed_response_attempt|
+      =constructed_response_attempt.text_field :user_id
+      =constructed_response_attempt.text_field :constructed_response_id
+      =constructed_response_attempt.text_field :scenario_id
+      =constructed_response_attempt.text_field :course_module_element_id
+      =constructed_response_attempt.text_field :original_scenario_text_content
+      =constructed_response_attempt.text_field :user_edited_scenario_text_content
 
 
 
@@ -132,6 +159,7 @@
     }
     $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
+    submitForm();
   };
 
   function previousQuestion() {
@@ -141,6 +169,7 @@
     }
     $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
+    submitForm();
   };
 
   function revealQuestion(questionNumber) {
@@ -148,6 +177,7 @@
     currentQuestion = questionsList.indexOf(questionNumber);
     $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
+    submitForm();
   };
 
 
@@ -155,4 +185,12 @@
     questionNumber = questionsList[0];
     revealQuestion(questionNumber);
   });
+
+
+
+
+
+  function submitForm() {
+    $("#edit_course_module_element_user_log_#{@course_module_element_user_log.id}").submit();
+  };
 

@@ -114,6 +114,18 @@ class CoursesController < ApplicationController
 
   end
 
+  def update_constructed_response_user_log
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
+
+    respond_to do |format|
+      if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
+        format.json { render json: @course_module_element_user_log, status: :created }
+      else
+        format.json { render json: @course_module_element_user_log.errors, status: :unprocessable_entity }
+      end
+
+    end
+  end
 
   private
 
@@ -132,6 +144,27 @@ class CoursesController < ApplicationController
                     :quiz_question_id,
                     :quiz_answer_id,
                     :answer_array
+            ]
+    )
+  end
+
+  def constructed_response_allowed_params
+    params.require(:course_module_element_user_log).permit(
+            :subject_course_id,
+            :student_exam_track_id,
+            :subject_course_user_log_id,
+            :course_module_id,
+            :course_module_element_id,
+            :user_id,
+            :time_taken_in_seconds,
+            constructed_response_attempt_attributes: [
+                    :id,
+                    :user_id,
+                    :constructed_response_id,
+                    :scenario_id,
+                    :course_module_element_id,
+                    :original_scenario_text_content,
+                    :user_edited_scenario_text_content
             ]
     )
   end
@@ -174,6 +207,32 @@ class CoursesController < ApplicationController
     @constructed_response = @course_module_element.constructed_response
     @all_questions = @constructed_response.scenario.scenario_questions
     @all_question_ids = @constructed_response.scenario.scenario_questions.map(&:id)
+
+    #Creates CONSTRUCTED_RESPONSE log when page renders
+    #TODO Add a conditional if a params cmeul_id is found, don't create new log find that one
+    #TODO For students retrying previous attempts
+    @course_module_element_user_log = CourseModuleElementUserLog.create(
+        session_guid: current_session_guid,
+        course_module_id: @course_module_element.course_module_id,
+        subject_course_id: @course_module_element.course_module.subject_course_id,
+        subject_course_user_log_id: @subject_course_user_log.id,
+        student_exam_track_id: @student_exam_track.try(:id),
+        course_module_element_id: @course_module_element.id,
+        is_quiz: false,
+        is_video: false,
+        is_constructed_response: true,
+        user_id: current_user.id
+    )
+    @constructed_response_attempt = ConstructedResponseAttempt.create(
+        user_id: current_user.id,
+        course_module_element_user_log_id: @course_module_element_user_log.id,
+        constructed_response_id: @constructed_response.id,
+        scenario_id: @constructed_response.scenario.id,
+        course_module_element_id: @constructed_response.course_module_element_id,
+        original_scenario_text_content: @constructed_response.scenario.text_content
+    )
+    #TODO Add a loop to create scenario_question_attempts for each @all_question_ids
+    #TODO And then within each of these a loop for each scenario_question_aanswer_attempt
   end
 
   protected

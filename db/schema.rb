@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180607200629) do
+ActiveRecord::Schema.define(version: 20180623164019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,27 @@ ActiveRecord::Schema.define(version: 20180607200629) do
   add_index "charges", ["subscription_id"], name: "index_charges_on_subscription_id", using: :btree
   add_index "charges", ["subscription_payment_card_id"], name: "index_charges_on_subscription_payment_card_id", using: :btree
   add_index "charges", ["user_id"], name: "index_charges_on_user_id", using: :btree
+
+  create_table "constructed_response_attempts", force: :cascade do |t|
+    t.integer  "constructed_response_id"
+    t.integer  "scenario_id"
+    t.integer  "course_module_element_id"
+    t.integer  "course_module_element_user_log_id"
+    t.integer  "user_id"
+    t.text     "original_scenario_text_content"
+    t.text     "user_edited_scenario_text_content"
+    t.string   "status"
+    t.boolean  "flagged_for_review",                default: false
+    t.integer  "time_in_seconds"
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
+  end
+
+  add_index "constructed_response_attempts", ["constructed_response_id"], name: "index_constructed_response_attempts_on_constructed_response_id", using: :btree
+  add_index "constructed_response_attempts", ["course_module_element_id"], name: "index_constructed_response_attempts_on_course_module_element_id", using: :btree
+  add_index "constructed_response_attempts", ["flagged_for_review"], name: "index_constructed_response_attempts_on_flagged_for_review", using: :btree
+  add_index "constructed_response_attempts", ["scenario_id"], name: "index_constructed_response_attempts_on_scenario_id", using: :btree
+  add_index "constructed_response_attempts", ["user_id"], name: "index_constructed_response_attempts_on_user_id", using: :btree
 
   create_table "constructed_responses", force: :cascade do |t|
     t.integer  "course_module_element_id"
@@ -194,6 +215,7 @@ ActiveRecord::Schema.define(version: 20180607200629) do
     t.integer  "subject_course_id"
     t.integer  "student_exam_track_id"
     t.integer  "subject_course_user_log_id"
+    t.boolean  "is_constructed_response",    default: false
   end
 
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree
@@ -418,6 +440,12 @@ ActiveRecord::Schema.define(version: 20180607200629) do
     t.string   "name"
     t.string   "discourse_ids"
     t.boolean  "home",                          default: false
+    t.string   "header_heading"
+    t.text     "header_paragraph"
+    t.string   "header_button_text"
+    t.string   "background_image"
+    t.string   "header_button_link"
+    t.string   "header_button_subtext"
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree

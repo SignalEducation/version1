@@ -93,6 +93,8 @@ Rails.application.routes.draw do
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
+      match :create_constructed_response_user_log, on: :collection, via: [:post]
+      match :update_constructed_response_user_log, on: :collection, via: [:put, :patch]
     end
     resources :enrollments, only: [:edit, :update, :create]
     get '/enrollments_management', to: 'enrollment_management#index', as: :enrollments_management
