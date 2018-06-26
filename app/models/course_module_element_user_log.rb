@@ -38,7 +38,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :count_of_questions_taken, :count_of_questions_correct,
                   :subject_course_id, :student_exam_track_id,
                   :subject_course_user_log_id, :is_constructed_response,
-                  :constructed_response_attempt_attributes
+                  :constructed_response_attempt_attributes,
+                  :scenario_question_attempts_attributes
 
   # Constants
 
@@ -53,6 +54,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   has_one   :constructed_response_attempt
 
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
+
 
   # validation
   validates :user_id, presence: true,

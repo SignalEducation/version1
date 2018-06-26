@@ -164,7 +164,20 @@ class CoursesController < ApplicationController
                     :scenario_id,
                     :course_module_element_id,
                     :original_scenario_text_content,
-                    :user_edited_scenario_text_content
+                    :user_edited_scenario_text_content,
+                    scenario_question_attempts_attributes: [
+                        :id,
+                        :constructed_response_attempt_id,
+                        :course_module_element_user_log_id,
+                        :user_id,
+                        :constructed_response_id,
+                        :scenario_question_id,
+                        :status,
+                        :flagged_for_review,
+                        :original_scenario_question_text,
+                        :user_edited_scenario_question_text,
+
+                    ]
             ]
     )
   end
@@ -231,6 +244,21 @@ class CoursesController < ApplicationController
         course_module_element_id: @constructed_response.course_module_element_id,
         original_scenario_text_content: @constructed_response.scenario.text_content
     )
+    @all_questions.each do |scenario_question|
+      scenario_question_attempt = ScenarioQuestionAttempt.create(
+          constructed_response_attempt_id: @constructed_response_attempt.id,
+          course_module_element_user_log_id: @course_module_element_user_log.id,
+          user_id: current_user.id,
+          constructed_response_id: @constructed_response.id,
+          scenario_question_id: scenario_question.id,
+          status: 'Unseen',
+          flagged_for_review: false,
+          original_scenario_question_text: scenario_question.text_content,
+          user_edited_scenario_question_text: scenario_question.text_content
+      )
+
+    end
+
     #TODO Add a loop to create scenario_question_attempts for each @all_question_ids
     #TODO And then within each of these a loop for each scenario_question_aanswer_attempt
   end

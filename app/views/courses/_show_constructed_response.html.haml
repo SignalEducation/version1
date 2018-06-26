@@ -32,6 +32,9 @@
         -@constructed_response.scenario.scenario_questions.each_with_index do |scenario_question, index|
           .cr-question{id: "cr_question_#{scenario_question.id}"}
 
+            .cr-nav-link{onclick: "reviewFlag(#{scenario_question.id}); return false;"}
+              ='Flag for review!'
+
             =scenario_question.text_content.try(:html_safe)
 
             -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
@@ -85,6 +88,17 @@
       =constructed_response_attempt.text_field :course_module_element_id
       =constructed_response_attempt.text_field :original_scenario_text_content
       =constructed_response_attempt.text_field :user_edited_scenario_text_content
+      =constructed_response_attempt.fields_for :scenario_question_attempts do |scenario_question_attempt|
+        =scenario_question_attempt.text_field :constructed_response_attempt_id
+        =scenario_question_attempt.text_field :course_module_element_user_log_id
+        =scenario_question_attempt.text_field :user_id
+        =scenario_question_attempt.text_field :constructed_response_id
+        =scenario_question_attempt.text_field :scenario_question_id
+        =scenario_question_attempt.text_field :status
+        =scenario_question_attempt.text_field :flagged_for_review
+        =scenario_question_attempt.text_field :original_scenario_question_text
+        =scenario_question_attempt.text_field :user_edited_scenario_question_text
+
 
 
 
@@ -159,7 +173,7 @@
     }
     $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
-    submitForm();
+    //submitForm();
   };
 
   function previousQuestion() {
@@ -169,7 +183,7 @@
     }
     $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
-    submitForm();
+    //submitForm();
   };
 
   function revealQuestion(questionNumber) {
@@ -177,6 +191,12 @@
     currentQuestion = questionsList.indexOf(questionNumber);
     $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
+    //submitForm();
+  };
+
+  function reviewFlag() {
+    $("#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_0_flagged_for_review").val('true');
+
     submitForm();
   };
 

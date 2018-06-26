@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180623164019) do
+ActiveRecord::Schema.define(version: 20180625175854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -748,6 +748,24 @@ ActiveRecord::Schema.define(version: 20180623164019) do
   add_index "scenario_answer_templates", ["course_module_element_id"], name: "index_scenario_answer_templates_on_course_module_element_id", using: :btree
   add_index "scenario_answer_templates", ["scenario_id"], name: "index_scenario_answer_templates_on_scenario_id", using: :btree
   add_index "scenario_answer_templates", ["scenario_question_id"], name: "index_scenario_answer_templates_on_scenario_question_id", using: :btree
+
+  create_table "scenario_question_attempts", force: :cascade do |t|
+    t.integer  "constructed_response_attempt_id"
+    t.integer  "course_module_element_user_log_id"
+    t.integer  "user_id"
+    t.integer  "constructed_response_id"
+    t.integer  "scenario_question_id"
+    t.string   "status"
+    t.boolean  "flagged_for_review",                 default: false
+    t.text     "original_scenario_question_text"
+    t.text     "user_edited_scenario_question_text"
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+  end
+
+  add_index "scenario_question_attempts", ["constructed_response_id"], name: "index_scenario_question_attempts_on_constructed_response_id", using: :btree
+  add_index "scenario_question_attempts", ["flagged_for_review"], name: "index_scenario_question_attempts_on_flagged_for_review", using: :btree
+  add_index "scenario_question_attempts", ["scenario_question_id"], name: "index_scenario_question_attempts_on_scenario_question_id", using: :btree
 
   create_table "scenario_questions", force: :cascade do |t|
     t.integer  "course_module_element_id"

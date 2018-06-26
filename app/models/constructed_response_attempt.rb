@@ -22,7 +22,7 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   # attr-accessible
   attr_accessible :constructed_response_id, :scenario_id, :course_module_element_id,
                   :course_module_element_user_log_id, :user_id, :original_scenario_text_content,
-                  :user_edited_scenario_text_content, :time_in_seconds
+                  :user_edited_scenario_text_content, :time_in_seconds, :scenario_question_attempts_attributes
 
   # Constants
   STATUS = %w(Abandoned Completed)
@@ -33,6 +33,9 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :course_module_element_user_log
   belongs_to :user
+  has_many :scenario_question_attempts
+
+  accepts_nested_attributes_for :scenario_question_attempts
 
   # validation
   validates :constructed_response_id, presence: true,
