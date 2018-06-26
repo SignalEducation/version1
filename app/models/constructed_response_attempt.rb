@@ -49,6 +49,7 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :original_scenario_text_content, presence: true
+  validates :user_edited_scenario_text_content, presence: true
 
   # callbacks
   before_destroy :check_dependencies

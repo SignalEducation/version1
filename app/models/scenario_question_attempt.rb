@@ -46,6 +46,7 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :status, presence: true
   validates :original_scenario_question_text, presence: true
+  validates :user_edited_scenario_question_text, presence: true
 
   # callbacks
   before_destroy :check_dependencies

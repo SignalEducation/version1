@@ -16,89 +16,94 @@
           ='Submit'
 
         &#124;
+        %li.cr-nav-link.review-flag
+          ='Flag for review'
+
+        &#124;
         %li
           =link_to library_special_link(@course_module.parent), class: 'cr-nav-link' do
             -# Add 'Confirm' Modal
             ='Exit'
 
-
   .scenario-box
-    #splitter
-      .pane-content
-        .scenario-content
-          =@constructed_response.scenario.text_content.try(:html_safe)
+    =form_for @course_module_element_user_log, url: update_constructed_response_user_log_courses_url, remote: true do |f|
+      =f.hidden_field :id
+      =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
+      =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
+      =f.hidden_field :user_id
+      =f.hidden_field :course_module_id
+      =f.hidden_field :course_module_element_id
+      =f.hidden_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
+      =f.fields_for :constructed_response_attempt do |constructed_response_attempt|
+        =constructed_response_attempt.hidden_field :user_id
+        =constructed_response_attempt.hidden_field :constructed_response_id
+        =constructed_response_attempt.hidden_field :scenario_id
+        =constructed_response_attempt.hidden_field :course_module_element_id
+        =constructed_response_attempt.hidden_field :original_scenario_text_content
+        =constructed_response_attempt.hidden_field :user_edited_scenario_text_content
+        -cr_attempt = constructed_response_attempt.object
 
-      .pane-content
-        -@constructed_response.scenario.scenario_questions.each_with_index do |scenario_question, index|
-          .cr-question{id: "cr_question_#{scenario_question.id}"}
+        #splitter
+          .pane-content
+            .scenario-content
+              =cr_attempt.user_edited_scenario_text_content.try(:html_safe)
 
-            .cr-nav-link{onclick: "reviewFlag(#{scenario_question.id}); return false;"}
-              ='Flag for review!'
+          .pane-content
+            =constructed_response_attempt.fields_for :scenario_question_attempts do |scenario_question_attempt|
+              =scenario_question_attempt.hidden_field :constructed_response_attempt_id
+              =scenario_question_attempt.hidden_field :course_module_element_user_log_id
+              =scenario_question_attempt.hidden_field :user_id
+              =scenario_question_attempt.hidden_field :constructed_response_id
+              =scenario_question_attempt.hidden_field :scenario_question_id
+              =scenario_question_attempt.hidden_field :status
+              =scenario_question_attempt.hidden_field :flagged_for_review
+              =scenario_question_attempt.hidden_field :original_scenario_question_text
+              =scenario_question_attempt.hidden_field :user_edited_scenario_question_text
+              -sq_attempt = scenario_question_attempt.object
 
-            =scenario_question.text_content.try(:html_safe)
-
-            -scenario_question.scenario_answer_templates.each do |scenario_answer_template|
-              -if scenario_answer_template.spreadsheet_editor?
-                =render partial: 'courses/spread_sheet_template', locals: {scenario_question: scenario_question, scenario_answer_template: scenario_answer_template, spreadsheet_json: scenario_answer_template.text_content}
-              -elsif scenario_answer_template.text_editor?
-                =render partial: 'courses/text_editor_template', locals: {scenario_question: scenario_question, scenario_answer_template: scenario_answer_template}
+              .cr-question{id: "scenario_question_attempt_#{sq_attempt.id}"}
 
 
-  .scenario-box-nav.scenario-box-nav-footer
-    .cr-resources
-      -# TODO
-      ='Resources Will Go Here!'
+                =sq_attempt.user_edited_scenario_question_text.try(:html_safe)
 
-    .cr-navigation
-      %ul.cr-nav-block
-        %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
-          .glyphicon.glyphicon-arrow-left
-          ='Previous'
-        &#124;
-        %li.cr-nav-link#open-navigation-dialog{onclick: 'openDialog(); return false;'}
-          .glyphicon.glyphicon-screenshot
-          ='Navigation'
-        %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeDialog(); return false;'}
-          .glyphicon.glyphicon-screenshot
-          ='Navigation'
-        &#124;
-        %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
-          ='Next'
-          .glyphicon.glyphicon-arrow-right
+                -sq_attempt.scenario_question.scenario_answer_templates.each do |scenario_answer_template|
+                  -if scenario_answer_template.spreadsheet_editor?
+                    =render partial: 'courses/spread_sheet_template', locals: {scenario_question: sq_attempt, scenario_answer_template: scenario_answer_template, spreadsheet_json: scenario_answer_template.text_content}
+                  -elsif scenario_answer_template.text_editor?
+                    =render partial: 'courses/text_editor_template', locals: {scenario_question: sq_attempt, scenario_answer_template: scenario_answer_template}
+
+
+    .scenario-box-nav.scenario-box-nav-footer
+      .cr-resources
+        -# TODO
+        ='Resources Will Go Here!'
+
+      .cr-navigation
+        %ul.cr-nav-block
+          %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
+            .glyphicon.glyphicon-arrow-left
+            ='Previous'
+          &#124;
+          %li.cr-nav-link#open-navigation-dialog{onclick: 'openDialog(); return false;'}
+            .glyphicon.glyphicon-screenshot
+            ='Navigation'
+          %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeDialog(); return false;'}
+            .glyphicon.glyphicon-screenshot
+            ='Navigation'
+          &#124;
+          %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
+            ='Next'
+            .glyphicon.glyphicon-arrow-right
+
 
   #navigation-dialog.nav-dialog
-    -@constructed_response.scenario.scenario_questions.each do |scenario_question|
+    -counter = 0
+    -@all_scenario_question_attempt_ids.each do |scenario_question_attempt_id|
+      -counter = counter + 1
       %ul
-        %li{onclick: "revealQuestion(#{scenario_question.id}); return false;"}
+        %li{onclick: "revealQuestion(#{scenario_question_attempt_id}); return false;"}
           ='Question '
-          =scenario_question.sorting_order
-
-  =form_for @course_module_element_user_log, url: update_constructed_response_user_log_courses_url, remote: true, html: {style: 'display: none;'} do |f|
-    =f.hidden_field :id
-    =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
-    =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
-    =f.text_field :user_id
-    =f.text_field :course_module_id
-    =f.text_field :course_module_element_id
-    =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
-    =f.fields_for :constructed_response_attempt do |constructed_response_attempt|
-      =constructed_response_attempt.text_field :user_id
-      =constructed_response_attempt.text_field :constructed_response_id
-      =constructed_response_attempt.text_field :scenario_id
-      =constructed_response_attempt.text_field :course_module_element_id
-      =constructed_response_attempt.text_field :original_scenario_text_content
-      =constructed_response_attempt.text_field :user_edited_scenario_text_content
-      =constructed_response_attempt.fields_for :scenario_question_attempts do |scenario_question_attempt|
-        =scenario_question_attempt.text_field :constructed_response_attempt_id
-        =scenario_question_attempt.text_field :course_module_element_user_log_id
-        =scenario_question_attempt.text_field :user_id
-        =scenario_question_attempt.text_field :constructed_response_id
-        =scenario_question_attempt.text_field :scenario_question_id
-        =scenario_question_attempt.text_field :status
-        =scenario_question_attempt.text_field :flagged_for_review
-        =scenario_question_attempt.text_field :original_scenario_question_text
-        =scenario_question_attempt.text_field :user_edited_scenario_question_text
-
+          =counter
 
 
 
@@ -115,7 +120,7 @@
 
     });
 
-    var outerBox = $("#splitter").parent();
+    var outerBox = $("#splitter").parent().parent().parent();
     var outerSplitter = $("#splitter").data("kendoSplitter");
     var browserWindow = $(window);
     var headerFooterHeight = $(".nav-header").height() + ($("#footer").height() - '30');
@@ -144,7 +149,7 @@
   var dialog = $("#navigation-dialog").data("kendoDialog");
 
 
-  var questionsList = #{@all_question_ids},
+  var questionsList = #{@all_scenario_question_attempt_ids},
       currentQuestion = 1;
 
 
@@ -171,9 +176,9 @@
     if(currentQuestion < (questionsList.length -1 )) {
       currentQuestion++;
     }
-    $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
-    //submitForm();
+    submitForm();
   };
 
   function previousQuestion() {
@@ -181,24 +186,19 @@
     if(currentQuestion != 0) {
       currentQuestion--;
     }
-    $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
-    //submitForm();
+    submitForm();
   };
 
   function revealQuestion(questionNumber) {
     $('.cr-question').hide();
     currentQuestion = questionsList.indexOf(questionNumber);
-    $('#cr_question_' + questionsList[currentQuestion]).fadeIn();
+    $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     closeDialog();
-    //submitForm();
-  };
-
-  function reviewFlag() {
-    $("#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_0_flagged_for_review").val('true');
-
     submitForm();
   };
+
 
 
   $(document).on('ready page:load', function() {

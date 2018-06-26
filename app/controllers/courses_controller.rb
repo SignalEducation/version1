@@ -242,7 +242,8 @@ class CoursesController < ApplicationController
         constructed_response_id: @constructed_response.id,
         scenario_id: @constructed_response.scenario.id,
         course_module_element_id: @constructed_response.course_module_element_id,
-        original_scenario_text_content: @constructed_response.scenario.text_content
+        original_scenario_text_content: @constructed_response.scenario.text_content,
+        user_edited_scenario_text_content: @constructed_response.scenario.text_content
     )
     @all_questions.each do |scenario_question|
       scenario_question_attempt = ScenarioQuestionAttempt.create(
@@ -258,9 +259,10 @@ class CoursesController < ApplicationController
       )
 
     end
+    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
 
-    #TODO Add a loop to create scenario_question_attempts for each @all_question_ids
-    #TODO And then within each of these a loop for each scenario_question_aanswer_attempt
+
+    #TODO And then within each of these a loop for each scenario_question_answer_attempt
   end
 
   protected
