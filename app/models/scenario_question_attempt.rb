@@ -21,7 +21,8 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
   # attr-accessible
   attr_accessible :constructed_response_attempt_id, :course_module_element_user_log_id, :user_id,
                   :constructed_response_id, :scenario_question_id, :status, :flagged_for_review,
-                  :original_scenario_question_text, :user_edited_scenario_question_text
+                  :original_scenario_question_text, :user_edited_scenario_question_text,
+                  :scenario_answer_attempts_attributes
 
   # Constants
   STATUS = %w(Unseen Seen)
@@ -32,6 +33,9 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
   belongs_to :user
   belongs_to :constructed_response
   belongs_to :scenario_question
+  has_many :scenario_answer_attempts
+
+  accepts_nested_attributes_for :scenario_answer_attempts
 
   # validation
   validates :constructed_response_attempt_id, presence: true,
@@ -44,7 +48,7 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :scenario_question_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :status, presence: true
+  validates :status, presence: true, inclusion: {in: STATUS}
   validates :original_scenario_question_text, presence: true
   validates :user_edited_scenario_question_text, presence: true
 

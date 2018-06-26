@@ -22,7 +22,8 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   # attr-accessible
   attr_accessible :constructed_response_id, :scenario_id, :course_module_element_id,
                   :course_module_element_user_log_id, :user_id, :original_scenario_text_content,
-                  :user_edited_scenario_text_content, :time_in_seconds, :scenario_question_attempts_attributes
+                  :user_edited_scenario_text_content, :time_in_seconds,
+                  :scenario_question_attempts_attributes
 
   # Constants
   STATUS = %w(Abandoned Completed)

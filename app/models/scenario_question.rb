@@ -25,6 +25,7 @@ class ScenarioQuestion < ActiveRecord::Base
   belongs_to :constructed_response
   belongs_to :scenario
   has_many :scenario_answer_templates
+  has_many :scenario_question_attempts
 
   accepts_nested_attributes_for :scenario_answer_templates, reject_if: lambda { |attributes| question_nested_answer_template_is_blank?(attributes) }
 

@@ -32,6 +32,7 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
   belongs_to :constructed_response
   belongs_to :scenario
   belongs_to :scenario_question
+  has_many :scenario_answer_attempts
 
   # validation
   validates :scenario_question_id, presence: true, on: :update,

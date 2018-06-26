@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180625175854) do
+ActiveRecord::Schema.define(version: 20180626115218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -731,6 +731,21 @@ ActiveRecord::Schema.define(version: 20180625175854) do
   add_index "refunds", ["status"], name: "index_refunds_on_status", using: :btree
   add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
   add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
+
+  create_table "scenario_answer_attempts", force: :cascade do |t|
+    t.integer  "scenario_question_attempt_id"
+    t.integer  "constructed_response_attempt_id"
+    t.integer  "course_module_element_user_log_id"
+    t.integer  "user_id"
+    t.integer  "scenario_question_id"
+    t.integer  "constructed_response_id"
+    t.integer  "scenario_answer_template_id"
+    t.text     "original_answer_template_text"
+    t.text     "user_edited_answer_template_text"
+    t.string   "editor_type"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
 
   create_table "scenario_answer_templates", force: :cascade do |t|
     t.integer  "course_module_element_id"

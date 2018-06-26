@@ -176,6 +176,19 @@ class CoursesController < ApplicationController
                         :flagged_for_review,
                         :original_scenario_question_text,
                         :user_edited_scenario_question_text,
+                        scenario_answer_attempts_attributes: [
+                            :id,
+                            :scenario_question_attempt_id,
+                            :constructed_response_attempt_id,
+                            :course_module_element_user_log_id,
+                            :user_id,
+                            :scenario_question_id,
+                            :constructed_response_id,
+                            :scenario_answer_template_id,
+                            :original_answer_template_text,
+                            :user_edited_answer_template_text,
+                            :editor_type
+                        ]
 
                     ]
             ]
@@ -258,11 +271,24 @@ class CoursesController < ApplicationController
           user_edited_scenario_question_text: scenario_question.text_content
       )
 
+      scenario_question.scenario_answer_templates.each do |scenario_answer_template|
+        scenario_answer_attempt = ScenarioAnswerAttempt.create(
+            scenario_question_attempt_id: scenario_question_attempt.id,
+            constructed_response_attempt_id: @constructed_response_attempt.id,
+            course_module_element_user_log_id: @course_module_element_user_log.id,
+            user_id: current_user.id,
+            scenario_question_id: scenario_question.id,
+            constructed_response_id: @constructed_response.id,
+            scenario_answer_template_id: scenario_answer_template.id,
+            original_answer_template_text: scenario_answer_template.text_content,
+            user_edited_answer_template_text: scenario_answer_template.text_content,
+            editor_type: scenario_answer_template.editor_type
+        )
+
+      end
     end
     @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
 
-
-    #TODO And then within each of these a loop for each scenario_question_answer_attempt
   end
 
   protected

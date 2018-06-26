@@ -66,11 +66,24 @@
 
                 =sq_attempt.user_edited_scenario_question_text.try(:html_safe)
 
-                -sq_attempt.scenario_question.scenario_answer_templates.each do |scenario_answer_template|
-                  -if scenario_answer_template.spreadsheet_editor?
-                    =render partial: 'courses/spread_sheet_template', locals: {scenario_question: sq_attempt, scenario_answer_template: scenario_answer_template, spreadsheet_json: scenario_answer_template.text_content}
-                  -elsif scenario_answer_template.text_editor?
-                    =render partial: 'courses/text_editor_template', locals: {scenario_question: sq_attempt, scenario_answer_template: scenario_answer_template}
+                =scenario_question_attempt.fields_for :scenario_answer_attempts do |scenario_answer_attempt|
+                  =scenario_answer_attempt.hidden_field :scenario_question_attempt_id
+                  =scenario_answer_attempt.hidden_field :constructed_response_attempt_id
+                  =scenario_answer_attempt.hidden_field :course_module_element_user_log_id
+                  =scenario_answer_attempt.hidden_field :user_id
+                  =scenario_answer_attempt.hidden_field :scenario_question_id
+                  =scenario_answer_attempt.hidden_field :constructed_response_id
+                  =scenario_answer_attempt.hidden_field :scenario_answer_template_id
+                  =scenario_answer_attempt.hidden_field :original_answer_template_text
+                  =scenario_answer_attempt.hidden_field :user_edited_answer_template_text
+                  -sa_attempt = scenario_answer_attempt.object
+
+
+
+                  -if sa_attempt.spreadsheet_editor?
+                    =render partial: 'courses/spread_sheet_template', locals: {sq_attempt: sq_attempt, sa_attempt: sa_attempt, scenario_answer_attempt: scenario_answer_attempt, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
+                  -#elsif sa_attempt.text_editor?
+                    =render partial: 'courses/text_editor_template', locals: {scenario_question_attempt: sq_attempt, scenario_answer_attempt: sa_attempt, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
 
 
     .scenario-box-nav.scenario-box-nav-footer
@@ -171,12 +184,29 @@
     $("#close-navigation-dialog").addClass('hidden');
   }
 
+  function updateHiddenField(sq_attempt_id, sa_attempt_id) {
+
+    var data = $("#scenario_question_attempt_" + sq_attempt_id + "_scenario_answer_attempt_" + sa_attempt_id + "_spreadsheet").data("kendoSpreadsheet");
+    var data2 = data.toJSON();
+    var json = JSON.stringify(data2, null, 2);
+
+    var ssa = $("#input_scenario_question_attempt_" + sq_attempt_id + "_scenario_answer_attempt_" + sa_attempt_id + "_spreadsheet_json");
+    ssa.val(json);
+  }
+
+
   function nextQuestion() {
     $('.cr-question').hide();
     if(currentQuestion < (questionsList.length -1 )) {
       currentQuestion++;
     }
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+
+    $('.answer_spreadsheet').each(function (index, value){
+      updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
+    });
+
+
     closeDialog();
     submitForm();
   };
@@ -211,6 +241,10 @@
 
 
   function submitForm() {
+
+
+    //TODO Find all texteditors and call the updateHiddenField function on each
+
     $("#edit_course_module_element_user_log_#{@course_module_element_user_log.id}").submit();
   };
 
