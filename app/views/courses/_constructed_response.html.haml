@@ -6,16 +6,6 @@
 
     .cr-navigation
       %ul.cr-nav-block
-        %li.cr-nav-link
-          -# Add to a Start-screen with list of any previous attempts
-          ='Start'
-
-        &#124;
-        %li.cr-nav-link{onclick: 'submitForm(); return false;'}
-          -# Add to an End-screen  with list of question status and flagged_for_review
-          ='Submit'
-
-        &#124;
         %li.cr-nav-link.review-flag
           ='Flag for review'
 
@@ -48,6 +38,7 @@
             .scenario-content
               =cr_attempt.user_edited_scenario_text_content.try(:html_safe)
 
+          -#TODO This pane is not resizing on window resize, other pane is resizing
           .pane-content
             =constructed_response_attempt.fields_for :scenario_question_attempts do |scenario_question_attempt|
               =scenario_question_attempt.hidden_field :constructed_response_attempt_id
@@ -233,21 +224,13 @@
   };
 
 
-
   $(document).on('ready page:load', function() {
     questionNumber = questionsList[0];
     revealQuestion(questionNumber);
   });
 
 
-
-
-
   function submitForm() {
-
-
-    //TODO Find all texteditors and call the updateHiddenField function on each
-
     $("#edit_course_module_element_user_log_#{@course_module_element_user_log.id}").submit();
   };
 

@@ -4,7 +4,15 @@
     .row
       -if @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
         -if @course_module_element.try(:is_constructed_response)
-          =render partial: 'courses/constructed_response'
+          #constructed-response-window
+            :javascript
+              var dialog = $("#constructed-response-window");
+              kendo.ui.progress(dialog, true);
+              kendo.ui.progress.messages = {
+                loading: "Processing..."
+              };
+
+            =render partial: 'courses/constructed_response'
         -else
           %h2 Sorry Unknown Content Type Requested
           -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
@@ -16,3 +24,11 @@
 
 
 
+
+:javascript
+
+  $(window).load(function() {
+    // page is fully loaded, including all frames, objects and images
+    var dialog = $("#constructed-response-window");
+    //kendo.ui.progress(dialog, false);
+  });
