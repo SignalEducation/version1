@@ -67,6 +67,7 @@
                 =sq_attempt.user_edited_scenario_question_text.try(:html_safe)
 
                 =scenario_question_attempt.fields_for :scenario_answer_attempts do |scenario_answer_attempt|
+                  -sa_attempt = scenario_answer_attempt.object
                   =scenario_answer_attempt.hidden_field :scenario_question_attempt_id
                   =scenario_answer_attempt.hidden_field :constructed_response_attempt_id
                   =scenario_answer_attempt.hidden_field :course_module_element_user_log_id
@@ -75,15 +76,17 @@
                   =scenario_answer_attempt.hidden_field :constructed_response_id
                   =scenario_answer_attempt.hidden_field :scenario_answer_template_id
                   =scenario_answer_attempt.hidden_field :original_answer_template_text
-                  =scenario_answer_attempt.hidden_field :user_edited_answer_template_text
-                  -sa_attempt = scenario_answer_attempt.object
+
+                  -if sa_attempt.spreadsheet_editor?
+                    =scenario_answer_attempt.hidden_field :user_edited_answer_template_text
+
 
 
 
                   -if sa_attempt.spreadsheet_editor?
                     =render partial: 'courses/spread_sheet_template', locals: {sq_attempt: sq_attempt, sa_attempt: sa_attempt, scenario_answer_attempt: scenario_answer_attempt, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
-                  -#elsif sa_attempt.text_editor?
-                    =render partial: 'courses/text_editor_template', locals: {scenario_question_attempt: sq_attempt, scenario_answer_attempt: sa_attempt, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
+                  -elsif sa_attempt.text_editor?
+                    =render partial: 'courses/text_editor_template', locals: {scenario_answer_attempt: scenario_answer_attempt, sq_attempt: sq_attempt, sa_attempt: sa_attempt}
 
 
     .scenario-box-nav.scenario-box-nav-footer

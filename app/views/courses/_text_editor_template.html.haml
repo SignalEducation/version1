@@ -1,11 +1,11 @@
 .answer_texteditor
-  =text_area :scenario_answer_template, :text_content, id: "scenario_question_#{scenario_question.id}_answer_template_#{scenario_answer_template.id}_texteditor"
+  =scenario_answer_attempt.text_area :user_edited_answer_template_text, id: "scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_texteditor"
 
 
 
 :javascript
   $(document).ready(function(){
-    $("#scenario_question_#{scenario_question.id}_answer_template_#{scenario_answer_template.id}_texteditor").kendoEditor({
+    $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_texteditor").kendoEditor({
       encoded: false,
       tools: [
         "bold",
