@@ -1,0 +1,27 @@
+.col-md-12
+
+  .scenario-box-nav.scenario-box-nav-header
+    .cr-resources
+      =@course_module_element.try(:name).try(:html_safe)
+
+  .scenario-box
+    .col-sm-6
+      %ul
+        -@course_module_element_user_logs.each do |cmeul|
+          =link_to courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id) do
+            %li
+              ="CMEUL #{cmeul.id}"
+
+    .col-sm-6
+      =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.subject_course.name_url, course_module_name_url: @course_module_element.course_module.name_url, course_module_element_name_url: @course_module_element.name_url) do
+
+        .btn.btn-red.btn-secondary
+          ='New Constructed Response Session'
+
+
+
+  .scenario-box-nav.scenario-box-nav-footer
+    .cr-resources
+      ='Resources Will Go Here!'
+
+

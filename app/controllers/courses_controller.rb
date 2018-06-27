@@ -1,8 +1,8 @@
 class CoursesController < ApplicationController
 
-  skip_after_filter :intercom_rails_auto_include, only: :show
+  skip_after_filter :intercom_rails_auto_include, only: :show_constructed_response
   before_action :logged_in_required
-  before_action :check_permission, only: :show
+  before_action :check_permission, only: [:show, :show_constructed_response]
 
   def show
     if @course_module && @course_module.active_children
@@ -15,7 +15,7 @@ class CoursesController < ApplicationController
       if @course_module_element.is_quiz
         set_up_quiz
       elsif @course_module_element.is_constructed_response
-        set_up_constructed_response
+        set_up_constructed_response_start_screen
       end
     else
       ## The URL params are wrong ##
@@ -112,6 +112,31 @@ class CoursesController < ApplicationController
       }
     end
 
+  end
+
+  def show_constructed_response
+    if @course_module && @course_module.active_children
+      @course_module_element = @course_module.active_children.find_by(name_url: params[:course_module_element_name_url])
+      @course_module_element ||= @course_module.active_children.all_in_order.first
+
+      #CME name is not in the seo title because it is html_safe
+      seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
+
+      if @course_module_element.is_constructed_response
+        if params[:course_module_element_user_log_id]
+          set_up_previous_constructed_response
+        else
+          set_up_new_constructed_response
+        end
+
+      end
+
+    else
+      ## The URL params are wrong ##
+      flash[:warning] = t('controllers.courses.show.warning')
+      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+      redirect_to library_special_link(@course)
+    end
   end
 
   def update_constructed_response_user_log
@@ -227,7 +252,12 @@ class CoursesController < ApplicationController
     @mathjax_required = true
   end
 
-  def set_up_constructed_response
+  def set_up_constructed_response_start_screen
+    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse
+
+  end
+
+  def set_up_new_constructed_response
     @mathjax_required = true
     @time_allowed = @course_module_element.constructed_response.time_allowed
     @constructed_response = @course_module_element.constructed_response
@@ -289,6 +319,19 @@ class CoursesController < ApplicationController
     end
     @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
 
+  end
+
+
+  def set_up_previous_constructed_response
+    @mathjax_required = true
+    @constructed_response = @course_module_element.constructed_response
+    @time_allowed = @constructed_response.time_allowed
+    @all_question_ids = @constructed_response.scenario.scenario_questions.map(&:id)
+
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log_id])
+    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+
+    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
   end
 
   protected
