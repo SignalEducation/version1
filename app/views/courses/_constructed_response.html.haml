@@ -117,7 +117,7 @@
 :javascript
 
 
-  $(document).ready(function() {
+  $(document).on('ready page:load', function() {
 
     $("#splitter").kendoSplitter({
       panes: [
@@ -140,6 +140,9 @@
 
     resizeSplitter();
     browserWindow.resize(resizeSplitter);
+
+    questionNumber = questionsList[0];
+    revealQuestion(questionNumber);
 
   });
 
@@ -223,11 +226,6 @@
     submitForm();
   };
 
-
-  $(document).on('ready page:load', function() {
-    questionNumber = questionsList[0];
-    revealQuestion(questionNumber);
-  });
 
 
   function submitForm() {

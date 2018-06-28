@@ -2696,6 +2696,10 @@ spinner {
   }
 }
 
+.k-loading-mask .k-loading-color {
+  background-color: #F8FAFF;
+  opacity: 1;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 23. CSS Partials that depend on existing classes in this file so must be imported last

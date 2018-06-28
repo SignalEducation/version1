@@ -6,11 +6,9 @@
         -if @course_module_element.try(:is_constructed_response)
           #constructed-response-window
             :javascript
-              var dialog = $("#constructed-response-window");
-              kendo.ui.progress(dialog, true);
-              kendo.ui.progress.messages = {
-                loading: "Processing..."
-              };
+              var crDialog = $("#constructed-response-window");
+              kendo.ui.progress(crDialog, true);
+
 
             =render partial: 'courses/constructed_response'
         -else
@@ -28,7 +26,9 @@
 :javascript
 
   $(window).load(function() {
-    // page is fully loaded, including all frames, objects and images
-    var dialog = $("#constructed-response-window");
-    //kendo.ui.progress(dialog, false);
+    var crDialog = $("#constructed-response-window");
+    setTimeout(function(){
+      kendo.ui.progress(crDialog, false);
+    }, 1800);
   });
+
