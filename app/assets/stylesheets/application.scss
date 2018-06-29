@@ -2715,7 +2715,12 @@ spinner {
     color: darken($white, 15);
   }
 }
-
+.submission-pane-content {
+  padding: $gutter;
+  .final-submission {
+    margin-top: $gutter*2;
+  }
+}
 .nav-dialog {
 
   ul, li {

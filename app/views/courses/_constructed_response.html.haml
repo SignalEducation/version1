@@ -79,6 +79,32 @@
                   -elsif sa_attempt.text_editor?
                     =render partial: 'courses/text_editor_template', locals: {scenario_answer_attempt: scenario_answer_attempt, sq_attempt: sq_attempt, sa_attempt: sa_attempt}
 
+            .submission-pane-content.hidden
+              .table-responsive.l-margin-top
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th='Question'
+                      %th='Flagged for review'
+                      %th='Status'
+
+                  %tbody
+                    -counter = 0
+                    -@all_scenario_question_attempt.each do |question_attempt|
+                      -counter = counter + 1
+                      %tr
+                        %td
+                          ="Question #{counter}"
+                        %td
+                          =tick_or_cross(question_attempt.flagged_for_review)
+                        %td
+                          =question_attempt.status
+              .final-submission.text-center
+                =link_to '#' do
+                  .btn.btn-red.btn-secondary
+                    ='Submit Constructed Response'
+
+
 
     .scenario-box-nav.scenario-box-nav-footer
       .cr-resources
@@ -97,6 +123,10 @@
           %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeDialog(); return false;'}
             .glyphicon.glyphicon-screenshot
             ='Navigation'
+          &#124;
+          %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
+            ='Submit'
+
           &#124;
           %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
             ='Next'
@@ -202,7 +232,7 @@
     $('.answer_spreadsheet').each(function (index, value){
       updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
     });
-
+    $('.submission-pane-content').addClass('hidden');
 
     closeDialog();
     submitForm();
@@ -214,6 +244,7 @@
       currentQuestion--;
     }
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+    $('.submission-pane-content').addClass('hidden');
     closeDialog();
     submitForm();
   };
@@ -222,6 +253,14 @@
     $('.cr-question').hide();
     currentQuestion = questionsList.indexOf(questionNumber);
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+    $('.submission-pane-content').addClass('hidden');
+    closeDialog();
+    submitForm();
+  };
+
+  function loadSubmission() {
+    $('.cr-question').hide();
+    $('.submission-pane-content').removeClass('hidden');
     closeDialog();
     submitForm();
   };

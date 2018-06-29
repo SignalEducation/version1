@@ -266,8 +266,6 @@ class CoursesController < ApplicationController
     @all_question_ids = @constructed_response.scenario.scenario_questions.map(&:id)
 
     #Creates CONSTRUCTED_RESPONSE log when page renders
-    #TODO Add a conditional if a params cmeul_id is found, don't create new log find that one
-    #TODO For students retrying previous attempts
     @course_module_element_user_log = CourseModuleElementUserLog.create(
         session_guid: current_session_guid,
         course_module_id: @course_module_element.course_module_id,
@@ -318,6 +316,7 @@ class CoursesController < ApplicationController
 
       end
     end
+    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts
     @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
 
   end
@@ -332,6 +331,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log_id])
     @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
 
+    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts
     @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
   end
 
