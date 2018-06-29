@@ -15,7 +15,26 @@
     $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").kendoSpreadsheet({
       sheetsbar: false,
       scrollable: false,
-      toolbar: {insert: false, data: false }
+      toolbar: {
+        insert: false,
+        data: false,
+        home: [
+          [ "cut", "copy", "paste" ],
+          "fontSize",
+          [ "bold", "italic", "underline" ],
+          "backgroundColor", "textColor",
+          "alignment",
+          "format",
+          {
+              type: "button",
+              text: "Custom",
+              spriteCssClass: "k-icon k-i-cog",
+              click: function() {
+                  window.alert("custom tool");
+              }
+          }
+        ]
+      }
      });
 
     $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet").fromJSON(paredJson);
