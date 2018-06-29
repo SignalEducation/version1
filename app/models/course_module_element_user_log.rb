@@ -84,7 +84,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
-  scope :constructed_reponses, -> { where(is_constructed_response: true) }
+  scope :constructed_responses, -> { where(is_constructed_response: true) }
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }

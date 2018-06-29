@@ -1,26 +1,55 @@
 .col-md-12
 
-  .scenario-box-nav.scenario-box-nav-header
+  .start-screen-box-nav.start-screen-box-nav-header
     .cr-resources
       =@course_module_element.try(:name).try(:html_safe)
 
-  .scenario-box
-    .col-sm-6
+  .start-screen-box
+    .col-sm-6.l-margin-bottom
+      %h3.l-margin-bottom
+        ='IMPORTANT - PLEASE READ'
+      %h6.l-margin-bottom
+        ='BEFORE ATTEMPTING THIS STEP:'
+
       %ul
-        -@course_module_element_user_logs.each do |cmeul|
-          =link_to courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id) do
-            %li
-              ="CMEUL #{cmeul.id}"
+        %li='Please do not attempt until you are ready to complete this step.'
+        %li='If you are not ready, please exit the assessment now.'
+        %li='When you are ready to make your attempt, please ensure you have allocated time to complete this step.'
+        %li='The timer has been set to indicate the time you would have to complete this step under real exam conditions. When the timer runs out, it will not end the assessment, but instead only produce a warning, and you can continue until you are ready to submit your step attempt.'
 
     .col-sm-6
       =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.subject_course.name_url, course_module_name_url: @course_module_element.course_module.name_url, course_module_element_name_url: @course_module_element.name_url) do
-
-        .btn.btn-red.btn-secondary
+        .btn.btn-red.btn-secondary.full-width
           ='New Constructed Response Session'
 
 
 
-  .scenario-box-nav.scenario-box-nav-footer
+      .table-responsive.l-margin-top
+        %table.table{style: 'font-size: 18px;'}
+          %thead
+            %tr
+              %th='Previous Attempts'
+              %th='Date'
+              %th='Status'
+
+          %tbody
+            -@course_module_element_user_logs.each do |cmeul|
+              %tr
+                %td
+                  =link_to "CMEUL #{cmeul.id}", courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id)
+                %td
+                  =humanize_datetime(cmeul.updated_at)
+                %td
+                  =#cmeul.constructed_response_attempt.status
+                  -if cmeul.id.even?
+                    ='Abandoned'
+                  -else
+                    ='Completed'
+
+
+
+
+  .start-screen-box-nav.start-screen-box-nav-footer
     .cr-resources
       ='Resources Will Go Here!'
 

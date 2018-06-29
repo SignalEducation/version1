@@ -253,7 +253,8 @@ class CoursesController < ApplicationController
   end
 
   def set_up_constructed_response_start_screen
-    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse
+    #Order by most recently updated_at
+    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse[0...5]
 
   end
 

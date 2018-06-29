@@ -2614,12 +2614,46 @@ spinner {
 // 22. Kendo UI Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+.start-screen-box {
+  display: block;
+  position: relative;
+  padding: $gutter*1.5;
+  border-radius: 0;
+  background: $white;
+  color: $colour-7;
+  @include clearfix();
+
+  ul {
+    margin: 0 $gutter;
+  }
+
+  ul, li {
+    display: list-item;
+    list-style: disc;
+
+    padding: 0;
+    @include font-size(1.6);
+  }
+
+}
+.start-screen-box-nav {
+  padding: $gutter/2.5 $gutter;
+  background-color: $colour-21;
+  color: $white;
+  &.start-screen-box-nav-header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  &.start-screen-box-nav-footer {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+}
 
 .scenario-box {
   display: block;
   position: relative;
   height: 300px;
-  //padding: $gutter;
   border-radius: 0;
   background: $white;
   color: $colour-7;
