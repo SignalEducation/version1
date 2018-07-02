@@ -38,7 +38,7 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
   validates :scenario_question_id, presence: true, on: :update,
             numericality: {only_integer: true, greater_than: 0}
   validates :editor_type, presence: true, inclusion: {in: FORMAT_TYPES},
-            on: :update, length: {maximum: 255}
+            length: {maximum: 255}
 
   # callbacks
   before_destroy :check_dependencies

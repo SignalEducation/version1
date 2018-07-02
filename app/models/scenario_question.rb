@@ -42,7 +42,7 @@ class ScenarioQuestion < ActiveRecord::Base
 
   # class methods
   def self.question_nested_answer_template_is_blank?(attributes)
-    attributes['text_content'].blank?
+    attributes['editor_type'].blank?
   end
 
 

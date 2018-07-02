@@ -52,8 +52,6 @@ class ScenarioAnswerAttempt < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :scenario_answer_template_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :original_answer_template_text, presence: true
-  validates :user_edited_answer_template_text, presence: true
   validates :editor_type, presence: true, inclusion: {in: ScenarioAnswerTemplate::FORMAT_TYPES}
 
   # callbacks

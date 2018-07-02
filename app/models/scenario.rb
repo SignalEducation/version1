@@ -56,6 +56,7 @@ class Scenario < ActiveRecord::Base
     2.times do |number|
       self.scenario_questions.last.scenario_answer_templates.build(
           sorting_order: number + 1,
+          text_content: '',
           editor_type: (number.odd? ? 'text_editor' : 'spreadsheet_editor')
       )
     end

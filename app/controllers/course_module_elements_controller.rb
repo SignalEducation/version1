@@ -125,7 +125,7 @@ class CourseModuleElementsController < ApplicationController
 
     verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name) if @course_module_element.is_video?
 
-    binding.pry
+
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')

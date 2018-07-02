@@ -301,6 +301,7 @@ class CoursesController < ApplicationController
       )
 
       scenario_question.scenario_answer_templates.each do |scenario_answer_template|
+
         scenario_answer_attempt = ScenarioAnswerAttempt.create(
             scenario_question_attempt_id: scenario_question_attempt.id,
             constructed_response_attempt_id: @constructed_response_attempt.id,
@@ -309,10 +310,11 @@ class CoursesController < ApplicationController
             scenario_question_id: scenario_question.id,
             constructed_response_id: @constructed_response.id,
             scenario_answer_template_id: scenario_answer_template.id,
-            original_answer_template_text: scenario_answer_template.text_content,
-            user_edited_answer_template_text: scenario_answer_template.text_content,
+            original_answer_template_text: scenario_answer_template.text_content || '[]',
+            user_edited_answer_template_text: scenario_answer_template.text_content || '[]',
             editor_type: scenario_answer_template.editor_type
         )
+
 
       end
     end
