@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180703090752) do
+ActiveRecord::Schema.define(version: 20180703100240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -748,10 +748,11 @@ ActiveRecord::Schema.define(version: 20180703090752) do
     t.integer  "scenario_question_id"
     t.integer  "sorting_order"
     t.string   "editor_type"
-    t.text     "text_content"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.datetime "destroyed_at"
+    t.text     "text_editor_content"
+    t.text     "spreadsheet_editor_content"
   end
 
   add_index "scenario_answer_templates", ["scenario_question_id"], name: "index_scenario_answer_templates_on_scenario_question_id", using: :btree

@@ -2,23 +2,23 @@
 #
 # Table name: scenario_answer_templates
 #
-#  id                   :integer          not null, primary key
-#  scenario_question_id :integer
-#  sorting_order        :integer
-#  editor_type          :string
-#  text_content         :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  destroyed_at         :datetime
+#  id                         :integer          not null, primary key
+#  scenario_question_id       :integer
+#  sorting_order              :integer
+#  editor_type                :string
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  destroyed_at               :datetime
+#  text_editor_content        :text
+#  spreadsheet_editor_content :text
 #
 
 class ScenarioAnswerTemplate < ActiveRecord::Base
 
-  #TODO Is this needed???
-  serialize :text_content, JSON
 
   # attr-accessible
-  attr_accessible :scenario_question_id, :sorting_order, :editor_type, :text_content
+  attr_accessible :scenario_question_id, :sorting_order, :editor_type, :text_editor_content,
+                  :spreadsheet_editor_content
 
   # Constants
   FORMAT_TYPES = %w(text_editor spreadsheet_editor)
@@ -33,6 +33,7 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :editor_type, presence: true, inclusion: {in: FORMAT_TYPES},
             length: {maximum: 255}
+  validate  :text_or_spreadsheet_content_present
 
   # callbacks
   before_destroy :check_dependencies
@@ -53,6 +54,10 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
 
   def text_editor?
     editor_type == 'text_editor'
+  end
+
+  def text_or_spreadsheet_content_present
+
   end
 
   protected

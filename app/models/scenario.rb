@@ -45,7 +45,7 @@ class Scenario < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def add_an_empty_scenario_question
@@ -54,7 +54,7 @@ class Scenario < ActiveRecord::Base
     2.times do |number|
       self.scenario_questions.last.scenario_answer_templates.build(
           sorting_order: number + 1,
-          text_content: '',
+          spreadsheet_editor_content: '[]',
           editor_type: (number.odd? ? 'text_editor' : 'spreadsheet_editor')
       )
     end

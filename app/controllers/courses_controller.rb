@@ -294,12 +294,14 @@ class CoursesController < ApplicationController
 
       scenario_question.scenario_answer_templates.each do |scenario_answer_template|
 
+        text_content = scenario_answer_template.spreadsheet_editor? ? scenario_answer_template.spreadsheet_editor_content : scenario_answer_template.text_editor_content
+
         scenario_answer_attempt = ScenarioAnswerAttempt.create(
             scenario_question_attempt_id: scenario_question_attempt.id,
             user_id: current_user.id,
             scenario_answer_template_id: scenario_answer_template.id,
-            original_answer_template_text: scenario_answer_template.text_content || '[]',
-            user_edited_answer_template_text: scenario_answer_template.text_content || '[]',
+            original_answer_template_text: text_content,
+            user_edited_answer_template_text: text_content,
             editor_type: scenario_answer_template.editor_type
         )
 

@@ -11,7 +11,7 @@
 .col-sm-12
   #spreadsheet_editor.editors.l-margin-top
 
-  =spreadsheet_scenario_answer_template.hidden_field :text_content
+  =spreadsheet_scenario_answer_template.hidden_field :spreadsheet_editor_content
 
   %div{id: "scenario_question_#{scenario_question.options[:child_index]}_scenario_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor", style: 'width: 100%;'}
 
@@ -19,19 +19,22 @@
 :javascript
 
   function onChange() {
-    var data = spreadsheet.toJSON();
+    console.log('Change event!');
+    var data = spreadsheet_question_#{scenario_question.options[:child_index]}_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}.toJSON();
     var json = JSON.stringify(data, null, 2);
-    $("#course_module_element_constructed_response_attributes_scenario_attributes_scenario_questions_attributes_#{scenario_question.options[:child_index]}_scenario_answer_templates_attributes_#{spreadsheet_scenario_answer_template.options[:child_index]}_text_content").val(json);
+    $("#course_module_element_constructed_response_attributes_scenario_attributes_scenario_questions_attributes_#{scenario_question.options[:child_index]}_scenario_answer_templates_attributes_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor_content").val(json);
   }
 
-  var storedJson = $("#course_module_element_constructed_response_attributes_scenario_attributes_scenario_questions_attributes_#{scenario_question.options[:child_index]}_scenario_answer_templates_attributes_#{spreadsheet_scenario_answer_template.options[:child_index]}_text_content").val();
+  var storedJson = $("#course_module_element_constructed_response_attributes_scenario_attributes_scenario_questions_attributes_#{scenario_question.options[:child_index]}_scenario_answer_templates_attributes_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor_content").val();
 
   $("#scenario_question_#{scenario_question.options[:child_index]}_scenario_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor").kendoSpreadsheet({sheetsbar: false, change: onChange});
-  var spreadsheet = $("#scenario_question_#{scenario_question.options[:child_index]}_scenario_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor").data("kendoSpreadsheet");
+
+
+  var spreadsheet_question_#{scenario_question.options[:child_index]}_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]} = $("#scenario_question_#{scenario_question.options[:child_index]}_scenario_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor").data("kendoSpreadsheet");
 
   if (storedJson != '') {
     var paredJson = JSON.parse(storedJson);
-    spreadsheet.fromJSON(paredJson);
+    spreadsheet_question_#{scenario_question.options[:child_index]}_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}.fromJSON(paredJson);
   }
 
 

@@ -2,14 +2,15 @@
 #
 # Table name: scenario_answer_templates
 #
-#  id                   :integer          not null, primary key
-#  scenario_question_id :integer
-#  sorting_order        :integer
-#  editor_type          :string
-#  text_content         :text
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  destroyed_at         :datetime
+#  id                         :integer          not null, primary key
+#  scenario_question_id       :integer
+#  sorting_order              :integer
+#  editor_type                :string
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  destroyed_at               :datetime
+#  text_editor_content        :text
+#  spreadsheet_editor_content :text
 #
 
 require 'rails_helper'

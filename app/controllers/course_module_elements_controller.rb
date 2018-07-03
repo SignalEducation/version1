@@ -393,7 +393,8 @@ class CourseModuleElementsController < ApplicationController
                         :scenario_question_id,
                         :sorting_order,
                         :editor_type,
-                        :text_content
+                        :text_editor_content,
+                        :spreadsheet_editor_content
                     ]
 
                 ]

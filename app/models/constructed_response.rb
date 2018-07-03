@@ -40,7 +40,7 @@ class ConstructedResponse < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def add_an_empty_scenario
