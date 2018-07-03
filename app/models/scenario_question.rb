@@ -2,28 +2,24 @@
 #
 # Table name: scenario_questions
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  constructed_response_id  :integer
-#  scenario_id              :integer
-#  sorting_order            :integer
-#  text_content             :text
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  destroyed_at             :datetime
+#  id            :integer          not null, primary key
+#  scenario_id   :integer
+#  sorting_order :integer
+#  text_content  :text
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  destroyed_at  :datetime
 #
 
 class ScenarioQuestion < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :constructed_response_id,
-                  :scenario_id, :sorting_order, :text_content, :scenario_answer_templates_attributes
+  attr_accessible :scenario_id, :sorting_order, :text_content,
+                  :scenario_answer_templates_attributes
 
   # Constants
 
   # relationships
-  belongs_to :course_module_element
-  belongs_to :constructed_response
   belongs_to :scenario
   has_many :scenario_answer_templates
   has_many :scenario_question_attempts
@@ -39,7 +35,7 @@ class ScenarioQuestion < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order, :course_module_element_id) }
+  scope :all_in_order, -> { order(:sorting_order, :scenario_id) }
 
   # class methods
 

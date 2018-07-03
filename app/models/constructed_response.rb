@@ -20,8 +20,6 @@ class ConstructedResponse < ActiveRecord::Base
   # relationships
   belongs_to :course_module_element
   has_one :scenario
-  has_many :scenario_questions
-  has_many :scenario_answer_templates
 
   accepts_nested_attributes_for :scenario, reject_if: lambda { |attributes| constructed_response_nested_scenario_text_is_blank?(attributes) }
 

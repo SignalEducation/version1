@@ -4,9 +4,7 @@
 #
 #  id                                 :integer          not null, primary key
 #  constructed_response_attempt_id    :integer
-#  course_module_element_user_log_id  :integer
 #  user_id                            :integer
-#  constructed_response_id            :integer
 #  scenario_question_id               :integer
 #  status                             :string
 #  flagged_for_review                 :boolean          default(FALSE)

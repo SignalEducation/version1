@@ -2,14 +2,13 @@
 #
 # Table name: scenarios
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  constructed_response_id  :integer
-#  sorting_order            :integer
-#  text_content             :text
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  destroyed_at             :datetime
+#  id                      :integer          not null, primary key
+#  constructed_response_id :integer
+#  sorting_order           :integer
+#  text_content            :text
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  destroyed_at            :datetime
 #
 
 require 'rails_helper'

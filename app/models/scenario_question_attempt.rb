@@ -4,9 +4,7 @@
 #
 #  id                                 :integer          not null, primary key
 #  constructed_response_attempt_id    :integer
-#  course_module_element_user_log_id  :integer
 #  user_id                            :integer
-#  constructed_response_id            :integer
 #  scenario_question_id               :integer
 #  status                             :string
 #  flagged_for_review                 :boolean          default(FALSE)
@@ -19,20 +17,17 @@
 class ScenarioQuestionAttempt < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :constructed_response_attempt_id, :course_module_element_user_log_id, :user_id,
-                  :constructed_response_id, :scenario_question_id, :status, :flagged_for_review,
-                  :original_scenario_question_text, :user_edited_scenario_question_text,
-                  :scenario_answer_attempts_attributes
+  attr_accessible :constructed_response_attempt_id, :user_id, :scenario_question_id,
+                  :status, :flagged_for_review, :original_scenario_question_text,
+                  :user_edited_scenario_question_text, :scenario_answer_attempts_attributes
 
   # Constants
   STATUS = %w(Unseen Seen)
 
   # relationships
-  belongs_to :constructed_response_attempt
-  belongs_to :course_module_element_user_log
-  belongs_to :user
-  belongs_to :constructed_response
   belongs_to :scenario_question
+  belongs_to :user
+  belongs_to :constructed_response_attempt
   has_many :scenario_answer_attempts
 
   accepts_nested_attributes_for :scenario_answer_attempts
@@ -40,11 +35,7 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
   # validation
   validates :constructed_response_attempt_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_user_log_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :constructed_response_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :scenario_question_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}

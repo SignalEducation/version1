@@ -2,29 +2,26 @@
 #
 # Table name: scenarios
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  constructed_response_id  :integer
-#  sorting_order            :integer
-#  text_content             :text
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  destroyed_at             :datetime
+#  id                      :integer          not null, primary key
+#  constructed_response_id :integer
+#  sorting_order           :integer
+#  text_content            :text
+#  created_at              :datetime         not null
+#  updated_at              :datetime         not null
+#  destroyed_at            :datetime
 #
 
 class Scenario < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :course_module_element_id, :constructed_response_id, :sorting_order, :text_content,
+  attr_accessible :constructed_response_id, :sorting_order, :text_content,
                   :scenario_questions_attributes
 
   # Constants
 
   # relationships
-  belongs_to :course_module_element
   belongs_to :constructed_response
   has_many :scenario_questions
-  has_many :scenario_answer_templates
 
   accepts_nested_attributes_for :scenario_questions, allow_destroy: true, reject_if: lambda { |attributes| scenario_nested_question_is_blank?(attributes) }
 
@@ -38,7 +35,7 @@ class Scenario < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:course_module_element_id) }
+  scope :all_in_order, -> { order(:constructed_response_id) }
 
   # class methods
   def self.scenario_nested_question_is_blank?(attributes)

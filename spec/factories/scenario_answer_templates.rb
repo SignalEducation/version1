@@ -2,17 +2,14 @@
 #
 # Table name: scenario_answer_templates
 #
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  constructed_response_id  :integer
-#  scenario_id              :integer
-#  scenario_question_id     :integer
-#  sorting_order            :integer
-#  editor_type              :string
-#  text_content             :text
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  destroyed_at             :datetime
+#  id                   :integer          not null, primary key
+#  scenario_question_id :integer
+#  sorting_order        :integer
+#  editor_type          :string
+#  text_content         :text
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  destroyed_at         :datetime
 #
 
 FactoryBot.define do

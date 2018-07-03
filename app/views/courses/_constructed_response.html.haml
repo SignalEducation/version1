@@ -42,9 +42,7 @@
           .pane-content
             =constructed_response_attempt.fields_for :scenario_question_attempts do |scenario_question_attempt|
               =scenario_question_attempt.hidden_field :constructed_response_attempt_id
-              =scenario_question_attempt.hidden_field :course_module_element_user_log_id
               =scenario_question_attempt.hidden_field :user_id
-              =scenario_question_attempt.hidden_field :constructed_response_id
               =scenario_question_attempt.hidden_field :scenario_question_id
               =scenario_question_attempt.hidden_field :status
               =scenario_question_attempt.hidden_field :flagged_for_review
@@ -60,11 +58,7 @@
                 =scenario_question_attempt.fields_for :scenario_answer_attempts do |scenario_answer_attempt|
                   -sa_attempt = scenario_answer_attempt.object
                   =scenario_answer_attempt.hidden_field :scenario_question_attempt_id
-                  =scenario_answer_attempt.hidden_field :constructed_response_attempt_id
-                  =scenario_answer_attempt.hidden_field :course_module_element_user_log_id
                   =scenario_answer_attempt.hidden_field :user_id
-                  =scenario_answer_attempt.hidden_field :scenario_question_id
-                  =scenario_answer_attempt.hidden_field :constructed_response_id
                   =scenario_answer_attempt.hidden_field :scenario_answer_template_id
                   =scenario_answer_attempt.hidden_field :original_answer_template_text
 

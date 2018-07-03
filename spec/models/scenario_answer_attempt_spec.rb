@@ -2,19 +2,15 @@
 #
 # Table name: scenario_answer_attempts
 #
-#  id                                :integer          not null, primary key
-#  scenario_question_attempt_id      :integer
-#  constructed_response_attempt_id   :integer
-#  course_module_element_user_log_id :integer
-#  user_id                           :integer
-#  scenario_question_id              :integer
-#  constructed_response_id           :integer
-#  scenario_answer_template_id       :integer
-#  original_answer_template_text     :text
-#  user_edited_answer_template_text  :text
-#  editor_type                       :string
-#  created_at                        :datetime         not null
-#  updated_at                        :datetime         not null
+#  id                               :integer          not null, primary key
+#  scenario_question_attempt_id     :integer
+#  user_id                          :integer
+#  scenario_answer_template_id      :integer
+#  original_answer_template_text    :text
+#  user_edited_answer_template_text :text
+#  editor_type                      :string
+#  created_at                       :datetime         not null
+#  updated_at                       :datetime         not null
 #
 
 require 'rails_helper'

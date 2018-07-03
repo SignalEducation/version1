@@ -184,18 +184,16 @@ class CoursesController < ApplicationController
             :time_taken_in_seconds,
             constructed_response_attempt_attributes: [
                     :id,
-                    :user_id,
                     :constructed_response_id,
                     :scenario_id,
                     :course_module_element_id,
+                    :user_id,
                     :original_scenario_text_content,
                     :user_edited_scenario_text_content,
                     scenario_question_attempts_attributes: [
                         :id,
                         :constructed_response_attempt_id,
-                        :course_module_element_user_log_id,
                         :user_id,
-                        :constructed_response_id,
                         :scenario_question_id,
                         :status,
                         :flagged_for_review,
@@ -204,11 +202,7 @@ class CoursesController < ApplicationController
                         scenario_answer_attempts_attributes: [
                             :id,
                             :scenario_question_attempt_id,
-                            :constructed_response_attempt_id,
-                            :course_module_element_user_log_id,
                             :user_id,
-                            :scenario_question_id,
-                            :constructed_response_id,
                             :scenario_answer_template_id,
                             :original_answer_template_text,
                             :user_edited_answer_template_text,
@@ -279,20 +273,18 @@ class CoursesController < ApplicationController
         user_id: current_user.id
     )
     @constructed_response_attempt = ConstructedResponseAttempt.create(
-        user_id: current_user.id,
-        course_module_element_user_log_id: @course_module_element_user_log.id,
         constructed_response_id: @constructed_response.id,
         scenario_id: @constructed_response.scenario.id,
         course_module_element_id: @constructed_response.course_module_element_id,
+        course_module_element_user_log_id: @course_module_element_user_log.id,
+        user_id: current_user.id,
         original_scenario_text_content: @constructed_response.scenario.text_content,
         user_edited_scenario_text_content: @constructed_response.scenario.text_content
     )
     @all_questions.each do |scenario_question|
       scenario_question_attempt = ScenarioQuestionAttempt.create(
           constructed_response_attempt_id: @constructed_response_attempt.id,
-          course_module_element_user_log_id: @course_module_element_user_log.id,
           user_id: current_user.id,
-          constructed_response_id: @constructed_response.id,
           scenario_question_id: scenario_question.id,
           status: 'Unseen',
           flagged_for_review: false,
@@ -304,11 +296,7 @@ class CoursesController < ApplicationController
 
         scenario_answer_attempt = ScenarioAnswerAttempt.create(
             scenario_question_attempt_id: scenario_question_attempt.id,
-            constructed_response_attempt_id: @constructed_response_attempt.id,
-            course_module_element_user_log_id: @course_module_element_user_log.id,
             user_id: current_user.id,
-            scenario_question_id: scenario_question.id,
-            constructed_response_id: @constructed_response.id,
             scenario_answer_template_id: scenario_answer_template.id,
             original_answer_template_text: scenario_answer_template.text_content || '[]',
             user_edited_answer_template_text: scenario_answer_template.text_content || '[]',

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180703073526) do
+ActiveRecord::Schema.define(version: 20180703090752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -735,42 +735,30 @@ ActiveRecord::Schema.define(version: 20180703073526) do
 
   create_table "scenario_answer_attempts", force: :cascade do |t|
     t.integer  "scenario_question_attempt_id"
-    t.integer  "constructed_response_attempt_id"
-    t.integer  "course_module_element_user_log_id"
     t.integer  "user_id"
-    t.integer  "scenario_question_id"
-    t.integer  "constructed_response_id"
     t.integer  "scenario_answer_template_id"
     t.text     "original_answer_template_text"
     t.text     "user_edited_answer_template_text"
     t.string   "editor_type"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
 
   create_table "scenario_answer_templates", force: :cascade do |t|
-    t.integer  "course_module_element_id"
-    t.integer  "constructed_response_id"
-    t.integer  "scenario_id"
     t.integer  "scenario_question_id"
     t.integer  "sorting_order"
     t.string   "editor_type"
     t.text     "text_content"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.datetime "destroyed_at"
   end
 
-  add_index "scenario_answer_templates", ["constructed_response_id"], name: "index_scenario_answer_templates_on_constructed_response_id", using: :btree
-  add_index "scenario_answer_templates", ["course_module_element_id"], name: "index_scenario_answer_templates_on_course_module_element_id", using: :btree
-  add_index "scenario_answer_templates", ["scenario_id"], name: "index_scenario_answer_templates_on_scenario_id", using: :btree
   add_index "scenario_answer_templates", ["scenario_question_id"], name: "index_scenario_answer_templates_on_scenario_question_id", using: :btree
 
   create_table "scenario_question_attempts", force: :cascade do |t|
     t.integer  "constructed_response_attempt_id"
-    t.integer  "course_module_element_user_log_id"
     t.integer  "user_id"
-    t.integer  "constructed_response_id"
     t.integer  "scenario_question_id"
     t.string   "status"
     t.boolean  "flagged_for_review",                 default: false
@@ -780,37 +768,30 @@ ActiveRecord::Schema.define(version: 20180703073526) do
     t.datetime "updated_at",                                         null: false
   end
 
-  add_index "scenario_question_attempts", ["constructed_response_id"], name: "index_scenario_question_attempts_on_constructed_response_id", using: :btree
   add_index "scenario_question_attempts", ["flagged_for_review"], name: "index_scenario_question_attempts_on_flagged_for_review", using: :btree
   add_index "scenario_question_attempts", ["scenario_question_id"], name: "index_scenario_question_attempts_on_scenario_question_id", using: :btree
 
   create_table "scenario_questions", force: :cascade do |t|
-    t.integer  "course_module_element_id"
-    t.integer  "constructed_response_id"
     t.integer  "scenario_id"
     t.integer  "sorting_order"
     t.text     "text_content"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.datetime "destroyed_at"
   end
 
-  add_index "scenario_questions", ["constructed_response_id"], name: "index_scenario_questions_on_constructed_response_id", using: :btree
-  add_index "scenario_questions", ["course_module_element_id"], name: "index_scenario_questions_on_course_module_element_id", using: :btree
   add_index "scenario_questions", ["scenario_id"], name: "index_scenario_questions_on_scenario_id", using: :btree
 
   create_table "scenarios", force: :cascade do |t|
-    t.integer  "course_module_element_id"
     t.integer  "constructed_response_id"
     t.integer  "sorting_order"
     t.text     "text_content"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.datetime "destroyed_at"
   end
 
   add_index "scenarios", ["constructed_response_id"], name: "index_scenarios_on_constructed_response_id", using: :btree
-  add_index "scenarios", ["course_module_element_id"], name: "index_scenarios_on_course_module_element_id", using: :btree
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"

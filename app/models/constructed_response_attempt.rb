@@ -43,8 +43,6 @@ class ConstructedResponseAttempt < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :scenario_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_element_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :course_module_element_user_log_id, presence: true,
             on: :update, numericality: {only_integer: true, greater_than: 0}
   validates :user_id, presence: true,
