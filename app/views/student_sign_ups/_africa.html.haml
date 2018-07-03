@@ -33,46 +33,36 @@
                   =image_tag('acca_approved.png')
 
 
-    -#%section#tips
-      .container
-        %h2.title1 Get Jamie’s 3 free tips on passing your ACCA.
-        .video
-          .play
-            #vimeo-player.vimeo-player
-
-          .about Meet course tutor Jamie. He’s helped learners all over the world pass their ACCA.
-
-
-    %section#homeblog
-      .container
-        %h2.title1 Access our latest free advice
-        .posts.first
-          .row
-            -@home_page.blog_posts.each do |blog_post|
-              .col-md-4.col-sm-6
-                .post
-                  .photo
-                    =link_to blog_post.url, target: '_blank' do
-                      =image_tag(blog_post.image.url)
-
-                  .cat
-                    =link_to blog_post.url, target: '_blank' do
-                      .hu
-                        Blog
-                  .title
-                    =link_to blog_post.url, target: '_blank' do
-                      .hu
-                        =blog_post.title
-                  .excerpt
-                    =link_to blog_post.url, target: '_blank' do
-                      .hu
-                        =blog_post.description
+    -if @home_page && @home_page.blog_posts && @home_page.blog_posts.any?
+      %section#homeblog
+        .container
+          %h2.title1 Access our latest free advice
+          .posts.first
+            .row
+              -@home_page.blog_posts.each do |blog_post|
+                .col-md-4.col-sm-6
+                  .post
+                    .photo
+                      =link_to blog_post.url, target: '_blank' do
+                        =image_tag(blog_post.image.url)
+                    .cat
+                      =link_to blog_post.url, target: '_blank' do
+                        .hu
+                          Blog
+                    .title
+                      =link_to blog_post.url, target: '_blank' do
+                        .hu
+                          =blog_post.title
+                    .excerpt
+                      =link_to blog_post.url, target: '_blank' do
+                        .hu
+                          =blog_post.description
 
 
 
-        .row.btnset
-          .col-lg-6.col-lg-offset-3.col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3.col-xs-6.col-xs-offset-3
-            %a.lsbtn.v3{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
+          .row.btnset
+            .col-lg-6.col-lg-offset-3.col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3.col-xs-6.col-xs-offset-3
+              %a.lsbtn.v3{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
 
 
     %section#what
