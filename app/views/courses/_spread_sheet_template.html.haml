@@ -1,0 +1,44 @@
+.hidden{id: "scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet_json"}
+  =spreadsheet_json
+
+=scenario_answer_attempt.hidden_field :user_edited_answer_template_text, {id: "input_scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet_json"}
+
+
+.answer_spreadsheet{id: "scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet", sq_attempt_id: sq_attempt.id, sa_attempt_id: sa_attempt.id}
+
+:javascript
+  $(document).ready(function(){
+
+    var templateJson = $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet_json").text();
+    var paredJson = JSON.parse(templateJson);
+
+    $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").kendoSpreadsheet({
+      sheetsbar: false,
+      scrollable: false,
+      toolbar: {
+        insert: false,
+        data: false,
+        home: [
+          [ "cut", "copy", "paste" ],
+          "fontSize",
+          [ "bold", "italic", "underline" ],
+          "backgroundColor", "textColor",
+          "alignment",
+          "format",
+          {
+              type: "button",
+              text: "Custom",
+              spriteCssClass: "k-icon k-i-cog",
+              click: function() {
+                  window.alert("custom tool");
+              }
+          }
+        ]
+      }
+     });
+
+    $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet").fromJSON(paredJson);
+
+    var spreadsheet_#{sa_attempt.id} = $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet");
+
+  });

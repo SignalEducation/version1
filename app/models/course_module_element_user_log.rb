@@ -22,6 +22,7 @@
 #  subject_course_id          :integer
 #  student_exam_track_id      :integer
 #  subject_course_user_log_id :integer
+#  is_constructed_response    :boolean          default(FALSE)
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -36,7 +37,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :quiz_attempts_attributes, :seconds_watched,
                   :count_of_questions_taken, :count_of_questions_correct,
                   :subject_course_id, :student_exam_track_id,
-                  :subject_course_user_log_id
+                  :subject_course_user_log_id, :is_constructed_response,
+                  :constructed_response_attempt_attributes,
+                  :scenario_question_attempts_attributes
 
   # Constants
 
@@ -48,8 +51,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :user
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
+  has_one   :constructed_response_attempt
 
-  accepts_nested_attributes_for :quiz_attempts
+  accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
+
 
   # validation
   validates :user_id, presence: true,
@@ -79,6 +84,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
+  scope :constructed_responses, -> { where(is_constructed_response: true) }
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }

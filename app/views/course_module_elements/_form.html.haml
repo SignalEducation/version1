@@ -5,6 +5,7 @@
     =f.hidden_field :course_module_id
     =f.hidden_field :is_quiz
     =f.hidden_field :is_video
+    =f.hidden_field :is_constructed_response
 
 
     .col-md-6
@@ -13,6 +14,9 @@
         =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
       -elsif @course_module_element.course_module_element_quiz
         =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+      -elsif @course_module_element.constructed_response
+        =render partial: 'constructed_responses/basic_fields_for', locals: {f: f}
+
 
       -# Dropdown list of other CourseModules in the SubjectCourse
       =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
@@ -70,6 +74,11 @@
     -if @course_module_element.course_module_element_resources.size > 0
       =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
+  -elsif @course_module_element.constructed_response
+    %br/
+    %hr/
+    %br/
+    =render partial: 'constructed_responses/fields_for', locals: {f: f}
 
   .row
     .col-md-12
@@ -78,7 +87,7 @@
       -if @course_module_element.course_module_element_video
         =f.submit t('views.general.save'), class: 'btn btn-red', disabled: false
       -else
-        =f.submit t('views.general.save'), class: 'btn btn-red clear-question'
+        =f.submit t('views.general.save'), class: 'btn btn-red clear-question', id: 'submit_button'
       -if f.object.course_module_element_quiz
         =t('views.general.or')
         =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
@@ -104,4 +113,3 @@
     disableDragAndDrop: true
   });
 
-    onclick: " return false;"

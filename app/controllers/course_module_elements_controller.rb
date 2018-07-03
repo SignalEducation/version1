@@ -20,6 +20,7 @@
 #  number_of_questions       :integer          default(0)
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
+#  is_constructed_response   :boolean          default(FALSE), not null
 #
 
 class CourseModuleElementsController < ApplicationController
@@ -82,6 +83,8 @@ class CourseModuleElementsController < ApplicationController
 
     elsif params[:type] == 'quiz'
       spawn_quiz_children
+    elsif params[:type] == 'constructed_response'
+      spawn_constructed_response_children
     end
     set_related_cmes
   end
@@ -93,6 +96,8 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
         @course_module_element.course_module_element_resources.build
+      elsif @course_module_element.is_constructed_response
+        @course_module_element.constructed_response.scenario.add_an_empty_scenario_question
         unless @course_module_element.video_resource
           @course_module_element.build_video_resource
         end
@@ -119,6 +124,7 @@ class CourseModuleElementsController < ApplicationController
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
     verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name) if @course_module_element.is_video?
+
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -256,6 +262,12 @@ class CourseModuleElementsController < ApplicationController
     @course_module_element.course_module_element_quiz.quiz_questions.last.course_module_element_quiz_id = @course_module_element.course_module_element_quiz.id
   end
 
+  def spawn_constructed_response_children
+    @course_module_element.is_constructed_response = true
+    @course_module_element.build_constructed_response
+    @course_module_element.constructed_response.add_an_empty_scenario
+  end
+
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
       @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
@@ -275,6 +287,7 @@ class CourseModuleElementsController < ApplicationController
         :active,
         :is_video,
         :is_quiz,
+        :is_constructed_response,
         :seo_description,
         :seo_no_index,
         :number_of_questions,
@@ -358,6 +371,34 @@ class CourseModuleElementsController < ApplicationController
             :answer,
             :notes,
             :transcript,
+        ],
+        constructed_response_attributes:  [
+            :id,
+            :course_module_element_id,
+            :time_allowed,
+            scenario_attributes: [
+                :id,
+                :constructed_response_id,
+                :sorting_order,
+                :text_content,
+                scenario_questions_attributes: [
+                    :id,
+                    :_destroy,
+                    :scenario_id,
+                    :sorting_order,
+                    :text_content,
+                    scenario_answer_templates_attributes: [
+                        :id,
+                        :_destroy,
+                        :scenario_question_id,
+                        :sorting_order,
+                        :editor_type,
+                        :text_editor_content,
+                        :spreadsheet_editor_content
+                    ]
+
+                ]
+            ]
         ]
     )
   end

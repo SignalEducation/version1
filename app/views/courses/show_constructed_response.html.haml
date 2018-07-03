@@ -1,0 +1,34 @@
+.is-bg-asphalt.l-section-extra-small
+  .container-fluid{style: 'margin-bottom: 60px;'}
+
+    .row
+      -if @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
+        -if @course_module_element.try(:is_constructed_response)
+          #constructed-response-window
+            :javascript
+              var crDialog = $("#constructed-response-window");
+              kendo.ui.progress(crDialog, true);
+
+
+            =render partial: 'courses/constructed_response'
+        -else
+          %h2 Sorry Unknown Content Type Requested
+          -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
+      -elsif @course_module
+        .well
+          %h3=t('views.general.coming_soon')
+          %p=t('views.courses.show.coming_soon')
+
+
+
+
+
+:javascript
+
+  $(window).load(function() {
+    var crDialog = $("#constructed-response-window");
+    setTimeout(function(){
+      kendo.ui.progress(crDialog, false);
+    }, 1800);
+  });
+
