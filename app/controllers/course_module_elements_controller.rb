@@ -384,6 +384,7 @@ class CourseModuleElementsController < ApplicationController
                 :text_content,
                 scenario_questions_attributes: [
                     :id,
+                    :_destroy,
                     :course_module_element_id,
                     :constructed_response_id,
                     :scenario_id,
@@ -391,6 +392,7 @@ class CourseModuleElementsController < ApplicationController
                     :text_content,
                     scenario_answer_templates_attributes: [
                         :id,
+                        :_destroy,
                         :course_module_element_id,
                         :constructed_response_id,
                         :scenario_id,

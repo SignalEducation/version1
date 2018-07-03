@@ -7,6 +7,7 @@
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  time_allowed             :integer
+#  destroyed_at             :datetime
 #
 
 class ConstructedResponse < ActiveRecord::Base
@@ -22,7 +23,7 @@ class ConstructedResponse < ActiveRecord::Base
   has_many :scenario_questions
   has_many :scenario_answer_templates
 
-  accepts_nested_attributes_for :scenario
+  accepts_nested_attributes_for :scenario, reject_if: lambda { |attributes| constructed_response_nested_scenario_text_is_blank?(attributes) }
 
   # validation
   validates :course_module_element_id, presence: true, on: :update,
@@ -35,6 +36,9 @@ class ConstructedResponse < ActiveRecord::Base
   scope :all_in_order, -> { order(:course_module_element_id) }
 
   # class methods
+  def self.constructed_response_nested_scenario_text_is_blank?(attributes)
+    attributes['text_content'].blank?
+  end
 
   # instance methods
   def destroyable?

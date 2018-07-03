@@ -2,7 +2,16 @@
   .row
     =scenario_question.hidden_field :sorting_order
     .quiz-question
-      %h6=scenario_question.object.id.nil? ? 'New Scenario Question' : 'Scenario Question #' + scenario_question.object.id.to_s
+      .col-sm-6
+        %h6=scenario_question.object.id.nil? ? 'New Scenario Question' : 'Scenario Question #' + scenario_question.object.id.to_s
+      .col-sm-6
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =scenario_question.check_box :_destroy
+                ='Remove Question Block'
+
       .input-group.input-group-lg.full-width
         =scenario_question.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: "scenario_question_text_area_#{scenario_question.options[:child_index]}"
       %br/

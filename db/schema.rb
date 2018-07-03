@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180626115218) do
+ActiveRecord::Schema.define(version: 20180703073526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 20180626115218) do
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.integer  "time_allowed"
+    t.datetime "destroyed_at"
   end
 
   add_index "constructed_responses", ["course_module_element_id"], name: "index_constructed_responses_on_course_module_element_id", using: :btree
@@ -757,6 +758,7 @@ ActiveRecord::Schema.define(version: 20180626115218) do
     t.text     "text_content"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.datetime "destroyed_at"
   end
 
   add_index "scenario_answer_templates", ["constructed_response_id"], name: "index_scenario_answer_templates_on_constructed_response_id", using: :btree
@@ -790,6 +792,7 @@ ActiveRecord::Schema.define(version: 20180626115218) do
     t.text     "text_content"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.datetime "destroyed_at"
   end
 
   add_index "scenario_questions", ["constructed_response_id"], name: "index_scenario_questions_on_constructed_response_id", using: :btree
@@ -803,6 +806,7 @@ ActiveRecord::Schema.define(version: 20180626115218) do
     t.text     "text_content"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
+    t.datetime "destroyed_at"
   end
 
   add_index "scenarios", ["constructed_response_id"], name: "index_scenarios_on_constructed_response_id", using: :btree

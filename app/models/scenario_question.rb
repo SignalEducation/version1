@@ -10,6 +10,7 @@
 #  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  destroyed_at             :datetime
 #
 
 class ScenarioQuestion < ActiveRecord::Base
@@ -27,7 +28,7 @@ class ScenarioQuestion < ActiveRecord::Base
   has_many :scenario_answer_templates
   has_many :scenario_question_attempts
 
-  accepts_nested_attributes_for :scenario_answer_templates, reject_if: lambda { |attributes| question_nested_answer_template_is_blank?(attributes) }
+  accepts_nested_attributes_for :scenario_answer_templates, allow_destroy: true, reject_if: lambda { |attributes| question_nested_answer_template_is_blank?(attributes) }
 
   # validation
   validates :scenario_id, presence: true, on: :update,
@@ -41,6 +42,8 @@ class ScenarioQuestion < ActiveRecord::Base
   scope :all_in_order, -> { order(:sorting_order, :course_module_element_id) }
 
   # class methods
+
+  ## update this when new text content fields are added
   def self.question_nested_answer_template_is_blank?(attributes)
     attributes['editor_type'].blank?
   end

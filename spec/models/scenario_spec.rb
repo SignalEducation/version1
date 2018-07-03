@@ -9,6 +9,7 @@
 #  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  destroyed_at             :datetime
 #
 
 require 'rails_helper'

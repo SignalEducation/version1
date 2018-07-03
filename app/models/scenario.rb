@@ -9,6 +9,7 @@
 #  text_content             :text
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  destroyed_at             :datetime
 #
 
 class Scenario < ActiveRecord::Base
@@ -25,7 +26,7 @@ class Scenario < ActiveRecord::Base
   has_many :scenario_questions
   has_many :scenario_answer_templates
 
-  accepts_nested_attributes_for :scenario_questions, reject_if: lambda { |attributes| scenario_nested_question_is_blank?(attributes) }
+  accepts_nested_attributes_for :scenario_questions, allow_destroy: true, reject_if: lambda { |attributes| scenario_nested_question_is_blank?(attributes) }
 
 
   # validation
