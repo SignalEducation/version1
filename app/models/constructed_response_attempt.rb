@@ -22,11 +22,11 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   # attr-accessible
   attr_accessible :constructed_response_id, :scenario_id, :course_module_element_id,
                   :course_module_element_user_log_id, :user_id, :original_scenario_text_content,
-                  :user_edited_scenario_text_content, :time_in_seconds,
+                  :user_edited_scenario_text_content, :time_in_seconds, :status,
                   :scenario_question_attempts_attributes
 
   # Constants
-  STATUS = %w(Abandoned Completed)
+  STATUS = %w(Incomplete Completed)
 
   # relationships
   belongs_to :constructed_response

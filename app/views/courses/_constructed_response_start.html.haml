@@ -20,7 +20,7 @@
     .col-sm-6
       =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.subject_course.name_url, course_module_name_url: @course_module_element.course_module.name_url, course_module_element_name_url: @course_module_element.name_url) do
         .btn.btn-red.btn-secondary.full-width
-          ='New Constructed Response Session'
+          ='New Constructed Response'
 
 
 
@@ -29,8 +29,9 @@
           %table.table{style: 'font-size: 18px;'}
             %thead
               %tr
-                %th='Previous Attempts'
-                %th='Date'
+                %th='Previous Responses'
+                %th='Created'
+                %th='Updated'
                 %th='Status'
 
             %tbody
@@ -39,13 +40,11 @@
                   %td
                     =link_to "CMEUL #{cmeul.id}", courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id)
                   %td
+                    =humanize_datetime(cmeul.created_at)
+                  %td
                     =humanize_datetime(cmeul.updated_at)
                   %td
-                    =#cmeul.constructed_response_attempt.status
-                    -if cmeul.id.even?
-                      ='Abandoned'
-                    -else
-                      ='Completed'
+                    =cmeul.constructed_response_attempt.status
 
 
 

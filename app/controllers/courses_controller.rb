@@ -152,6 +152,17 @@ class CoursesController < ApplicationController
     end
   end
 
+  def submit_constructed_response_user_log
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+
+    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+    @constructed_response_attempt.update_attributes(status: 'Completed')
+
+    @course_module_element_user_log.update_attributes(element_completed: true)
+
+    redirect_to course_special_link(@course_module_element_user_log.course_module_element)
+  end
+
   private
 
   def allowed_params
@@ -278,6 +289,7 @@ class CoursesController < ApplicationController
         course_module_element_id: @constructed_response.course_module_element_id,
         course_module_element_user_log_id: @course_module_element_user_log.id,
         user_id: current_user.id,
+        status: 'Incomplete',
         original_scenario_text_content: @constructed_response.scenario.text_content,
         user_edited_scenario_text_content: @constructed_response.scenario.text_content
     )
