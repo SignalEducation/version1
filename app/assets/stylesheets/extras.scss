@@ -143,6 +143,16 @@
 #what ul li .item .img img { display: block; width: 100%; }
 #what .lsbtn-base { margin: 0 0 1.778em 0; }
 
+#podcast { padding: 75px 0 68px 0; background: none; text-align: center; position: relative; }
+#podcast .title1 { margin: 0 0 1.29em 0; }
+#podcast .h3 { text-align: center; }
+#podcast ul { display: block; overflow: hidden; }
+#podcast ul li { float: left; width: 25%; margin: 0; padding: 0 15px 60px 15px; }
+#podcast ul li .item { width: 100%; max-width: 190px; margin: auto; }
+#podcast ul li .item .img { width: 100%; max-width: 180px; overflow: hidden; border-radius: 50%; margin: 0 0 1.7em 0; background: #35B9CF; }
+#podcast ul li .item .img img { display: block; width: 100%; }
+#podcast .lsbtn-base { margin: 0 0 1.778em 0; }
+
 
 #reviews { padding: 110px 0 160px 0; color: #fff; position: relative; }
 #reviews .container { z-index: 400; }
