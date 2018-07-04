@@ -1,0 +1,82 @@
+.landing
+  =render partial: 'layouts/external_banner'
+  #wrapper
+    -#loading
+    %header#header
+      =render 'layouts/landing_navbar'
+      -#.container
+        #logo
+          =link_to home_url do
+            =image_tag('ls-logo-transparent.svg', class: 'nav-logo')
+
+    %section#coming_soon.diag-r-down
+      .tmain
+        .tbase
+          .container
+            .row
+              .col-md-10
+                %h1.title1
+                  ='Coming Soon! A powerful way to lock in your knowledge as you study.'
+                %h2.subtitle
+                  ='Studying online with LearnSignal is about to get even better.'
+
+              .col-md-2
+                .approved
+                  =image_tag('acca_approved.png')
+
+
+
+    %section#points
+      .container
+        .row
+          .col-md-10.col-md-offset-1
+            %ol
+              %li
+                Fully integrated to give you a seamless study experience. No other logins. etc
+              %li
+                No extra cost. etc
+              %li
+                Proven method will help you absorb and retain more knowledge for your exams. etc
+              %li
+                Increase your chances of passing. etc
+              %li
+                Practice without limits. etc
+
+
+
+
+    %section#what{style: 'background: #F5F5F7;'}
+      .container
+        %h2.title1 Questions/You Might Be Wondering:
+        %ul
+          %li
+            .item
+              .img
+                =image_tag('what1.png')
+              .desc Do I have to pay extra for this?
+          %li
+            .item
+              .img
+                =image_tag('what2.png')
+              .desc Can I use this for my Assumed Knowledge?
+          %li
+            .item
+              .img
+                =image_tag('what3.png')
+              .desc Are there any restrictions on how often I use it?
+          %li
+            .item
+              .img
+                =image_tag('what4.png')
+              .desc Will this help me pass my exams?
+
+        .obs-nocc{style: 'margin-bottom: 10px;'}
+          Don’t miss out!
+        .lsbtn-base
+          =link_to 'Start Free Trial', new_student_url, class: 'lsbtn'
+
+
+
+
+
+=render partial: 'footer_pages/contact_us_form_modal'
