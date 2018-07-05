@@ -2723,11 +2723,7 @@ spinner {
 }
 .nav-dialog {
 
-  ul, li {
-    padding: 0;
-    display: list-item;
-    border-bottom: 1px solid rgba(120,120,120,.5);
-    @include font-size(1.6);
+  .nav-link {
     &:hover {
       cursor: pointer;
       color: darken($white, 25);

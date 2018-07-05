@@ -93,8 +93,7 @@
                     -@all_scenario_question_attempt.each do |question_attempt|
                       -counter = counter + 1
                       %tr
-                        %td
-                          ="Question #{counter}"
+                        %td="Question #{counter}"
                         %td{id: "td_question_attempt_#{question_attempt.id}_status"}
                           =question_attempt.status
                         %td{id: "td_question_attempt_#{question_attempt.id}_review"}
@@ -135,13 +134,23 @@
 
 
   #navigation-dialog.nav-dialog
-    -counter = 0
-    -@all_scenario_question_attempt_ids.each do |scenario_question_attempt_id|
-      -counter = counter + 1
-      %ul
-        %li{onclick: "revealQuestion(#{scenario_question_attempt_id}); return false;"}
-          ='Question '
-          =counter
+    %table.table
+      %thead
+        %tr
+          %th='Question #'
+          %th='Status'
+          %th.text-center='Flagged - Review'
+      %tbody
+        -counter = 0
+        -@all_scenario_question_attempt.each do |scenario_question_attempt|
+          -counter = counter + 1
+          %tr
+            %td.nav-link{onclick: "revealQuestion(#{scenario_question_attempt.id}); return false;"}
+              ="Question #{counter}"
+            %td{id: "td_question_attempt_#{scenario_question_attempt.id}_status"}
+              =scenario_question_attempt.status
+            %td.text-center{id: "td_question_attempt_#{scenario_question_attempt.id}_review", onclick: "flagForReview(#{scenario_question_attempt.id}); return false;"}
+              =flagged_for_review(scenario_question_attempt.flagged_for_review)
 
 
 
