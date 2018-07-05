@@ -122,6 +122,15 @@
 #africa .approved img { max-width: 100%; }
 #africa .form { padding-bottom: 15px; padding-top: 10px; display: none; }
 
+#coming_soon { background: asset-url('lamp_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#coming_soon .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#coming_soon .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#coming_soon .subtitle { color: inherit; }
+#coming_soon .lsbtn-base { margin: 0 0 28px 0; }
+#coming_soon .approved { padding: 6em 0 0 0; margin: auto; }
+#coming_soon .approved img { max-width: 100%; }
+#coming_soon .form { padding-bottom: 15px; padding-top: 10px; display: none; }
+
 
 #explore { text-align: center; padding: 65px 0 46px 0; position: relative; }
 #explore .title1 { margin: 0 0 0.5em 0; }
@@ -142,6 +151,16 @@
 #what ul li .item .img { width: 100%; max-width: 180px; overflow: hidden; border-radius: 50%; margin: 0 0 1.7em 0; background: #35B9CF; }
 #what ul li .item .img img { display: block; width: 100%; }
 #what .lsbtn-base { margin: 0 0 1.778em 0; }
+
+#podcast { padding: 75px 0 68px 0; background: none; text-align: center; position: relative; }
+#podcast .title1 { margin: 0 0 1.29em 0; }
+#podcast .h3 { text-align: center; }
+#podcast ul { display: block; overflow: hidden; }
+#podcast ul li { float: left; width: 25%; margin: 0; padding: 0 15px 60px 15px; }
+#podcast ul li .item { width: 100%; max-width: 190px; margin: auto; }
+#podcast ul li .item .img { width: 100%; max-width: 180px; overflow: hidden; border-radius: 50%; margin: 0 0 1.7em 0; background: #35B9CF; }
+#podcast ul li .item .img img { display: block; width: 100%; }
+#podcast .lsbtn-base { margin: 0 0 1.778em 0; }
 
 
 #reviews { padding: 110px 0 160px 0; color: #fff; position: relative; }
@@ -323,6 +342,12 @@
 #through .title1 { margin: 0 0 0.875em 0; }
 #through .subtitle { font-size: inherit; font-weight: inherit; color: inherit; line-height: 2em; margin: 0 0 2.778em; }
 
+#points { padding: 70px 0; text-align: left; position: relative; }
+#points .title1 { margin: 0 0 0.875em 0; }
+#points .subtitle { font-size: 1.5em; font-weight: inherit; color: inherit; line-height: 2em; margin: 0 0 2.778em; }
+#points ul li { font-size: 1.5em; font-weight: inherit; color: inherit; margin: 0 0 1em; display: list-item; list-style-type: disc; }
+#points ol li { font-size: 1.5em; font-weight: inherit; color: inherit; margin: 0 0 1em; display: list-item; list-style-type: decimal; }
+
 
 
 
@@ -369,6 +394,13 @@
 .landing #meeting_persons .tmain { }
 .landing #meeting_persons .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
 .landing #meeting_persons .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #coming_soon { text-align: left; background-image: asset-url('coming_soon_background.png'); }
+.landing #coming_soon * { text-align: left; }
+.landing #coming_soon .tmain { }
+.landing #coming_soon .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #coming_soon .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
 
 .landing #tips { padding-bottom: 15px; }
 
