@@ -342,10 +342,11 @@
 #through .title1 { margin: 0 0 0.875em 0; }
 #through .subtitle { font-size: inherit; font-weight: inherit; color: inherit; line-height: 2em; margin: 0 0 2.778em; }
 
-#points { padding: 100px 0; text-align: left; position: relative; }
+#points { padding: 70px 0; text-align: left; position: relative; }
 #points .title1 { margin: 0 0 0.875em 0; }
 #points .subtitle { font-size: 1.5em; font-weight: inherit; color: inherit; line-height: 2em; margin: 0 0 2.778em; }
-#points li { font-size: 1.5em; font-weight: inherit; color: inherit; margin: 0 0 1em; display: list-item; list-style-type: decimal; }
+#points ul li { font-size: 1.5em; font-weight: inherit; color: inherit; margin: 0 0 1em; display: list-item; list-style-type: disc; }
+#points ol li { font-size: 1.5em; font-weight: inherit; color: inherit; margin: 0 0 1em; display: list-item; list-style-type: decimal; }
 
 
 
