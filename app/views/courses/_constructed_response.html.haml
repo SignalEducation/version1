@@ -6,8 +6,14 @@
 
     .cr-navigation
       %ul.cr-nav-block
-        %li.cr-nav-link.review-flag
-          ='Flag for review'
+        %li.question-count
+          ='Question 1 of 1'
+        &#124;
+
+        -@all_scenario_question_attempt.each do |question_attempt|
+          %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
+            =flagged_for_review(question_attempt.flagged_for_review)
+            ='Flag for review'
 
         &#124;
         %li
@@ -92,7 +98,8 @@
                         %td{id: "td_question_attempt_#{question_attempt.id}_status"}
                           =question_attempt.status
                         %td{id: "td_question_attempt_#{question_attempt.id}_review"}
-                          =tick_or_cross(question_attempt.flagged_for_review)
+                          =flagged_for_review(question_attempt.flagged_for_review)
+
               .final-submission.text-center
                 =link_to submit_constructed_response_user_log_url(@course_module_element_user_log.id) do
                   .btn.btn-red.btn-secondary
@@ -139,7 +146,9 @@
 
 
 :javascript
-
+  //
+  //All of this JQuery needs to be cleaned up
+  //
 
   $(document).on('ready page:load', function() {
 
@@ -205,6 +214,27 @@
     $("#close-navigation-dialog").addClass('hidden');
   }
 
+  function flagForReview(question_attempt_id) {
+    var flagValue = $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_flagged_for_review').val();
+    if(flagValue == 'false') {
+      // Change the val to 1
+      $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_flagged_for_review').val(1);
+      // Change the span css to red
+      $('#review_flag_' + question_attempt_id + ' span').css('color','#eb4242');
+      //Change the final screen icon to red
+      $('#td_question_attempt_' + question_attempt_id + '_review  span').css('color','#eb4242');
+
+    } else if(flagValue == 'true') {
+      // Change the val to 0
+      $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_flagged_for_review').val(0);
+      // Change the span css to white
+      $('#review_flag_' + question_attempt_id + ' span').css('color','#FFFFFF');
+      // Change the final screen icon to white
+      $('#td_question_attempt_' + question_attempt_id + '_review  span').css('color','#FFFFFF');
+    }
+    submitForm();
+  }
+
   function updateHiddenField(sq_attempt_id, sa_attempt_id) {
 
     var data = $("#scenario_question_attempt_" + sq_attempt_id + "_scenario_answer_attempt_" + sa_attempt_id + "_spreadsheet").data("kendoSpreadsheet");
@@ -218,13 +248,16 @@
 
   function nextQuestion() {
     $('.cr-question').hide();
+    $('.review-flag').hide();
     if(currentQuestion < (questionsList.length -1 )) {
       currentQuestion++;
     }
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
 
+    $('#review_flag_' + questionsList[currentQuestion]).show();
     $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
     $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
 
     $('.answer_spreadsheet').each(function (index, value){
       updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
@@ -237,10 +270,13 @@
 
   function previousQuestion() {
     $('.cr-question').hide();
+    $('.review-flag').hide();
     if(currentQuestion != 0) {
       currentQuestion--;
     }
+    $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+    $('#review_flag_' + questionsList[currentQuestion]).show();
     $('.submission-pane-content').addClass('hidden');
     closeDialog();
     submitForm();
@@ -248,9 +284,12 @@
 
   function revealQuestion(questionNumber) {
     $('.cr-question').hide();
+    $('.review-flag').hide();
     currentQuestion = questionsList.indexOf(questionNumber);
     $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
     $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
+    $('#review_flag_' + questionsList[currentQuestion]).show();
 
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     $('.submission-pane-content').addClass('hidden');

@@ -6,6 +6,12 @@ module ApplicationHelper
             "<span style='color: #eb4242;' class='glyphicon glyphicon-remove'></span>".html_safe
   end
 
+  def flagged_for_review(the_thing)
+    the_thing ?
+            "<span style='color: #eb4242;' class='glyphicon glyphicon-flag'></span>".html_safe :
+            "<span style='color: #ffffff;' class='glyphicon glyphicon-flag'></span>".html_safe
+  end
+
   def number_in_local_currency(amount, currency_id)
     ccy = Currency.find(currency_id)
     number_to_currency(amount, unit: ccy.leading_symbol, separator: I18n.t('views.general.numbers.decimal_separator'), delimiter: I18n.t('views.general.numbers.decimal_separator'), precision: 2)
