@@ -79,8 +79,8 @@
                   %thead
                     %tr
                       %th='Question'
-                      %th='Flagged for review'
                       %th='Status'
+                      %th='Flagged for review'
 
                   %tbody
                     -counter = 0
@@ -89,10 +89,10 @@
                       %tr
                         %td
                           ="Question #{counter}"
-                        %td
-                          =tick_or_cross(question_attempt.flagged_for_review)
-                        %td
+                        %td{id: "td_question_attempt_#{question_attempt.id}_status"}
                           =question_attempt.status
+                        %td{id: "td_question_attempt_#{question_attempt.id}_review"}
+                          =tick_or_cross(question_attempt.flagged_for_review)
               .final-submission.text-center
                 =link_to submit_constructed_response_user_log_url(@course_module_element_user_log.id) do
                   .btn.btn-red.btn-secondary
@@ -223,6 +223,9 @@
     }
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
 
+    $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
+    $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+
     $('.answer_spreadsheet').each(function (index, value){
       updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
     });
@@ -246,6 +249,9 @@
   function revealQuestion(questionNumber) {
     $('.cr-question').hide();
     currentQuestion = questionsList.indexOf(questionNumber);
+    $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
+    $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     $('.submission-pane-content').addClass('hidden');
     closeDialog();
