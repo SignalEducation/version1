@@ -201,6 +201,7 @@ class CoursesController < ApplicationController
                     :user_id,
                     :original_scenario_text_content,
                     :user_edited_scenario_text_content,
+                    :scratch_pad_text,
                     scenario_question_attempts_attributes: [
                         :id,
                         :constructed_response_attempt_id,
@@ -291,7 +292,10 @@ class CoursesController < ApplicationController
         user_id: current_user.id,
         status: 'Incomplete',
         original_scenario_text_content: @constructed_response.scenario.text_content,
-        user_edited_scenario_text_content: @constructed_response.scenario.text_content
+        user_edited_scenario_text_content: @constructed_response.scenario.text_content,
+        guid: ApplicationController.generate_random_code(6),
+        scratch_pad_text: 'You can write notes here...'
+
     )
     @all_questions.each do |scenario_question|
       scenario_question_attempt = ScenarioQuestionAttempt.create(

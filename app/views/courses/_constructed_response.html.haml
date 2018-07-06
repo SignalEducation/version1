@@ -1,25 +1,38 @@
 .col-md-12
 
+  -#%h2=@course_module_element.try(:name)
   .scenario-box-nav.scenario-box-nav-header
-    .cr-resources
-      =@course_module_element.try(:name)
-
     .cr-navigation
-      %ul.cr-nav-block
-        %li.question-count
-          ='Question 1 of 1'
-        &#124;
+      .cr-navigation-left
+        %ul
+          %li.cr-nav-link
+            .k-icon.k-i-calculator
+            ='Calculator'
 
-        -@all_scenario_question_attempt.each do |question_attempt|
-          %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
-            =flagged_for_review(question_attempt.flagged_for_review)
-            ='Flag for review'
+          &#124;
+          %li.cr-nav-link#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
+            .k-icon.k-i-track-changes-enable
+            ='Scratch Pad'
+          %li.cr-nav-link.hidden#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
+            .k-icon.k-i-track-changes-enable
+            ='Scratch Pad'
 
-        &#124;
-        %li
-          =link_to course_special_link(@course_module_element), class: 'cr-nav-link' do
-            -# Add 'Confirm' Modal and change destination to start/finish screens
-            ='Exit'
+      .cr-navigation-right
+        %ul
+          %li.question-count
+            ='Question 1 of 1'
+          &#124;
+
+          -@all_scenario_question_attempt.each do |question_attempt|
+            %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
+              =flagged_for_review(question_attempt.flagged_for_review)
+              ='Flag for review'
+
+          &#124;
+          %li
+            =link_to course_special_link(@course_module_element), class: 'cr-nav-link' do
+              -# Add 'Confirm' Modal and change destination to start/finish screens
+              ='Exit'
 
   .scenario-box
     =form_for @course_module_element_user_log, url: update_constructed_response_user_log_courses_url, remote: true do |f|
@@ -37,6 +50,7 @@
         =constructed_response_attempt.hidden_field :course_module_element_id
         =constructed_response_attempt.hidden_field :original_scenario_text_content
         =constructed_response_attempt.hidden_field :user_edited_scenario_text_content
+        =constructed_response_attempt.hidden_field :scratch_pad_text
         -cr_attempt = constructed_response_attempt.object
 
         #splitter
@@ -106,31 +120,34 @@
 
 
 
+
     .scenario-box-nav.scenario-box-nav-footer
-      .cr-resources
-        -# TODO
-        ='Resources Will Go Here!'
-
       .cr-navigation
-        %ul.cr-nav-block
-          %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
-            .glyphicon.glyphicon-arrow-left
-            ='Previous'
-          &#124;
-          %li.cr-nav-link#open-navigation-dialog{onclick: 'openDialog(); return false;'}
-            .glyphicon.glyphicon-screenshot
-            ='Navigation'
-          %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeDialog(); return false;'}
-            .glyphicon.glyphicon-screenshot
-            ='Navigation'
-          &#124;
-          %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
-            ='Submit'
+        .cr-navigation-left
+          %ul
+            %li.cr-nav-link
+              ='Resources Will Go Here!'
 
-          &#124;
-          %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
-            ='Next'
-            .glyphicon.glyphicon-arrow-right
+        .cr-navigation-right
+          %ul
+            %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
+              .glyphicon.glyphicon-arrow-left
+              ='Previous'
+            &#124;
+            %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
+              .glyphicon.glyphicon-screenshot
+              ='Navigation'
+            %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
+              .glyphicon.glyphicon-screenshot
+              ='Navigation'
+            &#124;
+            %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
+              ='Submit'
+
+            &#124;
+            %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
+              ='Next'
+              .glyphicon.glyphicon-arrow-right
 
 
   #navigation-dialog.nav-dialog
@@ -152,6 +169,10 @@
             %td.text-center{id: "td_question_attempt_#{scenario_question_attempt.id}_review", onclick: "flagForReview(#{scenario_question_attempt.id}); return false;"}
               =flagged_for_review(scenario_question_attempt.flagged_for_review)
 
+
+  #scratch-pad-dialog.scratch-pad-dialog
+    .scratchpad_texteditor
+      %textarea#constructed_response_attempt_scratchpad_texteditor
 
 
 :javascript
@@ -197,26 +218,66 @@
     visible: false,
     close: onClose
   });
+  var navDialog = $("#navigation-dialog").data("kendoDialog");
 
-  var dialog = $("#navigation-dialog").data("kendoDialog");
+
+  // ScratchPad Dialog & Buttons
+  $("#scratch-pad-dialog").kendoDialog({
+    width: "400px",
+    title: "Scratch Pad",
+    closable: true,
+    modal: false,
+    visible: false,
+    open: populateEditorText,
+    close: updateText
+  });
+  var scratchPadDialog = $("#scratch-pad-dialog").data("kendoDialog");
+
+  $("#constructed_response_attempt_scratchpad_texteditor").kendoEditor({
+    encoded: false,
+    tools: []
+  });
+  var scratchPadEditor = $("#constructed_response_attempt_scratchpad_texteditor").data("kendoEditor");
+  function populateEditorText(){
+    scratchPadEditor.value($("#course_module_element_user_log_constructed_response_attempt_attributes_scratch_pad_text").val());
+  }
+  function updateText(){
+    $("#course_module_element_user_log_constructed_response_attempt_attributes_scratch_pad_text").val(scratchPadEditor.value());
+    $("#open-scratch-pad-dialog").removeClass('hidden');
+    $("#close-scratch-pad-dialog").addClass('hidden');
+  }
 
 
   var questionsList = #{@all_scenario_question_attempt_ids},
       currentQuestion = 1;
 
 
-
-  function openDialog() {
-    dialog.open();
+  function openNavDialog() {
+    navDialog.open();
     $("#open-navigation-dialog").addClass('hidden');
     $("#close-navigation-dialog").removeClass('hidden');
   };
 
-  function closeDialog() {
-    dialog.close();
+  function closeNavDialog() {
+    navDialog.close();
     $("#open-navigation-dialog").removeClass('hidden');
     $("#close-navigation-dialog").addClass('hidden');
   };
+
+
+  function openScratchPadDialog() {
+    scratchPadDialog.open();
+    $("#open-scratch-pad-dialog").addClass('hidden');
+    $("#close-scratch-pad-dialog").removeClass('hidden');
+  };
+
+  function closeScratchPadDialog() {
+    scratchPadDialog.close();
+    $("#open-scratch-pad-dialog").removeClass('hidden');
+    $("#close-scratch-pad-dialog").addClass('hidden');
+  };
+
+
 
   function onClose() {
     $("#open-navigation-dialog").removeClass('hidden');
@@ -273,7 +334,8 @@
     });
     $('.submission-pane-content').addClass('hidden');
 
-    closeDialog();
+    closeNavDialog();
+    closeScratchPadDialog();
     submitForm();
   };
 
@@ -287,7 +349,8 @@
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     $('#review_flag_' + questionsList[currentQuestion]).show();
     $('.submission-pane-content').addClass('hidden');
-    closeDialog();
+    closeNavDialog();
+    closeScratchPadDialog();
     submitForm();
   };
 
@@ -302,14 +365,16 @@
 
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     $('.submission-pane-content').addClass('hidden');
-    closeDialog();
+    closeNavDialog();
+    closeScratchPadDialog();
     submitForm();
   };
 
   function loadSubmission() {
     $('.cr-question').hide();
     $('.submission-pane-content').removeClass('hidden');
-    closeDialog();
+    closeNavDialog();
+    closeScratchPadDialog();
     submitForm();
   };
 

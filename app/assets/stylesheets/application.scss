@@ -2669,10 +2669,12 @@ spinner {
   &.scenario-box-nav-header {
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+    padding: $gutter/2.5 $gutter 1px $gutter;
   }
   &.scenario-box-nav-footer {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
+    padding: $gutter/2.5 $gutter 1px $gutter;
   }
 }
 #splitter {
@@ -2695,17 +2697,20 @@ spinner {
 
 }
 
-.cr-resources {
-  display: inline-block
-}
 .cr-navigation {
-  float: right;
-}
-.cr-nav-block {
+  width: 100%;
+  display: inline-block;
   list-style: none;
   & li {
     position: relative;
     display: inline-block;
+  }
+
+  .cr-navigation-left {
+    float: left;
+  }
+  .cr-navigation-right {
+    float: right;
   }
 }
 .cr-nav-link {

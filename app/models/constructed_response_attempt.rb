@@ -15,6 +15,8 @@
 #  time_in_seconds                   :integer
 #  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null
+#  guid                              :string
+#  scratch_pad_text                  :text
 #
 
 class ConstructedResponseAttempt < ActiveRecord::Base
@@ -23,7 +25,7 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   attr_accessible :constructed_response_id, :scenario_id, :course_module_element_id,
                   :course_module_element_user_log_id, :user_id, :original_scenario_text_content,
                   :user_edited_scenario_text_content, :time_in_seconds, :status,
-                  :scenario_question_attempts_attributes
+                  :scenario_question_attempts_attributes, :guid, :scratch_pad_text
 
   # Constants
   STATUS = %w(Incomplete Completed)
@@ -48,6 +50,7 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :original_scenario_text_content, presence: true
+  validates :guid, presence: true, uniqueness: true
   validates :user_edited_scenario_text_content, presence: true
 
   # callbacks

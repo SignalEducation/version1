@@ -38,7 +38,7 @@
               -@course_module_element_user_logs.each do |cmeul|
                 %tr
                   %td
-                    =link_to "CMEUL #{cmeul.id}", courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id)
+                    =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id)
                   %td
                     =humanize_datetime(cmeul.created_at)
                   %td
