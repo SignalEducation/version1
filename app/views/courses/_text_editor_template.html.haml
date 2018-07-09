@@ -7,21 +7,41 @@
   $(document).ready(function(){
     $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_texteditor").kendoEditor({
       encoded: false,
+      pasteCleanup: {
+          keepNewLines: true
+      },
       tools: [
+        {
+            name: "customReset",
+            tooltip: "Reset",
+            class: "k-i-file k-i-file-vertical",
+            exec: function(e) {
+                var editor = $(this).data("kendoEditor");
+                editor.value("#{sa_attempt.original_answer_template_text}");
+            }
+        },
+
+        "cut",
+        "copy",
+        "paste",
+
+        "undo",
+        "redo",
+
+        "find",
+
         "bold",
         "italic",
         "underline",
         "strikethrough",
-        "justifyLeft",
-        "justifyCenter",
-        "justifyRight",
-        "justifyFull",
-        "insertUnorderedList",
-        "insertOrderedList",
-        "indent",
-        "outdent",
+
         "subscript",
         "superscript",
+
+        "cleanFormatting",
+
+        "formatting",
+
         "tableWizard",
         "createTable",
         "addRowAbove",
@@ -30,10 +50,21 @@
         "addColumnRight",
         "deleteRow",
         "deleteColumn",
-        "formatting",
-        "cleanFormatting"
+
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "justifyFull",
+
+        "insertUnorderedList",
+        "insertOrderedList",
+
+        "indent",
+        "outdent"
+
       ]
     });
+
 
 
   });
