@@ -89,7 +89,7 @@
 
 
                   -if sa_attempt.spreadsheet_editor?
-                    =render partial: 'courses/spread_sheet_template', locals: {sq_attempt: sq_attempt, sa_attempt: sa_attempt, scenario_answer_attempt: scenario_answer_attempt, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
+                    =render partial: 'courses/spread_sheet_template', locals: {sq_attempt: sq_attempt, sa_attempt: sa_attempt, scenario_answer_attempt: scenario_answer_attempt, original_spreadsheet_json: sa_attempt.original_answer_template_text, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
                   -elsif sa_attempt.text_editor?
                     =render partial: 'courses/text_editor_template', locals: {scenario_answer_attempt: scenario_answer_attempt, sq_attempt: sq_attempt, sa_attempt: sa_attempt}
 

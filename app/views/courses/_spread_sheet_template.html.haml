@@ -1,3 +1,5 @@
+.hidden{id: "scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_original_spreadsheet_json"}
+  =original_spreadsheet_json
 .hidden{id: "scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet_json"}
   =spreadsheet_json
 
@@ -8,6 +10,9 @@
 
 :javascript
   $(document).ready(function(){
+
+    var originalTemplateJson = $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_original_spreadsheet_json").text();
+    var originalParedJson = JSON.parse(originalTemplateJson);
 
     var templateJson = $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet_json").text();
     var paredJson = JSON.parse(templateJson);
@@ -30,9 +35,9 @@
           {
               type: "button",
               text: "Custom",
-              spriteCssClass: "k-icon k-i-cog",
+              spriteCssClass: "tick",
               click: function() {
-                  window.alert("custom tool");
+                  reloadSource();
               }
           }
         ]
@@ -42,5 +47,12 @@
     $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet").fromJSON(paredJson);
 
     var spreadsheet_#{sa_attempt.id} = $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet");
+
+
+    function reloadSource() {
+      $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet").fromJSON(originalParedJson);
+      var spreadsheet_#{sa_attempt.id} = $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_spreadsheet").data("kendoSpreadsheet");
+    };
+
 
   });
