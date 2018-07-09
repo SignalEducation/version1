@@ -2742,9 +2742,14 @@ spinner {
 }
 
 
-.k-editor .k-i-custom-reset:before
-{
+.k-editor .k-i-custom-reset:before {
   content: "\e906";
+}
+.k-editor .k-i-custom-undo:before {
+  content: "\e100";
+}
+.k-editor .k-i-custom-redo:before {
+  content: "\e101";
 }
 
 

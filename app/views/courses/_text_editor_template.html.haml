@@ -25,8 +25,22 @@
         "copy",
         "paste",
 
-        "undo",
-        "redo",
+        {
+          name: "customUndo",
+          tooltip: "Undo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("undo");
+          }
+        },
+        {
+          name: "customRedo",
+          tooltip: "Redo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("redo");
+          }
+        },
 
         "find",
 
