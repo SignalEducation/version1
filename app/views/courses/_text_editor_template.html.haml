@@ -4,6 +4,7 @@
 
 
 :javascript
+
   $(document).ready(function(){
     $("#scenario_question_attempt_#{sq_attempt.id}_scenario_answer_attempt_#{sa_attempt.id}_texteditor").kendoEditor({
       encoded: false,
@@ -21,9 +22,9 @@
             }
         },
 
-        "cut",
-        "copy",
-        "paste",
+        "cut", //missing
+        "copy", //missing
+        "paste", //missing
 
         {
           name: "customUndo",
@@ -42,7 +43,7 @@
           }
         },
 
-        "find",
+        "findReplace", //missing
 
         "bold",
         "italic",
@@ -56,7 +57,7 @@
 
         "formatting",
 
-        "tableWizard",
+        "tableWizard", //Can't make exact match -- having issue with width of dialog modal
         "createTable",
         "addRowAbove",
         "addRowBelow",

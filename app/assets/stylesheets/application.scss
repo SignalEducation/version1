@@ -2693,6 +2693,9 @@ spinner {
   .answer_texteditor {
     width: 100%;
     margin: $gutter 0;
+    .k-editor {
+      height: 350px;
+    }
   }
 
 }
