@@ -2750,6 +2750,12 @@ spinner {
 .k-spreadsheet-toolbar>.k-widget[data-property=format] {
   width: 100px !important;
 }
+.k-widget .k-window {
+  width: 400px;
+}
+.k-block>.k-header, .k-window-titlebar {
+  width: 90% !important;
+}
 .k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
   padding-top: 0 !important;
 }
