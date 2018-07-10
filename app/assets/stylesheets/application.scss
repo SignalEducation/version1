@@ -2747,6 +2747,9 @@ spinner {
 .k-toolbar .k-button {
   padding: 4px 6px !important;
 }
+.k-spreadsheet-toolbar>.k-widget[data-property=format] {
+  width: 100px !important;
+}
 .k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
   padding-top: 0 !important;
 }
