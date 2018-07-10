@@ -2744,11 +2744,17 @@ spinner {
   opacity: 1;
 }
 
+.k-toolbar .k-button {
+  padding: 4px 6px !important;
+}
+.k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
+  padding-top: 0 !important;
+}
+.k-spreadsheet-tabstrip {
+  padding-top: 0 !important;
+}
 
 .k-editor .k-i-custom-reset:before {
-  content: "\e906";
-}
-.k-sprite .k-icon .k-editor .k-i-custom-reset:before {
   content: "\e906";
 }
 .k-editor .k-i-custom-undo:before {

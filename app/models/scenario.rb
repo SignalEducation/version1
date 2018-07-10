@@ -49,12 +49,14 @@ class Scenario < ActiveRecord::Base
   end
 
   def add_an_empty_scenario_question
+    json = {"activeSheet":"Sheet1","sheets":[{"name":"Sheet1","rows":[],"columns":[],"selection":"A1:A1","activeCell":"A1:A1","frozenRows":0,"frozenColumns":0,"showGridLines":true,"gridLinesColor":nil,"mergedCells":[],"hyperlinks":[],"defaultCellStyle":{"fontFamily":"Arial","fontSize":"12"}}],"names":[],"columnWidth":64,"rowHeight":20}.to_json
+
     self.scenario_questions.build
     self.scenario_questions.last.scenario_id = self.id
     2.times do |number|
       self.scenario_questions.last.scenario_answer_templates.build(
           sorting_order: number + 1,
-          spreadsheet_editor_content: '[]',
+          spreadsheet_editor_content: json,
           editor_type: (number.odd? ? 'text_editor' : 'spreadsheet_editor')
       )
     end
