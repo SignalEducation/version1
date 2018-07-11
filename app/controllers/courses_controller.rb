@@ -304,6 +304,7 @@ class CoursesController < ApplicationController
           scenario_question_id: scenario_question.id,
           status: 'Unseen',
           flagged_for_review: false,
+          sorting_order: scenario_question.sorting_order,
           original_scenario_question_text: scenario_question.text_content,
           user_edited_scenario_question_text: scenario_question.text_content
       )
@@ -318,7 +319,8 @@ class CoursesController < ApplicationController
             scenario_answer_template_id: scenario_answer_template.id,
             original_answer_template_text: text_content,
             user_edited_answer_template_text: text_content,
-            editor_type: scenario_answer_template.editor_type
+            editor_type: scenario_answer_template.editor_type,
+            sorting_order: scenario_answer_template.sorting_order
         )
 
 

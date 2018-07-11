@@ -11,6 +11,7 @@
 #  editor_type                      :string
 #  created_at                       :datetime         not null
 #  updated_at                       :datetime         not null
+#  sorting_order                    :integer
 #
 
 class ScenarioAnswerAttempt < ActiveRecord::Base
@@ -18,7 +19,7 @@ class ScenarioAnswerAttempt < ActiveRecord::Base
   # attr-accessible
   attr_accessible :scenario_question_attempt_id, :user_id, :scenario_answer_template_id,
                   :original_answer_template_text, :user_edited_answer_template_text,
-                  :editor_type
+                  :editor_type, :sorting_order
 
   # Constants
 
@@ -40,7 +41,7 @@ class ScenarioAnswerAttempt < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:scenario_question_attempt_id) }
+  scope :all_in_order, -> { order(:sorting_order, :scenario_question_attempt_id) }
 
   # class methods
 
