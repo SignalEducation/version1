@@ -268,8 +268,8 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     @time_allowed = @course_module_element.constructed_response.time_allowed
     @constructed_response = @course_module_element.constructed_response
-    @all_questions = @constructed_response.scenario.scenario_questions
-    @all_question_ids = @constructed_response.scenario.scenario_questions.map(&:id)
+    @all_questions = @constructed_response.scenario.scenario_questions.all_in_order
+    @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
 
     #Creates CONSTRUCTED_RESPONSE log when page renders
     @course_module_element_user_log = CourseModuleElementUserLog.create(
@@ -326,8 +326,8 @@ class CoursesController < ApplicationController
 
       end
     end
-    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts
-    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
+    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts.all_in_order
+    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.all_in_order.map(&:id)
 
   end
 
@@ -336,13 +336,13 @@ class CoursesController < ApplicationController
     @mathjax_required = true
     @constructed_response = @course_module_element.constructed_response
     @time_allowed = @constructed_response.time_allowed
-    @all_question_ids = @constructed_response.scenario.scenario_questions.map(&:id)
+    @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
 
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log_id])
     @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
 
-    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts
-    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.map(&:id)
+    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts.all_in_order
+    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.all_in_order.map(&:id)
   end
 
   protected
