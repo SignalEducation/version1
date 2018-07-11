@@ -49,9 +49,11 @@ class Scenario < ActiveRecord::Base
   end
 
   def add_an_empty_scenario_question
+    question_order = self.scenario_questions.any? ? self.scenario_questions.all_in_order.last.sorting_order + 1 : 1
+
     json = {"activeSheet":"Sheet1","sheets":[{"name":"Sheet1","rows":[],"columns":[],"selection":"A1:A1","activeCell":"A1:A1","frozenRows":0,"frozenColumns":0,"showGridLines":true,"gridLinesColor":nil,"mergedCells":[],"hyperlinks":[],"defaultCellStyle":{"fontFamily":"Arial","fontSize":"12"}}],"names":[],"columnWidth":64,"rowHeight":20}.to_json
 
-    self.scenario_questions.build
+    self.scenario_questions.build(sorting_order: question_order)
     self.scenario_questions.last.scenario_id = self.id
     2.times do |number|
       self.scenario_questions.last.scenario_answer_templates.build(
