@@ -5,9 +5,14 @@
     .cr-navigation
       .cr-navigation-left
         %ul
-          %li.cr-nav-link
+
+          %li.cr-nav-link#open-calculator-dialog{onclick: 'openCalculatorDialog(); return false;'}
             .k-icon.k-i-calculator
             ='Calculator'
+          %li.cr-nav-link.hidden#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
+            .k-icon.k-i-calculator
+            ='Calculator'
+
 
           &#124;
           %li.cr-nav-link#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
@@ -174,6 +179,9 @@
     .scratchpad_texteditor
       %textarea#constructed_response_attempt_scratchpad_texteditor
 
+  #calculator-dialog.calculator-dialog
+    =render partial: 'courses/cbe_calculator'
+
 
 :javascript
   //
@@ -208,6 +216,19 @@
     revealQuestion(questionNumber);
 
   });
+
+  // Navigation Dialog & Buttons
+  $("#calculator-dialog").kendoDialog({
+    width: "550px",
+    height: "400px",
+    title: "Calculator",
+    closable: true,
+    modal: false,
+    visible: false,
+    close: onCalculatorClose
+  });
+  var calculatorDialog = $("#calculator-dialog").data("kendoDialog");
+
 
   // Navigation Dialog & Buttons
   $("#navigation-dialog").kendoDialog({
@@ -277,11 +298,28 @@
     $("#close-scratch-pad-dialog").addClass('hidden');
   };
 
+  function openCalculatorDialog() {
+    calculatorDialog.open();
+    $("#open-calculator-dialog").addClass('hidden');
+    $("#close-calculator-dialog").removeClass('hidden');
+  };
+
+  function closeCalculatorDialog() {
+    calculatorDialog.close();
+    $("#open-calculator-dialog").removeClass('hidden');
+    $("#close-calculator-dialog").addClass('hidden');
+  };
+
 
 
   function onClose() {
     $("#open-navigation-dialog").removeClass('hidden');
     $("#close-navigation-dialog").addClass('hidden');
+  }
+
+  function onCalculatorClose() {
+    $("#open-calculator-dialog").removeClass('hidden');
+    $("#close-calculator-dialog").addClass('hidden');
   }
 
   function flagForReview(question_attempt_id) {
