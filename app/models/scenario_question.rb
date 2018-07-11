@@ -36,6 +36,7 @@ class ScenarioQuestion < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :scenario_id) }
+  default_scope { order(:sorting_order, :scenario_id) }
 
   # class methods
 

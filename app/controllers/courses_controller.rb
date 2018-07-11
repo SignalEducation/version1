@@ -130,7 +130,7 @@ class CoursesController < ApplicationController
         end
 
       end
-
+      @footer = false
     else
       ## The URL params are wrong ##
       flash[:warning] = t('controllers.courses.show.warning')
@@ -150,6 +150,17 @@ class CoursesController < ApplicationController
       end
 
     end
+  end
+
+  def submit_constructed_response_user_log
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+
+    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+    @constructed_response_attempt.update_attributes(status: 'Completed')
+
+    @course_module_element_user_log.update_attributes(element_completed: true)
+
+    redirect_to course_special_link(@course_module_element_user_log.course_module_element)
   end
 
   private
@@ -190,6 +201,7 @@ class CoursesController < ApplicationController
                     :user_id,
                     :original_scenario_text_content,
                     :user_edited_scenario_text_content,
+                    :scratch_pad_text,
                     scenario_question_attempts_attributes: [
                         :id,
                         :constructed_response_attempt_id,
@@ -278,8 +290,12 @@ class CoursesController < ApplicationController
         course_module_element_id: @constructed_response.course_module_element_id,
         course_module_element_user_log_id: @course_module_element_user_log.id,
         user_id: current_user.id,
+        status: 'Incomplete',
         original_scenario_text_content: @constructed_response.scenario.text_content,
-        user_edited_scenario_text_content: @constructed_response.scenario.text_content
+        user_edited_scenario_text_content: @constructed_response.scenario.text_content,
+        guid: ApplicationController.generate_random_code(6),
+        scratch_pad_text: 'You can write notes here...'
+
     )
     @all_questions.each do |scenario_question|
       scenario_question_attempt = ScenarioQuestionAttempt.create(
@@ -288,6 +304,7 @@ class CoursesController < ApplicationController
           scenario_question_id: scenario_question.id,
           status: 'Unseen',
           flagged_for_review: false,
+          sorting_order: scenario_question.sorting_order,
           original_scenario_question_text: scenario_question.text_content,
           user_edited_scenario_question_text: scenario_question.text_content
       )
@@ -302,7 +319,8 @@ class CoursesController < ApplicationController
             scenario_answer_template_id: scenario_answer_template.id,
             original_answer_template_text: text_content,
             user_edited_answer_template_text: text_content,
-            editor_type: scenario_answer_template.editor_type
+            editor_type: scenario_answer_template.editor_type,
+            sorting_order: scenario_answer_template.sorting_order
         )
 
 

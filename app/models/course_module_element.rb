@@ -176,7 +176,7 @@ class CourseModuleElement < ActiveRecord::Base
     if is_quiz
       'Quiz'
     elsif is_video
-      "Video"
+      'Video'
     elsif constructed_response
       'Constructed Response'
     else

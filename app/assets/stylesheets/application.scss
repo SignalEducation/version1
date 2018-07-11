@@ -2669,10 +2669,12 @@ spinner {
   &.scenario-box-nav-header {
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
+    padding: $gutter/2.5 $gutter 1px $gutter;
   }
   &.scenario-box-nav-footer {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
+    padding: $gutter/2.5 $gutter 1px $gutter;
   }
 }
 #splitter {
@@ -2691,21 +2693,27 @@ spinner {
   .answer_texteditor {
     width: 100%;
     margin: $gutter 0;
+    .k-editor {
+      height: 350px;
+    }
   }
 
 }
 
-.cr-resources {
-  display: inline-block
-}
 .cr-navigation {
-  float: right;
-}
-.cr-nav-block {
+  width: 100%;
+  display: inline-block;
   list-style: none;
   & li {
     position: relative;
     display: inline-block;
+  }
+
+  .cr-navigation-left {
+    float: left;
+  }
+  .cr-navigation-right {
+    float: right;
   }
 }
 .cr-nav-link {
@@ -2723,11 +2731,7 @@ spinner {
 }
 .nav-dialog {
 
-  ul, li {
-    padding: 0;
-    display: list-item;
-    border-bottom: 1px solid rgba(120,120,120,.5);
-    @include font-size(1.6);
+  .nav-link {
     &:hover {
       cursor: pointer;
       color: darken($white, 25);
@@ -2740,10 +2744,41 @@ spinner {
   opacity: 1;
 }
 
+.k-toolbar .k-button {
+  padding: 4px 6px !important;
+}
+.k-spreadsheet-toolbar>.k-widget[data-property=format] {
+  width: 100px !important;
+}
+.k-widget .k-window {
+  width: 400px;
+}
+.k-block>.k-header, .k-window-titlebar {
+  width: 90% !important;
+}
+.k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
+  padding-top: 0 !important;
+}
+.k-spreadsheet-tabstrip {
+  padding-top: 0 !important;
+}
+
+.k-editor .k-i-custom-reset:before {
+  content: "\e906";
+}
+.k-editor .k-i-custom-undo:before {
+  content: "\e100";
+}
+.k-editor .k-i-custom-redo:before {
+  content: "\e101";
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 23. CSS Partials that depend on existing classes in this file so must be imported last
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 @import "nav_and_footer.scss";
+@import "calculator.scss";
 @import "extras.scss";

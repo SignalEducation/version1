@@ -97,6 +97,9 @@ Rails.application.routes.draw do
       match :create_constructed_response_user_log, on: :collection, via: [:post]
       match :update_constructed_response_user_log, on: :collection, via: [:put, :patch]
     end
+
+    get '/submit_constructed_response_user_log/:cmeul_id', to: 'courses#submit_constructed_response_user_log', as: :submit_constructed_response_user_log
+
     resources :enrollments, only: [:edit, :update, :create]
     get '/enrollments_management', to: 'enrollment_management#index', as: :enrollments_management
     resources :enrollment_management, only: [:edit, :update, :show]

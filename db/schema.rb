@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180703100240) do
+ActiveRecord::Schema.define(version: 20180711082326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 20180703100240) do
     t.integer  "time_in_seconds"
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
+    t.string   "guid"
+    t.text     "scratch_pad_text"
   end
 
   add_index "constructed_response_attempts", ["constructed_response_id"], name: "index_constructed_response_attempts_on_constructed_response_id", using: :btree
@@ -742,6 +744,7 @@ ActiveRecord::Schema.define(version: 20180703100240) do
     t.string   "editor_type"
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
+    t.integer  "sorting_order"
   end
 
   create_table "scenario_answer_templates", force: :cascade do |t|
@@ -767,6 +770,7 @@ ActiveRecord::Schema.define(version: 20180703100240) do
     t.text     "user_edited_scenario_question_text"
     t.datetime "created_at",                                         null: false
     t.datetime "updated_at",                                         null: false
+    t.integer  "sorting_order"
   end
 
   add_index "scenario_question_attempts", ["flagged_for_review"], name: "index_scenario_question_attempts_on_flagged_for_review", using: :btree

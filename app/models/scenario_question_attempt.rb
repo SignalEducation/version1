@@ -12,6 +12,7 @@
 #  user_edited_scenario_question_text :text
 #  created_at                         :datetime         not null
 #  updated_at                         :datetime         not null
+#  sorting_order                      :integer
 #
 
 class ScenarioQuestionAttempt < ActiveRecord::Base
@@ -19,7 +20,8 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
   # attr-accessible
   attr_accessible :constructed_response_attempt_id, :user_id, :scenario_question_id,
                   :status, :flagged_for_review, :original_scenario_question_text,
-                  :user_edited_scenario_question_text, :scenario_answer_attempts_attributes
+                  :user_edited_scenario_question_text,
+                  :scenario_answer_attempts_attributes, :sorting_order
 
   # Constants
   STATUS = %w(Unseen Seen)
@@ -47,7 +49,7 @@ class ScenarioQuestionAttempt < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:constructed_response_attempt_id) }
+  scope :all_in_order, -> { order(:sorting_order, :constructed_response_attempt_id) }
 
   # class methods
 

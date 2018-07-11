@@ -11,6 +11,7 @@
 #  editor_type                      :string
 #  created_at                       :datetime         not null
 #  updated_at                       :datetime         not null
+#  sorting_order                    :integer
 #
 
 FactoryBot.define do

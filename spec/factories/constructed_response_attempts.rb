@@ -15,6 +15,8 @@
 #  time_in_seconds                   :integer
 #  created_at                        :datetime         not null
 #  updated_at                        :datetime         not null
+#  guid                              :string
+#  scratch_pad_text                  :text
 #
 
 FactoryBot.define do
