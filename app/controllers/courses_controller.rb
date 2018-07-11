@@ -130,7 +130,7 @@ class CoursesController < ApplicationController
         end
 
       end
-
+      @footer = false
     else
       ## The URL params are wrong ##
       flash[:warning] = t('controllers.courses.show.warning')

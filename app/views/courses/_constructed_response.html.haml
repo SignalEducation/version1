@@ -201,7 +201,7 @@
     var outerBox = $("#splitter").parent().parent().parent();
     var outerSplitter = $("#splitter").data("kendoSplitter");
     var browserWindow = $(window);
-    var headerFooterHeight = $(".nav-header").height() + ($("#footer").height() - '30');
+    var headerFooterHeight = $(".nav-header").height() + 110;
 
     function resizeSplitter() {
         outerBox.height(browserWindow.height() - headerFooterHeight);
