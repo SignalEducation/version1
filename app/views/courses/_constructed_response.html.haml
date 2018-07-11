@@ -63,7 +63,6 @@
             .scenario-content
               =cr_attempt.user_edited_scenario_text_content.try(:html_safe)
 
-          -#TODO This pane is not resizing on window resize, other pane is resizing
           .pane-content
             =constructed_response_attempt.fields_for :scenario_question_attempts, cr_attempt.scenario_question_attempts.all_in_order do |scenario_question_attempt|
               =scenario_question_attempt.hidden_field :constructed_response_attempt_id
