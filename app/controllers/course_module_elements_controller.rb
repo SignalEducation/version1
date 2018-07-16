@@ -375,7 +375,6 @@ class CourseModuleElementsController < ApplicationController
         constructed_response_attributes:  [
             :id,
             :course_module_element_id,
-            :time_allowed,
             scenario_attributes: [
                 :id,
                 :constructed_response_id,

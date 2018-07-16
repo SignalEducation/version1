@@ -2,22 +2,23 @@
 #
 # Table name: student_exam_tracks
 #
-#  id                              :integer          not null, primary key
-#  user_id                         :integer
-#  latest_course_module_element_id :integer
-#  exam_schedule_id                :integer
-#  created_at                      :datetime
-#  updated_at                      :datetime
-#  session_guid                    :string
-#  course_module_id                :integer
-#  percentage_complete             :float            default(0.0)
-#  count_of_cmes_completed         :integer          default(0)
-#  subject_course_id               :integer
-#  count_of_questions_taken        :integer
-#  count_of_questions_correct      :integer
-#  count_of_quizzes_taken          :integer
-#  count_of_videos_taken           :integer
-#  subject_course_user_log_id      :integer
+#  id                                   :integer          not null, primary key
+#  user_id                              :integer
+#  latest_course_module_element_id      :integer
+#  exam_schedule_id                     :integer
+#  created_at                           :datetime
+#  updated_at                           :datetime
+#  session_guid                         :string
+#  course_module_id                     :integer
+#  percentage_complete                  :float            default(0.0)
+#  count_of_cmes_completed              :integer          default(0)
+#  subject_course_id                    :integer
+#  count_of_questions_taken             :integer
+#  count_of_questions_correct           :integer
+#  count_of_quizzes_taken               :integer
+#  count_of_videos_taken                :integer
+#  subject_course_user_log_id           :integer
+#  count_of_constructed_responses_taken :integer
 #
 
 #This should have been called CourseModuleUserLog
@@ -116,11 +117,14 @@ class StudentExamTrack < ActiveRecord::Base
     unique_video_ids = video_ids.uniq
     quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
     unique_quiz_ids = quiz_ids.uniq
+    constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id)
+    unique_constructed_response_ids = constructed_response_ids.uniq
     videos_taken = unique_video_ids.count
     quizzes_taken = unique_quiz_ids.count
+    constructed_responses_taken = unique_constructed_response_ids.count
     cmes_completed = self.unique_logs.count
     percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
+    self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_constructed_responses_taken: constructed_responses_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
     ## TODO See Sidekiq Github wiki FAQ may be race condition issue ##
   end
 
@@ -132,9 +136,16 @@ class StudentExamTrack < ActiveRecord::Base
     unique_video_ids = video_ids.uniq
     quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
     unique_quiz_ids = quiz_ids.uniq
+
+    constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id)
+    unique_constructed_response_ids = constructed_response_ids.uniq
+
     self.count_of_videos_taken = unique_video_ids.count
     self.count_of_quizzes_taken = unique_quiz_ids.count
-    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count)
+
+    self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
+
+    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count + unique_constructed_response_ids.count)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
 
     begin

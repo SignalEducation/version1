@@ -2,22 +2,23 @@
 #
 # Table name: student_exam_tracks
 #
-#  id                              :integer          not null, primary key
-#  user_id                         :integer
-#  latest_course_module_element_id :integer
-#  exam_schedule_id                :integer
-#  created_at                      :datetime
-#  updated_at                      :datetime
-#  session_guid                    :string
-#  course_module_id                :integer
-#  percentage_complete             :float            default(0.0)
-#  count_of_cmes_completed         :integer          default(0)
-#  subject_course_id               :integer
-#  count_of_questions_taken        :integer
-#  count_of_questions_correct      :integer
-#  count_of_quizzes_taken          :integer
-#  count_of_videos_taken           :integer
-#  subject_course_user_log_id      :integer
+#  id                                   :integer          not null, primary key
+#  user_id                              :integer
+#  latest_course_module_element_id      :integer
+#  exam_schedule_id                     :integer
+#  created_at                           :datetime
+#  updated_at                           :datetime
+#  session_guid                         :string
+#  course_module_id                     :integer
+#  percentage_complete                  :float            default(0.0)
+#  count_of_cmes_completed              :integer          default(0)
+#  subject_course_id                    :integer
+#  count_of_questions_taken             :integer
+#  count_of_questions_correct           :integer
+#  count_of_quizzes_taken               :integer
+#  count_of_videos_taken                :integer
+#  subject_course_user_log_id           :integer
+#  count_of_constructed_responses_taken :integer
 #
 
 require 'rails_helper'

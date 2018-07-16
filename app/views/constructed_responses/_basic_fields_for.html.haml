@@ -1,5 +1,15 @@
 =f.fields_for :constructed_response do |constructed_response|
-  =constructed_response.label :time_allowed, t('views.constructed_responses.form.time_allowed'), class: 'control-label'
-  .input-group.input-group-lg.full-width
+  -#=constructed_response.label :time_allowed, t('views.constructed_responses.form.time_allowed'), class: 'control-label'
+  -#.input-group.input-group-lg.full-width
     =constructed_response.text_field :time_allowed, placeholder: t('views.constructed_responses.form.time_allowed_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+
+
+  =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
+  .input-group.input-group-lg.full-width
+    =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    %p{style: 'margin-bottom: 1px;'}
+      =t('views.course_module_elements.form.estimated_time_in_seconds_tag')
+    %p
+      ='(This counts towards the students trial limit)'
+
   %br/

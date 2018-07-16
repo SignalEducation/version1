@@ -143,6 +143,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
 
     respond_to do |format|
+      #update_columns ?? to stop callback chain will be called on final submit
       if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
         format.json { render json: @course_module_element_user_log, status: :created }
       else
@@ -186,13 +187,6 @@ class CoursesController < ApplicationController
 
   def constructed_response_allowed_params
     params.require(:course_module_element_user_log).permit(
-            :subject_course_id,
-            :student_exam_track_id,
-            :subject_course_user_log_id,
-            :course_module_id,
-            :course_module_element_id,
-            :user_id,
-            :time_taken_in_seconds,
             constructed_response_attempt_attributes: [
                     :id,
                     :constructed_response_id,
