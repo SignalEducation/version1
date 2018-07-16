@@ -12,6 +12,11 @@
       %li
         =link_to 'Pricing', pricing_url
       %li
-        =link_to 'Get free access', new_student_url, class: 'uc get'
-      %li
-        =link_to 'Login', sign_in_url, class: 'uc'
+        -if current_user && current_user.trial_or_sub_user?
+          =link_to 'Get full access', new_subscription_url, class: 'uc get'
+        -else
+          =link_to 'Get free access', new_student_url, class: 'uc get'
+
+      -unless current_user
+        %li
+          =link_to 'Login', sign_in_url, class: 'uc'
