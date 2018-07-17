@@ -120,7 +120,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def type
-    self.is_quiz ? 'Quiz' : 'Video'
+    if self.is_quiz?
+      'Quiz'
+    elsif self.is_video?
+      'Video'
+    elsif self.is_constructed_response?
+      'Constructed Response'
+    else
+      'Unknown'
+    end
   end
 
   def latest
@@ -156,7 +164,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
       percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
       passed = percentage_score >= course_pass_rate ? true : false
-      self.update_attributes(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
+      self.update_columns(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
     end
   end
 
@@ -187,8 +195,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def set_booleans
-    if self.course_module_element.course_module_element_quiz
+    if self.course_module_element.is_quiz
       self.is_quiz = true
+    elsif self.course_module_element.is_video
+      self.is_video = true
+    elsif self.course_module_element.is_constructed_response
+      self.is_constructed_response = true
     else
       self.is_video = true
     end
@@ -203,7 +215,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def create_lesson_intercom_event
-    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
+    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.type, self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
   end
 
 

@@ -2753,9 +2753,6 @@ spinner {
 .k-widget .k-window {
   width: 400px;
 }
-.k-block>.k-header, .k-window-titlebar {
-  width: 90% !important;
-}
 .k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
   padding-top: 0 !important;
 }
@@ -2773,6 +2770,13 @@ spinner {
   content: "\e101";
 }
 
+.k-block>.k-header, .k-window-titlebar {
+  width: auto !important;
+}
+
+.k-block>.k-action-window>.k-window-content, .k-editor-table-wizard-dialog {
+  width: 500px !important;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 23. CSS Partials that depend on existing classes in this file so must be imported last

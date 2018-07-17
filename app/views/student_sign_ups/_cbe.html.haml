@@ -1,0 +1,99 @@
+.landing
+  =render partial: 'layouts/external_banner'
+  #wrapper
+    -#loading
+    %header#header
+      =render 'layouts/landing_navbar'
+
+    %section#coming_soon.diag-r-down
+      .tmain
+        .tbase
+          .container
+            .row
+              .col-md-10{style: 'margin-top: 60px;'}
+                %h1.title1
+                  ='Coming Soon . . . Unlimited CBE’s!'
+                %h2.subtitle
+                  ='Eliminate your exam fears. Start studying with LearnSignal now.'
+
+              .col-md-2
+                .approved
+                  =image_tag('acca_approved.png')
+
+
+
+    %section#points
+      .container
+        .row
+          .col-md-10.col-md-offset-1
+            %h2.title1
+              ='Eliminate your fear of ACCA exams'
+
+            %ul
+              %li
+                ='No extra cost.'
+              %li
+                ='Unlimited constructed response CBE practice.'
+              %li
+                ='No other learning provider gives you this many unlimited constructed response practice CBE’s.'
+              %li
+                ='Short on time? Save your answers and finish them later.'
+              %li
+                ='Easy to use. Just log in and get started.'
+
+
+
+
+    %section#what{style: 'background: #F5F5F7;'}
+      .container
+        %h2.title1 Frequently Asked Questions
+        %ul
+          %li
+            .item
+              .img
+                =image_tag('what1.png')
+              .desc
+                %span{style: 'font-weight: bold;'}
+                  ='How much do the CBE’s cost?'
+                ='They are completely free for LearnSignal students.'
+          %li
+            .item
+              .img
+                =image_tag('what2.png')
+              .desc
+                %span{style: 'font-weight: bold;'}
+                  ='Can I use the CBE’s for my Assumed Knowledge?'
+                ='Absolutely. Use them for all'
+                %span{style: 'font-style: italic;'}
+                  ='Applied Knowledge and Applied Skills'
+                ='exams.'
+          %li
+            .item
+              .img
+                =image_tag('what3.png')
+              .desc
+                %span{style: 'font-weight: bold;'}
+                  ='How many times can I use the CBE’s?'
+                ='As many times as you like - there’s no limit.'
+          %li
+            .item
+              .img
+                =image_tag('what4.png')
+              .desc
+                %span{style: 'font-weight: bold;'}
+                  ='Where are the CBE’s?'
+                ='Inside the LearnSignal platform. Simply log in and get started.'
+
+        .obs-nocc{style: 'margin-bottom: 10px;'}
+          Eliminate your fear of your ACCA exams - get started now!
+        .lsbtn-base
+          -if current_user && current_user.trial_or_sub_user?
+            =link_to 'Get full access now', new_subscription_url, class: 'lsbtn'
+          -else
+            =link_to 'Start Free Trial', new_student_url, class: 'lsbtn'
+
+
+
+
+
+=render partial: 'footer_pages/contact_us_form_modal'

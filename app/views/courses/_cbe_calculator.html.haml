@@ -1,4 +1,4 @@
-.calc-main
+.calc-main#calc-main
   .calc-display
     %span 0
     .calc-rad Rad
@@ -117,4 +117,6 @@
     .calc-black.calc-f21
       %div .
 
-=javascript_include_tag 'calculator.js', modernizr: :true
+
+
+=render partial: 'calculator_js'

@@ -1,8 +1,8 @@
 class StudentSignUpsController < ApplicationController
 
-  before_action :check_logged_in_status
+  before_action :check_logged_in_status, except: [:landing]
   before_action :get_variables
-  before_action :create_user_object, only: [:home, :landing, :new]
+  before_action :create_user_object, only: [:home, :new]
   before_action :layout_variables, only: [:home, :landing]
 
   def home
@@ -27,7 +27,14 @@ class StudentSignUpsController < ApplicationController
       @subject_course = @home_page.subject_course
       @banner = @home_page.external_banners.first
 
-      #TODO Remove limit(3)
+      if current_user
+        ip_country = IpAddress.get_country(request.remote_ip)
+        country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+        @currency_id = country.currency_id
+      else
+        create_user_object
+      end
+
       @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
 
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
@@ -53,7 +60,7 @@ class StudentSignUpsController < ApplicationController
         @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
 
         respond_to do |format|
-          format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
+          format.json{render json: {message: 'Success! Check your email to confirm your subscription.'}}
         end
       rescue Mailchimp::ListAlreadySubscribedError
         respond_to do |format|
@@ -61,22 +68,22 @@ class StudentSignUpsController < ApplicationController
         end
       rescue Mailchimp::ListDoesNotExistError
         respond_to do |format|
-          format.json{render json: {message: "The list could not be found."}}
+          format.json{render json: {message: 'The list could not be found.'}}
         end
       rescue Mailchimp::Error => ex
         if ex.message
           respond_to do |format|
-            format.json{render json: {message: "There is an error. Please enter valid email id."}}
+            format.json{render json: {message: 'There is an error. Please enter valid email.'}}
           end
         else
           respond_to do |format|
-            format.json{render json: {message: "An unknown error occurred."}}
+            format.json{render json: {message: 'An unknown error occurred.'}}
           end
         end
       end
     else
       respond_to do |format|
-        format.json{render json: {message: "Email Address Cannot be blank. Please enter valid email id."}}
+        format.json{render json: {message: 'Email Address Cannot be blank. Please enter valid email.'}}
       end
     end
   end
