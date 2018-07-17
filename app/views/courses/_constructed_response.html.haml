@@ -162,7 +162,7 @@
           %tr
             %td.nav-link{onclick: "revealQuestion(#{scenario_question_attempt.id}); return false;"}
               ="Question #{counter}"
-            %td{id: "td_question_attempt_#{scenario_question_attempt.id}_status"}
+            %td{id: "nav_dialog_td_question_attempt_#{scenario_question_attempt.id}_status"}
               =scenario_question_attempt.status
             %td.text-center{id: "td_question_attempt_#{scenario_question_attempt.id}_review", onclick: "flagForReview(#{scenario_question_attempt.id}); return false;"}
               =flagged_for_review(scenario_question_attempt.flagged_for_review)
@@ -358,6 +358,7 @@
     $('#review_flag_' + questionsList[currentQuestion]).show();
     $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
     $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('#nav_dialog_td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
     $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
 
     $('.answer_spreadsheet').each(function (index, value){
@@ -391,6 +392,8 @@
     currentQuestion = questionsList.indexOf(questionNumber);
     $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
     $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('#nav_dialog_td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+
     $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
     $('#review_flag_' + questionsList[currentQuestion]).show();
 
