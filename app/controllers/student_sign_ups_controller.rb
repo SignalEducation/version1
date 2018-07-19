@@ -138,10 +138,12 @@ class StudentSignUpsController < ApplicationController
         end
       end
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
-    else
+    elsif request && request.referrer
       session[:sign_up_errors] = @user.errors unless @user.errors.empty?
       session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.terms_and_conditions] unless @user.errors.empty?
       redirect_to request.referrer
+    else
+      redirect_to root_url
     end
   end
 
