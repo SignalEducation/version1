@@ -468,6 +468,7 @@ en:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
+        constructed_response_preview: Constructed Response Preview
         next: Next
         next_step: Next Step
         skip_step: Skip Step

@@ -24,7 +24,7 @@
 
 
 
-      -if @course_module_element_user_logs.any?
+      -if @course_module_element_user_logs && @course_module_element_user_logs.any?
         .table-responsive.l-margin-top
           %table.table{style: 'font-size: 18px;'}
             %thead
