@@ -13,3 +13,6 @@
       ='(This counts towards the students trial limit)'
 
   %br/
+  -if f.object
+    .l-margin-bottom
+      =link_to 'Additional Resources', course_module_element_course_module_element_resources_url(f.object.id), class: 'btn btn-red'

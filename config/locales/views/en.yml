@@ -531,13 +531,18 @@ en:
         upload_updated_at: Upload updated at
         upload: Upload File
         replace: Replace Current File
+        type: Type
 
       edit:
+        h1: Edit Resource
 
       index:
         h1: File Uploads - (PDF's, Excel Files, etc)
+        index_h1: Course Module Element Resources
 
       new:
+        h1: New Resource
+        new_button: New Resource
 
       show:
 
