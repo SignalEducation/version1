@@ -534,8 +534,8 @@ label, .label {
       border: 2px solid $colour-13;
       &:hover {
         background: transparent;
-        color: shade($colour-13, 20%);
-        border: 1px solid shade($colour-13, 20%);
+        color: darken($colour-13, 10%);
+        border: 2px solid darken($colour-13, 10%);
       }
     }
   }
@@ -2636,24 +2636,6 @@ spinner {
   }
 
 }
-.start-screen-box .resources-list{
-  list-style: none;
-  ul {
-    list-style: none;
-    margin: 0;
-  }
-
-  ul, li {
-    position: relative;
-    display: inline-block;
-    list-style: none;
-
-    padding: 0 0 5px 0;
-    @include font-size(1.6);
-  }
-
-}
-
 .start-screen-box-nav {
   padding: $gutter/2.5 $gutter;
   background-color: $colour-21;
