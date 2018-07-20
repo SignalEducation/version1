@@ -46,6 +46,13 @@
                   %td
                     =cmeul.constructed_response_attempt.status
 
+    .col-sm-12.l-margin-top
+      %ul.resources-list
+        -@course_module_element.course_module_element_resources.each do |resource|
+          %li
+            =link_to resource.upload.url, target: '_blank' do
+              .btn.btn-secondary.btn-red
+                =resource.name
 
 
 
