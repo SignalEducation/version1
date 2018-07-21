@@ -18,7 +18,7 @@
         %li='The timer has been set to indicate the time you would have to complete this step under real exam conditions. When the timer runs out, it will not end the assessment, but instead only produce a warning, and you can continue until you are ready to submit your step attempt.'
 
       .l-margin-top
-        -if @course_module_element.course_module_element_resources
+        -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
           %h6.l-margin-bottom
             ='Help/Formulae Sheets'
           -@course_module_element.course_module_element_resources.each do |resource|

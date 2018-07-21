@@ -273,6 +273,7 @@ class CoursesController < ApplicationController
         subject_course_user_log_id: @subject_course_user_log.id,
         student_exam_track_id: @student_exam_track.try(:id),
         course_module_element_id: @course_module_element.id,
+        time_taken_in_seconds: @course_module_element.estimated_time_in_seconds,
         is_quiz: false,
         is_video: false,
         is_constructed_response: true,
