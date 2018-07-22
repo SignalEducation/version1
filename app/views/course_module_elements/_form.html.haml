@@ -88,8 +88,7 @@
         =f.submit t('views.general.save'), class: 'btn btn-red', disabled: false
       -else
         =f.submit t('views.general.save'), class: 'btn btn-red clear-question', id: 'submit_button'
-      -if f.object.course_module_element_quiz
-        =t('views.general.or')
+      -if f.object.course_module_element_quiz || f.object.constructed_response
         =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-red'
       =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module), class: 'btn btn-cyan'
 
