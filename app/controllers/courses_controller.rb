@@ -6,8 +6,8 @@ class CoursesController < ApplicationController
 
   def show
     if @course_module && @course_module.active_children
-      @course_module_element = @course_module.active_children.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_element ||= @course_module.active_children.all_in_order.first
+      @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
+      #@course_module_element ||= @course_module.active_children.all_in_order.first
 
       #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
@@ -41,9 +41,7 @@ class CoursesController < ApplicationController
 
         @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
 
-        if params[:demo_mode] == 'yes'
-          redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-        elsif @course_module && @course_module_element && @course_module_element_user_log
+        if @course_module && @course_module_element && @course_module_element_user_log
           render :show
         else
           redirect_to library_url
@@ -116,8 +114,8 @@ class CoursesController < ApplicationController
 
   def show_constructed_response
     if @course_module && @course_module.active_children
-      @course_module_element = @course_module.active_children.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_element ||= @course_module.active_children.all_in_order.first
+      @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
+      current_user.non_student_user? && !@course_module_element.active ? (@preview_mode = true) : (@preview_mode = false)
 
       #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
@@ -168,6 +166,7 @@ class CoursesController < ApplicationController
 
   def allowed_params
     params.require(:course_module_element_user_log).permit(
+            :preview_mode,
             :subject_course_id,
             :student_exam_track_id,
             :subject_course_user_log_id,
@@ -267,11 +266,12 @@ class CoursesController < ApplicationController
 
     #Creates CONSTRUCTED_RESPONSE log when page renders
     @course_module_element_user_log = CourseModuleElementUserLog.create(
+        preview_mode: @preview_mode,
         session_guid: current_session_guid,
         course_module_id: @course_module_element.course_module_id,
         subject_course_id: @course_module_element.course_module.subject_course_id,
-        subject_course_user_log_id: @subject_course_user_log.id,
-        student_exam_track_id: @student_exam_track.try(:id),
+        subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.id,
+        student_exam_track_id: @preview_mode ? nil : @student_exam_track.try(:id),
         course_module_element_id: @course_module_element.id,
         time_taken_in_seconds: @course_module_element.estimated_time_in_seconds,
         is_quiz: false,
@@ -352,6 +352,9 @@ class CoursesController < ApplicationController
       if @active_enrollment
         @subject_course_user_log = @active_enrollment.subject_course_user_log
         @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+      elsif current_user && current_user.non_student_user?
+
+
       else
         flash[:warning] = 'Sorry, you are not permitted to access that content.'
         redirect_to root_url
