@@ -17,7 +17,69 @@
 :javascript
   $(document).ready(function(){
     $("#scenario_text_area").kendoEditor({
-      encoded: false
+      encoded: false,
+      pasteCleanup: {
+          keepNewLines: true
+      },
+      tools: [
+        "cut", //missing
+        "copy", //missing
+        "paste", //missing
+        {
+          name: "customUndo",
+          tooltip: "Undo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("undo");
+          }
+        },
+        {
+          name: "customRedo",
+          tooltip: "Redo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("redo");
+          }
+        },
+
+        "findReplace", //missing
+
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+
+        "subscript",
+        "superscript",
+
+        "cleanFormatting",
+
+        "formatting",
+        "insertImage",
+        "createLink",
+        "unlink",
+
+        "tableWizard", //Can't make exact match -- having issue with width of dialog modal
+        "createTable",
+        "addRowAbove",
+        "addRowBelow",
+        "addColumnLeft",
+        "addColumnRight",
+        "deleteRow",
+        "deleteColumn",
+
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "justifyFull",
+
+        "insertUnorderedList",
+        "insertOrderedList",
+
+        "indent",
+        "outdent"
+
+      ]
     });
 
 

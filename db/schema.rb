@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180713105704) do
+ActiveRecord::Schema.define(version: 20180722110332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -219,6 +219,7 @@ ActiveRecord::Schema.define(version: 20180713105704) do
     t.integer  "student_exam_track_id"
     t.integer  "subject_course_user_log_id"
     t.boolean  "is_constructed_response",    default: false
+    t.boolean  "preview_mode",               default: false
   end
 
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree

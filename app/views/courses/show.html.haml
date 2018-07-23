@@ -2,7 +2,7 @@
   .l-wrap
     .container-fluid{style: 'margin-bottom: 60px;'}
       -#TODO fix this hidden sections by screen-width
-      .row.l-margin-bottom-big.hidden-xs.visible-sm.visible-md.visible-lg
+      .row.l-margin-bottom.hidden-xs.visible-sm.visible-md.visible-lg
         .col-sm-6.col-md-4
           =link_to library_special_link(@course_module.parent) do
             .btn.btn-red.btn-secondary
@@ -16,7 +16,7 @@
                 =t('views.course_module_elements.show.next_step')
                 &#62;
 
-      .row.l-margin-bottom-big.visible-xs.hidden-sm
+      .row.l-margin-bottom.l-margin-top.visible-xs.hidden-sm
         .col-xs-12
           =link_to library_special_link(@course_module.parent) do
             .btn.btn-red.btn-secondary.full-width
@@ -37,7 +37,7 @@
           =render partial: 'courses/show_results', locals: {cme: @course_module_element}
         -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
           =render partial: 'courses/content_denied'
-        -elsif @course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true
+        -elsif (@course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true) || @course_module_element && paywall_checkpoint[:course_content][:view_all] == true
           -if @course_module_element.try(:is_video)
             =render partial: 'courses/show_video', locals: {cme: @course_module_element}
           -elsif @course_module_element.try(:is_quiz)

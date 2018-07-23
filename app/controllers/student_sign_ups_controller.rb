@@ -6,6 +6,7 @@ class StudentSignUpsController < ApplicationController
   before_action :layout_variables, only: [:home, :landing]
 
   def home
+
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     if @home_page
       @group = @home_page.group
@@ -16,7 +17,11 @@ class StudentSignUpsController < ApplicationController
     end
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
-    render 'student_sign_ups/home'
+
+    #Added respond block to stop the missing template errors with image, text, json types
+    respond_to do |format|
+      format.html
+    end
   end
 
   def landing
@@ -138,10 +143,12 @@ class StudentSignUpsController < ApplicationController
         end
       end
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
-    else
+    elsif request && request.referrer
       session[:sign_up_errors] = @user.errors unless @user.errors.empty?
       session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.terms_and_conditions] unless @user.errors.empty?
       redirect_to request.referrer
+    else
+      redirect_to root_url
     end
   end
 

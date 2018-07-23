@@ -534,8 +534,8 @@ label, .label {
       border: 2px solid $colour-13;
       &:hover {
         background: transparent;
-        color: shade($colour-13, 20%);
-        border: 1px solid shade($colour-13, 20%);
+        color: darken($colour-13, 10%);
+        border: 2px solid darken($colour-13, 10%);
       }
     }
   }

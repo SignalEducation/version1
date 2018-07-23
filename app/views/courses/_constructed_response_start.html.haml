@@ -17,15 +17,39 @@
         %li='When you are ready to make your attempt, please ensure you have allocated time to complete this step.'
         %li='The timer has been set to indicate the time you would have to complete this step under real exam conditions. When the timer runs out, it will not end the assessment, but instead only produce a warning, and you can continue until you are ready to submit your step attempt.'
 
+      .l-margin-top
+        -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
+          %h6.l-margin-bottom
+            ='Help/Formulae Sheets'
+          -@course_module_element.course_module_element_resources.each do |resource|
+            .col-sm-6{style: 'margin-bottom: 5px;'}
+              =link_to resource.upload.url, target: '_blank' do
+                .btn.btn-secondary.btn-cyan.full-width
+                  =resource.name
+
     .col-sm-6
-      =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.subject_course.name_url, course_module_name_url: @course_module_element.course_module.name_url, course_module_element_name_url: @course_module_element.name_url) do
+      =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.subject_course.name_url, course_module_name_url: @course_module_element.course_module.name_url, course_module_element_name_url: @course_module_element.name_url), id: 'newConstructedResponseButton' do
         .btn.btn-red.btn-secondary.full-width
           ='New Constructed Response'
 
+      .sk-circle
+        .sk-circle1.sk-child
+        .sk-circle2.sk-child
+        .sk-circle3.sk-child
+        .sk-circle4.sk-child
+        .sk-circle5.sk-child
+        .sk-circle6.sk-child
+        .sk-circle7.sk-child
+        .sk-circle8.sk-child
+        .sk-circle9.sk-child
+        .sk-circle10.sk-child
+        .sk-circle11.sk-child
+        .sk-circle12.sk-child
 
 
-      -if @course_module_element_user_logs.any?
-        .table-responsive.l-margin-top
+
+      -if @course_module_element_user_logs && @course_module_element_user_logs.any?
+        .table-responsive.l-margin-top-big
           %table.table{style: 'font-size: 18px;'}
             %thead
               %tr
@@ -54,3 +78,12 @@
       =''
 
 
+:javascript
+  $(".sk-circle").hide();
+  $(document).on('ready', function() {
+
+    $("#newConstructedResponseButton").click(function(event) {
+      $("#newConstructedResponseButton").hide();
+      $(".sk-circle").show();
+    });
+  });
