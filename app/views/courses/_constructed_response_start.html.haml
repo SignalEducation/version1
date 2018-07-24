@@ -7,15 +7,16 @@
   .start-screen-box
     .col-sm-6.l-margin-bottom
       %h3.l-margin-bottom
-        ='IMPORTANT - PLEASE READ'
+        ='WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL'
       %h6.l-margin-bottom
-        ='BEFORE ATTEMPTING THIS STEP:'
+        ='Before you attempt this question for the first time:'
 
       %ul
-        %li='Please do not attempt until you are ready to complete this step.'
-        %li='If you are not ready, please exit the assessment now.'
-        %li='When you are ready to make your attempt, please ensure you have allocated time to complete this step.'
-        %li='The timer has been set to indicate the time you would have to complete this step under real exam conditions. When the timer runs out, it will not end the assessment, but instead only produce a warning, and you can continue until you are ready to submit your step attempt.'
+        -#%li='Watch your CBE introduction video'
+        %li='Ensure you have watched all the lectures and read the notes associated with this topic'
+        %li='Only watch the tutor completing this question after your first attempt'
+        %li='Keep track of time to get into the exam mindset from your first attempt – roughly 1.8 minutes per mark'
+        %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
       .l-margin-top
         -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
