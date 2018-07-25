@@ -171,7 +171,7 @@ class SubjectCoursesController < ApplicationController
   ### Triggered by a CronTask ###
   def update_student_exam_tracks
     subject_course = SubjectCourse.where(id: params[:id]).first
-    subject_course.update_all_course_sets
+    subject_course.update_all_course_logs
     redirect_to subject_course_url(subject_course)
   end
 

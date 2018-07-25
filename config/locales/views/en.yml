@@ -442,6 +442,7 @@ en:
         updated_at: Updated_at
         new_video: New video
         new_quiz: New quiz
+        new_constructed_response: New CR
         questions: Questions
         save_and_add_another: Save and add another Question
         active: Active
@@ -461,11 +462,13 @@ en:
         h1: New Course Module Element
         video: New Video
         quiz: New Quiz
+        constructed_response: New Constructed Response
 
       show:
         h1: Course Module Element
         quiz_preview: Quiz Preview
         video_preview: Video Preview
+        constructed_response_preview: Constructed Response Preview
         next: Next
         next_step: Next Step
         skip_step: Skip Step
@@ -497,6 +500,22 @@ en:
           question_number: "Question #"
           question_new: New Question
 
+    constructed_responses:
+      form:
+        time_allowed: Time Allowed
+        time_allowed_placeholder: Time in Seconds
+        new_scenario: New Scenario
+        scenario_number: "Scenario #"
+        scenario_number: "Scenario #"
+        type: Answer Template Type
+
+        scenarios:
+          text_content: Scenario Text
+        scenario_question:
+          text_content: Scenario Question Text
+        scenario_answer_template:
+          text_content: Answer Template Text
+
     course_module_element_resources:
       form:
         course_module_element_id: Course module element
@@ -512,13 +531,18 @@ en:
         upload_updated_at: Upload updated at
         upload: Upload File
         replace: Replace Current File
+        type: Type
 
       edit:
+        h1: Edit Resource
 
       index:
         h1: File Uploads - (PDF's, Excel Files, etc)
+        index_h1: Course Module Element Resources
 
       new:
+        h1: New Resource
+        new_button: New Resource
 
       show:
 

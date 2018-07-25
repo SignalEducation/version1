@@ -4,10 +4,6 @@
     -#loading
     %header#header
       =render 'layouts/landing_navbar'
-      -#.container
-        #logo
-          =link_to home_url do
-            =image_tag('ls-logo-transparent.svg', class: 'nav-logo')
 
     %section#coming_soon.diag-r-down
       .tmain
@@ -91,7 +87,10 @@
         .obs-nocc{style: 'margin-bottom: 10px;'}
           Eliminate your fear of your ACCA exams - get started now!
         .lsbtn-base
-          =link_to 'Start Free Trial', new_student_url, class: 'lsbtn'
+          -if current_user && current_user.trial_or_sub_user?
+            =link_to 'Get full access now', new_subscription_url, class: 'lsbtn'
+          -else
+            =link_to 'Start Free Trial', new_student_url, class: 'lsbtn'
 
 
 

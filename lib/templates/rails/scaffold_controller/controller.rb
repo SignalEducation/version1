@@ -2,7 +2,7 @@ class <%= table_name.gsub('_',' ').titleize.gsub(' ','') %>Controller < Applicat
 
   before_action :logged_in_required
   before_action do
-    ensure_user_is_of_type(['admin'])
+    ensure_user_has_access_rights(%w(system_requirements_access content_management_access user_management_access))
   end
   before_action :get_variables
 

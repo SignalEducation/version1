@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     get 'new_subscription_africa', to: 'student_sign_ups#home'
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+    get 'courses_constructed_response/:subject_course_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
@@ -93,7 +94,12 @@ Rails.application.routes.draw do
     resources :courses, only: [:create] do
       match :create_video_user_log, on: :collection, via: [:post]
       match :video_watched_data, on: :collection, via: [:put, :patch]
+      match :create_constructed_response_user_log, on: :collection, via: [:post]
+      match :update_constructed_response_user_log, on: :collection, via: [:put, :patch]
     end
+
+    get '/submit_constructed_response_user_log/:cmeul_id', to: 'courses#submit_constructed_response_user_log', as: :submit_constructed_response_user_log
+
     resources :enrollments, only: [:edit, :update, :create]
     get '/enrollments_management', to: 'enrollment_management#index', as: :enrollments_management
     resources :enrollment_management, only: [:edit, :update, :show]
@@ -106,7 +112,9 @@ Rails.application.routes.draw do
     get 'course_modules/:subject_course_name_url', to: 'course_modules#show',
         as: :course_modules_for_subject_course
     resources :course_modules, concerns: :supports_reordering
-    resources :course_module_elements, except: [:index], concerns: :supports_reordering
+    resources :course_module_elements, except: [:index], concerns: :supports_reordering do
+      resources :course_module_element_resources, except: [:show], concerns: :supports_reordering
+    end
     get 'course_module_elements/:id/quiz_questions_order', to: 'course_module_elements#quiz_questions_order', as: :quiz_questions_order
     resources :currencies, concerns: :supports_reordering
 

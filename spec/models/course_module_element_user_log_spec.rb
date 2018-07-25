@@ -22,6 +22,8 @@
 #  subject_course_id          :integer
 #  student_exam_track_id      :integer
 #  subject_course_user_log_id :integer
+#  is_constructed_response    :boolean          default(FALSE)
+#  preview_mode               :boolean          default(FALSE)
 #
 
 require 'rails_helper'

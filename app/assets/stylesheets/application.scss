@@ -12,7 +12,6 @@
 @import "remodal-default-theme";
 @import "remodal";
 @import "jquery-tosrus";
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. Colours & Fonts
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +113,7 @@ body {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 img{ max-width: 100%;}
-* { margin: 0 auto;}
+//* { margin: 0 auto;} // This line was disturbing the Handsontable layout - think it was an Ebow addition, unsure what is does
 :focus{ outline: none;}
 .wrapper{
   max-width: 970px;
@@ -535,8 +534,8 @@ label, .label {
       border: 2px solid $colour-13;
       &:hover {
         background: transparent;
-        color: shade($colour-13, 20%);
-        border: 1px solid shade($colour-13, 20%);
+        color: darken($colour-13, 10%);
+        border: 2px solid darken($colour-13, 10%);
       }
     }
   }
@@ -661,6 +660,16 @@ label, .label {
   padding: 3rem 0;
   @include breakpoint(md-min) {
     padding: 4rem 0;
+  }
+}
+.l-section-extra-small {
+  background: $colour-3;
+  padding: 2rem 0;
+  @include breakpoint(xs-min) {
+    padding: 4rem 0;
+  }
+  @include breakpoint(md-min) {
+    padding: 2rem 0;
   }
 }
 .l-section-footer-pages {
@@ -2602,9 +2611,178 @@ spinner {
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 22. CSS Partials that depend on existing classes in this file so must be imported last
+// 22. Kendo UI Classes
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.start-screen-box {
+  display: block;
+  position: relative;
+  padding: $gutter*1.5;
+  border-radius: 0;
+  background: $white;
+  color: $colour-7;
+  @include clearfix();
+
+  ul {
+    margin: 0 $gutter;
+  }
+
+  ul, li {
+    display: list-item;
+    list-style: disc;
+
+    padding: 0;
+    @include font-size(1.6);
+  }
+
+}
+.start-screen-box-nav {
+  padding: $gutter/2.5 $gutter;
+  background-color: $colour-21;
+  color: $white;
+  &.start-screen-box-nav-header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+  &.start-screen-box-nav-footer {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+}
+
+.scenario-box {
+  display: block;
+  position: relative;
+  height: 300px;
+  border-radius: 0;
+  background: $white;
+  color: $colour-7;
+
+  @include clearfix();
+
+
+}
+.scenario-box-nav {
+  padding: $gutter/2.5 $gutter;
+  background-color: $colour-21;
+  color: $white;
+  &.scenario-box-nav-header {
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: $gutter/2.5 $gutter 1px $gutter;
+  }
+  &.scenario-box-nav-footer {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    padding: $gutter/2.5 $gutter 1px $gutter;
+  }
+}
+#splitter {
+  height: 100%;
+  border:0;
+}
+.scenario-content {
+  padding: $gutter;
+}
+.cr-question {
+  padding: $gutter;
+  .answer_spreadsheet {
+    width: 100%;
+    margin: $gutter 0;
+  }
+  .answer_texteditor {
+    width: 100%;
+    margin: $gutter 0;
+    .k-editor {
+      height: 350px;
+    }
+  }
+
+}
+
+.cr-navigation {
+  width: 100%;
+  display: inline-block;
+  list-style: none;
+  & li {
+    position: relative;
+    display: inline-block;
+  }
+
+  .cr-navigation-left {
+    float: left;
+  }
+  .cr-navigation-right {
+    float: right;
+  }
+}
+.cr-nav-link {
+  color: darken($white, 5);
+  &:hover {
+    cursor: pointer;
+    color: darken($white, 15);
+  }
+}
+.submission-pane-content {
+  padding: $gutter;
+  .final-submission {
+    margin-top: $gutter*2;
+  }
+}
+.nav-dialog {
+
+  .nav-link {
+    &:hover {
+      cursor: pointer;
+      color: darken($white, 25);
+    }
+  }
+}
+
+.k-loading-mask .k-loading-color {
+  background-color: #F8FAFF;
+  opacity: 1;
+}
+
+.k-toolbar .k-button {
+  padding: 4px 6px !important;
+}
+.k-spreadsheet-toolbar>.k-widget[data-property=format] {
+  width: 100px !important;
+}
+.k-widget .k-window {
+  width: 400px;
+}
+.k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
+  padding-top: 0 !important;
+}
+.k-spreadsheet-tabstrip {
+  padding-top: 0 !important;
+}
+
+.k-editor .k-i-custom-reset:before {
+  content: "\e906";
+}
+.k-editor .k-i-custom-undo:before {
+  content: "\e100";
+}
+.k-editor .k-i-custom-redo:before {
+  content: "\e101";
+}
+
+.k-block>.k-header, .k-window-titlebar {
+  width: auto !important;
+}
+
+.k-block>.k-action-window>.k-window-content, .k-editor-table-wizard-dialog {
+  width: 500px !important;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 23. CSS Partials that depend on existing classes in this file so must be imported last
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 @import "nav_and_footer.scss";
+@import "calculator.scss";
 @import "extras.scss";

@@ -1,0 +1,33 @@
+=form_for([@course_module_element, @course_module_element_resource], html: {class: 'form-horizontal', role: 'form'}, multipart: true) do |f|
+  =f.hidden_field :course_module_element_id
+  .row
+    =render partial: '/layouts/error_messages', locals: {thing: @course_module_element_resource, message: nil}
+
+    .col-md-6
+      =f.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+    .col-md-6
+      =f.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+
+      -if f.object.upload_file_name
+        .form-control-static
+          =link_to f.object.upload_file_name, f.object.upload.url, target: '_blank'
+          =number_to_human_size(f.object.upload_file_size)
+          %br/
+          %br/
+
+        Upload a replacement file
+        .input-group.input-group-lg.form-control
+
+          =f.file_field :upload, style: 'border-radius: 6px;'
+
+      -else
+        .input-group.input-group-lg
+          =f.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
+
+  .row
+    .col-sm-12.l-margin-top
+      =f.submit t('views.general.save'), class: 'btn btn-red'
+      =link_to t('views.general.cancel'), edit_course_module_element_url(@course_module_element.id), class: 'btn btn-cyan'

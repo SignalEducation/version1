@@ -49,6 +49,10 @@ class CourseModuleElementResource < ActiveRecord::Base
     true
   end
 
+  def type
+    self.web_url ? 'External LInk' : 'File Upload'
+  end
+
   protected
 
 end

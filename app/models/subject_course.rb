@@ -295,7 +295,6 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  #TODO Why is this not called from anywhere? CRON??
   def update_course_logs
     SubjectCourseUserLogWorker.perform_async(self.id)
   end
