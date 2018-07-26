@@ -57,6 +57,13 @@
         .input-group.input-group-lg.full-width
           =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
+        .form-group.l-margin-top-big
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =f.check_box :footer_link
+                ='Footer Link'
+
 
 
   .row.l-margin-top

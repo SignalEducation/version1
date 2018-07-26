@@ -21,6 +21,7 @@
 #  background_image              :string
 #  header_button_link            :string
 #  header_button_subtext         :string
+#  footer_link                   :boolean          default(FALSE)
 #
 
 FactoryBot.define do
