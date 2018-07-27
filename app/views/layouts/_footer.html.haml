@@ -37,6 +37,10 @@
             %li
               =link_to 'FAQs', public_faqs_url
 
+            -@footer_landing_pages.each do |landing_page|
+              %li
+                =link_to landing_page.name, footer_landing_page_url(landing_page.public_url)
+
         .clearfix.visible-xs-block
 
         .col-md-3.col-sm-3.col-xs-6
