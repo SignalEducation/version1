@@ -22,6 +22,8 @@
 #  subject_course_id          :integer
 #  student_exam_track_id      :integer
 #  subject_course_user_log_id :integer
+#  is_constructed_response    :boolean          default(FALSE)
+#  preview_mode               :boolean          default(FALSE)
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -36,7 +38,9 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :quiz_attempts_attributes, :seconds_watched,
                   :count_of_questions_taken, :count_of_questions_correct,
                   :subject_course_id, :student_exam_track_id,
-                  :subject_course_user_log_id
+                  :subject_course_user_log_id, :is_constructed_response,
+                  :constructed_response_attempt_attributes,
+                  :scenario_question_attempts_attributes, :preview_mode
 
   # Constants
 
@@ -48,8 +52,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   belongs_to :course_module_element
   belongs_to :user
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
+  has_one   :constructed_response_attempt
 
-  accepts_nested_attributes_for :quiz_attempts
+  accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
+
 
   # validation
   validates :user_id, presence: true,
@@ -57,16 +63,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   validates :session_guid, allow_nil: true, length: {maximum: 255}
   validates :student_exam_track_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true,
+  validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
-  after_create :calculate_score
-  after_save :add_to_user_trial_limit, :create_or_update_student_exam_track
-  after_create :create_lesson_intercom_event
+  after_create :calculate_score, :update_user_seconds_consumed, :create_lesson_intercom_event
+  after_save :update_user_seconds_consumed_for_videos, :create_or_update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -76,9 +81,11 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :for_course_module, lambda { |module_id| where(course_module_id: module_id) }
   scope :for_course_module_element, lambda { |element_id| where(course_module_element_id: element_id) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
+  scope :for_current_user, lambda { |current_user_id| where(user_id: current_user_id) }
   scope :latest_only, -> { where(latest_attempt: true) }
   scope :quizzes, -> { where(is_quiz: true) }
   scope :videos, -> { where(is_video: true) }
+  scope :constructed_responses, -> { where(is_constructed_response: true) }
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
@@ -114,7 +121,15 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   end
 
   def type
-    self.is_quiz ? 'Quiz' : 'Video'
+    if self.is_quiz?
+      'Quiz'
+    elsif self.is_video?
+      'Video'
+    elsif self.is_constructed_response?
+      'Constructed Response'
+    else
+      'Unknown'
+    end
   end
 
   def latest
@@ -145,59 +160,89 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   protected
 
+  # After Create
   def calculate_score
     if self.is_quiz
       course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
       percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
       passed = percentage_score >= course_pass_rate ? true : false
-      self.update_attributes(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
+      self.update_columns(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
     end
   end
 
+  # After Save
   def create_or_update_student_exam_track
-    if self.student_exam_track
-      #Update SET record
-      set = self.student_exam_track
-      set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-      set.recalculate_completeness # Includes a save!
-    else
-      #Create SET and assign it id to this record
-      set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
-      set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-      saved_set = set.recalculate_completeness # Includes a save!
-      self.update_column(:student_exam_track_id, saved_set.id)
-    end
-  end
-
-  def add_to_user_trial_limit
-    user = self.user
-    if user.trial_or_sub_user? && user.trial_user?
-      new_limit = user.student_access.content_seconds_consumed + self.try(:time_taken_in_seconds)
-      user.student_access.update_attribute(:content_seconds_consumed, new_limit)
-      if new_limit > user.student_access.trial_seconds_limit
-        TrialExpirationWorker.perform_async(user.id)
+    unless self.preview_mode
+      if self.student_exam_track
+        #Update SET record
+        set = self.student_exam_track
+        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+        set.recalculate_completeness # Includes a save!
+      else
+        #Create SET and assign it id to this record
+        set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
+        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+        saved_set = set.recalculate_completeness # Includes a save!
+        self.update_column(:student_exam_track_id, saved_set.id)
       end
     end
   end
 
+  # After Create
+  # Need to always update the student_access limit to the new limit
+  def update_user_seconds_consumed
+    unless self.preview_mode
+      user = self.user
+      current_seconds_consumed = user.student_access.content_seconds_consumed
+      updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
+      user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
+
+      TrialExpirationWorker.perform_async(user.id) if updated_seconds_consumed > user.student_access.trial_seconds_limit
+    end
+  end
+
+  # After Save
+  # Only update the student_access if it is a video log
+  def update_user_seconds_consumed_for_videos
+    if self.is_video && !self.preview_mode
+      user = self.user
+      current_seconds_consumed = user.student_access.content_seconds_consumed
+      updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
+      user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
+
+      TrialExpirationWorker.perform_async(user.id) if updated_seconds_consumed > user.student_access.trial_seconds_limit
+    end
+  end
+
+  # Before Create
   def set_booleans
-    if self.course_module_element.course_module_element_quiz
+    if self.course_module_element.is_quiz
       self.is_quiz = true
+    elsif self.course_module_element.is_video
+      self.is_video = true
+    elsif self.course_module_element.is_constructed_response
+      self.is_constructed_response = true
     else
       self.is_video = true
     end
     true
   end
 
+  # Before Create
   def set_latest_attempt
-    self.latest_attempt = true
-    others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
-    others.update_all(latest_attempt: false)
-    true
+    unless self.preview_mode
+      self.latest_attempt = true
+      others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
+      others.update_all(latest_attempt: false)
+      true
+    end
   end
 
+  # After Save
   def create_lesson_intercom_event
-    IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.is_video ? 'Video' : 'Quiz', self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
+    unless self.preview_mode
+      IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.type, self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
+    end
   end
 
 

@@ -173,13 +173,13 @@
                   %li
                     %i.fa-li.fa.fa-check
                     Cancel anytime
-                  %li
+                  -#%li
                     %i.fa-li.fa.fa-check
                     =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                    -#%li
-                      %i.fa-li.fa.fa-check
-                      -# TODO Add plans free mock exams count here
-                      =#'corrected mock exams'
+                  -#%li
+                    %i.fa-li.fa.fa-check
+                    -# TODO Add plans free mock exams count here
+                    =#'corrected mock exams'
 
                 .price
                   =plan.currency.format_number(plan.price)

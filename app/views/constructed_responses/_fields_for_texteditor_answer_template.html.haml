@@ -1,0 +1,74 @@
+.col-sm-12
+  #text_editor.editors
+    .col-sm-6
+      %h6=texteditor_scenario_answer_template.object.id.nil? ? 'New TextEditor Answer Template' : 'Answer Template #' + texteditor_scenario_answer_template.object.id.to_s
+    .col-sm-6.l-margin-bottom
+      .form-group
+        .col-sm-8.col-sm-offset-4
+          .checkbox
+            %label
+              =texteditor_scenario_answer_template.check_box :_destroy
+              ='Remove Answer Template'
+
+    =texteditor_scenario_answer_template.text_area :text_editor_content, id: "scenario_question_#{scenario_question.options[:child_index]}_answer_template_type_texteditor_#{texteditor_scenario_answer_template.options[:child_index]}"
+
+
+    :javascript
+      $(document).ready(function(){
+        $("#scenario_question_#{scenario_question.options[:child_index]}_answer_template_type_texteditor_#{texteditor_scenario_answer_template.options[:child_index]}").kendoEditor({
+          encoded: false,
+          pasteCleanup: {
+              keepNewLines: true
+          },
+          tools: [
+            "cut", //missing
+            "copy", //missing
+            "paste", //missing
+            {
+              name: "customUndo",
+              tooltip: "Undo",
+              exec: function (e) {
+                var editor = $(this).data("kendoEditor");
+                editor.exec("undo");
+              }
+            },
+            {
+              name: "customRedo",
+              tooltip: "Redo",
+              exec: function (e) {
+                var editor = $(this).data("kendoEditor");
+                editor.exec("redo");
+              }
+            },
+            "findReplace", //missing
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "subscript",
+            "superscript",
+            "cleanFormatting",
+            "formatting",
+            "insertImage",
+            "createLink",
+            "unlink",
+            "tableWizard", //Can't make exact match -- having issue with width of dialog modal
+            "createTable",
+            "addRowAbove",
+            "addRowBelow",
+            "addColumnLeft",
+            "addColumnRight",
+            "deleteRow",
+            "deleteColumn",
+            "justifyLeft",
+            "justifyCenter",
+            "justifyRight",
+            "justifyFull",
+            "insertUnorderedList",
+            "insertOrderedList",
+            "indent",
+            "outdent"
+          ]
+        });
+      });
+

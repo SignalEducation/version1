@@ -1,0 +1,88 @@
+.col-sm-12
+  .scenario
+    =scenario.hidden_field :sorting_order
+    =scenario.label :text_content, t('views.constructed_responses.form.scenarios.text_content'), class: 'control-label'
+    .input-group.input-group-lg.full-width
+      =scenario.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: 'scenario_text_area'
+    %br/
+    %hr/
+    %br/
+
+    =scenario.fields_for :scenario_questions do |scenario_question|
+      =render partial: 'constructed_responses/fields_for_scenario_question', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question}
+
+
+
+
+:javascript
+  $(document).ready(function(){
+    $("#scenario_text_area").kendoEditor({
+      encoded: false,
+      pasteCleanup: {
+          keepNewLines: true
+      },
+      tools: [
+        "cut", //missing
+        "copy", //missing
+        "paste", //missing
+        {
+          name: "customUndo",
+          tooltip: "Undo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("undo");
+          }
+        },
+        {
+          name: "customRedo",
+          tooltip: "Redo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("redo");
+          }
+        },
+
+        "findReplace", //missing
+
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+
+        "subscript",
+        "superscript",
+
+        "cleanFormatting",
+
+        "formatting",
+        "insertImage",
+        "createLink",
+        "unlink",
+
+        "tableWizard", //Can't make exact match -- having issue with width of dialog modal
+        "createTable",
+        "addRowAbove",
+        "addRowBelow",
+        "addColumnLeft",
+        "addColumnRight",
+        "deleteRow",
+        "deleteColumn",
+
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "justifyFull",
+
+        "insertUnorderedList",
+        "insertOrderedList",
+
+        "indent",
+        "outdent",
+
+        "viewHtml"
+
+      ]
+    });
+
+
+  });

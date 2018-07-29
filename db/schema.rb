@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180611112421) do
+ActiveRecord::Schema.define(version: 20180726135122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,39 @@ ActiveRecord::Schema.define(version: 20180611112421) do
   add_index "charges", ["subscription_id"], name: "index_charges_on_subscription_id", using: :btree
   add_index "charges", ["subscription_payment_card_id"], name: "index_charges_on_subscription_payment_card_id", using: :btree
   add_index "charges", ["user_id"], name: "index_charges_on_user_id", using: :btree
+
+  create_table "constructed_response_attempts", force: :cascade do |t|
+    t.integer  "constructed_response_id"
+    t.integer  "scenario_id"
+    t.integer  "course_module_element_id"
+    t.integer  "course_module_element_user_log_id"
+    t.integer  "user_id"
+    t.text     "original_scenario_text_content"
+    t.text     "user_edited_scenario_text_content"
+    t.string   "status"
+    t.boolean  "flagged_for_review",                default: false
+    t.integer  "time_in_seconds"
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
+    t.string   "guid"
+    t.text     "scratch_pad_text"
+  end
+
+  add_index "constructed_response_attempts", ["constructed_response_id"], name: "index_constructed_response_attempts_on_constructed_response_id", using: :btree
+  add_index "constructed_response_attempts", ["course_module_element_id"], name: "index_constructed_response_attempts_on_course_module_element_id", using: :btree
+  add_index "constructed_response_attempts", ["flagged_for_review"], name: "index_constructed_response_attempts_on_flagged_for_review", using: :btree
+  add_index "constructed_response_attempts", ["scenario_id"], name: "index_constructed_response_attempts_on_scenario_id", using: :btree
+  add_index "constructed_response_attempts", ["user_id"], name: "index_constructed_response_attempts_on_user_id", using: :btree
+
+  create_table "constructed_responses", force: :cascade do |t|
+    t.integer  "course_module_element_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "time_allowed"
+    t.datetime "destroyed_at"
+  end
+
+  add_index "constructed_responses", ["course_module_element_id"], name: "index_constructed_responses_on_course_module_element_id", using: :btree
 
   create_table "content_pages", force: :cascade do |t|
     t.string   "name"
@@ -185,6 +218,8 @@ ActiveRecord::Schema.define(version: 20180611112421) do
     t.integer  "subject_course_id"
     t.integer  "student_exam_track_id"
     t.integer  "subject_course_user_log_id"
+    t.boolean  "is_constructed_response",    default: false
+    t.boolean  "preview_mode",               default: false
   end
 
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree
@@ -221,6 +256,7 @@ ActiveRecord::Schema.define(version: 20180611112421) do
     t.integer  "number_of_questions",       default: 0
     t.float    "duration",                  default: 0.0
     t.string   "temporary_label"
+    t.boolean  "is_constructed_response",   default: false, null: false
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -414,6 +450,7 @@ ActiveRecord::Schema.define(version: 20180611112421) do
     t.string   "background_image"
     t.string   "header_button_link"
     t.string   "header_button_subtext"
+    t.boolean  "footer_link",                   default: false
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
@@ -700,6 +737,68 @@ ActiveRecord::Schema.define(version: 20180611112421) do
   add_index "refunds", ["subscription_id"], name: "index_refunds_on_subscription_id", using: :btree
   add_index "refunds", ["user_id"], name: "index_refunds_on_user_id", using: :btree
 
+  create_table "scenario_answer_attempts", force: :cascade do |t|
+    t.integer  "scenario_question_attempt_id"
+    t.integer  "user_id"
+    t.integer  "scenario_answer_template_id"
+    t.text     "original_answer_template_text"
+    t.text     "user_edited_answer_template_text"
+    t.string   "editor_type"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.integer  "sorting_order"
+  end
+
+  create_table "scenario_answer_templates", force: :cascade do |t|
+    t.integer  "scenario_question_id"
+    t.integer  "sorting_order"
+    t.string   "editor_type"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.datetime "destroyed_at"
+    t.text     "text_editor_content"
+    t.text     "spreadsheet_editor_content"
+  end
+
+  add_index "scenario_answer_templates", ["scenario_question_id"], name: "index_scenario_answer_templates_on_scenario_question_id", using: :btree
+
+  create_table "scenario_question_attempts", force: :cascade do |t|
+    t.integer  "constructed_response_attempt_id"
+    t.integer  "user_id"
+    t.integer  "scenario_question_id"
+    t.string   "status"
+    t.boolean  "flagged_for_review",                 default: false
+    t.text     "original_scenario_question_text"
+    t.text     "user_edited_scenario_question_text"
+    t.datetime "created_at",                                         null: false
+    t.datetime "updated_at",                                         null: false
+    t.integer  "sorting_order"
+  end
+
+  add_index "scenario_question_attempts", ["flagged_for_review"], name: "index_scenario_question_attempts_on_flagged_for_review", using: :btree
+  add_index "scenario_question_attempts", ["scenario_question_id"], name: "index_scenario_question_attempts_on_scenario_question_id", using: :btree
+
+  create_table "scenario_questions", force: :cascade do |t|
+    t.integer  "scenario_id"
+    t.integer  "sorting_order"
+    t.text     "text_content"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.datetime "destroyed_at"
+  end
+
+  add_index "scenario_questions", ["scenario_id"], name: "index_scenario_questions_on_scenario_id", using: :btree
+
+  create_table "scenarios", force: :cascade do |t|
+    t.integer  "constructed_response_id"
+    t.integer  "sorting_order"
+    t.text     "text_content"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.datetime "destroyed_at"
+  end
+
+  add_index "scenarios", ["constructed_response_id"], name: "index_scenarios_on_constructed_response_id", using: :btree
 
   create_table "stripe_api_events", force: :cascade do |t|
     t.string   "guid"
@@ -749,14 +848,15 @@ ActiveRecord::Schema.define(version: 20180611112421) do
     t.datetime "updated_at"
     t.string   "session_guid"
     t.integer  "course_module_id"
-    t.float    "percentage_complete",             default: 0.0
-    t.integer  "count_of_cmes_completed",         default: 0
+    t.float    "percentage_complete",                  default: 0.0
+    t.integer  "count_of_cmes_completed",              default: 0
     t.integer  "subject_course_id"
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_questions_correct"
     t.integer  "count_of_quizzes_taken"
     t.integer  "count_of_videos_taken"
     t.integer  "subject_course_user_log_id"
+    t.integer  "count_of_constructed_responses_taken"
   end
 
   add_index "student_exam_tracks", ["exam_schedule_id"], name: "index_student_exam_tracks_on_exam_schedule_id", using: :btree
@@ -785,17 +885,18 @@ ActiveRecord::Schema.define(version: 20180611112421) do
     t.integer  "user_id"
     t.string   "session_guid"
     t.integer  "subject_course_id"
-    t.integer  "percentage_complete",             default: 0
-    t.integer  "count_of_cmes_completed",         default: 0
+    t.integer  "percentage_complete",                  default: 0
+    t.integer  "count_of_cmes_completed",              default: 0
     t.integer  "latest_course_module_element_id"
-    t.boolean  "completed",                       default: false
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
+    t.boolean  "completed",                            default: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
     t.integer  "count_of_questions_correct"
     t.integer  "count_of_questions_taken"
     t.integer  "count_of_videos_taken"
     t.integer  "count_of_quizzes_taken"
     t.datetime "completed_at"
+    t.integer  "count_of_constructed_responses_taken"
   end
 
   add_index "subject_course_user_logs", ["session_guid"], name: "index_subject_course_user_logs_on_session_guid", using: :btree

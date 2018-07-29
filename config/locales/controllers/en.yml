@@ -117,6 +117,19 @@ en:
           success: Course Module Element has been deleted
           error: Course Module Element was not deleted
 
+    course_module_element_resources:
+      create:
+        flash:
+          success: Course Module Element Resource has been created successfully
+          error: Course Module Element Resource has Not been created
+      update:
+        flash:
+          success: Course Module Element Resource details have been updated successfully
+      destroy:
+        flash:
+          success: Course Module Element Resource has been deleted
+          error: Course Module Element Resource was not deleted
+
     currencies:
       create:
         flash:

@@ -1,18 +1,21 @@
 class CoursesController < ApplicationController
 
+  skip_after_filter :intercom_rails_auto_include, only: :show_constructed_response
   before_action :logged_in_required
-  before_action :check_permission, only: :show
+  before_action :check_permission, only: [:show, :show_constructed_response]
 
   def show
     if @course_module && @course_module.active_children
-      @course_module_element = @course_module.active_children.find_by(name_url: params[:course_module_element_name_url])
-      @course_module_element ||= @course_module.active_children.all_in_order.first
+      @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
+      #@course_module_element ||= @course_module.active_children.all_in_order.first
 
       #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
 
       if @course_module_element.is_quiz
         set_up_quiz
+      elsif @course_module_element.is_constructed_response
+        set_up_constructed_response_start_screen
       end
     else
       ## The URL params are wrong ##
@@ -38,9 +41,7 @@ class CoursesController < ApplicationController
 
         @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
 
-        if params[:demo_mode] == 'yes'
-          redirect_to course_module_element_path(@course_module_element_user_log.course_module_element)
-        elsif @course_module && @course_module_element && @course_module_element_user_log
+        if @course_module && @course_module_element && @course_module_element_user_log
           render :show
         else
           redirect_to library_url
@@ -111,11 +112,61 @@ class CoursesController < ApplicationController
 
   end
 
+  def show_constructed_response
+    if @course_module && @course_module.active_children
+      @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
+      current_user.non_student_user? && !@course_module_element.active ? (@preview_mode = true) : (@preview_mode = false)
+
+      #CME name is not in the seo title because it is html_safe
+      seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
+
+      if @course_module_element.is_constructed_response
+        if params[:course_module_element_user_log_id]
+          set_up_previous_constructed_response
+        else
+          set_up_new_constructed_response
+        end
+
+      end
+      @footer = false
+    else
+      ## The URL params are wrong ##
+      flash[:warning] = t('controllers.courses.show.warning')
+      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
+      redirect_to library_special_link(@course)
+    end
+  end
+
+  def update_constructed_response_user_log
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
+
+    respond_to do |format|
+      #update_columns ?? to stop callback chain will be called on final submit
+      if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
+        format.json { render json: @course_module_element_user_log, status: :created }
+      else
+        format.json { render json: @course_module_element_user_log.errors, status: :unprocessable_entity }
+      end
+
+    end
+  end
+
+  def submit_constructed_response_user_log
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+
+    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+    @constructed_response_attempt.update_attributes(status: 'Completed')
+
+    @course_module_element_user_log.update_attributes(element_completed: true)
+
+    redirect_to course_special_link(@course_module_element_user_log.course_module_element)
+  end
 
   private
 
   def allowed_params
     params.require(:course_module_element_user_log).permit(
+            :preview_mode,
             :subject_course_id,
             :student_exam_track_id,
             :subject_course_user_log_id,
@@ -129,6 +180,41 @@ class CoursesController < ApplicationController
                     :quiz_question_id,
                     :quiz_answer_id,
                     :answer_array
+            ]
+    )
+  end
+
+  def constructed_response_allowed_params
+    params.require(:course_module_element_user_log).permit(
+            constructed_response_attempt_attributes: [
+                    :id,
+                    :constructed_response_id,
+                    :scenario_id,
+                    :course_module_element_id,
+                    :user_id,
+                    :original_scenario_text_content,
+                    :user_edited_scenario_text_content,
+                    :scratch_pad_text,
+                    scenario_question_attempts_attributes: [
+                        :id,
+                        :constructed_response_attempt_id,
+                        :user_id,
+                        :scenario_question_id,
+                        :status,
+                        :flagged_for_review,
+                        :original_scenario_question_text,
+                        :user_edited_scenario_question_text,
+                        scenario_answer_attempts_attributes: [
+                            :id,
+                            :scenario_question_attempt_id,
+                            :user_id,
+                            :scenario_answer_template_id,
+                            :original_answer_template_text,
+                            :user_edited_answer_template_text,
+                            :editor_type
+                        ]
+
+                    ]
             ]
     )
   end
@@ -165,6 +251,95 @@ class CoursesController < ApplicationController
     @mathjax_required = true
   end
 
+  def set_up_constructed_response_start_screen
+    #Order by most recently updated_at
+    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse[0...8]
+
+  end
+
+  def set_up_new_constructed_response
+    @mathjax_required = true
+    @time_allowed = @course_module_element.constructed_response.time_allowed
+    @constructed_response = @course_module_element.constructed_response
+    @all_questions = @constructed_response.scenario.scenario_questions.all_in_order
+    @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
+
+    #Creates CONSTRUCTED_RESPONSE log when page renders
+    @course_module_element_user_log = CourseModuleElementUserLog.create(
+        preview_mode: @preview_mode,
+        session_guid: current_session_guid,
+        course_module_id: @course_module_element.course_module_id,
+        subject_course_id: @course_module_element.course_module.subject_course_id,
+        subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.id,
+        student_exam_track_id: @preview_mode ? nil : @student_exam_track.try(:id),
+        course_module_element_id: @course_module_element.id,
+        time_taken_in_seconds: @course_module_element.estimated_time_in_seconds,
+        is_quiz: false,
+        is_video: false,
+        is_constructed_response: true,
+        user_id: current_user.id
+    )
+    @constructed_response_attempt = ConstructedResponseAttempt.create(
+        constructed_response_id: @constructed_response.id,
+        scenario_id: @constructed_response.scenario.id,
+        course_module_element_id: @constructed_response.course_module_element_id,
+        course_module_element_user_log_id: @course_module_element_user_log.id,
+        user_id: current_user.id,
+        status: 'Incomplete',
+        original_scenario_text_content: @constructed_response.scenario.text_content,
+        user_edited_scenario_text_content: @constructed_response.scenario.text_content,
+        guid: ApplicationController.generate_random_code(6),
+        scratch_pad_text: 'You can write notes here...'
+
+    )
+    @all_questions.each do |scenario_question|
+      scenario_question_attempt = ScenarioQuestionAttempt.create(
+          constructed_response_attempt_id: @constructed_response_attempt.id,
+          user_id: current_user.id,
+          scenario_question_id: scenario_question.id,
+          status: 'Unseen',
+          flagged_for_review: false,
+          sorting_order: scenario_question.sorting_order,
+          original_scenario_question_text: scenario_question.text_content,
+          user_edited_scenario_question_text: scenario_question.text_content
+      )
+
+      scenario_question.scenario_answer_templates.each do |scenario_answer_template|
+
+        text_content = scenario_answer_template.spreadsheet_editor? ? scenario_answer_template.spreadsheet_editor_content : scenario_answer_template.text_editor_content
+
+        scenario_answer_attempt = ScenarioAnswerAttempt.create(
+            scenario_question_attempt_id: scenario_question_attempt.id,
+            user_id: current_user.id,
+            scenario_answer_template_id: scenario_answer_template.id,
+            original_answer_template_text: text_content,
+            user_edited_answer_template_text: text_content,
+            editor_type: scenario_answer_template.editor_type,
+            sorting_order: scenario_answer_template.sorting_order
+        )
+
+
+      end
+    end
+    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts.all_in_order
+    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.all_in_order.map(&:id)
+
+  end
+
+
+  def set_up_previous_constructed_response
+    @mathjax_required = true
+    @constructed_response = @course_module_element.constructed_response
+    @time_allowed = @constructed_response.time_allowed
+    @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
+
+    @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log_id])
+    @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
+
+    @all_scenario_question_attempt = @constructed_response_attempt.scenario_question_attempts.all_in_order
+    @all_scenario_question_attempt_ids = @constructed_response_attempt.scenario_question_attempts.all_in_order.map(&:id)
+  end
+
   protected
 
   def check_permission
@@ -177,6 +352,9 @@ class CoursesController < ApplicationController
       if @active_enrollment
         @subject_course_user_log = @active_enrollment.subject_course_user_log
         @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+      elsif current_user && current_user.non_student_user?
+
+
       else
         flash[:warning] = 'Sorry, you are not permitted to access that content.'
         redirect_to root_url

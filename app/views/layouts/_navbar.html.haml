@@ -32,7 +32,8 @@
                     =link_to 'Reactivate Account', new_subscription_url, class: 'days-left', title: 'Reactivate your account'
 
               -if current_user.non_student_user?
-                %li=link_to 'Console', management_consoles_url
+                -unless current_user && current_user.user_group.name == 'Demo Video Group'
+                  %li=link_to 'Console', management_consoles_url
 
 
               -#Student/Tutor/Content Manager Dropdown

@@ -23,9 +23,14 @@
                   ='when upgrading from free trial. (Offer expires 1 July 2018)'
 
                 .lsbtn-base
-                  =link_to new_student_url, class: 'lsbtn' do
-                    Get free course access
-                    %i.fa.fa-chevron-right
+                  -if current_user && current_user.trial_or_sub_user?
+                    =link_to new_subscription_url, class: 'lsbtn' do
+                      Get full course access
+                      %i.fa.fa-chevron-right
+                  -else
+                    =link_to new_student_url, class: 'lsbtn' do
+                      Get free course access
+                      %i.fa.fa-chevron-right
                 .obs-nocc No credit card details needed!
 
               .col-md-2
@@ -91,7 +96,10 @@
             .desc Tutor support
             .desc 24 hours a day
         .lsbtn-base
-          =link_to 'Get free access', new_student_url, class: 'lsbtn'
+          -if current_user && current_user.trial_or_sub_user?
+            =link_to 'Get full access', new_subscription_url, class: 'lsbtn'
+          -else
+            =link_to 'Get free access', new_student_url, class: 'lsbtn'
 
 
     %section#trusted
@@ -100,29 +108,11 @@
           %h2.title1 Trusted by learners all over the world.
           %p The days of in-person training have become impractical. Issues with memory retention, data overload and poor quality trainers have made in-person training ineffective. That’s why we’ve created our adaptive learning platform, so you can access your learning anywhere and anytime that you need it.
         .lsbtn-base
-          =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
+          -if current_user && current_user.trial_or_sub_user?
+            =link_to 'Try us out now', new_subscription_url, class: 'lsbtn'
+          -else
+            =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
         .obs-nocc No credit card details needed!
-
-
-
-    -#%section#reviews2.diag-l-up
-      .container
-        .row.review1
-          .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-            .review
-              %span.q.q1
-              I have only just discovered it. So far, very highly recommended. Videos are short, so easy to dip in and out when you are on the go and have a spare minute.
-              %span.q.q2 ”
-            .name Patti Mary, UK
-        .row.reviews
-          .col-md-5.col-md-offset-1.col-sm-6
-            .box
-              .review Videos are short, so easy to dip in and out when you are on the go and have a spare minute. Worth paying monthly fee, it makes the whole learning process much less daunting.
-              .name Patti Mary
-          .col-md-5.col-sm-6
-            .box
-              .review The good thing about Learn-signal was the way the lecturers went thru questions papers. It helped me so much with the technique that i had lacked in my previous paper.
-              .name Rebecca Nagujja
 
 
 
@@ -146,7 +136,10 @@
 
 
           .btn-base
-            =link_to 'Get started', new_student_url, class: 'lsbtn'
+            -if current_user && current_user.trial_or_sub_user?
+              =link_to 'Get started', new_subscription_url, class: 'lsbtn'
+            -else
+              =link_to 'Get started', new_student_url, class: 'lsbtn'
 
     -elsif @subject_course
       %section#explore
@@ -167,7 +160,10 @@
 
 
           .btn-base
-            =link_to 'Get started', new_student_url, class: 'lsbtn'
+            -if current_user && current_user.trial_or_sub_user?
+              =link_to 'Get started', new_subscription_url, class: 'lsbtn'
+            -else
+              =link_to 'Get started', new_student_url, class: 'lsbtn'
 
 
 
@@ -205,13 +201,13 @@
                     %li
                       %i.fa-li.fa.fa-check
                       Cancel anytime
-                    %li
+                    -#%li
                       %i.fa-li.fa.fa-check
                       =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                      -#%li
-                        %i.fa-li.fa.fa-check
-                        -# TODO Add plans free mock exams count here
-                        =#'corrected mock exams'
+                    -#%li
+                      %i.fa-li.fa.fa-check
+                      -# TODO Add plans free mock exams count here
+                      =#'corrected mock exams'
 
                   .price
                     =plan.currency.format_number(plan.price)
@@ -223,9 +219,17 @@
                         18% OFF
                       .line2
                         Save €25
-                .lsbtn-base
-                  =link_to new_student_url, class: 'lsbtn' do
-                    Get Started For Free
+                -if current_user && current_user.trial_or_sub_user?
+                  .lsbtn-base
+                    =link_to new_subscription_url do
+                      .lsbtn
+                        %i.fa.fa-check
+                        Choose this plan
+                -else
+                  .lsbtn-base
+                    =link_to new_student_url do
+                      .lsbtn
+                        Get Started For Free
 
 
 
@@ -251,7 +255,10 @@
             %p
               ="No problem! We’re so confident you’ll love our courses, we want to give you access to #{(ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i/60).to_s} minutes of completely FREE online revision. No credit card details are required, and if you feel our courses aren’t a good fit for you, you’ve no obligation to sign up for an unlimited access plan. So why not give it a try and sign up for your #{ENV['FREE_TRIAL_DAYS']}-day trial below?"
             .lsbtn-base
-              =link_to 'Get free course access', new_student_url, class: 'lsbtn'
+              -if current_user && current_user.trial_or_sub_user?
+                =link_to 'Get full course access', new_subscription_url, class: 'lsbtn'
+              -else
+                =link_to 'Get free course access', new_student_url, class: 'lsbtn'
             .obs-nocc No credit card details needed!
 
 
@@ -266,6 +273,3 @@
                 ='Chat with our experts'
 
 =render partial: 'footer_pages/contact_us_form_modal'
--#:javascript
-  var player = new Vimeo.Player('vimeo-player', {id: '224044673'});
-
