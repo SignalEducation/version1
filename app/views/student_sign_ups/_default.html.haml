@@ -121,6 +121,8 @@
             =link_to 'Get free access', new_student_url, class: 'lsbtn'
 
 
+
+
     %section#trusted
       .container
         .inner
@@ -133,6 +135,7 @@
             =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
 
         .obs-nocc No credit card details needed!
+
 
 
 
@@ -202,7 +205,11 @@
               Invest in
               %strong your
               future.
-            %h2.subtitle2 With LearnSignal, you can gain access to our body of ACCA accounting expert tutors from as little as £24.99. We also offer a selection of payment plans to suit you and your study needs.
+            %h2.subtitle2
+              ='With LearnSignal, you can gain access to our body of ACCA accounting expert tutors from as little as'
+              %strong
+                =@subscription_plans.first.currency.format_number(@subscription_plans.first.price).to_s + '.'
+              ='We also offer a selection of payment plans to suit you and your study needs.'
           .col-sm-2
             .approved
               =image_tag('acca_approved2.png')
@@ -224,24 +231,10 @@
                     %li
                       %i.fa-li.fa.fa-check
                       Cancel anytime
-                    -#%li
-                      %i.fa-li.fa.fa-check
-                      =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                    -#%li
-                      %i.fa-li.fa.fa-check
-                      -# TODO Add plans free mock exams count here
-                      =#'corrected mock exams'
 
                   .price
                     =plan.currency.format_number(plan.price)
 
-                  -#unless plan.payment_frequency_in_months == 1
-                    -# TODO change this display actual discount and saving values
-                    .promo
-                      .line1
-                        18% OFF
-                      .line2
-                        Save €25
                 -if current_user && current_user.trial_or_sub_user?
                   .lsbtn-base
                     =link_to new_subscription_url do
@@ -255,35 +248,34 @@
                         Get Started For Free
 
 
+    -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
+      %section#subscribe.diag-l-up.bg-gradient1
+        .container
+          %h2.title1
+            -if @home_page.mailchimp_list_guid && @home_page.mailchimp_section_heading
+              =@home_page.mailchimp_section_heading
+            -else
+              ='Get fortnightly ACCA insider knowledge'
 
-
-    %section#cancel.bg-gradient1
-      .container
-        %h2.title1
-          %span
-            And don’t forget,
-            %strong
-              you can cancel anytime.
-        %h2.title1
-          %span
-            No lengthy commitments or obligations.
-            %br/
-
-
-    %section#tryfirst.diag-l-up
-      .container
-        .row
-          .col-lg-10.col-lg-offset-1
-            %h2.title1 Prefer to try us out first?
-            %p
-              ="No problem! We’re so confident you’ll love our courses, we want to give you access to #{(ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i/60).to_s} minutes of completely FREE online revision. No credit card details are required, and if you feel our courses aren’t a good fit for you, you’ve no obligation to sign up for an unlimited access plan. So why not give it a try and sign up for your #{ENV['FREE_TRIAL_DAYS']}-day trial below?"
-            .lsbtn-base
-              -if current_user && current_user.trial_or_sub_user?
-                =link_to 'Get full course access', new_subscription_url, class: 'lsbtn'
-              -else
-                =link_to 'Get free course access', new_student_url, class: 'lsbtn'
-
-            .obs-nocc No credit card details needed!
+          %h2.subtitle
+            -if @home_page.mailchimp_list_guid && @home_page.mailchimp_section_subheading
+              =@home_page.mailchimp_section_subheading
+            -else
+              ='Direct to your inbox.'
+          #response
+            =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+              -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
+                =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
+              .row
+                .col-md-4.col-md-offset-1.col-sm-6
+                  .form-group
+                    =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
+                .col-md-4.col-sm-6
+                  .form-group
+                    =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
+                .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
+                  .form-group
+                    %button.lsbtn.s{:type => "submit"} Subscribe
 
 
     %section#through
