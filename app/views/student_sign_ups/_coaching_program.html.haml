@@ -13,10 +13,16 @@
             .row
               .col-md-10
                 %h1.title1
-                  ='ACCA Coaching Program'
+                  -if @home_page && @home_page.header_heading && !@home_page.header_heading.empty?
+                    =@home_page.header_heading
+                  -else
+                    ='ACCA Coaching Program'
 
                 %h2.subtitle
-                  ='Want some extra help and motivation to pass your ACCA exams? Get ready for the ACCA Coaching Program!'
+                  -if @home_page && @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+                    =@home_page.header_paragraph
+                  -else
+                    ='Want some extra help and motivation to pass your ACCA exams? Get ready for the ACCA Coaching Program!'
 
               .col-md-2
                 .approved
