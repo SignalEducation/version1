@@ -822,6 +822,13 @@ en:
         header_button_subtext: Header Button Subtext
         header_button_subtext_placeholder: Header Button Subtext
         background_image: Background Image
+        mailchimp_list_guid: MailChimp List ID
+        mailchimp_list_guid_placeholder: MailChimp List ID
+        mailchimp_subscribe_section: MailChimp Section
+        mailchimp_section_heading: MailChimp Section Heading Text
+        mailchimp_section_heading_placeholder: H1 Text
+        mailchimp_section_subheading: MailChimp Section Sub-Heading Text
+        mailchimp_section_subheading_placeholder: H2 Text
 
       index:
         h1: Landing Pages

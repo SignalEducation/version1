@@ -58,12 +58,33 @@
           =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
         .form-group.l-margin-top-big
-          .col-sm-8.col-sm-offset-4
+          .col-sm-6
             .checkbox
               %label
                 =f.check_box :footer_link
                 ='Footer Link'
 
+
+
+          .col-sm-6
+            .checkbox
+              %label
+                =f.check_box :mailchimp_subscribe_section
+                =t('views.home_pages.form.mailchimp_subscribe_section')
+
+        %br/
+        %br/
+        =f.label :mailchimp_list_guid, t('views.home_pages.form.mailchimp_list_guid'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :mailchimp_list_guid, placeholder: t('views.home_pages.form.mailchimp_list_guid_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :mailchimp_section_heading, t('views.home_pages.form.mailchimp_section_heading'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :mailchimp_section_heading, placeholder: t('views.home_pages.form.mailchimp_section_heading_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        %br/
+        =f.label :mailchimp_section_subheading, t('views.home_pages.form.mailchimp_section_subheading'), class: 'control-label'
+        .input-group.input-group-lg.full-width
+          =f.text_field :mailchimp_section_subheading, placeholder: t('views.home_pages.form.mailchimp_section_subheading_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
 
   .row.l-margin-top

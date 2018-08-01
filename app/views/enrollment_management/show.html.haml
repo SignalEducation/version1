@@ -74,7 +74,8 @@
                             %td
                               =tick_or_cross(log.element_completed)
                             %td
-                              =log.is_video ? 'Video' : 'Quiz'
+                              =#log.is_video ? 'Video' : 'Quiz'
+                              =log.type
                             %td
                               =tick_or_cross(log.latest_attempt)
                             %td

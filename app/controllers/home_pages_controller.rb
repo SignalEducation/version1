@@ -22,6 +22,10 @@
 #  header_button_link            :string
 #  header_button_subtext         :string
 #  footer_link                   :boolean          default(FALSE)
+#  mailchimp_list_guid           :string
+#  mailchimp_section_heading     :string
+#  mailchimp_section_subheading  :string
+#  mailchimp_subscribe_section   :boolean          default(FALSE)
 #
 
 class HomePagesController < ApplicationController
@@ -95,6 +99,8 @@ class HomePagesController < ApplicationController
                                       :name, :home, :group_id, :background_image,
                                       :header_heading, :header_paragraph, :header_button_text,
                                       :header_button_link, :header_button_subtext,
+                                      :mailchimp_list_guid, :mailchimp_subscribe_section,
+                                      :mailchimp_section_heading, :mailchimp_section_subheading,
                                       :footer_link,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
