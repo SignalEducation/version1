@@ -21,6 +21,11 @@
 #  background_image              :string
 #  header_button_link            :string
 #  header_button_subtext         :string
+#  footer_link                   :boolean          default(FALSE)
+#  mailchimp_list_guid           :string
+#  mailchimp_section_heading     :string
+#  mailchimp_section_subheading  :string
+#  mailchimp_subscribe_section   :boolean          default(FALSE)
 #
 
 class HomePage < ActiveRecord::Base
@@ -32,7 +37,8 @@ class HomePage < ActiveRecord::Base
                   :public_url, :subject_course_id, :custom_file_name,
                   :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes,
                   :header_heading, :header_paragraph, :header_button_text, :background_image,
-                  :header_button_link, :header_button_subtext
+                  :header_button_link, :header_button_subtext, :footer_link, :mailchimp_list_guid,
+                  :mailchimp_section_heading, :mailchimp_section_subheading, :mailchimp_subscribe_section
 
   # Constants
   BACKGROUND_IMAGES = %w(watch_person highlighter_person lamp_person glasses_person meeting_persons)
@@ -66,6 +72,7 @@ class HomePage < ActiveRecord::Base
   scope :all_in_order, -> { order(:seo_title) }
   scope :for_courses, -> { where.not(subject_course_id: nil) }
   scope :for_groups, -> { where.not(group_id: nil) }
+  scope :for_footer, -> { where(footer_link: true) }
 
   # class methods
 

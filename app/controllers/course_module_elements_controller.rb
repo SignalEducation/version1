@@ -96,8 +96,6 @@ class CourseModuleElementsController < ApplicationController
         @course_module_element.course_module_element_quiz.add_an_empty_question
       elsif @course_module_element.is_video
         @course_module_element.course_module_element_resources.build
-      elsif @course_module_element.is_constructed_response
-        @course_module_element.constructed_response.scenario.add_an_empty_scenario_question
         unless @course_module_element.video_resource
           @course_module_element.build_video_resource
         end
@@ -107,6 +105,8 @@ class CourseModuleElementsController < ApplicationController
           @ticket = build_vimeo_ticket(edit_course_module_element_url(type: 'video', cm_id: cm.id, course_module_element_id: @course_module_element.id))
           @ticket_url = @ticket.upload_link_secure
         end
+      elsif @course_module_element.is_constructed_response
+        @course_module_element.constructed_response.scenario.add_an_empty_scenario_question
       end
       @course_modules = cm.parent.active_children
       set_related_cmes

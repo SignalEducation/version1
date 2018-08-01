@@ -21,6 +21,11 @@
 #  background_image              :string
 #  header_button_link            :string
 #  header_button_subtext         :string
+#  footer_link                   :boolean          default(FALSE)
+#  mailchimp_list_guid           :string
+#  mailchimp_section_heading     :string
+#  mailchimp_section_subheading  :string
+#  mailchimp_subscribe_section   :boolean          default(FALSE)
 #
 
 FactoryBot.define do

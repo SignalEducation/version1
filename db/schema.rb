@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180722110332) do
+ActiveRecord::Schema.define(version: 20180730113141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -450,6 +450,11 @@ ActiveRecord::Schema.define(version: 20180722110332) do
     t.string   "background_image"
     t.string   "header_button_link"
     t.string   "header_button_subtext"
+    t.boolean  "footer_link",                   default: false
+    t.string   "mailchimp_list_guid"
+    t.string   "mailchimp_section_heading"
+    t.string   "mailchimp_section_subheading"
+    t.boolean  "mailchimp_subscribe_section",   default: false
   end
 
   add_index "home_pages", ["public_url"], name: "index_home_pages_on_public_url", using: :btree
