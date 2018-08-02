@@ -248,34 +248,33 @@
                         Get Started For Free
 
 
-    -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
-      %section#subscribe.diag-l-up.bg-gradient1
-        .container
-          %h2.title1
-            -if @home_page.mailchimp_list_guid && @home_page.mailchimp_section_heading
-              =@home_page.mailchimp_section_heading
-            -else
-              ='Get fortnightly ACCA insider knowledge'
+    %section#subscribe.diag-l-up.bg-gradient1
+      .container
+        %h2.title1
+          -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_heading && !@home_page.mailchimp_section_heading.empty?)
+            =@home_page.mailchimp_section_heading
+          -else
+            ='Get fortnightly ACCA insider knowledge'
 
-          %h2.subtitle
-            -if @home_page.mailchimp_list_guid && @home_page.mailchimp_section_subheading
-              =@home_page.mailchimp_section_subheading
-            -else
-              ='Direct to your inbox.'
-          #response
-            =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-              -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
-                =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
-              .row
-                .col-md-4.col-md-offset-1.col-sm-6
-                  .form-group
-                    =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
-                .col-md-4.col-sm-6
-                  .form-group
-                    =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
-                .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
-                  .form-group
-                    %button.lsbtn.s{:type => "submit"} Subscribe
+        %h2.subtitle
+          -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_subheading && !@home_page.mailchimp_section_subheading.empty?)
+            =@home_page.mailchimp_section_subheading
+          -else
+            ='Direct to your inbox.'
+        #response
+          =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+            -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
+              =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
+            .row
+              .col-md-4.col-md-offset-1.col-sm-6
+                .form-group
+                  =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
+              .col-md-4.col-sm-6
+                .form-group
+                  =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
+              .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
+                .form-group
+                  %button.lsbtn.s{:type => "submit"} Subscribe
 
 
     %section#through
