@@ -16,13 +16,13 @@
                   -if @home_page && @home_page.header_heading && !@home_page.header_heading.empty?
                     =@home_page.header_heading
                   -else
-                    ='ACCA Coaching Program'
+                    ='ACCA Exam Bootcamp'
 
                 %h2.subtitle
                   -if @home_page && @home_page.header_paragraph && !@home_page.header_paragraph.empty?
                     =@home_page.header_paragraph
                   -else
-                    ='Want some extra help and motivation to pass your ACCA exams? Get ready for the ACCA Coaching Program!'
+                    ='LearnSignal is inviting you to join Exam Bootcamp for the 21 days leading up to the exam.'
 
               .col-md-2
                 .approved
@@ -36,7 +36,7 @@
           -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_section_heading.empty?
             =@home_page.mailchimp_section_heading
           -else
-            ='Sign-Up For ACCA Coaching Program Now'
+            ='Sign-Up For Exam Bootcamp Now'
 
         %h2.subtitle{style: 'margin-bottom: 20px;'}
           -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_section_subheading.empty?
