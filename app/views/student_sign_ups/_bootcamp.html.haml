@@ -33,13 +33,13 @@
     %section#what{style: 'background: #F5F5FC;'}
       .container
         %h2.title1{style: 'margin-bottom: 20px;'}
-          -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_section_heading.empty?
+          -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_heading && !@home_page.mailchimp_section_heading.empty?)
             =@home_page.mailchimp_section_heading
           -else
             ='Sign-Up For Exam Bootcamp Now'
 
         %h2.subtitle{style: 'margin-bottom: 20px;'}
-          -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_section_subheading.empty?
+          -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_subheading && !@home_page.mailchimp_section_subheading.empty?)
             =@home_page.mailchimp_section_subheading
           -else
             ='(It’s Free)'

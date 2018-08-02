@@ -105,13 +105,23 @@
                         =blog_post.description
 
 
-
   %section#subscribe.diag-l-up.bg-gradient1
     .container
-      %h2.title1 Get fortnightly ACCA insider knowledge
-      %h2.subtitle Direct to your inbox.
+      %h2.title1
+        -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_heading && !@home_page.mailchimp_section_heading.empty?)
+          =@home_page.mailchimp_section_heading
+        -else
+          ='Get fortnightly ACCA insider knowledge'
+
+      %h2.subtitle
+        -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_subheading && !@home_page.mailchimp_section_subheading.empty?)
+          =@home_page.mailchimp_section_subheading
+        -else
+          ='Direct to your inbox.'
       #response
         =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+          -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
+            =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
           .row
             .col-md-4.col-md-offset-1.col-sm-6
               .form-group
@@ -122,21 +132,6 @@
             .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
               .form-group
                 %button.lsbtn.s{:type => "submit"} Subscribe
-      .sep
-      .row
-        .col-lg-6.col-lg-offset-3.col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3.col-xs-6.col-xs-offset-3
-          %a.lsbtn.v2{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
-
-
-  -#%section#tips
-    .container
-      %h2.title1 Get Jamie’s 3 free tips on passing your ACCA.
-      .video
-        .play
-          #vimeo-player.vimeo-player
-
-        .about Meet course tutor Jamie. He’s helped learners all over the world pass their ACCA.
-
 
 
 
