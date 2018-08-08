@@ -75,6 +75,19 @@ class ContentPagesController < ApplicationController
     end
   end
 
+  def new_activation_worker
+
+  end
+
+  def create_activation_worker
+
+    if @content_page && params[:datetime]
+      datetime = params[:datetime]
+      ContentActivationWorker.perform_at(datetime.to_datetime, 'ContentPage', @content_page.id)
+      redirect_to content_pages_url
+    end
+  end
+
 
   def destroy
     if @content_page.destroy

@@ -1,0 +1,36 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            ='Create Activation Worker'
+
+      .row.l-margin-bottom
+        .col-md-12
+          =form_tag(content_page_activation_url, method: 'post') do
+            =hidden_field_tag :id, @content_page.id
+
+            .row.l-margin-bottom-huge.l-margin-top{style: "overflow:hidden;"}
+              .form-group
+                .row
+                  .col-md-8.col-md-offset-2
+                    %div#datetimepicker1{style: 'background: #fff;'}
+                      =text_field_tag(:datetime, nil)
+
+
+
+            %button{:type => "submit", class: 'btn btn-red'} Save
+            =link_to t('views.general.cancel'), content_pages_path, class: 'btn btn-cyan'
+
+
+
+
+:javascript
+
+  $(function () {
+    $('#datetimepicker1').datetimepicker({
+      inline: true,
+      sideBySide: true
+    });
+  });
