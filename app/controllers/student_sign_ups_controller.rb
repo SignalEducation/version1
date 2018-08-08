@@ -56,10 +56,14 @@ class StudentSignUpsController < ApplicationController
   end
 
   def subscribe
+    if params[:mailchimp_list_guid]
+      list_id = params[:mailchimp_list_guid]
+    else
+      list_id = 'a716c282e2' # Newsletter List
+    end
     email = params[:email][:address]
     name = params[:first_name][:address]
-    #list_id = '866fa91d62' # Dev List
-    list_id = 'a716c282e2' # Production List
+
     if !email.blank?
       begin
         @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
