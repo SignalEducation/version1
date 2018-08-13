@@ -7,6 +7,7 @@ class ContentActivationsController < ApplicationController
   before_action :get_variables
 
   def new
+
   end
 
   def create
@@ -17,7 +18,7 @@ class ContentActivationsController < ApplicationController
       parsed_time = DateTime.strptime(datetime, '%d/%m/%Y %H:%M:%S')
       ContentActivationWorker.perform_at(parsed_time, record_type, @record.id)
 
-      redirect_to course_module_special_link(@record)
+      redirect_to content_activation_special_link(@record)
     end
   end
 

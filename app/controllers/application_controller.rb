@@ -232,6 +232,22 @@ class ApplicationController < ActionController::Base
   helper_method :course_module_special_link
 
 
+  def content_activation_special_link(the_thing)
+    if the_thing.class == CourseModuleElement || the_thing.class == CourseModule
+      subject_course_url(the_thing.subject_course)
+    elsif the_thing.class == SubjectCourse
+      subject_course_url
+    elsif the_thing.class == ContentPage
+      content_pages_url
+    elsif the_thing.class == SubjectCourseResource
+      course_resources_url(the_thing.subject_course)
+    else
+      subject_course_url
+    end
+  end
+  helper_method :content_activation_special_link
+
+
 
   # Library Navigation Links
   def library_special_link(the_thing)
