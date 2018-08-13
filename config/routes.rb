@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
 
     resources :content_pages, except: [:show]
+    resources :content_activations, only: [:new, :create]
     resources :user_groups
     resources :subscription_management do
       get '/invoice/:invoice_id', action: :invoice, as: :invoice

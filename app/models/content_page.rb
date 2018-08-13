@@ -68,7 +68,7 @@ class ContentPage < ActiveRecord::Base
     #Since the editor will always populate the text_content field
     #we must clear the entire record when no name attribute is present
     #to allow content_page records be created without nested banners
-    if self.external_banners[0].name.blank?
+    if self.external_banners.any? && self.external_banners[0].name.blank?
       self.external_banners[0].destroy
     end
   end

@@ -222,11 +222,30 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == SubjectCourse
       new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
 
+    elsif the_thing.class == ContentPage
+      content_pages_url
+
     else # default route
       subject_course_url
     end
   end
   helper_method :course_module_special_link
+
+
+  def content_activation_special_link(the_thing)
+    if the_thing.class == CourseModuleElement || the_thing.class == CourseModule
+      subject_course_url(the_thing.course_module.subject_course)
+    elsif the_thing.class == SubjectCourse
+      subject_course_url
+    elsif the_thing.class == ContentPage
+      content_pages_url
+    elsif the_thing.class == SubjectCourseResource
+      course_resources_url(the_thing.subject_course)
+    else
+      subject_course_url
+    end
+  end
+  helper_method :content_activation_special_link
 
 
 
