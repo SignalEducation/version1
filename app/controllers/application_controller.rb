@@ -222,6 +222,9 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == SubjectCourse
       new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
 
+    elsif the_thing.class == ContentPage
+      content_pages_url
+
     else # default route
       subject_course_url
     end

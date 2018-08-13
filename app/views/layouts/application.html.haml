@@ -15,7 +15,7 @@
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
-    -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'
+    -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'|| controller_name == 'content_activations'
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common.min.css', rel: 'stylesheet'}
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default-v2.min.css', rel: 'stylesheet'}
 
@@ -48,7 +48,7 @@
       =render partial: 'layouts/quora_js_pixel'
 
   %body
-    -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'
+    -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
 
