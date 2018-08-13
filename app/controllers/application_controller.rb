@@ -234,7 +234,7 @@ class ApplicationController < ActionController::Base
 
   def content_activation_special_link(the_thing)
     if the_thing.class == CourseModuleElement || the_thing.class == CourseModule
-      subject_course_url(the_thing.subject_course)
+      subject_course_url(the_thing.course_module.subject_course)
     elsif the_thing.class == SubjectCourse
       subject_course_url
     elsif the_thing.class == ContentPage
