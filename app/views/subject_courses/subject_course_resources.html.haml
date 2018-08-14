@@ -31,6 +31,10 @@
                       %td=subject_course_resource.name
                       %td=subject_course_resource.subject_course.name
                       %td=tick_or_cross(subject_course_resource.active)
+                      -unless subject_course_resource.active
+                        %td
+                          =link_to 'Activate', new_content_activation_url(type: subject_course_resource.class, id: subject_course_resource.id), class: 'btn btn-green btn-small'
+
                       %td
                         =link_to t('views.general.edit'), edit_subject_course_resource_url(subject_course_resource), class: 'btn btn-cyan btn-small'
                       %td
