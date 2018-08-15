@@ -24,9 +24,7 @@
                   %tr
                     %th=t('views.content_pages.form.name')
                     %th=t('views.content_pages.form.public_url')
-                    %th=t('views.content_pages.form.nav_type')
                     %th=t('views.content_pages.form.active')
-                    %th=t('views.content_pages.form.footer_link')
                     %th
                     %th
                     %th
@@ -35,9 +33,10 @@
                     %tr{id: content_page.id}
                       %td=content_page.name
                       %td=content_page.public_url
-                      %td=content_page.nav_type
                       %td=tick_or_cross(content_page.active)
-                      %td=tick_or_cross(content_page.footer_link)
+                      %td
+                        -unless content_page.active
+                          =link_to 'Activate', new_content_activation_url(type: content_page.class, id: content_page.id), class: 'btn btn-green btn-small'
                       %td=link_to t('views.general.view'), footer_content_page_url(content_page.public_url), class: 'btn btn-purple btn-small', target: '_blank'
                       %td=link_to t('views.general.edit'), edit_content_page_url(content_page), class: 'btn btn-cyan btn-small'
                       -if content_page.destroyable?
