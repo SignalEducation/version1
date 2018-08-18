@@ -60,6 +60,7 @@
 #  unsubscribed_from_emails         :boolean          default(FALSE)
 #  communication_approval           :boolean          default(FALSE)
 #  communication_approval_datetime  :datetime
+#  tutor_title                      :string
 #
 
 class User < ActiveRecord::Base
@@ -87,7 +88,7 @@ class User < ActiveRecord::Base
                   :date_of_birth, :description, :free_trial_ended_at,
                   :student_number, :student_access_attributes,
                   :unsubscribed_from_emails, :communication_approval_datetime,
-                  :communication_approval
+                  :communication_approval, :tutor_title
 
   # Constants
   LOCALES = %w(en)

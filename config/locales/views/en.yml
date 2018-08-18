@@ -1385,6 +1385,8 @@ en:
         date_of_birth_placeholder: D.O.B
         description: Description
         description_placeholder: Tutor Info
+        tutor_title: Tutor Title
+        tutor_title_placeholder: Tutor Title
         student_number: Student Number
         student_number_placeholder: Student Number
         stripe_account_balance: Stripe Account Balance (in Cents)

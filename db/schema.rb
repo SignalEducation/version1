@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180730113141) do
+ActiveRecord::Schema.define(version: 20180816185000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1180,6 +1180,7 @@ ActiveRecord::Schema.define(version: 20180730113141) do
     t.boolean  "unsubscribed_from_emails",                     default: false
     t.boolean  "communication_approval",                       default: false
     t.datetime "communication_approval_datetime"
+    t.string   "tutor_title"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
