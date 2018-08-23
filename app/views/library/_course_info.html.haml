@@ -9,17 +9,17 @@
         =link_to @course.external_url, target: '_blank' do
           =@course.external_url_name
 
-  -if @course.users.any?
+  -if @course.course_tutor_details.any?
     .col-md-6
       %p.h4.l-margin-bottom.l-margin-top
         =t('views.general.course_tutors')
       .col-sm-12
-        -@course.users.each do |tutor|
+        -@course_tutor_details.each do |course_tutor|
           .col-xs-6.l-margin-bottom
             .tutor-header.text-center
-              =link_to profile_url(tutor) do
-                =image_tag tutor.profile_image.url, class: 'profile-pic profile-pic-small'
+              =link_to profile_url(course_tutor.user) do
+                =image_tag course_tutor.user.profile_image.url, class: 'profile-pic profile-pic-small'
               .h6
-                =tutor.full_name
+                =course_tutor.user.full_name
               .h5
-                =tutor.tutor_title
+                =course_tutor.title

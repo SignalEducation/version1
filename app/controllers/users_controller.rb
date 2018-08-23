@@ -60,7 +60,6 @@
 #  unsubscribed_from_emails         :boolean          default(FALSE)
 #  communication_approval           :boolean          default(FALSE)
 #  communication_approval_datetime  :datetime
-#  tutor_title                      :string
 #
 
 class UsersController < ApplicationController
@@ -214,7 +213,7 @@ class UsersController < ApplicationController
 
   def allowed_params
     params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image,
-                                 :date_of_birth, :description, :student_number, :stripe_account_balance, :tutor_title,
+                                 :date_of_birth, :description, :student_number, :stripe_account_balance,
                                  student_access_attributes: [:id, :trial_seconds_limit, :trial_days_limit, :account_type]
     )
   end

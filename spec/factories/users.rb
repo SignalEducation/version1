@@ -60,7 +60,6 @@
 #  unsubscribed_from_emails         :boolean          default(FALSE)
 #  communication_approval           :boolean          default(FALSE)
 #  communication_approval_datetime  :datetime
-#  tutor_title                      :string
 #
 
 FactoryBot.define do

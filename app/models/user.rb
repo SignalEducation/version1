@@ -60,7 +60,6 @@
 #  unsubscribed_from_emails         :boolean          default(FALSE)
 #  communication_approval           :boolean          default(FALSE)
 #  communication_approval_datetime  :datetime
-#  tutor_title                      :string
 #
 
 class User < ActiveRecord::Base
@@ -88,7 +87,7 @@ class User < ActiveRecord::Base
                   :date_of_birth, :description, :free_trial_ended_at,
                   :student_number, :student_access_attributes,
                   :unsubscribed_from_emails, :communication_approval_datetime,
-                  :communication_approval, :tutor_title
+                  :communication_approval
 
   # Constants
   LOCALES = %w(en)
@@ -101,6 +100,7 @@ class User < ActiveRecord::Base
            class_name: 'CourseModuleElementUserLog'
   has_many :incomplete_course_module_element_user_logs, -> {where(element_completed: false)},
            class_name: 'CourseModuleElementUserLog'
+  has_many :course_tutor_details
   has_many :enrollments
   has_and_belongs_to_many :subject_courses
   has_many :invoices

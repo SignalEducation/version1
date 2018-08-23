@@ -75,10 +75,6 @@
         .input-group.input-group-lg.full-width
           =f.text_area :description, as: :summernote, placeholder: t('views.users.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
 
-        =f.label :tutor_title, t('views.users.form.tutor_title'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_area :tutor_title, placeholder: t('views.users.form.tutor_title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
       .col-md-4
         =f.label :profile_image, t('views.users.form.profile_image'), class: 'control-label'
         -if f.object.profile_image.url

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180816185000) do
+ActiveRecord::Schema.define(version: 20180823122311) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,6 +289,18 @@ ActiveRecord::Schema.define(version: 20180816185000) do
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
   add_index "course_modules", ["sorting_order"], name: "index_course_modules_on_sorting_order", using: :btree
+
+  create_table "course_tutor_details", force: :cascade do |t|
+    t.integer  "subject_course_id"
+    t.integer  "user_id"
+    t.integer  "sorting_order"
+    t.string   "title"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "course_tutor_details", ["subject_course_id"], name: "index_course_tutor_details_on_subject_course_id", using: :btree
+  add_index "course_tutor_details", ["user_id"], name: "index_course_tutor_details_on_user_id", using: :btree
 
   create_table "currencies", force: :cascade do |t|
     t.string   "iso_code"
@@ -1180,7 +1192,6 @@ ActiveRecord::Schema.define(version: 20180816185000) do
     t.boolean  "unsubscribed_from_emails",                     default: false
     t.boolean  "communication_approval",                       default: false
     t.datetime "communication_approval_datetime"
-    t.string   "tutor_title"
   end
 
   add_index "users", ["account_activation_code"], name: "index_users_on_account_activation_code", using: :btree
