@@ -7,7 +7,7 @@
     -if @user.tutor_user?
       %li
         =link_to 'Courses', user_courses_url(@user)
-    -elsif @user.subscription_user?
+    -elsif @user.subscriptions && @user.subscriptions.any?
       %li
         =link_to 'Subscriptions', user_subscription_url(@user)
     %li
