@@ -20,7 +20,7 @@ class CourseTutorDetailsController < ApplicationController
   before_action :get_variables
 
   def index
-    @course_tutor_details = CourseTutorDetail.all_in_order
+    @course_tutor_details = @subject_course.course_tutor_details.all_in_order
   end
 
   def new
