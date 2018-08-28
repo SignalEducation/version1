@@ -42,8 +42,6 @@
     var course_log_id = #{@subject_course_user_log.id};
     var exam_track_id = "#{@student_exam_track.try(:id)}";
     var logId = '';
-    var percent = 0;
-    var seconds = 0;
     var options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
       frameborder: 0,
@@ -55,19 +53,16 @@
     var player = new Vimeo.Player('vimeo-player-window', options);
 
     var timeUpdate = function(data) {
-      // Every 5 seconds [250ms]
-
-      var percent = data.percent;
-      var seconds = data.seconds;
-
-      $.ajax({
-        url: '#{video_watched_data_courses_path}',
-        dataType: 'json',
-        data: JSON.stringify({'videoLogId': logId, 'percent': percent, 'seconds': seconds}),
-        method: 'PATCH',
-        contentType: "application/json; charset=utf-8"
-      });
-
+      if (data.percent >= 0.75) {
+        $.ajax({
+          url: '#{video_watched_data_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'videoLogId': logId}),
+          method: 'PATCH',
+          contentType: "application/json; charset=utf-8"
+        });
+        player.off('timeupdate', timeUpdate);
+      }
     };
 
     //When the player starts send JSON request to create CMEUL
