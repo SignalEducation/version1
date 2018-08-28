@@ -130,6 +130,19 @@ en:
           success: Course Module Element Resource has been deleted
           error: Course Module Element Resource was not deleted
 
+    course_tutor_details:
+      create:
+        flash:
+          success: Course Tutor Details have been created successfully
+          error: Course Tutor Details has Not been created
+      update:
+        flash:
+          success: Course Tutor Details details have been updated successfully
+      destroy:
+        flash:
+          success: Course Tutor Details have been deleted
+          error: Course Tutor Details were not deleted
+
     currencies:
       create:
         flash:
@@ -376,6 +389,10 @@ en:
       update_subjects:
         flash:
           success: Course Tutors have been updated successfully
+
+      tutor_infos:
+        flash:
+          success: Course Tutor Info have been successfully created
 
     subject_course_resources:
       create:

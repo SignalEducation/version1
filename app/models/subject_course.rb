@@ -59,10 +59,10 @@ class SubjectCourse < ActiveRecord::Base
   # relationships
   belongs_to :exam_body
   belongs_to :group
-  has_and_belongs_to_many :users
   has_many :course_modules
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_tutor_details
   has_many :quiz_questions
   has_many :enrollments
   has_many :home_pages

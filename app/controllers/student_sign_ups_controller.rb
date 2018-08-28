@@ -1,6 +1,6 @@
 class StudentSignUpsController < ApplicationController
 
-  before_action :check_logged_in_status, except: [:landing]
+  before_action :check_logged_in_status, except: [:landing, :subscribe]
   before_action :get_variables
   before_action :create_user_object, only: [:home, :new]
   before_action :layout_variables, only: [:home, :landing]

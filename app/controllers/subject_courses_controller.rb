@@ -129,38 +129,6 @@ class SubjectCoursesController < ApplicationController
   end
 
 
-  ## Edit & Update Actions for Tutor Users associated with this SubjectCourse ##
-  def edit_tutors
-    @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
-    @tutor_group = UserGroup.where(tutor: true).first
-    @tutors = @tutor_group.users
-    all_tutors = @tutors.each_slice( (@tutors.size/2.0).round ).to_a
-    @first_tutors = all_tutors.first
-    @second_tutors = all_tutors.last
-    if @subject_course.nil?
-      flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-      redirect_to subject_courses_url
-    end
-  end
-
-  def update_tutors
-    # TODO Review this - why the conditional
-    @subject_course = SubjectCourse.find(params[:subject_course_id]) rescue nil
-    if @subject_course && current_user.content_management_access?
-      if params[:subject_course]
-        @subject_course.user_ids = params[:subject_course][:user_ids]
-      else
-        @subject_course.user_ids = []
-      end
-
-      flash[:success] = I18n.t('controllers.subject_courses.update_subjects.flash.success')
-      redirect_to subject_courses_url
-    else
-      render action: :edit_tutors
-    end
-  end
-
-
   ## Misc Actions ##
 
   ### Creates list of the Course's CourseModules for Drag&Drop reordering (posted to CourseModules#reorder) ###
