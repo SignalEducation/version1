@@ -100,6 +100,7 @@ class User < ActiveRecord::Base
            class_name: 'CourseModuleElementUserLog'
   has_many :incomplete_course_module_element_user_logs, -> {where(element_completed: false)},
            class_name: 'CourseModuleElementUserLog'
+  has_many :course_tutor_details
   has_many :enrollments
   has_and_belongs_to_many :subject_courses
   has_many :invoices

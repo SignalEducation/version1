@@ -171,8 +171,7 @@ Rails.application.routes.draw do
 
 
     resources :subject_courses, concerns: :supports_reordering do
-      get 'edit_tutors', action: :edit_tutors, as: :edit_course_tutors
-      patch 'update_tutors', action: :update_tutors, as: :update_course_tutors
+      resources :course_tutor_details, concerns: :supports_reordering
     end
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
