@@ -59,14 +59,19 @@ class StudentSignUpsController < ApplicationController
     if params[:mailchimp_list_guid]
       list_id = params[:mailchimp_list_guid]
     else
-      list_id = '866fa91d62' # Newsletter List
+      list_id = 'ac6c0d8c35' # Development List
     end
+
     email = params[:email][:address]
     name = params[:first_name][:address]
+    course_name = params[:course]
 
     if !email.blank?
       begin
-        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+        # TODO make the course name optional #####################
+        # TODO make the course name optional #####################
+        # TODO make the course name optional #####################
+        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name, 'course' => course_name})
 
         respond_to do |format|
           format.json{render json: {message: 'Success! Check your email to confirm your subscription.'}}
