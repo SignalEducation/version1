@@ -55,6 +55,10 @@
                         =label(:email, 'Email Address')
                         .input-group.input-group-lg.full-width
                           =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control', style: 'border-radius: 6px;'})
+                        %br/
+                        =label(:student_number, 'Student Number')
+                        .input-group.input-group-lg.full-width
+                          =text_field(:student_number, :address, {id: 'student_number', placeholder: 'Your student number', class: 'form-control', style: 'border-radius: 6px;'})
 
                         %br/
                         =label(:course_name, 'Course')
