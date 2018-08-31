@@ -63,7 +63,7 @@
                         %br/
                         =label(:course_name, 'Course')
                         .input-group.input-group-lg.full-width
-                          =select_tag('course', options_for_select(@group.subject_courses.all_in_order.collect{ |u| [u.name, u.name] }), {include_blank: t('views.general.select'), class: 'form-control'})
+                          =select_tag('course', options_for_select(@group.subject_courses.all_in_order.all_active.collect{ |u| [u.name, u.name] }), {include_blank: t('views.general.select'), class: 'form-control'})
 
 
                         %button.btn.btn-red{:type => "submit"}
