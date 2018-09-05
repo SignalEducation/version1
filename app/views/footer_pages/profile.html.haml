@@ -29,25 +29,17 @@
               .row
                 -@courses.each do |course|
                   -if course.parent && course.parent.active && course.active_children
-                    .col-sm-6.col-md-4
+                    .col-sm-4
                       =link_to library_special_link(course), class: 'card card-course' do
-                        .card-outer
-                          .card-inner
-                            %h3.h3.card-title.l-margin-bottom
-                              =course.try(:name)
-                            %p.card-desc
-                              -if course.short_description
-                                =course.try(:short_description).to_s.truncate(185)
-                              -else
-                                =course.parent.try(:name).to_s.truncate(185)
-                        .card-label
-                          .row
-                            .col-md-12.col-xs-12
-                              .col-md-6.col-xs-6
-                                %h6
-                                  =t('views.general.browse')
-                              .col-md-6.col-xs-6.text-right
-                                -if course.total_estimated_time_in_seconds && course.total_estimated_time_in_seconds > 0
-                                  %h6
-                                    =simple_hour_time(course.total_estimated_time_in_seconds)
+                        .card-inner.text-center
+                          %h3.h3.card-title
+                            =course.try(:name)
+                        .card-info.text-center
+                          %p.h5{style: 'color: #f092b0; '}
+                            =course.try(:additional_text_label)
 
+                        .card-label{style: "background: #{course.highlight_colour};"}
+                          .row
+                            .col-md-12.col-xs-12.text-center
+                              %h4{style: 'color: #fff;'}
+                                =course.category_label ? course.category_label : 'Enrol Now'
