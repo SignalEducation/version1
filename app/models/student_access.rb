@@ -39,6 +39,9 @@ class StudentAccess < ActiveRecord::Base
   validates :trial_days_limit, presence: true
   validates :account_type, presence: true, inclusion: {in: ACCOUNT_TYPES}
 
+  #TODO Add validation to ensure a SubscriptionID is present if trial_ended_date is present
+  #TODO ensure some method to ensure once it has a value it can't return to nil
+
   # callbacks
   before_destroy :check_dependencies
   after_save :post_save_callbacks
@@ -94,6 +97,49 @@ class StudentAccess < ActiveRecord::Base
     else
       self.update_columns(content_access: true, account_type: 'Complimentary')
     end
+  end
+
+  def start_trial_access
+    date_now = Proc.new{Time.now.to_datetime}.call
+    self.trial_started_date = date_now
+    self.trial_ending_at_date = self.trial_started_date + self.trial_days_limit.days
+    self.account_type = 'Trial'
+    self.content_access = true
+    self.save
+    TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
+  end
+
+  def check_trial_access
+    date_now = Proc.new{Time.now.to_datetime}.call
+    if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
+      self.content_access = false
+      self.trial_ended_date = date_now
+      self.save
+    else
+      TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
+    end
+  end
+
+  def update_subscription_access(sub_id)
+    # Called from the subscription creation process or subscription update process (current_status change)
+    subscription = Subscription.find(sub_id)
+    self.subscription_id = sub_id
+    self.account_type = 'Subscription'
+    self.trial_ended_date = Proc.new{Time.now.to_datetime}.call unless self.trial_ended_date
+    if %w(unpaid suspended canceled).include?(subscription.current_status)
+      self.content_access = false
+    elsif %w(active past_due canceled-pending).include?(subscription.current_status)
+      self.content_access = true
+    end
+    self.save
+  end
+
+  def convert_to_comp_access
+
+  end
+
+  def convert_to_trial_access
+
   end
 
   protected
