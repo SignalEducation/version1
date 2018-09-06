@@ -828,9 +828,10 @@ class User < ActiveRecord::Base
       #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
 
       if subscription_saved
-        #TODO - Need to update the student_access instead
-        trial_ended_date = self.free_trial_ended_at ? self.free_trial_ended_at : Proc.new{Time.now}.call
-        self.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
+        time_now = Proc.new{Time.now.to_datetime}.call
+        self.student_access.update_attributes(trial_ended_date: time_now, content_access: true,
+                                              subscription_id: subscription_saved.id,
+                                              account_type: 'Subscription')
       end
     end
 
