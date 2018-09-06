@@ -66,11 +66,15 @@ class StudentSignUpsController < ApplicationController
     name = params[:first_name][:address]
     student_number = params[:student_number][:address] if params[:student_number]
     course_name = params[:course]
+    date_of_birth = params[:date_of_birth][:address]
 
     if !email.blank?
       begin
         if params[:course] && params[:student_number][:address]
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name, 'snumber' => student_number, 'coursename' => course_name})
+          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name,
+                                                            'snumber' => student_number,
+                                                            'dob' => date_of_birth,
+                                                            'coursename' => course_name})
         else
           @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
         end
@@ -90,8 +94,9 @@ class StudentSignUpsController < ApplicationController
       rescue Mailchimp::Error => ex
         if ex.message
           respond_to do |format|
-            format.json{render json: {message: 'There is an error. Please enter valid email.'}}
+            format.json{render json: {message: 'There was an error. Please enter valid email.'}}
           end
+          Rails.logger.error "ERROR: Mailchimp#error - Returned #{ex.message}"
         else
           respond_to do |format|
             format.json{render json: {message: 'An unknown error occurred.'}}
@@ -102,6 +107,7 @@ class StudentSignUpsController < ApplicationController
       respond_to do |format|
         format.json{render json: {message: 'Email Address Cannot be blank. Please enter valid email.'}}
       end
+
     end
   end
 

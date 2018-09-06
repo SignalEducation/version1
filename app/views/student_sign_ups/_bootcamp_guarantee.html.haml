@@ -59,6 +59,10 @@
                         =label(:student_number, 'Student Number')
                         .input-group.input-group-lg.full-width
                           =text_field(:student_number, :address, {id: 'student_number', placeholder: 'Your student number', class: 'form-control', style: 'border-radius: 6px;'})
+                        %br/
+                        =label(:date_of_birth, 'Date Of Birth')
+                        .input-group.input-group-lg.full-width
+                          =date_field(:date_of_birth, :address, {id: 'date_of_birth', placeholder: 'Your date of birth', class: 'form-control', style: 'border-radius: 6px;'})
 
                         %br/
                         =label(:course_name, 'Course')
