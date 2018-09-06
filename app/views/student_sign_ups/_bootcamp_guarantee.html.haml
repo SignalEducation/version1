@@ -18,30 +18,47 @@
                 .logo-center
                   =image_tag('acca_approved.png')
 
-          .container.l-margin-top-big
+          .container.l-margin-top
             .row
-              .col-md-7
+              .col-md-8
 
                 %h2.subtitle
-                  ='Having successfully guided nearly 10,000 students in what to study coming up to their exams, LearnSignal is now offering students who follow our study guides a guarantee that they will pass their exams.  Here are the rules;'
+                  ='We are delighted to have successfully guided nearly 10,000 of your fellow students in their studies, but we want to do more.'
 
-                .list.l-margin-bottom-huge
+                %p.subtitle
+                  ='LearnSignal’s Bootcamp Guarantee is for students who are you:'
+
+                .list.l-margin-bottom
                   %ul
                     %li
-                      ='100% of content completed'
+                      ='Serious about your future career?'
                     %li
-                      ='Mock exam submitted 2 weeks before the exam'
+                      ='Appreciate the challenge of passing ACCA exams?'
                     %li
-                      ='Studying with LearnSignal for two months prior to the exam'
-                    %li
-                      ='Attend the Bootcamp'
-                    %li
-                      ='Submit daily questions'
-                    %li
-                      ='Submit their number and Date of Birth'
+                      ='Seeking to pass first time, every time?'
 
 
-              .col-md-5
+                %p.subtitle
+                  ='A qualifying student who has met all of the requirements below, but has failed to pass their exam, is entitled to access to all the LearnSignal resources for that subject free of charge.'
+
+                .list.l-margin-bottom
+                  %ul
+                    %li
+                      ='Complete 100% of your content'
+                    %li
+                      ='Complete and submit a mock exam for marking, at least 2 weeks before the exam'
+                    %li
+                      ='Join LearnSignal by the end of September 2018 and continue to study with us until your exam in December 2018.'
+                    %li
+                      ='Sign-up to the Exam Bootcamp and send us your solutions regularly'
+                    %li
+                      ='Give us those boring details like your ACCA student number and date of birth.  These details will have to match those on your ACCA student account.'
+
+                %p.subtitle
+                  ='So come on board and pass your exams the LearnSignal Way.'
+
+
+              .col-md-4
                 #response.form
                   =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
                     -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?
