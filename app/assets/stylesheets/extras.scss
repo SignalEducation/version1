@@ -131,6 +131,21 @@
 #coming_soon .approved img { max-width: 100%; }
 #coming_soon .form { padding-bottom: 15px; padding-top: 10px; display: none; }
 
+#bootcamp_guarantee { background: asset-url('highlighter_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
+#bootcamp_guarantee .tmain { height: 790px; padding: 140px 0; text-align: center; }
+#bootcamp_guarantee .tmain .logo-center { text-align: center; }
+#bootcamp_guarantee .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
+#bootcamp_guarantee .tmain .subtitle { color: inherit; font-size: 1.3em; }
+#bootcamp_guarantee .lsbtn-base { margin: 0 0 28px 0; }
+#bootcamp_guarantee .approved { padding: 6em 0 0 0; margin: auto; }
+#bootcamp_guarantee .approved img { max-width: 100%; }
+#bootcamp_guarantee .form { padding-left: 20px; padding-right: 20px;  }
+#bootcamp_guarantee .form label { color: $white;  }
+#bootcamp_guarantee .form button { margin-top: 20px; text-align: center; width: 100%; }
+#bootcamp_guarantee .list { padding-left: 40px;  }
+#bootcamp_guarantee ul li { display: list-item; list-style-type: disc; }
+#bootcamp_guarantee li { font-size: 1.1em; line-height: 1.333em; }
+
 
 #explore { text-align: center; padding: 65px 0 46px 0; position: relative; }
 #explore .title1 { margin: 0 0 0.5em 0; }
@@ -400,6 +415,12 @@
 .landing #coming_soon .tmain { }
 .landing #coming_soon .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
 .landing #coming_soon .subtitle { font-size: 1.5em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+
+.landing #bootcamp_guarantee { text-align: left; background-image: asset-url('highlighter_person.png'); }
+.landing #bootcamp_guarantee * { text-align: left; }
+.landing #bootcamp_guarantee .tmain { }
+.landing #bootcamp_guarantee .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
+.landing #bootcamp_guarantee .subtitle { font-size: 1.4em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
 
 
 .landing #tips { padding-bottom: 15px; }
