@@ -134,6 +134,7 @@
 #bootcamp_guarantee { background: asset-url('highlighter_person.png') center center no-repeat; background-size: cover; overflow: hidden; color: #fff; position: relative; }
 #bootcamp_guarantee .tmain { height: 790px; padding: 140px 0; text-align: center; }
 #bootcamp_guarantee .tmain .logo-center { text-align: center; }
+#bootcamp_guarantee .tmain .logo-center img { max-height: 135px; }
 #bootcamp_guarantee .title1 { max-width: 800px; margin: 0 auto 0.65em auto; }
 #bootcamp_guarantee .tmain .subtitle { color: inherit; font-size: 1.3em; }
 #bootcamp_guarantee .lsbtn-base { margin: 0 0 28px 0; }
@@ -420,7 +421,8 @@
 .landing #bootcamp_guarantee * { text-align: left; }
 .landing #bootcamp_guarantee .tmain { }
 .landing #bootcamp_guarantee .title1 { margin: 0 0 0.7em 0; max-width: 920px; }
-.landing #bootcamp_guarantee .subtitle { font-size: 1.4em; line-height: 1.333em; margin: 0 0 1.6em 0; font-weight: 300; max-width: 920px; }
+.landing #bootcamp_guarantee .subtitle { font-size: 1.3em; line-height: 1.2em; margin: 0 0 14px 0; font-weight: 300; max-width: 920px; }
+.landing #bootcamp_guarantee .small-print {  color: inherit; font-size: 1.6rem; line-height: 1.1em; margin: 0 0 14px 0; font-weight: 300; max-width: 920px; }
 
 
 .landing #tips { padding-bottom: 15px; }
