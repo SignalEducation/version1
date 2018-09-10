@@ -2,64 +2,57 @@
 #
 # Table name: users
 #
-#  id                               :integer          not null, primary key
-#  email                            :string
-#  first_name                       :string
-#  last_name                        :string
-#  address                          :text
-#  country_id                       :integer
-#  crypted_password                 :string(128)      default(""), not null
-#  password_salt                    :string(128)      default(""), not null
-#  persistence_token                :string
-#  perishable_token                 :string(128)
-#  single_access_token              :string
-#  login_count                      :integer          default(0)
-#  failed_login_count               :integer          default(0)
-#  last_request_at                  :datetime
-#  current_login_at                 :datetime
-#  last_login_at                    :datetime
-#  current_login_ip                 :string
-#  last_login_ip                    :string
-#  account_activation_code          :string
-#  account_activated_at             :datetime
-#  active                           :boolean          default(FALSE), not null
-#  user_group_id                    :integer
-#  password_reset_requested_at      :datetime
-#  password_reset_token             :string
-#  password_reset_at                :datetime
-#  stripe_customer_id               :string
-#  created_at                       :datetime
-#  updated_at                       :datetime
-#  locale                           :string
-#  guid                             :string
-#  trial_ended_notification_sent_at :datetime
-#  crush_offers_session_id          :string
-#  subscription_plan_category_id    :integer
-#  password_change_required         :boolean
-#  session_key                      :string
-#  name_url                         :string
-#  profile_image_file_name          :string
-#  profile_image_content_type       :string
-#  profile_image_file_size          :integer
-#  profile_image_updated_at         :datetime
-#  topic_interest                   :string
-#  email_verification_code          :string
-#  email_verified_at                :datetime
-#  email_verified                   :boolean          default(FALSE), not null
-#  stripe_account_balance           :integer          default(0)
-#  trial_limit_in_seconds           :integer          default(0)
-#  free_trial                       :boolean          default(FALSE)
-#  trial_limit_in_days              :integer          default(0)
-#  terms_and_conditions             :boolean          default(FALSE)
-#  discourse_user                   :boolean          default(FALSE)
-#  date_of_birth                    :date
-#  description                      :text
-#  free_trial_ended_at              :datetime
-#  analytics_guid                   :string
-#  student_number                   :string
-#  unsubscribed_from_emails         :boolean          default(FALSE)
-#  communication_approval           :boolean          default(FALSE)
-#  communication_approval_datetime  :datetime
+#  id                              :integer          not null, primary key
+#  email                           :string
+#  first_name                      :string
+#  last_name                       :string
+#  address                         :text
+#  country_id                      :integer
+#  crypted_password                :string(128)      default(""), not null
+#  password_salt                   :string(128)      default(""), not null
+#  persistence_token               :string
+#  perishable_token                :string(128)
+#  single_access_token             :string
+#  login_count                     :integer          default(0)
+#  failed_login_count              :integer          default(0)
+#  last_request_at                 :datetime
+#  current_login_at                :datetime
+#  last_login_at                   :datetime
+#  current_login_ip                :string
+#  last_login_ip                   :string
+#  account_activation_code         :string
+#  account_activated_at            :datetime
+#  active                          :boolean          default(FALSE), not null
+#  user_group_id                   :integer
+#  password_reset_requested_at     :datetime
+#  password_reset_token            :string
+#  password_reset_at               :datetime
+#  stripe_customer_id              :string
+#  created_at                      :datetime
+#  updated_at                      :datetime
+#  locale                          :string
+#  guid                            :string
+#  subscription_plan_category_id   :integer
+#  password_change_required        :boolean
+#  session_key                     :string
+#  name_url                        :string
+#  profile_image_file_name         :string
+#  profile_image_content_type      :string
+#  profile_image_file_size         :integer
+#  profile_image_updated_at        :datetime
+#  email_verification_code         :string
+#  email_verified_at               :datetime
+#  email_verified                  :boolean          default(FALSE), not null
+#  stripe_account_balance          :integer          default(0)
+#  free_trial                      :boolean          default(FALSE)
+#  terms_and_conditions            :boolean          default(FALSE)
+#  date_of_birth                   :date
+#  description                     :text
+#  analytics_guid                  :string
+#  student_number                  :string
+#  unsubscribed_from_emails        :boolean          default(FALSE)
+#  communication_approval          :boolean          default(FALSE)
+#  communication_approval_datetime :datetime
 #
 
 class User < ActiveRecord::Base
@@ -77,14 +70,11 @@ class User < ActiveRecord::Base
                   :stripe_customer_id, :password, :password_confirmation,
                   :current_password, :locale, :subscriptions_attributes,
                   :password_change_required, :address,
-                  :profile_image, :topic_interest,
-                  :email_verification_code, :email_verified_at,
+                  :profile_image, :email_verification_code, :email_verified_at,
                   :email_verified, :account_activated_at,
                   :account_activation_code, :session_key,
-                  :stripe_account_balance, :trial_limit_in_seconds,
-                  :free_trial, :trial_limit_in_days,
-                  :trial_ended_notification_sent_at, :terms_and_conditions,
-                  :date_of_birth, :description, :free_trial_ended_at,
+                  :stripe_account_balance, :free_trial,
+                  :terms_and_conditions, :date_of_birth, :description,
                   :student_number, :student_access_attributes,
                   :unsubscribed_from_emails, :communication_approval_datetime,
                   :communication_approval
@@ -102,7 +92,6 @@ class User < ActiveRecord::Base
            class_name: 'CourseModuleElementUserLog'
   has_many :course_tutor_details
   has_many :enrollments
-  has_and_belongs_to_many :subject_courses
   has_many :invoices
   has_many :quiz_attempts
   has_many :orders
@@ -153,7 +142,7 @@ class User < ActiveRecord::Base
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
-  scope :all_free_trial, -> { where(free_trial: true).where("trial_limit_in_seconds <= #{ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i}") }
+  scope :with_course_tutor_details, -> { joins(:course_tutor_details) }
 
   def date_of_birth_is_possible?
     return if self.date_of_birth.blank?
@@ -293,35 +282,6 @@ class User < ActiveRecord::Base
   end
 
 
-  def days_or_seconds_valid?
-    if free_trial_days_valid? && free_trial_minutes_valid?
-      true
-    else
-      false
-    end
-  end
-
-  def free_trial_days_valid?
-    # 86400 is number of seconds in a day
-    trial_limit_days_in_seconds = self.trial_limit_in_days * 86400
-    current_date_time = Proc.new { Time.now }.call
-    trial_start_date = self.email_verified_at || self.created_at
-
-    if  current_date_time <= (trial_start_date + trial_limit_days_in_seconds)
-      true
-    else
-      false
-    end
-  end
-
-  def free_trial_minutes_valid?
-    #If the Number of seconds watched is less than the allowed free trial time limit then permission is allowed
-    if self.trial_limit_in_seconds <= ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-      true
-    else
-      false
-    end
-  end
 
   ### instance methods
 
@@ -869,8 +829,10 @@ class User < ActiveRecord::Base
       #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
 
       if subscription_saved
-        trial_ended_date = self.free_trial_ended_at ? self.free_trial_ended_at : Proc.new{Time.now}.call
-        self.update_attributes(free_trial: false, free_trial_ended_at: trial_ended_date)
+        time_now = Proc.new{Time.now.to_datetime}.call
+        self.student_access.update_attributes(trial_ended_date: time_now, content_access: true,
+                                              subscription_id: subscription_saved.id,
+                                              account_type: 'Subscription')
       end
     end
 

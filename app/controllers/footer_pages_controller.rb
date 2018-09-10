@@ -65,7 +65,7 @@ class FooterPagesController < ApplicationController
 
   def profile_index
     #/profiles
-    @tutors = User.all_tutors.where.not(profile_image_file_name: nil)
+    @tutors = User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil)
     seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
     @navbar = true
     @top_margin = true

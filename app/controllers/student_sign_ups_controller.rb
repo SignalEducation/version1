@@ -56,17 +56,29 @@ class StudentSignUpsController < ApplicationController
   end
 
   def subscribe
-    if params[:mailchimp_list_guid]
+    if params[:mailchimp_list_guid] && !params[:mailchimp_list_guid].empty?
       list_id = params[:mailchimp_list_guid]
     else
-      list_id = '866fa91d62' # Newsletter List
+      list_id = 'ac6c0d8c35' # Development List
     end
+
     email = params[:email][:address]
     name = params[:first_name][:address]
+    student_number = params[:student_number][:address] if params[:student_number]
+    course_name = params[:course]
+    date_of_birth = params[:date_of_birth][:address]
 
     if !email.blank?
       begin
-        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+        if params[:course] && params[:student_number][:address]
+          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name,
+                                                            'snumber' => student_number,
+                                                            'dob' => date_of_birth,
+                                                            'coursename' => course_name})
+        else
+          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+        end
+
 
         respond_to do |format|
           format.json{render json: {message: 'Success! Check your email to confirm your subscription.'}}
@@ -82,8 +94,9 @@ class StudentSignUpsController < ApplicationController
       rescue Mailchimp::Error => ex
         if ex.message
           respond_to do |format|
-            format.json{render json: {message: 'There is an error. Please enter valid email.'}}
+            format.json{render json: {message: 'There was an error. Please enter valid email.'}}
           end
+          Rails.logger.error "ERROR: Mailchimp#error - Returned #{ex.message}"
         else
           respond_to do |format|
             format.json{render json: {message: 'An unknown error occurred.'}}
@@ -94,6 +107,7 @@ class StudentSignUpsController < ApplicationController
       respond_to do |format|
         format.json{render json: {message: 'Email Address Cannot be blank. Please enter valid email.'}}
       end
+
     end
   end
 
@@ -172,7 +186,7 @@ class StudentSignUpsController < ApplicationController
         :email, :first_name, :last_name,
         :country_id, :locale,
         :password, :password_confirmation,
-        :topic_interest, :terms_and_conditions,
+        :terms_and_conditions,
         :communication_approval
     )
   end
