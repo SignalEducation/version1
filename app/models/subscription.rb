@@ -83,10 +83,8 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:current_status, 'canceled-pending')
       elsif response[:status] == 'past_due'
-        self.update_attribute(:current_status, 'canceled')
-        self.user.student_access.update_attributes(content_access: false)
-        #We don't send any email here!!
-        Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
+        self.update_attribute(:current_status, 'canceled-pending')
+        Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled-pending StripeResponse:#{response}."
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180823122311) do
+ActiveRecord::Schema.define(version: 20180906115844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -957,14 +957,6 @@ ActiveRecord::Schema.define(version: 20180823122311) do
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree
 
-  create_table "subject_courses_users", id: false, force: :cascade do |t|
-    t.integer "subject_course_id", null: false
-    t.integer "user_id",           null: false
-  end
-
-  add_index "subject_courses_users", ["subject_course_id"], name: "index_subject_courses_users_on_subject_course_id", using: :btree
-  add_index "subject_courses_users", ["user_id"], name: "index_subject_courses_users_on_user_id", using: :btree
-
   create_table "subscription_payment_cards", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "stripe_card_guid"
@@ -1140,13 +1132,13 @@ ActiveRecord::Schema.define(version: 20180823122311) do
     t.string   "last_name"
     t.text     "address"
     t.integer  "country_id"
-    t.string   "crypted_password",                 limit: 128, default: "",    null: false
-    t.string   "password_salt",                    limit: 128, default: "",    null: false
+    t.string   "crypted_password",                limit: 128, default: "",    null: false
+    t.string   "password_salt",                   limit: 128, default: "",    null: false
     t.string   "persistence_token"
-    t.string   "perishable_token",                 limit: 128
+    t.string   "perishable_token",                limit: 128
     t.string   "single_access_token"
-    t.integer  "login_count",                                  default: 0
-    t.integer  "failed_login_count",                           default: 0
+    t.integer  "login_count",                                 default: 0
+    t.integer  "failed_login_count",                          default: 0
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
@@ -1154,7 +1146,7 @@ ActiveRecord::Schema.define(version: 20180823122311) do
     t.string   "last_login_ip"
     t.string   "account_activation_code"
     t.datetime "account_activated_at"
-    t.boolean  "active",                                       default: false, null: false
+    t.boolean  "active",                                      default: false, null: false
     t.integer  "user_group_id"
     t.datetime "password_reset_requested_at"
     t.string   "password_reset_token"
@@ -1164,8 +1156,6 @@ ActiveRecord::Schema.define(version: 20180823122311) do
     t.datetime "updated_at"
     t.string   "locale"
     t.string   "guid"
-    t.datetime "trial_ended_notification_sent_at"
-    t.string   "crush_offers_session_id"
     t.integer  "subscription_plan_category_id"
     t.boolean  "password_change_required"
     t.string   "session_key"
@@ -1174,23 +1164,18 @@ ActiveRecord::Schema.define(version: 20180823122311) do
     t.string   "profile_image_content_type"
     t.integer  "profile_image_file_size"
     t.datetime "profile_image_updated_at"
-    t.string   "topic_interest"
     t.string   "email_verification_code"
     t.datetime "email_verified_at"
-    t.boolean  "email_verified",                               default: false, null: false
-    t.integer  "stripe_account_balance",                       default: 0
-    t.integer  "trial_limit_in_seconds",                       default: 0
-    t.boolean  "free_trial",                                   default: false
-    t.integer  "trial_limit_in_days",                          default: 0
-    t.boolean  "terms_and_conditions",                         default: false
-    t.boolean  "discourse_user",                               default: false
+    t.boolean  "email_verified",                              default: false, null: false
+    t.integer  "stripe_account_balance",                      default: 0
+    t.boolean  "free_trial",                                  default: false
+    t.boolean  "terms_and_conditions",                        default: false
     t.date     "date_of_birth"
     t.text     "description"
-    t.datetime "free_trial_ended_at"
     t.string   "analytics_guid"
     t.string   "student_number"
-    t.boolean  "unsubscribed_from_emails",                     default: false
-    t.boolean  "communication_approval",                       default: false
+    t.boolean  "unsubscribed_from_emails",                    default: false
+    t.boolean  "communication_approval",                      default: false
     t.datetime "communication_approval_datetime"
   end
 

@@ -186,7 +186,7 @@ class StudentSignUpsController < ApplicationController
         :email, :first_name, :last_name,
         :country_id, :locale,
         :password, :password_confirmation,
-        :topic_interest, :terms_and_conditions,
+        :terms_and_conditions,
         :communication_approval
     )
   end
