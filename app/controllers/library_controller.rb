@@ -23,8 +23,9 @@ class LibraryController < ApplicationController
   def course_show
 
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @course_tutor_details = @course.course_tutor_details.all_in_order
+
     if @course && @course.active && !@course.preview
+      @course_tutor_details = @course.course_tutor_details.all_in_order
       # Course is active Data necessary for logged out state
       tag_manager_data_layer(@course.name)
       seo_title_maker(@course.name, @course.description, nil)
