@@ -66,7 +66,7 @@ class StudentSignUpsController < ApplicationController
     name = params[:first_name][:address]
     student_number = params[:student_number][:address] if params[:student_number]
     course_name = params[:course]
-    date_of_birth = params[:date_of_birth][:address]
+    date_of_birth = params[:date_of_birth][:address] if params[:date_of_birth]
 
     if !email.blank?
       begin

@@ -52,6 +52,8 @@ class Enrollment < ActiveRecord::Base
   before_destroy :check_dependencies
   after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event
   after_update :create_expiration_worker, if: :exam_date_changed?
+  # TODO - Add callback to update the percentage_complete attribute from SCUL,
+  # TODO - as it's not being called when a new Enrollment is created for an existing SCUL
 
   # scopes
   scope :all_in_order, -> { order(:active, :created_at) }

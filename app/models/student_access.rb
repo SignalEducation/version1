@@ -97,6 +97,8 @@ class StudentAccess < ActiveRecord::Base
     else
       self.update_columns(content_access: true, account_type: 'Complimentary')
     end
+
+    # TODO - Need to trigger IntercomCreateUser call to update
   end
 
   def start_trial_access
@@ -109,21 +111,10 @@ class StudentAccess < ActiveRecord::Base
     TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
   end
 
-  def check_trial_access
-    date_now = Proc.new{Time.now.to_datetime}.call
-    if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
-      self.content_access = false
-      self.trial_ended_date = date_now
-      self.save
-    else
-      TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
-    end
-  end
-
-  def update_subscription_access(sub_id)
-    # Called from the subscription creation process or subscription update process (current_status change)
-    subscription = Subscription.find(sub_id)
-    self.subscription_id = sub_id
+  def assign_subscription_access(subscription_id)
+    # Called from the subscription after_save update_student_access
+    subscription = Subscription.find(subscription_id)
+    self.subscription_id = subscription_id
     self.account_type = 'Subscription'
     self.trial_ended_date = Proc.new{Time.now.to_datetime}.call unless self.trial_ended_date
     if %w(unpaid suspended canceled).include?(subscription.current_status)
@@ -134,13 +125,25 @@ class StudentAccess < ActiveRecord::Base
     self.save
   end
 
-  def convert_to_comp_access
-
+  def assign_complimentary_access
+    date_now = Proc.new{Time.now.to_datetime}.call
+    self.trial_ended_date = date_now
+    self.account_type = 'Complimentary'
+    self.content_access = true
+    self.save
   end
 
-  def convert_to_trial_access
-
+  def check_trial_access_is_valid
+    date_now = Proc.new{Time.now.to_datetime}.call
+    if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
+      self.content_access = false
+      self.trial_ended_date = date_now
+      self.save
+    else
+      TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
+    end
   end
+
 
   protected
 
