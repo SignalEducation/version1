@@ -130,7 +130,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :create_referral_code_record
-  after_update :update_stripe_customer, :update_intercom_user, :recalculate_student_access
+  after_update :update_stripe_customer, :update_student_access
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -838,55 +838,8 @@ class User < ActiveRecord::Base
 
   end
 
-  def update_or_create_student_access
-    if self.student_access
-      self.student_access.recalculate_access_from_limits
-    else
-
-      if self.student_user?
-        days_limit = ENV['FREE_TRIAL_DAYS'].to_i
-
-        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
-        ending_date = started_date + days_limit.days
-
-        subs = self.subscriptions.in_created_order
-        sub_id = subs.any? ? subs.last.id : nil
-        type = sub_id ? 'Subscription' : 'Trial'
-
-        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                                  trial_days_limit: days_limit,
-                                  trial_started_date: started_date,
-                                  trial_ending_at_date: ending_date,
-                                  subscription_id: sub_id,
-                                  account_type: type,
-                                  content_access: false)
-
-        self.save
-        self.student_access.recalculate_access_from_limits
-
-      else
-
-        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
-
-        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                                  trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
-                                  trial_started_date: started_date,
-                                  account_type: 'Complimentary', content_access: true)
-        self.save
-        self.student_access.recalculate_access_from_limits
-      end
-
-    end
-  end
-
 
   protected
-
-  def update_intercom_user
-    if self.date_of_birth_changed? || self.email_changed? || self.student_number_changed?
-      IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
-    end
-  end
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
@@ -894,12 +847,11 @@ class User < ActiveRecord::Base
   end
 
   def create_referral_code_record
-
     self.create_referral_code
   end
 
-  def recalculate_student_access
-    self.student_access.recalculate_access_from_limits
+  def update_student_access
+    self.student_access.check_student_access
   end
 
   def update_stripe_customer

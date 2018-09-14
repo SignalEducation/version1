@@ -364,7 +364,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def update_student_access
-    self.student_access.assign_subscription_access(self.id) if self.active && self.student_access
+    self.student_access.convert_to_subscription_access(self.id) if self.active
   end
 
   def prefix
