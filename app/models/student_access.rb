@@ -38,6 +38,7 @@ class StudentAccess < ActiveRecord::Base
   validates :trial_seconds_limit, presence: true
   validates :trial_days_limit, presence: true
   validates :account_type, presence: true, inclusion: {in: ACCOUNT_TYPES}
+  # TODO - Add validation to ensure once a subscription_id is present it can't return to nil
 
 
   # callbacks

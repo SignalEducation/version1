@@ -190,27 +190,27 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # After Create
   # Need to always update the student_access limit to the new limit
+  # Trigger the check trial access still valid if a trial user
   def update_user_seconds_consumed
     unless self.preview_mode
       user = self.user
       current_seconds_consumed = user.student_access.content_seconds_consumed
       updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-
-      TrialExpirationWorker.perform_async(user.id) if updated_seconds_consumed > user.student_access.trial_seconds_limit
+      user.student_access.start_trial_access if user.student_access.trial_access?
     end
   end
 
   # After Save
   # Only update the student_access if it is a video log
+  # TODO - Issue here with video seconds watched. Update there when Vimeo tracking is accurate
   def update_user_seconds_consumed_for_videos
     if self.is_video && !self.preview_mode
       user = self.user
       current_seconds_consumed = user.student_access.content_seconds_consumed
       updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-
-      TrialExpirationWorker.perform_async(user.id) if updated_seconds_consumed > user.student_access.trial_seconds_limit
+      user.student_access.start_trial_access if user.student_access.trial_access?
     end
   end
 
@@ -240,8 +240,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # After Save
   def create_lesson_intercom_event
-    unless self.preview_mode
-      IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.type, self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct)) unless Rails.env.test?
+    unless self.preview_mode || Rails.env.test?
+      IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.type, self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct))
     end
   end
 
