@@ -71,10 +71,6 @@ class StudentExamTrack < ActiveRecord::Base
     log.recalculate_completeness # Includes a save
   end
 
-  def old_cme_user_logs
-    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_id: self.course_module_id)
-  end
-
   def completed_cme_user_logs
     self.course_module_element_user_logs.with_elements_active.all_completed
   end
@@ -159,9 +155,6 @@ class StudentExamTrack < ActiveRecord::Base
     self
   end
 
-  def old_subject_course_user_log
-    SubjectCourseUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id).first
-  end
 
   protected
 
