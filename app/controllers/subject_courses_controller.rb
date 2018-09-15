@@ -136,7 +136,7 @@ class SubjectCoursesController < ApplicationController
     @course_modules = @subject_course.children
   end
 
-  ### Triggered by a CronTask ###
+  ### Triggered by a Update Student Logs Button ###
   def update_student_exam_tracks
     subject_course = SubjectCourse.where(id: params[:id]).first
     subject_course.update_all_course_logs

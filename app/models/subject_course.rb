@@ -144,6 +144,12 @@ class SubjectCourse < ActiveRecord::Base
     self.children.all_active.all_in_order
   end
 
+  def valid_children
+    # Temp addition here - filter out the test boolean true records
+    # so as not to count these in the %_complete
+    self.children.all_active.where(test: false).all_in_order
+  end
+
   def first_active_child
     self.active_children.first
   end
@@ -184,24 +190,30 @@ class SubjectCourse < ActiveRecord::Base
 
   ### Triggered by Child Model ###
   def recalculate_fields
-    cme_count = self.active_children.sum(:cme_count)
-    quiz_count = self.active_children.sum(:quiz_count)
-    question_count = self.active_children.sum(:number_of_questions)
-    video_count = self.active_children.sum(:video_count)
-    video_duration = self.active_children.sum(:video_duration)
-    total_estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
+    # Temp change here - active_children to valid_children
+    # filter out the test boolean true records so as not to count these in the %_complete
+
+    cme_count = self.valid_children.sum(:cme_count)
+    quiz_count = self.valid_children.sum(:quiz_count)
+    question_count = self.valid_children.sum(:number_of_questions)
+    video_count = self.valid_children.sum(:video_count)
+    video_duration = self.valid_children.sum(:video_duration)
+    total_estimated_time_in_seconds = self.valid_children.sum(:estimated_time_in_seconds)
 
     self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, question_count: question_count, video_count: video_count, total_video_duration: video_duration, total_estimated_time_in_seconds: total_estimated_time_in_seconds)
   end
 
   ### Callback before_save ###
   def set_count_fields
-    self.cme_count = self.active_children.sum(:cme_count)
-    self.quiz_count = self.active_children.sum(:quiz_count)
-    self.question_count = self.active_children.sum(:number_of_questions)
-    self.video_count = self.active_children.sum(:video_count)
-    self.total_video_duration = self.active_children.sum(:video_duration)
-    self.total_estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
+    # Temp change here - active_children to valid_children
+    # filter out the test boolean true records so as not to count these in the %_complete
+
+    self.cme_count = self.valid_children.sum(:cme_count)
+    self.quiz_count = self.valid_children.sum(:quiz_count)
+    self.question_count = self.valid_children.sum(:number_of_questions)
+    self.video_count = self.valid_children.sum(:video_count)
+    self.total_video_duration = self.valid_children.sum(:video_duration)
+    self.total_estimated_time_in_seconds = self.valid_children.sum(:estimated_time_in_seconds)
   end
 
 
