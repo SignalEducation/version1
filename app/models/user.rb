@@ -851,7 +851,9 @@ class User < ActiveRecord::Base
   end
 
   def update_student_access
-    self.student_access.check_student_access
+    if self.user_group_id_changed?
+      self.student_access.check_student_access
+    end
   end
 
   def update_stripe_customer

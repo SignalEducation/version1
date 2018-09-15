@@ -141,7 +141,7 @@ class StudentAccess < ActiveRecord::Base
       elsif self.trial_access? && !self.trial_started_date && self.subscriptions.count == 0
         # If no trial_started_date and is trial_access then it is user just converted from comp access
         self.start_trial_access
-      elsif self.subscription_access?  && self.subscriptions.count >= 1 && self.subscription_id
+      elsif self.subscription_access?  && self.user.subscriptions.count >= 1 && self.subscription_id
         self.check_subscription_access_is_valid
       end
 
