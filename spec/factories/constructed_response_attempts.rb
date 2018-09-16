@@ -29,7 +29,7 @@ FactoryBot.define do
     user_id 1
     original_scenario_text_content 'MyText'
     user_edited_scenario_text_content 'MyText'
-    status 'MyString'
+    status 'Incomplete'
     flagged_for_review false
     time_in_seconds 1
     sequence(:guid)           { |n| "guid-#{n}" }

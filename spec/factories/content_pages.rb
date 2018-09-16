@@ -19,14 +19,15 @@
 
 FactoryBot.define do
   factory :content_page do
-    name "MyString"
-    public_url "MyString"
-    seo_title "MyString"
-    seo_description "MyText"
-    text_content "MyText"
-    h1_text "MyString"
-    h1_subtext "MyString"
-    nav_type "MyString"
+    name 'MyString'
+    public_url 'MyString'
+    seo_title 'MyString'
+    seo_description 'MyText'
+    text_content 'MyText'
+    h1_text 'MyString'
+    h1_subtext 'MyString'
+    nav_type 'MyString'
     footer_link false
+    active true
   end
 end

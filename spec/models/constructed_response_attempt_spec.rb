@@ -33,6 +33,8 @@ describe ConstructedResponseAttempt do
     end
   end
 
+  subject { FactoryBot.build(:constructed_response_attempt) }
+
   # Constants
   it { expect(ConstructedResponseAttempt.const_defined?(:STATUS)).to eq(true) }
 
@@ -68,8 +70,7 @@ describe ConstructedResponseAttempt do
   it { should validate_inclusion_of(:status).in_array(ConstructedResponseAttempt::STATUS) }
 
   it { should validate_presence_of(:guid) }
-  # TODO - why is uniqueness validation test failing?
-  xit { should validate_uniqueness_of(:guid) }
+  it { should validate_uniqueness_of(:guid) }
   it { should validate_length_of(:guid).is_at_most(255) }
 
   # callbacks
