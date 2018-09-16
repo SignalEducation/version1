@@ -16,14 +16,12 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # Constants
-  STRATEGIES = %w(random ordered)
-
   # attr-accessible
   attr_accessible :course_module_element_id, :number_of_questions,
                   :quiz_questions_attributes, :question_selection_strategy
 
   # Constants
+  STRATEGIES = %w(random ordered)
 
   # relationships
   belongs_to :course_module_element
