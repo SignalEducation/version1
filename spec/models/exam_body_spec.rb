@@ -25,6 +25,8 @@ describe ExamBody do
     end
   end
 
+  subject { FactoryBot.build(:exam_body) }
+
   # Constants
 
   # relationships
@@ -34,6 +36,7 @@ describe ExamBody do
 
   # validation
   it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name) }
 
   it { should validate_presence_of(:url) }
 
