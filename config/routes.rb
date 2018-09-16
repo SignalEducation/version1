@@ -133,8 +133,6 @@ Rails.application.routes.draw do
     get '/student_new', to: 'student_sign_ups#new', as: :new_student
     post '/student_create', to: 'student_sign_ups#create', as: :create_student
 
-    resources :invoices, only: [:index, :show]
-
     post '/subscribe', to: 'library#subscribe'
     post '/home_page_subscribe', to: 'student_sign_ups#subscribe'
     post '/info_subscribe', to: 'footer_pages#info_subscribe'

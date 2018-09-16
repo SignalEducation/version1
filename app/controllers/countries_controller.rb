@@ -22,6 +22,7 @@ class CountriesController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def index
     @countries = Country.includes(:vat_codes, :users, :subscription_payment_cards, :currency).paginate(per_page: 50, page: params[:page]).all_in_order
   end
@@ -33,9 +34,6 @@ class CountriesController < ApplicationController
     @country = Country.new(sorting_order: 1)
   end
 
-  def edit
-  end
-
   def create
     @country = Country.new(allowed_params)
     if @country.save
@@ -44,6 +42,9 @@ class CountriesController < ApplicationController
     else
       render action: :new
     end
+  end
+
+  def edit
   end
 
   def update

@@ -24,6 +24,7 @@ class ProductsController < ApplicationController
   end
   before_action :get_variables
 
+  ## Standard Actions ##
   def index
     @all_products = Product.paginate(per_page: 50, page: params[:page])
     @products = params[:search].to_s.blank? ?

@@ -65,6 +65,7 @@ class Product < ActiveRecord::Base
     end
   end
 
+  ## Creates product object on stripe and updates attributes here with response data ##
   def create_on_stripe
     unless Rails.env.test?
       stripe_product = Stripe::Product.create(name: self.name,
@@ -87,6 +88,7 @@ class Product < ActiveRecord::Base
     end
   end
 
+  ## Updates stripe product object ##
   def update_on_stripe
     unless Rails.env.test?
       stripe_product = Stripe::Product.retrieve(id: self.stripe_guid)
