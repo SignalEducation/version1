@@ -20,16 +20,20 @@
 #
 
 FactoryBot.define do
+
   factory :constructed_response_attempt do
     constructed_response_id 1
     scenario_id 1
     course_module_element_id 1
     course_module_element_user_log_id 1
     user_id 1
-    original_scenario_text_content "MyText"
-    user_edited_scenario_text_content "MyText"
-    status "MyString"
+    original_scenario_text_content 'MyText'
+    user_edited_scenario_text_content 'MyText'
+    status 'MyString'
     flagged_for_review false
     time_in_seconds 1
+    sequence(:guid)           { |n| "guid-#{n}" }
+    scratch_pad_text 'MyString'
   end
+
 end
