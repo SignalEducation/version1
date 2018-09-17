@@ -42,6 +42,8 @@ describe Subscription do
   it { should have_many(:invoices) }
   it { should have_many(:invoice_line_items) }
   it { should belong_to(:subscription_plan) }
+  it { should belong_to(:coupon) }
+  it { should have_one(:student_access) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:charges) }
   it { should have_many(:refunds) }
@@ -61,19 +63,29 @@ describe Subscription do
 
   # callbacks
   it { should callback(:create_subscription_payment_card).after(:create) }
+  it { should callback(:update_coupon_count).after(:create) }
   it { should callback(:update_student_access).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
   it { expect(Subscription).to respond_to(:all_in_order) }
   it { expect(Subscription).to respond_to(:in_created_order) }
+  it { expect(Subscription).to respond_to(:in_reverse_created_order) }
   it { expect(Subscription).to respond_to(:all_of_status) }
   it { expect(Subscription).to respond_to(:all_active) }
+  it { expect(Subscription).to respond_to(:all_valid) }
   it { expect(Subscription).to respond_to(:this_week) }
 
   # class methods
 
   # instance methods
+  it { should respond_to(:cancel) }
+  it { should respond_to(:immediate_cancel) }
+  it { should respond_to(:reactivate_canceled) }
+
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:stripe_token) }
+
   it { should respond_to(:active_status?) }
   it { should respond_to(:canceled_status?) }
   it { should respond_to(:past_due_status?) }
@@ -82,14 +94,10 @@ describe Subscription do
   it { should respond_to(:suspended_status?) }
   it { should respond_to(:billing_amount) }
 
-  it { should respond_to(:stripe_token) }
-  it { should respond_to(:cancel) }
-  it { should respond_to(:immediate_cancel) }
-  it { should respond_to(:destroyable?) }
   it { should respond_to(:reactivation_options) }
-  it { should respond_to(:update_from_stripe) }
   it { should respond_to(:upgrade_options) }
   it { should respond_to(:upgrade_plan) }
+  it { should respond_to(:update_from_stripe) }
   it { should respond_to(:un_cancel) }
 
 end

@@ -29,7 +29,6 @@ describe SubscriptionPlanCategory do
   subject { FactoryBot.build(:subscription_plan_category) }
 
   # Constants
-  #it { expect(SubscriptionPlanCategory.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should have_many(:subscription_plans) }

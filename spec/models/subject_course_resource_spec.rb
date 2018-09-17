@@ -48,6 +48,7 @@ describe SubjectCourseResource do
 
   # scopes
   it { expect(SubjectCourseResource).to respond_to(:all_in_order) }
+  it { expect(SubjectCourseResource).to respond_to(:all_active) }
 
   # class methods
 

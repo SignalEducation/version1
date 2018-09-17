@@ -54,6 +54,10 @@ describe UserGroup do
 
   # scopes
   it { expect(UserGroup).to respond_to(:all_in_order) }
+  it { expect(UserGroup).to respond_to(:all_not_student) }
+  it { expect(UserGroup).to respond_to(:all_not_admin) }
+  it { expect(UserGroup).to respond_to(:all_student) }
+  it { expect(UserGroup).to respond_to(:all_trial_or_sub) }
 
   # class methods
 
