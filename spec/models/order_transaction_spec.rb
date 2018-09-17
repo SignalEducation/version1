@@ -41,6 +41,13 @@ describe OrderTransaction do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
+  it { should validate_presence_of(:product_id) }
+  it { should validate_numericality_of(:product_id) }
+
+  it { should validate_presence_of(:stripe_order_id) }
+
+  it { should validate_presence_of(:stripe_charge_id) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 

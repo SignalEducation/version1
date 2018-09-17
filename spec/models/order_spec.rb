@@ -40,19 +40,18 @@ describe Order do
   it { should belong_to(:subject_course) }
   it { should belong_to(:mock_exam) }
   it { should belong_to(:user) }
+  it { should have_one(:order_transaction) }
 
   # validation
   it { should validate_presence_of(:product_id) }
   it { should validate_numericality_of(:product_id) }
 
-  it { should_not validate_presence_of(:subject_course_id) }
-
-  it { should validate_presence_of(:terms_and_conditions) }
-
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
   it { should validate_presence_of(:stripe_guid) }
+
+  it { should validate_presence_of(:terms_and_conditions) }
 
   it { should validate_presence_of(:stripe_customer_id) }
 
@@ -60,8 +59,11 @@ describe Order do
 
   it { should_not validate_presence_of(:coupon_code) }
 
+  it { should_not validate_presence_of(:subject_course_id) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:create_order_transaction).after(:create) }
 
   # scopes
   it { expect(Order).to respond_to(:all_in_order) }
@@ -74,6 +76,7 @@ describe Order do
   # instance methods
   it { should respond_to(:destroyable?) }
 
+  it { should respond_to(:mock_exam) }
   it { should respond_to(:stripe_token) }
 
 

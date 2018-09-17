@@ -22,7 +22,8 @@ class Product < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid, :live_mode, :stripe_guid
+  attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid,
+                  :live_mode, :stripe_guid
 
   # Constants
 

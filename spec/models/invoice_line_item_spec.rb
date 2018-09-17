@@ -31,7 +31,7 @@ describe InvoiceLineItem do
   end
 
   # Constants
-  #it { expect(InvoiceLineItem.const_defined?(:CONSTANT_NAME)).to eq(true) }
+
 
   # relationships
   it { should belong_to(:invoice) }
