@@ -30,13 +30,13 @@ shared_context 'system_setup' do
   let!(:gbp) { FactoryBot.create(:gbp) }
   let!(:eur) { FactoryBot.create(:euro) }
   let!(:usd) { FactoryBot.create(:usd) }
-  let!(:mxn) { FactoryGirl.create(:mxn) }
+  let!(:mxn) { FactoryBot.create(:mxn) }
 
   # countries
   let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
   let!(:ireland) { FactoryBot.create(:ireland, currency_id: eur.id) }
   let!(:usa) { FactoryBot.create(:usa, currency_id: usd.id) }
-  let!(:fr) { FactoryGirl.create(:fr, currency_id: eur.id) }
+  let!(:fr) { FactoryBot.create(:fr, currency_id: eur.id) }
 
   # vat codes
   let!(:uk_vat_code) { FactoryBot.create(:vat_code, country_id: uk.id) }

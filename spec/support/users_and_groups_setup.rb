@@ -40,21 +40,22 @@ shared_context 'users_and_groups_setup' do
   ## Sub Student Users
   let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student,
                                                  user_group_id: student_user_group.id) }
+  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access,
+                                                          user_id: valid_subscription_student.id) }
 
   let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
                                                 stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
 
-  let!(:valid_subscription_student_access) { FactoryBot.create(:valid_subscription_student_access,
-                                                        user_id: valid_subscription_student.id,
-                                                        subscription_id: valid_subscription.id) }
+
+
 
   let!(:invalid_subscription_student) { FactoryBot.create(:invalid_subscription_student,
-                                                   user_group_id: student_user_group.id) }
-  let!(:invalid_subscription) { FactoryBot.create(:valid_subscription, user_id: invalid_subscription_student.id,
+                                                 user_group_id: student_user_group.id) }
+  let!(:invalid_subscription_student_access) { FactoryBot.create(:trial_student_access,
+                                                          user_id: invalid_subscription_student.id) }
+
+  let!(:invalid_subscription) { FactoryBot.create(:invalid_subscription, user_id: invalid_subscription_student.id,
                                                 stripe_customer_id: invalid_subscription_student.stripe_customer_id ) }
-  let!(:invalid_subscription_student_access) { FactoryBot.create(:invalid_subscription_student_access,
-                                                          user_id: invalid_subscription_student.id,
-                                                          subscription_id: invalid_subscription.id) }
 
 
 

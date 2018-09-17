@@ -19,9 +19,9 @@
 
 FactoryBot.define do
   factory :content_page do
-    name 'MyString'
-    public_url 'MyString'
-    seo_title 'MyString'
+    sequence(:name)       { |n| "Content page - #{n}" }
+    sequence(:public_url)       { |n| "content-page-#{n}" }
+    sequence(:seo_title)       { |n| "Content page - #{n}" }
     seo_description 'MyText'
     text_content 'MyText'
     h1_text 'MyString'
