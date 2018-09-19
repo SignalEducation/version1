@@ -83,7 +83,7 @@ class StudentAccess < ActiveRecord::Base
   end
 
   def check_trial_access_is_valid
-    if self.user.student_user? && self.user.trial_access? &&  self.trial_started_date
+    if self.user.student_user? && self.trial_access? &&  self.trial_started_date
       date_now = Proc.new{Time.now.to_datetime}.call
       if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
         self.content_access = false
@@ -94,6 +94,7 @@ class StudentAccess < ActiveRecord::Base
         # As the users trial limits may have been changed after it expired
         self.trial_ended_date = nil
         self.content_access = true
+        self.save
         TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
       end
     end
