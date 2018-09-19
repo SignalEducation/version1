@@ -59,8 +59,8 @@ class Subscription < ActiveRecord::Base
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
-  after_create :update_coupon_count
-  after_save :update_student_access
+  after_create :update_coupon_count, :convert_student_access
+  after_save :update_student_access, if: :active
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -83,10 +83,8 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:current_status, 'canceled-pending')
       elsif response[:status] == 'past_due'
-        self.update_attribute(:current_status, 'canceled')
-        self.user.student_access.update_attributes(content_access: false)
-        #We don't send any email here!!
-        Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled StripeResponse:#{response}."
+        self.update_attribute(:current_status, 'canceled-pending')
+        Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled-pending StripeResponse:#{response}."
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
@@ -365,15 +363,12 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def convert_student_access
+    self.user.student_access.convert_to_subscription_access(self.id)
+  end
+
   def update_student_access
-    ## TODO Review this!
-    if self.active && self.student_access
-      if %w(unpaid suspended canceled).include?(self.current_status)
-        self.student_access.update_attribute(:content_access, false)
-      elsif %w(active past_due canceled-pending).include?(self.current_status)
-        self.student_access.update_attribute(:content_access, true)
-      end
-    end
+    self.user.student_access.check_student_access
   end
 
   def prefix

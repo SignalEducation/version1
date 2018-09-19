@@ -145,19 +145,28 @@ class StripeApiEvent < ActiveRecord::Base
       self.error = false
       self.error_message = nil
 
-      #Update the subscription if it is in the past_due state
-      if subscription.update_from_stripe
+      #The subscription charge was successful so send successful payment email
+      url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
+      invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en',
+                                                                                   format: 'pdf', host: url_host)
+      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+      Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
 
-        #The subscription charge was successful so send successful payment email
-        url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
-        invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en', format: 'pdf', host: url_host)
-        MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+      #Update the subscription from fresh stripe object
 
-        Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
-      
-      else
-        set_process_error("Error updating subscription from stripe - subscription.update_from_stripe. SubID-#{subscription.id}, InvID-#{invoice.id}, UserID-#{user.id}, InvoicePaymentSucceeded Event ")
+      begin
+        stripe_subscription = Stripe::Subscription.retrieve(stripe_subscription_guid)
+        if stripe_subscription
+          status = stripe_subscription.cancel_at_period_end ? 'canceled-pending' : stripe_subscription.status
+          subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
+          subscription.current_status = status
+          subscription.livemode = stripe_subscription[:plan][:livemode]
+          subscription.save(validate: false)
+        end
+      rescue Stripe::InvalidRequestError => e
+        Rails.logger.debug "DEBUG: Failed to find Stripe Subscription Object. Stripe Guid - #{stripe_subscription_guid}. Subscription Id - #{subscription.id}"
       end
+
 
     else
       set_process_error("Error finding User by - #{stripe_customer_guid}, Invoice by - #{stripe_invoice_guid} or Subscription by - #{stripe_subscription_guid}. InvoicePaymentSucceeded Event")

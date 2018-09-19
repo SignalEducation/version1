@@ -38,10 +38,12 @@ class StudentAccess < ActiveRecord::Base
   validates :trial_seconds_limit, presence: true
   validates :trial_days_limit, presence: true
   validates :account_type, presence: true, inclusion: {in: ACCOUNT_TYPES}
+  # TODO - Add validation to ensure once a subscription_id is present it can't return to nil
+
 
   # callbacks
   before_destroy :check_dependencies
-  after_save :post_save_callbacks
+  after_save :create_or_update_intercom_user
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -53,7 +55,7 @@ class StudentAccess < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    true
+    false
   end
 
   def trial_access?
@@ -68,44 +70,96 @@ class StudentAccess < ActiveRecord::Base
     self.account_type == 'Complimentary'
   end
 
-  def recalculate_access_from_limits
-    if self.user.student_user?
-      if self.user.trial_or_sub_user?
-        if self.trial_access? && self.trial_started_date
-          time_now = Proc.new{Time.now.to_datetime}.call
-          new_trial_ending = self.trial_started_date + self.trial_days_limit.days
-          if time_now >= new_trial_ending || self.content_seconds_consumed >= self.trial_seconds_limit
-            self.update_columns(trial_ended_date: time_now, content_access: false)
-          elsif time_now <= new_trial_ending || self.content_seconds_consumed <= self.trial_seconds_limit
-            self.update_columns(trial_ended_date: nil, content_access: true, trial_ending_at_date: new_trial_ending)
-          end
-        elsif self.subscription_access? && self.subscription_id
-          if self.subscription.active
-            if %w(unpaid suspended canceled).include?(self.subscription.current_status)
-              self.update_column(:content_access, false)
-            elsif %w(active past_due canceled-pending).include?(self.subscription.current_status)
-              self.update_column(:content_access, true)
-            end
-          end
-        end
-      elsif self.user.complimentary_user?
-        self.update_columns(content_access: true, account_type: 'Complimentary')
+  def start_trial_access
+    # Called from User get_and_verify method after verification email clicked
+    # Or from the User when user_group has been changed to a complimentary one
+    date_now = Proc.new{Time.now.to_datetime}.call
+    self.trial_started_date = date_now
+    self.trial_ending_at_date = self.trial_started_date + self.trial_days_limit.days
+    self.account_type = 'Trial'
+    self.content_access = true
+    self.save
+    TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
+  end
+
+  def check_trial_access_is_valid
+    if self.user.student_user? && self.user.trial_access? &&  self.trial_started_date
+      date_now = Proc.new{Time.now.to_datetime}.call
+      if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
+        self.content_access = false
+        self.trial_ended_date = date_now
+        self.save
+      else
+        # Need to reset the access boolean and trial_ended_date
+        # As the users trial limits may have been changed after it expired
+        self.trial_ended_date = nil
+        self.content_access = true
+        TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
       end
+    end
+  end
+
+  def convert_to_subscription_access(subscription_id)
+    # Called from the subscription after_save update_student_access
+    subscription = Subscription.find(subscription_id)
+    self.subscription_id = subscription_id
+    self.account_type = 'Subscription'
+    self.trial_ended_date = Proc.new{Time.now.to_datetime}.call unless self.trial_ended_date
+    if %w(unpaid suspended canceled).include?(subscription.current_status)
+      self.content_access = false
+    elsif %w(active past_due canceled-pending).include?(subscription.current_status)
+      self.content_access = true
+    end
+    self.save
+  end
+
+  def check_subscription_access_is_valid
+    if self.subscription && self.user.subscription_user?
+      if %w(unpaid suspended canceled).include?(self.subscription.current_status)
+        self.content_access = false
+      elsif %w(active past_due canceled-pending).include?(self.subscription.current_status)
+        self.content_access = true
+      end
+      self.save
+    end
+  end
+
+  def convert_to_complimentary_access
+    if self.user.complimentary_user?
+      date_now = Proc.new{Time.now.to_datetime}.call
+      self.trial_ended_date = date_now unless self.trial_ended_date
+      self.account_type = 'Complimentary'
+      self.content_access = true
+      self.save
+    end
+  end
+
+  def check_student_access
+    if self.user.trial_or_sub_user?
+      if self.trial_access? && self.trial_started_date
+        self.check_trial_access_is_valid
+      elsif self.trial_access? && !self.trial_started_date && self.subscriptions.count == 0
+        # If no trial_started_date and is trial_access then it is user just converted from comp access
+        self.start_trial_access
+      elsif self.subscription_access?  && self.user.subscriptions.count >= 1 && self.subscription_id
+        self.check_subscription_access_is_valid
+      end
+
+    elsif self.user.non_student_user?
+      self.convert_to_complimentary_access
     else
-      self.update_columns(content_access: true, account_type: 'Complimentary')
+      self.start_trial_access
     end
   end
 
   protected
 
   def post_save_callbacks
-    unless Rails.env.test?
-      IntercomCreateUserWorker.perform_async(self.user_id)
-      self.recalculate_access_from_limits
-      if self.user.student_user? && self.trial_access? && self.trial_ending_at_date && !self.trial_ended_date
-        TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)  unless Rails.env.test?
-      end
-    end
+    self.check_student_access
+  end
+
+  def create_or_update_intercom_user
+    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
   end
 
   def check_dependencies

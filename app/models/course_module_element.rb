@@ -207,6 +207,8 @@ class CourseModuleElement < ActiveRecord::Base
     if self.is_video && course_module_element_video
       self.duration = self.course_module_element_video.duration
       self.estimated_time_in_seconds = self.duration.round
+    elsif self.is_constructed_response
+      self.estimated_time_in_seconds = 900
     elsif self.is_quiz && course_module_element_quiz
       #Note: number_of_questions is the number selected in dropdown to be asked in the quiz, not the number of questions created for the quiz.
       self.number_of_questions = self.try(:course_module_element_quiz).try(:number_of_questions)
