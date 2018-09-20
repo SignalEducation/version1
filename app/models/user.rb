@@ -351,7 +351,7 @@ class User < ActiveRecord::Base
   end
 
   def valid_trial_user?
-    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date && self.trial_limits_valid?
+    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date
   end
 
   def not_started_trial_user?
@@ -359,7 +359,7 @@ class User < ActiveRecord::Base
   end
 
   def expired_trial_user?
-    self.trial_user? && !self.trial_limits_valid?
+    self.trial_user? && self.student_access && self.student_access.trial_ended_date && !self.student_access.content_access
   end
 
   # Trial Limits

@@ -117,9 +117,9 @@ class StudentAccess < ActiveRecord::Base
   def check_subscription_access_is_valid
     if self.subscription && self.user.subscription_user?
       if %w(unpaid suspended canceled).include?(self.subscription.current_status)
-        self.update_columns(content_access: false)
+        self.update_column(:content_access, false)
       elsif %w(active past_due canceled-pending).include?(self.subscription.current_status)
-        self.update_columns(content_access: true)
+        self.update_column(:content_access, true)
       end
     end
     self.create_or_update_intercom_user
