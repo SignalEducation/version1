@@ -47,6 +47,9 @@ describe Product do
 
   it { should validate_presence_of(:price) }
 
+  it { should validate_presence_of(:stripe_guid).on(:update) }
+  it { should validate_presence_of(:stripe_sku_guid).on(:update) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:create_on_stripe).after(:create) }
@@ -58,6 +61,7 @@ describe Product do
   it { expect(Product).to respond_to(:in_currency) }
 
   # class methods
+  it { expect(Product).to respond_to(:search) }
 
   # instance methods
   it { should respond_to(:create_on_stripe) }

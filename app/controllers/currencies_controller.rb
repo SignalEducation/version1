@@ -21,6 +21,7 @@ class CurrenciesController < ApplicationController
   end
   before_action :get_variables
 
+  # Standard Actions #
   def index
     @currencies = Currency.paginate(per_page: 50, page: params[:page]).all_in_order
   end
@@ -32,9 +33,6 @@ class CurrenciesController < ApplicationController
     @currency = Currency.new(sorting_order: 1)
   end
 
-  def edit
-  end
-
   def create
     @currency = Currency.new(allowed_params)
     if @currency.save
@@ -43,6 +41,9 @@ class CurrenciesController < ApplicationController
     else
       render action: :new
     end
+  end
+
+  def edit
   end
 
   def update

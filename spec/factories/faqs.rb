@@ -23,6 +23,7 @@ FactoryBot.define do
     sorting_order 1
     faq_section_id 1
     question_text "MyText"
+    pre_answer_text "MyText"
     answer_text "MyText"
   end
 end

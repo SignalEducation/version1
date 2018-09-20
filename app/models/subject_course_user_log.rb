@@ -109,13 +109,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.student_exam_tracks.map(&:course_module_id)
   end
 
-  def old_sets
-    StudentExamTrack.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
-  end
-
-  def old_cmeuls
-    CourseModuleElementUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
-  end
 
   protected
 

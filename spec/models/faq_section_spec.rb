@@ -26,20 +26,20 @@ describe FaqSection do
     end
   end
 
+  subject { FactoryBot.build(:faq_section) }
+
   # Constants
 
   # relationships
 
   # validation
-  it { should validate_presence_of(:name) }
+  it { should_not validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
   it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
   it { should validate_uniqueness_of(:name_url) }
   it { should validate_length_of(:name_url).is_at_most(255) }
-
-  it { should validate_presence_of(:description) }
 
   it { should validate_presence_of(:sorting_order) }
 

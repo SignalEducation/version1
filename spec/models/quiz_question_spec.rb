@@ -31,6 +31,7 @@ describe QuizQuestion do
   # Constants
 
   # relationships
+  it { should belong_to(:subject_course) }
   it { should belong_to(:course_module_element) }
   it { should belong_to(:course_module_element_quiz) }
   it { should have_many(:quiz_attempts) }
@@ -49,6 +50,7 @@ describe QuizQuestion do
 
   # scopes
   it { expect(QuizQuestion).to respond_to(:all_in_order) }
+  it { expect(QuizQuestion).to respond_to(:in_created_order) }
   it { expect(QuizQuestion).to respond_to(:all_destroyed) }
 
   # class methods

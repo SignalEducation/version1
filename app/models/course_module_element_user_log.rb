@@ -154,9 +154,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
-  def old_set
-    StudentExamTrack.for_user(self.user_id).where(course_module_id: self.course_module_id).first
-  end
 
   protected
 

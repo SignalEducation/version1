@@ -110,7 +110,8 @@ class User < ActiveRecord::Base
   has_one :student_access
   has_one :referred_signup
   belongs_to :subscription_plan_category
-  has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
+  has_attached_file :profile_image,
+                    default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :student_access
 

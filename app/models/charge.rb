@@ -63,8 +63,10 @@ class Charge < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :stripe_guid, presence: true
   validates :amount, presence: true
-  validates :stripe_customer_id, presence: true
-  validates :stripe_invoice_id, presence: true
+  validates :stripe_customer_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
+  validates :stripe_invoice_id, presence: true,
+            numericality: {only_integer: true, greater_than: 0}
   validates :status, presence: true
 
   # callbacks

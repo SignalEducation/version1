@@ -46,10 +46,11 @@ describe QuizAnswer do
 
   # scopes
   it { expect(QuizAnswer).to respond_to(:all_in_order) }
+  it { expect(QuizAnswer).to respond_to(:ids_in_specific_order) }
+  it { expect(QuizAnswer).to respond_to(:correct) }
   it { expect(QuizAnswer).to respond_to(:all_destroyed) }
 
   # class methods
-  it { expect(QuizAnswer).to respond_to(:ids_in_specific_order) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

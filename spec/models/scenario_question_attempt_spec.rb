@@ -30,32 +30,25 @@ describe ScenarioQuestionAttempt do
   end
 
   # Constants
-  #it { expect(ScenarioQuestionAttempt.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
-  it { should belong_to(:constructed_response_attempt) }
-  it { should belong_to(:course_module_element_user_log) }
-  it { should belong_to(:user) }
-  it { should belong_to(:constructed_response) }
   it { should belong_to(:scenario_question) }
+  it { should belong_to(:user) }
+  it { should belong_to(:constructed_response_attempt) }
+  it { should have_many(:scenario_answer_attempts) }
 
   # validation
   it { should validate_presence_of(:constructed_response_attempt_id) }
   it { should validate_numericality_of(:constructed_response_attempt_id) }
 
-  it { should validate_presence_of(:course_module_element_user_log_id) }
-  it { should validate_numericality_of(:course_module_element_user_log_id) }
-
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
-
-  it { should validate_presence_of(:constructed_response_id) }
-  it { should validate_numericality_of(:constructed_response_id) }
 
   it { should validate_presence_of(:scenario_question_id) }
   it { should validate_numericality_of(:scenario_question_id) }
 
   it { should validate_presence_of(:status) }
+  it { should validate_inclusion_of(:status).in_array(ScenarioQuestionAttempt::STATUS) }
 
   it { should validate_presence_of(:original_scenario_question_text) }
 
@@ -71,7 +64,5 @@ describe ScenarioQuestionAttempt do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end

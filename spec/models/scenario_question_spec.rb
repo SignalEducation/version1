@@ -16,7 +16,7 @@ require 'rails_helper'
 describe ScenarioQuestion do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at destroyed_at)
   ScenarioQuestion.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -28,21 +28,15 @@ describe ScenarioQuestion do
   # Constants
 
   # relationships
-  it { should belong_to(:course_module_element) }
-  it { should belong_to(:constructed_response) }
   it { should belong_to(:scenario) }
+  it { should have_many(:scenario_answer_templates) }
+  it { should have_many(:scenario_question_attempts) }
 
   # validation
-  it { should validate_presence_of(:course_module_element_id) }
-  it { should validate_numericality_of(:course_module_element_id) }
+  it { should validate_presence_of(:scenario_id).on(:update) }
+  it { should validate_numericality_of(:scenario_id).on(:update) }
 
-  it { should validate_presence_of(:constructed_response_id) }
-  it { should validate_numericality_of(:constructed_response_id) }
-
-  it { should validate_presence_of(:scenario_id) }
-  it { should validate_numericality_of(:scenario_id) }
-
-  it { should validate_presence_of(:sorting_order) }
+  it { should validate_presence_of(:text_content) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -51,6 +45,7 @@ describe ScenarioQuestion do
   it { expect(ScenarioQuestion).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(ScenarioQuestion).to respond_to(:question_nested_answer_template_is_blank?) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

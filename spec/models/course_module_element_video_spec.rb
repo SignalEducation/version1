@@ -37,6 +37,8 @@ describe CourseModuleElementVideo do
   it { should validate_presence_of(:vimeo_guid) }
   it { should validate_length_of(:vimeo_guid).is_at_most(255) }
 
+  it { should validate_presence_of(:duration) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -47,7 +49,8 @@ describe CourseModuleElementVideo do
   # class methods
 
   # instance methods
-  it { should respond_to(:destroyable?) }
   it { should respond_to(:parent) }
+
+  it { should respond_to(:destroyable?) }
 
 end

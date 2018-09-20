@@ -49,6 +49,8 @@ class Country < ActiveRecord::Base
   # class methods
 
   # instance methods
+
+  ## Check if the Country can be deleted ##
   def destroyable?
     false
   end
