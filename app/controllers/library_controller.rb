@@ -52,7 +52,7 @@ class LibraryController < ApplicationController
         end
 
 
-        if current_user.permission_to_see_content && current_user.enrollment_for_course?(@course.id)
+        if current_user.enrollment_for_course?(@course.id)
           # User has a valid trial or valid sub
           # User has an enrollment for this course
 

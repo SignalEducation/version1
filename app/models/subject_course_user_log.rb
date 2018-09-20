@@ -92,12 +92,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    self.count_of_questions_correct = self.student_exam_tracks.with_active_cmes.sum(:count_of_questions_correct)
-    self.count_of_questions_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_questions_taken)
-    self.count_of_videos_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_quizzes_taken)
-    self.count_of_constructed_responses_taken = self.student_exam_tracks.with_active_cmes.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed = self.student_exam_tracks.with_active_cmes.sum(:count_of_cmes_completed)
+    # Temp fix replaced SET scope with_active_cmes with with_valid_course_module scope
+    self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
+    self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)
+    self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
+    self.count_of_constructed_responses_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed = self.student_exam_tracks.with_valid_course_module.sum(:count_of_cmes_completed)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     unless self.percentage_complete.nil?
       self.completed = true if (self.percentage_complete > 99)
@@ -109,13 +110,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.student_exam_tracks.map(&:course_module_id)
   end
 
-  def old_sets
-    StudentExamTrack.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
-  end
-
-  def old_cmeuls
-    CourseModuleElementUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id)
-  end
 
   protected
 

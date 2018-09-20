@@ -59,6 +59,7 @@ class StudentExamTrack < ActiveRecord::Base
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :with_active_cmes, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.cme_count > 0').references(:course_module) }
+  scope :with_valid_course_module, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.test = ?', false).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
 
@@ -69,10 +70,6 @@ class StudentExamTrack < ActiveRecord::Base
     log = self.subject_course_user_log
     log.latest_course_module_element_id = self.latest_course_module_element_id
     log.recalculate_completeness # Includes a save
-  end
-
-  def old_cme_user_logs
-    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_id: self.course_module_id)
   end
 
   def completed_cme_user_logs
