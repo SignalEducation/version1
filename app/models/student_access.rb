@@ -44,6 +44,7 @@ class StudentAccess < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   after_save :create_or_update_intercom_user
+  after_update :check_student_access
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -74,72 +75,71 @@ class StudentAccess < ActiveRecord::Base
     # Called from User get_and_verify method after verification email clicked
     # Or from the User when user_group has been changed to a complimentary one
     date_now = Proc.new{Time.now.to_datetime}.call
-    self.trial_started_date = date_now
-    self.trial_ending_at_date = self.trial_started_date + self.trial_days_limit.days
-    self.account_type = 'Trial'
-    self.content_access = true
-    self.save
+    self.update_columns(trial_started_date: date_now,
+                           trial_ending_at_date: date_now + self.trial_days_limit.days,
+                           account_type: 'Trial',
+                           content_access: true)
     TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
+    self.create_or_update_intercom_user
   end
 
   def check_trial_access_is_valid
     if self.user.student_user? && self.trial_access? &&  self.trial_started_date
       date_now = Proc.new{Time.now.to_datetime}.call
       if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
-        self.content_access = false
-        self.trial_ended_date = date_now
-        self.save
+        self.update_columns(content_access: false, trial_ended_date: date_now)
       else
         # Need to reset the access boolean and trial_ended_date
         # As the users trial limits may have been changed after it expired
-        self.trial_ended_date = nil
-        self.content_access = true
-        self.save
+        self.update_columns(content_access: true,
+                            trial_ending_at_date: date_now + self.trial_days_limit.days,
+                            trial_ended_date: nil)
         TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
       end
     end
+    self.create_or_update_intercom_user
   end
 
   def convert_to_subscription_access(subscription_id)
     # Called from the subscription after_save update_student_access
     subscription = Subscription.find(subscription_id)
-    self.subscription_id = subscription_id
-    self.account_type = 'Subscription'
-    self.trial_ended_date = Proc.new{Time.now.to_datetime}.call unless self.trial_ended_date
+    trial_ended_date = self.trial_ended_date ? self.trial_ended_date : Proc.new{Time.now.to_datetime}.call
     if %w(unpaid suspended canceled).include?(subscription.current_status)
-      self.content_access = false
+      access = false
     elsif %w(active past_due canceled-pending).include?(subscription.current_status)
-      self.content_access = true
+      access = true
     end
-    self.save
+    self.update_columns(subscription_id: subscription_id, account_type: 'Subscription',
+                        trial_ended_date: trial_ended_date, content_access: access)
+    self.create_or_update_intercom_user
   end
 
   def check_subscription_access_is_valid
     if self.subscription && self.user.subscription_user?
       if %w(unpaid suspended canceled).include?(self.subscription.current_status)
-        self.content_access = false
+        self.update_columns(content_access: false)
       elsif %w(active past_due canceled-pending).include?(self.subscription.current_status)
-        self.content_access = true
+        self.update_columns(content_access: true)
       end
-      self.save
     end
+    self.create_or_update_intercom_user
   end
 
   def convert_to_complimentary_access
     if self.user.complimentary_user?
-      date_now = Proc.new{Time.now.to_datetime}.call
-      self.trial_ended_date = date_now unless self.trial_ended_date
-      self.account_type = 'Complimentary'
-      self.content_access = true
-      self.save
+      date_now = self.trial_ended_date ? self.trial_ended_date : Proc.new{Time.now.to_datetime}.call
+      self.update_columns(trial_ended_date: date_now,
+                          account_type: 'Complimentary',
+                          content_access: true)
     end
+    self.create_or_update_intercom_user
   end
 
   def check_student_access
     if self.user.trial_or_sub_user?
       if self.trial_access? && self.trial_started_date
         self.check_trial_access_is_valid
-      elsif self.trial_access? && !self.trial_started_date && self.subscriptions.count == 0
+      elsif self.trial_access? && !self.trial_started_date && self.user.subscriptions && self.user.subscriptions.count == 0
         # If no trial_started_date and is trial_access then it is user just converted from comp access
         self.start_trial_access
       elsif self.subscription_access?  && self.user.subscriptions.count >= 1 && self.subscription_id
@@ -151,13 +151,10 @@ class StudentAccess < ActiveRecord::Base
     else
       self.start_trial_access
     end
+    self.create_or_update_intercom_user
   end
 
   protected
-
-  def post_save_callbacks
-    self.check_student_access
-  end
 
   def create_or_update_intercom_user
     IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?

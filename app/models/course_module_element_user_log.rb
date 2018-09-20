@@ -197,7 +197,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       current_seconds_consumed = user.student_access.content_seconds_consumed
       updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-      user.student_access.start_trial_access if user.student_access.trial_access?
     end
   end
 
@@ -210,7 +209,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       current_seconds_consumed = user.student_access.content_seconds_consumed
       updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-      user.student_access.start_trial_access if user.student_access.trial_access?
     end
   end
 
