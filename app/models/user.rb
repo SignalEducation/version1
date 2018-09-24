@@ -110,7 +110,8 @@ class User < ActiveRecord::Base
   has_one :student_access
   has_one :referred_signup
   belongs_to :subscription_plan_category
-  has_attached_file :profile_image, default_url: '/assets/images/missing_corporate_logo.png'
+  has_attached_file :profile_image,
+                    default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :student_access
 
@@ -130,7 +131,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :create_referral_code_record
-  after_update :update_stripe_customer, :update_intercom_user, :recalculate_student_access
+  after_update :update_stripe_customer, :update_student_access
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -178,7 +179,7 @@ class User < ActiveRecord::Base
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.update_attributes(trial_started_date: time_now, trial_ending_at_date: time_now + user.student_access.trial_days_limit.days, content_access: true)
+      user.student_access.start_trial_access
       return user
     end
   end
@@ -351,7 +352,7 @@ class User < ActiveRecord::Base
   end
 
   def valid_trial_user?
-    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date && self.trial_limits_valid?
+    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date
   end
 
   def not_started_trial_user?
@@ -359,7 +360,7 @@ class User < ActiveRecord::Base
   end
 
   def expired_trial_user?
-    self.trial_user? && !self.trial_limits_valid?
+    self.trial_user? && self.student_access && self.student_access.trial_ended_date && !self.student_access.content_access
   end
 
   # Trial Limits
@@ -671,15 +672,19 @@ class User < ActiveRecord::Base
   end
 
   def self.parse_csv(csv_content)
-    #TODO Remove the if line count is one - reject csv file if it's less than 2 lines
     csv_data = []
     duplicate_emails = []
     has_errors = false
-    if csv_content.lines.count == 1 && csv_content.include?("\r")
-      csv_content.strip.split("\r").each do |line|
-        line.to_s.strip.split(',').tap do |fields|
+    if csv_content.respond_to?(:each_line)
+      csv_content.each_line do |line|
+        line.strip.split(',').tap do |fields|
           error_msgs = []
+          existing_user = User.where(email: fields[0]).first
+
           if fields.length == 3
+
+            error_msgs << I18n.t('models.users.existing_emails') if existing_user
+
             error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
 
             error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
@@ -702,65 +707,23 @@ class User < ActiveRecord::Base
         end
       end
     else
-      if csv_content.respond_to?(:each_line)
-        csv_content.each_line do |line|
-          line.strip.split(',').tap do |fields|
-            error_msgs = []
-            if fields.length == 3
-              error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-
-              error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
-
-              error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
-              error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
-
-              error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
-              error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
-
-              error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
-              error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
-
-              duplicate_emails << fields[0]
-            else
-              error_msgs << I18n.t('models.users.invalid_field_count')
-            end
-            has_errors = true unless error_msgs.empty?
-            csv_data << { values: fields, error_messages: error_msgs }
-          end
-        end
-      else
-        has_errors = true
-      end
-
+      has_errors = true
     end
     has_errors = true if csv_data.empty?
     return csv_data, has_errors
   end
 
-  def self.bulk_create(csv_data, root_url)
+  def self.bulk_create(csv_data, user_group_id, root_url)
     existing_users = []
     new_users = []
     if csv_data.is_a?(Hash)
       self.transaction do
         csv_data.each do |k,v|
           user = User.where(email: v['email']).first
-          similar_user = User.search_for(v['email']).first
-          if user && v['email'].empty?
-            existing_users = []
+          if user
             raise ActiveRecord::Rollback
-          elsif user
-            if user.expired_trial_user? && user.stripe_customer_id
-              MandrillWorker.perform_async(user.id, 'send_free_trial_over_email', "#{root_url}/new_subscription")
-              existing_users << user
-            end
-          elsif !user && similar_user
-            if similar_user.expired_trial_user? && similar_user.stripe_customer_id
-              MandrillWorker.perform_async(similar_user.id, 'send_free_trial_over_email', "#{root_url}/new_subscription")
-              existing_users << similar_user
-            end
           else
-
-            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], root_url)
+            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], user_group_id, root_url)
             new_users << v['email']
           end
         end
@@ -769,26 +732,29 @@ class User < ActiveRecord::Base
     return new_users, existing_users
   end
 
-  def self.create_csv_user(email, first_name, last_name, root_url)
+  def self.create_csv_user(email, first_name, last_name, user_group_id, root_url)
     country = Country.find(78) || Country.find(name: 'United Kingdom').last
     password = SecureRandom.hex(5)
     verification_code = ApplicationController::generate_random_code(20)
     time_now = Proc.new{Time.now}.call
-    user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
+    user_group = UserGroup.find(user_group_id)
 
     user = User.new(email: email, first_name: first_name, last_name: last_name)
-    user.assign_attributes(password: password, password_confirmation: password, country_id: country.id, password_change_required: true,
-                           locale: 'en', account_activated_at: time_now, account_activation_code: nil, active: true, email_verified: false,
-                           email_verified_at: nil, email_verification_code: verification_code, free_trial: true, user_group_id: user_group.id)
-    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+
+    user.assign_attributes(password: password, password_confirmation: password,
+                           country_id: country.id, password_change_required: true,
+                           locale: 'en', account_activated_at: time_now, account_activation_code: nil,
+                           active: true, email_verified: false, email_verified_at: nil,
+                           email_verification_code: verification_code, free_trial: true,
+                           user_group_id: user_group.id)
+
+    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                              trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
 
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
-
-      user.update_attribute(:stripe_customer_id, stripe_customer.id)
-
+      user.update_column(:stripe_customer_id, stripe_customer.id)
       MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
-
     else
 
     end
@@ -838,55 +804,8 @@ class User < ActiveRecord::Base
 
   end
 
-  def update_or_create_student_access
-    if self.student_access
-      self.student_access.recalculate_access_from_limits
-    else
-
-      if self.student_user?
-        days_limit = ENV['FREE_TRIAL_DAYS'].to_i
-
-        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
-        ending_date = started_date + days_limit.days
-
-        subs = self.subscriptions.in_created_order
-        sub_id = subs.any? ? subs.last.id : nil
-        type = sub_id ? 'Subscription' : 'Trial'
-
-        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                                  trial_days_limit: days_limit,
-                                  trial_started_date: started_date,
-                                  trial_ending_at_date: ending_date,
-                                  subscription_id: sub_id,
-                                  account_type: type,
-                                  content_access: false)
-
-        self.save
-        self.student_access.recalculate_access_from_limits
-
-      else
-
-        started_date = self.email_verified_at ? self.email_verified_at : self.created_at
-
-        self.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                                  trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
-                                  trial_started_date: started_date,
-                                  account_type: 'Complimentary', content_access: true)
-        self.save
-        self.student_access.recalculate_access_from_limits
-      end
-
-    end
-  end
-
 
   protected
-
-  def update_intercom_user
-    if self.date_of_birth_changed? || self.email_changed? || self.student_number_changed?
-      IntercomCreateUserWorker.perform_async(self.id) unless Rails.env.test?
-    end
-  end
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
@@ -894,12 +813,13 @@ class User < ActiveRecord::Base
   end
 
   def create_referral_code_record
-
     self.create_referral_code
   end
 
-  def recalculate_student_access
-    self.student_access.recalculate_access_from_limits
+  def update_student_access
+    if self.user_group_id_changed?
+      self.student_access.check_student_access
+    end
   end
 
   def update_stripe_customer

@@ -1,1 +1,0 @@
-json.extract! @invoice, :id, :user_id, :subscription_transaction_id, :subscription_id, :number_of_users, :currency_id, :unit_price_ex_vat, :line_total_ex_vat, :vat_rate_id, :line_total_vat_amount, :line_total_inc_vat, :created_at, :updated_at

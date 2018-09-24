@@ -10,6 +10,11 @@
       .row.l-margin-top.l-margin-bottom
         .col-md-12.l-margin-top-big
           =form_tag(import_csv_upload_path, authenticity_token: true, id: 'import_csv_corporate_students_form', role: 'form', class: 'form-horizontal') do
+
+            =label(:user_group_id, t('views.users.form.user_group_id'))
+            .input-group.input-group-lg.full-width
+              =select_tag(:user_group_id, options_for_select(@user_groups.collect{ |u| [u.name, u.id] }), {include_blank: t('views.general.select'), class: 'form-control'})
+            %br/
             .corporate-box-item.table-box
               .table-responsive
                 %table.table{style: 'font-size: 18px;'}

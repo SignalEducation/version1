@@ -54,10 +54,13 @@ class Currency < ActiveRecord::Base
   end
 
   # instance methods
+
+  ## Check if the Currency can be deleted ##
   def destroyable?
     !self.active && self.countries.empty? && self.invoices.empty? && self.invoice_line_items.empty? && self.subscription_transactions.empty? && self.subscription_plans.empty?
   end
 
+  ## Used in views to convert a number to currency format - $2.99 ##
   def format_number(the_number=0)
     number_to_currency(the_number, precision: 2, unit: self.leading_symbol)
   end

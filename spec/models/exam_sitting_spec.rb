@@ -32,17 +32,18 @@ describe ExamSitting do
   # relationships
   it { should belong_to(:exam_body) }
   it { should belong_to(:subject_course) }
+  it { should have_many(:enrollments) }
 
   # validation
-  it { should validate_presence_of(:name) }
-
-  it { should validate_presence_of(:date) }
+  it { should validate_presence_of(:exam_body_id) }
+  it { should validate_numericality_of(:exam_body_id) }
 
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
 
-  it { should validate_presence_of(:exam_body_id) }
-  it { should validate_numericality_of(:exam_body_id) }
+  it { should validate_presence_of(:name) }
+
+  it { should validate_presence_of(:date) }
 
 
   # callbacks
@@ -52,6 +53,10 @@ describe ExamSitting do
   # scopes
   it { expect(ExamSitting).to respond_to(:all_in_order) }
   it { expect(ExamSitting).to respond_to(:all_active) }
+  it { expect(ExamSitting).to respond_to(:all_not_active) }
+  it { expect(ExamSitting).to respond_to(:all_computer_based) }
+  it { expect(ExamSitting).to respond_to(:all_standard) }
+  it { expect(ExamSitting).to respond_to(:sort_by) }
 
   # class methods
 

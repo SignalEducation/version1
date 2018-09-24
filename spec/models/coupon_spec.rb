@@ -34,6 +34,8 @@ describe Coupon do
     end
   end
 
+  subject { FactoryBot.build(:coupon) }
+
   # Constants
   it { expect(Coupon.const_defined?(:DURATIONS)).to eq(true) }
 
@@ -45,13 +47,18 @@ describe Coupon do
   # validation
 
   it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name) }
+  it { should validate_length_of(:name).is_at_most(255) }
+
+  it { should validate_presence_of(:code) }
+  it { should validate_uniqueness_of(:code) }
+  it { should validate_length_of(:code).is_at_most(255) }
 
   it { should_not validate_presence_of(:currency_id) }
   it { should validate_numericality_of(:currency_id) }
 
-  it { should validate_presence_of(:code) }
-
   it { should validate_presence_of(:duration) }
+  it { should validate_inclusion_of(:duration).in_array(Coupon::DURATIONS) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -72,6 +79,8 @@ describe Coupon do
   it { should respond_to(:amount_or_percent_off) }
   it { should respond_to(:duration_months_if_repeating) }
   it { should respond_to(:currency_if_amount_off_set) }
+  it { should respond_to(:update_redeems) }
+  it { should respond_to(:deactivate) }
 
 
 end

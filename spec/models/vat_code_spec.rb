@@ -26,7 +26,6 @@ describe VatCode do
   end
 
   # Constants
-  #it { expect(VatCode.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:country) }

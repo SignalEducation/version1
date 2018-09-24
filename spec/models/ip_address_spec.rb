@@ -29,7 +29,6 @@ describe IpAddress do
   subject { FactoryBot.build(:ip_address) }
 
   # Constants
-  #it { expect(IpAddress.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:country) }

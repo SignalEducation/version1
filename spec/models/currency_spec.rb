@@ -38,6 +38,8 @@ describe Currency do
   it { should have_many(:products) }
   it { should have_many(:subscription_plans) }
   it { should have_many(:subscription_transactions) }
+  it { should have_many(:coupons) }
+  it { should have_many(:charges) }
 
   # validation
   it { should validate_presence_of(:iso_code) }

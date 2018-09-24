@@ -18,7 +18,7 @@
 FactoryBot.define do
   factory :course_module_element_resource do
     course_module_element_id 1
-    name 'MyString'
+    sequence(:name)           { |n| "Resource #{n}" }
     web_url 'https://linkedin.com'
   end
 

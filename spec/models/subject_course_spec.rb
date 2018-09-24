@@ -60,6 +60,8 @@ describe SubjectCourse do
   it { should have_many(:course_modules) }
   it { should have_many(:course_module_elements) }
   it { should have_many(:course_module_element_quizzes) }
+  it { should have_many(:course_tutor_details) }
+  it { should have_many(:quiz_questions) }
   it { should have_many(:enrollments) }
   it { should have_many(:home_pages) }
   it { should have_many(:student_exam_tracks) }
@@ -69,7 +71,6 @@ describe SubjectCourse do
   it { should have_many(:white_papers) }
   it { should have_many(:mock_exams) }
   it { should have_many(:exam_sittings) }
-  it { should have_and_belong_to_many(:users) }
 
   # validation
   # Build a FactoryBot record for Rspec to test the uniqueness validations against
@@ -90,6 +91,9 @@ describe SubjectCourse do
 
   it { should validate_presence_of(:quiz_pass_rate) }
 
+  it { should validate_presence_of(:survey_url) }
+  it { should validate_length_of(:survey_url).is_at_most(255) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -98,7 +102,10 @@ describe SubjectCourse do
 
 
   # scopes
+  it { expect(SubjectCourse).to respond_to(:all_live) }
   it { expect(SubjectCourse).to respond_to(:all_active) }
+  it { expect(SubjectCourse).to respond_to(:all_preview) }
+  it { expect(SubjectCourse).to respond_to(:all_computer_based) }
   it { expect(SubjectCourse).to respond_to(:all_in_order) }
   it { expect(SubjectCourse).to respond_to(:this_month) }
 
@@ -109,23 +116,37 @@ describe SubjectCourse do
   it { expect(SubjectCourse).to respond_to(:to_csv) }
 
   # instance methods
+  it { should respond_to(:parent) }
+  it { should respond_to(:children) }
   it { should respond_to(:active_children) }
   it { should respond_to(:first_active_child) }
-  it { should respond_to(:children) }
-  it { should respond_to(:completed_by_user) }
+  it { should respond_to(:tuition_children?) }
+  it { should respond_to(:test_children?) }
+  it { should respond_to(:revision_children?) }
+
   it { should respond_to(:destroyable?) }
   it { should respond_to(:destroyable_children) }
-  it { should respond_to(:enrolled_user_ids) }
-  it { should respond_to(:first_active_cme) }
-  it { should respond_to(:home_page) }
-  it { should respond_to(:number_complete_by_user) }
-  it { should respond_to(:parent) }
-  it { should respond_to(:percentage_complete_by_user) }
+
   it { should respond_to(:recalculate_fields) }
-  it { should respond_to(:revision_children?) }
+  it { should respond_to(:set_count_fields) }
+
+  it { should respond_to(:enrolled_user_ids) }
+  it { should respond_to(:active_enrollment_user_ids) }
+  it { should respond_to(:valid_enrollment_user_ids) }
   it { should respond_to(:started_by_user) }
-  it { should respond_to(:test_children?) }
-  it { should respond_to(:tuition_children?) }
+  it { should respond_to(:completed_by_user) }
+  it { should respond_to(:percentage_complete_by_user) }
+  it { should respond_to(:number_complete_by_user) }
+  it { should respond_to(:update_all_course_logs) }
+
+  it { should respond_to(:new_enrollments) }
+  it { should respond_to(:active_enrollments) }
+  it { should respond_to(:expired_enrollments) }
+  it { should respond_to(:non_expired_enrollments) }
+  it { should respond_to(:completed_enrollments) }
+  it { should respond_to(:total_enrollments) }
+
+  it { should respond_to(:home_page) }
 
 
 end

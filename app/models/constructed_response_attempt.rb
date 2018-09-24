@@ -50,7 +50,8 @@ class ConstructedResponseAttempt < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :original_scenario_text_content, presence: true
-  validates :guid, presence: true, uniqueness: true
+  validates :status, inclusion: {in: STATUS}, length: {maximum: 255}
+  validates :guid, presence: true, uniqueness: true, length: {maximum: 255}
   validates :user_edited_scenario_text_content, presence: true
 
   # callbacks

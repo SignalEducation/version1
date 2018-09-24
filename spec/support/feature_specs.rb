@@ -159,3 +159,9 @@ def sign_up_and_upgrade_from_free_trial_small_device
   click_on 'Subscriptions'
   expect(page).to have_content 'Billing Interval:   Monthly'
 end
+
+
+#### Admin management Processes
+def expect_to_fail_validation_with(attribute_name)
+  expect(page).to have_content("#{attribute_name} can't be blank")
+end

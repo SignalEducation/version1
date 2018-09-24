@@ -93,18 +93,25 @@ describe CourseModule do
   # class methods
 
   # instance methods
-  it { should respond_to(:array_of_sibling_ids) }
+  it { should respond_to(:parent) }
   it { should respond_to(:children) }
-  it { should respond_to(:completed_by_user) }
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:destroyable_children) }
-  it { should respond_to(:full_name) }
+  it { should respond_to(:active_children) }
+  it { should respond_to(:first_active_cme) }
+  it { should respond_to(:children_available_count) }
+  it { should respond_to(:array_of_sibling_ids) }
   it { should respond_to(:my_position_among_siblings) }
   it { should respond_to(:next_module) }
   it { should respond_to(:next_module_id) }
-  it { should respond_to(:parent) }
   it { should respond_to(:previous_module) }
   it { should respond_to(:previous_module_id) }
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
   it { should respond_to(:update_video_and_quiz_counts) }
+  it { should respond_to(:completed_by_user) }
+  it { should respond_to(:percentage_complete_by_user) }
+  it { should respond_to(:completed_for_enrollment) }
+  it { should respond_to(:percentage_complete_for_enrollment) }
+  it { should respond_to(:category) }
+  it { should respond_to(:full_name) }
 
 end

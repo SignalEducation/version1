@@ -33,15 +33,19 @@ describe ExternalBanner do
     end
   end
 
+  subject { FactoryBot.build(:external_banner) }
+
   # Constants
-  #it { expect(ExternalBanner.const_defined?(:CONSTANT_NAME)).to eq(true) }
+  it { expect(ExternalBanner.const_defined?(:BANNER_CONTROLLERS)).to eq(true) }
 
   # relationships
 
   # validation
   it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name) }
 
   it { should validate_presence_of(:sorting_order) }
+  it { should validate_numericality_of(:sorting_order) }
 
   it { should validate_presence_of(:background_colour) }
 
@@ -51,13 +55,17 @@ describe ExternalBanner do
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
+  it { expect(ExternalBanner).to respond_to(:all_active) }
   it { expect(ExternalBanner).to respond_to(:all_in_order) }
+  it { expect(ExternalBanner).to respond_to(:all_without_parent) }
+  it { expect(ExternalBanner).to respond_to(:for_home_page) }
+  it { expect(ExternalBanner).to respond_to(:for_content_page) }
+  it { expect(ExternalBanner).to respond_to(:render_for) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

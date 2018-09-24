@@ -35,6 +35,7 @@ class Order < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :mock_exam
   belongs_to :user
+  has_one :order_transaction
 
   # validation
   validates :product_id, presence: true,
@@ -69,12 +70,12 @@ class Order < ActiveRecord::Base
     self.product.mock_exam
   end
 
-  # setter method
+  ## setter method ##
   def stripe_token=(t)
     @stripe_token = t
   end
 
-  # getter method
+  ## getter method ##
   def stripe_token
     @stripe_token
   end

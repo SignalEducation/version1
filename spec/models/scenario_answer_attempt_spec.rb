@@ -29,42 +29,21 @@ describe ScenarioAnswerAttempt do
   end
 
   # Constants
-  #it { expect(ScenarioAnswerAttempt.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:scenario_question_attempt) }
-  it { should belong_to(:constructed_response_attempt) }
-  it { should belong_to(:course_module_element_user_log) }
   it { should belong_to(:user) }
-  it { should belong_to(:scenario_question) }
-  it { should belong_to(:constructed_response) }
   it { should belong_to(:scenario_answer_template) }
 
   # validation
   it { should validate_presence_of(:scenario_question_attempt_id) }
   it { should validate_numericality_of(:scenario_question_attempt_id) }
 
-  it { should validate_presence_of(:constructed_response_attempt_id) }
-  it { should validate_numericality_of(:constructed_response_attempt_id) }
-
-  it { should validate_presence_of(:course_module_element_user_log_id) }
-  it { should validate_numericality_of(:course_module_element_user_log_id) }
-
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:scenario_question_id) }
-  it { should validate_numericality_of(:scenario_question_id) }
-
-  it { should validate_presence_of(:constructed_response_id) }
-  it { should validate_numericality_of(:constructed_response_id) }
-
   it { should validate_presence_of(:scenario_answer_template_id) }
   it { should validate_numericality_of(:scenario_answer_template_id) }
-
-  it { should validate_presence_of(:original_answer_template_text) }
-
-  it { should validate_presence_of(:user_edited_answer_template_text) }
 
   it { should validate_presence_of(:editor_type) }
 
@@ -79,6 +58,8 @@ describe ScenarioAnswerAttempt do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:spreadsheet_editor?) }
+
+  it { should respond_to(:text_editor?) }
 
 end
