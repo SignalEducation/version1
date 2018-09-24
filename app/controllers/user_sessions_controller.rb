@@ -18,6 +18,10 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit
+      if @user_session.user.email_verified && !@user_session.user.student_access.trial_started_date
+        # This starts the student_access trial if it was not started from the verification process
+        @user_session.user.student_access.start_trial_access
+      end
       flash[:error] = nil
       if session[:return_to]
         redirect_back_or_default(student_dashboard_url)
@@ -46,7 +50,7 @@ class UserSessionsController < ApplicationController
       flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for assistance.'
       MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code)) if user.email_verification_code
       redirect_to sign_in_url
-    elsif user && user.student_user? && user.email_verified && user.password_change_required
+    elsif user && user.email_verified && user.password_change_required
       flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for help.'
       MandrillWorker.perform_async(user.id, 'send_set_password_email', set_password_url(user.password_reset_token))
       redirect_to sign_in_url

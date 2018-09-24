@@ -69,8 +69,11 @@ describe Refund do
 
   it { should validate_presence_of(:status) }
 
+  it { should validate_presence_of(:stripe_refund_data) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
+  it { should callback(:create_on_stripe).before(:validation) }
 
   # scopes
   it { expect(Refund).to respond_to(:all_in_order) }

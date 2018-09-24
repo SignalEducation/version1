@@ -93,7 +93,9 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                               trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
+                               account_type: 'Trial')
   end
 
   def create
@@ -139,6 +141,7 @@ class UsersController < ApplicationController
   end
 
   def preview_csv_upload
+    @user_groups = UserGroup.all_in_order
     if params[:upload] && params[:upload].respond_to?(:read)
       @csv_data, @has_errors = User.parse_csv(params[:upload].read)
     else
@@ -148,10 +151,8 @@ class UsersController < ApplicationController
   end
 
   def import_csv_upload
-    if params[:csvdata]
-
-      @new_users, @existing_users = User.bulk_create(params[:csvdata], root_url)
-
+    if params[:csvdata] && params[:user_group_id]
+      @new_users, @existing_users = User.bulk_create(params[:csvdata], params[:user_group_id], root_url)
       flash[:success] = t('controllers.dashboard.import_csv.flash.success')
     else
       flash[:error] = t('controllers.dashboard.import_csv.flash.error')

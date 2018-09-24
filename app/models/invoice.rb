@@ -83,6 +83,8 @@ class Invoice < ActiveRecord::Base
   scope :all_in_order, -> { order(user_id: :asc, id: :desc) }
 
   # class methods
+
+  ## Creates the Invoice from stripe data sent to a StripeApiEvent ##
   def self.build_from_stripe_data(stripe_data_hash)
     inv = nil
     #This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
@@ -139,6 +141,7 @@ class Invoice < ActiveRecord::Base
     inv
   end
 
+  ## Updates the Invoice from stripe data sent to a StripeApiEvent ##
   def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
     if stripe_invoice
@@ -173,6 +176,7 @@ class Invoice < ActiveRecord::Base
     self.invoice_line_items.empty?
   end
 
+  ## Used in the views to show state of the invoice ##
   def status
     if self.paid && self.payment_closed
       'Paid'

@@ -37,8 +37,6 @@ describe QuizAttempt do
   it { should belong_to(:user) }
 
   # validation
-  it { should_not validate_presence_of(:user_id) }
-
   it { should validate_presence_of(:quiz_question_id) }
 
   it { should validate_presence_of(:quiz_answer_id) }
@@ -46,6 +44,8 @@ describe QuizAttempt do
   it { should validate_presence_of(:course_module_element_user_log_id).on(:update) }
 
   it { should validate_presence_of(:answer_array).on(:update) }
+
+  it { should_not validate_presence_of(:user_id) }
 
   # callbacks
   it { should callback(:serialize_the_array).before(:validation) }

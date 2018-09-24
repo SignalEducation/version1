@@ -43,6 +43,7 @@ class OrderTransaction < ActiveRecord::Base
 
   # class methods
 
+  ## Creates record using stripe object data; called from Order model callback ##
   def self.create_from_stripe_data(order, user_id, order_id, product_id)
     OrderTransaction.create!(
         user_id: user_id,

@@ -43,7 +43,6 @@ describe Charge do
   end
 
   # Constants
-  #it { expect(Charge.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:subscription) }
@@ -79,8 +78,10 @@ describe Charge do
   it { should validate_presence_of(:amount) }
 
   it { should validate_presence_of(:stripe_customer_id) }
+  it { should validate_numericality_of(:stripe_customer_id) }
 
   it { should validate_presence_of(:stripe_invoice_id) }
+  it { should validate_numericality_of(:stripe_invoice_id) }
 
   it { should validate_presence_of(:status) }
 

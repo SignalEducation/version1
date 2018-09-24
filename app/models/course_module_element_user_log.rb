@@ -154,9 +154,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
   end
 
-  def old_set
-    StudentExamTrack.for_user(self.user_id).where(course_module_id: self.course_module_id).first
-  end
 
   protected
 
@@ -197,7 +194,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       current_seconds_consumed = user.student_access.content_seconds_consumed
       updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-      user.student_access.start_trial_access if user.student_access.trial_access?
     end
   end
 
@@ -210,7 +206,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       current_seconds_consumed = user.student_access.content_seconds_consumed
       updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
       user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-      user.student_access.start_trial_access if user.student_access.trial_access?
     end
   end
 

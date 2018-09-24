@@ -41,6 +41,7 @@ describe Group do
 
   # relationships
   it { should have_many(:subject_courses) }
+  it { should have_many(:home_pages) }
 
   # validation
   it { should validate_presence_of(:name) }

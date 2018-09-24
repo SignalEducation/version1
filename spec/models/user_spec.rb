@@ -77,19 +77,28 @@ describe User do
   # relationships
   it { should belong_to(:country) }
   it { should have_many(:course_module_element_user_logs) }
+  it { should have_many(:completed_course_module_element_user_logs) }
+  it { should have_many(:incomplete_course_module_element_user_logs) }
+  it { should have_many(:course_tutor_details) }
+  it { should have_many(:enrollments) }
   it { should have_many(:invoices) }
   it { should have_many(:quiz_attempts) }
+  it { should have_many(:orders) }
   it { should have_many(:subscriptions) }
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:student_exam_tracks) }
+  it { should have_many(:subject_course_user_logs) }
   it { should belong_to(:user_group) }
   it { should have_many(:user_notifications) }
+  it { should have_many(:visits) }
+  it { should have_many(:charges) }
+  it { should have_many(:refunds) }
+  it { should have_many(:ahoy_events) }
   it { should have_one(:referral_code) }
   it { should have_one(:student_access) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
-  it { should have_and_belong_to_many(:subject_courses) }
 
   # validation
   context 'test uniqueness validation' do
@@ -132,6 +141,9 @@ describe User do
 
   # callbacks
   it { should callback(:add_guid).before(:create) }
+  it { should callback(:create_referral_code_record).after(:create) }
+  it { should callback(:update_stripe_customer).after(:update) }
+  it { should callback(:update_student_access).after(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -139,10 +151,12 @@ describe User do
   it { expect(User).to respond_to(:search_for) }
   it { expect(User).to respond_to(:sort_by_email) }
   it { expect(User).to respond_to(:sort_by_name) }
+  it { expect(User).to respond_to(:sort_by_most_recent) }
   it { expect(User).to respond_to(:sort_by_recent_registration) }
   it { expect(User).to respond_to(:this_month) }
   it { expect(User).to respond_to(:this_week) }
   it { expect(User).to respond_to(:active_this_week) }
+  it { expect(User).to respond_to(:with_course_tutor_details) }
 
   # class methods
   it { expect(User).to respond_to(:all_students) }
@@ -151,6 +165,7 @@ describe User do
   it { expect(User).to respond_to(:get_and_activate) }
   it { expect(User).to respond_to(:get_and_verify) }
   it { expect(User).to respond_to(:start_password_reset_process) }
+  it { expect(User).to respond_to(:resend_pw_reset_email) }
   it { expect(User).to respond_to(:finish_password_reset_process) }
   it { expect(User).to respond_to(:sort_by) }
   it { expect(User).to respond_to(:to_csv) }
@@ -161,6 +176,7 @@ describe User do
   it { expect(User).to respond_to(:create_csv_user) }
 
   # instance methods
+  it { should respond_to(:date_of_birth_is_possible?) }
   it { should respond_to(:student_user?) }
   it { should respond_to(:non_student_user?) }
   it { should respond_to(:trial_or_sub_user?) }
@@ -191,9 +207,12 @@ describe User do
   it { should respond_to(:canceled_pending?) }
   it { should respond_to(:canceled_member?) }
   it { should respond_to(:current_subscription) }
+  it { should respond_to(:default_card) }
   it { should respond_to(:user_subscription_status) }
   it { should respond_to(:user_account_status) }
   it { should respond_to(:permission_to_see_content) }
+  it { should respond_to(:enrollment_for_course?) }
+  it { should respond_to(:enrolled_in_course?) }
 
   it { should respond_to(:referred_user) }
   it { should respond_to(:valid_order_ids) }
@@ -216,10 +235,15 @@ describe User do
   it { should respond_to(:visit_sources) }
   it { should respond_to(:visit_landing_pages) }
   it { should respond_to(:enrolled_course_ids) }
+  it { should respond_to(:valid_enrollments_in_sitting_order) }
+  it { should respond_to(:expired_enrollments_in_sitting_order) }
+  it { should respond_to(:active_enrollments_in_sitting_order) }
+  it { should respond_to(:next_enrollment) }
+  it { should respond_to(:next_exam_date) }
 
   it { should respond_to(:completed_course_module_element) }
-
   it { should respond_to(:started_course_module_element) }
+
   it { should respond_to(:update_from_stripe) }
   it { should respond_to(:create_subscription_from_stripe) }
 

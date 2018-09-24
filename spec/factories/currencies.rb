@@ -53,6 +53,14 @@ FactoryBot.define do
       leading_symbol          '£'
       trailing_symbol         'p'
     end
+
+    factory :mxn do
+      active                  false
+      name                    'Mexican Peso'
+      iso_code                'MXN'
+      leading_symbol          '$'
+      trailing_symbol         'c'
+    end
   end
 
 end
