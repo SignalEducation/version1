@@ -22,7 +22,8 @@ class Product < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # attr-accessible
-  attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid, :live_mode, :stripe_guid
+  attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid,
+                  :live_mode, :stripe_guid
 
   # Constants
 
@@ -65,6 +66,7 @@ class Product < ActiveRecord::Base
     end
   end
 
+  ## Creates product object on stripe and updates attributes here with response data ##
   def create_on_stripe
     unless Rails.env.test?
       stripe_product = Stripe::Product.create(name: self.name,
@@ -87,6 +89,7 @@ class Product < ActiveRecord::Base
     end
   end
 
+  ## Updates stripe product object ##
   def update_on_stripe
     unless Rails.env.test?
       stripe_product = Stripe::Product.retrieve(id: self.stripe_guid)

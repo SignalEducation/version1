@@ -95,6 +95,7 @@ describe SubscriptionPaymentCard do
   # callbacks
   it { should callback(:create_on_stripe_using_token).before(:validation).on(:create).if(:stripe_token) }
   it { should callback(:update_stripe_and_other_cards).after(:create) }
+  it { should callback(:delete_existing_default_cards).after(:create) }
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:remove_card_from_stripe).before(:destroy) }
 

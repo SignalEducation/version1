@@ -17,6 +17,7 @@ FactoryBot.define do
     sequence(:name)     { |n| "Subscription Plan Category #{n}" }
     available_from      { 1.week.ago }
     available_to        { 1.week.from_now }
+    sequence(:guid)     { |n| "Guid-#{n}" }
   end
 
 end

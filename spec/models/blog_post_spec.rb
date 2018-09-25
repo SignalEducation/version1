@@ -37,6 +37,7 @@ describe BlogPost do
 
   # validation
   it { should validate_presence_of(:home_page_id).on(:update) }
+  it { should validate_numericality_of(:home_page_id).on(:update) }
 
   it { should validate_presence_of(:title) }
 

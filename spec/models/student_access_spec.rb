@@ -47,6 +47,7 @@ describe StudentAccess do
   it { should validate_presence_of(:trial_days_limit) }
 
   it { should validate_presence_of(:account_type) }
+  it { should validate_inclusion_of(:account_type).in_array(StudentAccess::ACCOUNT_TYPES) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -55,11 +56,30 @@ describe StudentAccess do
   it { expect(StudentAccess).to respond_to(:all_in_order) }
   it { expect(StudentAccess).to respond_to(:all_trial) }
   it { expect(StudentAccess).to respond_to(:all_sub) }
+  it { expect(StudentAccess).to respond_to(:all_comp) }
 
   # class methods
 
   # instance methods
   it { should respond_to(:destroyable?) }
+
+  it { should respond_to(:trial_access?) }
+
+  it { should respond_to(:subscription_access?) }
+
+  it { should respond_to(:complimentary_access?) }
+
+  it { should respond_to(:start_trial_access) }
+
+  it { should respond_to(:check_trial_access_is_valid) }
+
+  it { should respond_to(:convert_to_subscription_access) }
+
+  it { should respond_to(:check_subscription_access_is_valid) }
+
+  it { should respond_to(:convert_to_complimentary_access) }
+
+  it { should respond_to(:check_student_access) }
 
 
 end

@@ -34,8 +34,10 @@ describe StripeApiEvent do
   # Constants
   it { expect(StripeApiEvent.const_defined?(:KNOWN_API_VERSIONS)).to eq(true) }
   it { expect(StripeApiEvent.const_defined?(:KNOWN_PAYLOAD_TYPES)).to eq(true) }
+  it { expect(StripeApiEvent.const_defined?(:DELAYED_TYPES)).to eq(true) }
 
   # relationships
+  it { should have_many(:charges)}
 
   # validation
   it { should validate_presence_of(:guid) }
@@ -44,6 +46,8 @@ describe StripeApiEvent do
 
   it { should validate_inclusion_of(:api_version).in_array(StripeApiEvent::KNOWN_API_VERSIONS) }
   it { should validate_length_of(:api_version).is_at_most(255) }
+
+  it { should validate_presence_of(:payload) }
 
   # callbacks
   it { should callback(:set_default_values).before(:validation).on(:create) }

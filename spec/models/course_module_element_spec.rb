@@ -45,6 +45,7 @@ describe CourseModuleElement do
   it { should belong_to(:course_module) }
   it { should have_one(:course_module_element_quiz) }
   it { should have_one(:course_module_element_video) }
+  it { should have_one(:constructed_response) }
   it { should have_one(:video_resource) }
   it { should have_many(:quiz_questions) }
   it { should have_many(:course_module_element_resources)}
@@ -53,7 +54,6 @@ describe CourseModuleElement do
 
   # validation
   it { should validate_presence_of(:name) }
-  it { should_not validate_uniqueness_of(:name) }
   it { should validate_length_of(:name).is_at_most(255) }
 
   it { should validate_presence_of(:name_url) }
@@ -86,14 +86,20 @@ describe CourseModuleElement do
   # class methods
 
   # instance methods
+  it { should respond_to(:parent) }
+
   it { should respond_to(:array_of_sibling_ids) }
-  it { should respond_to(:completed_by_user) }
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:destroyable_children) }
   it { should respond_to(:my_position_among_siblings) }
   it { should respond_to(:next_element) }
-  it { should respond_to(:parent) }
   it { should respond_to(:previous_element) }
+
+  it { should respond_to(:destroyable?) }
+  it { should respond_to(:destroyable_children) }
+
+  it { should respond_to(:completed_by_user) }
+  it { should respond_to(:started_by_user) }
+
   it { should respond_to(:type_name) }
+  it { should respond_to(:cme_is_video?) }
 
 end

@@ -49,6 +49,7 @@ class OrdersController < ApplicationController
     @layout = 'standard'
   end
 
+  ## API call to stripe to submit order ##
   def create
     #TODO - This is all too complicated. Needs simplification.
 

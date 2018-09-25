@@ -144,9 +144,11 @@ class Coupon < ActiveRecord::Base
   end
 
   def activate
-    stripe_coupon = Stripe::Coupon.retrieve(id: self.code)
-    if stripe_coupon && stripe_coupon[:valid]
-      self.update_column(:active, true)
+    unless Rails.env.test?
+      stripe_coupon = Stripe::Coupon.retrieve(id: self.code)
+      if stripe_coupon && stripe_coupon[:valid]
+        self.update_column(:active, true)
+      end
     end
   end
 

@@ -22,8 +22,8 @@
 class Enrollment < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id, :active,
-                  :exam_body_id, :exam_date, :expired, :updated_at,
+  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id,
+                  :active, :exam_body_id, :exam_date, :expired, :updated_at,
                   :exam_sitting_id, :computer_based_exam, :percentage_complete
 
   # Constants
@@ -50,7 +50,7 @@ class Enrollment < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event
+  after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event, :update_percentage_complete
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -66,7 +66,6 @@ class Enrollment < ActiveRecord::Base
   scope :all_expired, -> { where(expired: true) }
   scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
-  scope :all_expired, -> { where(expired: true) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :all_paused, -> { where(paused: true) }
   scope :all_un_paused, -> { where(paused: false) }
@@ -88,16 +87,6 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-
-  # instance methods
-  def destroyable?
-    false # Can never be destroyed because the CSV data files will not be accurate
-  end
-
-  def valid_enrollment?
-    self.active && !self.expired
-  end
-
   def self.to_csv(options = {})
     attributes = %w{id user_id status f_name l_name course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count }
     CSV.generate(options) do |csv|
@@ -107,6 +96,16 @@ class Enrollment < ActiveRecord::Base
         csv << attributes.map{ |attr| user.send(attr) }
       end
     end
+  end
+
+
+  # instance methods
+  def destroyable?
+    false # Can never be destroyed because the CSV data files will not be accurate
+  end
+
+  def valid_enrollment?
+    self.active && !self.expired
   end
 
   def enrollment_date
@@ -201,36 +200,6 @@ class Enrollment < ActiveRecord::Base
   end
 
 
-
-  def find_and_set_exam_sitting_id
-    if self.exam_date
-      exam_sitting = ExamSitting.where(subject_course_id: self.subject_course_id, date: self.exam_date, computer_based: false).first
-
-      if exam_sitting
-        sitting_id = exam_sitting.id
-        percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
-        expiration = exam_sitting.active ? false : true
-        self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
-      else
-        sitting = ExamSitting.where(subject_course_id: self.subject_course_id, computer_based: false).first
-
-        if sitting
-          sitting_id = sitting.id
-          percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
-          expiration = sitting.active ? false : true
-          self.update_columns(exam_sitting_id: sitting_id, percentage_complete: percentage, expired: expiration)
-        end
-
-      end
-    else
-      exam_sitting = ExamSitting.where(name: 'Missing date value enrolments').first
-      percentage = self.subject_course_user_log_id ? self.subject_course_user_log.percentage_complete : 0
-      self.update_columns(expired: true, exam_sitting_id: exam_sitting.id, percentage_complete: percentage)
-    end
-
-  end
-
-
   protected
 
   def check_dependencies
@@ -251,6 +220,12 @@ class Enrollment < ActiveRecord::Base
   def create_expiration_worker
     if self.computer_based_exam && self.exam_date
       EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
+    end
+  end
+
+  def update_percentage_complete
+    if self.subject_course_user_log_id && self.active
+      self.update_attribute(:percentage_complete, self.subject_course_user_log.percentage_complete)
     end
   end
 

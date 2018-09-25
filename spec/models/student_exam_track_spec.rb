@@ -26,7 +26,7 @@ require 'rails_helper'
 describe StudentExamTrack do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at exam_level_id exam_section_id exam_schedule_id count_of_questions_taken count_of_questions_correct count_of_quizzes_taken count_of_videos_taken)
+  black_list = %w(id created_at updated_at exam_level_id exam_section_id exam_schedule_id count_of_questions_taken count_of_questions_correct count_of_quizzes_taken count_of_videos_taken count_of_constructed_responses_taken)
   StudentExamTrack.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -36,7 +36,6 @@ describe StudentExamTrack do
   end
 
   # Constants
-  #it { expect()StudentExamTrack.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
@@ -47,16 +46,20 @@ describe StudentExamTrack do
   it { should have_many(:course_module_element_user_logs) }
 
   # validation
-  it { should_not validate_presence_of(:user_id) }
-
   it { should validate_presence_of(:subject_course_id) }
+  it { should validate_numericality_of(:subject_course_id) }
 
-  it { should_not validate_presence_of(:latest_course_module_element_id) }
+  it { should validate_presence_of(:course_module_id) }
+  it { should validate_numericality_of(:course_module_id) }
+
+  it { should validate_presence_of(:subject_course_user_log_id) }
+  it { should validate_numericality_of(:subject_course_user_log_id) }
 
   it { should_not validate_presence_of(:session_guid) }
   it { should validate_length_of(:session_guid).is_at_most(255) }
 
-  it { should validate_presence_of(:course_module_id) }
+  it { should_not validate_presence_of(:user_id) }
+  it { should_not validate_presence_of(:latest_course_module_element_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -64,6 +67,7 @@ describe StudentExamTrack do
 
   # scopes
   it { expect(StudentExamTrack).to respond_to(:all_in_order) }
+  it { expect(StudentExamTrack).to respond_to(:for_user) }
   it { expect(StudentExamTrack).to respond_to(:with_active_cmes) }
   it { expect(StudentExamTrack).to respond_to(:all_complete) }
   it { expect(StudentExamTrack).to respond_to(:all_incomplete) }
@@ -72,7 +76,6 @@ describe StudentExamTrack do
 
   # instance methods
   it { should respond_to(:update_subject_course_user_log) }
-  it { should respond_to(:old_cme_user_logs) }
   it { should respond_to(:completed_cme_user_logs) }
   it { should respond_to(:destroyable?) }
   it { should respond_to(:elements_total) }
@@ -83,6 +86,5 @@ describe StudentExamTrack do
   it { should respond_to(:calculate_completeness) }
   it { should respond_to(:worker_update_completeness) }
   it { should respond_to(:recalculate_completeness) }
-  it { should respond_to(:old_subject_course_user_log) }
 
 end

@@ -21,12 +21,12 @@
 
 require 'rails_helper'
 require 'support/users_and_groups_setup'
+require 'support/system_setup'
 require 'stripe_mock'
 
 describe SubscriptionsController, type: :controller do
 
   include_context 'users_and_groups_setup'
-
   include_context 'system_setup'
 
   let(:stripe_helper) { StripeMock.create_test_helper }
@@ -37,12 +37,12 @@ describe SubscriptionsController, type: :controller do
   let!(:student_user_3) { FactoryBot.create(:student_user, country_id: Country.first.id) }
   let!(:subscription_payment_card) { FactoryBot.create(:subscription_payment_card, user_id: student_user.id) }
   let!(:subscription_1) { x = FactoryBot.create(:subscription,
-                             user_id: student_user.id,
+                             user_id: valid_subscription_student.id,
                              active: true,
                              subscription_plan_id: subscription_plan_1.id,
                              stripe_token: stripe_helper.generate_card_token)
-  student_user.stripe_customer_id = x.stripe_customer_id
-  student_user.save
+  valid_subscription_student.stripe_customer_id = x.stripe_customer_id
+  valid_subscription_student.save
                              x }
   let!(:subscription_2) { x = FactoryBot.create(:subscription,
                              user_id: student_user_2.id,
@@ -953,6 +953,84 @@ describe SubscriptionsController, type: :controller do
 
   end
 
+  context 'Logged in as a content_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(content_management_user)
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new, user_id: content_management_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: content_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: content_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: '', user_id: content_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: content_management_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should update then redirect to account' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page after destroy' do
+        stripe_customer = Stripe::Customer.create(email: student_user.email)
+        student_user.update_attribute(:stripe_customer_id, stripe_customer.id)
+        stripe_subscription = stripe_customer.subscriptions.create(plan: subscription_plan_1.stripe_guid, trial_end: 'now', source: stripe_helper.generate_card_token)
+        subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
+        subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
+
+        delete :destroy, id: subscription_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
   context 'Logged in as a content_manager_user: ' do
 
     before(:each) do
@@ -1024,6 +1102,206 @@ describe SubscriptionsController, type: :controller do
         subscription_1.update_attribute(:stripe_guid, stripe_subscription.id)
         subscription_1.update_attribute(:stripe_customer_id, stripe_customer.id)
 
+        delete :destroy, id: subscription_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a stripe_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(stripe_management_user)
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new, user_id: stripe_management_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: stripe_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: stripe_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: '', user_id: stripe_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: stripe_management_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should update then redirect to account' do
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page after destroy' do
+        delete :destroy, id: subscription_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new, user_id: user_management_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: user_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: user_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: '', user_id: user_management_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: user_management_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should update then redirect to account' do
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page after destroy' do
+        delete :destroy, id: subscription_1.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new, user_id: developers_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: developers_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: developers_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: upgrade_params, coupon: '', user_id: developers_user.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should bounce as not allowed' do
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: developers_user.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "Get 'change_plan'" do
+      it 'should redirect to sign_in' do
+        get :change_plan
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should update then redirect to account' do
+
+        put :update, id: subscription_1.id, subscription: valid_params
+        expect_bounce_as_not_allowed
+
+      end
+    end
+
+    describe "DELETE 'destroy'" do
+      it 'should redirect to account page after destroy' do
         delete :destroy, id: subscription_1.id
         expect_bounce_as_not_allowed
       end
@@ -1109,38 +1387,38 @@ describe SubscriptionsController, type: :controller do
 
   end
 
-  context 'Logged in as a customer_support_manager_user: ' do
+  context 'Logged in as a user_group_manager_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(customer_support_manager_user)
+      UserSession.create!(user_group_manager_user)
     end
 
     describe "GET 'new'" do
       it 'should render upgrade page' do
-        get :new, user_id: customer_support_manager_user.id
+        get :new, user_id: user_group_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should bounce as not allowed' do
-        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: customer_support_manager_user.id
+        post :create, user: upgrade_params, coupon: 'valid_coupon_code', user_id: user_group_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create, user: upgrade_params, coupon: 'abc123', user_id: customer_support_manager_user.id
+        post :create, user: upgrade_params, coupon: 'abc123', user_id: user_group_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create, user: upgrade_params, coupon: '', user_id: customer_support_manager_user.id
+        post :create, user: upgrade_params, coupon: '', user_id: user_group_manager_user.id
         expect_bounce_as_not_allowed
       end
 
       it 'should bounce as not allowed' do
-        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: customer_support_manager_user.id
+        post :create, user: invalid_upgrade_params, coupon: 'valid_coupon_code', user_id: user_group_manager_user.id
         expect_bounce_as_not_allowed
       end
     end
@@ -1161,10 +1439,8 @@ describe SubscriptionsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should update then redirect to account' do
-
         put :update, id: subscription_1.id, subscription: valid_params
         expect_bounce_as_not_allowed
-
       end
     end
 

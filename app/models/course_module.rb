@@ -208,7 +208,7 @@ class CourseModule < ActiveRecord::Base
     elsif self.tuition
       'Tuition'
     elsif self.test
-      'Test'
+      'Additional'
     else
       ''
     end

@@ -24,9 +24,10 @@ describe ContentPagesController, type: :controller do
 
   include_context 'users_and_groups_setup'
 
-  # todo: Try to create children for content_page_1
-  let!(:content_page_1) { FactoryBot.create(:content_page) }
+  let!(:content_page_1) { FactoryBot.create(:content_page, active: true) }
   let!(:content_page_2) { FactoryBot.create(:content_page) }
+  let!(:external_banner) { FactoryBot.create(:external_banner, content_page_id: content_page_1.id) }
+
   let!(:valid_params) { FactoryBot.attributes_for(:content_page) }
 
   context 'Not logged in: ' do
@@ -40,8 +41,8 @@ describe ContentPagesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should redirect to sign_in' do
-        get :show, id: 1
-        expect_bounce_as_not_signed_in
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
       end
     end
 
@@ -83,29 +84,29 @@ describe ContentPagesController, type: :controller do
 
   end
 
-  context 'Logged in as a individual_student_user: ' do
+  context 'Logged in as a valid_trial_student: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(individual_student_user)
+      UserSession.create!(valid_trial_student)
     end
 
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('content_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
-        get :show, id: content_page_1.id
+        get :show, content_public_url: content_page_1.public_url
         expect_show_success_with_model('content_page', content_page_1.id)
       end
 
       # optional - some other object
       it 'should see content_page_2' do
-        get :show, id: content_page_2.id
+        get :show, content_public_url: content_page_2.public_url
         expect_show_success_with_model('content_page', content_page_2.id)
       end
     end
@@ -113,52 +114,50 @@ describe ContentPagesController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('content_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with content_page_1' do
         get :edit, id: content_page_1.id
-        expect_edit_success_with_model('content_page', content_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with content_page_2' do
         get :edit, id: content_page_2.id
-        expect_edit_success_with_model('content_page', content_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, content_page: valid_params
-        expect_create_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, content_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('content_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for content_page_1' do
         put :update, id: content_page_1.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for content_page_2' do
         put :update, id: content_page_2.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-        expect(assigns(:content_page).id).to eq(content_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('content_page')
-        expect(assigns(:content_page).id).to eq(content_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -166,12 +165,288 @@ describe ContentPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: content_page_2.id
-        expect_delete_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_trial_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_trial_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a invalid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(invalid_subscription_student)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -181,25 +456,25 @@ describe ContentPagesController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(complimentary_user)
+      UserSession.create!(comp_user)
     end
 
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('content_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
-        get :show, id: content_page_1.id
+        get :show, content_public_url: content_page_1.public_url
         expect_show_success_with_model('content_page', content_page_1.id)
       end
 
       # optional - some other object
       it 'should see content_page_2' do
-        get :show, id: content_page_2.id
+        get :show, content_public_url: content_page_2.public_url
         expect_show_success_with_model('content_page', content_page_2.id)
       end
     end
@@ -207,52 +482,50 @@ describe ContentPagesController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('content_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with content_page_1' do
         get :edit, id: content_page_1.id
-        expect_edit_success_with_model('content_page', content_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with content_page_2' do
         get :edit, id: content_page_2.id
-        expect_edit_success_with_model('content_page', content_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, content_page: valid_params
-        expect_create_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, content_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('content_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for content_page_1' do
         put :update, id: content_page_1.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for content_page_2' do
         put :update, id: content_page_2.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-        expect(assigns(:content_page).id).to eq(content_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('content_page')
-        expect(assigns(:content_page).id).to eq(content_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -260,12 +533,12 @@ describe ContentPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: content_page_2.id
-        expect_delete_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -281,19 +554,19 @@ describe ContentPagesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('content_pages', 2)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
-        get :show, id: content_page_1.id
+        get :show, content_public_url: content_page_1.public_url
         expect_show_success_with_model('content_page', content_page_1.id)
       end
 
       # optional - some other object
       it 'should see content_page_2' do
-        get :show, id: content_page_2.id
+        get :show, content_public_url: content_page_2.public_url
         expect_show_success_with_model('content_page', content_page_2.id)
       end
     end
@@ -301,52 +574,50 @@ describe ContentPagesController, type: :controller do
     describe "GET 'new'" do
       it 'should respond OK' do
         get :new
-        expect_new_success_with_model('content_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should respond OK with content_page_1' do
         get :edit, id: content_page_1.id
-        expect_edit_success_with_model('content_page', content_page_1.id)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK with content_page_2' do
         get :edit, id: content_page_2.id
-        expect_edit_success_with_model('content_page', content_page_2.id)
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, content_page: valid_params
-        expect_create_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should report error for invalid params' do
         post :create, content_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('content_page')
+        expect_bounce_as_not_allowed
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for content_page_1' do
         put :update, id: content_page_1.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       # optional
       it 'should respond OK to valid params for content_page_2' do
         put :update, id: content_page_2.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-        expect(assigns(:content_page).id).to eq(content_page_2.id)
+        expect_bounce_as_not_allowed
       end
 
       it 'should reject invalid params' do
         put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('content_page')
-        expect(assigns(:content_page).id).to eq(content_page_1.id)
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -354,22 +625,22 @@ describe ContentPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: content_page_2.id
-        expect_delete_success_with_model('content_page', content_pages_url)
+        expect_bounce_as_not_allowed
       end
     end
 
   end
 
-  context 'Logged in as a comp_user_user: ' do
+  context 'Logged in as a system_requirements_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(comp_user_user)
+      UserSession.create!(system_requirements_user)
     end
 
     describe "GET 'index'" do
@@ -381,13 +652,13 @@ describe ContentPagesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
-        get :show, id: content_page_1.id
+        get :show, content_public_url: content_page_1.public_url
         expect_show_success_with_model('content_page', content_page_1.id)
       end
 
       # optional - some other object
       it 'should see content_page_2' do
-        get :show, id: content_page_2.id
+        get :show, content_public_url: content_page_2.public_url
         expect_show_success_with_model('content_page', content_page_2.id)
       end
     end
@@ -448,289 +719,7 @@ describe ContentPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: content_page_2.id
         expect_delete_success_with_model('content_page', content_pages_url)
-      end
-    end
-
-  end
-
-  context 'Logged in as a marketing_manager_user_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(marketing_manager_user_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_index_success_with_model('content_pages', 2)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see content_page_1' do
-        get :show, id: content_page_1.id
-        expect_show_success_with_model('content_page', content_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see content_page_2' do
-        get :show, id: content_page_2.id
-        expect_show_success_with_model('content_page', content_page_2.id)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_new_success_with_model('content_page')
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with content_page_1' do
-        get :edit, id: content_page_1.id
-        expect_edit_success_with_model('content_page', content_page_1.id)
-      end
-
-      # optional
-      it 'should respond OK with content_page_2' do
-        get :edit, id: content_page_2.id
-        expect_edit_success_with_model('content_page', content_page_2.id)
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, content_page: valid_params
-        expect_create_success_with_model('content_page', content_pages_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, content_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('content_page')
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for content_page_1' do
-        put :update, id: content_page_1.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for content_page_2' do
-        put :update, id: content_page_2.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-        expect(assigns(:content_page).id).to eq(content_page_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('content_page')
-        expect(assigns(:content_page).id).to eq(content_page_1.id)
-      end
-    end
-
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: content_page_2.id
-        expect_delete_success_with_model('content_page', content_pages_url)
-      end
-    end
-
-  end
-
-  context 'Logged in as a customer_support_manager_user_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(customer_support_manager_user_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_index_success_with_model('content_pages', 2)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see content_page_1' do
-        get :show, id: content_page_1.id
-        expect_show_success_with_model('content_page', content_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see content_page_2' do
-        get :show, id: content_page_2.id
-        expect_show_success_with_model('content_page', content_page_2.id)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_new_success_with_model('content_page')
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with content_page_1' do
-        get :edit, id: content_page_1.id
-        expect_edit_success_with_model('content_page', content_page_1.id)
-      end
-
-      # optional
-      it 'should respond OK with content_page_2' do
-        get :edit, id: content_page_2.id
-        expect_edit_success_with_model('content_page', content_page_2.id)
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, content_page: valid_params
-        expect_create_success_with_model('content_page', content_pages_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, content_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('content_page')
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for content_page_1' do
-        put :update, id: content_page_1.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for content_page_2' do
-        put :update, id: content_page_2.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-        expect(assigns(:content_page).id).to eq(content_page_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('content_page')
-        expect(assigns(:content_page).id).to eq(content_page_1.id)
-      end
-    end
-
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: content_page_2.id
-        expect_delete_success_with_model('content_page', content_pages_url)
-      end
-    end
-
-  end
-
-  context 'Logged in as a blogger_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(blogger_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_index_success_with_model('content_pages', 2)
-      end
-    end
-
-    describe "GET 'show/1'" do
-      it 'should see content_page_1' do
-        get :show, id: content_page_1.id
-        expect_show_success_with_model('content_page', content_page_1.id)
-      end
-
-      # optional - some other object
-      it 'should see content_page_2' do
-        get :show, id: content_page_2.id
-        expect_show_success_with_model('content_page', content_page_2.id)
-      end
-    end
-
-    describe "GET 'new'" do
-      it 'should respond OK' do
-        get :new
-        expect_new_success_with_model('content_page')
-      end
-    end
-
-    describe "GET 'edit/1'" do
-      it 'should respond OK with content_page_1' do
-        get :edit, id: content_page_1.id
-        expect_edit_success_with_model('content_page', content_page_1.id)
-      end
-
-      # optional
-      it 'should respond OK with content_page_2' do
-        get :edit, id: content_page_2.id
-        expect_edit_success_with_model('content_page', content_page_2.id)
-      end
-    end
-
-    describe "POST 'create'" do
-      it 'should report OK for valid params' do
-        post :create, content_page: valid_params
-        expect_create_success_with_model('content_page', content_pages_url)
-      end
-
-      it 'should report error for invalid params' do
-        post :create, content_page: {valid_params.keys.first => ''}
-        expect_create_error_with_model('content_page')
-      end
-    end
-
-    describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for content_page_1' do
-        put :update, id: content_page_1.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-      end
-
-      # optional
-      it 'should respond OK to valid params for content_page_2' do
-        put :update, id: content_page_2.id, content_page: valid_params
-        expect_update_success_with_model('content_page', content_pages_url)
-        expect(assigns(:content_page).id).to eq(content_page_2.id)
-      end
-
-      it 'should reject invalid params' do
-        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
-        expect_update_error_with_model('content_page')
-        expect(assigns(:content_page).id).to eq(content_page_1.id)
-      end
-    end
-
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
       end
 
       it 'should be OK as no dependencies exist' do
@@ -745,7 +734,375 @@ describe ContentPagesController, type: :controller do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(content_manager_user)
+      UserSession.create!(content_management_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a stripe_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(stripe_management_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_management_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_management_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a developers_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(developers_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+  end
+
+  context 'Logged in as a marketing_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(marketing_manager_user)
     end
 
     describe "GET 'index'" do
@@ -757,13 +1114,13 @@ describe ContentPagesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
-        get :show, id: content_page_1.id
+        get :show, content_public_url: content_page_1.public_url
         expect_show_success_with_model('content_page', content_page_1.id)
       end
 
       # optional - some other object
       it 'should see content_page_2' do
-        get :show, id: content_page_2.id
+        get :show, content_public_url: content_page_2.public_url
         expect_show_success_with_model('content_page', content_page_2.id)
       end
     end
@@ -824,12 +1181,104 @@ describe ContentPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
+        expect_delete_success_with_model('content_page', content_pages_url)
       end
 
       it 'should be OK as no dependencies exist' do
         delete :destroy, id: content_page_2.id
         expect_delete_success_with_model('content_page', content_pages_url)
+      end
+    end
+
+  end
+
+  context 'Logged in as a user_group_manager_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(user_group_manager_user)
+    end
+
+    describe "GET 'index'" do
+      it 'should respond OK' do
+        get :index
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+
+      # optional - some other object
+      it 'should see content_page_2' do
+        get :show, content_public_url: content_page_2.public_url
+        expect_show_success_with_model('content_page', content_page_2.id)
+      end
+    end
+
+    describe "GET 'new'" do
+      it 'should respond OK' do
+        get :new
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "GET 'edit/1'" do
+      it 'should respond OK with content_page_1' do
+        get :edit, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK with content_page_2' do
+        get :edit, id: content_page_2.id
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "POST 'create'" do
+      it 'should report OK for valid params' do
+        post :create, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should report error for invalid params' do
+        post :create, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+    describe "PUT 'update/1'" do
+      it 'should respond OK to valid params for content_page_1' do
+        put :update, id: content_page_1.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      # optional
+      it 'should respond OK to valid params for content_page_2' do
+        put :update, id: content_page_2.id, content_page: valid_params
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should reject invalid params' do
+        put :update, id: content_page_1.id, content_page: {valid_params.keys.first => ''}
+        expect_bounce_as_not_allowed
+      end
+    end
+
+
+    describe "DELETE 'destroy'" do
+      it 'should be ERROR as children exist' do
+        delete :destroy, id: content_page_1.id
+        expect_bounce_as_not_allowed
+      end
+
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, id: content_page_2.id
+        expect_bounce_as_not_allowed
       end
     end
 
@@ -851,13 +1300,13 @@ describe ContentPagesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see content_page_1' do
-        get :show, id: content_page_1.id
+        get :show, content_public_url: content_page_1.public_url
         expect_show_success_with_model('content_page', content_page_1.id)
       end
 
       # optional - some other object
       it 'should see content_page_2' do
-        get :show, id: content_page_2.id
+        get :show, content_public_url: content_page_2.public_url
         expect_show_success_with_model('content_page', content_page_2.id)
       end
     end
@@ -918,7 +1367,7 @@ describe ContentPagesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
         delete :destroy, id: content_page_1.id
-        expect_delete_error_with_model('content_page', content_pages_url)
+        expect_delete_success_with_model('content_page', content_pages_url)
       end
 
       it 'should be OK as no dependencies exist' do

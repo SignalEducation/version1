@@ -16,7 +16,7 @@ require 'rails_helper'
 describe Scenario do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at)
+  black_list = %w(id created_at updated_at destroyed_at)
   Scenario.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }
@@ -28,17 +28,14 @@ describe Scenario do
   # Constants
 
   # relationships
-  it { should belong_to(:course_module_element) }
   it { should belong_to(:constructed_response) }
+  it { should have_many(:scenario_questions) }
 
   # validation
-  it { should validate_presence_of(:course_module_element_id) }
-  it { should validate_numericality_of(:course_module_element_id) }
+  it { should validate_presence_of(:constructed_response_id).on(:update) }
+  it { should validate_numericality_of(:constructed_response_id).on(:update) }
 
-  it { should validate_presence_of(:constructed_response_id) }
-  it { should validate_numericality_of(:constructed_response_id) }
-
-  it { should validate_presence_of(:text_content) }
+  it { should validate_presence_of(:text_content).on(:update) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -47,9 +44,11 @@ describe Scenario do
   it { expect(Scenario).to respond_to(:all_in_order) }
 
   # class methods
+  it { expect(Scenario).to respond_to(:scenario_nested_question_is_blank?) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
+  it { should respond_to(:add_an_empty_scenario_question) }
 
 
 end

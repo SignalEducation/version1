@@ -59,6 +59,7 @@ class StudentExamTrack < ActiveRecord::Base
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :with_active_cmes, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.cme_count > 0').references(:course_module) }
+  scope :with_valid_course_module, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.test = ?', false).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
 
@@ -69,10 +70,6 @@ class StudentExamTrack < ActiveRecord::Base
     log = self.subject_course_user_log
     log.latest_course_module_element_id = self.latest_course_module_element_id
     log.recalculate_completeness # Includes a save
-  end
-
-  def old_cme_user_logs
-    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_id: self.course_module_id)
   end
 
   def completed_cme_user_logs
@@ -125,7 +122,6 @@ class StudentExamTrack < ActiveRecord::Base
     cmes_completed = self.unique_logs.count
     percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
     self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_constructed_responses_taken: constructed_responses_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
-    ## TODO See Sidekiq Github wiki FAQ may be race condition issue ##
   end
 
   def recalculate_completeness
@@ -160,9 +156,6 @@ class StudentExamTrack < ActiveRecord::Base
     self
   end
 
-  def old_subject_course_user_log
-    SubjectCourseUserLog.for_user(self.user_id).where(subject_course_id: self.subject_course_id).first
-  end
 
   protected
 

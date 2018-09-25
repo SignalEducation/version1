@@ -26,7 +26,6 @@ describe CourseTutorDetail do
   end
 
   # Constants
-  #it { expect(CourseTutorDetail.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
   # relationships
   it { should belong_to(:subject_course) }
@@ -41,7 +40,7 @@ describe CourseTutorDetail do
 
   it { should validate_presence_of(:sorting_order) }
 
-  it { should validate_presence_of(:title) }
+  it { should_not validate_presence_of(:title) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
@@ -54,6 +53,5 @@ describe CourseTutorDetail do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-  pending "Please review #{__FILE__}"
 
 end

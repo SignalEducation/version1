@@ -46,47 +46,63 @@ describe Enrollment do
   it { should validate_presence_of(:user_id) }
   it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:exam_sitting_id) }
-  it { should validate_numericality_of(:exam_sitting_id) }
-
   it { should validate_presence_of(:subject_course_id) }
   it { should validate_numericality_of(:subject_course_id) }
 
+  it { should validate_presence_of(:exam_sitting_id) }
+  it { should validate_numericality_of(:exam_sitting_id) }
+
   it { should_not validate_presence_of(:subject_course_user_log_id) }
   it { should validate_numericality_of(:subject_course_user_log_id) }
+
+  it { should_not validate_presence_of(:exam_body_id) }
+  it { should validate_numericality_of(:exam_body_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:create_expiration_worker).after(:create) }
   it { should callback(:deactivate_siblings).after(:create) }
+  it { should callback(:create_intercom_event).after(:create) }
+  it { should callback(:update_percentage_complete).after(:create) }
   it { should callback(:create_expiration_worker).after(:update), if: :exam_date_changed? }
 
   # scopes
   it { expect(Enrollment).to respond_to(:all_in_order) }
   it { expect(Enrollment).to respond_to(:all_in_admin_order) }
+  it { expect(Enrollment).to respond_to(:all_in_exam_sitting_order) }
+  it { expect(Enrollment).to respond_to(:all_reverse_order) }
+  it { expect(Enrollment).to respond_to(:all_in_exam_order) }
+  it { expect(Enrollment).to respond_to(:by_sitting_date) }
+  it { expect(Enrollment).to respond_to(:all_in_recent_order) }
   it { expect(Enrollment).to respond_to(:all_active) }
+  it { expect(Enrollment).to respond_to(:all_not_active) }
   it { expect(Enrollment).to respond_to(:all_expired) }
+  it { expect(Enrollment).to respond_to(:all_valid) }
   it { expect(Enrollment).to respond_to(:all_not_expired) }
   it { expect(Enrollment).to respond_to(:for_subject_course) }
-  it { expect(Enrollment).to respond_to(:all_valid) }
   it { expect(Enrollment).to respond_to(:all_paused) }
   it { expect(Enrollment).to respond_to(:all_un_paused) }
   it { expect(Enrollment).to respond_to(:all_for_notifications) }
   it { expect(Enrollment).to respond_to(:all_not_for_notifications) }
   it { expect(Enrollment).to respond_to(:this_week) }
+  it { expect(Enrollment).to respond_to(:by_sitting) }
+
   it { expect(Enrollment).to respond_to(:all_completed) }
 
   # class methods
+  it { expect(Enrollment).to respond_to(:search) }
   it { expect(Enrollment).to respond_to(:to_csv) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
   it { should respond_to(:valid_enrollment?) }
-  it { should respond_to(:course_name) }
   it { should respond_to(:enrollment_date) }
+  it { should respond_to(:course_name) }
   it { should respond_to(:exam_sitting_name) }
   it { should respond_to(:user_email) }
   it { should respond_to(:student_number) }
+  it { should respond_to(:f_name) }
+  it { should respond_to(:l_name) }
   it { should respond_to(:date_of_birth) }
   it { should respond_to(:display_percentage_complete) }
   it { should respond_to(:elements_complete_count) }

@@ -59,8 +59,8 @@ class Subscription < ActiveRecord::Base
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
-  after_create :update_coupon_count
-  after_save :update_student_access
+  after_create :update_coupon_count, :convert_student_access
+  after_save :update_student_access, if: :active
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -363,15 +363,12 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def convert_student_access
+    self.user.student_access.convert_to_subscription_access(self.id)
+  end
+
   def update_student_access
-    ## TODO Review this!
-    if self.active && self.student_access
-      if %w(unpaid suspended canceled).include?(self.current_status)
-        self.student_access.update_attribute(:content_access, false)
-      elsif %w(active past_due canceled-pending).include?(self.current_status)
-        self.student_access.update_attribute(:content_access, true)
-      end
-    end
+    self.user.student_access.check_student_access
   end
 
   def prefix

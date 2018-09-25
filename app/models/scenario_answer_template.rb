@@ -57,6 +57,7 @@ class ScenarioAnswerTemplate < ActiveRecord::Base
   end
 
   def text_or_spreadsheet_content_present
+    # TODO - Create this custom validation
 
   end
 
