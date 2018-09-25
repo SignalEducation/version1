@@ -22,22 +22,15 @@ class ExamSittingsController < ApplicationController
   before_action :get_variables
 
   def index
-    @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
-
     @sort_choices = ExamSitting::SORT_OPTIONS
-
-    if params[:sort_by].to_s.blank?
+    case params[:sort_by]
+    when 'all'
       @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
-    elsif params[:sort_by] == 'all'
-      @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
-    elsif params[:sort_by] == 'active'
-      @exam_sittings = ExamSitting.all_active.paginate(per_page: 50, page: params[:page]).all_in_order
-    elsif params[:sort_by] == 'not-active'
+    when 'not-active'
       @exam_sittings = ExamSitting.all_not_active.paginate(per_page: 50, page: params[:page]).all_in_order
-    else
-      @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
+    else 
+      @exam_sittings = ExamSitting.all_active.paginate(per_page: 50, page: params[:page]).all_in_order
     end
-
   end
 
   def show
