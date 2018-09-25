@@ -14,9 +14,9 @@ describe 'User changing their date of birth', type: :feature do
 
   before(:each) do
     a = admin_user
-    b = individual_student_user
+    b = student_user
     e = comp_user
-    f = content_manager_user
+    f = content_management_user
     g = tutor_user
     activate_authlogic
   end

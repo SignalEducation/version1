@@ -90,7 +90,8 @@ group :development, :test do
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'poltergeist'
   gem 'rspec-rails' # our core testing environment
-  gem 'selenium-webdriver', '>=2.53.4'
+  gem 'selenium-webdriver'
+  gem 'chromedriver-helper'
   gem 'thin' # new web server
   gem 'ultrahook' # allows incoming webhooks from stripe
 end
