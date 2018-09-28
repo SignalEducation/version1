@@ -16,30 +16,22 @@ describe 'User creation by admin: ', type: :feature do
   before(:each) do
     activate_authlogic
     a = admin_user
-    b = individual_student_user
-    c = content_manager_user
-    d = blogger_user
-    e = comp_user
-    f = customer_support_manager_user
-    g = tutor_user
-    h = marketing_manager_user
 
     sign_in_via_sign_in_page(admin_user)
-    visit users_path
+    click_link 'Console'
+    click_link 'Users'
     click_link I18n.t('views.general.add_user')
     expect(page).to have_content I18n.t('views.users.admin_new.h1')
     within('#new_user') do
-      check I18n.t('views.users.form.active')
       fill_in I18n.t('views.users.form.first_name'), with: 'First Name'
       fill_in I18n.t('views.users.form.last_name'), with: 'Last Name'
-      select ireland.name, from: I18n.t('views.users.form.country_id')
     end
   end
 
   describe 'creates a ' do
     scenario 'student user', js: false do
       fill_in I18n.t('views.users.form.email'), with: 'student-user@example.com'
-      select individual_student_user_group.name, from: I18n.t('views.users.form.user_group_id')
+      select student_user_group.name, from: I18n.t('views.users.form.user_group_id')
       click_button(I18n.t('views.general.save'))
       expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
     end
@@ -58,30 +50,65 @@ describe 'User creation by admin: ', type: :feature do
       expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
     end
 
-    scenario 'content manager user', js: false do
-      fill_in I18n.t('views.users.form.email'), with: 'content-user@example.com'
-      select content_manager_user_group.name, from: I18n.t('views.users.form.user_group_id')
+    scenario 'system requirements user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'system-requirements-user@example.com'
+      select system_requirements_user_group.name, from: I18n.t('views.users.form.user_group_id')
       click_button(I18n.t('views.general.save'))
       expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
     end
 
-    scenario 'blogger user', js: false do
-      fill_in I18n.t('views.users.form.email'), with: 'blogger-user@example.com'
-      select blogger_user_group.name, from: I18n.t('views.users.form.user_group_id')
+    scenario 'content_management user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'content-management-user@example.com'
+      select content_management_user_group.name, from: I18n.t('views.users.form.user_group_id')
       click_button(I18n.t('views.general.save'))
       expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
     end
 
-    scenario 'marketing manager user', js: false do
-      fill_in I18n.t('views.users.form.email'), with: 'marketing-user@example.com'
+    scenario 'stripe_management user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'stripe-management-user@example.com'
+      select stripe_management_user_group.name, from: I18n.t('views.users.form.user_group_id')
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
+    end
+
+    scenario 'user_management user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'user-management-user@example.com'
+      select user_management_user_group.name, from: I18n.t('views.users.form.user_group_id')
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
+    end
+
+    scenario 'developers user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'developer-user@example.com'
+      select developers_user_group.name, from: I18n.t('views.users.form.user_group_id')
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
+    end
+
+    scenario 'marketing_manager user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'marketing-manager-user@example.com'
       select marketing_manager_user_group.name, from: I18n.t('views.users.form.user_group_id')
       click_button(I18n.t('views.general.save'))
       expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
     end
 
-    scenario 'customer support user', js: false do
-      fill_in I18n.t('views.users.form.email'), with: 'customer-support-user@example.com'
-      select customer_support_user_group.name, from: I18n.t('views.users.form.user_group_id')
+    scenario 'user_group_manager user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'user-group-manager-user@example.com'
+      select user_group_manager_user_group.name, from: I18n.t('views.users.form.user_group_id')
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
+    end
+
+    scenario 'admin user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'admin-user-user@example.com'
+      select admin_user_group.name, from: I18n.t('views.users.form.user_group_id')
+      click_button(I18n.t('views.general.save'))
+      expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
+    end
+
+    scenario 'blocked user', js: false do
+      fill_in I18n.t('views.users.form.email'), with: 'blocked-user-user@example.com'
+      select blocked_user_group.name, from: I18n.t('views.users.form.user_group_id')
       click_button(I18n.t('views.general.save'))
       expect(page).to have_content(I18n.t('controllers.users.create.flash.success'))
     end

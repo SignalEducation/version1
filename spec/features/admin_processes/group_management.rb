@@ -8,14 +8,11 @@ describe 'Group management by admin: ', type: :feature do
   before(:each) do
     activate_authlogic
     a = admin_user
-    b = individual_student_user
-    e = comp_user
-    f = content_manager_user
-    g = tutor_user
 
     sign_in_via_sign_in_page(admin_user)
-    find('.dropdown.dropdown-admin').click
-    click_link(I18n.t('views.groups.index.h1'))
+    click_link 'Console'
+    click_link 'Course Content'
+    click_link 'Groups'
     expect(page).to have_content(I18n.t('views.groups.index.h1'))
   end
 
@@ -33,10 +30,11 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name
+      expect(page).to have_content group_name
     end
 
     scenario 'an in-active Group', js: true do
@@ -51,6 +49,7 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
@@ -71,13 +70,15 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name_1
+      expect(page).to have_content group_name_1
 
-      find('.dropdown.dropdown-admin').click
-      click_link(I18n.t('views.groups.index.h1'))
+      click_link 'Console'
+      click_link 'Course Content'
+      click_link 'Groups'
       click_link('New')
       expect(page).to have_content(I18n.t('views.groups.new.h1'))
       group_name_2 = 'Group Name 002'
@@ -90,6 +91,7 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
@@ -111,13 +113,15 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name_1
+      expect(page).to have_content group_name_1
 
-      find('.dropdown.dropdown-admin').click
-      click_link(I18n.t('views.groups.index.h1'))
+      click_link 'Console'
+      click_link 'Course Content'
+      click_link 'Groups'
       click_link('New')
       expect(page).to have_content(I18n.t('views.groups.new.h1'))
       group_name_2 = 'Group Name 002'
@@ -129,10 +133,11 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name_1
+      expect(page).to have_content group_name_1
 
     end
 
@@ -148,13 +153,15 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
       expect(page).to have_content('Learn anytime, anywhere')
 
-      find('.dropdown.dropdown-admin').click
-      click_link(I18n.t('views.groups.index.h1'))
+      click_link 'Console'
+      click_link 'Course Content'
+      click_link 'Groups'
       click_link('New')
       expect(page).to have_content(I18n.t('views.groups.new.h1'))
       group_name_2 = 'Group Name 002'
@@ -166,6 +173,7 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
@@ -204,13 +212,15 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name
+      expect(page).to have_content group_name
 
-      find('.dropdown.dropdown-admin').click
-      click_link(I18n.t('views.groups.index.h1'))
+      click_link 'Console'
+      click_link 'Course Content'
+      click_link 'Groups'
 
       click_link('Edit')
       expect(page).to have_content(I18n.t('views.groups.edit.h1'))
@@ -221,10 +231,11 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.update.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name
+      expect(page).to have_content group_name
     end
   end
 
@@ -242,13 +253,15 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name
+      expect(page).to have_content group_name
 
-      find('.dropdown.dropdown-admin').click
-      click_link(I18n.t('views.groups.index.h1'))
+      click_link 'Console'
+      click_link 'Course Content'
+      click_link 'Groups'
 
       click_link('Edit')
       expect(page).to have_content(I18n.t('views.groups.edit.h1'))
@@ -275,22 +288,25 @@ describe 'Group management by admin: ', type: :feature do
       end
       expect(page).to have_content(I18n.t('controllers.groups.create.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to have_content maybe_upcase group_name
+      expect(page).to have_content group_name
 
-      find('.dropdown.dropdown-admin').click
-      click_link(I18n.t('views.groups.index.h1'))
+      click_link 'Console'
+      click_link 'Course Content'
+      click_link 'Groups'
 
       click_link('Delete')
       page.driver.browser.switch_to.alert.accept
       expect(page).to have_content(I18n.t('controllers.groups.destroy.flash.success'))
       expect(page).to have_content(I18n.t('views.groups.index.h1'))
+      click_link('Return')
       within('.navbar.navbar-default') do
         click_link('Courses')
       end
-      expect(page).to_not have_content maybe_upcase group_name
+      expect(page).to_not have_content group_name
       expect(page).to have_content('Learn anytime, anywhere')
     end
 

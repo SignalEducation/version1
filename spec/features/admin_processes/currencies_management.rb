@@ -10,10 +10,6 @@ describe 'Currencies management by admin: ', type: :feature do
   before(:each) do
     activate_authlogic
     a = admin_user
-    # b = individual_student_user
-    # e = comp_user
-    # f = content_manager_user
-    # g = tutor_user
 
     sign_in_via_sign_in_page(admin_user)
     click_link 'Console'
