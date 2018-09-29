@@ -90,7 +90,6 @@ describe User do
   it { should have_many(:student_exam_tracks) }
   it { should have_many(:subject_course_user_logs) }
   it { should belong_to(:user_group) }
-  it { should have_many(:user_notifications) }
   it { should have_many(:visits) }
   it { should have_many(:charges) }
   it { should have_many(:refunds) }

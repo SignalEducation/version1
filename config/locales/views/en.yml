@@ -1670,48 +1670,6 @@ en:
         paragraph_1: "The following information required to complete your account setup"
 
 
-    user_notifications:
-      form:
-        user_id: User
-        subject_line: Subject
-        subject_line_placeholder: Subject line
-        content: Content
-        content_placeholder: Content
-        email_required: Email required
-        email_sent_at: Email sent at
-        email_sent_at_placeholder: Date
-        unread: Unread
-        destroyed_at: Destroyed at
-        destroyed_at_placeholder: Destroyed at
-        message_type: Message type
-        message_type_placeholder: Blog, study plan, forum, marketing etc
-        falling_behind: Falling behind
-        blog_post_id: Blog post
-        created_at: Sent at
-
-      index:
-        h1: Your Notifications
-        h2: You do not have any notifications
-        user_id: User
-        subject_line: Subject
-        content: Content
-        email_required: Email required
-        email_sent_at: Email sent
-        unread: Unread
-        destroyed_at: Destroyed at
-        message_type: Type
-        falling_behind: Falling behind
-        blog_post_id: Blog post
-
-      show:
-        h1: Notification
-        from: From
-
-      edit:
-        h1: Edit Notification
-
-      new:
-        h1: New Notification
 
     user_sessions:
       new:
