@@ -13,7 +13,6 @@
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
-#  discourse_ids                 :string
 #  home                          :boolean          default(FALSE)
 #  header_heading                :string
 #  header_paragraph              :text
@@ -33,7 +32,7 @@ require 'rails_helper'
 describe HomePage do
 
   # attr-accessible
-  black_list = %w(id created_at updated_at discourse_ids)
+  black_list = %w(id created_at updated_at)
   HomePage.column_names.each do |column_name|
     if black_list.include?(column_name)
       it { should_not allow_mass_assignment_of(column_name.to_sym) }

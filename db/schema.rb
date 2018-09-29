@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180906115844) do
+ActiveRecord::Schema.define(version: 20180929140943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,7 +284,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.boolean  "tuition",                   default: false
     t.boolean  "test",                      default: false
     t.boolean  "revision",                  default: false
-    t.integer  "discourse_topic_id"
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
@@ -454,7 +453,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.string   "custom_file_name"
     t.integer  "group_id"
     t.string   "name"
-    t.string   "discourse_ids"
     t.boolean  "home",                          default: false
     t.string   "header_heading"
     t.text     "header_paragraph"
@@ -626,7 +624,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
-    t.integer  "subject_course_id"
     t.integer  "mock_exam_id"
     t.string   "stripe_guid"
     t.boolean  "live_mode",         default: false
@@ -636,12 +633,12 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.integer  "currency_id"
     t.decimal  "price"
     t.string   "stripe_sku_guid"
+    t.integer  "subject_course_id"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
-  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
