@@ -2,44 +2,34 @@
 
 This section documents the necessary steps to install the SignalEducation/version1 codebase.
 
-1. Install Postgres database, downloading the app is recommended from http://postgresapp.com/.
+Requirements:
 
-2. Install Ruby 2.2.2 with rvm and rails 4.2.1, see http://installrails.com/ for basic installation details
+1. Postgres Database, can download from http://postgresapp.com/.
 
-3. Install Redis, on Mac homebrew is recommended (brew install redis).
+2. Ruby 2.2.9
 
-4. On github.com/SignalEducation/version1, Fork the repository to your github account.
+3. Rails 4.2.1, see http://installrails.com/ for basic installation details
 
-5. Ensure SSH Keys are set up and clone the fork.
+4. Redis, on Mac homebrew is recommended (brew install redis).
 
-6. Set up a second git remote to the SignalEducation/version1 master branch which you should 'git pull' from.
+5. Invite from github.com/SignalEducation/version1, Fork the repository to your github account.
 
-7. In terminal navigate to top of the app and bundle install.
+6. Ensure SSH Keys are set up and clone the fork.
 
-8. In config folder create a new file called 'database.yml' and copy the content from the sample_database.yml file into the new file.
+7. Git pulls should be from SignalEducation/version1 master branch for latest stable codebase version.
 
-9. In config folder create a new file called 'application.yml' and copy the content from the sample_application.yml file into the new file. You will be sent a file, by James, with the correct keys for each key pair in this file.
+8. Bundle install.
 
-10. Run the following commands to create a local db for the project:
+9. Create a database.yml file and copy the content from sample_database.yml file.
 
+10. Create a local_env.yml file and copy the content from sample_local_env.yml file.
+
+11. Create a local Database
     - rake db:create RAILS_ENV=development
-    - rake db:create RAILS_ENV=test
     - rake db:migrate RAILS_ENV=development
-    - rake db:migrate RAILS_ENV=test
 
-11. In new terminal tab start the Redis DB by running 'redis-server /usr/local/etc/redis.conf'.
+12. Load a DB dump file.
 
-12. In another terminal tab start sidekiq by running 'sidekiq'.
-
-13. In another terminal tab start your local server with 'rails server'.
-
-14. In another terminal tab load the seeds file with 'rake db:seed'.
-
-15. Enter a rails console with 'rails c', and run "load 'tmp/course_content_data.rb'" command. This command requires you to have the course_content_data.rb file in your tmp folder. It will be sent to you by James.
-
-16. Exit the rails console and run 'rake video:find_new'.
-
-17. Run the seeds file again with 'rake db:seed'.
 
 
 
