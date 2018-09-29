@@ -220,8 +220,13 @@ class StripeApiEvent < ActiveRecord::Base
 
   def process_charge_event(invoice_guid, event_data)
     invoice = Invoice.where(stripe_guid: invoice_guid).first
+    charge = nil
 
-    charge = Charge.create_from_stripe_data(event_data)
+    if invoice
+      charge = Charge.create_from_stripe_data(event_data)
+    else
+      StripeApiProcessorWorker.perform_at(5.minutes, self.guid, self.api_version, account_url)
+    end
 
     if invoice && charge
       Rails.logger.debug "DEBUG: Successful Create Charge - #{charge.id} for Invoice - #{invoice.id}"
@@ -231,7 +236,7 @@ class StripeApiEvent < ActiveRecord::Base
       self.error_message = nil
 
     else
-      set_process_error("Error creating charge. #{}")
+      set_process_error("Error creating charge. Invoice Guid: #{invoice_guid}")
     end
   end
 
