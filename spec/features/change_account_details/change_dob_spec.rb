@@ -1,15 +1,11 @@
 require 'rails_helper'
-require 'support/users_and_groups_setup'
-
-require 'support/course_content'
 require 'support/system_setup'
+require 'support/users_and_groups_setup'
 
 describe 'User changing their date of birth', type: :feature do
 
-  include_context 'users_and_groups_setup'
-
-  include_context 'course_content'
   include_context 'system_setup'
+  include_context 'users_and_groups_setup'
 
 
   before(:each) do

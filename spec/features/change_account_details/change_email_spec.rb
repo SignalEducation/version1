@@ -1,14 +1,11 @@
 require 'rails_helper'
+require 'support/system_setup'
 require 'support/users_and_groups_setup'
-require 'support/course_content'
 
 describe 'User changing their email', type: :feature do
 
+  include_context 'system_setup'
   include_context 'users_and_groups_setup'
-  include_context 'course_content'
-
-  let!(:country_1) { try(:country) || FactoryBot.create(:ireland)}
-  let!(:country_2) { FactoryBot.create(:uk)}
 
   before(:each) do
     activate_authlogic
@@ -31,5 +28,4 @@ describe 'User changing their email', type: :feature do
       print '>'
     end
   end
-  sleep(1)
 end
