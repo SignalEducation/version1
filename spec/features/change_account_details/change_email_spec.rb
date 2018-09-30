@@ -11,11 +11,6 @@ describe 'User changing their email', type: :feature do
   let!(:country_2) { FactoryBot.create(:uk)}
 
   before(:each) do
-    a = admin_user
-    b = individual_student_user
-    e = comp_user
-    f = content_manager_user
-    g = tutor_user
     activate_authlogic
   end
 

@@ -13,15 +13,10 @@ describe 'User changing their date of birth', type: :feature do
 
 
   before(:each) do
-    a = admin_user
-    b = student_user
-    e = comp_user
-    f = content_management_user
-    g = tutor_user
     activate_authlogic
   end
 
-  scenario 'when logged in as one of the users', js: false do
+  scenario 'when logged in as one of the users', js: true do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
@@ -31,7 +26,7 @@ describe 'User changing their date of birth', type: :feature do
       end
 
       within('#personal-details-form') do
-        fill_in I18n.t('views.users.form.date_of_birth_placeholder'), with: '20-02-1990'
+        fill_in I18n.t('views.user_accounts.student_user_form.date_of_birth'), with: '20-02-1990'
         click_button(I18n.t('views.general.actual_submit'))
       end
       sign_out

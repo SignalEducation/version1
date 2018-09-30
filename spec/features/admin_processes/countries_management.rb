@@ -9,7 +9,6 @@ describe 'Currencies management by admin: ', type: :feature do
 
   before(:each) do
     activate_authlogic
-    a = admin_user
     sign_in_via_sign_in_page(admin_user)
     click_link 'Console'
     click_link 'System Requirements'
@@ -38,7 +37,7 @@ describe 'Currencies management by admin: ', type: :feature do
 
     end
 
-    scenario 'Fails', js: true do
+    scenario 'Fails with validation error', js: true do
       click_link(I18n.t('views.general.new'))
       expect(page).to have_content(I18n.t('views.countries.new.h1'))
       country_name = ''
@@ -77,7 +76,7 @@ describe 'Currencies management by admin: ', type: :feature do
       expect(page).to have_content(I18n.t('views.countries.index.h1'))
     end
 
-    scenario 'Fails', js: true do
+    scenario 'Fails with validation error', js: true do
       within('.table-responsive') do
         page.find('tr', :text => usa.name).click_link(I18n.t('views.general.edit'))
       end

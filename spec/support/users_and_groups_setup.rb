@@ -120,7 +120,7 @@ shared_context 'users_and_groups_setup' do
   let(:user_list) {[valid_trial_student, invalid_trial_student, valid_subscription_student,
                     invalid_subscription_student, comp_user, tutor_user, system_requirements_user,
                     content_management_user, stripe_management_user, user_management_user, developers_user,
-                    marketing_manager_user, user_group_manager_user, admin_user, blocked_user] }
+                    marketing_manager_user, user_group_manager_user, admin_user] }
 
 
 end

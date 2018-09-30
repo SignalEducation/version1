@@ -84,6 +84,9 @@ class StudentAccess < ActiveRecord::Base
   end
 
   def check_trial_access_is_valid
+    #TODO
+    # Need to check that the start_trial_access was called here otherwise continuous loop
+
     if self.user.student_user? && self.trial_access? &&  self.trial_started_date
       date_now = Proc.new{Time.now.to_datetime}.call
       if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit

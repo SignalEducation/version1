@@ -15,8 +15,6 @@ describe 'User creation by admin: ', type: :feature do
 
   before(:each) do
     activate_authlogic
-    a = admin_user
-
     sign_in_via_sign_in_page(admin_user)
     click_link 'Console'
     click_link 'Users'

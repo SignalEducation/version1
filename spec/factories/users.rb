@@ -166,6 +166,9 @@ FactoryBot.define do
       sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
+      email_verified                  true
+      email_verification_code         nil
+      email_verified_at               Time.now
       stripe_customer_id                nil
     end
 

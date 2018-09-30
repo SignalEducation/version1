@@ -31,8 +31,6 @@ describe 'Subscription UX:', type: :feature do
   after { StripeMock.stop }
 
   before(:each) do
-    a = admin_user
-    b = individual_student_user
     activate_authlogic
   end
 

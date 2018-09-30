@@ -12,8 +12,6 @@ describe 'User changing their password', type: :feature do
   include_context 'course_content'
 
   before(:each) do
-    a = admin_user
-    b = individual_student_user
     activate_authlogic
   end
 
