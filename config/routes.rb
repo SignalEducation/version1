@@ -224,7 +224,7 @@ Rails.application.routes.draw do
 
     root 'student_sign_ups#home'
     # Catch-all
-    get '404', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
