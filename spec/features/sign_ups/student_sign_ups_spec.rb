@@ -59,26 +59,53 @@ describe 'The student sign-up process', type: :feature do
 
   describe 'sign-up with problems:' do
     describe 'bad user details -' do
-      scenario 'bad first name', js: false do
+      scenario 'bad first name', js: true do
+        visit new_student_path
         user_password = ApplicationController.generate_random_code(10)
-        within('#sign_up') do
-          student_sign_up_as('D', 'Smith', nil, user_password)
+        within('#new_user') do
+          fill_in('user_first_name', with: 'J')
+          fill_in('user_last_name', with: 'Smith')
+          fill_in('user_email', with: "john_#{rand(999999)}@example.com")
+          fill_in('user_password', with: user_password)
+          find('.check.communication_approval').click
+          within('.check.terms_and_conditions') do
+            find('span').click
+          end
+          page.all(:css, '#signUp').first.click
         end
         expect(page).to have_content 'First name is too short (minimum is 2 characters)'
       end
 
-      scenario 'bad last name', js: false do
+      scenario 'bad last name', js: true do
+        visit new_student_path
         user_password = ApplicationController.generate_random_code(10)
-        within('#sign_up') do
-          student_sign_up_as('Dan', 'S', nil, user_password)
+        within('#new_user') do
+          fill_in('user_first_name', with: 'John')
+          fill_in('user_last_name', with: 'S')
+          fill_in('user_email', with: "john_#{rand(999999)}@example.com")
+          fill_in('user_password', with: user_password)
+          find('.check.communication_approval').click
+          within('.check.terms_and_conditions') do
+            find('span').click
+          end
+          page.all(:css, '#signUp').first.click
         end
         expect(page).to have_content 'Last name is too short (minimum is 2 characters)'
       end
 
-      scenario 'bad email', js: false do
+      scenario 'bad email', js: true do
+        visit new_student_path
         user_password = ApplicationController.generate_random_code(10)
-        within('#sign_up') do
-          student_sign_up_as('Jo', 'Ng', 'a@bcd', user_password)
+        within('#new_user') do
+          fill_in('user_first_name', with: 'John')
+          fill_in('user_last_name', with: 'Smith')
+          fill_in('user_email', with: 'a@bcd')
+          fill_in('user_password', with: user_password)
+          find('.check.communication_approval').click
+          within('.check.terms_and_conditions') do
+            find('span').click
+          end
+          page.all(:css, '#signUp').first.click
         end
         expect(page).to have_content 'Email should look like an email address'
       end
