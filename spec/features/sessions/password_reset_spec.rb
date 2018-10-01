@@ -7,23 +7,22 @@ describe 'The password reset process,', type: :feature do
 
     before(:each) do
       activate_authlogic
-      x = individual_student_user.id
     end
 
     scenario 'attempt to log in then reset password' do
       visit sign_in_path
       within('#sign-in') do
-        fill_in I18n.t('views.user_sessions.form.email'), with: individual_student_user.email
+        fill_in I18n.t('views.user_sessions.form.email'), with: student_user.email
         fill_in I18n.t('views.user_sessions.form.password'), with: 'abc'
         click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password is not valid'
       click_link('#forgot-password')
       page.has_css?('.page-header', text: I18n.t('views.user_sessions.form.forgot_password'))
-      page.has_css?('.forgot-password-modal', text: I18n.t('views.user_password_resets.new.paragraph_1'))
+      page.has_css?('.forgot-password-modal', text: I18n.t('views.user_passwords.new.paragraph_1'))
       within('.forgot-password-modal') do
         fill_in ('#email-field'), with: 'user@example.com'
-        click_button 'SEND MY PASSWORD'
+        click_button 'Reset My Password'
       end
       expect(page).to have_content('Reset password')
     end
@@ -32,17 +31,17 @@ describe 'The password reset process,', type: :feature do
       visit student_dashboard_path
       visit sign_in_path
       within('#sign-in') do
-        fill_in 'user_session_email' , with: individual_student_user.email
+        fill_in 'user_session_email' , with: student_user.email
         fill_in 'user_session_password', with: 'abc'
         click_button I18n.t('views.general.sign_in')
       end
       expect(page).to have_content 'Password is not valid'
       click_link(I18n.t('views.user_sessions.form.forgot_password'))
       page.has_css?('.page-header', text: I18n.t('views.user_sessions.form.forgot_password'))
-      page.has_css?('.forgot-password-modal', text: I18n.t('views.user_password_resets.new.paragraph_1'))
+      page.has_css?('.forgot-password-modal', text: I18n.t('views.user_passwords.new.paragraph_1'))
       within('.forgot-password-modal') do
         fill_in ('#email-field'), with: 'user@example.com'
-        click_button 'SEND MY PASSWORD'
+        click_button 'Reset My Password'
       end
       expect(page).to have_content('Reset password')
     end
