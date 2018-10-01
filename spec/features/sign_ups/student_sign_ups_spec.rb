@@ -20,19 +20,37 @@ describe 'The student sign-up process', type: :feature do
   end
 
   describe 'sign-up to free trial:' do
-    scenario 'with valid details on a home_page', js: false do
+    scenario 'with valid details on the home page', js: true do
       user_password = ApplicationController.generate_random_code(10)
+      find('.lsbtn.open-form').click
       within('#sign_up') do
-        student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
+        fill_in('user_first_name', with: 'John')
+        fill_in('user_last_name', with: 'Smith')
+        fill_in('user_email', with: "john_#{rand(999999)}@example.com")
+        fill_in('user_password', with: user_password)
+        find(:css, '.check.communication_approval').click
+        within('.check.terms_and_conditions') do
+          find('span').click
+        end
+
       end
+      find('.lsbtn.submit').click
       expect(page).to have_content 'Thanks for Signing Up'
     end
 
-    scenario 'with valid details on users#new page', js: false do
+    scenario 'with valid details on student_sign_ups#new page', js: true do
       visit new_student_path
       user_password = ApplicationController.generate_random_code(10)
       within('#new_user') do
-        signup_page_student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
+        fill_in('user_first_name', with: 'John')
+        fill_in('user_last_name', with: 'Smith')
+        fill_in('user_email', with: "john_#{rand(999999)}@example.com")
+        fill_in('user_password', with: user_password)
+        find('.check.communication_approval').click
+        within('.check.terms_and_conditions') do
+          find('span').click
+        end
+        page.all(:css, '#signUp').first.click
       end
       expect(page).to have_content 'Thanks for Signing Up'
     end
