@@ -15,14 +15,16 @@ describe 'The student sign-up process', type: :feature do
 
   before(:each) do
     activate_authlogic
-    visit root_path
+    visit new_student_path
     user_password = ApplicationController.generate_random_code(10)
-    within('#sign-up-form') do
+    within('#new_user') do
       student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
     end
     expect(page).to have_content 'Thanks for Signing Up'
-    visit user_verification_path(email_verification_code: User.last.email_verification_code)
 
+    #TODO - this visit is failing to load the page
+    visit user_verification_path(email_verification_code: User.last.email_verification_code)
+    expect(page).to have_content 'Verification Complete'
   end
 
   describe 'sign-up with to free trial valid details:' do

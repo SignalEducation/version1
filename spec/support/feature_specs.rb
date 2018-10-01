@@ -93,9 +93,12 @@ end
 def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
-  fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  check I18n.t('views.general.terms_and_conditions')
+  fill_in('user_email', with: email)
   fill_in('user_password', with: user_password)
+  find('.check.communication_approval').click
+  within('.check.terms_and_conditions') do
+    find('span').click
+  end
 end
 
 def student_picks_a_subscription_plan(currency, payment_frequency)
