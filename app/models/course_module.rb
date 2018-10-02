@@ -178,7 +178,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def percentage_complete_by_user(user_id)
-    set = self.student_exam_tracks.where(user_id: user_id).first
+    set = self.student_exam_tracks.where(user_id: user_id).last
     set.try(:percentage_complete) || 0
   end
 
