@@ -25,6 +25,7 @@ shared_context 'users_and_groups_setup' do
 
   let(:inactive_student_user) { FactoryBot.create(:inactive_student_user , user_group_id: student_user_group.id) }
   let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
+  let!(:unverified_trial_student_access) { FactoryBot.create(:unverified_trial_student_access, user_id: unverified_student_user.id) }
 
   ## Trial Student Users
   let!(:valid_trial_student) { FactoryBot.create(:valid_free_trial_student,

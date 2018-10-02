@@ -127,7 +127,7 @@ FactoryBot.define do
       factory :active_student_user do
         sequence(:email)                { |n| "active-student-#{n}@example.com" }
         active                          true
-        account_activation_code         'abcde12345'
+        account_activation_code         SecureRandom.hex(10)
         account_activated_at            Time.now
         email_verified                  true
         email_verification_code         nil
@@ -135,12 +135,12 @@ FactoryBot.define do
       end
 
       factory :unverified_user do
-        sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
+        sequence(:email)                { |n| "unverified-student-user-#{n}@example.com" }
         active                          true
         account_activation_code         nil
         account_activated_at            nil
         email_verified                  false
-        email_verification_code         'abc123456'
+        email_verification_code         SecureRandom.hex(10)
         email_verified_at               nil
       end
 
@@ -178,7 +178,7 @@ FactoryBot.define do
       account_activation_code         nil
       account_activated_at            Time.now
       email_verified                  false
-      email_verification_code         'abc123456'
+      email_verification_code         SecureRandom.hex(10)
       email_verified_at               nil
       password_change_required        true
     end

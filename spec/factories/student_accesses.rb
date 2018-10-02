@@ -44,6 +44,13 @@ FactoryBot.define do
         content_access false
       end
 
+      factory :unverified_trial_student_access do
+        account_type 'Trial'
+        content_access false
+        trial_started_date nil
+        trial_ending_at_date nil
+      end
+
     end
 
     factory :subscription_student_access do
@@ -64,6 +71,13 @@ FactoryBot.define do
     factory :complimentary_student_access do
       account_type 'Complimentary'
       content_access true
+    end
+
+    factory :unverified_comp_student_access do
+      account_type 'Trial'
+      content_access false
+      trial_started_date nil
+      trial_ending_at_date nil
     end
 
   end
