@@ -454,7 +454,7 @@ class User < ActiveRecord::Base
       elsif self.current_subscription
         self.user_subscription_status
       else
-        'Unknown'
+        'Unknown Student'
       end
     else
       if self.user_group_id
