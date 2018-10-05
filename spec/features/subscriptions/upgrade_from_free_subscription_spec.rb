@@ -22,7 +22,6 @@ describe 'The student sign-up process', type: :feature do
     end
     expect(page).to have_content 'Thanks for Signing Up'
 
-    #TODO - this visit is failing to load the page
     visit user_verification_path(email_verification_code: User.last.email_verification_code)
     expect(page).to have_content 'Verification Complete'
   end
@@ -33,11 +32,14 @@ describe 'The student sign-up process', type: :feature do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
-        expect(page).to have_content 'Upgrade your membership'
+        expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
 
         student_picks_a_subscription_plan(gbp, 1)
         enter_credit_card_details('valid')
-        check(I18n.t('views.general.terms_and_conditions'))
+        within('.check.terms_and_conditions') do
+          find('span').click
+        end
+        # Getting rejected by Stripe because we aren't sending existing SubscriptionPlan Item
         click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
         sleep(10)
         within('#thank-you-message') do
@@ -53,10 +55,12 @@ describe 'The student sign-up process', type: :feature do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
-        expect(page).to have_content 'Upgrade your membership'
+        expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
         student_picks_a_subscription_plan(gbp, 3)
         enter_credit_card_details('valid')
-        check(I18n.t('views.general.terms_and_conditions'))
+        within('.check.terms_and_conditions') do
+          find('span').click
+        end
         click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
         sleep(10)
         within('#thank-you-message') do
@@ -72,7 +76,7 @@ describe 'The student sign-up process', type: :feature do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
-        expect(page).to have_content 'Upgrade your membership'
+        expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
         student_picks_a_subscription_plan(gbp, 12)
         enter_credit_card_details('valid')
         check(I18n.t('views.general.terms_and_conditions'))

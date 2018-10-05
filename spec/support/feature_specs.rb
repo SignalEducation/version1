@@ -57,7 +57,7 @@ def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email
 end
 
 def enter_card_details(card, cvv, exp_month, exp_year)
-  stripe_iframe = all('iframe[name=__privateStripeFrame4]').last
+  stripe_iframe = all('iframe[name=__privateStripeFrame3]').last
   Capybara.within_frame stripe_iframe do
     find_field('cardnumber').send_keys(card)
     find_field('exp-date').send_keys(exp_month, exp_year)
@@ -65,12 +65,24 @@ def enter_card_details(card, cvv, exp_month, exp_year)
   end
 end
 
+def fill_stripe_elements(card, cvv, exp_month, exp_year)
+  stripe_iframe = all('iframe[name=__privateStripeFrame3]').last
+  using_wait_time(15) { Capybara.within_frame stripe_iframe do
+    card.to_s.chars.each do |piece|
+      find_field('cardnumber').send_keys(piece)
+    end
+
+    find_field('exp-date').send_keys(exp_month, exp_year)
+    find_field('cvc').send_keys(cvv)
+  end }
+end
+
 def enter_credit_card_details(card_type='valid')
   # see https://stripe.com/docs/testing
   expect(%w(valid valid_visa_debit valid_mc_debit expired bad_cvc declined bad_number processing_error).include?(card_type)).to eq(true)
   case card_type
     when 'valid'
-      enter_card_details('4242424242424242','123','12',Time.now.year + 1)
+      fill_stripe_elements('4242424242424242','123','12',Time.now.year + 1)
     when 'valid_visa_debit'
       enter_card_details('4000056655665556','123','12',Time.now.year + 1)
     when 'valid_mc_debit'

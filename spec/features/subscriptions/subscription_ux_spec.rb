@@ -13,19 +13,19 @@ describe 'Subscription UX:', type: :feature do
 
   let(:stripe_helper) { StripeMock.create_test_helper }
   let!(:individual_student_user_2) { FactoryBot.create(:individual_student_user,
-                                                      user_group_id: individual_student_user_group.id) }
+                                                      user_group_id: student_user_group.id) }
 
   let!(:subscription_1) { x = FactoryBot.create(:subscription,
-                          user_id: individual_student_user.id,
+                          user_id: student_user.id,
                           subscription_plan_id: subscription_plan_eur_m.id,
                           stripe_token: stripe_helper.generate_card_token)
                           individual_student_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
                           x }
   let!(:subscription_2) { x = FactoryBot.create(:subscription,
-                          user_id: individual_student_user_2.id,
+                          user_id: student_user_2.id,
                           subscription_plan_id: subscription_plan_eur_m.id,
                           stripe_token: stripe_helper.generate_card_token)
-  individual_student_user_2.update_attribute(:stripe_customer_id, x.stripe_customer_id)
+  student_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
                           x }
   #before { StripeMock.start }
   after { StripeMock.stop }
