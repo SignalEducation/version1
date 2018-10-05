@@ -74,13 +74,24 @@ class StudentAccess < ActiveRecord::Base
   def start_trial_access
     # Called from User get_and_verify method after verification email clicked
     # Or from the User when user_group has been changed to a complimentary one
-    date_now = Proc.new{Time.now.to_datetime}.call
-    self.update_columns(trial_started_date: date_now,
-                           trial_ending_at_date: date_now + self.trial_days_limit.days,
-                           account_type: 'Trial',
-                           content_access: true)
-    TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
-    self.create_or_update_intercom_user
+    if self.trial_access?
+      date_now = Proc.new{Time.now.to_datetime}.call
+      self.update_columns(trial_started_date: date_now,
+                             trial_ending_at_date: date_now + self.trial_days_limit.days,
+                             account_type: 'Trial',
+                             content_access: true)
+      TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id)
+      self.create_or_update_intercom_user
+    else
+      #For comp users being set to trial users
+      date_now = Proc.new{Time.now.to_datetime}.call
+
+      self.update_columns(trial_started_date: self.trial_started_date ? self.trial_started_date : date_now,
+                          trial_ending_at_date: self.trial_ending_at_date ? self.trial_ending_at_date : date_now,
+                          trial_ended_date: self.trial_ended_date ? self.trial_ended_date : date_now,
+                          account_type: 'Trial',
+                          content_access: false)
+    end
   end
 
   def check_trial_access_is_valid
@@ -137,7 +148,9 @@ class StudentAccess < ActiveRecord::Base
   end
 
   def check_student_access
-    if self.user.trial_or_sub_user?
+    if self.user.complimentary_user? || self.user.non_student_user?
+      self.convert_to_complimentary_access
+    elsif self.user.trial_or_sub_user?
       if self.trial_access? && self.trial_started_date
         self.check_trial_access_is_valid
       elsif self.trial_access? && !self.trial_started_date && self.user.subscriptions && self.user.subscriptions.count == 0
@@ -145,10 +158,9 @@ class StudentAccess < ActiveRecord::Base
         self.start_trial_access
       elsif self.subscription_access?  && self.user.subscriptions.count >= 1 && self.subscription_id
         self.check_subscription_access_is_valid
+      elsif self.complimentary_access?
+        self.start_trial_access
       end
-
-    elsif self.user.non_student_user?
-      self.convert_to_complimentary_access
     else
       self.start_trial_access
     end
