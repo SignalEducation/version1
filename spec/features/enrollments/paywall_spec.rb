@@ -19,17 +19,14 @@ describe 'Course content Vs Paywall', type: :feature do
 
   describe 'Anonymous user' do
     scenario 'cannot see any content', js: true do
-      expect(individual_student_user_group.id).to be > 0
       visit home_path
       click_on('Courses')
       click_link('Group 1')
       click_link('Subject Course 1')
       parent = page.find('.course-topics-list li:first-child')
       parent.click
-      sleep(1)
       click_on(course_module_element_1_1.name)
-      sleep(1)
-      expect(page).to have_content('Start Free 7-Day Trial')
+      expect(page).to have_content('Welcome to your 7-day Free Trial')
     end
   end
 

@@ -17,10 +17,10 @@ describe 'User navigating through the dashboard:', type: :feature do
     activate_authlogic
   end
 
-  describe 'navigates to dashboard' do
+  describe 'student user logs in and enrols in a course ' do
 
-    scenario 'when logged in as an individual user', js: true do
-      sign_up_and_upgrade_from_free_trial
+    scenario 'completes a quiz and navigates to dashboard', js: true do
+      sign_in_via_sign_in_page(student_user)
       within('.navbar.navbar-default') do
         click_link 'Dashboard'
       end
@@ -30,18 +30,27 @@ describe 'User navigating through the dashboard:', type: :feature do
       end
       click_link('Group 1')
       click_link('Subject Course 1')
+
+      page.find('#enrol-now-button').click
+
+      within('#enrollment_form') do
+        find('#exam_sitting_select').find(:xpath, 'option[2]').select_option
+        page.find('#enroll_submit_button').click
+      end
+      expect(page).to have_content(I18n.t('controllers.enrollments.create.flash.success'))
+
       parent = page.find('.course-topics-list li:first-child')
       parent.click
       click_on(course_module_element_1_1.name)
       expect(page).to have_content course_module_element_1_1.name
       page.all('.quiz-answer-clickable').first.click
+
       expect(page).to have_content 'Result:'
       within('.navbar.navbar-default') do
         click_link 'Dashboard'
       end
-      click_link 'Activity'
+
       expect(page).to have_content subject_course_1.name
-      expect(page).to have_css('.progress')
       expect(page).to have_css('.card')
       click_link('Resume Course')
       expect(page).to have_content subject_course_1.name
