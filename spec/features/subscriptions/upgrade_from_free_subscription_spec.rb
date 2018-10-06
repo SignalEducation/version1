@@ -1,20 +1,38 @@
 require 'rails_helper'
 require 'support/users_and_groups_setup'
-
-require 'support/course_content'
 require 'support/system_setup'
 
 describe 'The student sign-up process', type: :feature do
 
   include_context 'users_and_groups_setup'
-
-  include_context 'course_content'
   include_context 'system_setup'
 
-  after { StripeMock.stop }
 
   before(:each) do
     activate_authlogic
+
+    stripe_monthly_plan = Stripe::Plan.create(amount: (subscription_plan_gbp_m.price.to_f * 100).to_i,
+                                              currency: subscription_plan_gbp_m.currency.try(:iso_code).try(:downcase),
+                                              interval: 'month',
+                                              name: 'LearnSignal Test' + subscription_plan_gbp_m.name.to_s,
+                                              interval_count: subscription_plan_gbp_m.payment_frequency_in_months.to_i,
+                                              id: Rails.env + '-' + ApplicationController::generate_random_code(20))
+    subscription_plan_gbp_m.update_attribute(:stripe_guid, stripe_monthly_plan.id)
+    stripe_monthly_plan = Stripe::Plan.create(amount: (subscription_plan_gbp_q.price.to_f * 100).to_i,
+                                              currency: subscription_plan_gbp_q.currency.try(:iso_code).try(:downcase),
+                                              interval: 'month',
+                                              name: 'LearnSignal Test' + subscription_plan_gbp_q.name.to_s,
+                                              interval_count: subscription_plan_gbp_q.payment_frequency_in_months.to_i,
+                                              id: Rails.env + '-' + ApplicationController::generate_random_code(20))
+    subscription_plan_gbp_q.update_attribute(:stripe_guid, stripe_monthly_plan.id)
+    stripe_monthly_plan = Stripe::Plan.create(amount: (subscription_plan_gbp_y.price.to_f * 100).to_i,
+                                              currency: subscription_plan_gbp_y.currency.try(:iso_code).try(:downcase),
+                                              interval: 'month',
+                                              name: 'LearnSignal Test' + subscription_plan_gbp_y.name.to_s,
+                                              interval_count: subscription_plan_gbp_y.payment_frequency_in_months.to_i,
+                                              id: Rails.env + '-' + ApplicationController::generate_random_code(20))
+    subscription_plan_gbp_y.update_attribute(:stripe_guid, stripe_monthly_plan.id)
+
     visit new_student_path
     user_password = ApplicationController.generate_random_code(10)
     within('#new_user') do
@@ -33,22 +51,19 @@ describe 'The student sign-up process', type: :feature do
           find('.days-left').click
         end
         expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
-
         student_picks_a_subscription_plan(gbp, 1)
         enter_credit_card_details('valid')
         within('.check.terms_and_conditions') do
           find('span').click
         end
-        # Getting rejected by Stripe because we aren't sending existing SubscriptionPlan Item
         click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
         sleep(10)
         within('#thank-you-message') do
-          expect(page).to have_content 'Thanks for upgrading your subscription!'
+          expect(page).to have_content 'Thanks for choosing a subscription!'
         end
         visit_my_profile
-        click_on I18n.t('views.users.show.tabs.subscriptions')
-        expect(page).to have_content 'Account Status Active Subscription'
-        expect(page).to have_content 'Billing Interval Monthly'
+        click_on I18n.t('views.user_accounts.subscription_info.tab_heading')
+        expect(page).to have_content 'Active Subscription'
       end
 
       scenario 'Quarterly GBP', js: true do
@@ -64,12 +79,11 @@ describe 'The student sign-up process', type: :feature do
         click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
         sleep(10)
         within('#thank-you-message') do
-          expect(page).to have_content 'Thanks for upgrading your subscription!'
+          expect(page).to have_content 'Thanks for choosing a subscription!'
         end
         visit_my_profile
-        click_on I18n.t('views.users.show.tabs.subscriptions')
-        expect(page).to have_content 'Account Status Active Subscription'
-        expect(page).to have_content 'Billing Interval Quarterly'
+        click_on I18n.t('views.user_accounts.subscription_info.tab_heading')
+        expect(page).to have_content 'Active Subscription'
       end
 
       scenario 'Yearly GBP', js: true do
@@ -79,16 +93,17 @@ describe 'The student sign-up process', type: :feature do
         expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
         student_picks_a_subscription_plan(gbp, 12)
         enter_credit_card_details('valid')
-        check(I18n.t('views.general.terms_and_conditions'))
+        within('.check.terms_and_conditions') do
+          find('span').click
+        end
         click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
         sleep(10)
         within('#thank-you-message') do
-          expect(page).to have_content 'Thanks for upgrading your subscription!'
+          expect(page).to have_content 'Thanks for choosing a subscription!'
         end
         visit_my_profile
-        click_on I18n.t('views.users.show.tabs.subscriptions')
-        expect(page).to have_content 'Account Status Active Subscription'
-        expect(page).to have_content 'Billing Interval Yearly'
+        click_on I18n.t('views.user_accounts.subscription_info.tab_heading')
+        expect(page).to have_content 'Active Subscription'
       end
     end
   end
