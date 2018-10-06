@@ -66,6 +66,8 @@ FactoryBot.define do
     active                                    true
     terms_and_conditions                      true
     locale                                    'en'
+    date_of_birth                              '2001-10-03'
+    student_number                             '123456789'
 
     factory :free_trial_student do
       sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
