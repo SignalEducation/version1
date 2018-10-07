@@ -47,6 +47,7 @@ describe 'Course content Vs Paywall', type: :feature do
       expect(page).to have_content course_module_element_1_1.name
       visit_my_profile
       click_on I18n.t('views.user_accounts.trial_info.tab_heading')
+      sleep(1)
       expect(page).to have_content 'Valid Trial'
     end
 
@@ -95,6 +96,7 @@ describe 'Course content Vs Paywall', type: :feature do
       expect(page).to have_content course_module_element_1_1.name
       visit_my_profile
       click_on I18n.t('views.user_accounts.subscription_info.tab_heading')
+      sleep(1)
       expect(page).to have_content 'Active Subscription'
     end
 

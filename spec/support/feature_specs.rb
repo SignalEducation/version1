@@ -40,6 +40,7 @@ def visit_my_profile
     find('.dropdown-normal').click
     click_link(I18n.t('views.users.show.h1'))
   end
+  sleep(3)
 end
 
 #### Student sign_up process

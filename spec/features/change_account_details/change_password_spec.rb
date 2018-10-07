@@ -31,6 +31,7 @@ describe 'User changing their password', type: :feature do
       sign_out
       print '>'
     end
+    sleep(1)
   end
 
 end

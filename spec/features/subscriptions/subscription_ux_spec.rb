@@ -1,92 +1,92 @@
 require 'rails_helper'
-require 'support/users_and_groups_setup'
-
-require 'support/course_content'
 require 'support/system_setup'
+require 'support/users_and_groups_setup'
+require 'support/course_content'
 
 describe 'Subscription UX:', type: :feature do
 
+
+  include_context 'system_setup'
   include_context 'users_and_groups_setup'
   include_context 'course_content'
 
-  include_context 'system_setup'
-
-  let(:stripe_helper) { StripeMock.create_test_helper }
-  let!(:individual_student_user_2) { FactoryBot.create(:individual_student_user,
-                                                      user_group_id: student_user_group.id) }
-
-  let!(:subscription_1) { x = FactoryBot.create(:subscription,
-                          user_id: student_user.id,
-                          subscription_plan_id: subscription_plan_eur_m.id,
-                          stripe_token: stripe_helper.generate_card_token)
-                          individual_student_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
-                          x }
-  let!(:subscription_2) { x = FactoryBot.create(:subscription,
-                          user_id: student_user_2.id,
-                          subscription_plan_id: subscription_plan_eur_m.id,
-                          stripe_token: stripe_helper.generate_card_token)
-  student_user.update_attribute(:stripe_customer_id, x.stripe_customer_id)
-                          x }
-  #before { StripeMock.start }
-  after { StripeMock.stop }
-
+  # All this calls stripe test platform - needs to be reworked to not call stripe
   before(:each) do
     activate_authlogic
+
+    stripe_monthly_plan = Stripe::Plan.create(amount: (subscription_plan_gbp_m.price.to_f * 100).to_i,
+                                              currency: subscription_plan_gbp_m.currency.try(:iso_code).try(:downcase),
+                                              interval: 'month',
+                                              name: 'LearnSignal Test' + subscription_plan_gbp_m.name.to_s,
+                                              interval_count: subscription_plan_gbp_m.payment_frequency_in_months.to_i,
+                                              id: Rails.env + '-' + ApplicationController::generate_random_code(20))
+    subscription_plan_gbp_m.update_attribute(:stripe_guid, stripe_monthly_plan.id)
+    stripe_monthly_plan = Stripe::Plan.create(amount: (subscription_plan_gbp_q.price.to_f * 100).to_i,
+                                              currency: subscription_plan_gbp_q.currency.try(:iso_code).try(:downcase),
+                                              interval: 'month',
+                                              name: 'LearnSignal Test' + subscription_plan_gbp_q.name.to_s,
+                                              interval_count: subscription_plan_gbp_q.payment_frequency_in_months.to_i,
+                                              id: Rails.env + '-' + ApplicationController::generate_random_code(20))
+    subscription_plan_gbp_q.update_attribute(:stripe_guid, stripe_monthly_plan.id)
+
+    visit new_student_path
+    user_password = ApplicationController.generate_random_code(10)
+    within('#new_user') do
+      student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
+    end
+    expect(page).to have_content 'Thanks for Signing Up'
+    visit user_verification_path(email_verification_code: User.last.email_verification_code)
+    expect(page).to have_content 'Verification Complete'
+
+    visit new_subscription_path
+    student_picks_a_subscription_plan(gbp, 1)
+    enter_credit_card_details('valid')
+    within('.check.terms_and_conditions') do
+      find('span').click
+    end
+    click_on I18n.t('views.users.upgrade_subscription.upgrade_subscription')
+    sleep(10)
+    within('#thank-you-message') do
+      expect(page).to have_content 'Thanks for choosing a subscription!'
+    end
+
   end
 
   scenario 'user can change their subscription plan', js: true do
-    sign_up_and_upgrade_from_free_trial
     visit_my_profile
-    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
-    click_link(I18n.t('views.users.show.tabs.subscriptions'))
+    click_link(I18n.t('views.user_accounts.subscription_info.tab_heading'))
+    expect(page).to have_content 'Active Subscription'
     click_link(I18n.t('views.users.show.change_subscription_plan'))
-    expect(page).to have_content 'Select a new plan'
-    parent = page.find('.plans:first-child')
-    parent.click
+    visit account_change_plan_path
+    expect(page).to have_content 'Simply select your new plan'
 
-    btn = page.find('#upgrade-submit')
-    btn.click
-
-    # page should reload
+    find("#sub-GBP-3").click
+    within("#sub-GBP-3") do
+      find('.plan-option').click
+    end
+    click_on 'Change Plan'
     expect(page).to have_content(I18n.t('controllers.subscriptions.update.flash.success'))
-    expect(page).to have_content 'Billing Interval Quarterly'
     sign_out
   end
 
   scenario 'user can cancel a subscription', js: true do
-    sign_up_and_upgrade_from_free_trial
-    visit_my_profile
-    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
-    click_link(I18n.t('views.users.show.tabs.subscriptions'))
-    click_link(I18n.t('views.users.show.cancel_your_subscription_plan'))
-    page.driver.browser.switch_to.alert.accept
 
+    visit_my_profile
+    click_link(I18n.t('views.user_accounts.subscription_info.tab_heading'))
+    find('.confirm-cancellation-modal').click
+
+    click_link(I18n.t('views.users.show.confirm_subscription_cancellation'))
     expect(page).to have_content 'Your Subscription has been cancelled'
     visit_my_profile
-    click_on I18n.t('views.users.show.tabs.subscriptions')
-
-    sign_out
-  end
-
-  scenario 'student_user can view invoices', js: true do
-    # sign up as a student
-    sign_up_and_upgrade_from_free_trial
-    visit_my_profile
-
-    expect(page).to have_content I18n.t('views.users.show.tabs.subscriptions')
-    click_link(I18n.t('views.users.show.tabs.subscriptions'))
-
-    expect(page).to have_content I18n.t('views.users.show.your_invoices')
-
+    click_on I18n.t('views.user_accounts.subscription_info.tab_heading')
+    expect(page).to have_content I18n.t('views.users.show.un_cancel_subscription.h3')
     sign_out
   end
 
   scenario 'user can update card details', js: true do
-    # sign up as a student
-    sign_up_and_upgrade_from_free_trial
     visit_my_profile
-    expect(page).to have_content I18n.t('views.users.show.tabs.payments')
-    click_on I18n.t('views.users.show.tabs.payments')
+    expect(page).to have_content I18n.t('views.user_accounts.payment_details.tab_heading')
+    click_on I18n.t('views.user_accounts.payment_details.tab_heading')
 
     within('#add-card') do
       find('.add-card').click
@@ -96,7 +96,7 @@ describe 'Subscription UX:', type: :feature do
       %w(valid_visa_debit ).each do |this_card|
         sleep 2
         enter_credit_card_details(this_card)
-        click_button(I18n.t('views.general.save'))
+        click_button('Add New Card')
       end
     end
     sleep 5
@@ -106,16 +106,6 @@ describe 'Subscription UX:', type: :feature do
     sign_out
   end
 
-  def check_that_the_plans_are_visible(plans)
-    expect(plans.size).to be > 1
-    expect(plans.size).to be <= 3
-    plans.each do |option|
-      expect(page).to have_content maybe_upcase option.name
-      option.description.lines.each do |line|
-        expect(page).to have_content line
-      end
-    end
-  end
   sleep(10)
 end
 

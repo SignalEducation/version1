@@ -43,6 +43,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       parent.click
       click_on(course_module_element_1_1.name)
       expect(page).to have_content course_module_element_1_1.name
+      sleep(1)
       page.all('.quiz-answer-clickable').first.click
 
       expect(page).to have_content 'Result:'
