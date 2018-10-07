@@ -32,7 +32,7 @@ describe 'User navigating through the dashboard:', type: :feature do
       click_link('Subject Course 1')
 
       page.find('#enrol-now-button').click
-
+      sleep(1)
       within('#enrollment_form') do
         find('#exam_sitting_select').find(:xpath, 'option[2]').select_option
         page.find('#enroll_submit_button').click

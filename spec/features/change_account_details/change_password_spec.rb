@@ -16,7 +16,7 @@ describe 'User changing their password', type: :feature do
     user_list.each do |this_user|
       sign_in_via_sign_in_page(this_user)
       visit_my_profile
-
+      sleep(2)
       within('#modal-links') do
         find('.change-pw-link').click
       end
@@ -31,7 +31,6 @@ describe 'User changing their password', type: :feature do
       sign_out
       print '>'
     end
-    sleep(1)
   end
 
 end
