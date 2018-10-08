@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180906115844) do
+ActiveRecord::Schema.define(version: 20181005151335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,52 @@ ActiveRecord::Schema.define(version: 20180906115844) do
   add_index "ahoy_events", ["time"], name: "index_ahoy_events_on_time", using: :btree
   add_index "ahoy_events", ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
   add_index "ahoy_events", ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
+
+  create_table "blazer_audits", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "query_id"
+    t.text     "statement"
+    t.string   "data_source"
+    t.datetime "created_at"
+  end
+
+  create_table "blazer_checks", force: :cascade do |t|
+    t.integer  "creator_id"
+    t.integer  "query_id"
+    t.string   "state"
+    t.string   "schedule"
+    t.text     "emails"
+    t.string   "check_type"
+    t.text     "message"
+    t.datetime "last_run_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "blazer_dashboard_queries", force: :cascade do |t|
+    t.integer  "dashboard_id"
+    t.integer  "query_id"
+    t.integer  "position"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "blazer_dashboards", force: :cascade do |t|
+    t.integer  "creator_id"
+    t.text     "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "blazer_queries", force: :cascade do |t|
+    t.integer  "creator_id"
+    t.string   "name"
+    t.text     "description"
+    t.text     "statement"
+    t.string   "data_source"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "blog_posts", force: :cascade do |t|
     t.integer  "home_page_id"
@@ -284,7 +330,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.boolean  "tuition",                   default: false
     t.boolean  "test",                      default: false
     t.boolean  "revision",                  default: false
-    t.integer  "discourse_topic_id"
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
@@ -454,7 +499,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.string   "custom_file_name"
     t.integer  "group_id"
     t.string   "name"
-    t.string   "discourse_ids"
     t.boolean  "home",                          default: false
     t.string   "header_heading"
     t.text     "header_paragraph"
@@ -626,7 +670,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
-    t.integer  "subject_course_id"
     t.integer  "mock_exam_id"
     t.string   "stripe_guid"
     t.boolean  "live_mode",         default: false
@@ -636,12 +679,12 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.integer  "currency_id"
     t.decimal  "price"
     t.string   "stripe_sku_guid"
+    t.integer  "subject_course_id"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
   add_index "products", ["name"], name: "index_products_on_name", using: :btree
   add_index "products", ["stripe_guid"], name: "index_products_on_stripe_guid", using: :btree
-  add_index "products", ["subject_course_id"], name: "index_products_on_subject_course_id", using: :btree
 
   create_table "quiz_answers", force: :cascade do |t|
     t.integer  "quiz_question_id"
@@ -1075,18 +1118,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
   add_index "subscriptions", ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
-  create_table "system_defaults", force: :cascade do |t|
-    t.integer  "individual_student_user_group_id"
-    t.integer  "corporate_student_user_group_id"
-    t.integer  "corporate_customer_user_group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "system_defaults", ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id", using: :btree
-  add_index "system_defaults", ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id", using: :btree
-  add_index "system_defaults", ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id", using: :btree
-
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -1105,27 +1136,6 @@ ActiveRecord::Schema.define(version: 20180906115844) do
     t.boolean  "blocked_user",                 default: false
     t.boolean  "marketing_resources_access",   default: false
   end
-
-  create_table "user_notifications", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "subject_line"
-    t.text     "content"
-    t.boolean  "email_required", default: false, null: false
-    t.datetime "email_sent_at"
-    t.boolean  "unread",         default: true,  null: false
-    t.datetime "destroyed_at"
-    t.string   "message_type"
-    t.integer  "tutor_id"
-    t.boolean  "falling_behind",                 null: false
-    t.integer  "blog_post_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_notifications", ["blog_post_id"], name: "index_user_notifications_on_blog_post_id", using: :btree
-  add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
-  add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
-  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"

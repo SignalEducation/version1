@@ -135,7 +135,7 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
-    if self.stripe_guid.nil?
+    if self.stripe_guid.nil? && Rails.env.production?
       stripe_plan = Stripe::Plan.create(
               amount: (self.price.to_f * 100).to_i,
               currency: self.currency.try(:iso_code).try(:downcase),

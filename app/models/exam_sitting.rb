@@ -19,7 +19,7 @@ class ExamSitting < ActiveRecord::Base
   attr_accessible :name, :subject_course_id, :date, :exam_body_id, :active, :computer_based
 
   # Constants
-  SORT_OPTIONS = %w(all active not-active)
+  SORT_OPTIONS = %w(active not-active all)
 
   # relationships
   belongs_to :exam_body
@@ -70,7 +70,7 @@ class ExamSitting < ActiveRecord::Base
   end
 
   def create_expiration_worker
-    ExamSittingExpirationWorker.perform_at(self.date.to_datetime + 23.hours, self.id)
+    ExamSittingExpirationWorker.perform_at(self.date.to_datetime + 23.hours, self.id) unless Rails.env.test?
   end
 
 end

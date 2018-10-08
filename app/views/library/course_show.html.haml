@@ -49,7 +49,8 @@
               -# Second Section for Course Modules for Test
               %br/
               %p.h4.l-margin-bottom
-                =t('views.general.course_test')
+                -#=t('views.general.course_test')
+                Additional Content
               =render partial: 'library/test'
 
             -if @course.revision_children?
@@ -77,6 +78,7 @@
           =render partial: 'course_info'
 
 =render partial: 'courses/access_denied_modal'
+=render partial: 'courses/resources_unavailable_modal'
 
 :javascript
 

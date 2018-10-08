@@ -41,6 +41,7 @@ describe <%= class_name %> do
   it { expect(<%= class_name %>).to respond_to(:all_in_order) }
 
   # class methods
+  #it { expect(<%= class_name %>).to respond_to(:method_name) }
 
   # instance methods
   it { should respond_to(:destroyable?) }

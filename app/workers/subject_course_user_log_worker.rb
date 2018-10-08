@@ -11,7 +11,6 @@ class SubjectCourseUserLogWorker
         scul.student_exam_tracks.each do |set|
           set.worker_update_completeness
         end
-        scul.recalculate_completeness
       end
     end
   end

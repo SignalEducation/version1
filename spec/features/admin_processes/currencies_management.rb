@@ -9,14 +9,9 @@ describe 'Currencies management by admin: ', type: :feature do
 
   before(:each) do
     activate_authlogic
-    a = admin_user
-    b = individual_student_user
-    e = comp_user
-    f = content_manager_user
-    g = tutor_user
-
     sign_in_via_sign_in_page(admin_user)
-    find('.dropdown.dropdown-normal').click
+    click_link 'Console'
+    click_link 'System Requirements'
     click_link(I18n.t('views.currencies.index.h1'))
     expect(page).to have_content(I18n.t('views.currencies.index.h1'))
   end
@@ -42,7 +37,7 @@ describe 'Currencies management by admin: ', type: :feature do
 
     end
 
-    scenario 'Fails', js: true do
+    scenario 'Fails with validation error', js: true do
       click_link(I18n.t('views.general.new'))
       expect(page).to have_content(I18n.t('views.currencies.new.h1'))
       currency_name = ''
@@ -81,7 +76,7 @@ describe 'Currencies management by admin: ', type: :feature do
       expect(page).to have_content(I18n.t('views.currencies.index.h1'))
     end
 
-    scenario 'Fails', js: true do
+    scenario 'Fails with validation error', js: true do
       within('.table-responsive') do
         page.find('tr', :text => gbp.name).click_link(I18n.t('views.general.edit'))
       end

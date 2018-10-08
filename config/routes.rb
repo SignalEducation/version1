@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+  mount Blazer::Engine, at: "blazer"
 
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
@@ -195,7 +196,6 @@ Rails.application.routes.draw do
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
     get 'welcome_video', to: 'footer_pages#welcome_video', as: :welcome_video
 
-    resources :user_notifications
     resources :users, only: [:new, :create]
 
     post :preview_csv_upload, to: 'users#preview_csv_upload'
@@ -225,7 +225,7 @@ Rails.application.routes.draw do
 
     root 'student_sign_ups#home'
     # Catch-all
-    get '404', to: 'footer_pages#missing_page', first_element: '404-page'
+    get '404', to: 'footer_pages#missing_page', first_element: '404-page', as: :missing_page
     get '404-page', to: 'footer_pages#missing_page', first_element: '404-page'
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page

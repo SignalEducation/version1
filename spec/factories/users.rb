@@ -66,6 +66,8 @@ FactoryBot.define do
     active                                    true
     terms_and_conditions                      true
     locale                                    'en'
+    date_of_birth                              '2001-10-03'
+    student_number                             '123456789'
 
     factory :free_trial_student do
       sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
@@ -127,7 +129,7 @@ FactoryBot.define do
       factory :active_student_user do
         sequence(:email)                { |n| "active-student-#{n}@example.com" }
         active                          true
-        account_activation_code         'abcde12345'
+        account_activation_code         SecureRandom.hex(10)
         account_activated_at            Time.now
         email_verified                  true
         email_verification_code         nil
@@ -135,12 +137,12 @@ FactoryBot.define do
       end
 
       factory :unverified_user do
-        sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
+        sequence(:email)                { |n| "unverified-student-user-#{n}@example.com" }
         active                          true
         account_activation_code         nil
         account_activated_at            nil
         email_verified                  false
-        email_verification_code         'abc123456'
+        email_verification_code         SecureRandom.hex(10)
         email_verified_at               nil
       end
 
@@ -166,6 +168,9 @@ FactoryBot.define do
       sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
       active                            true
       user_group_id                     1
+      email_verified                  true
+      email_verification_code         nil
+      email_verified_at               Time.now
       stripe_customer_id                nil
     end
 
@@ -175,7 +180,7 @@ FactoryBot.define do
       account_activation_code         nil
       account_activated_at            Time.now
       email_verified                  false
-      email_verification_code         'abc123456'
+      email_verification_code         SecureRandom.hex(10)
       email_verified_at               nil
       password_change_required        true
     end

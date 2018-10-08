@@ -38,8 +38,8 @@ config/secrets.yml
 !.elasticbeanstalk/*.global.yml
 
 # Ignore application configuration - figaro gem
-/config/application.yml
 /config/local_env.yml
+*.dump
 
 
 # used by SimpleCov

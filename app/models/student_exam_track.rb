@@ -59,6 +59,7 @@ class StudentExamTrack < ActiveRecord::Base
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :with_active_cmes, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.cme_count > 0').references(:course_module) }
+  scope :with_valid_course_module, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.test = ?', false).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
 

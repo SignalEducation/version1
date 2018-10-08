@@ -16,6 +16,13 @@ FactoryBot.define do
     quiz_question_id 1
     correct false
     degree_of_wrongness 'incorrect'
+
+
+    factory :correct_quiz_answer do
+      correct true
+      degree_of_wrongness 'correct'
+    end
+
   end
 
 end

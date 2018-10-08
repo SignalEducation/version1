@@ -21,10 +21,11 @@ shared_context 'users_and_groups_setup' do
 
   # Users
   let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
-  let!(:student_access) { FactoryBot.create(:trial_student_access, user_id: student_user.id) }
+  let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
 
   let(:inactive_student_user) { FactoryBot.create(:inactive_student_user , user_group_id: student_user_group.id) }
   let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
+  let!(:unverified_trial_student_access) { FactoryBot.create(:unverified_trial_student_access, user_id: unverified_student_user.id) }
 
   ## Trial Student Users
   let!(:valid_trial_student) { FactoryBot.create(:valid_free_trial_student,
@@ -120,7 +121,7 @@ shared_context 'users_and_groups_setup' do
   let(:user_list) {[valid_trial_student, invalid_trial_student, valid_subscription_student,
                     invalid_subscription_student, comp_user, tutor_user, system_requirements_user,
                     content_management_user, stripe_management_user, user_management_user, developers_user,
-                    marketing_manager_user, user_group_manager_user, admin_user, blocked_user] }
+                    marketing_manager_user, user_group_manager_user, admin_user] }
 
 
 end

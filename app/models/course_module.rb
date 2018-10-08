@@ -24,7 +24,6 @@
 #  tuition                   :boolean          default(FALSE)
 #  test                      :boolean          default(FALSE)
 #  revision                  :boolean          default(FALSE)
-#  discourse_topic_id        :integer
 #
 
 class CourseModule < ActiveRecord::Base
@@ -179,7 +178,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def percentage_complete_by_user(user_id)
-    set = self.student_exam_tracks.where(user_id: user_id).first
+    set = self.student_exam_tracks.where(user_id: user_id).last
     set.try(:percentage_complete) || 0
   end
 
@@ -208,7 +207,7 @@ class CourseModule < ActiveRecord::Base
     elsif self.tuition
       'Tuition'
     elsif self.test
-      'Test'
+      'Additional'
     else
       ''
     end

@@ -219,7 +219,7 @@ class Enrollment < ActiveRecord::Base
 
   def create_expiration_worker
     if self.computer_based_exam && self.exam_date
-      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id)
+      EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) unless Rails.env.test?
     end
   end
 

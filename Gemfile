@@ -7,6 +7,7 @@ gem 'rails', '4.2.1'
 gem 'airbrake', '~> 4.3.4'
 gem 'authlogic', '~> 3.4.3'
 gem 'ahoy_matey' # visit tracking
+gem 'blazer'
 gem 'scrypt' # S-Crypt for Authlogic
 gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 #gem 'aws-sdk' # enables AWS functionality - use with AWS::...
@@ -18,7 +19,6 @@ gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
 gem 'chart-js-rails' #Graphs
 gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
-gem 'discourse_api'
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.9.2'
 gem 'geocoder', '~> 1.3', '>= 1.3.7'#  a public API for geo-locating IP addresses
@@ -58,10 +58,8 @@ gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in p
 gem 'utf8-cleaner' # removes illegal characters from inbound requests
 gem 'will_paginate' # manage long web pages
 gem 'will_paginate-bootstrap' # adds Bootstrap3 support to will_paginate
-gem 'wistia-api' #Video player data api gem, allows retrieval of data on videos and projects
 gem 'font-awesome-rails' # Font Awesome with lot of useful icons
 gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
-gem 'zendesk_api'
 gem 'mandrill-api' # official Mandrill's gem
 
 # Environment-specific gems
@@ -71,10 +69,6 @@ group :development do
   gem 'better_errors' # gives more useful error report in the browser
   gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
-  gem 'capistrano', '~> 3.4.0'
-  gem 'capistrano-passenger', '0.0.2'
-  gem 'capistrano-rails', '~> 1.1.1'
-  gem 'capistrano-rbenv', '~> 2.0'
   gem 'spring' # Spring speeds up development by keeping your application running
           # in the background. Read more: https://github.com/rails/spring
   gem 'powder'
@@ -90,7 +84,8 @@ group :development, :test do
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'poltergeist'
   gem 'rspec-rails' # our core testing environment
-  gem 'selenium-webdriver', '>=2.53.4'
+  gem 'selenium-webdriver'
+  gem 'chromedriver-helper'
   gem 'thin' # new web server
   gem 'ultrahook' # allows incoming webhooks from stripe
 end
@@ -104,6 +99,7 @@ group :test do
   gem 'simplecov', require: false
   gem 'stripe-ruby-mock', '>= 2.4.0', :require => 'stripe_mock'
   gem 'webrat' # Runs tests in a "headless" browser
+  gem 'launchy'
 end
 
 group :staging do
@@ -136,9 +132,6 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 
 # Use unicorn as the app server
 # gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
