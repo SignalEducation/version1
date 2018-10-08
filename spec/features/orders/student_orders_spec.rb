@@ -17,7 +17,9 @@ describe 'The student orders process', type: :feature do
   before(:each) do
     activate_authlogic
     visit home_path
-    y = subject_course_1
+    stripe_customer = Stripe::Customer.create(email: valid_trial_student.email)
+    valid_trial_student.update_attribute(:stripe_customer_id, stripe_customer.id)
+
     stripe_product = Stripe::Product.create(name: product_1.name, shippable: false, active: product_1.active)
     product_1.update_attribute(:stripe_guid, stripe_product.id)
 
@@ -39,7 +41,7 @@ describe 'The student orders process', type: :feature do
 
     describe 'User purchases a Mock Exam' do
       scenario 'from the media library page', js: true do
-        sign_up_and_upgrade_from_free_trial
+        sign_in_via_sign_in_page(valid_trial_student)
 
         click_link 'Media'
         expect(page).to have_content(I18n.t('views.mock_exams.index.h1'))
@@ -53,20 +55,21 @@ describe 'The student orders process', type: :feature do
         check I18n.t('views.general.terms_and_conditions')
         click_on('Purchase Mock Exam')
         sleep(5)
-        expect(page).to have_content('Mock Exams')
-        expect(page).to have_content(I18n.t('controllers.orders.create.flash.mock_exam_success'))
-        expect(page).to have_content(I18n.t('views.users.show.tabs.orders'))
-        expect(page).to have_content('Account Info')
+        expect(page).to have_content('Order Complete')
+        expect(page).to have_content('Your Mock Exam will be emailed to you shortly. You can also download it below.')
+        visit_my_profile
+        click_link(I18n.t('views.user_accounts.orders_info.tab_heading'))
         expect(page).to have_content(mock_exam_1.name)
         expect(page).to have_content(product_1.price)
         expect(page).to have_content('Paid')
       end
 
       scenario 'from the library course page', js: true do
-        sign_up_and_upgrade_from_free_trial
+        sign_in_via_sign_in_page(valid_trial_student)
+
 
         click_on('Courses')
-        click_link(course_group_1.name)
+        click_link(group_1.name)
         click_link(subject_course_1.name)
         expect(page).to have_content subject_course_1.name
         expect(page).to have_content(mock_exam_1.name.upcase)
@@ -81,10 +84,10 @@ describe 'The student orders process', type: :feature do
         check I18n.t('views.general.terms_and_conditions')
         click_on('Purchase Mock Exam')
         sleep(5)
-        expect(page).to have_content('Mock Exams')
-        expect(page).to have_content(I18n.t('controllers.orders.create.flash.mock_exam_success'))
-        expect(page).to have_content(I18n.t('views.users.show.tabs.orders'))
-        expect(page).to have_content('Account Info')
+        expect(page).to have_content('Order Complete')
+        expect(page).to have_content('Your Mock Exam will be emailed to you shortly. You can also download it below.')
+        visit_my_profile
+        click_link(I18n.t('views.user_accounts.orders_info.tab_heading'))
         expect(page).to have_content(mock_exam_1.name)
         expect(page).to have_content(product_1.price)
         expect(page).to have_content('Paid')

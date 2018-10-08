@@ -101,7 +101,6 @@ class User < ActiveRecord::Base
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
   belongs_to :user_group
-  has_many :user_notifications
   has_many :visits
   has_many :charges
   has_many :refunds

@@ -20,12 +20,13 @@
 FactoryBot.define do
   factory :student_access do
     user_id 1
-    trial_seconds_limit 1
-    trial_days_limit 1
-    content_seconds_consumed 1
+    trial_seconds_limit ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
+    trial_days_limit ENV['FREE_TRIAL_DAYS'].to_i
+    content_seconds_consumed 0
     account_type 'Trial'
     content_access false
-
+    trial_started_date (Time.now.to_datetime - 2.days)
+    trial_ending_at_date (Time.now.to_datetime + 5)
 
 
     factory :trial_student_access do
@@ -39,7 +40,15 @@ FactoryBot.define do
       end
 
       factory :invalid_free_trial_student_access do
+        trial_ended_date Time.now.to_datetime
         content_access false
+      end
+
+      factory :unverified_trial_student_access do
+        account_type 'Trial'
+        content_access false
+        trial_started_date nil
+        trial_ending_at_date nil
       end
 
     end
@@ -62,6 +71,13 @@ FactoryBot.define do
     factory :complimentary_student_access do
       account_type 'Complimentary'
       content_access true
+    end
+
+    factory :unverified_comp_student_access do
+      account_type 'Trial'
+      content_access false
+      trial_started_date nil
+      trial_ending_at_date nil
     end
 
   end

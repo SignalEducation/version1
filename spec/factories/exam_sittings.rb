@@ -16,9 +16,20 @@
 FactoryBot.define do
   factory :exam_sitting do
     sequence(:name)           { |n| "Exam Sitting #{n}" }
-    subject_course_id 1
     exam_body_id 1
-    date "2016-10-26"
+    subject_course_id 1
+    active true
+    date "2019-10-26"
+
+
+    factory :standard_exam_sitting do
+      computer_based false
+    end
+
+    factory :computer_based_exam_sitting do
+      computer_based true
+    end
+
   end
 
 end

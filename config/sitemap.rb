@@ -17,19 +17,25 @@ sitemap :site do
   url pricing_url, last_mod: last_updated_plan.updated_at, change_freq: 'monthly', priority: 1.0
 
   #Tutor Profile pages
-  User.all_tutors.where.not(profile_image_file_name: nil).each do |tutor|
+  User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil).each do |tutor|
     url profile_url(tutor, locale: 'en'), last_mod: tutor.updated_at, change_freq: 'monthly', priority: 1.0
   end
 
   #Footer pages + other static pages
   url tutors_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url contact_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url acca_info_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url privacy_policy_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url terms_and_conditions_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url public_faqs_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url media_library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
   #Library
-  group = Group.all_active.all_in_order.first
-  url library_url, last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
+  if Group.all_active.count > 1
+    url library_url, last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
+  end
 
+  group = Group.all_active.all_in_order.first
   group.active_children.all_in_order.each do |course|
     url library_course_url(group_name_url: group.name_url, subject_course_name_url: course.name_url), last_mod: course.updated_at, change_freq: 'monthly', priority: 1.0
   end
