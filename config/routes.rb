@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+  mount Blazer::Engine, at: "blazer"
 
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
