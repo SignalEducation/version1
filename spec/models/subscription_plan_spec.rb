@@ -83,6 +83,7 @@ describe SubscriptionPlan do
 
   describe 'instance methods' do
     let(:subscription_plan) { create(:subscription_plan) }
+    it { should respond_to(:destroyable?) }
 
     describe '#amount' do
       it 'defers to the currency #format_number method' do
@@ -140,9 +141,5 @@ describe SubscriptionPlan do
         expect(plan.description).to include('A subscription for the LearnSignal online training service.')
       end
     end
-
-    it { should respond_to(:unlimited_access) }
-    it { should respond_to(:cancel_anytime) }
-    it { should respond_to(:destroyable?) }
   end
 end
