@@ -75,17 +75,6 @@ class SubscriptionPlan < ActiveRecord::Base
     self.available_from < Proc.new{Time.now}.call && self.available_to > Proc.new{Time.now}.call
   end
 
-  def age_status
-    right_now = Proc.new{Time.now}.call.to_date
-    if self.available_from > right_now
-       'info' # future
-    elsif self.available_to < right_now
-      'active' # expired
-    else
-      'success' # live
-    end
-  end
-
   def description
     self.description_without_trial + "\r\n" +
             (self.trial_period_in_days > 0 ?
