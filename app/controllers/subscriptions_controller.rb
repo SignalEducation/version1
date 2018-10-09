@@ -96,9 +96,6 @@ class SubscriptionsController < ApplicationController
           stripe_customer_data: stripe_customer.to_hash.deep_dup
       )
       if @subscription.valid? && @subscription.save
-        trial_ended_date = user.student_access.trial_ended_date ? user.student_access.trial_ended_date : Proc.new{Time.now}.call
-        user.student_access.update_attributes(subscription_id: @subscription.id, trial_ended_date: trial_ended_date, account_type: 'Subscription', content_access: true)
-
         user.referred_signup.update_attributes(payed_at: Proc.new{Time.now}.call, subscription_id: @subscription.id) if user.referred_user
         redirect_to personal_upgrade_complete_url
       else

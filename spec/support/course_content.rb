@@ -40,11 +40,11 @@ shared_context 'course_content' do
                            course_module_element_quiz_id: course_module_element_quiz_1_1.id) }
   let!(:quiz_content_1)  { FactoryBot.create(:quiz_content,
                            quiz_question_id: quiz_question_1.id) }
-  let!(:quiz_answer_1)   { FactoryBot.create(:quiz_answer,
+  let!(:quiz_answer_1)   { FactoryBot.create(:correct_quiz_answer,
                            quiz_question_id: quiz_question_1.id) }
   let!(:quiz_content_2)  { FactoryBot.create(:quiz_content,
                            quiz_answer_id: quiz_answer_1.id) }
-  let!(:quiz_answer_2)   { FactoryBot.create(:quiz_answer,
+  let!(:quiz_answer_2)   { FactoryBot.create(:correct_quiz_answer,
                            quiz_question_id: quiz_question_1.id) }
   let!(:quiz_content_3)  { FactoryBot.create(:quiz_content,
                            quiz_answer_id: quiz_answer_2.id) }
@@ -64,11 +64,11 @@ shared_context 'course_content' do
                              quiz_question_id: quiz_question_1.id) }
   let!(:quiz_content_2_1b) { FactoryBot.create(:quiz_content,
                              quiz_question_id: quiz_question_1.id) }
-  let!(:quiz_answer_2_1)   { FactoryBot.create(:quiz_answer,
+  let!(:quiz_answer_2_1)   { FactoryBot.create(:correct_quiz_answer,
                              quiz_question_id: quiz_question_2.id) }
   let!(:quiz_content_2_2)  { FactoryBot.create(:quiz_content,
                              quiz_answer_id: quiz_answer_2.id) }
-  let!(:quiz_answer_2_2)   { FactoryBot.create(:quiz_answer,
+  let!(:quiz_answer_2_2)   { FactoryBot.create(:correct_quiz_answer,
                              quiz_question_id: quiz_question_2.id) }
   let!(:quiz_content_2_3)  { FactoryBot.create(:quiz_content,
                              quiz_answer_id: quiz_answer_2.id) }

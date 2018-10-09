@@ -330,7 +330,6 @@ ActiveRecord::Schema.define(version: 20181005151335) do
     t.boolean  "tuition",                   default: false
     t.boolean  "test",                      default: false
     t.boolean  "revision",                  default: false
-    t.integer  "discourse_topic_id"
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
@@ -500,7 +499,6 @@ ActiveRecord::Schema.define(version: 20181005151335) do
     t.string   "custom_file_name"
     t.integer  "group_id"
     t.string   "name"
-    t.string   "discourse_ids"
     t.boolean  "home",                          default: false
     t.string   "header_heading"
     t.text     "header_paragraph"
@@ -1120,18 +1118,6 @@ ActiveRecord::Schema.define(version: 20181005151335) do
   add_index "subscriptions", ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 
-  create_table "system_defaults", force: :cascade do |t|
-    t.integer  "individual_student_user_group_id"
-    t.integer  "corporate_student_user_group_id"
-    t.integer  "corporate_customer_user_group_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "system_defaults", ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id", using: :btree
-  add_index "system_defaults", ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id", using: :btree
-  add_index "system_defaults", ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id", using: :btree
-
   create_table "user_groups", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -1150,27 +1136,6 @@ ActiveRecord::Schema.define(version: 20181005151335) do
     t.boolean  "blocked_user",                 default: false
     t.boolean  "marketing_resources_access",   default: false
   end
-
-  create_table "user_notifications", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "subject_line"
-    t.text     "content"
-    t.boolean  "email_required", default: false, null: false
-    t.datetime "email_sent_at"
-    t.boolean  "unread",         default: true,  null: false
-    t.datetime "destroyed_at"
-    t.string   "message_type"
-    t.integer  "tutor_id"
-    t.boolean  "falling_behind",                 null: false
-    t.integer  "blog_post_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_notifications", ["blog_post_id"], name: "index_user_notifications_on_blog_post_id", using: :btree
-  add_index "user_notifications", ["message_type"], name: "index_user_notifications_on_message_type", using: :btree
-  add_index "user_notifications", ["tutor_id"], name: "index_user_notifications_on_tutor_id", using: :btree
-  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email"

@@ -13,7 +13,6 @@
 #  custom_file_name              :string
 #  group_id                      :integer
 #  name                          :string
-#  discourse_ids                 :string
 #  home                          :boolean          default(FALSE)
 #  header_heading                :string
 #  header_paragraph              :text

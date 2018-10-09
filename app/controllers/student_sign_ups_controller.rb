@@ -21,6 +21,7 @@ class StudentSignUpsController < ApplicationController
     #Added respond block to stop the missing template errors with image, text, json types
     respond_to do |format|
       format.html
+      format.all { redirect_to(missing_page_url) }
     end
   end
 

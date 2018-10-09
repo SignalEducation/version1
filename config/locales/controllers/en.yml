@@ -541,18 +541,6 @@ en:
           success: User Group has been deleted
           error: User Group was not deleted
 
-    user_notifications:
-      create:
-        flash:
-          success: User Notification has been created successfully
-      update:
-        flash:
-          success: User Notification details have been updated successfully
-      destroy:
-        flash:
-          success: User Notification has been deleted
-          error: User Notification was not deleted
-
     user_passwords:
       create:
         flash:

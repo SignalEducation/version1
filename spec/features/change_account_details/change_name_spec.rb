@@ -1,19 +1,14 @@
 require 'rails_helper'
+require 'support/system_setup'
 require 'support/users_and_groups_setup'
 
 describe 'User changing their name', type: :feature do
 
+  include_context 'system_setup'
   include_context 'users_and_groups_setup'
 
-  let!(:country_1) { try(:country) || FactoryBot.create(:ireland)}
-  let!(:country_2) { FactoryBot.create(:uk)}
 
   before(:each) do
-    a = admin_user
-    b = individual_student_user
-    e = comp_user
-    f = content_manager_user
-    g = tutor_user
     activate_authlogic
   end
 
@@ -25,7 +20,7 @@ describe 'User changing their name', type: :feature do
       within('#modal-links') do
         find('.edit-details').click
       end
-      sleep(2)
+
       within('#personal-details-form') do
         fill_in I18n.t('views.users.form.first_name'), with: "Student#{rand(9999)}"
         fill_in I18n.t('views.users.form.last_name'), with: "Individual#{rand(9999)}"
@@ -35,5 +30,5 @@ describe 'User changing their name', type: :feature do
       print '>'
     end
   end
-  sleep(1)
+
 end

@@ -214,7 +214,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def billing_amount
-    self.subscription_plan.amount
+    self.subscription_plan.try(:amount)
   end
 
   def reactivation_options

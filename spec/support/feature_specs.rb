@@ -40,6 +40,7 @@ def visit_my_profile
     find('.dropdown-normal').click
     click_link(I18n.t('views.users.show.h1'))
   end
+  sleep(3)
 end
 
 #### Student sign_up process
@@ -57,7 +58,7 @@ def signup_page_student_sign_up_as(user_first_name, user_second_name, user_email
 end
 
 def enter_card_details(card, cvv, exp_month, exp_year)
-  stripe_iframe = all('iframe[name=__privateStripeFrame4]').last
+  stripe_iframe = all('iframe[name=__privateStripeFrame3]').last
   Capybara.within_frame stripe_iframe do
     find_field('cardnumber').send_keys(card)
     find_field('exp-date').send_keys(exp_month, exp_year)
@@ -65,12 +66,24 @@ def enter_card_details(card, cvv, exp_month, exp_year)
   end
 end
 
+def fill_stripe_elements(card, cvv, exp_month, exp_year)
+  stripe_iframe = all('iframe[name=__privateStripeFrame3]').last
+  using_wait_time(15) { Capybara.within_frame stripe_iframe do
+    card.to_s.chars.each do |piece|
+      find_field('cardnumber').send_keys(piece)
+    end
+
+    find_field('exp-date').send_keys(exp_month, exp_year)
+    find_field('cvc').send_keys(cvv)
+  end }
+end
+
 def enter_credit_card_details(card_type='valid')
   # see https://stripe.com/docs/testing
   expect(%w(valid valid_visa_debit valid_mc_debit expired bad_cvc declined bad_number processing_error).include?(card_type)).to eq(true)
   case card_type
     when 'valid'
-      enter_card_details('4242424242424242','123','12',Time.now.year + 1)
+      fill_stripe_elements('4242424242424242','123','12',Time.now.year + 1)
     when 'valid_visa_debit'
       enter_card_details('4000056655665556','123','12',Time.now.year + 1)
     when 'valid_mc_debit'
@@ -93,9 +106,12 @@ end
 def enter_user_details(first_name, last_name, email=nil, user_password)
   fill_in('user_first_name', with: first_name)
   fill_in('user_last_name', with: last_name)
-  fill_in('user_email', with: email || "#{first_name.downcase}_#{rand(999999)}@example.com")
-  check I18n.t('views.general.terms_and_conditions')
+  fill_in('user_email', with: email)
   fill_in('user_password', with: user_password)
+  find('.check.communication_approval').click
+  within('.check.terms_and_conditions') do
+    find('span').click
+  end
 end
 
 def student_picks_a_subscription_plan(currency, payment_frequency)
