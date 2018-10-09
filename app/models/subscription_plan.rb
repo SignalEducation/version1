@@ -88,14 +88,6 @@ class SubscriptionPlan < ActiveRecord::Base
     end
   end
 
-  def unlimited_access
-    I18n.t('views.general.all_you_can_eat_yes')
-  end
-
-  def cancel_anytime
-    I18n.t('views.general.cancel_anytime')
-  end
-
   def destroyable?
     self.subscriptions.empty?
   end
