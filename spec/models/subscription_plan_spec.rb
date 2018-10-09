@@ -22,17 +22,6 @@
 require 'rails_helper'
 
 describe SubscriptionPlan do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at stripe_guid)
-  SubscriptionPlan.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   # Constants
   it { expect(SubscriptionPlan.const_defined?(:PAYMENT_FREQUENCIES)).to eq(true) }
 
@@ -123,7 +112,6 @@ describe SubscriptionPlan do
       end
     end
 
-    it { should respond_to(:active?) }
     it { should respond_to(:age_status) }
     it { should respond_to(:description) }
     it { should respond_to(:unlimited_access) }

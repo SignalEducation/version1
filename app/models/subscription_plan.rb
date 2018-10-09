@@ -20,16 +20,8 @@
 #
 
 class SubscriptionPlan < ActiveRecord::Base
-
   include ActionView::Helpers::TextHelper
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :available_to_students, :all_you_can_eat,
-                  :payment_frequency_in_months, :currency_id,
-                  :price, :available_from, :available_to,
-                  :trial_period_in_days, :name, :subscription_plan_category_id,
-                  :livemode
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
