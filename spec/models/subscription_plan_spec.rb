@@ -113,31 +113,36 @@ describe SubscriptionPlan do
     end
 
     describe '#description' do
-      it "returns the correct description for monthly subscription_plans" do
+      it 'returns the correct description for monthly subscription_plans' do
         plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 1)
 
-        expect(plan.description).to include("monthly")
-        expect(plan.description).to include("billed every month")
+        expect(plan.description).to include('monthly')
+        expect(plan.description).to include('billed every month')
       end
 
-      it "returns the correct description for quarterly subscription_plans" do
+      it 'returns the correct description for quarterly subscription_plans' do
         plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 3)
 
-        expect(plan.description).to include("quarterly")
-        expect(plan.description).to include("billed every three months")
+        expect(plan.description).to include('quarterly')
+        expect(plan.description).to include('billed every three months')
       end
 
-      it "returns the correct description for yearly subscription_plans" do
+      it 'returns the correct description for yearly subscription_plans' do
         plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 12)
 
-        expect(plan.description).to include("yearly")
-        expect(plan.description).to include("billed every 12 months")
+        expect(plan.description).to include('yearly')
+        expect(plan.description).to include('billed every 12 months')
+      end
+
+      it 'returns a default description for non-standard subscription_plans' do
+        plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 2)
+
+        expect(plan.description).to include('A subscription for the LearnSignal online training service.')
       end
     end
 
     it { should respond_to(:unlimited_access) }
     it { should respond_to(:cancel_anytime) }
-    it { should respond_to(:description_without_trial) }
     it { should respond_to(:destroyable?) }
   end
 end
