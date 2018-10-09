@@ -76,10 +76,16 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def description
-    self.description_without_trial + "\r\n" +
-            (self.trial_period_in_days > 0 ?
-                (self.trial_period_in_days).to_s + (I18n.t('views.general.day') + I18n.t('views.general.free_trial')) +
-                     "\r\n" : '')
+    case payment_frequency_in_months
+    when 1
+      I18n.t('models.subscription_plans.monthly_description')
+    when 3
+      I18n.t('models.subscription_plans.quarterly_description')
+    when 12
+      I18n.t('models.subscription_plans.yearly_description')
+    else
+      'A subscription for the LearnSignal online training service.'
+    end
   end
 
   def unlimited_access
