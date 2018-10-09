@@ -96,12 +96,6 @@ class SubscriptionPlan < ActiveRecord::Base
     I18n.t('views.general.cancel_anytime')
   end
 
-  def description_without_trial
-    self.currency.format_number(self.price) + "\r\n" + (self.all_you_can_eat ?
-                                              I18n.t('views.general.all_you_can_eat_yes') :
-                                              I18n.t('views.general.all_you_can_eat_yes') )
-  end
-
   def destroyable?
     self.subscriptions.empty?
   end
