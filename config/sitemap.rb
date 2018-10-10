@@ -8,7 +8,7 @@ sitemap :site do
   url root_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
   HomePage.where(home: false).each do |home_page|
-    url "#{host}/#{home_page.public_url}", last_mod: home_page.updated_at, change_freq: 'monthly', priority: 1.0
+    url "http://#{host}/#{home_page.public_url}", last_mod: home_page.updated_at, change_freq: 'monthly', priority: 1.0
   end
 
 
