@@ -378,7 +378,7 @@ class User < ActiveRecord::Base
 
   def trial_days_left
     time_now = Proc.new{Time.now.to_date}.call
-    (self.student_access.trial_ending_at_date.to_date - time_now).to_i
+    ((self.student_access.trial_started_date + self.student_access.trial_days_limit.days).to_date - time_now).to_i
   end
 
   def trial_seconds_left
