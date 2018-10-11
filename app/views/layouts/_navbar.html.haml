@@ -21,12 +21,8 @@
               %li
                 =link_to 'Courses', library_url
               -if current_user.trial_user?
-                -if current_user.valid_trial_user?
-                  %li
-                    =link_to "#{current_user.trial_days_left} Days left in Trial", new_subscription_url, class: 'days-left', title: 'Upgrade your account'
-                -elsif current_user.expired_trial_user?
-                  %li
-                    =link_to 'Upgrade Account', new_subscription_url, class: 'days-left', title: 'Upgrade your account'
+                %li
+                  =link_to 'Upgrade Account', new_subscription_url, class: 'days-left', title: 'Upgrade your account'
               -elsif current_user.canceled_member?
                 %li
                   =link_to 'Reactivate Account', new_subscription_url, class: 'days-left', title: 'Reactivate your account'
