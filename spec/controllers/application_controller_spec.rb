@@ -8,6 +8,9 @@ describe ApplicationController, type: :controller do
 
   controller do
     before_action do
+      logged_in_required
+    end
+    before_action do
       ensure_user_has_access_rights(access_list)
     end
 
@@ -16,7 +19,25 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a student_user' do
+  describe 'handling logged_in_required before_action as a student_user' do
+
+    it 'should allow access' do
+      activate_authlogic
+      UserSession.create!(valid_trial_student)
+      access_list = %w(student_user)
+      get :index
+      expect(flash[:success]).to be_nil
+      expect(flash[:error]).to be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it 'should redirect with ERROR not signed in' do
+      get :index
+      expect_bounce_as_not_signed_in
+    end
+  end
+
+  describe 'handling access_rights before_action as a student_user' do
     before(:each) do
       activate_authlogic
       UserSession.create!(valid_trial_student)
@@ -37,7 +58,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a comp_user' do
+  describe 'handling access_rights before_action as a comp_user' do
 
     before(:each) do
       activate_authlogic
@@ -58,7 +79,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a tutor_user' do
+  describe 'handling access_rights before_action as a tutor_user' do
 
     before(:each) do
       activate_authlogic
@@ -79,7 +100,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a system_requirements_user' do
+  describe 'handling access_rights before_action as a system_requirements_user' do
 
     before(:each) do
       activate_authlogic
@@ -101,7 +122,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a content_management_user' do
+  describe 'handling access_rights before_action as a content_management_user' do
 
     before(:each) do
       activate_authlogic
@@ -123,7 +144,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a stripe_management_user' do
+  describe 'handling access_rights before_action as a stripe_management_user' do
 
     before(:each) do
       activate_authlogic
@@ -145,7 +166,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a user_management_user' do
+  describe 'handling access_rights before_action as a user_management_user' do
 
     before(:each) do
       activate_authlogic
@@ -167,7 +188,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a developers_user' do
+  describe 'handling access_rights before_action as a developers_user' do
 
     before(:each) do
       activate_authlogic
@@ -189,7 +210,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a marketing_manager_user' do
+  describe 'handling access_rights before_action as a marketing_manager_user' do
 
     before(:each) do
       activate_authlogic
@@ -211,7 +232,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a user_group_manager_user' do
+  describe 'handling access_rights before_action as a user_group_manager_user' do
 
     before(:each) do
       activate_authlogic
@@ -233,7 +254,7 @@ describe ApplicationController, type: :controller do
     end
   end
 
-  describe 'handling before_action as a admin_user' do
+  describe 'handling access_rights before_action as a admin_user' do
 
     before(:each) do
       activate_authlogic
