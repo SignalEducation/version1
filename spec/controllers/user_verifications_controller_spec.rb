@@ -1,12 +1,15 @@
 require 'rails_helper'
 require 'authlogic/test_case'
-require 'support/users_and_groups_setup'
 
 RSpec.describe UserVerificationsController, :type => :controller do
 
-  include_context 'users_and_groups_setup'
+  let!(:gbp) { FactoryBot.create(:gbp) }
+  let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
+  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
+  let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
+  let!(:unverified_trial_student_access) { FactoryBot.create(:unverified_trial_student_access, user_id: unverified_student_user.id) }
 
-
+  #TODO - attention needed here
   context 'Non-verified user' do
     describe "Get 'update'" do
       it 'returns success when given a valid code' do
@@ -17,11 +20,30 @@ RSpec.describe UserVerificationsController, :type => :controller do
         expect(flash[:error]).to be_nil
       end
 
-      it 'returns error when given an invalid code' do
+      xit 'returns error when given an invalid code' do
         get :update, email_verification_code: 'XYZ123'
         expect(response.status).to eq(302)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.user_activations.update.error'))
+      end
+    end
+
+    describe "Get 'account_verified'" do
+      xit 'returns success when given a valid code' do
+        get :account_verified
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:account_verified)
+        expect(flash[:error]).to be_nil
+      end
+    end
+
+    describe "Post 'resend_verification_mail'" do
+      xit 'returns success when given a valid code' do
+        post :resend_verification_mail, email_verification_code: unverified_student_user.email_verification_code
+
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_verified_path)
+        expect(flash[:error]).to be_nil
       end
     end
   end

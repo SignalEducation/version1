@@ -17,9 +17,9 @@
 
 FactoryBot.define do
   factory :faq do
-    name "MyString"
-    name_url "MyString"
-    active false
+    sequence(:name)           { |n| "faq-#{n}"}
+    sequence(:name_url)       { |n| "faq-#{n}"}
+    active true
     sorting_order 1
     faq_section_id 1
     question_text "MyText"

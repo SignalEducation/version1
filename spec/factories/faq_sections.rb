@@ -14,8 +14,8 @@
 
 FactoryBot.define do
   factory :faq_section do
-    name "MyString"
-    name_url "MyString"
+    sequence(:name)         { |n| "faq-section-#{n}"}
+    sequence(:name_url)         { |n| "faq-section-#{n}"}
     description "MyText"
     active false
     sorting_order 1
