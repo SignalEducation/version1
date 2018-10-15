@@ -18,13 +18,14 @@
 
 FactoryBot.define do
   factory :product do
-    sequence(:name)      { |n| "Product-00#{n}" }
+    sequence(:name)                  { |n| "Product-00#{n}" }
     mock_exam_id 1
     active true
-    stripe_guid "MyString"
+    sequence(:stripe_guid)           { |n| "stripe-guid-#{n}" }
     live_mode false
     price '999'
     currency_id 1
+    sequence(:stripe_sku_guid)           { |n| "stripe-sku-guid-#{n}" }
   end
 
 end

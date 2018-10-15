@@ -189,11 +189,11 @@ class User < ActiveRecord::Base
       if user && !user.password_change_required?
         user.update_attributes(password_reset_requested_at: Proc.new{Time.now}.call,password_reset_token: ApplicationController::generate_random_code(20))
         #Send reset password email from Mandrill
-        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}")
+        MandrillWorker.perform_async(user.id, 'password_reset_email', "#{root_url}/reset_password/#{user.password_reset_token}") unless Rails.env.test?
       elsif user && user.email_verified && user.password_change_required?
         # This is for users that received invite verification emails, clicked on the link which verified their account but they did not enter a PW. Now they are trying to access their account by trying to reset their PW so we send them a link for the set pw form instead of the reset pw form.
         user.update_attribute(:password_reset_token, ApplicationController::generate_random_code(20))
-        MandrillWorker.perform_async(user.id, 'send_set_password_email', "#{root_url}/set_password/#{user.password_reset_token}")
+        MandrillWorker.perform_async(user.id, 'send_set_password_email', "#{root_url}/set_password/#{user.password_reset_token}") unless Rails.env.test?
       end
     end
   end
@@ -378,7 +378,7 @@ class User < ActiveRecord::Base
 
   def trial_days_left
     time_now = Proc.new{Time.now.to_date}.call
-    (self.student_access.trial_ending_at_date.to_date - time_now).to_i
+    ((self.student_access.trial_started_date + self.student_access.trial_days_limit.days).to_date - time_now).to_i
   end
 
   def trial_seconds_left

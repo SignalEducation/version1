@@ -10,218 +10,25 @@
 #
 
 require 'rails_helper'
-require 'support/users_and_groups_setup'
 
 describe ReferralCodesController, type: :controller do
 
-  include_context 'users_and_groups_setup'
+  let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
+  let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let!(:user_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_management_user.id) }
+
+  let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
+  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
 
   let!(:tutor) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id ) }
-  let!(:tutor_referral_code) { FactoryBot.create(:referral_code, user_id: tutor.id) }
+  let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
+  let!(:referred_signup) { FactoryBot.create(:referred_signup, referral_code_id: tutor.referral_code.id, user_id: student_user.id) }
 
-  context 'Not logged in: ' do
-
-    describe "GET 'index'" do
-      it 'should redirect to sign_in' do
-        get :index
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should redirect to sign_in' do
-        delete :destroy, id: 1
-        expect_bounce_as_not_signed_in
-      end
-    end
-
-  end
-
-  context 'Logged in as a valid_trial_student: ' do
+  context 'Logged in as a user_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(valid_trial_student)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a invalid_trial_student: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(invalid_trial_student)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a valid_subscription_student: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(valid_subscription_student)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a invalid_subscription_student: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(invalid_subscription_student)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a complimentary_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(comp_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a tutor_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(tutor_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        delete :destroy, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a content_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(content_manager_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        delete :destroy, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a marketing_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(marketing_manager_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should bounce as not allowed' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should bounce as not allowed' do
-        delete :destroy, id: tutor_referral_code.id
-        expect_bounce_as_not_allowed
-      end
-    end
-
-  end
-
-  context 'Logged in as a customer_support_manager_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(customer_support_manager_user)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_index_success_with_model('referral_codes', 1)
-      end
-    end
-
-    describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        student_user = FactoryBot.create(:student_user)
-        student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
-                                            subscription_id: 1)
-        delete :destroy, id: tutor_referral_code.id
-        expect_delete_error_with_model('referral_code', referral_codes_url)
-      end
-
-      it 'should be OK as no dependencies exist' do
-        delete :destroy, id: tutor_referral_code.id
-        expect_delete_success_with_model('referral_code', referral_codes_url)
-      end
-    end
-
-  end
-
-  context 'Logged in as a admin_user: ' do
-
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(admin_user)
+      UserSession.create!(user_management_user)
     end
 
     describe "GET 'index'" do
@@ -232,17 +39,17 @@ describe ReferralCodesController, type: :controller do
     end
     
     describe "DELETE 'destroy'" do
-      it 'should be ERROR as children exist' do
-        student_user = FactoryBot.create(:student_user)
-        student_user.create_referred_signup(referral_code_id: tutor_referral_code.id,
-                                                       subscription_id: 1)
-        delete :destroy, id: tutor_referral_code.id
-        expect_delete_error_with_model('referral_code', referral_codes_url)
-      end
-
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: tutor_referral_code.id
+        delete :destroy, id: tutor.referral_code.id
         expect_delete_success_with_model('referral_code', referral_codes_url)
+      end
+    end
+
+    describe "Post 'referral'" do
+      it 'redirect to root' do
+        #TODO test cookie dropping
+        post :referral, ref_code: tutor.referral_code.code
+        expect(response).to redirect_to(root_url)
       end
     end
 

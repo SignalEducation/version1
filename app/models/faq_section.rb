@@ -38,8 +38,7 @@ class FaqSection < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    #If no child FAQ records
-    false
+    self.faqs.empty?
   end
 
   protected

@@ -83,6 +83,7 @@ class EnrollmentManagementController < ApplicationController
 
 
   def export_enrollment_log_data
+    #TODO - Flagged for removal
     @enrollment = Enrollment.find(params[:id])
     @scul = @enrollment.subject_course_user_log
     @course_module_element_user_logs = @scul.course_module_element_user_logs
