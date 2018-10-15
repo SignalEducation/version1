@@ -38,10 +38,10 @@ describe 'The student sign-up process', type: :feature do
     within('#new_user') do
       student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
     end
-    expect(page).to have_content 'Thanks for Signing Up'
+    expect(page).to have_content 'Fantastic! Check your inbox now'
 
     visit user_verification_path(email_verification_code: User.last.email_verification_code)
-    expect(page).to have_content 'Verification Complete'
+    expect(page).to have_content 'Congratulations! Your LearnSignal account is now active'
   end
 
   describe 'sign-up with to free trial valid details:' do
@@ -50,7 +50,7 @@ describe 'The student sign-up process', type: :feature do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
-        expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
+        expect(page).to have_content 'Upgrade now for Unlimited Access'
         student_picks_a_subscription_plan(gbp, 1)
         enter_credit_card_details('valid')
         within('.check.terms_and_conditions') do
@@ -70,7 +70,7 @@ describe 'The student sign-up process', type: :feature do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
-        expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
+        expect(page).to have_content 'Upgrade now for Unlimited Access'
         student_picks_a_subscription_plan(gbp, 3)
         enter_credit_card_details('valid')
         within('.check.terms_and_conditions') do
@@ -90,7 +90,7 @@ describe 'The student sign-up process', type: :feature do
         within('.navbar.navbar-default') do
           find('.days-left').click
         end
-        expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
+        expect(page).to have_content 'Upgrade now for Unlimited Access'
         student_picks_a_subscription_plan(gbp, 12)
         enter_credit_card_details('valid')
         within('.check.terms_and_conditions') do
