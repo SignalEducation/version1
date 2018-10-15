@@ -33,8 +33,12 @@ class FooterPagesController < ApplicationController
 
     mock_exams = MockExam.all_in_order
     mock_exam_ids = mock_exams.map(&:id)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : current_user.country
+    if current_user
+      @country = current_user.country
+    else
+      ip_country = IpAddress.get_country(request.remote_ip)
+      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    end
     @currency_id = @country.currency_id
     @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
 
@@ -54,7 +58,7 @@ class FooterPagesController < ApplicationController
       @tutor.course_tutor_details.each do |course_tutor|
         @course_ids << course_tutor.subject_course if course_tutor.subject_course
       end
-      @courses = SubjectCourse.find(@course_ids)
+      @courses = SubjectCourse.where(id: @course_ids)
       seo_title_maker(@tutor.full_name, @tutor.description, nil)
     else
       redirect_to tutors_url
@@ -133,7 +137,7 @@ class FooterPagesController < ApplicationController
     user_id = current_user ? current_user.id : nil
     IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
-    redirect_to request.referrer
+    redirect_to request.referrer ? request.referrer : root_url
   end
 
   protected

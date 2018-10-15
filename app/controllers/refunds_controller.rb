@@ -49,7 +49,7 @@ class RefundsController < ApplicationController
       flash[:success] = I18n.t('controllers.refunds.create.flash.success')
       redirect_to subscription_management_invoice_charge_url(@refund.subscription_id, @refund.invoice_id, @refund.charge_id)
     else
-      redirect_to request.referrer
+      redirect_to request.referrer ? request.referrer : root_url
       flash[:error] = I18n.t('controllers.refunds.create.flash.error')
     end
   end

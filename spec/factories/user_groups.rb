@@ -96,7 +96,7 @@ FactoryBot.define do
       content_management_access             true
       stripe_management_access              true
       user_management_access                true
-      developer_access                      true
+      developer_access                      false
       user_group_management_access          true
     end
 
