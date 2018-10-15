@@ -5,10 +5,14 @@
         .h3
           =t('views.user_accounts.trial_info.trial_status')
         .h6
-          =@user.user_account_status
+          -if @user.trial_or_sub_user? && @user.valid_trial_user?
+            ='Live'
+          -elsif @user.trial_or_sub_user? && @user.expired_trial_user?
+            ='Expired'
+
       .col-md-6
         .h3
-          =t('views.user_accounts.trial_info.remaning_minutes')
+          ='Minutes Remaining in Trial'
         .h6
           =@user.trial_minutes_left
 
@@ -24,13 +28,13 @@
       .col-md-6
         -if @user.student_access.trial_ended_date
           .h3
-            =t('views.user_accounts.trial_info.trial_ended')
+            ='Trial Period Expired'
           .h6
             =humanize_datetime(@user.student_access.trial_ended_date)
 
         -elsif @user.student_access.trial_ending_at_date
           .h3
-            =t('views.user_accounts.trial_info.trial_ending')
+            ='Trial Period Expires'
           .h6
             =humanize_datetime(@user.student_access.trial_ending_at_date)
 
@@ -38,5 +42,5 @@
 
   .col-sm-6.col-md-4
     -if @user.trial_user?
-      =link_to t('views.user_accounts.trial_info.upgrade_button'), new_subscription_url, class: 'btn btn-red full-width'
+      =link_to 'Upgrade to full membership', new_subscription_url, class: 'btn btn-red full-width'
 
