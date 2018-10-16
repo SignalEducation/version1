@@ -98,13 +98,13 @@ class StudentAccess < ActiveRecord::Base
 
     if self.user.student_user? && self.trial_access? && self.trial_started_date
       date_now = Proc.new{Time.now.to_datetime}.call
-      if date_now > self.trial_ending_at_date || self.content_seconds_consumed > self.trial_seconds_limit
+      if date_now > (self.trial_started_date + self.trial_days_limit.days) || self.content_seconds_consumed > self.trial_seconds_limit
         self.update_columns(content_access: false, trial_ended_date: date_now)
       else
         # Need to reset the access boolean and trial_ended_date
         # As the users trial limits may have been changed after it expired
         self.update_columns(content_access: true,
-                            trial_ending_at_date: date_now + self.trial_days_limit.days,
+                            trial_ending_at_date: self.trial_started_date + self.trial_days_limit.days,
                             trial_ended_date: nil)
         TrialExpirationWorker.perform_at(self.trial_ending_at_date, self.user_id) unless Rails.env.test?
       end

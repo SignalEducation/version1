@@ -19,7 +19,7 @@ describe 'Course content Vs Paywall', type: :feature do
       parent = page.find('.course-topics-list li:first-child')
       parent.click
       click_on(course_module_element_1_1.name)
-      expect(page).to have_content('Welcome to your 7-day Free Trial')
+      expect(page).to have_content('Start your free trial today')
     end
   end
 
@@ -48,7 +48,7 @@ describe 'Course content Vs Paywall', type: :feature do
       visit_my_profile
       click_on I18n.t('views.user_accounts.trial_info.tab_heading')
       sleep(1)
-      expect(page).to have_content 'Valid Trial'
+      expect(page).to have_content 'Live'
     end
 
     scenario 'an expired trial student - cannot see content', js: true do
@@ -71,10 +71,10 @@ describe 'Course content Vs Paywall', type: :feature do
       within('.remodal') do
         click_on 'Upgrade Account'
       end
-      expect(page).to have_content I18n.t('views.subscriptions.new_subscription.h1')
+      expect(page).to have_content 'Upgrade now for Unlimited Access'
       visit_my_profile
       click_on I18n.t('views.user_accounts.trial_info.tab_heading')
-      expect(page).to have_content 'Expired Trial'
+      expect(page).to have_content 'Expired'
     end
 
     scenario 'a valid subscription student - can see content', js: true do

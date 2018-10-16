@@ -7,10 +7,6 @@ class SubscriptionManagementController < ApplicationController
   before_action :get_variables
 
 
-  def index
-
-  end
-
   def show
     @subscription = Subscription.where(id: params[:id]).first
     @user = @subscription.user

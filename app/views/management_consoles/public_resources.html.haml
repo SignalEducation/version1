@@ -51,5 +51,6 @@
                     .col-md-6
                       .pull-right
                         =link_to t('views.faq_sections.edit.h1'), edit_faq_section_url(faq_section), class: 'btn btn-purple'
-                        =link_to I18n.t('views.faq_sections.index.delete'), faq_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
+                        -if faq_section.destroyable?
+                          =link_to I18n.t('views.faq_sections.index.delete'), faq_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
 

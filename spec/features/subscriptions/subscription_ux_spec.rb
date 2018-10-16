@@ -34,9 +34,9 @@ describe 'Subscription UX:', type: :feature do
     within('#new_user') do
       student_sign_up_as('John', 'Smith', 'john@example.com', user_password)
     end
-    expect(page).to have_content 'Thanks for Signing Up'
+    expect(page).to have_content 'Fantastic! Check your inbox now'
     visit user_verification_path(email_verification_code: User.last.email_verification_code)
-    expect(page).to have_content 'Verification Complete'
+    expect(page).to have_content 'Congratulations! Your LearnSignal account is now active'
 
     visit new_subscription_path
     student_picks_a_subscription_plan(gbp, 1)

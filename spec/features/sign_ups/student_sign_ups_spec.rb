@@ -35,7 +35,7 @@ describe 'The student sign-up process', type: :feature do
 
       end
       find('.lsbtn.submit').click
-      expect(page).to have_content 'Thanks for Signing Up'
+      expect(page).to have_content 'Fantastic! Check your inbox now'
     end
 
     scenario 'with valid details on student_sign_ups#new page', js: true do
@@ -52,7 +52,7 @@ describe 'The student sign-up process', type: :feature do
         end
         page.all(:css, '#signUp').first.click
       end
-      expect(page).to have_content 'Thanks for Signing Up'
+      expect(page).to have_content 'Fantastic! Check your inbox now'
     end
 
   end

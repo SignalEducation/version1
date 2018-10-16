@@ -7,7 +7,7 @@ RSpec.describe UserSessionsController, :type => :controller do
   # Need a create tests for each possible redirect and student updates
   # Need a session destroy test
   # Need test for blocked user group users
-  # Need test for email verification and PW Reset
+  # Need test for users that need email verification and PW Reset
 
   describe "GET new" do
     it "returns http success" do

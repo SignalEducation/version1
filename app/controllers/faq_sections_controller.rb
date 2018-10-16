@@ -24,9 +24,6 @@ class FaqSectionsController < ApplicationController
     @faq_sections = FaqSection.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def show
-  end
-
   def new
     @faq_section = FaqSection.new(sorting_order: 1)
   end
