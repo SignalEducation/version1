@@ -4,11 +4,11 @@
       .row
         .col-lg-10.col-lg-offset-1
           %h1.title1
-            ="Welcome to your #{ENV['FREE_TRIAL_DAYS']}-day Free Trial"
+            ='Start your free trial today'
           %h2.subtitle1
-            ="We’re offering you #{(ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i/60).to_s} minutes of complimentary access over the next #{ENV['FREE_TRIAL_DAYS']} days.  Let us show you how we will help you pass your exams."
+            ='Explore our innovative learning platform and discover how LearnSignal helps you pass your ACCA faster'
 
-      .row.l-margin-top
+      .row.l-margin-top.l-margin-bottom
         .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
           #sign_up.l-margin-top
             =form_for @user, url: create_student_url do |f|
@@ -40,19 +40,22 @@
                         %input{type: 'checkbox', id: 'communication_approval', required: true}
                           %span
                             %i.fa.fa-check
-                          ='I agree to receiving communication from LearnSignal, you can unsubscribe at any time'
+                          ='I agree to receiving communications from LearnSignal (you can unsubscribe at any time)'
 
                   .col-sm-12
-                    .form-group.l-margin-top
+                    .form-group
                       %label.check.terms_and_conditions
                         %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
                           %span
                             %i.fa.fa-check
-                          ='I Agree to LearnSignal'
-                          =link_to 'Terms & Conditions', terms_and_conditions_url
+                          ="I Agree to LearnSignal's"
+                          =link_to 'Terms and Conditions', terms_and_conditions_url
+
+                    %p.h5.text-center
+                      ='No credit card required. Set-up takes one minute.'
 
                   .col-sm-12.l-margin-top
-                    =f.submit t('views.general.sign_up_now'), class: 'btn btn-red btn-wide btn-lg-text', id: 'signUp'
+                    =f.submit 'START FREE TRIAL NOW', class: 'btn btn-red btn-wide btn-lg-text', id: 'signUp'
                     .sk-circle
                       .sk-circle1.sk-child
                       .sk-circle2.sk-child
@@ -67,10 +70,6 @@
                       .sk-circle11.sk-child
                       .sk-circle12.sk-child
 
-      .row.l-margin-top-huge
-        .col-sm-12
-          .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-            =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 
 
