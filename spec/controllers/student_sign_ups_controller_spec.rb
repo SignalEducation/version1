@@ -1,6 +1,9 @@
 require 'rails_helper'
+require 'support/stripe_web_mock_helpers'
+require 'support/mandrill_web_mock_helpers'
 
 RSpec.describe StudentSignUpsController, type: :controller do
+
 
   let!(:group_1) { FactoryBot.create(:group) }
   let!(:group_2) { FactoryBot.create(:group) }
@@ -19,7 +22,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
   let!(:unverified_user) { FactoryBot.create(:student_user, account_activated_at: nil, account_activation_code: '987654321', active: false, email_verified_at: nil, email_verification_code: '123456687', email_verified: false) }
   let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
-  let!(:sign_up_params) { { first_name: "Test", last_name: "Student", country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: "dummy_pass", password_confirmation: "dummy_pass" } }
+  let!(:sign_up_params) { { first_name: "Test", last_name: "Student", country_id: uk.id, locale: 'en', email: 'test.student@example.com', password: "dummy_pass", password_confirmation: "dummy_pass" , email_verification_code: "c5a8a2cb71d476ff4ed5" } }
 
 
   context 'Not logged in...' do
@@ -91,13 +94,25 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
       describe "valid data" do
 
-        xit 'signs up new student' do
+        it 'signs up new student' do
+          stripe_url = 'https://api.stripe.com/v1/customers'
+          stripe_request_body = {'email'=>'test.student@example.com'}
+          stub_customer_create_request(stripe_url, stripe_request_body)
+
+          mandrill_url = 'https://mandrillapp.com/api/1.0/messages/send-template.json'
+          email= 'test.student@example.com'
+          template = 'email_verification_181015'
+          #stub_mandrill_verification_request(mandrill_url)
+
           user_count = User.all.count
           post :create, user: sign_up_params
           user = assigns(:user)
           expect(response.status).to eq(302)
           expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(User.all.count).to eq(user_count + 1)
+
+          expect(a_request(:post, stripe_url).with(body: stripe_request_body)).to have_been_made.once
+
         end
 
         #TODO - review this with ReferralCodes/ReferralSignUps controllers

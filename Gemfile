@@ -97,7 +97,7 @@ group :test do
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
-  gem 'stripe-ruby-mock', '>= 2.4.0', :require => 'stripe_mock'
+  gem 'webmock' # stub http requestes
   gem 'webrat' # Runs tests in a "headless" browser
   gem 'launchy'
 end
