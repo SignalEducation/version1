@@ -8,7 +8,7 @@
           %h2.subtitle1
             ='Explore our innovative learning platform and discover how LearnSignal helps you pass your ACCA faster'
 
-      .row.l-margin-top
+      .row.l-margin-top.l-margin-bottom
         .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
           #sign_up.l-margin-top
             =form_for @user, url: create_student_url do |f|
@@ -70,10 +70,6 @@
                       .sk-circle11.sk-child
                       .sk-circle12.sk-child
 
-      .row.l-margin-top-huge
-        .col-sm-12
-          .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-            =link_to 'Already have an account?', sign_in_url, class: 'btn btn-red btn-wide btn-lg-text btn-secondary', style: 'line-height: 60px'
 
 
 
