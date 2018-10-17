@@ -55,7 +55,7 @@ class Refund < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  before_validation :create_on_stripe, unless: 'Rails.env.test?'
+  before_validation :create_on_stripe
 
   # scopes
   scope :all_in_order, -> { order(:stripe_guid) }
