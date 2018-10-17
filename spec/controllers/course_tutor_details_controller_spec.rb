@@ -25,17 +25,20 @@ describe CourseTutorDetailsController, type: :controller do
   let!(:valid_params) { FactoryBot.attributes_for(:course_tutor_detail) }
 
 
-  context 'Logged in as a admin_user: ' do
+  context 'Logged in as a content_management_user: ' do
 
     before(:each) do
       activate_authlogic
-      UserSession.create!(admin_user)
+      UserSession.create!(content_management_user)
     end
 
     describe "GET 'index'" do
-      xit 'should respond OK' do
+      it 'should respond OK' do
         get :index, subject_course_id: subject_course_1.id
-        expect_index_success_with_model('course_tutor_details', 2)
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:index)
       end
     end
 
