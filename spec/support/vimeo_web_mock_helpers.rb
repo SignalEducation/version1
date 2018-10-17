@@ -38,3 +38,24 @@ def stub_vimeo_delete_request(url)
       to_return(status: status, body: '', headers: {})
 
 end
+
+
+#Vimeo - verify_upload Call
+def stub_vimeo_patch_request(url, request_body)
+  uri = url
+  status = 200
+  request_body = request_body
+
+  stub_request(:patch, uri).
+      with(
+          body: request_body,
+          headers: {
+              'Accept'=>'*/*',
+              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+              'Authorization'=>'Bearer a3b067f4c5605adb58d0fc1f599d76a6',
+              'Content-Type'=>'application/x-www-form-urlencoded',
+              'User-Agent'=>'Ruby'
+          }).
+      to_return(status: status, body: '', headers: {})
+
+end

@@ -39,6 +39,10 @@ describe CourseModuleElementsController, type: :controller do
 
   let!(:valid_params) { course_module_element_1_1.attributes.merge({name: 'ABCDE', name_url: 'adcbw'}) }
 
+  let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video) }
+  let!(:valid_video_params) { course_module_element_1_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
+
+
   context 'Logged in as a content_management_user: ' do
 
     before(:each) do
@@ -83,6 +87,17 @@ describe CourseModuleElementsController, type: :controller do
       it 'should report OK for valid params' do
         post :create, course_module_element: valid_params
         expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+      end
+
+      it 'should report OK for valid_video_params' do
+        url = "https://api.vimeo.com/videos/#{cme_video_params[:vimeo_guid]}"
+        vimeo_request_body = {"name"=>"Video 01"}
+        stub_vimeo_patch_request(url, vimeo_request_body)
+
+        post :create, course_module_element: valid_video_params
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+
+        expect(a_request(:patch, url).with(body: vimeo_request_body)).to have_been_made.once
       end
 
       it 'should report error for invalid params' do
