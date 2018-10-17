@@ -29,6 +29,9 @@ describe CouponsController, type: :controller do
                                                    user_group_id: stripe_management_user_group.id) }
   let!(:stripe_management_student_access) { FactoryBot.create(:complimentary_student_access,
                                                               user_id: stripe_management_user.id) }
+  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
+  let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
+  let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
 
   let!(:gbp) { FactoryBot.create(:gbp) }
   let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
@@ -98,17 +101,40 @@ describe CouponsController, type: :controller do
       it 'should be OK as valid code' do
         post :validate_coupon, { coupon_code: coupon_1.code, plan_id: plan1.id, format: :json }
         expect(response.status).to eq(200)
-        expect(response.body.split("\"")[1]).to eq('valid')
+        expect(JSON.parse(response.body).first[1]).to eq(true)
       end
 
-      xit 'should be ERROR as invalid code' do
+      it 'should be ERROR as invalid code' do
         post :validate_coupon, { coupon_code: 'abc123', plan_id: plan1.id, format: :json }
         expect(response.status).to eq(200)
-        #TODO
-        expect(response.body.split("\"")[1]).to eq('false')
+        expect(JSON.parse(response.body).first[1]).to eq(false)
+
       end
     end
 
+  end
+
+  context 'Logged in as a student_user: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(student_user)
+    end
+
+    describe "POST 'validate_coupon'" do
+      it 'should be OK as valid code' do
+        post :validate_coupon, { coupon_code: coupon_1.code, plan_id: plan1.id, format: :json }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body).first[1]).to eq(true)
+      end
+
+      it 'should be ERROR as invalid code' do
+        post :validate_coupon, { coupon_code: 'abc123', plan_id: plan1.id, format: :json }
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body).first[1]).to eq(false)
+
+      end
+    end
   end
 
 end
