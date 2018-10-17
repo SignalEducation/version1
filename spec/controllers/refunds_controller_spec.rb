@@ -23,6 +23,7 @@ require 'rails_helper'
 require 'support/stripe_web_mock_helpers'
 
 describe RefundsController, type: :controller do
+
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
   let(:stripe_management_user_group) { FactoryBot.create(:stripe_management_user_group) }
   let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student,

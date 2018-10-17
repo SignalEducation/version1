@@ -20,82 +20,43 @@
 #
 
 require 'rails_helper'
-require 'support/users_and_groups_setup'
-require 'support/system_setup'
-require 'stripe_mock'
 
 describe SubscriptionsController, type: :controller do
 
-  include_context 'users_and_groups_setup'
-  include_context 'system_setup'
+  let!(:gbp) { FactoryBot.create(:gbp) }
+  let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
+  let!(:uk_vat_code) { FactoryBot.create(:vat_code, country_id: uk.id) }
+  let!(:subscription_plan_gbp_m) { FactoryBot.create(:student_subscription_plan_m,
+                                                     currency_id: gbp.id, price: 7.50) }
+  let!(:subscription_plan_gbp_q) { FactoryBot.create(:student_subscription_plan_q,
+                                                     currency_id: gbp.id, price: 22.50) }
+  let!(:subscription_plan_gbp_y) { FactoryBot.create(:student_subscription_plan_y,
+                                                     currency_id: gbp.id, price: 87.99) }
 
-  let(:stripe_helper) { StripeMock.create_test_helper }
-  let!(:start_stripe_mock) { StripeMock.start }
-  let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
-  let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
-  let!(:student_user_2) { FactoryBot.create(:student_user, country_id: Country.first.id) }
-  let!(:student_user_3) { FactoryBot.create(:student_user, country_id: Country.first.id) }
-  let!(:subscription_payment_card) { FactoryBot.create(:subscription_payment_card, user_id: student_user.id) }
-  let!(:subscription_1) { x = FactoryBot.create(:subscription,
-                             user_id: valid_subscription_student.id,
-                             active: true,
-                             subscription_plan_id: subscription_plan_1.id,
-                             stripe_token: stripe_helper.generate_card_token)
-  valid_subscription_student.stripe_customer_id = x.stripe_customer_id
-  valid_subscription_student.save
-                             x }
-  let!(:subscription_2) { x = FactoryBot.create(:subscription,
-                             user_id: student_user_2.id,
-                             subscription_plan_id: subscription_plan_1.id,
-                             stripe_token: stripe_helper.generate_card_token)
-  student_user_2.stripe_customer_id = x.stripe_customer_id
-  student_user_2.save
-                             x }
-  let!(:subscription_3) { x = FactoryBot.create(:subscription,
-                             user_id: student_user_3.id,
-                             subscription_plan_id: subscription_plan_1.id,
-                             stripe_token: stripe_helper.generate_card_token)}
+  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
+  let!(:valid_trial_student) { FactoryBot.create(:valid_free_trial_student,
+                                                 user_group_id: student_user_group.id) }
+  let!(:valid_trial_student_access) { FactoryBot.create(:valid_free_trial_student_access,
+                                                        user_id: valid_trial_student.id) }
+  let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student,
+                                                        user_group_id: student_user_group.id) }
+  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access,
+                                                               user_id: valid_subscription_student.id) }
 
+  let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
+                                                stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
 
-  let!(:upgrade_params) {{ subscriptions_attributes: { "0" => {subscription_plan_id: subscription_plan_1.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'true'} } }}
-  let!(:invalid_upgrade_params) {{ subscriptions_attributes: { "0" => {subscription_plan_id: subscription_plan_1.id, stripe_token: stripe_helper.generate_card_token, terms_and_conditions: 'false'} } }}
-
-  let!(:valid_params) { {subscription_plan_id: subscription_plan_2.id} }
-
-  after { StripeMock.stop }
+  let!(:valid_params) { FactoryBot.attributes_for(:subscription) }
 
   context 'Logged in as a valid_trial_student: ' do
-
-    ##TODO
-    ## Testing for student users must test each account type a user can have
-    ## [not-started-trial, valid-trial, expired-trial]
-    ## [valid-sub, past-due-sub, canceled-pending-sub, canceled-sub]
-    ##TODO
 
     before(:each) do
       activate_authlogic
       UserSession.create!(valid_trial_student)
-      stripe_plan = Stripe::Plan.create(
-          amount: (subscription_plan_1.price.to_f * 100).to_i,
-          interval: 'month',
-          interval_count: subscription_plan_1.payment_frequency_in_months.to_i,
-          trial_period_days: subscription_plan_1.trial_period_in_days.to_i,
-          name: 'LearnSignal ' + subscription_plan_1.name.to_s,
-          statement_descriptor: 'LearnSignal',
-          currency: subscription_plan_1.currency.try(:iso_code).try(:downcase),
-          id: Rails.env + '-' + ApplicationController::generate_random_code(20)
-      )
-      subscription_plan_1.update_attribute(:stripe_guid, stripe_plan.id)
-      stripe_customer = Stripe::Customer.create(
-          email: valid_trial_student.email
-      )
-      valid_trial_student.update_attributes(stripe_customer_id: stripe_customer.id, country_id: Country.first.id)
-
-      valid_coupon = Stripe::Coupon.create(percent_off: 25, duration: 'repeating', duration_in_months: 3, id: 'valid_coupon_code', currency: subscription_plan_1.currency.try(:iso_code).try(:downcase))
     end
 
     describe "GET 'new'" do
-      xit 'should render upgrade page' do
+      it 'should render upgrade page' do
         get :new
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -234,4 +195,24 @@ describe SubscriptionsController, type: :controller do
 
   end
 
-end
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+    end
+
+    describe "GET 'new'" do
+      it 'should render upgrade page' do
+        get :new
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(account_url(anchor: :subscriptions))
+      end
+    end
+
+
+  end
+
+  end
