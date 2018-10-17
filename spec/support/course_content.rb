@@ -82,4 +82,7 @@ shared_context 'course_content' do
                              quiz_answer_id: quiz_answer_4.id) }
 
 
+  # Constructed Response
+
+
 end

@@ -42,6 +42,7 @@ describe CourseModuleElementsController, type: :controller do
   let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video) }
   let!(:valid_video_params) { course_module_element_1_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
 
+  #TODO - add tests for Constructed Response CMEs
 
   context 'Logged in as a content_management_user: ' do
 
