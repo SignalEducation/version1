@@ -48,10 +48,17 @@ RSpec.describe StudentSignUpsController, type: :controller do
     end
 
     describe "GET 'show'" do
+      #This is the post sign-up landing page - personal_sign_up_complete
       it 'returns http success' do
         get :show, account_activation_code: unverified_user.account_activation_code
         expect(response.status).to eq(200)
         expect(response).to render_template(:show)
+      end
+
+      it 'redirect to sign in as no user found' do
+        get :show, account_activation_code: '123abc'
+        expect(response.status).to eq(302)
+        expect(response).to redirect_to(sign_in_url)
       end
     end
 
@@ -66,7 +73,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
     end
 
     describe "POST 'create'" do
-
+      #Stripe Customer Create
       describe "invalid data" do
 
         it 'does not subscribe user if user with same email already exists' do
@@ -99,9 +106,10 @@ RSpec.describe StudentSignUpsController, type: :controller do
           stripe_request_body = {'email'=>'test.student@example.com'}
           stub_customer_create_request(stripe_url, stripe_request_body)
 
-          mandrill_url = 'https://mandrillapp.com/api/1.0/messages/send-template.json'
-          email= 'test.student@example.com'
-          template = 'email_verification_181015'
+          #TODO - Mandrill call needs to be stubbed [verification_code issue]
+          #mandrill_url = 'https://mandrillapp.com/api/1.0/messages/send-template.json'
+          #email= 'test.student@example.com'
+          #template = 'email_verification_181015'
           #stub_mandrill_verification_request(mandrill_url)
 
           user_count = User.all.count
@@ -115,9 +123,12 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
         end
 
-        #TODO - review this with ReferralCodes/ReferralSignUps controllers
-        xit 'creates referred signup if user comes from referral link' do
-          cookies.encrypted[:referral_data] = "#{referral_code.code};http://referral.example.com"
+        it 'creates referred signup if user comes from referral link' do
+          stripe_url = 'https://api.stripe.com/v1/customers'
+          stripe_request_body = {'email'=>'test.student@example.com'}
+          stub_customer_create_request(stripe_url, stripe_request_body)
+
+          cookies.encrypted[:referral_data] = "#{student_user.referral_code.code};http://referral.example.com"
           post :create, user: sign_up_params
           user = assigns(:user)
           expect(response.status).to eq(302)
@@ -126,9 +137,46 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
           expect(ReferredSignup.count).to eq(1)
           rs = ReferredSignup.first
-          expect(rs.referral_code_id).to eq(referral_code.id)
+          expect(rs.referral_code_id).to eq(student_user.referral_code.id)
           expect(rs.user_id).to eq(User.last.id)
           expect(rs.referrer_url).to eq("http://referral.example.com")
+        end
+      end
+    end
+
+    describe "POST 'subscribe'" do
+      #Mailchimp list
+      describe "invalid data" do
+
+        it 'does not subscribe user if data is missing' do
+          request.env['HTTP_REFERER'] = '/en/student_new'
+          post :create, user: sign_up_params.merge(password: nil)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(:new_student)
+        end
+
+      end
+
+      describe "valid data" do
+
+        xit 'subscribes with full data set' do
+
+          user_count = User.all.count
+          post :create, user: sign_up_params
+          user = assigns(:user)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
+          expect(User.all.count).to eq(user_count + 1)
+
+        end
+
+        xit 'subscribes with reduced data set' do
+          post :create, user: sign_up_params
+          user = assigns(:user)
+          expect(response.status).to eq(302)
+          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
+          expect(Subscription.all.count).to eq(0)
+
         end
       end
     end
