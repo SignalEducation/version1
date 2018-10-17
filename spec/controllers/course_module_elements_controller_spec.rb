@@ -25,6 +25,7 @@
 
 require 'rails_helper'
 require 'support/course_content'
+require 'support/vimeo_web_mock_helpers'
 
 describe CourseModuleElementsController, type: :controller do
 
@@ -65,10 +66,16 @@ describe CourseModuleElementsController, type: :controller do
         expect_edit_success_with_model('course_module_element', course_module_element_1_1.id)
       end
 
-      # optional
+      # Vimeo Upload Ticket Build Stubbed
       it 'should respond OK with course_module_element_1_2 - video' do
+        url = 'https://api.vimeo.com/me/videos'
+        redirect_url = "http://test.host/en/course_module_elements/#{course_module_element_1_2.id}/edit?cm_id=#{course_module_element_1_2.course_module.id}&course_module_element_id=#{course_module_element_1_2.id}&type=video"
+        vimeo_request_body = {"redirect_url"=>redirect_url}
+        stub_vimeo_post_request(url, redirect_url, vimeo_request_body)
+
         get :edit, id: course_module_element_1_2.id
         expect_edit_success_with_model('course_module_element', course_module_element_1_2.id)
+        expect(a_request(:post, url).with(body: vimeo_request_body)).to have_been_made.once
       end
     end
 
@@ -114,8 +121,14 @@ describe CourseModuleElementsController, type: :controller do
     describe "DELETE 'destroy'" do
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: course_module_element_2_2.id
-        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_2_2.course_module))
+        url = "https://api.vimeo.com/videos/#{course_module_element_video_1_1_2.vimeo_guid}"
+        stub_vimeo_delete_request(url)
+
+        delete :destroy, id: course_module_element_1_3.id
+        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_3.course_module))
+
+        expect(a_request(:delete, url).with(body: '')).to have_been_made.once
+
       end
     end
 
