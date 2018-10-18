@@ -60,7 +60,11 @@ class SubscriptionsController < ApplicationController
 
     unless stripe_token && @subscription && @subscription.subscription_plan
       flash[:error] = 'Sorry! The data entered is not valid. Please contact us for assistance.'
-      redirect_to request.referrer and return
+      redirect_to new_subscription_url and return
+    end
+    unless @subscription.terms_and_conditions && @subscription.user_id && @subscription.subscription_plan_id
+      flash[:error] = 'Sorry Something went wrong! You must agree to our Terms & Conditions.'
+      redirect_to new_subscription_url and return
     end
 
     user = @subscription.user
@@ -70,7 +74,7 @@ class SubscriptionsController < ApplicationController
 
     if coupon_code && !@coupon
       flash[:error] = 'Sorry! That is not a valid coupon code.'
-      redirect_to request.referrer and return
+      redirect_to new_subscription_url(coupon: true) and return
     end
 
     begin
@@ -112,13 +116,14 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
 
       flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
-      redirect_to request.referrer
+      redirect_to new_subscription_url
 
     rescue => e
       Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
       flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
-      redirect_to request.referrer
+      redirect_to new_subscription_url
     end
+
   end
 
   def personal_upgrade_complete
@@ -126,7 +131,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def change_plan
-    if current_user && current_user.current_subscription && !current_user.current_subscription.active_status?
+    if current_user && current_user.trial_user?
+      redirect_to new_subscription_url
+    elsif current_user && current_user.subscription_user? && current_user.current_subscription && !current_user.current_subscription.active_status?
       redirect_to account_url(anchor: :subscriptions)
     else
       @current_subscription = current_user.current_subscription
