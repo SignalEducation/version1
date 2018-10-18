@@ -20,7 +20,6 @@
 #
 
 require 'rails_helper'
-require 'stripe_mock'
 
 describe SubscriptionPlansController, type: :controller do
 
@@ -31,8 +30,6 @@ describe SubscriptionPlansController, type: :controller do
   let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
   let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
 
-  let(:stripe_helper) { StripeMock.create_test_helper }
-  let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
   let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
   let!(:stripe_student_user) { FactoryBot.create(:student_user,
@@ -45,10 +42,7 @@ describe SubscriptionPlansController, type: :controller do
 
   let!(:valid_params) { FactoryBot.attributes_for(:subscription_plan) }
 
-  #before { StripeMock.start }
-  after { StripeMock.stop }
 
-  #TODO - review all these. Is StripeMock needed?
   context 'Logged in as a stripe_management_user: ' do
 
     before(:each) do

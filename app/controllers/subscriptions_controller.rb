@@ -171,7 +171,7 @@ class SubscriptionsController < ApplicationController
       redirect_to account_url(anchor: 'subscriptions')
     else
       flash[:error] = I18n.t('controllers.subscriptions.update.flash.invalid_card')
-      redirect_to root_url
+      redirect_to account_url(anchor: 'payment-details')
     end
   end
 
