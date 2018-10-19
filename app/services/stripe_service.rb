@@ -13,6 +13,17 @@ class StripeService
     update_subscription_plan(subscription_plan, stripe_plan)
   end
 
+  def get_plan(plan_id)
+    plan = Stripe::Plan.retrieve({ id: plan_id })
+  end
+
+  def delete_plan(plan_id)
+    plan = get_plan(plan_id)
+    plan.delete if plan
+  rescue Stripe::InvalidRequestError => e
+    return false
+  end
+
   private
 
   def update_subscription_plan(subscription_plan, stripe_plan)
