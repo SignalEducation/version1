@@ -12,31 +12,28 @@ class PaypalService
     paypal_plan = Plan.new(plan_attributes(subscription_plan))
     paypal_plan.create
     update_subscription_plan(subscription_plan, paypal_plan)
-    if paypal_plan.update(patch('replace', 'ACTIVE'))
+    if paypal_plan.update(patch('replace', { state: 'ACTIVE' }))
       update_subscription_plan_state(subscription_plan, 'ACTIVE')
     end
   end
 
-  def update_plan(paypal_plan_id)
-    
+  def update_plan(subscription_plan)
+    delete_plan(subscription_plan.paypal_guid)
+    create_plan(subscription_plan)
   end
 
   def delete_plan(paypal_plan_id)
     plan = Plan.find(paypal_plan_id)
-    plan.update(patch('replace', 'DELETED'))
+    plan.update(patch('replace', { state: 'DELETED' }))
   end
 
   private
 
-  def api_client
-    @api ||= API.new
-  end
-
-  def patch(op, state)
+  def patch(op, update_attributes)
     patch = Patch.new
     patch.op = op
     patch.path = "/"
-    patch.value = { "state" => state }
+    patch.value = update_attributes
     patch
   end
 
