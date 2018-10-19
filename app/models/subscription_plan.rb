@@ -17,6 +17,7 @@
 #  name                          :string
 #  subscription_plan_category_id :integer
 #  livemode                      :boolean          default(FALSE)
+#  paypal_guid                   :string
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -108,6 +109,7 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_on_stripe_platform
+    SubscriptionPlanCreationWorker.perform_async(id)
     if self.stripe_guid.nil? && Rails.env.production?
       stripe_plan = Stripe::Plan.create(
               amount: (self.price.to_f * 100).to_i,
