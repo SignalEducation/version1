@@ -11,8 +11,10 @@ class PaypalService
   def create_plan(subscription_plan)
     paypal_plan = Plan.new(plan_attributes(subscription_plan))
     paypal_plan.create
-    paypal_plan.update(patch('replace', 'ACTIVE'))
     update_subscription_plan(subscription_plan, paypal_plan)
+    if paypal_plan.update(patch('replace', 'ACTIVE'))
+      update_subscription_plan_state(subscription_plan, 'ACTIVE')
+    end
   end
 
   def update_plan(paypal_plan_id)
@@ -72,7 +74,14 @@ class PaypalService
 
   def update_subscription_plan(subscription_plan, paypal_plan)
     subscription_plan.update(
-      paypal_guid: paypal_plan.id
+      paypal_guid: paypal_plan.id,
+      paypal_state: paypal_plan.state
     )    
+  end
+
+  def update_subscription_plan_state(subscription_plan, state)
+    subscription_plan.update(
+      paypal_state: state
+    ) 
   end
 end
