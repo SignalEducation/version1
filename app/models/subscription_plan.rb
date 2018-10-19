@@ -47,9 +47,9 @@ class SubscriptionPlan < ActiveRecord::Base
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
 
   # callbacks
-  before_create :create_on_stripe_platform
-  before_update :update_on_stripe_platform
-  after_destroy :delete_on_stripe_platform
+  after_create :create_remote_plans
+  after_update :update_remote_plans, if: :name_updated?
+  after_destroy :delete_remote_plans
 
   # scopes
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
@@ -108,52 +108,15 @@ class SubscriptionPlan < ActiveRecord::Base
     end
   end
 
-  def create_on_stripe_platform
-    SubscriptionPlanCreationWorker.perform_async(id)
-    if self.stripe_guid.nil? && Rails.env.production?
-      stripe_plan = Stripe::Plan.create(
-              amount: (self.price.to_f * 100).to_i,
-              currency: self.currency.try(:iso_code).try(:downcase),
-              interval: 'month',
-              interval_count: self.payment_frequency_in_months.to_i,
-              trial_period_days: self.trial_period_in_days.to_i,
-              name: 'LearnSignal ' + self.name.to_s,
-              statement_descriptor: 'LearnSignal',
-              id: Rails.env + '-' + ApplicationController::generate_random_code(20)
-      )
-      self.stripe_guid = stripe_plan.id
-      self.livemode = stripe_plan[:livemode]
-      if self.livemode == Invoice::STRIPE_LIVE_MODE
-        true
-      else
-        errors.add(:stripe, I18n.t('models.general.live_mode_error'))
-        return false
-      end
-    else
-      true
-    end
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+  def create_remote_plans
+    SubscriptionPlanWorker.perform_async(id, :create)
   end
 
-  def delete_on_stripe_platform
-    if self.destroyable?
-      stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
-      stripe_plan.delete
-    end
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+  def delete_remote_plans
+    SubscriptionPlanWorker.perform_async(id, :delete)
   end
 
-  def update_on_stripe_platform
-    stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
-    stripe_plan.name = 'Learnsignal ' + self.name
-    stripe_plan.save
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+  def update_remote_plans
+    SubscriptionPlanWorker.perform_async(id, :update)
   end
-
 end
