@@ -18,6 +18,7 @@
 #  subscription_plan_category_id :integer
 #  livemode                      :boolean          default(FALSE)
 #  paypal_guid                   :string
+#  paypal_state                  :string
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -26,6 +27,11 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
+  PAYPAL_STATES = [
+    'CREATED',
+    'ACTIVE',
+    'INACTIVE'
+  ]
 
   # relationships
   belongs_to :currency
@@ -35,7 +41,8 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # validation
   validates :name, presence: true, length: { maximum: 255 }
-  validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
+  validates :payment_frequency_in_months, inclusion: { in: PAYMENT_FREQUENCIES }
+  validates :paypal_state, inclusion: { in: PAYPAL_STATES }, allow_nil: true
   validates :currency_id, presence: true
   validates :price, presence: true
   validates :available_from, presence: true
@@ -55,7 +62,7 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
   scope :all_in_display_order, -> { order(:created_at) }
   scope :all_in_update_order, -> { order(:updated_at) }
-  scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
+  scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{ Time.now.gmtime.to_date }.call) }
   scope :for_students, -> { where(available_to_students: true) }
   scope :for_non_standard_students, -> { where(available_to_students: false) }
   scope :generally_available, -> { where(subscription_plan_category_id: nil) }

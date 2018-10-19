@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181009142259) do
+ActiveRecord::Schema.define(version: 20181019160216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1066,6 +1066,7 @@ ActiveRecord::Schema.define(version: 20181009142259) do
     t.integer  "subscription_plan_category_id"
     t.boolean  "livemode",                      default: false
     t.string   "paypal_guid"
+    t.string   "paypal_state"
   end
 
   add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree
