@@ -48,7 +48,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # callbacks
   after_create :create_remote_plans
-  after_update :update_remote_plans, if: :name_updated?
+  after_update :update_remote_plans, if: :name_changed?
   after_destroy :delete_remote_plans
 
   # scopes

@@ -11,6 +11,7 @@ class PaypalService
   def create_plan(subscription_plan)
     paypal_plan = Plan.new(plan_attributes(subscription_plan))
     paypal_plan.create
+    paypal_plan.update(patch('replace', 'ACTIVE'))
     update_subscription_plan(subscription_plan, paypal_plan)
   end
 
@@ -34,6 +35,7 @@ class PaypalService
     patch.op = op
     patch.path = "/"
     patch.value = { "state" => state }
+    patch
   end
 
   def plan_attributes(subscription_plan)
