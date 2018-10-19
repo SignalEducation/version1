@@ -6,7 +6,7 @@ class StripeService
       currency: subscription_plan.currency.iso_code.downcase,
       interval: 'month',
       interval_count: subscription_plan.payment_frequency_in_months,
-      name: 'LearnSignal ' + subscription_plan.name,
+      name: "LearnSignal #{subscription_plan.name}",
       statement_descriptor: 'LearnSignal',
       id: stripe_plan_id
     )
@@ -17,11 +17,15 @@ class StripeService
     plan = Stripe::Plan.retrieve({ id: stripe_plan_id })
   end
 
+  def update_plan(subscription_plan)
+    plan = get_plan(subscription_plan.stripe_guid)
+    plan.name = "LearnSignal #{subscription_plan.name}"
+    plan.save
+  end
+
   def delete_plan(stripe_plan_id)
     plan = get_plan(stripe_plan_id)
     plan.delete if plan
-  rescue Stripe::InvalidRequestError => e
-    return false
   end
 
   private

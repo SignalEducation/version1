@@ -31,8 +31,8 @@ class SubscriptionPlanService
   end
 
   def update_remote_plans
-    StripService.new.update_plan
-    PaypalService.new.update_plan
+    StripService.new.update_plan(@plan)
+    PaypalService.new.update_plan(@plan)
   end
 
   def delete_remote_plans
