@@ -14,10 +14,26 @@ class PaypalService
     update_subscription_plan(subscription_plan, paypal_plan)
   end
 
+  def update_plan(paypal_plan_id)
+    
+  end
+
+  def delete_plan(paypal_plan_id)
+    plan = Plan.find(paypal_plan_id)
+    plan.update(patch('replace', 'DELETED'))
+  end
+
   private
 
   def api_client
     @api ||= API.new
+  end
+
+  def patch(op, state)
+    patch = Patch.new
+    patch.op = op
+    patch.path = "/"
+    patch.value = { "state" => state }
   end
 
   def plan_attributes(subscription_plan)
