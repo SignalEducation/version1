@@ -3,8 +3,8 @@ class SubscriptionPlanWorker
 
   sidekiq_options queue: 'high'
 
-  def perform(subscription_id, action)
-    subscription = Subscription.find(subscription_id)
-    SubscriptionService.new(subscription).async_action(action)
+  def perform(subscription_plan_id, action)
+    plan = SubscriptionPlan.find(subscription_plan_id)
+    SubscriptionPlanService.new(plan).async_action(action)
   end
 end
