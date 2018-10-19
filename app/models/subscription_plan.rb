@@ -109,14 +109,14 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def create_remote_plans
-    SubscriptionPlanWorker.perform_async(id, :create)
+    SubscriptionPlanService.new(self).queue_async(:create)
   end
 
   def delete_remote_plans
-    SubscriptionPlanWorker.perform_async(id, :delete)
+    SubscriptionPlanService.new(self).queue_async(:delete)
   end
 
   def update_remote_plans
-    SubscriptionPlanWorker.perform_async(id, :update)
+    SubscriptionPlanService.new(self).queue_async(:update)
   end
 end
