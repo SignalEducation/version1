@@ -52,6 +52,14 @@ class StripeService
       coupon: coupon.try(:code),
       trial_end: 'now'
     )
+  rescue Stripe::CardError => e
+    body = e.json_body
+    err  = body[:error]
+    Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
+    raise Learnsignal::SubscriptionError.new("Sorry! Your request was declined because - #{err[:message]}")
+  rescue => e
+    Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
+    raise Learnsignal::SubscriptionError.new('Sorry Something went wrong! Please contact us for assistance.')
   end
 
   private
