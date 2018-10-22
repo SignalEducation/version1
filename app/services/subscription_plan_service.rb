@@ -26,17 +26,17 @@ class SubscriptionPlanService
   private
 
   def create_remote_plans
-    StripService.new.create_plan(@plan)
+    StripeService.new.create_plan(@plan)
     PaypalService.new.create_plan(@plan)
   end
 
   def update_remote_plans
-    StripService.new.update_plan(@plan)
+    StripeService.new.update_plan(@plan)
     PaypalService.new.update_plan(@plan)
   end
 
   def delete_remote_plans
-    StripService.new.delete_plan(@plan.stripe_guid)
+    StripeService.new.delete_plan(@plan.stripe_guid)
     PaypalService.new.delete_plan(@plan.paypal_guid)
   end
 end
