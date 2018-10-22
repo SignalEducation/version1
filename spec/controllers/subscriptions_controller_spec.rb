@@ -18,6 +18,8 @@
 #  terms_and_conditions     :boolean          default(FALSE)
 #  coupon_id                :integer
 #  paypal_subscription_guid :string
+#  paypal_token             :string
+#  paypal_status            :string
 #
 
 require 'rails_helper'

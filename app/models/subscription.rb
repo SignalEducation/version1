@@ -18,6 +18,8 @@
 #  terms_and_conditions     :boolean          default(FALSE)
 #  coupon_id                :integer
 #  paypal_subscription_guid :string
+#  paypal_token             :string
+#  paypal_status            :string
 #
 
 class Subscription < ActiveRecord::Base
@@ -30,6 +32,7 @@ class Subscription < ActiveRecord::Base
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
+  PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
   VALID_STATES = %w(active past_due canceled-pending)
 
   # relationships
@@ -48,9 +51,10 @@ class Subscription < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :subscription_plan_id, presence: true
-  validates :next_renewal_date, presence: true
-  validates :current_status, inclusion: {in: STATUSES}
-  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, on: :update
+  # validates :next_renewal_date, presence: true
+  validates :current_status, inclusion: { in: STATUSES }
+  validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
+  # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
 
