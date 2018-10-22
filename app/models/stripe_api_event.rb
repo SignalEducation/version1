@@ -180,7 +180,7 @@ class StripeApiEvent < ActiveRecord::Base
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
+      invoice.update_from_stripe(stripe_invoice_guid)
       subscription.update_from_stripe
 
       self.processed = true
@@ -190,10 +190,10 @@ class StripeApiEvent < ActiveRecord::Base
 
       if stripe_next_attempt
         #A NextPaymentAttempt Date value means that another payment attempt will be made
-        MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
+        MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url) unless Rails.env.test?
       else
         #Final payment attempt has failed on stripe so we cancel the current subscription
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email')
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
       end
     else
       set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"

@@ -29,6 +29,9 @@ describe Api::StripeV02Controller, type: :controller do
   let!(:default_card) { FactoryBot.create(:subscription_payment_card, user_id: valid_subscription_student.id,
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
+  let!(:invoice) { FactoryBot.create(:invoice, user_id: valid_subscription_student.id,
+                                     subscription_id: valid_subscription.id, total: 99 ,
+                                     currency_id: gbp.id, stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo') }
 
 
 
@@ -72,35 +75,62 @@ describe Api::StripeV02Controller, type: :controller do
           expect(InvoiceLineItem.count).to eq(1)
         end
 
-        xit 'invoice.payment_failed first attempt' do
+        it 'invoice.payment_failed first attempt' do
 
-          invoice = Invoice.build_from_stripe_data(invoice_created_event_2[:data][:object])
-          #TODO - Fix this Mandrill Test
-          #mc = double
-          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
-          #expect(MandrillClient).to receive(:new).and_return(mc)
-          expect(subscription_2.current_status).to eq('active')
+          post_request_body = {"id": "evt_00000000000002", "object": "event", "api_version": "2017-05-25", "created": 1326853478, "data": {"object": {"id": "in_1APVed2eZvKYlo2CP6dsoJTo", "object": "invoice", "amount_due": 599, "application_fee": nil, "attempt_count": 1, "attempted": true, "charge": "ch_1APVed2eZvKYlo2C1QNH6jru", "closed": true, "currency": "gbp", "customer": valid_subscription_student.stripe_customer_id, "date": 1496232623, "description": nil, "discount": nil, "ending_balance": 0, "forgiven": false, "lines": {"data": [{"id": valid_subscription.stripe_guid, "object": "line_item", "amount": 599, "currency": "gbp", "description": nil, "discountable": true, "livemode": true, "metadata": {}, "period": {"start": 1498824623, "end": 1501503023}, "plan": {"id": subscription_plan_gbp_m.stripe_guid, "object": "plan", "amount": 999, "created": 1496222010, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "name": subscription_plan_gbp_m.name, "statement_descriptor": nil, "trial_period_days": nil}, "proration": false, "quantity": 1, "subscription": nil, "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE", "type": "subscription"}], "total_count": 1, "object": "list", "url": "/v1/invoices/in_1APVed2eZvKYlo2CP6dsoJTo/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "paid": true, "period_end": 1496232623, "period_start": 1496232623, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": valid_subscription.stripe_guid, "subtotal": 599, "tax": nil, "tax_percent": nil, "total": 599, "webhooks_delivered_at": 1496232630}}, "livemode": false, "pending_webhooks": 1, "request": "req_Al1inviVfg7df", "type": "invoice.payment_failed"}
 
-          post :create, invoice_payment_failed_event_1.to_json
+          event_url = 'https://api.stripe.com/v1/events/evt_00000000000002'
+          stub_event_get_request(event_url, post_request_body)
+
+          invoice_response_body = {"id": invoice.stripe_guid, "object": "invoice", "amount_due": 500, "amount_paid": 0, "amount_remaining": 500, "application_fee": nil, "attempt_count": 4, "attempted": true, "auto_advance": true, "billing": "charge_automatically", "billing_reason": "subscription", "charge": "ch_5WybupUzcscclq", "closed": false, "currency": "gbp", "customer": valid_subscription_student.stripe_customer_id, "date": 1420193829, "description": nil, "discount": nil, "due_date": nil, "ending_balance": 0, "forgiven": false, "hosted_invoice_url": "https://pay.stripe.com/invoice/invst_0kScQzgfwvufrbPULAPttcBSCi", "invoice_pdf": "https://pay.stripe.com/invoice/invst_0kScQzgfwvufrbPULAPttcBSCi/pdf", "lines": {"data": [{"id": "sli_859339fd5ed203", "object": "line_item", "amount": 0, "currency": "gbp", "description": "Trial period for LearnSignal Test 267", "discountable": true, "livemode": false, "metadata": {}, "period": {"end": 1540807556, "start": 1540202756}, "plan": {"id": subscription_plan_gbp_m.stripe_guid, "object": "plan", "active": true, "aggregate_usage": nil, "amount": 999, "billing_scheme": "per_unit", "created": 1462284968, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "nickname": nil, "product": "prod_BTuUwcCciIESD8", "tiers": nil, "tiers_mode": nil, "transform_usage": nil, "trial_period_days": 7, "usage_type": "licensed"}, "proration": false, "quantity": 1, "subscription": valid_subscription.stripe_guid, "subscription_item": "si_DpfdybeQdJlQfY", "type": "subscription"}], "has_more": false, "object": "list", "url": "/v1/invoices/in_5RLAdp7JkW1w6I/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "number": nil, "paid": false, "period_end": 1420193754, "period_start": 1417515354, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": valid_subscription.stripe_guid, "subtotal": 500, "tax": nil, "tax_percent": nil, "total": 500, "webhooks_delivered_at": 1420193835}
+          invoice_url = "https://api.stripe.com/v1/invoices/#{invoice.stripe_guid}"
+          stub_invoice_get_request(invoice_url, invoice_response_body)
+
+          sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
+                     "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
+          }
+          subscriptions = {"id": valid_subscription.stripe_guid, "object": "subscription", "livemode": false,
+                           "current_period_end": 1540455078, "plan": {"id": subscription_plan_gbp_m.stripe_guid,
+                                                                      "object": "plan", "active": true,
+                                                                      "amount": 999, "livemode": false }, "status": "past_due"}
+
+          get_response_body = {"id": valid_subscription_student.stripe_customer_id, "object": "customer", "account_balance": 0,
+                               "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
+                               "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
+                                           "url": "/v1/customers/cus_Do8skFvJFlWtvy/sources"},
+                               "subscriptions": {"object": "list","data": [subscriptions],"has_more": false,"total_count": 0,
+                                                 "url": "/v1/customers/#{valid_subscription_student.stripe_customer_id}/subscriptions"}}
+
+          customer_url = "https://api.stripe.com/v1/customers/#{valid_subscription_student.stripe_customer_id}"
+          stub_customer_get_request(customer_url, get_response_body)
+
+          subscription_url = "https://api.stripe.com/v1/customers/#{valid_subscription_student.stripe_customer_id}/subscriptions/#{valid_subscription.stripe_guid}"
+          subscription = {      "id": valid_subscription.stripe_guid, "object": "subscription",
+                                "billing": "charge_automatically", "status": "past_due",
+                                "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
+                                "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
+                                "customer": valid_subscription_student.stripe_customer_id, "plan": {"livemode": false}}
+
+          stub_subscription_get_request(subscription_url, subscription)
+
+          # Add Mandrill Post Stub
+          expect(valid_subscription.current_status).to eq('active')
+          post :create, post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(true)
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
-          subscription_2.reload
-          expect(subscription_2.current_status).to eq('past_due')
+          valid_subscription.reload
+          expect(valid_subscription.current_status).to eq('past_due')
 
         end
 
         xit 'invoice.payment_failed last attempt' do
-          invoice = Invoice.build_from_stripe_data(invoice_created_event_2[:data][:object])
-          #TODO - Fix this Mandrill Test
-          #mc = double
-          #expect(mc).to receive(:send_card_payment_failed_email).with(account_url)
-          #expect(MandrillClient).to receive(:new).and_return(mc)
 
-          post :create, invoice_payment_failed_event_2.to_json
+
+          post :create, post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
