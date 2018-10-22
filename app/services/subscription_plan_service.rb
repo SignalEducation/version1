@@ -1,5 +1,5 @@
 class SubscriptionPlanService
-  attr_accessor :subscription_plan
+  attr_reader :subscription_plan
 
   def initialize(subscription_plan)
     @plan = subscription_plan
@@ -13,7 +13,7 @@ class SubscriptionPlanService
   end
 
   def async_action(action)
-    case action
+    case action.to_sym
     when :create
       create_remote_plans
     when :update
