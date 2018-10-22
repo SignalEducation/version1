@@ -1,6 +1,7 @@
 require 'paypal-sdk-rest'
 
 class PaypalService
+  include Rails.application.routes.url_helpers
   include PayPal::SDK::REST
   PayPal::SDK::REST.set_config(
     mode: "sandbox",
@@ -31,13 +32,22 @@ class PaypalService
 
   # BILLING AGREEMENTS =========================================================
 
+  def create_and_return_subscription(subscription)
+    agreement = create_billing_agreement(subscription.subscription_plan, subscription.user)
+    subscription.assign_attributes(
+      paypal_token: agreement.token,
+      paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href
+    )
+    subscription
+  end
+
   def create_billing_agreement(subscription_plan, user)
     agreement = Agreement.new(agreement_attributes(subscription_plan, user))
     if agreement.create
       agreement
     else
-      # log the error
-      false
+      Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - Error: #{agreement.inspect}"
+      raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
     end
   end
 
@@ -46,11 +56,15 @@ class PaypalService
     agreement.token = token
     if agreement.execute
       subscription.update(
+        complimentary: false,
+        active: true,
+        current_status: agreement.state,
         paypal_subscription_guid: agreement.id,
-        active: true
+        next_renewal_date: Time.at(agreement.next_billing_date),
       )
     else
-      # log an error and redirect appropriately
+      Rails.logger.error "DEBUG: Subscription#create Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
+      raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
     end
   end
 
@@ -68,7 +82,8 @@ class PaypalService
 
   private
 
-  def agreement_attributes(subscription_plan, user)
+  def agreement_attributes(subscription, user)
+    subscription_plan = subscription.subscription_plan
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
@@ -82,8 +97,8 @@ class PaypalService
         }
       },
       override_merchant_preferences: {
-        return_url: "https://example.com",
-        cancel_url: "https://example.com/cancel"
+        return_url: execute_subscription_url(subscription, host: 'https://learnsignal.com', payment_processor: 'paypal'),
+        cancel_url: unapproved_subscription_url(subscription, host: 'https://learnsignal.com', payment_processor: 'paypal')
       },
       plan: {
         id: subscription_plan.paypal_guid

@@ -26,10 +26,7 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
 
   # attr-accessible
-  attr_accessible :user_id, :subscription_plan_id, :complimentary,
-                  :current_status, :stripe_customer_id, :stripe_token,
-                  :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data, :coupon_id
+  attr_accessible :stripe_token, :use_paypal, :user_id, :paypal_approval_url
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)

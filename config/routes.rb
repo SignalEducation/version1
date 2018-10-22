@@ -177,9 +177,10 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
-    resources :subscriptions, only: [:update, :destroy] do
+    resources :subscriptions, only: [:new, :create, :update, :destroy] do
       member do
         get 'execute'
+        get 'unapproved'
       end
     end
 

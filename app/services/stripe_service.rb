@@ -44,8 +44,27 @@ class StripeService
 
   # SUBSCRIPTIONS ==============================================================
 
+  def create_and_return_subscription(subscription, stripe_token, coupon)
+    stripe_subscription = create_subscription(subscription, stripe_token, coupon)
+    stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
+    subscription.assign_attributes(
+      complimentary: false,
+      active: true,
+      livemode: stripe_subscription[:plan][:livemode],
+      current_status: stripe_subscription.status,
+      stripe_guid: stripe_subscription.id,
+      next_renewal_date: Time.at(stripe_subscription.current_period_end),
+      stripe_customer_id: stripe_customer.id,
+      coupon_id: coupon.try(:id),
+      stripe_customer_data: stripe_customer.to_hash.deep_dup
+    )
+    subscription
+  end
+
+  private
+
   def create_subscription(subscription, stripe_token, coupon)
-    stripe_subscription = Stripe::Subscription.create(
+    Stripe::Subscription.create(
       customer: subscription.user.stripe_customer_id,
       plan: subscription.subscription_plan.stripe_guid,
       source: stripe_token,
@@ -61,8 +80,6 @@ class StripeService
     Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
     raise Learnsignal::SubscriptionError.new('Sorry Something went wrong! Please contact us for assistance.')
   end
-
-  private
 
   def update_subscription_plan(subscription_plan, stripe_plan)
     subscription_plan.update(

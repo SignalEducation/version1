@@ -483,19 +483,16 @@ class User < ActiveRecord::Base
     #Returns true if an active enrollment exists for this user/course
 
     self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
-
   end
 
   def enrolled_in_course?(course_id)
     #Returns true if a non-expired active enrollment exists for this user/course
 
     self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
-
   end
 
-
-  def referred_user
-    self.student_user? && self.referred_signup
+  def referred_user?
+    student_user? && referred_signup
   end
 
   # Orders/Products

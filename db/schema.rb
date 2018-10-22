@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181022123738) do
+ActiveRecord::Schema.define(version: 20181022165858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1114,6 +1114,7 @@ ActiveRecord::Schema.define(version: 20181022123738) do
     t.boolean  "terms_and_conditions",     default: false
     t.integer  "coupon_id"
     t.string   "paypal_subscription_guid"
+    t.string   "paypal_token"
   end
 
   add_index "subscriptions", ["current_status"], name: "index_subscriptions_on_current_status", using: :btree
