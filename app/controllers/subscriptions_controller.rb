@@ -26,7 +26,7 @@ class SubscriptionsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w(student_user))
   end
-  before_action :get_subscription
+  before_action :get_subscription, except: [:new, :create]
   before_action :check_subscriptions, only: [:new, :create]
 
   def new
@@ -55,7 +55,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    @subscription = Subscription.new(allowed_params)
+    @subscription = Subscription.new(subscription_params)
     stripe_token = params[:subscription][:stripe_token]
     coupon_code = params[:hidden_coupon_code] if params[:hidden_coupon_code].present?
 
@@ -207,7 +207,7 @@ class SubscriptionsController < ApplicationController
 
   protected
 
-  def allowed_params
+  def subscription_params
     params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code)
   end
 

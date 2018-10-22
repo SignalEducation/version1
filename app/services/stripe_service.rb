@@ -1,5 +1,19 @@
 class StripeService
 
+  # CUSTOMERS ==================================================================
+
+  def create_customer(user)
+    customer = Stripe::Customer.create(email: user.email)
+    user.update(stripe_customer_id: customer.id)
+    customer
+  end
+
+  def get_customer(stripe_customer_id)
+    Stripe::Customer.retrieve(stripe_customer_id)
+  end
+
+  # PLANS ======================================================================
+
   def create_plan(subscription_plan)
     stripe_plan = Stripe::Plan.create(
       amount: (subscription_plan.price.to_f * 100).to_i,
@@ -26,6 +40,18 @@ class StripeService
   def delete_plan(stripe_plan_id)
     plan = get_plan(stripe_plan_id)
     plan.delete if plan
+  end
+
+  # SUBSCRIPTIONS ==============================================================
+
+  def create_subscription(subscription, stripe_token, coupon)
+    stripe_subscription = Stripe::Subscription.create(
+      customer: subscription.user.stripe_customer_id,
+      plan: subscription.subscription_plan.stripe_guid,
+      source: stripe_token,
+      coupon: coupon.try(:code),
+      trial_end: 'now'
+    )
   end
 
   private
