@@ -8,6 +8,8 @@ class PaypalService
     client_secret: "EPF0A4akXxhuDx3BFKQGcEuYZw4_5sS13of5hX9MnjtvAVy1WmcPTj0cBk9lGxJ3TNqroDCTMC6PnaZc"
   )
 
+  # PLANS ======================================================================
+
   def create_plan(subscription_plan)
     paypal_plan = Plan.new(plan_attributes(subscription_plan))
     paypal_plan.create
@@ -27,7 +29,55 @@ class PaypalService
     plan.update(patch('replace', { state: 'DELETED' }))
   end
 
+  # BILLING AGREEMENTS =========================================================
+
+  def create_billing_agreement(subscription_plan, user)
+    agreement = Agreement.new(agreement_attributes(subscription_plan, user))
+    if agreement.create
+      agreement
+    else
+      # log the error
+      false
+    end
+  end
+
+  def execute_subscription(subscription, token)
+    agreement = Agreement.new()
+    agreement.token = token
+    if agreement.execute
+      subscription.update(
+        paypal_subscription_guid: agreement.id,
+        active: true
+      )
+    else
+      # log an error and redirect appropriately
+    end
+  end
+
   private
+
+  def agreement_attributes(subscription_plan, user)
+    {
+      name: subscription_plan.name,
+      description: subscription_plan.description.gsub("\n", ""),
+      start_date: (Time.zone.now + 1.day).iso8601,
+      payer: {
+        payment_method: "paypal",
+        payer_info: {
+          email: user.email,
+          first_name: user.first_name,
+          last_name: user.last_name
+        }
+      },
+      override_merchant_preferences: {
+        return_url: "https://example.com",
+        cancel_url: "https://example.com/cancel"
+      },
+      plan: {
+        id: subscription_plan.paypal_guid
+      }
+    }
+  end
 
   def patch(op, update_attributes)
     patch = Patch.new

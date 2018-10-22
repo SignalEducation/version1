@@ -2,21 +2,22 @@
 #
 # Table name: subscriptions
 #
-#  id                   :integer          not null, primary key
-#  user_id              :integer
-#  subscription_plan_id :integer
-#  stripe_guid          :string
-#  next_renewal_date    :date
-#  complimentary        :boolean          default(FALSE), not null
-#  current_status       :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  stripe_customer_id   :string
-#  stripe_customer_data :text
-#  livemode             :boolean          default(FALSE)
-#  active               :boolean          default(FALSE)
-#  terms_and_conditions :boolean          default(FALSE)
-#  coupon_id            :integer
+#  id                       :integer          not null, primary key
+#  user_id                  :integer
+#  subscription_plan_id     :integer
+#  stripe_guid              :string
+#  next_renewal_date        :date
+#  complimentary            :boolean          default(FALSE), not null
+#  current_status           :string
+#  created_at               :datetime
+#  updated_at               :datetime
+#  stripe_customer_id       :string
+#  stripe_customer_data     :text
+#  livemode                 :boolean          default(FALSE)
+#  active                   :boolean          default(FALSE)
+#  terms_and_conditions     :boolean          default(FALSE)
+#  coupon_id                :integer
+#  paypal_subscription_guid :string
 #
 
 class SubscriptionsController < ApplicationController
@@ -118,6 +119,22 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
       flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
       redirect_to request.referrer
+    end
+  end
+
+  def execute
+    case params[:payment_processor]
+    when 'paypal'
+      if PaypalService.new.execute_subscription(@subscription, params[:token])
+        # success
+        @user = @subscription.user
+        @user.referred_signup.update_attributes(payed_at: Proc.new{ Time.now }.call, subscription_id: @subscription.id) if @user.referred_user
+        redirect_to personal_upgrade_complete_url
+      else
+        # error, redirect appropriately
+      end
+    else
+      # something werid going on
     end
   end
 
