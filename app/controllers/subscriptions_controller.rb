@@ -125,7 +125,7 @@ class SubscriptionsController < ApplicationController
   def execute
     case params[:payment_processor]
     when 'paypal'
-      if PaypalService.new.execute_subscription(@subscription, params[:token])
+      if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
         # success
         @user = @subscription.user
         @user.referred_signup.update_attributes(payed_at: Proc.new{ Time.now }.call, subscription_id: @subscription.id) if @user.referred_user

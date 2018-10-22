@@ -41,7 +41,7 @@ class PaypalService
     end
   end
 
-  def execute_subscription(subscription, token)
+  def execute_billing_agreement(subscription, token)
     agreement = Agreement.new()
     agreement.token = token
     if agreement.execute
@@ -52,6 +52,18 @@ class PaypalService
     else
       # log an error and redirect appropriately
     end
+  end
+
+  def suspend_billing_agreement
+    # 
+  end
+
+  def reactivate_billing_agreement
+    # 
+  end
+
+  def cancel_billing_agreement
+    # 
   end
 
   private
