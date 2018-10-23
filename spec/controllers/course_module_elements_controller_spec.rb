@@ -41,8 +41,9 @@ describe CourseModuleElementsController, type: :controller do
 
   let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video) }
   let!(:valid_video_params) { course_module_element_1_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
+  let!(:constructed_response_params) { course_module_element_1_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }
+  let!(:update_constructed_response_params) { course_module_element_1_4.attributes.merge({name: 'CR 01 - Edited', name_url: 'cr_01'}) }
 
-  #TODO - add tests for Constructed Response CMEs
 
   context 'Logged in as a content_management_user: ' do
 
@@ -82,6 +83,11 @@ describe CourseModuleElementsController, type: :controller do
         expect_edit_success_with_model('course_module_element', course_module_element_1_2.id)
         expect(a_request(:post, url).with(body: vimeo_request_body)).to have_been_made.once
       end
+
+      it 'should respond OK with course_module_element_1_3 - constructed_response' do
+        get :edit, id: course_module_element_1_4.id
+        expect_edit_success_with_model('course_module_element', course_module_element_1_4.id)
+      end
     end
 
     describe "POST 'create'" do
@@ -101,6 +107,11 @@ describe CourseModuleElementsController, type: :controller do
         expect(a_request(:patch, url).with(body: vimeo_request_body)).to have_been_made.once
       end
 
+      it 'should report OK for constructed_response_params' do
+        post :create, course_module_element: constructed_response_params
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+      end
+
       it 'should report error for invalid params' do
         post :create, course_module_element: {valid_params.keys.first => ''}
         expect_create_error_with_model('course_module_element')
@@ -118,6 +129,12 @@ describe CourseModuleElementsController, type: :controller do
         put :update, id: course_module_element_1_2.id, course_module_element: valid_params
         expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
         expect(assigns(:course_module_element).id).to eq(course_module_element_1_2.id)
+      end
+
+      it 'should report OK for constructed_response_params' do
+        post :update, id: course_module_element_1_4.id, course_module_element: update_constructed_response_params
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+        expect(assigns(:course_module_element).id).to eq(course_module_element_1_4.id)
       end
 
       it 'should reject invalid params' do

@@ -12,6 +12,8 @@ shared_context 'course_content' do
                            course_module_id: course_module_1.id) }
   let!(:course_module_element_1_3) { FactoryBot.create(:cme_video,
                            course_module_id: course_module_1.id) }
+  let!(:course_module_element_1_4) { FactoryBot.create(:cme_constructed_response,
+                           course_module_id: course_module_1.id) }
   let!(:course_module_element_quiz_1_1) { FactoryBot.create(:course_module_element_quiz,
                            course_module_element_id: course_module_element_1_1.id) }
   let!(:course_module_element_video_1_1_1) { FactoryBot.create(:course_module_element_video,
@@ -20,6 +22,8 @@ shared_context 'course_content' do
   let!(:course_module_element_video_1_1_2) { FactoryBot.create(:course_module_element_video,
                            course_module_element_id: course_module_element_1_3.id,
                                                                 vimeo_guid: '123abc') }
+  let!(:constructed_response_1) { FactoryBot.create(:constructed_response,
+                           course_module_element_id: course_module_element_1_4.id) }
 
   #Courses Second set
 
@@ -83,6 +87,15 @@ shared_context 'course_content' do
 
 
   # Constructed Response
+  let!(:scenario_1)  { FactoryBot.create(:scenario, constructed_response_id: constructed_response_1.id) }
+
+  let!(:scenario_question_1)  { FactoryBot.create(:scenario_question, scenario_id: scenario_1.id) }
+  let!(:scenario_answer_template_1)  { FactoryBot.create(:scenario_answer_template,
+                                                         scenario_question_id: scenario_question_1.id,
+                                                         editor_type: 'text_editor') }
+  let!(:scenario_answer_template_2)  { FactoryBot.create(:scenario_answer_template,
+                                                         scenario_question_id: scenario_question_1.id,
+                                                         editor_type: 'spreadsheet_editor') }
 
 
 end
