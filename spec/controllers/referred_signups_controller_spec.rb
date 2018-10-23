@@ -26,14 +26,14 @@ RSpec.describe ReferredSignupsController, type: :controller do
 
   let!(:tutor) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id ) }
   let!(:referred_student) { FactoryBot.create(:student_user) }
+  let!(:comp_student_access) { FactoryBot.create(:complimentary_student_access, user_id: referred_student.id) }
   let!(:subscription) { FactoryBot.create(:subscription, user_id: referred_student.id) }
   let!(:referred_signup) { FactoryBot.create(:referred_signup,
                                               user_id: referred_student.id,
                                               subscription_id: subscription.id,
-                                              referral_code_id: tutor_referral_code.id) }
+                                              referral_code_id: tutor.referral_code.id) }
 
 
-  #TODO - this needs a complete overhaul
   context 'Logged in as a user_management_user: ' do
 
     before(:each) do
@@ -44,6 +44,7 @@ RSpec.describe ReferredSignupsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK by default with referred signups that are not payed' do
         referred_student_2 = FactoryBot.create(:student_user)
+        comp_student_access = FactoryBot.create(:complimentary_student_access, user_id: referred_student_2.id)
         subscription_2 = FactoryBot.create(:subscription, user_id: referred_student_2.id)
         referred_signup_2 = FactoryBot.create(:referred_signup,
                                               user_id: referred_student_2.id,
