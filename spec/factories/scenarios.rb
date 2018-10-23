@@ -13,7 +13,6 @@
 
 FactoryBot.define do
   factory :scenario do
-    course_module_element_id 1
     constructed_response_id 1
     sorting_order 1
     text_content 'MyText'

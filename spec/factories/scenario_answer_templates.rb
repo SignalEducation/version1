@@ -14,13 +14,11 @@
 #
 
 FactoryBot.define do
-  factory :scenario_answer_templates do
-    course_module_element_id 1
-    constructed_response_id 1
-    scenario_id 1
+  factory :scenario_answer_template do
     scenario_question_id 1
     sorting_order 1
-    text_content 'MyString'
-    type 'text_editor'
+    editor_type 'text_editor'
+    text_editor_content 'MyString'
+    spreadsheet_editor_content 'MyString'
   end
 end
