@@ -113,7 +113,7 @@ class UsersController < ApplicationController
       stripe_customer = Stripe::Customer.create(email: @user.email)
       @user.update_attribute(:stripe_customer_id, stripe_customer.id)
 
-      MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code))
+      MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.users.create.flash.success')
       redirect_to users_url
     else
