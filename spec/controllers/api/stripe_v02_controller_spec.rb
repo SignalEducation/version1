@@ -78,6 +78,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(invoice.subscription_id).to eq(valid_subscription.id)
           expect(invoice.stripe_guid).to eq('in_1APVed2eZvKYlo2CP6dsoJTo')
           expect(InvoiceLineItem.count).to eq(1)
+          expect(a_request(:get, url).with(body: nil)).to have_been_made.once
         end
 
         it 'invoice.payment_failed first attempt' do
@@ -130,6 +131,12 @@ describe Api::StripeV02Controller, type: :controller do
           valid_subscription.reload
           expect(valid_subscription.current_status).to eq('past_due')
 
+          expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, customer_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, subscription_url).with(body: nil)).to have_been_made.once
+
+
         end
 
         it 'invoice.payment_failed last attempt' do
@@ -179,6 +186,11 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
           expect(valid_subscription.current_status).to eq('canceled')
+
+          expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, invoice_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, customer_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, subscription_url).with(body: nil)).to have_been_made.once
         end
 
         it 'invoice.payment_succeeded first attempt' do
@@ -219,6 +231,11 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
           expect(valid_subscription.current_status).to eq('active')
+
+          expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, invoice_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, subscription_url).with(body: nil)).to have_been_made.once
+
         end
 
         it 'invoice.payment_succeeded after failed attempt' do
@@ -254,6 +271,10 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
           expect(valid_subscription.current_status).to eq('active')
+          expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, invoice_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, subscription_url).with(body: nil)).to have_been_made.once
+
         end
 
         it 'customer.subscription.deleted event' do
@@ -298,6 +319,11 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
           expect(valid_subscription.current_status).to eq('canceled')
+
+          expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, customer_url).with(body: nil)).to have_been_made.once
+          expect(a_request(:get, subscription_url).with(body: nil)).to have_been_made.once
+
         end
 
 
@@ -318,6 +344,9 @@ describe Api::StripeV02Controller, type: :controller do
         expect(sae.error_message).to eq(nil)
         valid_subscription.reload
         expect(valid_subscription.current_status).to eq('active')
+
+        expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+
       end
 
       it 'charge.failed event' do
@@ -336,6 +365,8 @@ describe Api::StripeV02Controller, type: :controller do
         expect(sae.error_message).to eq(nil)
         valid_subscription.reload
         expect(valid_subscription.current_status).to eq('active')
+        expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+
       end
 
       it 'charge.refunded event' do
@@ -354,6 +385,8 @@ describe Api::StripeV02Controller, type: :controller do
         expect(sae.error_message).to eq(nil)
         charge.reload
         expect(charge.refunded).to eq(true)
+        expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+
       end
 
       it 'coupon.updated event' do
@@ -376,6 +409,9 @@ describe Api::StripeV02Controller, type: :controller do
         expect(sae.error_message).to eq(nil)
         coupon.reload
         expect(coupon.active).to eq(false)
+        expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
+        expect(a_request(:get, url).with(body: nil)).to have_been_made.once
+
       end
 
     end
@@ -397,6 +433,8 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
           expect(sae.error_message).to eq("Error creating invoice")
+          expect(a_request(:get, url).with(body: nil)).to have_been_made.once
+
         end
 
         it 'should not process invoice.created event if subscription with given GUID does not exist' do
@@ -414,6 +452,8 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
           expect(sae.error_message).to eq("Error creating invoice")
+          expect(a_request(:get, url).with(body: nil)).to have_been_made.once
+
         end
 
         it 'should not process invoice.created event if subscription plan from invoice line item with given GUID does not exist' do
@@ -431,6 +471,8 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
           expect(sae.error_message).to eq("Error creating invoice")
+          expect(a_request(:get, url).with(body: nil)).to have_been_made.once
+
         end
 
       end
