@@ -80,7 +80,6 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
                   # needs a user_id too
 
 
-  #TODO - Review this controller does it need stripe_mock?
   context 'Logged in as user_management_user: ' do
 
     before(:each) do
@@ -89,7 +88,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should be OK with redirect' do
+      it 'should be OK with redirect' do
         post :create, subscription_payment_card: create_params.merge(user_id: student_user.id)
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
@@ -97,7 +96,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
         expect(response).to redirect_to(account_url(anchor: 'payment-details'))
       end
 
-      xit 'should report ERROR as token is invalid' do
+      it 'should report ERROR as token is invalid' do
         post :create, subscription_payment_card: {stripe_token: stripe_bad_token, user_id: student_user_2.id, make_default_card: true}
         expect(flash[:error]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.error'))
         expect(flash[:success]).to eq(nil)
@@ -107,7 +106,7 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
     end
 
     describe "PUT 'update'" do
-      xit 'should be OK with redirect' do
+      it 'should be OK with redirect' do
         put :update, id: card_1.id
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.update.flash.success'))

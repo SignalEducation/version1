@@ -159,7 +159,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
       describe "valid data" do
 
-        xit 'subscribes with full data set' do
+        it 'subscribes with full data set' do
 
           user_count = User.all.count
           post :create, user: sign_up_params
@@ -170,7 +170,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
         end
 
-        xit 'subscribes with reduced data set' do
+        it 'subscribes with reduced data set' do
           post :create, user: sign_up_params
           user = assigns(:user)
           expect(response.status).to eq(302)

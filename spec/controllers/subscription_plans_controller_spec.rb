@@ -51,7 +51,7 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      xit 'should respond OK' do
+      it 'should respond OK' do
         get :index
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -63,58 +63,58 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      xit 'should see subscription_plan_1' do
+      it 'should see subscription_plan_1' do
         get :show, id: subscription_plan_1.id
         expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
       end
 
       # optional - some other object
-      xit 'should see subscription_plan_2' do
+      it 'should see subscription_plan_2' do
         get :show, id: subscription_plan_2.id
         expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
       end
     end
 
     describe "GET 'new'" do
-      xit 'should respond OK' do
+      it 'should respond OK' do
         get :new
         expect_new_success_with_model('subscription_plan')
       end
     end
 
     describe "GET 'edit/1'" do
-      xit 'should respond OK with subscription_plan_1' do
+      it 'should respond OK with subscription_plan_1' do
         get :edit, id: subscription_plan_1.id
         expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
       end
 
       # optional
-      xit 'should respond OK with subscription_plan_2' do
+      it 'should respond OK with subscription_plan_2' do
         get :edit, id: subscription_plan_2.id
         expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
       end
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, subscription_plan: valid_params
         expect_create_success_with_model('subscription_plan', subscription_plans_url)
       end
 
-      xit 'should report error for invalid params' do
+      it 'should report error for invalid params' do
         post :create, subscription_plan: {valid_params.keys.first => ''}
         expect_create_error_with_model('subscription_plan')
       end
     end
 
     describe "PUT 'update/1'" do
-      xit 'should respond OK to valid params for subscription_plan_1' do
+      it 'should respond OK to valid params for subscription_plan_1' do
         put :update, id: subscription_plan_1.id, subscription_plan: {name: 'new-name'}
         expect_update_success_with_model('subscription_plan', subscription_plans_url)
         expect(assigns(:subscription_plan).name).to eq('new-name')
       end
 
-      xit 'should reject invalid params' do
+      it 'should reject invalid params' do
         put :update, id: subscription_plan_1.id, subscription_plan: {name: nil}
         expect_update_error_with_model('subscription_plan')
         expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
@@ -122,7 +122,7 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be ERROR as children exist' do
+      it 'should be ERROR as children exist' do
         delete :destroy, id: subscription_plan_1.id
         # expect_delete_success_with_model('subscription_plan', subscription_plans_url)
         expect_delete_error_with_model('subscription_plan', subscription_plans_url)
@@ -130,7 +130,7 @@ describe SubscriptionPlansController, type: :controller do
         expect(plan.try(:deleted)).not_to eq(true)
       end
 
-      xit 'should be OK as no dependencies exist' do
+      it 'should be OK as no dependencies exist' do
         delete :destroy, id: subscription_plan_2.id
         expect_delete_success_with_model('subscription_plan', subscription_plans_url)
         expect{Stripe::Plan.retrieve(subscription_plan_2.stripe_guid)}.to raise_error { |e|

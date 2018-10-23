@@ -42,7 +42,7 @@ RSpec.describe ReferredSignupsController, type: :controller do
     end
 
     describe "GET 'index'" do
-      xit 'should respond OK by default with referred signups that are not payed' do
+      it 'should respond OK by default with referred signups that are not payed' do
         referred_student_2 = FactoryBot.create(:student_user)
         subscription_2 = FactoryBot.create(:subscription, user_id: referred_student_2.id)
         referred_signup_2 = FactoryBot.create(:referred_signup,
@@ -55,26 +55,26 @@ RSpec.describe ReferredSignupsController, type: :controller do
         expect_index_success_with_model('referred_signups', 1)
       end
 
-      xit 'should respond OK with all payed referred signups' do
+      it 'should respond OK with all payed referred signups' do
         get :index, payed: 1
         expect_index_success_with_model('referred_signups', 1)
       end
     end
 
     describe "GET 'edit/1'" do
-      xit 'should respond OK with referred_signup' do
+      it 'should respond OK with referred_signup' do
         get :edit, id: referred_signup.id
         expect_edit_success_with_model('referred_signup', referred_signup.id)
       end
     end
 
     describe "PUT 'update/1'" do
-      xit 'should respond OK to valid params for referred_signup' do
+      it 'should respond OK to valid params for referred_signup' do
         put :update, id: referred_signup, referred_signup: { payed_at: Time.now }
         expect_update_success_with_model('referred_signup', referred_signups_url)
       end
 
-      xit 'should update only payed_at' do
+      it 'should update only payed_at' do
         now = Time.zone.now
         put :update, id: referred_signup.id, referred_signup: { referral_code_id: tutor.referral_code.id + 1000,
                                                                 user_id: referred_student.id + 1000,

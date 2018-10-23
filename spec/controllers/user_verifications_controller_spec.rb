@@ -20,7 +20,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
         expect(flash[:error]).to be_nil
       end
 
-      xit 'returns error when given an invalid code' do
+      it 'returns error when given an invalid code' do
         get :update, email_verification_code: 'XYZ123'
         expect(response.status).to eq(302)
         expect(flash[:success]).to be_nil
@@ -29,7 +29,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
     end
 
     describe "Get 'account_verified'" do
-      xit 'returns success when given a valid code' do
+      it 'returns success when given a valid code' do
         get :account_verified
         expect(response.status).to eq(200)
         expect(response).to render_template(:account_verified)
@@ -38,7 +38,7 @@ RSpec.describe UserVerificationsController, :type => :controller do
     end
 
     describe "Post 'resend_verification_mail'" do
-      xit 'returns success when given a valid code' do
+      it 'returns success when given a valid code' do
         post :resend_verification_mail, email_verification_code: unverified_student_user.email_verification_code
 
         expect(response.status).to eq(302)

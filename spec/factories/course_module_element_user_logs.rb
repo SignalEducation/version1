@@ -42,7 +42,20 @@ FactoryBot.define do
     count_of_questions_taken 1
     count_of_questions_correct 1
     subject_course_user_log_id 1
-    subject_course_user_log_id 1
+
+
+    factory :quiz_cmeul do
+      is_quiz true
+    end
+
+    factory :video_cmeul do
+      is_video true
+    end
+
+    factory :cr_cmeul do
+      is_constructed_response true
+    end
+
   end
 
 end

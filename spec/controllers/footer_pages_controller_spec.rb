@@ -111,7 +111,7 @@ describe FooterPagesController, type: :controller do
 
     describe "Post 'info_subscribe'" do
       #TODO - fix this post to mailchimp
-      xit 'should render with 200' do
+      it 'should render with 200' do
         post :info_subscribe
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -120,7 +120,7 @@ describe FooterPagesController, type: :controller do
 
       end
 
-      xit 'should reject with invalid params' do
+      it 'should reject with invalid params' do
         post :info_subscribe
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -132,7 +132,7 @@ describe FooterPagesController, type: :controller do
 
     describe "Post 'complaints_intercom'" do
       #TODO - fix this post to intercom
-      xit 'should render with 200' do
+      it 'should render with 200' do
         post :complaints_intercom
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -141,7 +141,7 @@ describe FooterPagesController, type: :controller do
 
       end
 
-      xit 'should reject with invalid params' do
+      it 'should reject with invalid params' do
         post :complaints_intercom
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -153,7 +153,7 @@ describe FooterPagesController, type: :controller do
 
     describe "Post 'contact_us_intercom'" do
       #TODO - fix this post to intercom
-      xit 'should respond OK to valid params' do
+      it 'should respond OK to valid params' do
         post :contact_us_intercom
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -162,7 +162,7 @@ describe FooterPagesController, type: :controller do
 
       end
 
-      xit 'should reject with invalid params' do
+      it 'should reject with invalid params' do
         post :contact_us_intercom
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil

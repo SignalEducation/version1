@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'stripe_mock'
 
 describe UserAccountsController, type: :controller do
 
@@ -69,7 +68,7 @@ describe UserAccountsController, type: :controller do
 
     describe "Get 'subscription_invoice'" do
       #TODO - create an Invoice record
-      xit 'should redirect to root' do
+      it 'should redirect to root' do
         get :subscription_invoice, id: valid_subscription.invoices.last
         expect(flash[:success]).to eq(I18n.t('controllers.users.update.flash.success'))
         expect(flash[:error]).to be_nil

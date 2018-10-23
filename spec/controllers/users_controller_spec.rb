@@ -116,7 +116,7 @@ describe UsersController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should successfully create record' do
+      it 'should successfully create record' do
         post :create, user: valid_params
         expect_create_success_with_model('user', users_url)
         expect(assigns(:user).password_change_required).to eq(true)
@@ -140,7 +140,7 @@ describe UsersController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be OK if deleting normal user' do
+      it 'should be OK if deleting normal user' do
         delete :destroy, id: valid_subscription_student.id
         expect_delete_success_with_model('user', users_url)
       end
@@ -148,7 +148,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'preview_csv_upload'" do
       #TODO Test CSV Files Upload
-      xit 'should redirect to root' do
+      it 'should redirect to root' do
         post :preview_csv_upload, id: 1
         expect_bounce_as_not_allowed
       end
@@ -156,7 +156,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'import_csv_upload'" do
       #TODO Test CSV Files Upload
-      xit 'should redirect to root' do
+      it 'should redirect to root' do
         post :import_csv_upload, id: 1
         expect_bounce_as_not_allowed
       end

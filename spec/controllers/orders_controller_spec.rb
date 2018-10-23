@@ -74,12 +74,12 @@ describe OrdersController, type: :controller do
 
     describe "POST 'create'" do
       #TODO fix this to test stripe orders
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, order: valid_params
         expect_create_success_with_model('order', orders_url)
       end
 
-      xit 'should report error for invalid params' do
+      it 'should report error for invalid params' do
         post :create, order: {valid_params.keys.first => ''}
         expect_create_error_with_model('order')
       end
