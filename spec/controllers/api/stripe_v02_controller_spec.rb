@@ -381,31 +381,16 @@ describe Api::StripeV02Controller, type: :controller do
     end
 
       describe 'invoice with invalid data' do
-        #TODO should add more tests for bad data, payment_failed and subscription_deleted are not tested
-        before(:each) do
-          SubscriptionPlan.skip_callback(:update, :before, :update_on_stripe_platform)
-        end
 
-        xit 'should not process invoice.created event if user with given GUID does not exist' do
-          evt = StripeMock.mock_webhook_event('invoice.created',
-                                              subscription: subscription_1.stripe_guid)
-          expect {
-            post :create, evt.to_json
-          }.not_to change { Invoice.count }
+        it 'should not process invoice.created event if user with given GUID does not exist' do
 
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Error creating invoice")
-        end
+          post_request_body = {"id": "evt_00000000000008", "object": "event", "api_version": "2017-05-25", "created": 1326853478, "data": {"object": {"id": "in_1APVed2eZvKYlo2CP6dsoJTo", "object": "invoice", "amount_due": 599, "application_fee": nil, "attempt_count": 1, "attempted": true, "charge": "ch_1APVed2eZvKYlo2C1QNH6jru", "closed": true, "currency": "gbp", "customer": "cu_0000000", "date": 1496232623, "description": nil, "discount": nil, "ending_balance": 0, "forgiven": false, "lines": {"data": [{"id": valid_subscription.stripe_guid, "object": "line_item", "amount": 599, "currency": "gbp", "description": nil, "discountable": true, "livemode": true, "metadata": {}, "period": {"start": 1498824623, "end": 1501503023}, "plan": {"id": subscription_plan_gbp_m.stripe_guid, "object": "plan", "amount": 999, "created": 1496222010, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "name": subscription_plan_gbp_m.name, "statement_descriptor": nil, "trial_period_days": nil}, "proration": false, "quantity": 1, "subscription": nil, "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE", "type": "subscription"}], "total_count": 1, "object": "list", "url": "/v1/invoices/in_1APVed2eZvKYlo2CP6dsoJTo/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "paid": true, "period_end": 1496232623, "period_start": 1496232623, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": valid_subscription.stripe_guid, "subtotal": 599, "tax": nil, "tax_percent": nil, "total": 599, "webhooks_delivered_at": 1496232630}}, "livemode": false, "pending_webhooks": 1, "request": "req_Al1inviVvNH7df", "type": "invoice.created"}
 
-        xit 'should not process invoice.created event if subscription with given GUID does not exist' do
-          evt = StripeMock.mock_webhook_event('invoice.created',
-                                              customer: student.stripe_customer_id)
-          expect {
-            post :create, evt.to_json
-          }.not_to change { Invoice.count }
+
+          url = 'https://api.stripe.com/v1/events/evt_00000000000008'
+          stub_event_get_request(url, post_request_body)
+
+          post :create, post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -414,26 +399,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error_message).to eq("Error creating invoice")
         end
 
-        xit 'should not process invoice.created event if subscription plan from invoice line item with given GUID does not exist' do
-          post :create, invoice_created_event_1.to_json
-
-          # Following test should pass because transaction is rolled back. However,
-          # xit seems that database_cleaner messes up transactions and our transaction
-          # in Invoice.build_from_stripe_data is not rolled back. That's why we skip
-          # this test here (in normal mode xit should work).
-          # expect(Invoice.count).to eq(0)
-          expect(StripeApiEvent.count).to eq(1)
-          sae = StripeApiEvent.last
-          expect(sae.processed).to eq(false)
-          expect(sae.error).to eq(true)
-          expect(sae.error_message).to eq("Error creating invoice")
-        end
-
-        xit 'payment_failed' do
-          evt = StripeMock.mock_webhook_event('invoice.payment_failed',
-                                              subscription: subscription_1.stripe_guid)
-
-          expect(MandrillClient).not_to receive(:new)
+        it 'should not process invoice.created event if subscription with given GUID does not exist' do
 
           post :create, evt.to_json
 
@@ -441,7 +407,26 @@ describe Api::StripeV02Controller, type: :controller do
           sae = StripeApiEvent.last
           expect(sae.processed).to eq(false)
           expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Error creating invoice")
         end
+
+        it 'should not process invoice.created event if subscription plan from invoice line item with given GUID does not exist' do
+
+          post_request_body = {"id": "evt_00000000000008", "object": "event", "api_version": "2017-05-25", "created": 1326853478, "data": {"object": {"id": "in_1APVed2eZvKYlo2CP6dsoJTo", "object": "invoice", "amount_due": 599, "application_fee": nil, "attempt_count": 1, "attempted": true, "charge": "ch_1APVed2eZvKYlo2C1QNH6jru", "closed": true, "currency": "gbp", "customer": "cu_0000000", "date": 1496232623, "description": nil, "discount": nil, "ending_balance": 0, "forgiven": false, "lines": {"data": [{"id": valid_subscription.stripe_guid, "object": "line_item", "amount": 599, "currency": "gbp", "description": nil, "discountable": true, "livemode": true, "metadata": {}, "period": {"start": 1498824623, "end": 1501503023}, "plan": {"id": subscription_plan_gbp_m.stripe_guid, "object": "plan", "amount": 999, "created": 1496222010, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "name": "sub_000000000", "statement_descriptor": nil, "trial_period_days": nil}, "proration": false, "quantity": 1, "subscription": nil, "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE", "type": "subscription"}], "total_count": 1, "object": "list", "url": "/v1/invoices/in_1APVed2eZvKYlo2CP6dsoJTo/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "paid": true, "period_end": 1496232623, "period_start": 1496232623, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": "sub_000000000", "subtotal": 599, "tax": nil, "tax_percent": nil, "total": 599, "webhooks_delivered_at": 1496232630}}, "livemode": false, "pending_webhooks": 1, "request": "req_Al1inviVvNH7df", "type": "invoice.created"}
+
+
+          url = 'https://api.stripe.com/v1/events/evt_00000000000008'
+          stub_event_get_request(url, post_request_body)
+
+          post :create, post_request_body.to_json
+
+          expect(StripeApiEvent.count).to eq(1)
+          sae = StripeApiEvent.last
+          expect(sae.processed).to eq(false)
+          expect(sae.error).to eq(true)
+          expect(sae.error_message).to eq("Error creating invoice")
+        end
+
       end
 
     end
