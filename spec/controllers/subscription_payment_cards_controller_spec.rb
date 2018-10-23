@@ -33,6 +33,7 @@
 #
 
 require 'rails_helper'
+require 'support/stripe_web_mock_helpers'
 
 RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
@@ -43,41 +44,8 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
   let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
   let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
 
-  before { StripeMock.start }
-  after { StripeMock.stop }
+  let!(:create_params) { {stripe_token: 'tk_0000000', user_id: student_user.id} }
 
-  let(:stripe_helper) { StripeMock.create_test_helper }
-  let(:card_params) { { last4: '4242', exp_mth: 12, exp_year: 2019 } }
-  let(:bad_card_params) { { last4: '4241', exp_mth: 12, exp_year: 2012 } }
-  let(:stripe_card_token) { stripe_helper.generate_card_token(card_params) }
-  let(:stripe_bad_token) { StripeMock.prepare_card_error(:incorrect_number) }
-
-  let(:student_user_2) { FactoryBot.create(:student_user)}
-  let!(:stripe_customer_1) { customer = Stripe::Customer.create({
-                  email: student_user.email,
-                  card: stripe_helper.generate_card_token})
-                  student_user.stripe_customer_id = customer.id
-                  student_user.save!
-                  customer
-  }
-  let!(:stripe_customer_2) { customer = Stripe::Customer.create({
-                  email: student_user_2.email,
-                  card: stripe_helper.generate_card_token})
-  student_user_2.stripe_customer_id = customer.id
-  student_user_2.save!
-                  customer
-  }
-
-  let(:card_1) { FactoryBot.create(:subscription_payment_card,
-                  stripe_token: stripe_helper.generate_card_token(card_params),
-                  user_id: student_user.id,
-                  customer_guid: student_user.stripe_customer_id) }
-  let(:card_2) { FactoryBot.create(:subscription_payment_card,
-                  stripe_token: stripe_helper.generate_card_token(card_params),
-                  user_id: student_user_2.id,
-                  customer_guid: student_user_2.stripe_customer_id) }
-  let!(:create_params) { {stripe_token: stripe_card_token, make_default_card: true} }
-                  # needs a user_id too
 
 
   context 'Logged in as user_management_user: ' do
@@ -89,7 +57,27 @@ RSpec.describe SubscriptionPaymentCardsController, type: :controller do
 
     describe "POST 'create'" do
       it 'should be OK with redirect' do
-        post :create, subscription_payment_card: create_params.merge(user_id: student_user.id)
+        sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
+                   "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
+        }
+        get_response_body = {"id": student_user.stripe_customer_id, "object": "customer", "account_balance": 0,
+                             "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
+                             "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
+                                         "url": "/v1/customers/#{student_user.stripe_customer_id}/sources"}
+        }
+
+        get_url = "https://api.stripe.com/v1/customers/#{student_user.stripe_customer_id}"
+
+        stub_customer_get_request(get_url, get_response_body)
+
+        post_url = "https://api.stripe.com/v1/customers/#{student_user.stripe_customer_id}/sources"
+        request_body = {"source"=>"tk_0000000"}
+        post_response_body = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
+                              "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"}
+
+        stub_post_cards_request(post_url, request_body, post_response_body)
+
+        post :create, subscription_payment_card: create_params
         expect(flash[:error]).to eq(nil)
         expect(flash[:success]).to eq(I18n.t('controllers.subscription_payment_cards.create.flash.success'))
         expect(response.status).to eq(302)
