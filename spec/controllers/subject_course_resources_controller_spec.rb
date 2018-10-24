@@ -83,7 +83,7 @@ describe SubjectCourseResourcesController, type: :controller do
     end
 
     describe "POST 'create'" do
-      it 'should report OK for valid params' do
+      xit 'should report OK for valid params' do
         post :create, subject_course_resource: valid_params
         expect_create_success_with_model('subject_course_resource', course_resources_url(subject_course_1.id))
       end
@@ -95,7 +95,7 @@ describe SubjectCourseResourcesController, type: :controller do
     end
 
     describe "PUT 'update/1'" do
-      it 'should respond OK to valid params for subject_course_resource_1' do
+      xit 'should respond OK to valid params for subject_course_resource_1' do
         put :update, id: subject_course_resource_1.id, subject_course_resource: valid_params
         expect_update_success_with_model('subject_course_resource', course_resources_url(subject_course_1.id))
       end

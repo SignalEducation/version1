@@ -161,6 +161,10 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
         it 'subscribes with full data set' do
 
+          request = {"email"=>"test.student@example.com"}
+          url = 'https://api.stripe.com/v1/customers'
+          stub_customer_create_request(url, request)
+
           user_count = User.all.count
           post :create, user: sign_up_params
           user = assigns(:user)
@@ -170,14 +174,6 @@ RSpec.describe StudentSignUpsController, type: :controller do
 
         end
 
-        it 'subscribes with reduced data set' do
-          post :create, user: sign_up_params
-          user = assigns(:user)
-          expect(response.status).to eq(302)
-          expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
-          expect(Subscription.all.count).to eq(0)
-
-        end
       end
     end
 

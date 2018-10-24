@@ -63,7 +63,7 @@ describe WhitePapersController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should redirect to sign_in' do
-        get :edit, id: 1
+        get :edit, id: white_paper_1.id
         expect_edit_success_with_model('white_paper', white_paper_1.id)
       end
     end
@@ -84,14 +84,14 @@ describe WhitePapersController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should redirect to sign_in' do
-        put :update, id: 1, white_paper: valid_params
+        put :update, id: white_paper_1.id, white_paper: valid_params
         expect_update_success_with_model('white_paper', white_papers_url)
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should redirect to sign_in' do
-        delete :destroy, id: 1
+        delete :destroy, id: white_paper_1.id
         expect_delete_success_with_model('white_paper', white_papers_url)
       end
     end
