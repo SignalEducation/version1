@@ -1,59 +1,50 @@
-.l-section-small.is-bg-asphalt
+.l-section-extra-small.is-bg-asphalt
   .l-wrap
     .container-fluid
-      .row.l-margin-bottom#thank-you-message
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Congratulations! Your LearnSignal account is now active
-        .col-md-10.col-md-offset-1.l-margin-bottom-6x
-          .box-item
+      .row.l-margin-bottom-big#thank-you-message
+        .col-md-12
+          .box-item.l-margin-bottom
             .row
-              .col-sm-6.col-sm-offset-3
+              .col-sm-12
                 .text-center
-                  %h4.h3.l-margin-bottom
-                    Your account is now active
-                  %p.p
-                    ="You have #{(current_user.student_access.trial_seconds_limit/60).to_s}-minutes to use over the next #{humanize_date_and_month(current_user.student_access.trial_ending_at_date)}-days to explore our ACCA Gold Approved Learning Materials."
-
-
-      .l-margin-top-huge
-        .col-md-10.col-md-offset-1
-          .video
-            %h2.text-center
-              Welcome to LearnSignal
-            .play
-              #vimeo-player.vimeo-player
+                  %h4.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                    Congratulations! Your LearnSignal account is now active
+                  %h2.text-center
+                    Choose your course
 
 
 
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-
-      .row.l-margin-top
-        .l-margin-top-huge.l-margin-bottom-huge
-          %h2.text-center
-            ='Choose your course now to start learning'
-
+      .row
         .container-fluid.l-margin-bottom-huge
           .course-list-wrap
             -if @groups
               -@groups.each do |group|
                 .row
-                  -group.active_children.all_in_order.each do |course|
-                    .col-sm-6.col-md-4
-                      =link_to library_special_link(course), class: 'box box-course' do
-                        .box-inner
-                          .l-margin-top-xl
-                            %h2{style: 'margin-bottom: 5px;'}
-                              =course.try(:name)
-                            %p.p
-                              -if course.short_description
-                                =course.try(:short_description).to_s.truncate(30)
-                              -else
-                                =course.description.to_s.truncate(30)
-                        .box-label
-                          =t('views.general.start')
+                  -group.active_children.all_in_order.reverse.each do |course|
+                    .col-md-4.col-sm-6.col-xs-12
+                      =link_to library_special_link(course), class: 'card card-course' do
+                        .card-inner.text-center
+                          %h3.h3.card-title
+                            =course.try(:name)
+
+                        .card-label{style: "background: #{course.highlight_colour};"}
+                          .row
+                            .col-md-12.col-xs-12.text-center
+                              %h4{style: 'color: #fff;'}
+                                =course.category_label ? course.category_label : 'Enrol Now'
+
+
+      %hr/
+
+      .l-margin-top-huge.l-margin-bottom
+        .col-md-10.col-md-offset-1
+          %p.h2.text-center.h-separator.h-separator-center
+            Why LearnSignal?
+          .video.l-margin-top
+            .play
+              #vimeo-player.vimeo-player
+
+
 
 
 
@@ -61,7 +52,4 @@
 
   var player = new Vimeo.Player('vimeo-player', {id: '288321878'});
 
-  $(document).ready(function(){
-    player.play();
-  });
 
