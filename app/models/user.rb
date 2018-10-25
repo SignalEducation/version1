@@ -161,6 +161,10 @@ class User < ActiveRecord::Base
     includes(:user_group).references(:user_groups).where('user_groups.student_user = ?', true).where('user_groups.trial_or_sub_required = ?', true)
   end
 
+  def self.all_comp_students
+    includes(:user_group).references(:user_groups).where('user_groups.student_user = ?', true).where('user_groups.trial_or_sub_required = ?', false)
+  end
+
   def self.all_tutors
     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
   end

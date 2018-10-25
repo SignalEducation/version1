@@ -9,45 +9,112 @@
       .row.l-margin-top.l-margin-bottom
         .col-sm-12
           .box-item
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@users_count
-                  .h6
-                    Users
 
+            -#Trial User Numbers
             .col-md-4.col-sm-6.col-xs-12
               .stats-box
                 .stats-box-inner
                   .h3
-                    =@subscriptions
+                    =@trial_students.count
                   .h6
-                    Subscriptions
-
+                    Trial Users
             .col-md-4.col-sm-6.col-xs-12
               .stats-box
                 .stats-box-inner
                   .h3
-                    =@valid_trial_users
+                    =@valid_trial_students.count
                   .h6
                     Valid Trials
-
             .col-md-4.col-sm-6.col-xs-12
               .stats-box
                 .stats-box-inner
                   .h3
-                    =@invalid_trial_users
+                    =@invalid_trial_students.count
                   .h6
                     Expired Trials
 
 
+            -#Subscription User Numbers
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@sub_students.count
+                  .h6
+                    Sub Users
 
             .col-md-4.col-sm-6.col-xs-12
               .stats-box
                 .stats-box-inner
                   .h3
-                    =@total_enrollments
+                    =@valid_sub_students.count
+                  .h6
+                    Valid Sub Users
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@invalid_sub_students.count
+                  .h6
+                    Invalid Sub Users
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@subscriptions.count
+                  .h6
+                    Subscriptions Total
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@active_subs.count
+                  .h6
+                    Active Subs
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@cancelled_subs.count
+                  .h6
+                    Canceled Subs
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@past_due_subs.count
+                  .h6
+                    Past Due Subs
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@cancel_pending_subs.count
+                  .h6
+                    Cancel Pending Subs
+
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    ='-'
+                  .h6
+                    ='-'
+
+
+
+            .col-md-4.col-sm-6.col-xs-12
+              .stats-box
+                .stats-box-inner
+                  .h3
+                    =@total_enrollments.count
                   .h6
                     Enrolments - Total
 
@@ -55,7 +122,7 @@
               .stats-box
                 .stats-box-inner
                   .h3
-                    =@active_enrollments
+                    =@active_enrollments.count
                   .h6
                     Enrolments - Active
 
@@ -63,50 +130,7 @@
               .stats-box
                 .stats-box-inner
                   .h3
-                    =@expired_enrollments
+                    =@expired_enrollments.count
                   .h6
                     Enrolments - Expired
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_groups
-                  .h6
-                    Groups
-
-
-
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_courses
-                  .h6
-                    Courses
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_course_modules
-                  .h6
-                    Course Modules
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_videos
-                  .h6
-                    Videos
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_quizzes
-                  .h6
-                    Quizzes
 
