@@ -20,13 +20,14 @@
   .l-wrap-small
     .container-fluid
       .row
-        .col-md-12
-          .card.card-course
-            .card-info-lg
-              =@content_page.text_content.html_safe
+        -@content_page.content_page_sections.each do |section|
+          .col-md-12
+            .card.card-course
+              .card-info-lg
+                =section.text_content.html_safe
 
-            .card-label{style: "background: #eb7728;"}
-              .row
-                .col-md-12.col-xs-12.text-center
-                  %h4{style: 'color: #fff;'}
+              .card-label{style: "background: #{section.panel_colour};"}
+                .row
+                  .col-md-12.col-xs-12.text-center
+                    %h4{style: 'color: #fff;'}
 

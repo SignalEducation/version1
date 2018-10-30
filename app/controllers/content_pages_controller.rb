@@ -54,6 +54,7 @@ class ContentPagesController < ApplicationController
   end
 
   def edit
+    @content_page.content_page_sections.build
     @content_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF') unless @content_page.external_banners.any?
   end
 
@@ -100,6 +101,8 @@ class ContentPagesController < ApplicationController
                                          :h1_text, :h1_subtext, :nav_type, :footer_link, :active,
                                          external_banners_attributes: [:id, :name, :background_colour,
                                                                        :text_content, :sorting_order,
+                                                                       :_destroy],
+                                         content_page_sections_attributes: [:id, :text_content, :panel_colour,
                                                                        :_destroy])
   end
 

@@ -22,7 +22,7 @@ class ContentPage < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :public_url, :seo_title, :seo_description, :text_content,
                   :h1_text, :h1_subtext, :nav_type, :footer_link, :active,
-                  :external_banners_attributes
+                  :external_banners_attributes, :content_page_sections_attributes
 
   # Constants
   NAV_OPTIONS = %w(solid transparent)
