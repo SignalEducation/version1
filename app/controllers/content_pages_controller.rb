@@ -49,6 +49,7 @@ class ContentPagesController < ApplicationController
 
   def new
     @content_page = ContentPage.new
+    @content_page.content_page_sections.build
     @content_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF')
   end
 

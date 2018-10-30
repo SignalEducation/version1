@@ -51,6 +51,9 @@
 
 
   .row.l-margin-top-big
+    =render partial: 'fields_for_content_page_sections', locals: {f: f}
+
+  .row.l-margin-top-big
     =render partial: 'external_banners/fields_for_banners', locals: {f: f}
 
 
