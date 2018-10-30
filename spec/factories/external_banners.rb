@@ -21,7 +21,7 @@
 
 FactoryBot.define do
   factory :external_banner do
-    name "MyString"
+    sequence(:name)                  { |n| "banner-#{n}" }
     sorting_order 1
     active false
     background_colour "MyString"

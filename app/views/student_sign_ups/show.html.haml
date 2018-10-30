@@ -4,7 +4,7 @@
       .row.l-margin-bottom#thank-you-message
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Thanks for Signing Up
+            Fantastic! Check your inbox now
         .col-md-10.col-md-offset-1.l-margin-bottom-6x
           .box-item
             .row
@@ -19,7 +19,7 @@
             .row.l-margin-top
               .col-sm-10.col-sm-offset-1.text-center
                 %p{style: 'text-align: center;  letter-spacing: 0.5px;'}
-                  ="To complete your registration we need to verify your email address. To do this click on the verification email we just sent to #{@user.email}."
+                  Click on the email we just sent you to verify your email address. Then you can start your free trial.
 
                 -if @user && @user.email_verification_code
                   %p{style: 'text-align: center;  letter-spacing: 0.5px;'}

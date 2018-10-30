@@ -21,14 +21,17 @@
 
 FactoryBot.define do
   factory :refund do
-    stripe_charge_guid 'Stripe-charge-001'
+    sequence(:stripe_guid)                  { |n| "stripe-guid-#{n}" }
+    sequence(:stripe_charge_guid)           { |n| "stripe-charge-guid-#{n}" }
     charge_id 1
     invoice_id 1
     subscription_id 1
     user_id 1
     manager_id 8
-    amount ""
-    reason "MyText"
+    amount 1
+    reason "requested_by_customer"
+    status 'mystring'
+    stripe_refund_data 'mystring'
   end
 
 end

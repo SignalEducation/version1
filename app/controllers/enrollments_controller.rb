@@ -38,6 +38,7 @@ class EnrollmentsController < ApplicationController
       #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
       @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id) unless @enrollment.subject_course_user_log_id
 
+
       if @enrollment.save
         redirect_to library_special_link(@course)
         flash[:success] = t('controllers.enrollments.create.flash.success')
