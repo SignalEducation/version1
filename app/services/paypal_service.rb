@@ -90,7 +90,7 @@ class PaypalService
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
-      start_date: (Time.zone.now + 1.month).beginning_of_month.iso8601,
+      start_date: (Date.today + 1.month).iso8601,
       payer: {
         payment_method: "paypal",
         payer_info: {
@@ -101,7 +101,7 @@ class PaypalService
       },
       override_merchant_preferences: {
         setup_fee: {
-          value: subscription_plan.prorated_price.to_s,
+          value: subscription_plan.price.to_s,
           currency: subscription_plan.currency.iso_code
         },
         return_url: execute_subscription_url(id: subscription.id, host: 'https://staging.learnsignal.com', payment_processor: 'paypal'),
