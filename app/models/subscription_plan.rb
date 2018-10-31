@@ -106,7 +106,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   def prorated_price
     end_of_month = Date.today.end_of_month
-    days_left_in_month = (end_of_month - Date.today).to_i
+    days_left_in_month = (end_of_month - Date.today).to_i + 1
     proration = days_left_in_month.to_f / end_of_month.day
     price * proration
   end
