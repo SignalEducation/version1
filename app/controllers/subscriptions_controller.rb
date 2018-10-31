@@ -63,7 +63,7 @@ class SubscriptionsController < ApplicationController
     subscription_service.check_valid_subscription?(params)
     subscription_service.check_for_valid_coupon?(params[:hidden_coupon_code])
     @subscription = subscription_service.create_and_return_subscription(params)
-
+    
     if @subscription.save
       if subscription_service.stripe?
         subscription_service.validate_referral
@@ -72,12 +72,12 @@ class SubscriptionsController < ApplicationController
         redirect_to @subscription.paypal_approval_url
       end
     else
-      Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
+      Rails.logger.info "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
       flash[:error] = 'Your request was declined. Please contact us for assistance!'
       redirect_to new_subscription_url
     end
   rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e[:message]
+    flash[:error] = e.message
     redirect_to request.referrer
   end
 
@@ -97,7 +97,7 @@ class SubscriptionsController < ApplicationController
       redirect_to new_subscription_url
     end
   rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e[:message]
+    flash[:error] = e.message
     redirect_to new_subscription_url
   end
 
@@ -171,7 +171,7 @@ class SubscriptionsController < ApplicationController
   protected
 
   def subscription_params
-    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code)
+    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code, :use_paypal)
   end
 
   def updatable_params

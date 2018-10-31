@@ -15,15 +15,16 @@ class SubscriptionService
   end
 
   def create_and_return_subscription(params)
-    if @subscription.stripe?
+    if self.stripe?
       @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
-    elsif @subscription.paypal?
+    elsif self.paypal?
+      @subscription.save!
       @subscription = PaypalService.new.create_and_return_subscription(@subscription)
     end
   end
 
   def paypal?
-    @subscription.use_paypal.present?
+    @subscription.use_paypal.present? || @subscription.paypal_token.present?
   end
 
   def stripe?
@@ -50,7 +51,7 @@ class SubscriptionService
   private
 
   def valid_paypal_subscription?(params)
-    params[:subscription][:stripe_token].present? &&
+    params[:subscription][:use_paypal].present? &&
       @subscription &&
       @subscription.subscription_plan
   end

@@ -114,6 +114,10 @@
             .row
               .col-lg-10.col-lg-offset-1
                 %h2.title1
+                  =link_to image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png'), subscriptions_path(subscription: { user_id: @user.id, subscription_plan_id: @subscription_plans.last.id, use_paypal: true }), method: :post
+
+                %hr
+                %h2.title1
                   =t('views.subscriptions.new_subscription.enter_payment_details')
                 %h2.subtitle1
                   =t('views.subscriptions.new_subscription.continue_right_away')

@@ -33,7 +33,7 @@ class PaypalService
   # BILLING AGREEMENTS =========================================================
 
   def create_and_return_subscription(subscription)
-    agreement = create_billing_agreement(subscription.subscription_plan, subscription.user)
+    agreement = create_billing_agreement(subscription, subscription.user)
     subscription.assign_attributes(
       paypal_token: agreement.token,
       paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href
@@ -41,14 +41,17 @@ class PaypalService
     subscription
   end
 
-  def create_billing_agreement(subscription_plan, user)
-    agreement = Agreement.new(agreement_attributes(subscription_plan, user))
+  def create_billing_agreement(subscription, user)
+    agreement = Agreement.new(agreement_attributes(subscription, user))
     if agreement.create
       agreement
     else
       Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
     end
+  rescue PayPal::SDK::Core::Exceptions::ServerError => e
+    Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - PayPal Error - Error: #{e.message}"
+    raise Learnsignal::SubscriptionError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
   end
 
   def execute_billing_agreement(subscription, token)
@@ -60,7 +63,7 @@ class PaypalService
         active: true,
         current_status: agreement.state,
         paypal_subscription_guid: agreement.id,
-        next_renewal_date: Time.at(agreement.next_billing_date),
+        next_renewal_date: Time.parse(agreement.agreement_details.next_billing_date),
       )
     else
       Rails.logger.error "DEBUG: Subscription#create Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
@@ -87,7 +90,7 @@ class PaypalService
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
-      start_date: (Time.zone.now + 1.day).iso8601,
+      start_date: (Time.zone.now + 1.month).beginning_of_month.iso8601,
       payer: {
         payment_method: "paypal",
         payer_info: {
@@ -97,8 +100,12 @@ class PaypalService
         }
       },
       override_merchant_preferences: {
-        return_url: execute_subscription_url(subscription, host: 'https://learnsignal.com', payment_processor: 'paypal'),
-        cancel_url: unapproved_subscription_url(subscription, host: 'https://learnsignal.com', payment_processor: 'paypal')
+        setup_fee: {
+          value: subscription_plan.prorated_price.to_s,
+          currency: subscription_plan.currency.iso_code
+        },
+        return_url: execute_subscription_url(id: subscription.id, host: 'https://learnsignal.com', payment_processor: 'paypal'),
+        cancel_url: unapproved_subscription_url(id: subscription.id, host: 'https://learnsignal.com', payment_processor: 'paypal')
       },
       plan: {
         id: subscription_plan.paypal_guid
@@ -140,7 +147,7 @@ class PaypalService
         return_url: "https://example.com",
         cancel_url: "https://example.com/cancel",
         auto_bill_amount: "YES",
-        initial_fail_amount_action: "CONTINUE",
+        initial_fail_amount_action: "CANCEL",
         max_fail_attempts: "0"
       }
     }

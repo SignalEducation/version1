@@ -66,7 +66,10 @@ class StripeService
   def create_subscription(subscription, stripe_token, coupon)
     Stripe::Subscription.create(
       customer: subscription.user.stripe_customer_id,
-      plan: subscription.subscription_plan.stripe_guid,
+      items: [{
+        plan: subscription.subscription_plan.stripe_guid,
+        quantity: 1
+      }],
       source: stripe_token,
       coupon: coupon.try(:code),
       trial_end: 'now'

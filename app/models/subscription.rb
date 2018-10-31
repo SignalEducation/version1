@@ -28,7 +28,12 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
 
   # attr-accessible
-  attr_accessible :stripe_token, :use_paypal, :user_id, :paypal_approval_url
+  attr_accessor :use_paypal, :paypal_approval_url
+
+  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, :paypal_approval_url, :user_id, :subscription_plan_id, :complimentary,
+                  :current_status, :stripe_customer_id, :stripe_token,
+                  :livemode, :next_renewal_date, :active, :terms_and_conditions,
+                  :stripe_guid, :stripe_customer_data, :coupon_id
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
@@ -52,7 +57,7 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :subscription_plan_id, presence: true
   # validates :next_renewal_date, presence: true
-  validates :current_status, inclusion: { in: STATUSES }
+  validates :current_status, inclusion: { in: STATUSES + PAYPAL_STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
   # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
