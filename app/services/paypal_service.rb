@@ -90,7 +90,7 @@ class PaypalService
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
-      start_date: (Date.today + 1.month).iso8601,
+      start_date: (Time.zone.now + 1.month).iso8601,
       payer: {
         payment_method: "paypal",
         payer_info: {
