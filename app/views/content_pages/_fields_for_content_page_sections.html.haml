@@ -4,13 +4,13 @@
       .col-sm-12
         =section.label :text_content, 'Text', class: 'control-label'
         .input-group.input-group-lg.full-width
-          =section.text_area :text_content, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;', as: :summernote, id: 'section_editor'
+          =section.text_area :text_content, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control section_editor', style: 'border-radius: 6px;', as: :summernote
         %br
           =section.label :panel_colour, 'Panel Colour', class: 'control-label'
           .input-group.input-group-lg.full-width
             =section.color_field :panel_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-        -#if !section.object.new_record? && section.object.destroyable?
+        -if section.object.destroyable?
           %br/
           %br/
           .checkbox.l-margin-top
@@ -20,8 +20,7 @@
 
 
 :javascript
-
-  $('#section_editor').summernote({
+  $('.section_editor').summernote({
     disableDragAndDrop: true,
     height: 150
   });

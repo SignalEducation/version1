@@ -20,6 +20,11 @@
   .l-wrap-small
     .container-fluid
       .row
+        .col-md-12
+          =@content_page.text_content.html_safe
+
+      .row
+        %hr/
         -@content_page.content_page_sections.each do |section|
           .col-md-12
             .card.card-course
