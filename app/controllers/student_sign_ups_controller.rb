@@ -60,7 +60,7 @@ class StudentSignUpsController < ApplicationController
     if params[:mailchimp_list_guid] && !params[:mailchimp_list_guid].empty?
       list_id = params[:mailchimp_list_guid]
     else
-      list_id = 'ac6c0d8c35' # Development List
+      list_id = 'a716c282e2' # Development List 'ac6c0d8c35'
     end
 
     email = params[:email][:address]
