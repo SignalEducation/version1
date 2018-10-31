@@ -14,12 +14,8 @@
 #
 
 class Currency < ActiveRecord::Base
-
   include ActionView::Helpers::NumberHelper
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :iso_code, :name, :leading_symbol, :trailing_symbol, :active, :sorting_order
 
   # Constants
 
@@ -64,7 +60,4 @@ class Currency < ActiveRecord::Base
   def format_number(the_number=0)
     number_to_currency(the_number, precision: 2, unit: self.leading_symbol)
   end
-
-  protected
-
 end

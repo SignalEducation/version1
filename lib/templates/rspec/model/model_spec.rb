@@ -3,16 +3,6 @@ require 'rails_helper'
 <% module_namespacing do -%>
 describe <%= class_name %> do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  <%= class_name %>.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   # Constants
   #it { expect(<%= class_name %>.const_defined?(:CONSTANT_NAME)).to eq(true) }
 

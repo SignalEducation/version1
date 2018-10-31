@@ -2,21 +2,24 @@
 #
 # Table name: subscriptions
 #
-#  id                   :integer          not null, primary key
-#  user_id              :integer
-#  subscription_plan_id :integer
-#  stripe_guid          :string
-#  next_renewal_date    :date
-#  complimentary        :boolean          default(FALSE), not null
-#  current_status       :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  stripe_customer_id   :string
-#  stripe_customer_data :text
-#  livemode             :boolean          default(FALSE)
-#  active               :boolean          default(FALSE)
-#  terms_and_conditions :boolean          default(FALSE)
-#  coupon_id            :integer
+#  id                       :integer          not null, primary key
+#  user_id                  :integer
+#  subscription_plan_id     :integer
+#  stripe_guid              :string
+#  next_renewal_date        :date
+#  complimentary            :boolean          default(FALSE), not null
+#  current_status           :string
+#  created_at               :datetime
+#  updated_at               :datetime
+#  stripe_customer_id       :string
+#  stripe_customer_data     :text
+#  livemode                 :boolean          default(FALSE)
+#  active                   :boolean          default(FALSE)
+#  terms_and_conditions     :boolean          default(FALSE)
+#  coupon_id                :integer
+#  paypal_subscription_guid :string
+#  paypal_token             :string
+#  paypal_status            :string
 #
 
 class SubscriptionsController < ApplicationController
@@ -25,7 +28,7 @@ class SubscriptionsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w(student_user))
   end
-  before_action :get_subscription
+  before_action :get_subscription, except: [:new, :create]
   before_action :check_subscriptions, only: [:new, :create]
 
   def new
@@ -54,71 +57,48 @@ class SubscriptionsController < ApplicationController
   end
 
   def create
-    @subscription = Subscription.new(allowed_params)
-    stripe_token = params[:subscription][:stripe_token]
-    coupon_code = params[:hidden_coupon_code] if params[:hidden_coupon_code].present?
+    @subscription = Subscription.new(subscription_params)
 
-    unless stripe_token && @subscription && @subscription.subscription_plan
-      flash[:error] = 'Sorry! The data entered is not valid. Please contact us for assistance.'
-      redirect_to request.referrer and return
+    subscription_service = SubscriptionService.new(@subscription)
+    subscription_service.check_valid_subscription?(params)
+    subscription_service.check_for_valid_coupon?(params[:hidden_coupon_code])
+    @subscription = subscription_service.create_and_return_subscription(params)
+    
+    if @subscription.save
+      if subscription_service.stripe?
+        subscription_service.validate_referral
+        redirect_to personal_upgrade_complete_url
+      elsif subscription_service.paypal?
+        redirect_to @subscription.paypal_approval_url
+      end
+    else
+      Rails.logger.info "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
+      flash[:error] = 'Your request was declined. Please contact us for assistance!'
+      redirect_to new_subscription_url
     end
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to request.referrer
+  end
 
-    user = @subscription.user
-    subscription_plan_stripe_guid = @subscription.subscription_plan.stripe_guid
-    stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id)
-    @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id) if coupon_code
-
-    if coupon_code && !@coupon
-      flash[:error] = 'Sorry! That is not a valid coupon code.'
-      redirect_to request.referrer and return
-    end
-
-    begin
-      stripe_subscription = Stripe::Subscription.create(
-          customer: user.stripe_customer_id,
-          plan: subscription_plan_stripe_guid,
-          source: stripe_token,
-          coupon: @coupon.try(:code),
-          trial_end: 'now'
-      )
-
-      stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id) #Reload the stripe_customer to get new Subscription details
-
-      @subscription.assign_attributes(
-          complimentary: false,
-          active: true,
-          livemode: stripe_subscription[:plan][:livemode],
-          current_status: stripe_subscription.status,
-          stripe_guid: stripe_subscription.id,
-          next_renewal_date: Time.at(stripe_subscription.current_period_end),
-          stripe_customer_id: stripe_customer.id,
-          coupon_id: @coupon.try(:id),
-          stripe_customer_data: stripe_customer.to_hash.deep_dup
-      )
-      if @subscription.valid? && @subscription.save
-        user.referred_signup.update_attributes(payed_at: Proc.new{Time.now}.call, subscription_id: @subscription.id) if user.referred_user
+  def execute
+    case params[:payment_processor]
+    when 'paypal'
+      if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
+        SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url
       else
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
-        flash[:error] = 'Your request was declined. Please contact us for assistance!'
+        flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
         redirect_to new_subscription_url
       end
-
-
-    rescue Stripe::CardError => e
-      body = e.json_body
-      err  = body[:error]
-
-      Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-
-      flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
-      redirect_to request.referrer
-
-    rescue => e
-      Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
-      flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
-      redirect_to request.referrer
+    else
+      flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
+      redirect_to new_subscription_url
     end
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to new_subscription_url
   end
 
   def personal_upgrade_complete
@@ -190,8 +170,8 @@ class SubscriptionsController < ApplicationController
 
   protected
 
-  def allowed_params
-    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code)
+  def subscription_params
+    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code, :use_paypal)
   end
 
   def updatable_params

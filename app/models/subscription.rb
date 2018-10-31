@@ -2,21 +2,24 @@
 #
 # Table name: subscriptions
 #
-#  id                   :integer          not null, primary key
-#  user_id              :integer
-#  subscription_plan_id :integer
-#  stripe_guid          :string
-#  next_renewal_date    :date
-#  complimentary        :boolean          default(FALSE), not null
-#  current_status       :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  stripe_customer_id   :string
-#  stripe_customer_data :text
-#  livemode             :boolean          default(FALSE)
-#  active               :boolean          default(FALSE)
-#  terms_and_conditions :boolean          default(FALSE)
-#  coupon_id            :integer
+#  id                       :integer          not null, primary key
+#  user_id                  :integer
+#  subscription_plan_id     :integer
+#  stripe_guid              :string
+#  next_renewal_date        :date
+#  complimentary            :boolean          default(FALSE), not null
+#  current_status           :string
+#  created_at               :datetime
+#  updated_at               :datetime
+#  stripe_customer_id       :string
+#  stripe_customer_data     :text
+#  livemode                 :boolean          default(FALSE)
+#  active                   :boolean          default(FALSE)
+#  terms_and_conditions     :boolean          default(FALSE)
+#  coupon_id                :integer
+#  paypal_subscription_guid :string
+#  paypal_token             :string
+#  paypal_status            :string
 #
 
 class Subscription < ActiveRecord::Base
@@ -25,13 +28,16 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
 
   # attr-accessible
-  attr_accessible :user_id, :subscription_plan_id, :complimentary,
+  attr_accessor :use_paypal, :paypal_approval_url
+
+  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, :paypal_approval_url, :user_id, :subscription_plan_id, :complimentary,
                   :current_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
                   :stripe_guid, :stripe_customer_data, :coupon_id
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
+  PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
   VALID_STATES = %w(active past_due canceled-pending)
 
   # relationships
@@ -50,9 +56,10 @@ class Subscription < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :subscription_plan_id, presence: true
-  validates :next_renewal_date, presence: true
-  validates :current_status, inclusion: {in: STATUSES}
-  validates :livemode, inclusion: {in: [Invoice::STRIPE_LIVE_MODE]}, on: :update
+  # validates :next_renewal_date, presence: true
+  validates :current_status, inclusion: { in: STATUSES + PAYPAL_STATUSES }, allow_blank: true
+  validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
+  # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
 
