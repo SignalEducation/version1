@@ -104,8 +104,8 @@ class PaypalService
           value: subscription_plan.prorated_price.to_s,
           currency: subscription_plan.currency.iso_code
         },
-        return_url: execute_subscription_url(id: subscription.id, host: 'https://learnsignal.com', payment_processor: 'paypal'),
-        cancel_url: unapproved_subscription_url(id: subscription.id, host: 'https://learnsignal.com', payment_processor: 'paypal')
+        return_url: execute_subscription_url(id: subscription.id, host: 'https://staging.learnsignal.com', payment_processor: 'paypal'),
+        cancel_url: unapproved_subscription_url(id: subscription.id, host: 'https://staging.learnsignal.com', payment_processor: 'paypal')
       },
       plan: {
         id: subscription_plan.paypal_guid
