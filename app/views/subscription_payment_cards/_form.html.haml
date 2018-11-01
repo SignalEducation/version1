@@ -21,6 +21,8 @@
         %span.total Total:
         %span.value#total-value
           =default_plan.currency.format_number(default_plan.price)
+        %p
+          Billed every month
       .price.discounted-price
         -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
         %span.total Discounted Total:
