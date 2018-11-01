@@ -74,21 +74,32 @@
                   Pick a plan
 
                 .row.plan-options
-                  .col-md-4
-                    .plan-option
-                      Monthly
-                      %p
-                        €33.99
-                  .col-md-4
-                    .plan-option
-                      Quarterly
-                      %p
-                        €90.99
-                  .col-md-4
-                    .plan-option
-                      Yearly
-                      %p
-                        €333.99
+                  .col-sm-6
+                    .plan-select
+                      .plan
+                        %span.plan-title
+                          Monthly
+                        %span.price
+                          €33.99
+                      .plan.chosen
+                        %span.plan-title
+                          Quarterly
+                        %span.price
+                          €99.99
+                      .plan
+                        %span.plan-title
+                          Yearly
+                        %span.price
+                          €333.99
+                  .col-sm-6
+                    .plan-summary
+                      .summary-container
+                        %span.plan-title
+                          Quarterly
+                        %span.price
+                          €99.99
+                        %p.summary
+                          Billed every 3 months
 
               .col-lg-6
                 %h2.title1
