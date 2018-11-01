@@ -7,12 +7,11 @@
       =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
         =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
         =f.hidden_field :user_id, value: @user.id
-        =f.hidden_field :subscription_plan_id
+        =f.hidden_field :subscription_plan_id, value: @subscription_plans.last.id
         =f.hidden_field :stripe_token
-        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        =f.hidden_field :use_paypal, value: false
         -if params[:coupon]
           =hidden_field_tag :hidden_coupon_code
-
 
         %section#plans
           .container
@@ -123,10 +122,10 @@
   // Finds the id value of the sub plan that the radio button belongs to.
   // Sets the hidden field subscription_plan_id to that id.
   function choosePlan(theThing) {
-    $('.option[type="radio"]:checked').prop('checked', false);
-    $(theThing).find('.option[type="radio"]').prop('checked', true);
-    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
-    $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
+    // $('.option[type="radio"]:checked').prop('checked', false);
+    // $(theThing).find('.option[type="radio"]').prop('checked', true);
+    $('#subscription_subscription_plan_id').val('37');
+    // $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
     //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
     plan_id = $('#subscription_subscription_plan_id').val();
 
@@ -230,10 +229,12 @@
       if (this.value == 'stripe') {
         $('#card_inputs').slideDown();
         $('#paypal_inputs').slideUp();
+        $('#subscription_use_paypal').val(false);
       }
       else if (this.value == 'paypal') {
         $('#card_inputs').slideUp();
         $('#paypal_inputs').slideDown();
+        $('#subscription_use_paypal').val(true);
       }
     });
   })
@@ -298,8 +299,13 @@
     //Replace submit button with spinning JS
     $('#card_submit').prop('disabled',true);
     $('#card_submit').hide();
+    $('#paypal_submit').prop('disabled',true);
     $(".sk-circle").show();
-    createToken();
+    if ($('#subscription_use_paypal').val()) {
+      document.getElementById('upgrade-form').submit();
+    } else {
+      createToken();
+    }
   });
 
 
