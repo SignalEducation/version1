@@ -24,11 +24,16 @@ RSpec.describe UserVerificationsController, :type => :controller do
         get :update, email_verification_code: 'XYZ123'
         expect(response.status).to eq(302)
         expect(flash[:success]).to be_nil
-        expect(flash[:error]).to eq(I18n.t('controllers.user_activations.update.error'))
+        expect(flash[:warning]).to eq('Sorry! That link has expired. Please try to sign in or contact us for assistance')
       end
     end
 
     describe "Get 'account_verified'" do
+      before(:each) do
+        activate_authlogic
+        UserSession.create!(unverified_student_user)
+      end
+
       it 'returns success when given a valid code' do
         get :account_verified
         expect(response.status).to eq(200)
@@ -39,8 +44,8 @@ RSpec.describe UserVerificationsController, :type => :controller do
 
     describe "Post 'resend_verification_mail'" do
       it 'returns success when given a valid code' do
+        request.env['HTTP_REFERER'] = 'http://test.host/en/account_verified'
         post :resend_verification_mail, email_verification_code: unverified_student_user.email_verification_code
-
         expect(response.status).to eq(302)
         expect(response).to redirect_to(account_verified_path)
         expect(flash[:error]).to be_nil
