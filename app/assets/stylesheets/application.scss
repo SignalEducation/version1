@@ -2215,6 +2215,340 @@ spinner {
   @include border-radius(100%);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 1000. Checkout Flow
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.plan-options {
+  margin: 30px 0;
+
+  div.plan-option {
+    text-align: center;
+    margin: 5px;
+    border: 1px solid grey;
+    border-radius: 6px;
+    padding: 15px;
+  }
+}
+
+.payment-options {
+  border-bottom: 1px solid grey;
+  margin-top: 30px;
+
+  .option {
+    height: 90px;
+    font-size: 20px;
+    border-top: 1px solid grey;
+    padding: 30px;
+    i {
+      font-size: 30px;
+      margin-right: 15px;
+    }
+    .choose-payment-option {
+      float: right;
+    }
+  }
+
+  .checkout-form {
+    width: 90%;
+    margin: 30px auto;
+
+    .form-group {
+      &.cc {
+        text-align: center;
+        #card-element {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+      }
+    }
+
+    .price {
+      text-align: center;
+      .total {
+        margin-bottom: 10px;
+      }
+    }
+
+    .form-submit {
+      text-align: center;
+      margin: 40px auto;
+    }
+
+    &#card_inputs {
+      display: none;
+    }
+
+    &#paypal_inputs {
+      display: none;
+
+      input[type="submit"] {
+        width: 228px;
+        height: 44px;
+        background: url(https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png);
+        border: none;
+      }
+    }
+  }
+}
+
+//
+// Checkboxes
+// --------------------------------------------------
+
+
+$font-family-icon: 'FontAwesome' !default;
+$fa-var-check: "\f00c" !default;
+$check-icon: $fa-var-check !default;
+
+@mixin checkbox-variant($parent, $color) {
+  #{$parent} input[type="checkbox"]:checked + label,
+  #{$parent} input[type="radio"]:checked + label {
+    &::before {
+      background-color: $color;
+      border-color: $color;
+    }
+    &::after{
+      color: #fff;
+    }
+  }
+}
+
+@mixin checkbox-variant-indeterminate($parent, $color) {
+  #{$parent} input[type="checkbox"]:indeterminate + label,
+  #{$parent} input[type="radio"]:indeterminate + label {
+    &::before {
+      background-color: $color;
+      border-color: $color;
+    }
+    &::after{
+      background-color: #fff;
+    }
+  }
+}
+
+
+
+.pretty-checkbox{
+  padding-left: 20px;
+
+  label{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 5px;
+
+    &::before{
+      content: "";
+      display: inline-block;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 0;
+      margin-left: -20px;
+      border: 1px solid $input-border;
+      border-radius: 3px;
+      background-color: $input-bg;
+      @include transition(border 0.15s ease-in-out, color 0.15s ease-in-out);
+    }
+
+    &::after{
+      display: inline-block;
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      left: 0;
+      top: 0;
+      margin-left: -20px;
+      padding-left: 5px;
+      padding-top: 1px;
+      font-size: 20px;
+      color: $input-color;
+      line-height: 1.4;
+    }
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    opacity: 0;
+    z-index: 1;
+    cursor: pointer;
+
+    &:focus + label::before{
+      @include tab-focus();
+    }
+
+    &:checked + label::after{
+      font-family: $font-family-icon;
+      content: $check-icon;
+    }
+
+    &:indeterminate + label::after{
+      display: block;
+      content: "";
+      width: 10px;
+      height: 3px;
+      background-color: #555555;
+      border-radius: 2px;
+      margin-left: -16.5px;
+      margin-top: 7px;
+    }
+
+    &:disabled{
+      cursor: not-allowed;
+    }
+
+    &:disabled + label{
+      opacity: 0.65;
+
+      &::before{
+        background-color: $input-bg-disabled;
+        cursor: not-allowed;
+      }
+    }
+
+  }
+
+  &.checkbox-circle label::before{
+    border-radius: 50%;
+  }
+
+  &.checkbox-inline{
+    margin-top: 0;
+  }
+}
+
+@include checkbox-variant('.checkbox-primary', $brand-primary);
+@include checkbox-variant('.checkbox-danger', $brand-danger);
+@include checkbox-variant('.checkbox-info', $brand-info);
+@include checkbox-variant('.checkbox-warning', $brand-warning);
+@include checkbox-variant('.checkbox-success', $brand-success);
+
+
+@include checkbox-variant-indeterminate('.checkbox-primary', $brand-primary);
+@include checkbox-variant-indeterminate('.checkbox-danger', $brand-danger);
+@include checkbox-variant-indeterminate('.checkbox-info', $brand-info);
+@include checkbox-variant-indeterminate('.checkbox-warning', $brand-warning);
+@include checkbox-variant-indeterminate('.checkbox-success', $brand-success);
+
+//
+// Radios
+// --------------------------------------------------
+
+@mixin radio-variant($parent, $color) {
+  #{$parent} input[type="radio"]{
+    + label{
+      &::after{
+        background-color: $color;
+      }
+    }
+    &:checked + label{
+      &::before {
+        border-color: $color;
+      }
+      &::after{
+        background-color: $color;
+      }
+    }
+  }
+}
+
+.pretty-radio{
+  padding-left: 20px;
+
+  label{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 5px;
+
+    &::before{
+      content: "";
+      display: inline-block;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      left: 0;
+      margin-left: -20px;
+      border: 1px solid $input-border;
+      border-radius: 50%;
+      background-color: $input-bg;
+      @include transition(border 0.15s ease-in-out);
+    }
+
+    &::after{
+      display: inline-block;
+      position: absolute;
+      content: " ";
+      width: 20px;
+      height: 20px;
+      left: 5px;
+      top: 5px;
+      margin-left: -20px;
+      border-radius: 50%;
+      background-color: $input-color;
+      @include scale(0, 0);
+
+      @include transition-transform(.1s cubic-bezier(.8,-0.33,.2,1.33));
+      //curve - http://cubic-bezier.com/#.8,-0.33,.2,1.33
+    }
+  }
+
+  input[type="radio"]{
+    opacity: 0;
+    z-index: 1;
+    cursor: pointer;
+
+    &:focus + label::before{
+      @include tab-focus();
+    }
+
+    &:checked + label::after{
+      @include scale(1, 1);
+    }
+
+    &:disabled{
+      cursor: not-allowed;
+    }
+
+    &:disabled + label{
+      opacity: 0.65;
+
+      &::before{
+        cursor: not-allowed;
+      }
+    }
+
+  }
+
+  &.radio-inline{
+    margin-top: 0;
+  }
+}
+
+@include radio-variant('.radio-primary', $brand-primary);
+@include radio-variant('.radio-danger', $brand-danger);
+@include radio-variant('.radio-info', $brand-info);
+@include radio-variant('.radio-warning', $brand-warning);
+@include radio-variant('.radio-success', $brand-success);
+
+
+input[type="checkbox"],
+input[type="radio"] {
+  &.styled:checked + label:after {
+    font-family: $font-family-icon;
+    content: $check-icon;
+  }
+  .styled:checked + label {
+    &::before {
+      color: #fff;
+    }
+    &::after {
+      color: #fff;
+    }
+  }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 15. Site-Wide Classes

@@ -1,32 +1,5 @@
 .upgrade
   #wrapper
-    %section#free
-      .tmain
-        .tbase
-          -if flash[:success] || flash[:error] || flash[:warning]
-            .col-sm-8.col-sm-offset-2.col-xs-12
-              =render partial: 'layouts/flash_messages'
-          .container
-            -if @user.trial_user?
-              .row
-                .col-md-10.col-md-offset-1
-                  %h1.title1
-                    ='Upgrade now for Unlimited Access'
-                  %h2.subtitle
-                    =t('views.subscriptions.new_subscription.h2a')
-                  %h2.subtitle
-                    =t('views.subscriptions.new_subscription.h2b')
-            -else
-              .row
-                .col-md-10.col-md-offset-1
-                  %h1.title1
-                    =t('views.subscriptions.new_subscription.h2e')
-
-
-      .go-down
-        %a.anchor{:href => "#plans"}
-          %i.fa.fa-angle-down
-      .bottom-arrow
 
 
 
@@ -93,39 +66,51 @@
                         %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
                         =t('views.subscriptions.new_subscription.select_this_plan')
 
-
-
-
-        %section#cancel.bg-gradient1
-          .container
-            %h1.title1
-              %span
-                =t('views.subscriptions.new_subscription.and_dont_forget')
-                %strong
-                  =t('views.subscriptions.new_subscription.you_can_cancel_anytime')
-            %h1.title1
-              %span
-                =t('views.subscriptions.new_subscription.no_commitments')
-                %br/
-
-
         %section#simply
           .container
             .row
-              .col-lg-10.col-lg-offset-1
+              .col-lg-6
                 %h2.title1
-                  =link_to image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png'), subscriptions_path(subscription: { user_id: @user.id, subscription_plan_id: @subscription_plans.last.id, use_paypal: true }), method: :post
+                  %i.fa.fa-book
+                  Pick a plan
 
-                %hr
+                .row.plan-options
+                  .col-md-4
+                    .plan-option
+                      Monthly
+                      %p
+                        €33.99
+                  .col-md-4
+                    .plan-option
+                      Quarterly
+                      %p
+                        €90.99
+                  .col-md-4
+                    .plan-option
+                      Yearly
+                      %p
+                        €333.99
+
+              .col-lg-6
                 %h2.title1
-                  =t('views.subscriptions.new_subscription.enter_payment_details')
-                %h2.subtitle1
-                  =t('views.subscriptions.new_subscription.continue_right_away')
+                  Choose a way to pay
 
-            .row
-              .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-                =render partial: 'subscription_payment_cards/form', locals: {f: f}
-
+                .payment-options
+                  .option
+                    %i.fa.fa-credit-card
+                    Credit / Debit Card
+                    .pretty-radio.choose-payment-option
+                      %input{ :type => "radio", :name => "payment_radio", :id => "select_card", :value => "stripe" }
+                      %label{ :for => "select_card" }
+                  %div{ :id => 'card_inputs', :class => 'checkout-form' }
+                    =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                  .option
+                    =link_to image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_200x51.png', height: 30), subscriptions_path(subscription: { user_id: @user.id, subscription_plan_id: @subscription_plans.last.id, use_paypal: true }), method: :post
+                    .pretty-radio.choose-payment-option
+                      %input{ :type => "radio", :name => "payment_radio", :id => "select_paypal", :value => "paypal" }
+                      %label{ :for => "select_paypal" }
+                  %div{ :id => 'paypal_inputs', :class => 'checkout-form' }
+                    =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
 
 :javascript
@@ -240,6 +225,92 @@
     $(".sk-circle").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
+
+    $('input[type=radio][name=payment_radio]').change(function() {
+      if (this.value == 'stripe') {
+        $('#card_inputs').slideDown();
+        $('#paypal_inputs').slideUp();
+      }
+      else if (this.value == 'paypal') {
+        $('#card_inputs').slideUp();
+        $('#paypal_inputs').slideDown();
+      }
+    });
   })
+
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#terms_and_conditions').prop('checked') == true) {
+      $("#hidden_term_and_conditions").val('true');
+    } else if($('#terms_and_conditions').prop('checked') == false) {
+      $("#hidden_term_and_conditions").val('false');
+    }
+  });
+
+  // Custom styling can be passed to options when creating an Element.
+  var style = {
+    base: {
+      fontWeight: 300,
+      fontFamily: 'Rubik',
+      fontSize: '20px',
+      lineHeight: '24px'
+    }
+  };
+
+  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+  var elements = stripe.elements();
+
+  var card = elements.create('card', {hidePostalCode: true, style: style});
+  card.mount('#card-element');
+
+
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('upgrade-form');
+    $('#subscription_stripe_token').val(token.id);
+    $('#hidden_coupon_code').val($('#coupon_code').val());
+
+    // Submit the form
+    form.submit();
+  }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        //Replace spinning JS with Submit button
+        $('#card_submit').prop('disabled',false);
+        $('#card_submit').show();
+        $(".sk-circle").hide();
+
+      } else {
+        // Send the token to your server
+        stripeTokenHandler(result.token);
+      }
+    });
+  };
+
+  // Create a token when the form is submitted.
+  var form = document.getElementById('upgrade-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    //Replace submit button with spinning JS
+    $('#card_submit').prop('disabled',true);
+    $('#card_submit').hide();
+    $(".sk-circle").show();
+    createToken();
+  });
+
+
+
+  card.addEventListener('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
 
 
