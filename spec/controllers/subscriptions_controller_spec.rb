@@ -199,7 +199,7 @@ describe SubscriptionsController, type: :controller do
         }
         stub_customer_get_request(get_url, get_response_body)
 
-
+        request.env['HTTP_REFERER'] = 'http://test.host/en/new_subscription?coupon=true'
         post :create, subscription: upgrade_params, user_id: valid_trial_student.id, hidden_coupon_code: 'bad_coupon_001'
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! That is not a valid coupon code.')

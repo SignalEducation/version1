@@ -74,7 +74,7 @@ class SubscriptionsController < ApplicationController
 
     if coupon_code && !@coupon
       flash[:error] = 'Sorry! That is not a valid coupon code.'
-      redirect_to new_subscription_url(coupon: true) and return
+      redirect_to request.referrer and return
     end
 
     begin
@@ -116,12 +116,12 @@ class SubscriptionsController < ApplicationController
       Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
 
       flash[:error] = "Sorry! Your request was declined because - #{err[:message]}"
-      redirect_to new_subscription_url
+      redirect_to request.referrer
 
     rescue => e
       Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
       flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
-      redirect_to new_subscription_url
+      redirect_to request.referrer
     end
 
   end
