@@ -1306,7 +1306,7 @@ a.link-purple {
   display: block;
   max-width: 200px;
   max-height: 150px;
-  margin: 0 auto $gutter auto;
+  margin: 0 auto 0 auto;
 }
 
 
@@ -1440,6 +1440,76 @@ a.image-link {
 }
 
 
+// Mock Exam Boxes
+a.product-box {
+  text-decoration: none;
+  &:link {
+    text-decoration: none;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+    @include box-shadow(0, 0, 12px, rgba(#000, .25));
+  }
+  &:hover {
+    .product-box-label {
+      background: darken($colour-21, 5%);
+    }
+  }
+}
+
+.product-box {
+  display: block;
+  background: $white;
+  position: relative;
+  margin: $gutter*.5 0 $gutter 0;
+  text-align: center;
+  font-weight: 500;
+  @include border-radius(5px);
+  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
+  @include transition(box-shadow .1s ease);
+  @include breakpoint(sm-min) {
+    margin: $gutter*.5 0 $gutter 0;
+  }
+  .product-box-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin: 0 auto;
+  }
+  .product-box-title {
+    padding: $gutter $gutter/2;
+    position: relative;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .product-box-inner {
+    padding: $gutter/2;
+
+    position: relative;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .product-box-label {
+    background: $colour-21;
+    color: $white;
+    padding: $gutter/2;
+    margin-top: 10px;
+    letter-spacing: .2rem;
+    text-transform: uppercase;
+    @include transition(background-color .2s ease);
+    @include border-bottom-radius(4px);
+    @include font-size(1.4);
+    @include breakpoint(sm-min) {
+      @include font-size(1.6);
+    }
+  }
+
+}
 
 
 
