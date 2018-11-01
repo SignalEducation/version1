@@ -60,7 +60,7 @@ class StudentSignUpsController < ApplicationController
     if params[:mailchimp_list_guid] && !params[:mailchimp_list_guid].empty?
       list_id = params[:mailchimp_list_guid]
     else
-      list_id = 'a716c282e2' # Development List 'ac6c0d8c35'
+      list_id = 'a716c282e2' # Newsletter List
     end
 
     email = params[:email][:address]
@@ -71,15 +71,17 @@ class StudentSignUpsController < ApplicationController
 
     if !email.blank?
       begin
-        if params[:course] && params[:student_number][:address]
+        # Bootcamp Guarantee List has Student Number Field other do not
+        if params[:student_number]
           @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name,
                                                             'snumber' => student_number,
                                                             'dob' => date_of_birth,
                                                             'coursename' => course_name})
         else
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name,
+                                                            'dob' => date_of_birth,
+                                                            'coursename' => course_name})
         end
-
 
         respond_to do |format|
           format.json{render json: {message: 'Success! Check your email to confirm your subscription.'}}

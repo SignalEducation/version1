@@ -48,32 +48,32 @@
 
 
               .col-md-4
-                #response.form
-                  =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-                    -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?
+                -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?
+                  #response.form
+                    =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
                       =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
-                    .row
-                      .col-sm-12
-                        =label(:first_name, 'Full Name')
-                        .input-group.input-group-lg.full-width
-                          =text_field(:first_name, :address, {id: 'name', placeholder: 'Your full name', class: 'form-control', style: 'border-radius: 6px;'})
-                        %br/
-                        =label(:email, 'Email Address')
-                        .input-group.input-group-lg.full-width
-                          =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control', style: 'border-radius: 6px;'})
-                        %br/
-                        =label(:date_of_birth, 'Date Of Birth')
-                        .input-group.input-group-lg.full-width
-                          =date_field(:date_of_birth, :address, {id: 'date_of_birth', placeholder: 'Your date of birth', class: 'form-control', style: 'border-radius: 6px;'})
+                      .row
+                        .col-sm-12
+                          =label(:first_name, 'Full Name')
+                          .input-group.input-group-lg.full-width
+                            =text_field(:first_name, :address, {id: 'name', placeholder: 'Your full name', class: 'form-control', style: 'border-radius: 6px;'})
+                          %br/
+                          =label(:email, 'Email Address')
+                          .input-group.input-group-lg.full-width
+                            =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control', style: 'border-radius: 6px;'})
+                          %br/
+                          =label(:date_of_birth, 'Date Of Birth')
+                          .input-group.input-group-lg.full-width
+                            =date_field(:date_of_birth, :address, {id: 'date_of_birth', placeholder: 'Your date of birth', class: 'form-control', style: 'border-radius: 6px;'})
 
-                        %br/
-                        =label(:course_name, 'Course')
-                        .input-group.input-group-lg.full-width
-                          =select_tag('course', options_for_select(@group.subject_courses.all_in_order.all_active.collect{ |u| [u.name, u.name] }), {include_blank: t('views.general.select'), class: 'form-control'})
+                          %br/
+                          =label(:course_name, 'Course')
+                          .input-group.input-group-lg.full-width
+                            =select_tag('course', options_for_select(@group.subject_courses.all_in_order.all_active.collect{ |u| [u.name, u.name] }), {include_blank: t('views.general.select'), class: 'form-control'})
 
 
-                        %button.btn.btn-red{:type => "submit"}
-                          ='Register Now'
+                          %button.btn.btn-red{:type => "submit"}
+                            ='Register Now'
 
 
 
