@@ -4,7 +4,6 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
 #  mock_exam_id      :integer
 #  stripe_guid       :string
 #  live_mode         :boolean          default(FALSE)
@@ -14,6 +13,8 @@
 #  currency_id       :integer
 #  price             :decimal(, )
 #  stripe_sku_guid   :string
+#  subject_course_id :integer
+#  sorting_order     :integer
 #
 
 class ProductsController < ApplicationController
@@ -52,6 +53,13 @@ class ProductsController < ApplicationController
     end
   end
 
+  def reorder
+    array_of_ids = params[:array_of_ids]
+    array_of_ids.each_with_index do |the_id, counter|
+      Product.find(the_id.to_i).update_columns(sorting_order: (counter + 1))
+    end
+    render json: {}, status: 200
+  end
 
   def update
     if @product.update_attributes(allowed_params)
@@ -85,7 +93,7 @@ class ProductsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:product).permit(:name, :active, :price, :currency_id, :livemode, :mock_exam_id)
+    params.require(:product).permit(:name, :active, :price, :currency_id, :livemode, :mock_exam_id, :sorting_order)
   end
 
 end

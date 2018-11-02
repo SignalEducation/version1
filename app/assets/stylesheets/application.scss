@@ -1508,6 +1508,12 @@ a.product-box {
       @include font-size(1.6);
     }
   }
+  .media-pic {
+    display: block;
+    max-width: 200px;
+    max-height: 150px;
+    margin: 0 auto 0 auto;
+  }
 
 }
 
