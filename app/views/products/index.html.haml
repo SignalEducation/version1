@@ -40,8 +40,9 @@
                     %tr{id: product.id}
                       %td
                         =product.name
-                        .small{style: 'font-size: 12px;'}
-                          =product.mock_exam.name
+                        .small{style: 'font-size: 12px; color: #54a4ee;'}
+                          -if product.mock_exam
+                            =product.mock_exam.name
                       %td=tick_or_cross(product.active)
                       %td=number_in_local_currency(product.price, product.currency_id)
                       %td
