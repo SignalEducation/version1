@@ -27,7 +27,7 @@ class ProductsController < ApplicationController
 
   ## Standard Actions ##
   def index
-    @all_products = Product.paginate(per_page: 50, page: params[:page])
+    @all_products = Product.all
     @products = params[:search].to_s.blank? ?
         @products = @all_products.all_in_order :
         @products = @all_products.search(params[:search])
