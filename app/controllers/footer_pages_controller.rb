@@ -20,7 +20,14 @@ class FooterPagesController < ApplicationController
   end
 
   def terms_and_conditions
-    seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
+    @content_page = ContentPage.where(public_url: 'terms_and_conditions').all_active.first
+    if @content_page
+      seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
+      render 'content_pages/show'
+    else
+      seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
+      render 'terms_and_conditions'
+    end
   end
 
   def frequently_asked_questions

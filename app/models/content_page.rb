@@ -73,6 +73,9 @@ class ContentPage < ActiveRecord::Base
     if self.external_banners.any? && self.external_banners[0].name.blank?
       self.external_banners[0].destroy
     end
+    if self.content_page_sections.any? && self.content_page_sections[0].panel_colour == '#000000'
+      self.content_page_sections[0].destroy
+    end
   end
 
 
