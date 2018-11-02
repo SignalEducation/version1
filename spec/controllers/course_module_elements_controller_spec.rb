@@ -25,6 +25,7 @@
 
 require 'rails_helper'
 require 'support/course_content'
+require 'support/vimeo_web_mock_helpers'
 
 describe CourseModuleElementsController, type: :controller do
 
@@ -37,6 +38,12 @@ describe CourseModuleElementsController, type: :controller do
                                                     user_group_id: content_management_user_group.id) }
 
   let!(:valid_params) { course_module_element_1_1.attributes.merge({name: 'ABCDE', name_url: 'adcbw'}) }
+
+  let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video) }
+  let!(:valid_video_params) { course_module_element_1_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
+  let!(:constructed_response_params) { course_module_element_1_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }
+  let!(:update_constructed_response_params) { course_module_element_1_4.attributes.merge({name: 'CR 01 - Edited', name_url: 'cr_01'}) }
+
 
   context 'Logged in as a content_management_user: ' do
 
@@ -65,16 +72,43 @@ describe CourseModuleElementsController, type: :controller do
         expect_edit_success_with_model('course_module_element', course_module_element_1_1.id)
       end
 
-      # optional
+      # Vimeo Upload Ticket Build Stubbed
       it 'should respond OK with course_module_element_1_2 - video' do
+        url = 'https://api.vimeo.com/me/videos'
+        redirect_url = "http://test.host/en/course_module_elements/#{course_module_element_1_2.id}/edit?cm_id=#{course_module_element_1_2.course_module.id}&course_module_element_id=#{course_module_element_1_2.id}&type=video"
+        vimeo_request_body = {"redirect_url"=>redirect_url}
+        stub_vimeo_post_request(url, redirect_url, vimeo_request_body)
+
         get :edit, id: course_module_element_1_2.id
         expect_edit_success_with_model('course_module_element', course_module_element_1_2.id)
+        expect(a_request(:post, url).with(body: vimeo_request_body)).to have_been_made.once
+      end
+
+      it 'should respond OK with course_module_element_1_3 - constructed_response' do
+        get :edit, id: course_module_element_1_4.id
+        expect_edit_success_with_model('course_module_element', course_module_element_1_4.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
         post :create, course_module_element: valid_params
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+      end
+
+      it 'should report OK for valid_video_params' do
+        url = "https://api.vimeo.com/videos/#{cme_video_params[:vimeo_guid]}"
+        vimeo_request_body = {"name"=>"Video 01"}
+        stub_vimeo_patch_request(url, vimeo_request_body)
+
+        post :create, course_module_element: valid_video_params
+        expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+
+        expect(a_request(:patch, url).with(body: vimeo_request_body)).to have_been_made.once
+      end
+
+      it 'should report OK for constructed_response_params' do
+        post :create, course_module_element: constructed_response_params
         expect_create_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
       end
 
@@ -97,6 +131,12 @@ describe CourseModuleElementsController, type: :controller do
         expect(assigns(:course_module_element).id).to eq(course_module_element_1_2.id)
       end
 
+      it 'should report OK for constructed_response_params' do
+        post :update, id: course_module_element_1_4.id, course_module_element: update_constructed_response_params
+        expect_update_success_with_model('course_module_element', subject.course_module_special_link(course_module_1))
+        expect(assigns(:course_module_element).id).to eq(course_module_element_1_4.id)
+      end
+
       it 'should reject invalid params' do
         put :update, id: course_module_element_1_1.id, course_module_element: {name_url: ''}
         expect_update_error_with_model('course_module_element')
@@ -114,8 +154,14 @@ describe CourseModuleElementsController, type: :controller do
     describe "DELETE 'destroy'" do
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: course_module_element_2_2.id
-        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_2_2.course_module))
+        url = "https://api.vimeo.com/videos/#{course_module_element_video_1_1_2.vimeo_guid}"
+        stub_vimeo_delete_request(url)
+
+        delete :destroy, id: course_module_element_1_3.id
+        expect_delete_success_with_model('course_module_element', subject.course_module_special_link(course_module_element_1_3.course_module))
+
+        expect(a_request(:delete, url).with(body: '')).to have_been_made.once
+
       end
     end
 

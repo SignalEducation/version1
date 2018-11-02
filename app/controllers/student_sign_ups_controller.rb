@@ -150,7 +150,7 @@ class StudentSignUpsController < ApplicationController
       @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
 
       # Send User Activation email through Mandrill
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
 
       # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
       if cookies.encrypted[:referral_data]

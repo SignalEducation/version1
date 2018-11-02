@@ -48,7 +48,6 @@ FactoryBot.define do
     stripe_order_id "MyString"
     paid false
     refunded false
-    refunds "MyText"
     status "MyString"
   end
 

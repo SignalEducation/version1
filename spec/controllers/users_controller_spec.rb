@@ -56,12 +56,14 @@
 #
 
 require 'rails_helper'
+require 'support/stripe_web_mock_helpers'
 
 describe UsersController, type: :controller do
 
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
   let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
   let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
   let!(:user_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_management_user.id) }
   let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student, user_group_id: student_user_group.id) }
   let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access, user_id: valid_subscription_student.id) }
@@ -79,7 +81,6 @@ describe UsersController, type: :controller do
   let!(:update_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
 
-  #TODO - considerable work needed in this controller
   context 'Logged in as a user_management_user' do
 
     before(:each) do
@@ -116,7 +117,11 @@ describe UsersController, type: :controller do
     end
 
     describe "POST 'create'" do
-      xit 'should successfully create record' do
+      it 'should successfully create record' do
+        stripe_url = 'https://api.stripe.com/v1/customers'
+        stripe_request_body = {'email'=>valid_params[:email]}
+        stub_customer_create_request(stripe_url, stripe_request_body)
+
         post :create, user: valid_params
         expect_create_success_with_model('user', users_url)
         expect(assigns(:user).password_change_required).to eq(true)
@@ -140,8 +145,8 @@ describe UsersController, type: :controller do
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be OK if deleting normal user' do
-        delete :destroy, id: valid_subscription_student.id
+      it 'should be OK if deleting normal user' do
+        delete :destroy, id: unverified_student_user.id
         expect_delete_success_with_model('user', users_url)
       end
     end

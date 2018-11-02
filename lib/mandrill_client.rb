@@ -118,7 +118,7 @@ class MandrillClient
       "text" => nil,
       "subject" => nil,
       "from_email" => "team@learnsignal.com",
-      "from_name" => "Learn Signal",
+      "from_name" => "LearnSignal",
       "to" => [{
                  "email" => @user.email,
                  "type" => "to",

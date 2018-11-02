@@ -17,6 +17,8 @@ require 'capybara/poltergeist'
 require 'database_cleaner'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'sidekiq/testing'
+require 'webmock/rspec'
+WebMock.disable_net_connect!
 Sidekiq::Testing.inline! # makes background jobs run immediately
 
 # Add additional requires below this line. Rails is not loaded until this point!

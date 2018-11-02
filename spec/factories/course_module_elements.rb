@@ -34,6 +34,7 @@ FactoryBot.define do
     active                      true
     seo_description             'Lorem Ipsum'
     seo_no_index                false
+    is_constructed_response     false
 
     factory :cme_video do
       is_video                    true
@@ -43,6 +44,12 @@ FactoryBot.define do
     factory :cme_quiz do
       is_quiz                     true
       is_video                    false
+    end
+
+    factory :cme_constructed_response do
+      is_quiz                     false
+      is_video                    false
+      is_constructed_response     true
     end
 
   end

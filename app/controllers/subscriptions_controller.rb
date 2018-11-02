@@ -60,7 +60,11 @@ class SubscriptionsController < ApplicationController
 
     unless stripe_token && @subscription && @subscription.subscription_plan
       flash[:error] = 'Sorry! The data entered is not valid. Please contact us for assistance.'
-      redirect_to request.referrer and return
+      redirect_to new_subscription_url and return
+    end
+    unless @subscription.terms_and_conditions && @subscription.user_id && @subscription.subscription_plan_id
+      flash[:error] = 'Sorry Something went wrong! You must agree to our Terms & Conditions.'
+      redirect_to new_subscription_url and return
     end
 
     user = @subscription.user
@@ -119,6 +123,7 @@ class SubscriptionsController < ApplicationController
       flash[:error] = 'Sorry Something went wrong! Please contact us for assistance.'
       redirect_to request.referrer
     end
+
   end
 
   def personal_upgrade_complete
@@ -126,7 +131,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def change_plan
-    if current_user && current_user.current_subscription && !current_user.current_subscription.active_status?
+    if current_user && current_user.trial_user?
+      redirect_to new_subscription_url
+    elsif current_user && current_user.subscription_user? && current_user.current_subscription && !current_user.current_subscription.active_status?
       redirect_to account_url(anchor: :subscriptions)
     else
       @current_subscription = current_user.current_subscription
@@ -164,7 +171,7 @@ class SubscriptionsController < ApplicationController
       redirect_to account_url(anchor: 'subscriptions')
     else
       flash[:error] = I18n.t('controllers.subscriptions.update.flash.invalid_card')
-      redirect_to root_url
+      redirect_to account_url(anchor: 'payment-details')
     end
   end
 
