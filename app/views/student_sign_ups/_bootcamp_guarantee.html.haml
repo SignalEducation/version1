@@ -60,9 +60,9 @@
                       =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
                     .row
                       .col-sm-12
-                        =label(:first_name, 'Full Name')
+                        =label(:full_name, 'Full Name')
                         .input-group.input-group-lg.full-width
-                          =text_field(:first_name, :address, {id: 'name', placeholder: 'Your full name', class: 'form-control', style: 'border-radius: 6px;'})
+                          =text_field(:full_name, :address, {id: 'name', placeholder: 'Your full name', class: 'form-control', style: 'border-radius: 6px;'})
                         %br/
                         =label(:email, 'Email Address')
                         .input-group.input-group-lg.full-width
