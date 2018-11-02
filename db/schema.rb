@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181005151335) do
+ActiveRecord::Schema.define(version: 20181030130255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,6 +159,14 @@ ActiveRecord::Schema.define(version: 20181005151335) do
   end
 
   add_index "constructed_responses", ["course_module_element_id"], name: "index_constructed_responses_on_course_module_element_id", using: :btree
+
+  create_table "content_page_sections", force: :cascade do |t|
+    t.integer  "content_page_id"
+    t.text     "text_content"
+    t.string   "panel_colour"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "content_pages", force: :cascade do |t|
     t.string   "name"
