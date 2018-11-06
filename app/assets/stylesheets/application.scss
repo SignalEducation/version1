@@ -2224,6 +2224,32 @@ spinner {
   margin-bottom: 30px;
 }
 
+@media only screen and (min-width: 1200px) {
+  .payment-options-container {
+    border: 1px solid #d0cccc;
+    border-radius: 8px;
+    margin-left: 10px;
+    padding: 20px;
+    background-color: #f7f7fa;
+
+    .summary-container {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  .plans-container {
+    border: 1px solid #d0cccc;
+    border-radius: 8px;
+    margin-right: 10px;
+    padding: 10px;
+  }
+}
+
+.plans-container {
+  padding-top: 20px;  
+}
+
 .plan-options {
   margin: 30px 0;
 
@@ -2242,7 +2268,7 @@ spinner {
       border: 4px solid #35B9CF;
       color: #35B9CF;
       font-weight: 400;
-      font-size: 1.1em;
+      font-size: 1.05em;
 
       &:after {
         content: '\f058';
@@ -2258,7 +2284,6 @@ spinner {
 
   .plan-summary {
     text-align: center;
-    padding: 20px;
 
     .summary-container {
       width: 230px;

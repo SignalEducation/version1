@@ -12,52 +12,55 @@
 
         %section#simply
           .container
-            .row.subscription-flash
-              .col-xs-12
-                =render partial: 'layouts/flash_messages'
+            -if flash[:success] || flash[:error] || flash[:warning]
+              .row.subscription-flash
+                .col-xs-12
+                  =render partial: 'layouts/flash_messages'
             .row
               .col-lg-6
-                %h2.title1
-                  %i.fa.fa-book
-                  Pick a plan
+                .plans-container
+                  %h2.title1
+                    %i.fa.fa-book
+                    Pick a plan
 
-                .row.plan-options
-                  .col-sm-6
-                    .plan-select
-                      -@subscription_plans.each do |plan|
-                        %div{ :class => "plan #{'chosen' if @subscription.subscription_plan_id == plan.id}", id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months, plan_name: plan.interval_name} }
+                  .row.plan-options
+                    .col-sm-6
+                      .plan-select
+                        -@subscription_plans.each do |plan|
+                          %div{ :class => "plan #{'chosen' if @subscription.subscription_plan_id == plan.id}", id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months, plan_name: plan.interval_name} }
+                            %span.plan-title
+                              =plan.interval_name
+                            %span.price
+                              =plan.currency.format_number(plan.price)
+
+                    .col-sm-6
+                      .plan-summary
+                        .summary-container
                           %span.plan-title
-                            =plan.interval_name
                           %span.price
-                            =plan.currency.format_number(plan.price)
-
-                  .col-sm-6
-                    .plan-summary
-                      .summary-container
-                        %span.plan-title
-                        %span.price
-                        %p.summary
+                          %p.summary
 
               .col-lg-6
-                %h2.title1
-                  Choose a way to pay
+                .payment-options-container
+                  %h2.title1
+                    Choose a way to pay
 
-                .payment-options
-                  %div{ :class => "option", :id => "stripe_option" }
-                    %i.fa.fa-credit-card
-                    Credit / Debit Card
-                    .pretty-radio.choose-payment-option
-                      %input{ :type => "radio", :name => "payment_radio", :id => "select_card", :value => "stripe" }
-                      %label{ :for => "select_card" }
-                  %div{ :id => 'card_inputs', :class => 'checkout-form' }
-                    =render partial: 'subscription_payment_cards/form', locals: {f: f}
-                  %div{ :class => "option", :id => "paypal_option" }
-                    =image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_200x51.png', height: 30)
-                    .pretty-radio.choose-payment-option
-                      %input{ :type => "radio", :name => "payment_radio", :id => "select_paypal", :value => "paypal" }
-                      %label{ :for => "select_paypal" }
-                  %div{ :id => 'paypal_inputs', :class => 'checkout-form' }
-                    =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
+                  .payment-options
+                    %div{ :class => "option", :id => "stripe_option" }
+                      %i.fa.fa-credit-card
+                      Credit / Debit Card
+                      .pretty-radio.choose-payment-option
+                        %input{ :type => "radio", :name => "payment_radio", :id => "select_card", :value => "stripe" }
+                        %label{ :for => "select_card" }
+                    %div{ :id => 'card_inputs', :class => 'checkout-form' }
+                      =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                    %div{ :class => "option", :id => "paypal_option" }
+                      =image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_200x51.png', height: 30)
+                      .pretty-radio.choose-payment-option
+                        %input{ :type => "radio", :name => "payment_radio", :id => "select_paypal", :value => "paypal" }
+                        %label{ :for => "select_paypal" }
+                    %div{ :id => 'paypal_inputs', :class => 'checkout-form' }
+                      =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
 
 :javascript
