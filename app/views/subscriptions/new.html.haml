@@ -1,72 +1,20 @@
 .upgrade
   #wrapper
-
-
-
     #upgrade-subscription
       =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
         =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
-        =f.hidden_field :user_id, value: @user.id
-        =f.hidden_field :subscription_plan_id, value: @subscription_plans.last.id
+        =f.hidden_field :user_id, value: current_user.id
+        =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
         =f.hidden_field :stripe_token
         =f.hidden_field :use_paypal, value: false
         -if params[:coupon]
           =hidden_field_tag :hidden_coupon_code
 
-        %section#plans
-          .container
-
-            %h2.title1
-              =t('views.subscriptions.new_subscription.h2c')
-            %h2.subtitle1
-              =t('views.subscriptions.new_subscription.h2d')
-
-            %ul.plans.clearfix
-              -@subscription_plans.each do |plan|
-                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months}}
-                  .base
-                    .topbox
-                      -if plan.payment_frequency_in_months == 3
-                        %span
-                          =t('views.subscriptions.new_subscription.h2d')
-                    .box
-                      .name
-                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                      %ul.details.fa-ul
-                        %li
-                          %i.fa-li.fa.fa-check
-                          =t('views.subscriptions.new_subscription.get_unlimited_access')
-                        %li
-                          %i.fa-li.fa.fa-check
-                          =t('views.subscriptions.new_subscription.cancel_anytime')
-                        -#%li
-                          %i.fa-li.fa.fa-check
-                          =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                        -#%li
-                          %i.fa-li.fa.fa-check
-                          -# TODO Add plans free mock exams count here
-                          =#'corrected mock exams'
-
-                      .price
-                        =plan.currency.format_number(plan.price)
-                      -#unless plan.payment_frequency_in_months == 1
-                        -# TODO change this display actual discount and saving values
-                        .promo
-                          .line1
-                            18% OFF
-                          .line2
-                            Save €25
-                    .lsbtn-base
-                      -#%a.lsbtn{:href => "#"}
-                        %i.fa.fa-check
-                        Choose this plan
-                      -# TODO change this to have no tick and then tick if selected
-                      %label.lsbtn.plan-option
-                        %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                        =t('views.subscriptions.new_subscription.select_this_plan')
-
         %section#simply
           .container
+            .row.subscription-flash
+              .col-xs-12
+                =render partial: 'layouts/flash_messages'
             .row
               .col-lg-6
                 %h2.title1
@@ -76,30 +24,19 @@
                 .row.plan-options
                   .col-sm-6
                     .plan-select
-                      .plan
-                        %span.plan-title
-                          Monthly
-                        %span.price
-                          €33.99
-                      .plan.chosen
-                        %span.plan-title
-                          Quarterly
-                        %span.price
-                          €99.99
-                      .plan
-                        %span.plan-title
-                          Yearly
-                        %span.price
-                          €333.99
+                      -@subscription_plans.each do |plan|
+                        %div{ :class => "plan #{'chosen' if @subscription.subscription_plan_id == plan.id}", id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months, plan_name: plan.interval_name} }
+                          %span.plan-title
+                            =plan.interval_name
+                          %span.price
+                            =plan.currency.format_number(plan.price)
+
                   .col-sm-6
                     .plan-summary
                       .summary-container
                         %span.plan-title
-                          Quarterly
                         %span.price
-                          €99.99
                         %p.summary
-                          Billed every 3 months
 
               .col-lg-6
                 %h2.title1
@@ -129,16 +66,37 @@
   var couponCode = $('#coupon_code');
   var plan_id = '1';
 
-  // UnChecks radio buttons except the one that was clicked.
-  // Finds the id value of the sub plan that the radio button belongs to.
-  // Sets the hidden field subscription_plan_id to that id.
-  function choosePlan(theThing) {
-    // $('.option[type="radio"]:checked').prop('checked', false);
-    // $(theThing).find('.option[type="radio"]').prop('checked', true);
-    $('#subscription_subscription_plan_id').val('37');
-    // $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
-    //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
-    plan_id = $('#subscription_subscription_plan_id').val();
+  function intervalSummary(frequency) {
+    switch (frequency) {
+      case '1':
+        return 'Billed every month';
+      case '3':
+        return 'Billed every 3 months';
+      case '12':
+        return 'Billed every 12 months';
+      default:
+        return 'Billed every month';
+    }
+  }
+
+  function updatePlanSummary(selectedPlan) {
+    $('.summary-container > span.plan-title').text($(selectedPlan).attr('data-plan-name'));
+    $('.summary-container > span.price').text($(selectedPlan).attr('data-price'));
+    $('.summary-container > p.summary').text(intervalSummary($(selectedPlan).attr('data-interval')));
+  }
+
+  function choosePlan(selectedPlan) {
+    var preChosen = $('.plan-select').find('div.chosen');
+    if (preChosen) {
+      preChosen.removeClass('chosen');
+      $(selectedPlan).addClass('chosen');
+    }
+    $('#subscription_subscription_plan_id').val($(selectedPlan).attr('data-plan-id'));
+
+    updateCheckoutTotal();
+    updatePlanSummary(selectedPlan);
+
+    // plan_id = $('#subscription_subscription_plan_id').val();
 
     // Need to trigger Ajax call here if the coupon field already has a value
     if ($('#coupon_code').val()) {
@@ -221,11 +179,20 @@
     }
   });
 
+  function updateCheckoutTotal() {
+    var selectedPlan = $(".plan-select > .plan.chosen");
+
+    $('.tot-get > .price > span.value').text($(selectedPlan).attr('data-price'));
+    $('.tot-get > .price > p').text(intervalSummary($(selectedPlan).attr('data-interval')));
+  }
+
   function selectSripe() {
     $('#card_inputs').slideDown();
     $('#paypal_inputs').slideUp();
     $('#subscription_use_paypal').val(false);
     $('#select_card').prop("checked", true);
+
+    updateCheckoutTotal();
   }
 
   function selectPaypal() {
@@ -233,16 +200,18 @@
     $('#paypal_inputs').slideDown();
     $('#subscription_use_paypal').val(true);
     $('#select_paypal').prop("checked", true);
+
+    updateCheckoutTotal();
+  }
+
+  function initializePlan() {
+    var selectedPlan = $('.plan-select').find('div.chosen');
+    choosePlan(selectedPlan);
   }
 
   $(document).on('ready', function() {
-    choosePlan($('.plan-option')[1]);
-    $('.option').bind('click', function(event) {
-      event.stopPropagation();
-      choosePlan(this.parentElement);
-    });
-
-    $(".plan-option").bind('click', function(event) {
+    initializePlan();
+    $(".plan-select > .plan").bind('click', function(event) {
       event.preventDefault();
       choosePlan(this);
     });
@@ -321,7 +290,7 @@
     $('#card_submit').hide();
     $('#paypal_submit').prop('disabled',true);
     $(".sk-circle").show();
-    if ($('#subscription_use_paypal').val()) {
+    if ($('#subscription_use_paypal').val() === 'true') {
       document.getElementById('upgrade-form').submit();
     } else {
       createToken();

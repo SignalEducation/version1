@@ -17,17 +17,9 @@
   .form-group.l-margin-top
     .tot-get
       .price
-        -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
         %span.total Total:
-        %span.value#total-value
-          =default_plan.currency.format_number(default_plan.price)
+        %span.value#stripe-total-value
         %p
-          Billed every month
-      .price.discounted-price
-        -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
-        %span.total Discounted Total:
-        %span.value#discounted-value
-          =default_plan.currency.format_number(default_plan.price)
 
     %div
       = f.button :submit, class: 'lsbtn full-width', id: 'card_submit' do

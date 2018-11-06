@@ -32,25 +32,23 @@ class SubscriptionsController < ApplicationController
   before_action :check_subscriptions, only: [:new, :create]
 
   def new
-    @user = current_user
-    if @user.trial_or_sub_user?
+    if current_user.trial_or_sub_user?
 
       ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : @user.country
+      @country = ip_country ? ip_country : current_user.country
 
       # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
-      @existing_subscription = @user.current_subscription
+      @existing_subscription = current_user.current_subscription
       if @existing_subscription && @existing_subscription.subscription_plan
         @currency_id = @existing_subscription.subscription_plan.currency_id
       else
         @currency_id = @country.currency_id
       end
 
-      @subscription = Subscription.new(user_id: @user.id)
-
       @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+      @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3).first.id)
 
-      IntercomUpgradePageLoadedEventWorker.perform_async(@user.id, @country.name) unless Rails.env.test?
+      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, @country.name) unless Rails.env.test?
     else
       redirect_to root_url
     end
@@ -74,11 +72,11 @@ class SubscriptionsController < ApplicationController
     else
       Rails.logger.info "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
       flash[:error] = 'Your request was declined. Please contact us for assistance!'
-      redirect_to new_subscription_url
+      redirect_to new_subscription_url(subscription_plan_id: @subscription.subscription_plan_id)
     end
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
-    redirect_to request.referrer
+    redirect_to new_subscription_url(subscription_plan_id: @subscription.subscription_plan_id)
   end
 
   def execute
