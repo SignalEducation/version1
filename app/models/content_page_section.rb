@@ -22,7 +22,7 @@ class ContentPageSection < ActiveRecord::Base
 
   # validation
   validates :content_page_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :text_content, presence: true
   validates :panel_colour, presence: true
 
