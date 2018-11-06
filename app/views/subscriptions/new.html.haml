@@ -236,25 +236,49 @@
 
     $('#paypal_option').on('click', function() {
       selectPaypal();
-    })
+    });
+
+    // Custom styling can be passed to options when creating an Element.
+    var style = {
+      base: {
+        fontWeight: 300,
+        fontFamily: "Rubik, HelveticaNeue",
+        fontSize: '20px',
+        lineHeight: '24px'
+      }
+    };
+
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements = stripe.elements();
+
+    var card = elements.create('card', {hidePostalCode: true, style: style});
+    card.mount('#card-element');
+
+    // Create a token when the form is submitted.
+    var form = document.getElementById('upgrade-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      //Replace submit button with spinning JS
+      $('#card_submit').prop('disabled',true);
+      $('#card_submit').hide();
+      $('#paypal_submit').prop('disabled',true);
+      $(".sk-circle").show();
+      if ($('#subscription_use_paypal').val() === 'true') {
+        document.getElementById('upgrade-form').submit();
+      } else {
+        createToken();
+      }
+    });
+
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
   })
-
-  // Custom styling can be passed to options when creating an Element.
-  var style = {
-    base: {
-      fontWeight: 300,
-      fontFamily: 'Rubik',
-      fontSize: '20px',
-      lineHeight: '24px'
-    }
-  };
-
-  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
-  var elements = stripe.elements();
-
-  var card = elements.create('card', {hidePostalCode: true, style: style});
-  card.mount('#card-element');
-
 
   function stripeTokenHandler(token) {
     // Insert the token ID into the form so it gets submitted to the server
@@ -283,30 +307,5 @@
       }
     });
   };
-
-  // Create a token when the form is submitted.
-  var form = document.getElementById('upgrade-form');
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    //Replace submit button with spinning JS
-    $('#card_submit').prop('disabled',true);
-    $('#card_submit').hide();
-    $('#paypal_submit').prop('disabled',true);
-    $(".sk-circle").show();
-    if ($('#subscription_use_paypal').val() === 'true') {
-      document.getElementById('upgrade-form').submit();
-    } else {
-      createToken();
-    }
-  });
-
-  card.addEventListener('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-      displayError.textContent = event.error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  });
 
 
