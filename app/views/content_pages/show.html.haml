@@ -24,8 +24,7 @@
           =@content_page.text_content.html_safe
 
       -if @content_page.content_page_sections.any?
-        .row
-          %hr/
+        .row.l-margin-top-big
           -@content_page.content_page_sections.each do |section|
             .col-md-12
               .card.card-course
