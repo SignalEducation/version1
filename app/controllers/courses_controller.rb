@@ -77,6 +77,7 @@ class CoursesController < ApplicationController
   end
 
   def create_video_user_log
+
     #Create Video Log upon vimeo player play event sent by JSON, later updated by another JSON request to video_watched_data method
     respond_to do |format|
       format.json {
@@ -140,6 +141,7 @@ class CoursesController < ApplicationController
   def update_constructed_response_user_log
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
 
+    #TODO - this is failing
     respond_to do |format|
       #update_columns ?? to stop callback chain will be called on final submit
       if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
