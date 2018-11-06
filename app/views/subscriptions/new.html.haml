@@ -1,131 +1,66 @@
 .upgrade
   #wrapper
-    %section#free
-      .tmain
-        .tbase
-          -if flash[:success] || flash[:error] || flash[:warning]
-            .col-sm-8.col-sm-offset-2.col-xs-12
-              =render partial: 'layouts/flash_messages'
-          .container
-            -if @user.trial_user?
-              .row
-                .col-md-10.col-md-offset-1
-                  %h1.title1
-                    ='Upgrade now for Unlimited Access'
-                  %h2.subtitle
-                    =t('views.subscriptions.new_subscription.h2a')
-                  %h2.subtitle
-                    =t('views.subscriptions.new_subscription.h2b')
-            -else
-              .row
-                .col-md-10.col-md-offset-1
-                  %h1.title1
-                    =t('views.subscriptions.new_subscription.h2e')
-
-
-      .go-down
-        %a.anchor{:href => "#plans"}
-          %i.fa.fa-angle-down
-      .bottom-arrow
-
-
-
     #upgrade-subscription
       =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
         =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
-        =f.hidden_field :user_id, value: @user.id
-        =f.hidden_field :subscription_plan_id
+        =f.hidden_field :user_id, value: current_user.id
+        =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
         =f.hidden_field :stripe_token
-        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        =f.hidden_field :use_paypal, value: false
         -if params[:coupon]
           =hidden_field_tag :hidden_coupon_code
 
-
-        %section#plans
-          .container
-
-            %h2.title1
-              =t('views.subscriptions.new_subscription.h2c')
-            %h2.subtitle1
-              =t('views.subscriptions.new_subscription.h2d')
-
-            %ul.plans.clearfix
-              -@subscription_plans.each do |plan|
-                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months}}
-                  .base
-                    .topbox
-                      -if plan.payment_frequency_in_months == 3
-                        %span
-                          =t('views.subscriptions.new_subscription.h2d')
-                    .box
-                      .name
-                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                      %ul.details.fa-ul
-                        %li
-                          %i.fa-li.fa.fa-check
-                          =t('views.subscriptions.new_subscription.get_unlimited_access')
-                        %li
-                          %i.fa-li.fa.fa-check
-                          =t('views.subscriptions.new_subscription.cancel_anytime')
-                        -#%li
-                          %i.fa-li.fa.fa-check
-                          =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                        -#%li
-                          %i.fa-li.fa.fa-check
-                          -# TODO Add plans free mock exams count here
-                          =#'corrected mock exams'
-
-                      .price
-                        =plan.currency.format_number(plan.price)
-                      -#unless plan.payment_frequency_in_months == 1
-                        -# TODO change this display actual discount and saving values
-                        .promo
-                          .line1
-                            18% OFF
-                          .line2
-                            Save €25
-                    .lsbtn-base
-                      -#%a.lsbtn{:href => "#"}
-                        %i.fa.fa-check
-                        Choose this plan
-                      -# TODO change this to have no tick and then tick if selected
-                      %label.lsbtn.plan-option
-                        %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                        =t('views.subscriptions.new_subscription.select_this_plan')
-
-
-
-
-        %section#cancel.bg-gradient1
-          .container
-            %h1.title1
-              %span
-                =t('views.subscriptions.new_subscription.and_dont_forget')
-                %strong
-                  =t('views.subscriptions.new_subscription.you_can_cancel_anytime')
-            %h1.title1
-              %span
-                =t('views.subscriptions.new_subscription.no_commitments')
-                %br/
-
-
         %section#simply
           .container
+            -if flash[:success] || flash[:error] || flash[:warning]
+              .row.subscription-flash
+                .col-xs-12
+                  =render partial: 'layouts/flash_messages'
             .row
-              .col-lg-10.col-lg-offset-1
-                %h2.title1
-                  =link_to image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png'), subscriptions_path(subscription: { user_id: @user.id, subscription_plan_id: @subscription_plans.last.id, use_paypal: true }), method: :post
+              .col-lg-6
+                .plans-container
+                  %h2.title1
+                    %i.fa.fa-book
+                    Pick a plan
 
-                %hr
-                %h2.title1
-                  =t('views.subscriptions.new_subscription.enter_payment_details')
-                %h2.subtitle1
-                  =t('views.subscriptions.new_subscription.continue_right_away')
+                  .row.plan-options
+                    .col-sm-6
+                      .plan-select
+                        -@subscription_plans.each do |plan|
+                          %div{ :class => "plan #{'chosen' if @subscription.subscription_plan_id == plan.id}", id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months, plan_name: plan.interval_name} }
+                            %span.plan-title
+                              =plan.interval_name
+                            %span.price
+                              =plan.currency.format_number(plan.price)
 
-            .row
-              .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-                =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                    .col-sm-6
+                      .plan-summary
+                        .summary-container
+                          %span.plan-title
+                          %span.price
+                          %p.summary
 
+              .col-lg-6
+                .payment-options-container
+                  %h2.title1
+                    Choose a way to pay
+
+                  .payment-options
+                    %div{ :class => "option", :id => "stripe_option" }
+                      %i.fa.fa-credit-card
+                      Credit / Debit Card
+                      .pretty-radio.choose-payment-option
+                        %input{ :type => "radio", :name => "payment_radio", :id => "select_card", :value => "stripe" }
+                        %label{ :for => "select_card" }
+                    %div{ :id => 'card_inputs', :class => 'checkout-form' }
+                      =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                    %div{ :class => "option", :id => "paypal_option" }
+                      =image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_200x51.png', height: 30)
+                      .pretty-radio.choose-payment-option
+                        %input{ :type => "radio", :name => "payment_radio", :id => "select_paypal", :value => "paypal" }
+                        %label{ :for => "select_paypal" }
+                    %div{ :id => 'paypal_inputs', :class => 'checkout-form' }
+                      =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
 
 :javascript
@@ -134,16 +69,37 @@
   var couponCode = $('#coupon_code');
   var plan_id = '1';
 
-  // UnChecks radio buttons except the one that was clicked.
-  // Finds the id value of the sub plan that the radio button belongs to.
-  // Sets the hidden field subscription_plan_id to that id.
-  function choosePlan(theThing) {
-    $('.option[type="radio"]:checked').prop('checked', false);
-    $(theThing).find('.option[type="radio"]').prop('checked', true);
-    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
-    $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
-    //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
-    plan_id = $('#subscription_subscription_plan_id').val();
+  function intervalSummary(frequency) {
+    switch (frequency) {
+      case '1':
+        return 'Billed every month';
+      case '3':
+        return 'Billed every 3 months';
+      case '12':
+        return 'Billed every 12 months';
+      default:
+        return 'Billed every month';
+    }
+  }
+
+  function updatePlanSummary(selectedPlan) {
+    $('.summary-container > span.plan-title').text($(selectedPlan).attr('data-plan-name'));
+    $('.summary-container > span.price').text($(selectedPlan).attr('data-price'));
+    $('.summary-container > p.summary').text(intervalSummary($(selectedPlan).attr('data-interval')));
+  }
+
+  function choosePlan(selectedPlan) {
+    var preChosen = $('.plan-select').find('div.chosen');
+    if (preChosen) {
+      preChosen.removeClass('chosen');
+      $(selectedPlan).addClass('chosen');
+    }
+    $('#subscription_subscription_plan_id').val($(selectedPlan).attr('data-plan-id'));
+
+    updateCheckoutTotal();
+    updatePlanSummary(selectedPlan);
+
+    // plan_id = $('#subscription_subscription_plan_id').val();
 
     // Need to trigger Ajax call here if the coupon field already has a value
     if ($('#coupon_code').val()) {
@@ -226,20 +182,131 @@
     }
   });
 
-  $(document).on('ready', function() {
-    choosePlan($('.plan-option')[1]);
-    $('.option').bind('click', function(event) {
-      event.stopPropagation();
-      choosePlan(this.parentElement);
-    });
+  function updateCheckoutTotal() {
+    var selectedPlan = $(".plan-select > .plan.chosen");
 
-    $(".plan-option").bind('click', function(event) {
+    $('.tot-get > .price > span.value').text($(selectedPlan).attr('data-price'));
+    $('.tot-get > .price > p').text(intervalSummary($(selectedPlan).attr('data-interval')));
+  }
+
+  function selectSripe() {
+    $('#card_inputs').slideDown();
+    $('#paypal_inputs').slideUp();
+    $('#subscription_use_paypal').val(false);
+    $('#select_card').prop("checked", true);
+
+    updateCheckoutTotal();
+  }
+
+  function selectPaypal() {
+    $('#card_inputs').slideUp();
+    $('#paypal_inputs').slideDown();
+    $('#subscription_use_paypal').val(true);
+    $('#select_paypal').prop("checked", true);
+
+    updateCheckoutTotal();
+  }
+
+  function initializePlan() {
+    var selectedPlan = $('.plan-select').find('div.chosen');
+    choosePlan(selectedPlan);
+  }
+
+  $(document).on('ready', function() {
+    initializePlan();
+    $(".plan-select > .plan").bind('click', function(event) {
       event.preventDefault();
       choosePlan(this);
     });
     $(".sk-circle").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
+
+    $('input[type=radio][name=payment_radio]').change(function() {
+      if (this.value == 'stripe') {
+        selectSripe();
+      } else if (this.value == 'paypal') {
+        selectPaypal();
+      }
+    });
+
+    $('#stripe_option').on('click', function() {
+      selectSripe();
+    })
+
+    $('#paypal_option').on('click', function() {
+      selectPaypal();
+    })
   })
+
+  // Custom styling can be passed to options when creating an Element.
+  var style = {
+    base: {
+      fontWeight: 300,
+      fontFamily: 'Rubik',
+      fontSize: '20px',
+      lineHeight: '24px'
+    }
+  };
+
+  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+  var elements = stripe.elements();
+
+  var card = elements.create('card', {hidePostalCode: true, style: style});
+  card.mount('#card-element');
+
+
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('upgrade-form');
+    $('#subscription_stripe_token').val(token.id);
+    $('#hidden_coupon_code').val($('#coupon_code').val());
+
+    // Submit the form
+    form.submit();
+  }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        //Replace spinning JS with Submit button
+        $('#card_submit').prop('disabled',false);
+        $('#card_submit').show();
+        $(".sk-circle").hide();
+
+      } else {
+        // Send the token to your server
+        stripeTokenHandler(result.token);
+      }
+    });
+  };
+
+  // Create a token when the form is submitted.
+  var form = document.getElementById('upgrade-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    //Replace submit button with spinning JS
+    $('#card_submit').prop('disabled',true);
+    $('#card_submit').hide();
+    $('#paypal_submit').prop('disabled',true);
+    $(".sk-circle").show();
+    if ($('#subscription_use_paypal').val() === 'true') {
+      document.getElementById('upgrade-form').submit();
+    } else {
+      createToken();
+    }
+  });
+
+  card.addEventListener('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
 
 

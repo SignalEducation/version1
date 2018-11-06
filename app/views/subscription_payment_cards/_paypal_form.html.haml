@@ -1,8 +1,4 @@
 .payment-errors
-  .form-group.cc
-    #card-element
-    #card-errors{role: 'alert'}
-
 
   -if params[:coupon]
     .form-group.l-margin-bottom-big
@@ -14,17 +10,26 @@
         ='Invalid Code'
       %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Valid Coupon Code'}
 
+
+
   .form-group.l-margin-top
     .tot-get
       .price
+        -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
         %span.total Total:
-        %span.value#stripe-total-value
+        %span.value#total-value
+          =default_plan.currency.format_number(default_plan.price)
         %p
+          Billed every month
+      .price.discounted-price
+        -default_plan = @subscription_plans.where(payment_frequency_in_months: 3).first
+        %span.total Discounted Total:
+        %span.value#discounted-value
+          =default_plan.currency.format_number(default_plan.price)
 
-    %div
-      = f.button :submit, class: 'lsbtn full-width', id: 'card_submit' do
-        %i.fa.fa-lock
-        =t('views.users.upgrade_subscription.upgrade_subscription')
+    .form-submit
+      = f.submit '', id: 'paypal_submit' do
+        =image_tag("https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png")
 
       .sk-circle.text-center
         .sk-circle1.sk-child
@@ -56,3 +61,6 @@
 
       %p
         =t('views.subscriptions.new_subscription.remember_cancel_anytime')
+
+
+

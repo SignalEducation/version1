@@ -104,6 +104,19 @@ class SubscriptionPlan < ActiveRecord::Base
     self.currency.format_number(self.price)
   end
 
+  def interval_name
+    case payment_frequency_in_months
+    when 1
+      'Monthly'
+    when 3
+      'Quarterly'
+    when 12
+      'Yearly'
+    else
+      'Monthly'
+    end
+  end
+
   protected
 
   def available_to_in_the_future

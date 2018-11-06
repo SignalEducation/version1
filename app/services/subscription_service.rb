@@ -24,7 +24,7 @@ class SubscriptionService
   end
 
   def paypal?
-    @subscription.use_paypal.present? || @subscription.paypal_token.present?
+    (@subscription.use_paypal.present? && @subscription.use_paypal == 'true') || @subscription.paypal_token.present?
   end
 
   def stripe?
