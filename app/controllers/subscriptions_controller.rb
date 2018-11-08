@@ -30,6 +30,7 @@ class SubscriptionsController < ApplicationController
   end
   before_action :get_subscription, except: [:new, :create]
   before_action :check_subscriptions, only: [:new, :create]
+  before_action :set_flash, only: :new
 
   def new
     if current_user.trial_or_sub_user?
@@ -47,10 +48,6 @@ class SubscriptionsController < ApplicationController
 
       @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
       @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3).first.id)
-
-      if params[:flash].present?
-        flash[:error] = params[:flash]
-      end
 
       IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, @country.name) unless Rails.env.test?
     else
@@ -171,6 +168,12 @@ class SubscriptionsController < ApplicationController
   end
 
   protected
+
+  def set_flash
+    if params[:flash].present?
+      flash[:error] = params[:flash]
+    end
+  end
 
   def subscription_params
     params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code, :use_paypal)
