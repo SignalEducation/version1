@@ -50,13 +50,15 @@ class ContentPagesController < ApplicationController
   def new
     @group = Group.all_active.all_in_order.first
     @courses = @group.active_children.all_in_order
-    text_content = "<p><b>Signing up to the LearnSignal is the first step in passing your next ACCA exam.&nbsp;</b></p><p>The Exam Bootcamp has been designed with our students in mind. We enjoy the fact that if you are not our student that you feel you are benefitting from the daily email prompt. However, to get access to all of the amazing resources offered in the Exam Bootcamp and on our learning platform then<span>&nbsp;</span><b><a href='#{new_student_url}' target='_blank'>join LearnSignal now</a></b><span>.</span></p><p><b>Now, let’s get started!</b></p><p><b>1. Scroll down to your subject, find out your topic and go straight to your course</b></p><p><b>2. Review the lectures and notes before attempting the question</b></p><p><b>3. Do it under exam conditions (that means timed!!) and use the CBE tool when applicable</b></p><p><b>4. Review your attempt against the tutor solution and correct it as you go</b></p><p></p>"
+    text_content = "<p><b>Signing up to the LearnSignal is the first step in passing your next ACCA exam.</b></p><p>The Exam Bootcamp has been designed with our students in mind. We enjoy the fact that if you are not our student that you feel you are benefitting from the daily email prompt. However, to get access to all of the amazing resources offered in the Exam Bootcamp and on our learning platform then<span>&nbsp;</span><b><a href='#{new_student_url}' target='_blank'>join LearnSignal now</a></b><span>.</span></p><p><b>Now, let’s get started!</b></p><p><b>1. Scroll down to your subject, find out your topic and go straight to your course</b></p><p><b>2. Review the lectures and notes before attempting the question</b></p><p><b>3. Do it under exam conditions (that means timed!!) and use the CBE tool when applicable</b></p><p><b>4. Review your attempt against the tutor solution and correct it as you go</b></p>"
 
     @content_page = ContentPage.new(text_content: text_content)
-    @courses.reverse.each do |course|
-      text = "<h3>#{course.name}&nbsp; &nbsp; &nbsp; &nbsp;</h3><h5 style="">TODAY'S TOPIC IS <b>Professional and Ethical Considerations</b>&nbsp;- CLICK HERE TO GO TO YOUR COURSE PAGE AND ATTEMPT&nbsp;the <b>yes</b>&nbsp;</b><span>question</span>. remember TO MARK YOURSELF AGAINST THE TUTOR SOLUTION PROVIDED.<br></h5>"
-      #library_special_link(course)
+    @courses.reverse.each_with_index do |course, index|
+      text = "<h3>#{course.name}</h3><h5 style="">TODAY'S TOPIC IS <b>Professional and Ethical Considerations</b>&nbsp;- CLICK HERE TO GO TO YOUR COURSE PAGE AND ATTEMPT&nbsp;the <b>yes</b>&nbsp;</b><span>question</span>. remember TO MARK YOURSELF AGAINST THE TUTOR SOLUTION PROVIDED.<br></h5>"
+
       @content_page.content_page_sections.build(text_content: text,
+                                                subject_course_id: course.id,
+                                                sorting_order: index + 1,
                                                 panel_colour: course.highlight_colour)
     end
 
@@ -112,8 +114,10 @@ class ContentPagesController < ApplicationController
                                          external_banners_attributes: [:id, :name, :background_colour,
                                                                        :text_content, :sorting_order,
                                                                        :_destroy],
-                                         content_page_sections_attributes: [:id, :text_content, :panel_colour,
-                                                                       :_destroy])
+                                         content_page_sections_attributes: [:id, :text_content,
+                                                                            :panel_colour,
+                                                                            :sorting_order,
+                                                                            :subject_course_id, :_destroy])
   end
 
 end
