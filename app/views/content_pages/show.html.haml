@@ -6,10 +6,10 @@
       .l-section-footer-pages
         .container-fluid
           .row
-            .col-md-6.col-md-offset-3
+            .col-md-10.col-md-offset-1
               %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
                 =@content_page.h1_text
-              %p.h5.h-white.text-center.l-margin-bottom-big
+              %p.h5.h-white.text-center.l-margin-bottom-big{style: 'font-size: 1.8rem;'}
                 =@content_page.h1_subtext
 
 
@@ -25,9 +25,10 @@
 
       -if @content_page.content_page_sections.any?
         .row.l-margin-top-big
-          -@content_page.content_page_sections.each do |section|
+          -@content_page.content_page_sections.all_in_order.each do |section|
             .col-md-12
-              .card.card-course
+              =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-course' do
+
                 .card-info-lg
                   =section.text_content.html_safe
 

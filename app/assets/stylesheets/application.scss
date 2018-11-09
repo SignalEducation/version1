@@ -1010,8 +1010,11 @@ a.card {
     .card-title {
       //color: $colour-12;
     }
+    .card-info-lg {
+      //color: $colour-12;
+    }
     .card-label {
-      background: darken($colour-12, 5%);
+      text-decoration: none;
 
     }
   }

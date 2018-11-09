@@ -2,12 +2,14 @@
 #
 # Table name: content_page_sections
 #
-#  id              :integer          not null, primary key
-#  content_page_id :integer
-#  text_content    :text
-#  panel_colour    :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                :integer          not null, primary key
+#  content_page_id   :integer
+#  text_content      :text
+#  panel_colour      :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  subject_course_id :integer
+#  sorting_order     :integer
 #
 
 require 'rails_helper'
