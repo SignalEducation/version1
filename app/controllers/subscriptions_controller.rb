@@ -30,6 +30,7 @@ class SubscriptionsController < ApplicationController
   end
   before_action :get_subscription, except: [:new, :create]
   before_action :check_subscriptions, only: [:new, :create]
+  before_action :set_flash, only: :new
 
   def new
     if current_user.trial_or_sub_user?
@@ -167,6 +168,12 @@ class SubscriptionsController < ApplicationController
   end
 
   protected
+
+  def set_flash
+    if params[:flash].present?
+      flash[:error] = params[:flash]
+    end
+  end
 
   def subscription_params
     params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code, :use_paypal)
