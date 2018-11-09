@@ -289,87 +289,6 @@ class Subscription < ActiveRecord::Base
     SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).for_students.in_currency(subscription_plan.currency_id).all_active.all_in_order
   end
 
-  def upgrade_plan(new_plan_id)
-    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    user = self.user
-    # compare the currencies of the old and new plans,
-    unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-      return self
-    end
-    # make sure new plan is active
-    unless new_subscription_plan.active?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-      return self
-    end
-    # make sure the current subscription is in "good standing"
-    unless %w(active past_due).include?(self.stripe_status)
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-      return self
-    end
-    # only student_users are allowed to upgrade their plan
-    unless self.user.trial_or_sub_user?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-      return self
-    end
-    # Make sure they have a default credit card in place
-    unless self.user.subscription_payment_cards.all_default_cards.length > 0
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
-      return self
-    end
-
-    #### if we're here, then we're good to go.
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    if stripe_customer
-      stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-      stripe_subscription.plan = new_subscription_plan.stripe_guid
-      stripe_subscription.prorate = true
-      stripe_subscription.trial_end = 'now'
-
-      result = stripe_subscription.save # saves it at stripe.com, not in our DB
-
-      #### if we are here, the subscription change on Stripe has gone well
-      #### Now we need to create a new Subscription in our DB.
-      ActiveRecord::Base.transaction do
-        new_sub = Subscription.new(
-            user_id: self.user.id,
-            subscription_plan_id: new_plan_id,
-            complimentary: false,
-            active: true,
-            livemode: (result[:plan][:livemode]),
-            stripe_status: result[:status],
-        )
-        # mass-assign-protected attributes
-
-        ## This means it will have the same stripe_guid as the old Subscription ##
-        new_sub.stripe_guid = result[:id]
-
-        new_sub.next_renewal_date = Time.at(result[:current_period_end])
-        new_sub.stripe_customer_id = self.stripe_customer_id
-        new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-        new_sub.save(validate: false)
-
-        user.student_access.update_attributes(subscription_id: new_sub.id, account_type: 'Subscription', content_access: true)
-
-        #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
-        self.update_attributes(stripe_status: 'canceled', active: false)
-
-        return new_sub
-      end
-    else
-      return self
-    end
-
-  rescue ActiveRecord::RecordInvalid => exception
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - AR.Transaction failed.  Details: #{exception.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  rescue => e
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - failed to update Subscription at Stripe.  Details: #{e.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  end
-
   def update_from_stripe
     if self.stripe_guid && self.stripe_customer_id
       begin
@@ -412,7 +331,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def user_readable_status
-    case current_subscription.state
+    case state
       when 'active'
         'Active Subscription'
       when 'errored'
