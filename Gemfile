@@ -51,6 +51,7 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
+gem 'state_machines-activerecord'
 gem 'stripe', '=2.8.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'paypal-sdk-rest'
 gem 'summernote-rails'

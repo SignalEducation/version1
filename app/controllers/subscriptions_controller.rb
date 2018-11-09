@@ -8,7 +8,7 @@
 #  stripe_guid              :string
 #  next_renewal_date        :date
 #  complimentary            :boolean          default(FALSE), not null
-#  current_status           :string
+#  stripe_status            :string
 #  created_at               :datetime
 #  updated_at               :datetime
 #  stripe_customer_id       :string
@@ -20,6 +20,7 @@
 #  paypal_subscription_guid :string
 #  paypal_token             :string
 #  paypal_status            :string
+#  state                    :string
 #
 
 class SubscriptionsController < ApplicationController
@@ -58,16 +59,17 @@ class SubscriptionsController < ApplicationController
   def create
     @subscription = Subscription.new(subscription_params)
 
-    subscription_service = SubscriptionService.new(@subscription)
-    subscription_service.check_valid_subscription?(params)
-    subscription_service.check_for_valid_coupon?(params[:hidden_coupon_code])
-    @subscription = subscription_service.create_and_return_subscription(params)
+    subscription_object = SubscriptionService.new(@subscription)
+    subscription_object.check_valid_subscription?(params)
+    subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
+    @subscription = subscription_object.create_and_return_subscription(params)
     
     if @subscription.save
-      if subscription_service.stripe?
-        subscription_service.validate_referral
+      if subscription_object.stripe?
+        @subscription.start
+        subscription_object.validate_referral
         redirect_to personal_upgrade_complete_url
-      elsif subscription_service.paypal?
+      elsif subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
       end
     else
@@ -84,6 +86,7 @@ class SubscriptionsController < ApplicationController
     case params[:payment_processor]
     when 'paypal'
       if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
+        @subscription.start
         SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url
       else
@@ -132,19 +135,17 @@ class SubscriptionsController < ApplicationController
 
   #Upgrading current subscription to a new subscription plan
   def update
-    if @subscription && @subscription.user.default_card
-      @subscription = @subscription.upgrade_plan(updatable_params[:subscription_plan_id].to_i)
-      if @subscription && @subscription.errors.count == 0
-        flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
-      else
-        Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
-        flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
-      end
-      redirect_to account_url(anchor: 'subscriptions')
+    subscription_object = SubscriptionService.new(@subscription)
+    if @subscription = subscription_object.change_plan(updatable_params[:subscription_plan_id].to_i)
+      flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
     else
-      flash[:error] = I18n.t('controllers.subscriptions.update.flash.invalid_card')
-      redirect_to root_url
+      Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
+      flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
     end
+    redirect_to account_url(anchor: 'subscriptions')
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to account_url(anchor: 'subscriptions')
   end
 
   #Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record

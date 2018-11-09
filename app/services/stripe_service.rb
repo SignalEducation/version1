@@ -44,6 +44,50 @@ class StripeService
 
   # SUBSCRIPTIONS ==============================================================
 
+  def change_plan(old_sub, new_plan_id)
+    user = old_sub.user
+    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
+    validate_plan_changable(old_sub, new_subscription_plan, user)
+    
+    if stripe_subscription = get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
+      ActiveRecord::Base.transaction do
+        new_sub = Subscription.new(
+          user_id: user.id,
+          subscription_plan_id: new_plan_id,
+          complimentary: false,
+          active: true,
+          livemode: (stripe_subscription[:plan][:livemode]),
+          stripe_status: stripe_subscription[:status],
+        )
+        # mass-assign-protected attributes
+
+        ## This means it will have the same stripe_guid as the old Subscription ##
+        new_sub.stripe_guid = stripe_subscription[:id]
+
+        new_sub.next_renewal_date = Time.at(stripe_subscription[:current_period_end])
+        new_sub.stripe_customer_id = old_sub.stripe_customer_id
+        new_sub.stripe_customer_data = get_customer(old_sub.stripe_customer_id).to_hash
+        new_sub.save(validate: false)
+        new_sub.start
+
+        user.student_access.update_attributes(subscription_id: new_sub.id, account_type: 'Subscription', content_access: true)
+
+        #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
+        old_sub.update_attributes(stripe_status: 'canceled', active: false)
+        old_sub.cancel
+
+        return new_sub
+      end
+    end
+
+  rescue ActiveRecord::RecordInvalid => exception
+    Rails.logger.error("ERROR: Subscription#upgrade_plan - AR.Transaction failed.  Details: #{exception.inspect}")
+    raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+  rescue => e
+    Rails.logger.error("ERROR: Subscription#upgrade_plan - failed to update Subscription at Stripe.  Details: #{e.inspect}")
+    raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+  end
+
   def create_and_return_subscription(subscription, stripe_token, coupon)
     stripe_subscription = create_subscription(subscription, stripe_token, coupon)
     stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
@@ -51,7 +95,7 @@ class StripeService
       complimentary: false,
       active: true,
       livemode: stripe_subscription[:plan][:livemode],
-      current_status: stripe_subscription.status,
+      stripe_status: stripe_subscription.status,
       stripe_guid: stripe_subscription.id,
       next_renewal_date: Time.at(stripe_subscription.current_period_end),
       stripe_customer_id: stripe_customer.id,
@@ -62,6 +106,21 @@ class StripeService
   end
 
   private
+
+  def get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
+    stripe_customer = get_customer(old_sub.stripe_customer_id)
+    stripe_subscription = stripe_customer.subscriptions.retrieve(old_sub.stripe_guid)
+    stripe_subscription.plan = new_subscription_plan.stripe_guid
+    stripe_subscription.prorate = true
+    stripe_subscription.trial_end = 'now'
+
+    stripe_subscription.save
+  rescue Stripe::CardError => e
+    body = e.json_body
+    err  = body[:error]
+    Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
+    raise Learnsignal::SubscriptionError.new("Sorry! Your request was declined because - #{err[:message]}")
+  end
 
   def create_subscription(subscription, stripe_token, coupon)
     Stripe::Subscription.create(
@@ -93,5 +152,21 @@ class StripeService
 
   def stripe_plan_id
     Rails.env + '-' + ApplicationController::generate_random_code(20)
+  end
+
+  def validate_plan_changable(subscription, new_plan, user)
+    if !(subscription && subscription.user.default_card)
+      raise Learnsignal::SubscriptionError.new(I18n.t('controllers.subscriptions.update.flash.invalid_card'))
+    elsif subscription.subscription_plan.currency_id != new_plan.currency_id
+      raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
+    elsif !new_plan.active?
+      raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
+    elsif !%w(active past_due).include?(subscription.stripe_status)
+      raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
+    elsif !user.trial_or_sub_user?
+      raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
+    elsif !(user.subscription_payment_cards.all_default_cards.length > 0)
+      raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
+    end
   end
 end

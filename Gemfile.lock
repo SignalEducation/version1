@@ -413,6 +413,13 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    state_machines (0.5.0)
+    state_machines-activemodel (0.5.1)
+      activemodel (>= 4.1, < 6.0)
+      state_machines (>= 0.5.0)
+    state_machines-activerecord (0.5.2)
+      activerecord (>= 4.1, < 6.0)
+      state_machines-activemodel (>= 0.5.0)
     stripe (2.8.0)
       faraday (~> 0.9)
     stripe-ruby-mock (2.5.0)
@@ -536,6 +543,7 @@ DEPENDENCIES
   simplecov
   sinatra
   spring
+  state_machines-activerecord
   stripe (= 2.8.0)
   stripe-ruby-mock (>= 2.4.0)
   summernote-rails

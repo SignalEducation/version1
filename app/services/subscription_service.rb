@@ -6,6 +6,14 @@ class SubscriptionService
     @coupon = nil
   end
 
+  def change_plan(new_plan_id)
+    if paypal?
+      raise Learnsignal::SubscriptionError.new('Sorry! We do not allow upgrading PayPal plans yet. Get in touch if you would like us to change it for you.')
+    elsif stripe?
+      StripeService.new.change_plan(@subscription, new_plan_id)
+    end
+  end
+
   def check_for_valid_coupon?(coupon_code)
     if coupon_code.present?
       unless @coupon = Coupon.get_and_verify(coupon_code, @subscription.subscription_plan_id)

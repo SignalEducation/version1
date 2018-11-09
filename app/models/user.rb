@@ -398,15 +398,15 @@ class User < ActiveRecord::Base
   end
 
   def valid_subscription?
-    self.trial_or_sub_user? && self.current_subscription && %w(active past_due).include?(self.current_subscription.current_status)
+    self.trial_or_sub_user? && self.current_subscription && self.current_subscription.valid_subscription?
   end
 
   def canceled_pending?
-    self.subscription_user? && self.current_subscription && self.current_subscription.current_status == 'canceled-pending'
+    self.subscription_user? && self.current_subscription && self.current_subscription.stripe_status == 'canceled-pending'
   end
 
   def canceled_member?
-    self.subscription_user? && self.current_subscription && self.current_subscription.current_status == 'canceled'
+    self.subscription_user? && self.current_subscription && self.current_subscription.cancelled?
   end
 
   def current_subscription
@@ -421,22 +421,7 @@ class User < ActiveRecord::Base
   def user_subscription_status
     current_subscription = self.current_subscription
     if current_subscription
-      case current_subscription.current_status
-        when 'active'
-          'Active Subscription'
-        when 'past_due'
-          'Past Due Subscription'
-        when 'canceled-pending'
-          'Canceled-pending Subscription'
-        when 'canceled'
-          'Canceled Subscription'
-        when 'unpaid'
-          'Unpaid Subscription'
-        when 'suspended'
-          'Suspended Subscription'
-        else
-          'Invalid Subscription'
-      end
+      current_subscription.user_readable_status
     else
       'Invalid Subscription'
     end
@@ -780,7 +765,7 @@ class User < ActiveRecord::Base
           complimentary: false,
           active: true,
           livemode: stripe_subscription_object.plan.livemode,
-          current_status: stripe_subscription_object.status,
+          stripe_status: stripe_subscription_object.status,
       )
       subscription.stripe_guid = stripe_subscription_object.id
       subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)

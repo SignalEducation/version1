@@ -8,7 +8,7 @@
 #  stripe_guid              :string
 #  next_renewal_date        :date
 #  complimentary            :boolean          default(FALSE), not null
-#  current_status           :string
+#  stripe_status            :string
 #  created_at               :datetime
 #  updated_at               :datetime
 #  stripe_customer_id       :string
@@ -20,25 +20,24 @@
 #  paypal_subscription_guid :string
 #  paypal_token             :string
 #  paypal_status            :string
+#  state                    :string
 #
 
 class Subscription < ActiveRecord::Base
-
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
-
-  # attr-accessible
   attr_accessor :use_paypal, :paypal_approval_url
 
-  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, :paypal_approval_url, :user_id, :subscription_plan_id, :complimentary,
-                  :current_status, :stripe_customer_id, :stripe_token,
+  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
+                  :paypal_approval_url, :user_id, :subscription_plan_id,
+                  :stripe_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data, :coupon_id
+                  :stripe_guid, :stripe_customer_data, :coupon_id, :complimentary
 
   # Constants
-  STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
+  STATUSES = %w(active past_due canceled canceled-pending)
   PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
-  VALID_STATES = %w(active past_due canceled-pending)
+  STRIPE_VALID_STATES = %w(active past_due canceled-pending)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
@@ -57,7 +56,7 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :subscription_plan_id, presence: true
   # validates :next_renewal_date, presence: true
-  validates :current_status, inclusion: { in: STATUSES + PAYPAL_STATUSES }, allow_blank: true
+  validates :stripe_status, inclusion: { in: STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
   # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
@@ -73,14 +72,75 @@ class Subscription < ActiveRecord::Base
   scope :all_in_order, -> { order(:user_id, :id) }
   scope :in_created_order, -> { order(:created_at) }
   scope :in_reverse_created_order, -> { order(:created_at).reverse_order }
-  scope :all_of_status, lambda { |the_status| where(current_status: the_status) }
+  scope :all_of_status, lambda { |the_status| where(stripe_status: the_status) }
   scope :all_active, -> { where(active: true) }
-  scope :all_valid, -> { where(current_status: VALID_STATES) }
+  scope :all_valid, -> { where(stripe_status: STRIPE_VALID_STATES) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
-  # class methods
+  # STATE MACHINE ==============================================================
 
-  # instance methods
+  state_machine initial: :pending do
+    event :start do
+      transition pending: :active
+    end
+
+    event :record_error do
+      transition active: :errored
+    end
+
+    event :cancel_pending do
+      transition active: :pending_cancellation
+    end
+
+    event :cancel do
+      transition [:active, :errored, :pending_cancellation] => :cancelled
+    end
+
+    event :restart do
+      transition [:errored, :pending_cancellation] => :active
+    end
+
+    state all - [:active, :errored, :pending_cancellation] do
+      def valid_subscription?
+        false
+      end
+    end
+
+    state :active, :errored, :pending_cancellation do
+      def valid_subscription?
+        true
+      end
+    end
+
+    after_transition all => :errored do |subscription, _transition|
+      # Email somebody and tell them that they have an errored subscription
+      # Update card details
+      # Retry ? Stripe auto retries after 3, 5 and 7 days
+      # UserMailer.payment_failed_email(subscription.user).deliver
+    end
+
+    after_transition errored: :cancelled do |subscription, _transition|
+      # De-activate the user's account and email them to tell them that their 
+      # account has been temporarily cancelled with insturctions on how to unlock
+      # along with the number of remaining payments due
+      # Update card details (how-to)
+      # UserMailer.subscription_delete_email(subscription.user).deliver
+      # UserMailer.subscription_auto_delete_email(subscription.user).deliver
+    end
+
+    after_transition active: :cancelled do |subscription, _transition|
+      # An admin or user has deactivated the account - most likely because the user
+      # want's to cancel the subscription
+      # Need to update the stripe subscription with 'cancel_at_period_end'
+      # Need to allow the user access until the end of the current period
+      # UserMailer.subscription_request_delete_email(subscription.user).deliver
+    end
+  end
+
+  # CLASS METHODS ==============================================================
+
+  # INSTANCE METHODS ===========================================================
+
   def cancel
     if self.stripe_customer_id && self.stripe_guid
       # call stripe and cancel the subscription
@@ -88,9 +148,11 @@ class Subscription < ActiveRecord::Base
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
       response = stripe_subscription.delete(at_period_end: true).to_hash
       if response[:status] == 'active' && response[:cancel_at_period_end] == true
-        self.update_attribute(:current_status, 'canceled-pending')
+        self.update_attribute(:stripe_status, 'canceled-pending')
+        self.cancel_pending
       elsif response[:status] == 'past_due'
-        self.update_attribute(:current_status, 'canceled-pending')
+        self.update_attribute(:stripe_status, 'canceled-pending')
+        self.cancel_pending
         Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled-pending StripeResponse:#{response}."
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
@@ -110,7 +172,8 @@ class Subscription < ActiveRecord::Base
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
       response = stripe_subscription.delete(at_period_end: false).to_hash
       if response[:status] == 'canceled'
-        self.update_attribute(:current_status, 'canceled')
+        self.update_attribute(:stripe_status, 'canceled')
+        self.cancel
         self.user.student_access.update_attributes(content_access: false)
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
@@ -141,7 +204,7 @@ class Subscription < ActiveRecord::Base
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_current_subscription'))
     end
     # Ensure this sub is canceled
-    unless self.current_status == 'canceled'
+    unless self.stripe_status == 'canceled'
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.sub_is_not_canceled'))
     end
 
@@ -162,12 +225,13 @@ class Subscription < ActiveRecord::Base
       if stripe_subscription && stripe_customer && stripe_subscription.status == 'active'
 
         self.update_attributes(
-            current_status: stripe_subscription.status,
+            stripe_status: stripe_subscription.status,
             stripe_guid: stripe_subscription.id,
             next_renewal_date: Time.at(stripe_subscription.current_period_end),
             stripe_customer_data: stripe_customer.to_hash.deep_dup,
             active: true
         )
+        self.start
         self.user.student_access.update_attributes(content_access: true)
       end
 
@@ -197,31 +261,27 @@ class Subscription < ActiveRecord::Base
   end
 
   def active_status?
-    self.current_status == 'active'
+    self.stripe_status == 'active'
   end
 
   def canceled_status?
-    self.current_status == 'canceled'
+    self.stripe_status == 'canceled'
   end
 
   def past_due_status?
-    self.current_status == 'past_due'
+    self.stripe_status == 'past_due'
   end
 
   def unpaid_status?
-    self.current_status == 'unpaid'
+    self.stripe_status == 'unpaid'
   end
 
   def canceled_pending_status?
-    self.current_status == 'canceled-pending'
-  end
-
-  def suspended_status?
-    self.current_status == 'suspended'
+    self.stripe_status == 'canceled-pending'
   end
 
   def billing_amount
-    self.subscription_plan.try(:amount)
+    subscription_plan.try(:amount)
   end
 
   def reactivation_options
@@ -230,89 +290,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def upgrade_options
-    current_plan = self.subscription_plan
-    SubscriptionPlan.includes(:currency).where.not(id: current_plan.id).for_students.in_currency(current_plan.currency_id).all_active.all_in_order
-  end
-
-  def upgrade_plan(new_plan_id)
-    new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
-    user = self.user
-    # compare the currencies of the old and new plans,
-    unless self.subscription_plan.currency_id == new_subscription_plan.currency_id
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
-      return self
-    end
-    # make sure new plan is active
-    unless new_subscription_plan.active?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
-      return self
-    end
-    # make sure the current subscription is in "good standing"
-    unless %w(active past_due).include?(self.current_status)
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-      return self
-    end
-    # only student_users are allowed to upgrade their plan
-    unless self.user.trial_or_sub_user?
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
-      return self
-    end
-    # Make sure they have a default credit card in place
-    unless self.user.subscription_payment_cards.all_default_cards.length > 0
-      errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
-      return self
-    end
-
-    #### if we're here, then we're good to go.
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    if stripe_customer
-      stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-      stripe_subscription.plan = new_subscription_plan.stripe_guid
-      stripe_subscription.prorate = true
-      stripe_subscription.trial_end = 'now'
-
-      result = stripe_subscription.save # saves it at stripe.com, not in our DB
-
-      #### if we are here, the subscription change on Stripe has gone well
-      #### Now we need to create a new Subscription in our DB.
-      ActiveRecord::Base.transaction do
-        new_sub = Subscription.new(
-            user_id: self.user.id,
-            subscription_plan_id: new_plan_id,
-            complimentary: false,
-            active: true,
-            livemode: (result[:plan][:livemode]),
-            current_status: result[:status],
-        )
-        # mass-assign-protected attributes
-
-        ## This means it will have the same stripe_guid as the old Subscription ##
-        new_sub.stripe_guid = result[:id]
-
-        new_sub.next_renewal_date = Time.at(result[:current_period_end])
-        new_sub.stripe_customer_id = self.stripe_customer_id
-        new_sub.stripe_customer_data = Stripe::Customer.retrieve(self.stripe_customer_id).to_hash
-        new_sub.save(validate: false)
-
-        user.student_access.update_attributes(subscription_id: new_sub.id, account_type: 'Subscription', content_access: true)
-
-        #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
-        self.update_attributes(current_status: 'canceled', active: false)
-
-        return new_sub
-      end
-    else
-      return self
-    end
-
-  rescue ActiveRecord::RecordInvalid => exception
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - AR.Transaction failed.  Details: #{exception.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
-  rescue => e
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - failed to update Subscription at Stripe.  Details: #{e.inspect}")
-    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
-    false
+    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).for_students.in_currency(subscription_plan.currency_id).all_active.all_in_order
   end
 
   def update_from_stripe
@@ -326,13 +304,13 @@ class Subscription < ActiveRecord::Base
 
             subscription = Subscription.where(stripe_guid: stripe_subscription.id, active: true).first
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-            subscription.current_status = stripe_subscription.status
+            subscription.stripe_status = stripe_subscription.status
             subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
             subscription.livemode = stripe_subscription[:plan][:livemode]
             subscription.save(validate: false)
 
           rescue Stripe::InvalidRequestError => e
-            subscription.update_attribute(:current_status, 'canceled')
+            subscription.update_attribute(:stripe_status, 'canceled')
           end
 
         end
@@ -348,12 +326,27 @@ class Subscription < ActiveRecord::Base
     latest_subscription.plan = self.subscription_plan.stripe_guid
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attributes(current_status: 'active', active: true, terms_and_conditions: true)
+      self.update_attributes(stripe_status: 'active', active: true, terms_and_conditions: true)
 
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
     self
+  end
+
+  def user_readable_status
+    case state
+      when 'active'
+        'Active Subscription'
+      when 'errored'
+        'Past Due Subscription'
+      when 'pending_cancellation'
+        'Subscription Pending Cancellation'
+      when 'canceled'
+        'Canceled Subscription'
+      else
+        'Invalid Subscription'
+    end
   end
 
   protected
