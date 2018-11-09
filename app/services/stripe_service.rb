@@ -45,7 +45,6 @@ class StripeService
   # SUBSCRIPTIONS ==============================================================
 
   def change_plan(old_sub, new_plan_id)
-    binding.pry
     user = old_sub.user
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     validate_plan_changable(old_sub, new_subscription_plan, user)
