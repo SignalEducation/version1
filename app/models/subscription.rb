@@ -149,8 +149,10 @@ class Subscription < ActiveRecord::Base
       response = stripe_subscription.delete(at_period_end: true).to_hash
       if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:stripe_status, 'canceled-pending')
+        self.cancel_pending
       elsif response[:status] == 'past_due'
         self.update_attribute(:stripe_status, 'canceled-pending')
+        self.cancel_pending
         Rails.logger.error "ERROR: Subscription#cancel with a past_due status updated local sub from past_due to canceled-pending StripeResponse:#{response}."
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
@@ -171,6 +173,7 @@ class Subscription < ActiveRecord::Base
       response = stripe_subscription.delete(at_period_end: false).to_hash
       if response[:status] == 'canceled'
         self.update_attribute(:stripe_status, 'canceled')
+        self.cancel
         self.user.student_access.update_attributes(content_access: false)
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
@@ -228,6 +231,7 @@ class Subscription < ActiveRecord::Base
             stripe_customer_data: stripe_customer.to_hash.deep_dup,
             active: true
         )
+        self.start
         self.user.student_access.update_attributes(content_access: true)
       end
 
