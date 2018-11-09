@@ -58,16 +58,17 @@ class SubscriptionsController < ApplicationController
   def create
     @subscription = Subscription.new(subscription_params)
 
-    subscription_service = SubscriptionService.new(@subscription)
-    subscription_service.check_valid_subscription?(params)
-    subscription_service.check_for_valid_coupon?(params[:hidden_coupon_code])
-    @subscription = subscription_service.create_and_return_subscription(params)
+    subscription_object = SubscriptionService.new(@subscription)
+    subscription_object.check_valid_subscription?(params)
+    subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
+    @subscription = subscription_object.create_and_return_subscription(params)
     
     if @subscription.save
-      if subscription_service.stripe?
-        subscription_service.validate_referral
+      if subscription_object.stripe?
+        @subscription.start
+        subscription_object.validate_referral
         redirect_to personal_upgrade_complete_url
-      elsif subscription_service.paypal?
+      elsif subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
       end
     else
@@ -84,6 +85,7 @@ class SubscriptionsController < ApplicationController
     case params[:payment_processor]
     when 'paypal'
       if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
+        @subscription.start
         SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url
       else

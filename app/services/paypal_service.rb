@@ -36,7 +36,8 @@ class PaypalService
     agreement = create_billing_agreement(subscription, subscription.user)
     subscription.assign_attributes(
       paypal_token: agreement.token,
-      paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href
+      paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href,
+      paypal_status: agreement.state
     )
     subscription
   end
@@ -61,7 +62,6 @@ class PaypalService
       subscription.update(
         complimentary: false,
         active: true,
-        current_status: agreement.state,
         paypal_subscription_guid: agreement.id,
         next_renewal_date: Time.parse(agreement.agreement_details.next_billing_date),
       )

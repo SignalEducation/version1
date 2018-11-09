@@ -15,7 +15,7 @@ class ManagementConsolesController < ApplicationController
     #TODO and have it display general stats on their courses
     #Default view for all management users. General stats on site - user number, sub numbers, enrollment numbers, course numbers
     @users_count = StudentAccess.count
-    @subscriptions = Subscription.where(current_status: Subscription::VALID_STATES).count
+    @subscriptions = Subscription.with_state(:active).count
     @valid_trial_users = StudentAccess.all_trial.where(content_access: true).count
     @invalid_trial_users = StudentAccess.all_trial.where(content_access: false).count
     @active_courses = SubjectCourse.all_active.count

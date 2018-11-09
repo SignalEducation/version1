@@ -51,7 +51,7 @@ class StripeService
       complimentary: false,
       active: true,
       livemode: stripe_subscription[:plan][:livemode],
-      current_status: stripe_subscription.status,
+      stripe_status: stripe_subscription.status,
       stripe_guid: stripe_subscription.id,
       next_renewal_date: Time.at(stripe_subscription.current_period_end),
       stripe_customer_id: stripe_customer.id,
