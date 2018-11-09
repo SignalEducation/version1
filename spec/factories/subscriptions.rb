@@ -8,7 +8,7 @@
 #  stripe_guid              :string
 #  next_renewal_date        :date
 #  complimentary            :boolean          default(FALSE), not null
-#  current_status           :string
+#  stripe_status            :string
 #  created_at               :datetime
 #  updated_at               :datetime
 #  stripe_customer_id       :string
@@ -20,6 +20,7 @@
 #  paypal_subscription_guid :string
 #  paypal_token             :string
 #  paypal_status            :string
+#  state                    :string
 #
 
 FactoryBot.define do

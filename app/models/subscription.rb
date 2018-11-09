@@ -8,7 +8,7 @@
 #  stripe_guid              :string
 #  next_renewal_date        :date
 #  complimentary            :boolean          default(FALSE), not null
-#  current_status           :string
+#  stripe_status            :string
 #  created_at               :datetime
 #  updated_at               :datetime
 #  stripe_customer_id       :string
@@ -20,23 +20,22 @@
 #  paypal_subscription_guid :string
 #  paypal_token             :string
 #  paypal_status            :string
+#  state                    :string
 #
 
 class Subscription < ActiveRecord::Base
-
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
-
-  # attr-accessible
   attr_accessor :use_paypal, :paypal_approval_url
 
-  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, :paypal_approval_url, :user_id, :subscription_plan_id, :complimentary,
+  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
+                  :paypal_approval_url, :user_id, :subscription_plan_id,
                   :current_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data, :coupon_id
+                  :stripe_guid, :stripe_customer_data, :coupon_id, :complimentary
 
   # Constants
-  STATUSES = %w(active past_due canceled canceled-pending unpaid suspended)
+  STATUSES = %w(active past_due canceled canceled-pending unpaid)
   PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
   VALID_STATES = %w(active past_due canceled-pending)
 
@@ -57,7 +56,7 @@ class Subscription < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :subscription_plan_id, presence: true
   # validates :next_renewal_date, presence: true
-  validates :current_status, inclusion: { in: STATUSES + PAYPAL_STATUSES }, allow_blank: true
+  validates :stripe_status, inclusion: { in: STATUSES + PAYPAL_STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
   # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
@@ -78,9 +77,54 @@ class Subscription < ActiveRecord::Base
   scope :all_valid, -> { where(current_status: VALID_STATES) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
-  # class methods
+  # STATE MACHINE ==============================================================
 
-  # instance methods
+  state_machine initial: :pending do
+    event :start do
+      transition pending: :active
+    end
+
+    event :record_error do
+      transition all => :errored
+    end
+
+    event :cancel do
+      transition all => :cancelled
+    end
+
+    event :restart do
+      transition errored: :active
+    end
+
+    after_transition all => :errored do |subscription, _transition|
+      # Email somebody and tell them that they have an errored subscription
+      # Update card details
+      # Retry ? Stripe auto retries after 3, 5 and 7 days
+      # UserMailer.payment_failed_email(subscription.user).deliver
+    end
+
+    after_transition errored: :cancelled do |subscription, _transition|
+      # De-activate the user's account and email them to tell them that their 
+      # account has been temporarily cancelled with insturctions on how to unlock
+      # along with the number of remaining payments due
+      # Update card details (how-to)
+      # UserMailer.subscription_delete_email(subscription.user).deliver
+      # UserMailer.subscription_auto_delete_email(subscription.user).deliver
+    end
+
+    after_transition active: :cancelled do |subscription, _transition|
+      # An admin or user has deactivated the account - most likely because the user
+      # want's to cancel the subscription
+      # Need to update the stripe subscription with 'cancel_at_period_end'
+      # Need to allow the user access until the end of the current period
+      # UserMailer.subscription_request_delete_email(subscription.user).deliver
+    end
+  end
+
+  # CLASS METHODS ==============================================================
+
+  # INSTANCE METHODS ===========================================================
+
   def cancel
     if self.stripe_customer_id && self.stripe_guid
       # call stripe and cancel the subscription
@@ -216,12 +260,8 @@ class Subscription < ActiveRecord::Base
     self.current_status == 'canceled-pending'
   end
 
-  def suspended_status?
-    self.current_status == 'suspended'
-  end
-
   def billing_amount
-    self.subscription_plan.try(:amount)
+    subscription_plan.try(:amount)
   end
 
   def reactivation_options
@@ -230,8 +270,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def upgrade_options
-    current_plan = self.subscription_plan
-    SubscriptionPlan.includes(:currency).where.not(id: current_plan.id).for_students.in_currency(current_plan.currency_id).all_active.all_in_order
+    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).for_students.in_currency(subscription_plan.currency_id).all_active.all_in_order
   end
 
   def upgrade_plan(new_plan_id)
