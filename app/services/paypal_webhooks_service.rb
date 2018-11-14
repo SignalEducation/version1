@@ -65,7 +65,7 @@ class PaypalWebhooksService
     when 'BILLING.SUBSCRIPTION.CREATED'
       # do stuff
     when 'BILLING.SUBSCRIPTION.CANCELLED'
-      # do stuff
+      @webhook.process_subscription_cancelled
     when 'BILLING.SUBSCRIPTION.RE-ACTIVATED'
       # do stuff
     when 'BILLING.SUBSCRIPTION.SUSPENDED'
@@ -73,9 +73,9 @@ class PaypalWebhooksService
     when 'BILLING.SUBSCRIPTION.UPDATED'
       # do stuff
     when 'PAYMENT.SALE.COMPLETED'
-      @webhook.process_sale_completed(@paypal_body)
+      @webhook.process_sale_completed
     when 'PAYMENT.SALE.DENIED'
-      # do stuff
+      @webhook.process_sale_denied
     end
   end
 

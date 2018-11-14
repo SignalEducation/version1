@@ -15,7 +15,7 @@
 class PaypalWebhook < ActiveRecord::Base
   serialize :payload, Hash
   # attr-accessible
-  attr_accessible :guid, :payload, :processed_at
+  attr_accessible :guid, :event_type, :payload, :processed_at, :valid
 
   # Constants
 
@@ -35,9 +35,30 @@ class PaypalWebhook < ActiveRecord::Base
     false
   end
 
-  def process_sale_completed(paypal_body)
-    if invoice = Invoice.build_from_paypal_data(paypal_body)
+  def process_sale_completed
+    if invoice = Invoice.build_from_paypal_data(payload) && invoice.valid?
+      invoice.update!(paid: true, payment_closed: true)
       update!(processed_at: Time.now)
+    else
+      update!(valid: false)
+    end
+  end
+
+  def process_sale_denied
+    if invoice = Invoice.build_from_paypal_data(payload)
+      invoice.update!(paid: false, payment_closed: false)
+      invoice.increment!(:attempt_count)
+      update!(processed_at: Time.now)
+      subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['billing_agreement_id'])
+      subscription.record_error!
+    else
+      update!(valid: false)
+    end
+  end
+
+  def process_subscription_cancelled
+    if subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['id'])
+      subscription.cancel!
     else
       update!(valid: false)
     end

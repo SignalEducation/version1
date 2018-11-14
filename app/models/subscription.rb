@@ -95,7 +95,7 @@ class Subscription < ActiveRecord::Base
     end
 
     event :cancel do
-      transition [:active, :errored, :pending_cancellation] => :cancelled
+      transition [:pending, :active, :errored, :pending_cancellation] => :cancelled
     end
 
     event :restart do

@@ -32,6 +32,7 @@
 #  tax_percent                 :decimal(, )
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
+#  paypal_payment_guid         :string
 #
 
 class Invoice < ActiveRecord::Base
@@ -48,7 +49,7 @@ class Invoice < ActiveRecord::Base
                   :payment_closed, :forgiven, :paid, :livemode, :attempt_count,
                   :amount_due, :next_payment_attempt_at, :webhooks_delivered_at,
                   :charge_guid, :subscription_guid, :tax_percent, :tax,
-                  :original_stripe_data
+                  :original_stripe_data, :paypal_payment_guid
 
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
@@ -138,19 +139,18 @@ class Invoice < ActiveRecord::Base
   end
 
   def self.build_from_paypal_data(paypal_body)
-    inv = nil
+    inv = Invoice.find_or_initialize_by(paypal_payment_guid: paypal_body['resource']['id'])
     subscription = Subscription.find_by(paypal_subscription_guid: paypal_body['resource']['billing_agreement_id'])
     Invoice.transaction do
       if user && subscription && currency
-        inv = Invoice.new(
+        inv.assign_attributes(
           user_id: subscription.user.id,
           subscription_id: subscription.id,
           number_of_users: 1,
           currency_id: subscription.currency.id,
           issued_at: Time.parse(paypal_body['create_time']),
           total: paypal_body['resource']['amount']['total'].to_f,
-          paid: true,
-          payment_closed: true
+          paypal_payment_guid: paypal_body['resource']['id']
         )
         if inv.save
           begin

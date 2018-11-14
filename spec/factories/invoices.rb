@@ -32,6 +32,7 @@
 #  tax_percent                 :decimal(, )
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
+#  paypal_payment_guid         :string
 #
 
 FactoryBot.define do
