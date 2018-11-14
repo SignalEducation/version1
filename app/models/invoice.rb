@@ -64,11 +64,7 @@ class Invoice < ActiveRecord::Base
   belongs_to :vat_rate
 
   # validation
-  validates :user_id, presence: true
-  validates :subscription_id, presence: true
-  validates :number_of_users, presence: true
-  validates :currency_id, presence: true
-  validates :total, presence: true
+  validates :user_id, :subscription_id, :number_of_users, :currency_id, :total, presence: true
   validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true
@@ -126,6 +122,39 @@ class Invoice < ActiveRecord::Base
             stripe_data_hash[:lines][:data].each do |line_item|
               InvoiceLineItem.build_from_stripe_data(inv.id, line_item, inv.subscription_id)
             end
+          rescue NoMethodError => err
+            Rails.logger.error "ERROR: Invoice with id #{inv.id} was be rolledback due to the error in creating invoice line items."
+            inv = nil
+            raise ActiveRecord::Rollback
+          end
+        else
+          Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
+        end
+      else
+        Rails.logger.error "ERROR: Invoice#build_from_stripe_data find User-#{stripe_data_hash[:customer]}, Subscription-#{stripe_data_hash[:subscription]} OR Currency-#{stripe_data_hash[:currency].upcase}"
+      end
+    end
+    inv
+  end
+
+  def self.build_from_paypal_data(paypal_body)
+    inv = nil
+    subscription = Subscription.find_by(paypal_subscription_guid: paypal_body['resource']['billing_agreement_id'])
+    Invoice.transaction do
+      if user && subscription && currency
+        inv = Invoice.new(
+          user_id: subscription.user.id,
+          subscription_id: subscription.id,
+          number_of_users: 1,
+          currency_id: subscription.currency.id,
+          issued_at: Time.parse(paypal_body['create_time']),
+          total: paypal_body['resource']['amount']['total'].to_f,
+          paid: true,
+          payment_closed: true
+        )
+        if inv.save
+          begin
+            InvoiceLineItem.build_from_paypal_data(inv)
           rescue NoMethodError => err
             Rails.logger.error "ERROR: Invoice with id #{inv.id} was be rolledback due to the error in creating invoice line items."
             inv = nil

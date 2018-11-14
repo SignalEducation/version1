@@ -37,22 +37,27 @@ class PaypalWebhooksService
   end
 
   def valid?
-    actual_signature = @request.headers["Paypal-Transmission-Sig"]
-    auth_algo        = @request.headers["Paypal-Auth-Algo"]
-    auth_algo.sub!(/withRSA/i, "")
-    cert_url         = @request.headers["Paypal-Cert-Url"]
-    transmission_id  = @request.headers["Paypal-Transmission-Id"]
-    timestamp        = @request.headers["Paypal-Transmission-Time"]
-    webhook_id       = "0UT24471LT528120V" #The webhook_id provided by PayPal when webhook is created on the PayPal developer site
-    event_body       = @paypal_body
+    webhook_id = "0UT24471LT528120V"
 
-    WebhookEvent.verify(transmission_id, timestamp, webhook_id, event_body, cert_url, actual_signature, auth_algo)
+    WebhookEvent.verify(
+      transmission_id,
+      timestamp,
+      webhook_id,
+      @paypal_body,
+      cert_url,
+      actual_signature,
+      auth_algo
+    )
   end
 
   private
 
   def record_webhook
-    @webhook = PaypalWebhook.create!(guid: @paypal_body['id'], event_type: @paypal_body['event_type'], payload: @paypal_body)
+    @webhook = PaypalWebhook.create!(
+      guid: @paypal_body['id'], 
+      event_type: @paypal_body['event_type'], 
+      payload: @paypal_body
+    )
   end
 
   def trigger_payment_actions
@@ -68,9 +73,29 @@ class PaypalWebhooksService
     when 'BILLING.SUBSCRIPTION.UPDATED'
       # do stuff
     when 'PAYMENT.SALE.COMPLETED'
-      # do stuff
+      @webhook.process_sale_completed(@paypal_body)
     when 'PAYMENT.SALE.DENIED'
       # do stuff
     end
+  end
+
+  def transmission_id
+    @request.headers["Paypal-Transmission-Id"]
+  end
+
+  def actual_signature
+    @request.headers["Paypal-Transmission-Sig"]
+  end
+
+  def auth_algo
+    @request.headers["Paypal-Auth-Algo"].sub!(/withRSA/i, "")
+  end
+
+  def cert_url
+    @request.headers["Paypal-Cert-Url"]
+  end
+
+  def timestamp
+    @request.headers["Paypal-Transmission-Time"]
   end
 end

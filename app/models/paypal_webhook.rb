@@ -9,6 +9,7 @@
 #  processed_at :datetime
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  valid        :boolean          default(TRUE)
 #
 
 class PaypalWebhook < ActiveRecord::Base
@@ -32,6 +33,14 @@ class PaypalWebhook < ActiveRecord::Base
   # instance methods
   def destroyable?
     false
+  end
+
+  def process_sale_completed(paypal_body)
+    if invoice = Invoice.build_from_paypal_data(paypal_body)
+      update!(processed_at: Time.now)
+    else
+      update!(valid: false)
+    end
   end
 
   private

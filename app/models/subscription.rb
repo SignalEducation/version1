@@ -34,6 +34,8 @@ class Subscription < ActiveRecord::Base
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
                   :stripe_guid, :stripe_customer_data, :coupon_id, :complimentary
 
+  delegate :currency, to: :subscription_plan
+
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
   PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
@@ -85,7 +87,7 @@ class Subscription < ActiveRecord::Base
     end
 
     event :record_error do
-      transition active: :errored
+      transition [:active, :pending] => :errored
     end
 
     event :cancel_pending do
