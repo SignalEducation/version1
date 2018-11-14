@@ -66,6 +66,15 @@ class InvoiceLineItem < ActiveRecord::Base
     end
   end
 
+  def self.build_from_paypal_data(invoice)
+    invoice.invoice_line_items.create!(
+      amount: invoice.total,
+      currency_id: invoice.currency_id,
+      subscription_id: invoice.subscription_id,
+      subscription_plan_id: invoice.subscription.subscription_plan_id
+    )
+  end
+
   # instance methods
   def destroyable?
     #!Rails.env.production?

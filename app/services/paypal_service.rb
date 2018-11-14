@@ -59,13 +59,16 @@ class PaypalService
     agreement = Agreement.new()
     agreement.token = token
     if agreement.execute
-      subscription.update(
+      subscription.update!(
+        paypal_status: agreement.state,
         complimentary: false,
         active: true,
         paypal_subscription_guid: agreement.id,
         next_renewal_date: Time.parse(agreement.agreement_details.next_billing_date),
       )
+      subscription.start!
     else
+      subscription.record_error!
       Rails.logger.error "DEBUG: Subscription#create Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108143710) do
+ActiveRecord::Schema.define(version: 20181114170431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -584,6 +584,7 @@ ActiveRecord::Schema.define(version: 20181108143710) do
     t.decimal  "tax_percent"
     t.decimal  "tax"
     t.text     "original_stripe_data"
+    t.string   "paypal_payment_guid"
   end
 
   add_index "invoices", ["currency_id"], name: "index_invoices_on_currency_id", using: :btree
@@ -667,6 +668,16 @@ ActiveRecord::Schema.define(version: 20181108143710) do
   add_index "orders", ["stripe_guid"], name: "index_orders_on_stripe_guid", using: :btree
   add_index "orders", ["subject_course_id"], name: "index_orders_on_subject_course_id", using: :btree
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+
+  create_table "paypal_webhooks", force: :cascade do |t|
+    t.string   "guid"
+    t.string   "event_type"
+    t.text     "payload"
+    t.datetime "processed_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "valid",        default: true
+  end
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
