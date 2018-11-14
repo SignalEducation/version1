@@ -12,6 +12,7 @@ class PaypalWebhooksService
   def initialize(request, paypal_body)
     @request = request
     @paypal_body = paypal_body
+    @webhook = nil
   end
   # BILLING.PLAN.CREATED  A billing plan is created.  Create billing plan
   # BILLING.PLAN.UPDATED  A billing plan is updated.  Update billing plan
@@ -51,11 +52,11 @@ class PaypalWebhooksService
   private
 
   def record_webhook
-    # do stuff
+    @webhook = PaypalWebhook.create!(guid: @paypal_body['id'], event_type: @paypal_body['event_type'], payload: @paypal_body)
   end
 
   def trigger_payment_actions
-    case @paypal_body['event_type']
+    case @webhook.event_type
     when 'BILLING.SUBSCRIPTION.CREATED'
       # do stuff
     when 'BILLING.SUBSCRIPTION.CANCELLED'
