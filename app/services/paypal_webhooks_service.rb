@@ -53,7 +53,7 @@ class PaypalWebhooksService
   private
 
   def record_webhook
-    @webhook = PaypalWebhook.create!(
+    @webhook = PaypalWebhook.create(
       guid: @paypal_body['id'], 
       event_type: @paypal_body['event_type'], 
       payload: @paypal_body
