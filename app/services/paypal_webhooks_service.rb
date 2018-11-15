@@ -88,7 +88,7 @@ class PaypalWebhooksService
   end
 
   def auth_algo
-    @request.headers["Paypal-Auth-Algo"].sub!(/withRSA/i, "")
+    @request.headers["Paypal-Auth-Algo"].sub(/withRSA/i, "")
   end
 
   def cert_url
