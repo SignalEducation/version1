@@ -34,13 +34,10 @@ class InvoiceLineItem < ActiveRecord::Base
   belongs_to :subscription_plan
 
   # validation
-  validates :invoice_id, presence: true
-  validates :amount, presence: true
-  validates :currency_id, presence: true
-  validates :period_start_at, presence: true
-  validates :period_end_at, presence: true
-  validates :subscription_id, presence: true
-  validates :subscription_plan_id, presence: true
+  validates :invoice_id, :amount, :currency_id, :subscription_id, 
+            :subscription_plan_id, presence: true
+  # validates :period_start_at, presence: true
+  # validates :period_end_at, presence: true
 
   # callbacks
   before_destroy :check_dependencies

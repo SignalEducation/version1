@@ -9,7 +9,7 @@
 #  processed_at :datetime
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  valid        :boolean          default(TRUE)
+#  verified     :boolean          default(TRUE)
 #
 
 require 'rails_helper'
