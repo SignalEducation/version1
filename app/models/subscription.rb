@@ -32,7 +32,8 @@ class Subscription < ActiveRecord::Base
                   :paypal_approval_url, :user_id, :subscription_plan_id,
                   :stripe_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data, :coupon_id, :complimentary
+                  :stripe_guid, :stripe_customer_data, :coupon_id,
+                  :complimentary, :paypal_status, :state
 
   delegate :currency, to: :subscription_plan
 

@@ -63,8 +63,7 @@ class PaypalService
         paypal_status: agreement.state,
         complimentary: false,
         active: true,
-        paypal_subscription_guid: agreement.id,
-        next_renewal_date: Time.parse(agreement.agreement_details.next_billing_date),
+        paypal_subscription_guid: agreement.id
       )
       subscription.start!
     else
