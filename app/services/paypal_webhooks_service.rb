@@ -32,8 +32,15 @@ class PaypalWebhooksService
   # WE'LL DO IT
 
   def process
-    record_webhook
     trigger_payment_actions
+  end
+
+  def record_webhook
+    @webhook = PaypalWebhook.create(
+      guid: @paypal_body['id'], 
+      event_type: @paypal_body['event_type'], 
+      payload: @paypal_body
+    )
   end
 
   def valid?
@@ -51,14 +58,6 @@ class PaypalWebhooksService
   end
 
   private
-
-  def record_webhook
-    @webhook = PaypalWebhook.create(
-      guid: @paypal_body['id'], 
-      event_type: @paypal_body['event_type'], 
-      payload: @paypal_body
-    )
-  end
 
   def trigger_payment_actions
     case @webhook.event_type

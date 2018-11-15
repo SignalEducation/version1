@@ -9,7 +9,7 @@
 #  processed_at :datetime
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  valid        :boolean          default(TRUE)
+#  verified     :boolean          default(TRUE)
 #
 
 class PaypalWebhook < ActiveRecord::Base
@@ -32,15 +32,15 @@ class PaypalWebhook < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def process_sale_completed
-    if invoice = Invoice.build_from_paypal_data(payload) && invoice.valid?
+    if (invoice = Invoice.build_from_paypal_data(payload)) && invoice.valid?
       invoice.update!(paid: true, payment_closed: true)
       update!(processed_at: Time.now)
     else
-      update!(valid: false)
+      update!(verified: false)
     end
   end
 
@@ -52,7 +52,7 @@ class PaypalWebhook < ActiveRecord::Base
       subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['billing_agreement_id'])
       subscription.record_error!
     else
-      update!(valid: false)
+      update!(verified: false)
     end
   end
 
@@ -60,7 +60,7 @@ class PaypalWebhook < ActiveRecord::Base
     if subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['id'])
       subscription.cancel!
     else
-      update!(valid: false)
+      update!(verified: false)
     end
   end
 
