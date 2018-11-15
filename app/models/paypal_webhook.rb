@@ -36,9 +36,13 @@ class PaypalWebhook < ActiveRecord::Base
   end
 
   def process_sale_completed
+    Rails.logger.info "WEBHOOK: Processing PAYMENT.SALE.COMPLETED"
     if (invoice = Invoice.build_from_paypal_data(payload)) && invoice.valid?
+      Rails.logger.info "WEBHOOK: BUILT INVOICE SUCCESSFULLY"
       invoice.update!(paid: true, payment_closed: true)
+      Rails.logger.info "WEBHOOK: UPDATED INVOICE SUCCESSFULLY"
       update!(processed_at: Time.now)
+      Rails.logger.info "WEBHOOK: UPDATED WEBHOOK processed_at SUCCESSFULLY"
     else
       update!(verified: false)
     end
