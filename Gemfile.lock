@@ -438,6 +438,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.6)
     tilt (1.4.1)
+    timecop (0.9.1)
     ttfunk (1.1.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
@@ -549,6 +550,7 @@ DEPENDENCIES
   summernote-rails
   therubyracer
   thin
+  timecop
   uglifier (>= 1.3.0)
   ultrahook
   utf8-cleaner
