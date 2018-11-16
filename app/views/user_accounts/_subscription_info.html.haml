@@ -132,40 +132,41 @@
 
 
   .col-sm-6.col-md-4
-    -if @current_subscription.active_status?
-      -if @user.default_card
-        =link_to account_change_plan_url do
-          .btn.btn-purple.full-width.l-margin-bottom
-            =t('views.users.show.change_subscription_plan')
+    - unless @current_subscription.paypal_token.present?
+      -if @current_subscription.active_status?
+        -if @user.default_card
+          =link_to account_change_plan_url do
+            .btn.btn-purple.full-width.l-margin-bottom
+              =t('views.users.show.change_subscription_plan')
 
-      -#=link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
-        .btn.btn-red.full-width.l-margin-bottom
+        -#=link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
+          .btn.btn-red.full-width.l-margin-bottom
+            =t('views.users.show.cancel_your_subscription_plan')
+        %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
           =t('views.users.show.cancel_your_subscription_plan')
-      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
-        =t('views.users.show.cancel_your_subscription_plan')
 
 
-    -elsif @current_subscription.canceled_pending_status?
+      -elsif @current_subscription.canceled_pending_status?
 
-      %h3=t('views.users.show.un_cancel_subscription.h3')
-      =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_subscription_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
+        %h3=t('views.users.show.un_cancel_subscription.h3')
+        =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_subscription_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
 
 
-    -elsif @current_subscription.canceled_status?
+      -elsif @current_subscription.canceled_status?
 
-      %h3=t('views.users.show.reactivate_subscription.h3')
-      =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red full-width'
+        %h3=t('views.users.show.reactivate_subscription.h3')
+        =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red full-width'
 
 
 
-    -elsif @current_subscription.past_due_status?
-      -#=link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
-        .btn.btn-red.full-width.l-margin-bottom
+      -elsif @current_subscription.past_due_status?
+        -#=link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
+          .btn.btn-red.full-width.l-margin-bottom
+            =t('views.users.show.cancel_your_subscription_plan')
+        %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
           =t('views.users.show.cancel_your_subscription_plan')
-      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
-        =t('views.users.show.cancel_your_subscription_plan')
 
-    -elsif @current_subscription.unpaid_status?
+      -elsif @current_subscription.unpaid_status?
 
 
   -if @current_subscription && @invoices
@@ -176,5 +177,5 @@
         -@invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
         =render partial: 'invoices_index'
 
-
-=render partial: 'confirm_cancellation_modal'
+- unless @current_subscription.paypal_token.present?
+  =render partial: 'confirm_cancellation_modal'
