@@ -102,6 +102,7 @@ group :test do
   gem 'stripe-ruby-mock', '>= 2.4.0', :require => 'stripe_mock'
   gem 'webrat' # Runs tests in a "headless" browser
   gem 'launchy'
+  gem 'timecop'
 end
 
 group :staging do
