@@ -33,12 +33,13 @@ class PaypalWebhooksService
 
   def process
     Rails.logger.info "WEBHOOK: Processing"
+    record_webhook
     trigger_payment_actions
   end
 
   def record_webhook
     Rails.logger.info "WEBHOOK: Recording"
-    @webhook = PaypalWebhook.create(
+    @webhook = PaypalWebhook.create!(
       guid: @paypal_body['id'], 
       event_type: @paypal_body['event_type'], 
       payload: @paypal_body
@@ -64,9 +65,7 @@ class PaypalWebhooksService
   def trigger_payment_actions
     case @webhook.event_type
     when 'BILLING.SUBSCRIPTION.CREATED'
-
-      Rails.logger.info "WEBHOOK: TRIGGERED SUBSCRIPTION.CREATED ACTION"
-      # do stuff
+      Rails.logger.info "PAYPAL WEBHOOK: TRIGGERED SUBSCRIPTION.CREATED ACTION"
     when 'BILLING.SUBSCRIPTION.CANCELLED'
       @webhook.process_subscription_cancelled
     when 'BILLING.SUBSCRIPTION.RE-ACTIVATED'
