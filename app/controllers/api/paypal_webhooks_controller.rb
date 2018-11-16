@@ -3,7 +3,7 @@ class Api::PaypalWebhooksController < Api::BaseController
 
   def create
     @webhook = PaypalWebhooksService.new(request, params)
-    if @webhook.valid?
+    if @webhook.record_webhook
       @webhook.process
       render body: nil, status: 204
     else

@@ -33,13 +33,12 @@ class PaypalWebhooksService
 
   def process
     Rails.logger.info "WEBHOOK: Processing"
-    record_webhook
     trigger_payment_actions
   end
 
   def record_webhook
     Rails.logger.info "WEBHOOK: Recording"
-    @webhook = PaypalWebhook.create!(
+    @webhook = PaypalWebhook.create(
       guid: @paypal_body['id'], 
       event_type: @paypal_body['event_type'], 
       payload: @paypal_body
