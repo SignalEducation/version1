@@ -3,11 +3,6 @@ require 'paypal-sdk-rest'
 class PaypalService
   include Rails.application.routes.url_helpers
   include PayPal::SDK::REST
-  PayPal::SDK::REST.set_config(
-    mode: "sandbox",
-    client_id: "AajN5CdCcVFuea3nyJXXwZnAdkTxvgcd1IKeTcQVufHKl09WLTlmD5UKU7efXgC_VcZjUDTLveZ29FAt",
-    client_secret: "EPF0A4akXxhuDx3BFKQGcEuYZw4_5sS13of5hX9MnjtvAVy1WmcPTj0cBk9lGxJ3TNqroDCTMC6PnaZc"
-  )
 
   # PLANS ======================================================================
 
@@ -106,8 +101,8 @@ class PaypalService
           value: subscription_plan.price.to_s,
           currency: subscription_plan.currency.iso_code
         },
-        return_url: execute_subscription_url(id: subscription.id, host: 'https://staging.learnsignal.com', payment_processor: 'paypal'),
-        cancel_url: new_subscription_url(host: 'https://staging.learnsignal.com', flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')
+        return_url: execute_subscription_url(id: subscription.id, host: learnsignal_host, payment_processor: 'paypal'),
+        cancel_url: new_subscription_url(host: learnsignal_host, flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')
       },
       plan: {
         id: subscription_plan.paypal_guid
@@ -150,7 +145,7 @@ class PaypalService
         cancel_url: "https://example.com/cancel",
         auto_bill_amount: "YES",
         initial_fail_amount_action: "CANCEL",
-        max_fail_attempts: "0"
+        max_fail_attempts: "4"
       }
     }
   end
@@ -166,5 +161,9 @@ class PaypalService
     subscription_plan.update(
       paypal_state: state
     ) 
+  end
+
+  def learnsignal_host
+    Rails.env.production? ? 'https://learnsignal.com' : 'https://staging.learnsignal.com'
   end
 end
