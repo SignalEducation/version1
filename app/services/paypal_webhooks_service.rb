@@ -3,33 +3,12 @@ require 'paypal-sdk-rest'
 class PaypalWebhooksService
   include PayPal::SDK::REST
   include PayPal::SDK::Core::Logging
-  PayPal::SDK::REST.set_config(
-    mode: "sandbox",
-    client_id: "AajN5CdCcVFuea3nyJXXwZnAdkTxvgcd1IKeTcQVufHKl09WLTlmD5UKU7efXgC_VcZjUDTLveZ29FAt",
-    client_secret: "EPF0A4akXxhuDx3BFKQGcEuYZw4_5sS13of5hX9MnjtvAVy1WmcPTj0cBk9lGxJ3TNqroDCTMC6PnaZc"
-  )
 
   def initialize(request, paypal_body)
     @request = request
     @paypal_body = paypal_body
     @webhook = nil
   end
-  # BILLING.PLAN.CREATED  A billing plan is created.  Create billing plan
-  # BILLING.PLAN.UPDATED  A billing plan is updated.  Update billing plan
-  # BILLING.SUBSCRIPTION.CANCELLED  A billing agreement is canceled.  Cancel agreement
-  # BILLING.SUBSCRIPTION.CREATED  A billing agreement is created. Create agreement
-  # BILLING.SUBSCRIPTION.RE-ACTIVATED A billing agreement is re-activated.  Re-activate agreement
-  # BILLING.SUBSCRIPTION.SUSPENDED  A billing agreement is suspended. Suspend agreement
-  # BILLING.SUBSCRIPTION.UPDATED
-
-  # FOR NOW, THE ONLY ONES THAT WE NEED TO KNOW ABOUT ARE BILLING.SUBSCRIPTION.CANCELLED
-  # AND BILLING.SUBSCRIPTION.SUSPENDED
-
-  # FOR GENERAL PAYMENTS, PAYMENT.SALE.COMPLETED AND PAYMENT.SALE.DENIED LET US
-  # KNOW OF SUCCESSFULL AND FAILED RECURRING PAYMENTS. WE CAN USE THESE TO GENERATE
-  # INVOICES AND UPDATE THE SUBSCRIPTION OBJECT'S STATE AND NEXT BILLING DATE, ETC...
-  # IF A SUBSCRIPTION NEEDS TO BE CANCELLED OR MARKED 'ERRORED', THEN THIS IS WHERE
-  # WE'LL DO IT
 
   def process
     Rails.logger.info "WEBHOOK: Processing"

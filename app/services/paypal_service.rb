@@ -3,11 +3,6 @@ require 'paypal-sdk-rest'
 class PaypalService
   include Rails.application.routes.url_helpers
   include PayPal::SDK::REST
-  PayPal::SDK::REST.set_config(
-    mode: "sandbox",
-    client_id: "AajN5CdCcVFuea3nyJXXwZnAdkTxvgcd1IKeTcQVufHKl09WLTlmD5UKU7efXgC_VcZjUDTLveZ29FAt",
-    client_secret: "EPF0A4akXxhuDx3BFKQGcEuYZw4_5sS13of5hX9MnjtvAVy1WmcPTj0cBk9lGxJ3TNqroDCTMC6PnaZc"
-  )
 
   # PLANS ======================================================================
 
