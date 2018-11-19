@@ -150,6 +150,7 @@ class Invoice < ActiveRecord::Base
           currency_id: subscription.currency.id,
           issued_at: Time.parse(paypal_body['create_time']),
           total: paypal_body['resource']['amount']['total'].to_f,
+          sub_total: paypal_body['resource']['amount']['total'].to_f,
           paypal_payment_guid: paypal_body['resource']['id']
         )
         if inv.save
