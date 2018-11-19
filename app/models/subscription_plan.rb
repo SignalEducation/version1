@@ -52,7 +52,7 @@ class SubscriptionPlan < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 255 }
   validates :payment_frequency_in_months, inclusion: { in: PAYMENT_FREQUENCIES }
   validates :paypal_state, inclusion: { in: PAYPAL_STATES }, allow_nil: true
-  validates :currency_id, presence: true
+  validates :currency, presence: true
   validates :price, presence: true
   validates :available_from, presence: true
   validates :available_to, presence: true

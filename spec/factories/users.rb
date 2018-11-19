@@ -60,7 +60,7 @@ FactoryBot.define do
     sequence(:email)      { |n| "john.smith-#{n}@example.com" }
     first_name            'John'
     last_name             'Smith'
-    country_id            { Country.first.try(:id) || 1 }
+    association           :country
     password              '123123123'
     password_confirmation '123123123'
     active                                    true
@@ -68,11 +68,11 @@ FactoryBot.define do
     locale                                    'en'
     date_of_birth                              '2001-10-03'
     student_number                             '123456789'
+    association :user_group
 
     factory :free_trial_student do
       sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       email_verified                  true
       email_verification_code         nil
@@ -91,7 +91,6 @@ FactoryBot.define do
     factory :subscription_student do
       sequence(:email)                  { |n| "subscription.student-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       email_verified                  true
       email_verification_code         nil
@@ -111,7 +110,6 @@ FactoryBot.define do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
       active                            true
       free_trial                        true
-      user_group_id                     1
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
       account_activation_code           'abc123'
       email_verified                  true
@@ -167,7 +165,6 @@ FactoryBot.define do
     factory :comp_user do
       sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       email_verified                  true
       email_verification_code         nil
       email_verified_at               Time.now
@@ -188,74 +185,61 @@ FactoryBot.define do
     factory :tutor_user do
       sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :system_requirements_user do
       sequence(:email)                  { |n| "system.requirements.manager-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :content_management_user do
       sequence(:email)                  { |n| "content.management.user-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :stripe_management_user do
       sequence(:email)                  { |n| "stripe.manager-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :user_management_user do
       sequence(:email)                  { |n| "user.manager-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :developers_user do
       sequence(:email)                  { |n| "developer.user-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :marketing_manager_user do
       sequence(:email)                  { |n| "marketing.manager-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :user_group_manager_user do
       sequence(:email)                  { |n| "user.group.manager-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :admin_user do
       sequence(:email)                  { |n| "admin.user-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
 
     factory :blocked_user do
       sequence(:email)                  { |n| "blocked.user-#{n}@example.com" }
       active                            true
-      user_group_id                     1
       stripe_customer_id                nil
     end
-
-
   end
-
 end

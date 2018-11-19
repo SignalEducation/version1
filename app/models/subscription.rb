@@ -302,8 +302,12 @@ class Subscription < ActiveRecord::Base
   end
 
   def reactivation_options
-    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id,
-                           available_to_students: true).where('price > 0.0').generally_available.all_active.all_in_order
+    SubscriptionPlan
+      .where(
+        currency_id: self.subscription_plan.currency_id,
+        available_to_students: true
+      )
+      .where('price > 0.0').generally_available.all_active.all_in_order
   end
 
   def schedule_paypal_cancellation
