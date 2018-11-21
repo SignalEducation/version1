@@ -34,13 +34,15 @@ describe PaypalService, type: :service do
   end
 
   describe '#create_billing_agreement' do
-    let(:subscription) { build_stubbed(:subscription) }
-    let(:agreement) { class_double('Agreement').as_stubbed_const(:transfer_nested_constants => true) }
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+    let!(:subscription) { create(:subscription) }
 
     it 'calls CREATE on an instance of PayPal Agreement' do
-      expect(agreement).to receive(:create)
+      expect_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:create).and_return(true)
 
-      subject.create_billing_agreement(build(:subscription))
+      subject.create_billing_agreement(subscription)
     end
   end
 

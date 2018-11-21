@@ -36,12 +36,12 @@ end
 
 # PAYPAL CONFIGURATION #########################################################
 
-# PayPal::SDK::Core::Config.load(File.expand_path('./config/paypal.yml', __FILE__), 'test')
+# PayPal::SDK::Core::Config.load(File.expand_path(Rails.root.join('config/paypal.yml').to_s, __FILE__), 'test')
 # require 'paypal-sdk-rest'
 # include PayPal::SDK::REST
 # include PayPal::SDK::Core::Logging
 # require 'logger'
-# PayPal::SDK.load(File.expand_path('./config/paypal.yml', __FILE__), 'test')
+# PayPal::SDK.load(File.expand_path(Rails.root.join('config/paypal.yml').to_s, __FILE__), 'test')
 # PayPal::SDK.logger = Logger.new(STDERR)
 
 # JS DRIVER ####################################################################

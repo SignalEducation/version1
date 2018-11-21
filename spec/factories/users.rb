@@ -69,6 +69,9 @@ FactoryBot.define do
     date_of_birth                              '2001-10-03'
     student_number                             '123456789'
     association :user_group
+    after :create do |user|
+      create :student_access, user: user
+    end
 
     factory :free_trial_student do
       sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
