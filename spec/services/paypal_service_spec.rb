@@ -2,39 +2,45 @@ require 'rails_helper'
 
 describe PaypalService, type: :service do
 
-  describe '#create_billing_agreement' do
+  describe '#create_and_return_subscription' do
     let(:subscription) { build_stubbed(:subscription) }
-    let(:auth_response) { File.read('./spec/fixtures/paypal/auth_request_response.rb').to_json }
-    let(:billing_agreement) { File.read('./spec/fixtures/paypal/billing_agreement_response.rb').to_json }
+    let(:agreement_dbl) { 
+      double(
+        'Agreement', 
+        token: 'tok_FDAF343DFDA', 
+        links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
+        state: 'PENDING'
+      )
+    }
 
-    before :each do
-      stub_request(:post, "https://api.sandbox.paypal.com/v1/oauth2/token").
-        with(
-          body: {"grant_type"=>"client_credentials"},
-          headers: {
-            'Accept'=>'*/*',
-            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Authorization'=>'Basic UkFORE9NX0NMSUVOVF9JRDpSQU5ET01fQ0xJRU5UX1NFQ1JFVA==',
-            'Content-Type'=>'application/x-www-form-urlencoded',
-            'User-Agent'=>'PayPalSDK/PayPal-Ruby-SDK 1.7.2 (paypal-sdk-core 1.7.2; ruby 2.2.9p480-x86_64-darwin17;OpenSSL 1.0.2p  14 Aug 2018)'
-          }
-        ).to_return(
-          status: 200,
-          body: auth_response, 
-          headers: {}
-        )
-      stub_request(:post, "https://api.sandbox.paypal.com/v1/payments/billing-agreements/").
-        to_return(
-          status: 200,
-          body: billing_agreement, 
-          headers: {}
-        )
+    it 'calls the #create_billing_agreement method' do
+      expect(subject).to receive(:create_billing_agreement).with(subscription).and_return(agreement_dbl)
+
+      subject.create_and_return_subscription(subscription)
     end
 
-    it 'calls the correct paypal REST API method' do
-      # expect_any_instance_of(Agreement).to receive(:create).and_return(true)
+    it 'returns an updated subscription object with the PayPal attributes' do
+      allow(subject).to receive(:create_billing_agreement).with(subscription).and_return(agreement_dbl)
+      expect(subscription.paypal_token).to be_nil
+      expect(subscription.paypal_approval_url).to be_nil
+      expect(subscription.paypal_status).to be_nil
 
-      subject.send(:create_billing_agreement, subscription, subscription.user)
+      subject.create_and_return_subscription(subscription)
+
+      expect(subscription.paypal_token).not_to be_nil
+      expect(subscription.paypal_approval_url).not_to be_nil
+      expect(subscription.paypal_status).not_to be_nil
+    end
+  end
+
+  describe '#create_billing_agreement' do
+    let(:subscription) { build_stubbed(:subscription) }
+    let(:agreement) { class_double('Agreement').as_stubbed_const(:transfer_nested_constants => true) }
+
+    it 'calls CREATE on an instance of PayPal Agreement' do
+      expect(agreement).to receive(:create)
+
+      subject.create_billing_agreement(build(:subscription))
     end
   end
 
@@ -56,7 +62,7 @@ describe PaypalService, type: :service do
     let(:subscription) { build_stubbed(:subscription) }
 
     it 'returns the correct hash' do
-      expect(subject.send(:agreement_attributes, subscription, subscription.user))
+      expect(subject.send(:agreement_attributes, subscription))
         .to eq (
           {
             name: subscription.subscription_plan.name,
@@ -144,7 +150,7 @@ describe PaypalService, type: :service do
 
     describe '#update_subscription_plan' do
       let(:plan) { create(:subscription_plan, paypal_state: 'CREATED') }
-      let(:paypal_plan) { OpenStruct.new({ id: "PLAN-fdsfsdf43245423532", state: 'ACTIVE' }) }
+      let(:paypal_plan) { double({ id: "PLAN-fdsfsdf43245423532", state: 'ACTIVE' }) }
 
       it 'updates the paypal_state of a subscription' do
         expect(plan.paypal_state).to eq 'CREATED'

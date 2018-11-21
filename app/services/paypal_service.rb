@@ -65,7 +65,7 @@ class PaypalService
   # BILLING AGREEMENTS =========================================================
 
   def create_and_return_subscription(subscription)
-    agreement = create_billing_agreement(subscription, subscription.user)
+    agreement = create_billing_agreement(subscription)
     subscription.assign_attributes(
       paypal_token: agreement.token,
       paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href,
@@ -74,8 +74,8 @@ class PaypalService
     subscription
   end
 
-  def create_billing_agreement(subscription, user)
-    agreement = Agreement.new(agreement_attributes(subscription, user))
+  def create_billing_agreement(subscription)
+    agreement = Agreement.new(agreement_attributes(subscription))
     if agreement.create
       agreement
     else
@@ -142,7 +142,7 @@ class PaypalService
 
   private
 
-  def agreement_attributes(subscription, user)
+  def agreement_attributes(subscription)
     subscription_plan = subscription.subscription_plan
     {
       name: subscription_plan.name,
@@ -151,9 +151,9 @@ class PaypalService
       payer: {
         payment_method: "paypal",
         payer_info: {
-          email: user.email,
-          first_name: user.first_name,
-          last_name: user.last_name
+          email: subscription.user.email,
+          first_name: subscription.user.first_name,
+          last_name: subscription.user.last_name
         }
       },
       override_merchant_preferences: {

@@ -35,7 +35,7 @@ class Subscription < ActiveRecord::Base
                   :stripe_guid, :stripe_customer_data, :coupon_id,
                   :complimentary, :paypal_status, :state
 
-  delegate :currency, to: :subscription_plan
+  # delegate :currency, to: :subscription_plan
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
