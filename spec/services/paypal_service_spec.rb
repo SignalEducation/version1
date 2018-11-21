@@ -2,6 +2,52 @@ require 'rails_helper'
 
 describe PaypalService, type: :service do
 
+  describe '#execute_billing_agreement' do
+    let(:subscription) { create(:subscription) }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    it 'must have a subscription' do
+      expect { subject.execute_billing_agreement() }.to raise_error ArgumentError
+    end
+
+    it 'must have a token' do
+      expect { subject.execute_billing_agreement(subscription) }.to raise_error ArgumentError
+      expect { subject.execute_billing_agreement(subscription, 'token') }.not_to raise_error ArgumentError   
+    end
+
+    it 'calls EXECUTE on an instance of PayPal Agreement' do
+      expect_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:execute).and_return(true)
+      expect_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:token=)
+
+      subject.execute_billing_agreement(subscription, 'token')
+    end
+
+    it 'accurately updates the subscription' do
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:execute).and_return(true)
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:state).and_return('Active')
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:id).and_return('AGREEMENT_ID')
+
+      expect {
+        subject.execute_billing_agreement(subscription, 'dummy_token')
+      }.to change { subscription.paypal_status }.from(nil).to('Active')
+       .and change { subscription.active }.from(false).to(true)
+       .and change { subscription.paypal_subscription_guid }.from(nil).to('AGREEMENT_ID')
+    end
+
+    it 'starts the subscription' do
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:execute).and_return(true)
+      expect(subscription.state).to eq 'pending'
+
+      subject.execute_billing_agreement(subscription, 'dummy_token')
+
+      subscription.reload
+      expect(subscription.state).to eq 'active'
+    end
+  end
+
   describe '#create_and_return_subscription' do
     let(:subscription) { build_stubbed(:subscription) }
     let(:agreement_dbl) { 
