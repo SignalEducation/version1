@@ -2,6 +2,20 @@ require 'rails_helper'
 
 describe PaypalService, type: :service do
 
+  describe 'subscription crud actions' do
+    describe '#create_plan' do
+      it 'does stuff'
+    end
+
+    describe '#update_plan' do
+      it 'does stuff'
+    end
+
+    describe '#delete_plan' do
+      it 'does stuff'
+    end
+  end
+
   describe '#execute_billing_agreement' do
     let(:subscription) { create(:subscription) }
 
