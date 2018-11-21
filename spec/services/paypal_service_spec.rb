@@ -48,71 +48,77 @@ describe PaypalService, type: :service do
   #   patch.path = "/"
   #   patch.value = update_attributes
   #   patch
-  # end
+  # end  
 
-  describe '#plan_attributes' do
-    let(:plan) { create(:subscription_plan) }
+  describe 'async methods that communicate with PayPal / Stripe' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async).and_return(true)
+    end
 
-    it 'returns the correct hash' do
-      expect(subject.send(:plan_attributes, plan))
-        .to eq (
-          {
-            name: "LearnSignal #{plan.name}",
-            description: plan.description,
-            type: "INFINITE",
-            payment_definitions: [
-              {
-                name: "Regular payment definition",
-                type: "REGULAR",
-                frequency: "MONTH",
-                frequency_interval: plan.payment_frequency_in_months.to_s,
-                amount: {
-                  value: plan.price.to_s,
+    describe '#plan_attributes' do
+      let(:plan) { create(:subscription_plan) }
+
+      it 'returns the correct hash' do
+        expect(subject.send(:plan_attributes, plan))
+          .to eq (
+            {
+              name: "LearnSignal #{plan.name}",
+              description: plan.description,
+              type: "INFINITE",
+              payment_definitions: [
+                {
+                  name: "Regular payment definition",
+                  type: "REGULAR",
+                  frequency: "MONTH",
+                  frequency_interval: plan.payment_frequency_in_months.to_s,
+                  amount: {
+                    value: plan.price.to_s,
+                    currency: plan.currency.iso_code
+                  },
+                  cycles: "0",
+                }
+              ],
+              merchant_preferences: {
+                setup_fee: {
+                  value: "0",
                   currency: plan.currency.iso_code
                 },
-                cycles: "0",
+                return_url: "https://example.com",
+                cancel_url: "https://example.com/cancel",
+                auto_bill_amount: "YES",
+                initial_fail_amount_action: "CANCEL",
+                max_fail_attempts: "4"
               }
-            ],
-            merchant_preferences: {
-              setup_fee: {
-                value: "0",
-                currency: plan.currency.iso_code
-              },
-              return_url: "https://example.com",
-              cancel_url: "https://example.com/cancel",
-              auto_bill_amount: "YES",
-              initial_fail_amount_action: "CANCEL",
-              max_fail_attempts: "4"
             }
-          }
-        )
+          )
+      end
     end
-  end
 
-  describe '#update_subscription_plan' do
-    let(:plan) { create(:subscription_plan, paypal_state: 'CREATED') }
-    let(:paypal_plan) { OpenStruct.new({ id: "PLAN-fdsfsdf43245423532", state: 'ACTIVE' }) }
+    describe '#update_subscription_plan' do
+      let(:plan) { create(:subscription_plan, paypal_state: 'CREATED') }
+      let(:paypal_plan) { OpenStruct.new({ id: "PLAN-fdsfsdf43245423532", state: 'ACTIVE' }) }
 
-    it 'updates the paypal_state of a subscription' do
-      expect(plan.paypal_state).to eq 'CREATED'
-      expect(plan.paypal_guid).to be_nil
+      it 'updates the paypal_state of a subscription' do
+        expect(plan.paypal_state).to eq 'CREATED'
+        expect(plan.paypal_guid).to be_nil
 
-      subject.send(:update_subscription_plan, plan, paypal_plan)
+        subject.send(:update_subscription_plan, plan, paypal_plan)
 
-      expect(plan.paypal_state).to eq 'ACTIVE'
-      expect(plan.paypal_state).not_to be_nil
+        expect(plan.paypal_state).to eq 'ACTIVE'
+        expect(plan.paypal_state).not_to be_nil
+      end
     end
-  end
 
-  describe '#update_subscription_plan_state' do
-    let(:plan) { create(:subscription_plan, paypal_state: 'CREATED') }
+    describe '#update_subscription_plan_state' do
+      let(:plan) { create(:subscription_plan, paypal_state: 'CREATED') }
 
-    it 'updates the paypal_state of a subscription' do
-      expect(plan.paypal_state).to eq 'CREATED'
+      it 'updates the paypal_state of a subscription' do
+        expect(plan.paypal_state).to eq 'CREATED'
 
-      subject.send(:update_subscription_plan_state, plan, 'ACTIVE')
+        subject.send(:update_subscription_plan_state, plan, 'ACTIVE')
 
-      expect(plan.paypal_state).to eq 'ACTIVE'
+        expect(plan.paypal_state).to eq 'ACTIVE'
+      end
     end
   end
 
