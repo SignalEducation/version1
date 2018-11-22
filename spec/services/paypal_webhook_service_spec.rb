@@ -76,25 +76,6 @@ describe PaypalWebhookService, type: :service do
     end
   end
 
-  # def trigger_payment_actions
-  #   case @webhook.event_type
-  #   when 'BILLING.SUBSCRIPTION.CREATED'
-  #     Rails.logger.info "PAYPAL WEBHOOK: TRIGGERED SUBSCRIPTION.CREATED ACTION"
-  #   when 'BILLING.SUBSCRIPTION.CANCELLED'
-  #     @webhook.process_subscription_cancelled
-  #   when 'BILLING.SUBSCRIPTION.RE-ACTIVATED'
-  #     # do stuff
-  #   when 'BILLING.SUBSCRIPTION.SUSPENDED'
-  #     # do stuff
-  #   when 'BILLING.SUBSCRIPTION.UPDATED'
-  #     # do stuff
-  #   when 'PAYMENT.SALE.COMPLETED'
-  #     @webhook.process_sale_completed
-  #   when 'PAYMENT.SALE.DENIED'
-  #     @webhook.process_sale_denied
-  #   end
-  # end
-
   describe '#transmission_id' do
     it 'returns the header request transmission_id' do
       expect(hook_service.send(:transmission_id)).to eq webhook_request.headers["Paypal-Transmission-Id"]
