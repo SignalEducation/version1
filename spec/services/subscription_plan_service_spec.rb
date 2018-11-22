@@ -47,6 +47,78 @@ describe SubscriptionPlanService, type: :service do
   # PRIVATE METHODS ############################################################
 
   describe '#create_remote_plans' do
-    it 'does stuff'
+    before :each do
+      allow_any_instance_of(StripeService).to receive(:create_plan)
+      allow_any_instance_of(PaypalService).to receive(:create_plan)
+    end
+
+    it 'calls #create_plan on an instance of StripeService' do
+      expect_any_instance_of(StripeService).to receive(:create_plan)
+
+      sub_plan_service.send(:create_remote_plans)
+    end
+
+    it 'calls #create_plan on an instance of PaypalService' do
+      expect_any_instance_of(PaypalService).to receive(:create_plan)
+
+      sub_plan_service.send(:create_remote_plans)
+    end
+  end
+
+  describe '#create_remote_plans' do
+    before :each do
+      allow_any_instance_of(StripeService).to receive(:create_plan)
+      allow_any_instance_of(PaypalService).to receive(:create_plan)
+    end
+
+    it 'calls #create_plan on an instance of StripeService' do
+      expect_any_instance_of(StripeService).to receive(:create_plan)
+
+      sub_plan_service.send(:create_remote_plans)
+    end
+
+    it 'calls #create_plan on an instance of PaypalService' do
+      expect_any_instance_of(PaypalService).to receive(:create_plan)
+
+      sub_plan_service.send(:create_remote_plans)
+    end
+  end
+
+  describe '#update_remote_plans' do
+    before :each do
+      allow_any_instance_of(StripeService).to receive(:update_plan)
+      allow_any_instance_of(PaypalService).to receive(:update_plan)
+    end
+
+    it 'calls #update_plan on an instance of StripeService' do
+      expect_any_instance_of(StripeService).to receive(:update_plan)
+
+      sub_plan_service.send(:update_remote_plans)
+    end
+
+    it 'calls #update_plan on an instance of PaypalService' do
+      expect_any_instance_of(PaypalService).to receive(:update_plan)
+
+      sub_plan_service.send(:update_remote_plans)
+    end
+  end
+
+  describe '#delete_remote_plans' do
+    before :each do
+      allow_any_instance_of(StripeService).to receive(:delete_plan)
+      allow_any_instance_of(PaypalService).to receive(:delete_plan)
+    end
+
+    it 'calls #delete_plan on an instance of StripeService' do
+      expect_any_instance_of(StripeService).to receive(:delete_plan)
+
+      sub_plan_service.send(:delete_remote_plans)
+    end
+
+    it 'calls #delete_plan on an instance of PaypalService' do
+      expect_any_instance_of(PaypalService).to receive(:delete_plan)
+
+      sub_plan_service.send(:delete_remote_plans)
+    end
   end
 end
