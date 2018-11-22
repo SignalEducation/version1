@@ -1,5 +1,5 @@
 class SubscriptionPlanService
-  attr_reader :subscription_plan
+  attr_reader :plan
 
   def initialize(subscription_plan)
     @plan = subscription_plan

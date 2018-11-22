@@ -2,6 +2,8 @@ require 'rails_helper'
 
 describe PaypalService, type: :service do
 
+  # INSTANCE METHODS ###########################################################
+
   describe 'subscription crud actions' do
     let(:subscription_plan) { create(:subscription_plan) }
 
