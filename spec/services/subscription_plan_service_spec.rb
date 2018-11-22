@@ -4,10 +4,6 @@ describe SubscriptionPlanService, type: :service do
   let(:plan) { build_stubbed(:subscription_plan) }
   let(:sub_plan_service) { SubscriptionPlanService.new(plan) }
 
-  before :each do
-    # allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-  end
-
   # INSTANCE METHODS ###########################################################
 
   describe '#queue_async' do

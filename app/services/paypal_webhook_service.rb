@@ -1,6 +1,6 @@
 require 'paypal-sdk-rest'
 
-class PaypalWebhooksService
+class PaypalWebhookService
   include PayPal::SDK::REST
   include PayPal::SDK::Core::Logging
 
