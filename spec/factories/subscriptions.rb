@@ -27,13 +27,15 @@ FactoryBot.define do
   factory :subscription do
     association(:user)
     association(:subscription_plan)
-    sequence(:stripe_guid)      { |n| "sub_DUMMY-#{n}" }
     next_renewal_date     { 6.days.from_now}
     complimentary         false
     stripe_status        'active'
     livemode              false
     terms_and_conditions  true
 
+    factory :stripe_subscription do
+      sequence(:stripe_guid)      { |n| "sub_DUMMY-#{n}" }
+    end
 
     factory :valid_subscription do
       stripe_status        'active'

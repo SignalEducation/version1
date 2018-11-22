@@ -20,6 +20,7 @@ describe SubscriptionService, type: :service do
     describe 'for Stripe subscriptions' do
       before :each do
         allow(sub_service).to receive(:paypal?).and_return(false)
+        allow(subscription).to receive(:stripe_guid).and_return('test_guid')
       end
 
       it 'calls #change_plan on the StripeService' do
@@ -34,10 +35,101 @@ describe SubscriptionService, type: :service do
     it 'does stuff'
   end
 
+  describe '#paypal?' do
+    describe 'with :use_paypal param' do
+      let(:paypal_sub) { build_stubbed(:subscription, use_paypal: 'true') }
+      let(:paypal_sub_service) { SubscriptionService.new(paypal_sub) }
+
+      it 'returns TRUE if :use_paypal is true' do
+        expect(
+          paypal_sub_service.send(:paypal?)
+        ).to be true
+      end
+    end
+
+    describe 'with paypal_token' do
+      let(:paypal_sub) { build_stubbed(:subscription, paypal_token: 'true') }
+      let(:paypal_sub_service) { SubscriptionService.new(paypal_sub) }
+
+      it 'returns TRUE if :paypal_token is present' do
+        expect(
+          paypal_sub_service.send(:paypal?)
+        ).to be true
+      end
+    end
+
+    describe 'without paypal_token or use_paypal' do
+      it 'returns FALSE' do
+        expect(
+          sub_service.send(:paypal?)
+        ).to be false
+      end
+    end
+  end
+
+  describe '#stripe?' do
+    describe 'with :stripe_guid present' do
+      let(:stripe_sub) { build_stubbed(:subscription, stripe_guid: 'test_guid') }
+      let(:stripe_sub_service) { SubscriptionService.new(stripe_sub) }
+
+      it 'returns TRUE if :use_paypal is true' do
+        expect(
+          stripe_sub_service.send(:stripe?)
+        ).to be true
+      end
+    end
+
+    describe 'with stripe_token' do
+      let(:stripe_sub) { build_stubbed(:subscription, stripe_token: 'test_token') }
+      let(:stripe_sub_service) { SubscriptionService.new(stripe_sub) }
+
+      it 'returns TRUE if :stripe_token is present' do
+        expect(
+          stripe_sub_service.send(:stripe?)
+        ).to be true
+      end
+    end
+
+    describe 'without stripe_token or stripe_guid' do
+      let(:stripe_sub) { build(:subscription, stripe_guid: nil) }
+      let(:stripe_sub_service) { SubscriptionService.new(stripe_sub) }
+
+      it 'returns FALSE' do
+        expect(
+          sub_service.send(:stripe?)
+        ).to be false
+      end
+    end
+  end
+
   # PRIVATE METHODS ############################################################
 
   describe '#valid_paypal_subscription?' do
-    it 'does stuff'
+    it 'returns TRUE if :use_paypal is passed as a param' do
+      expect(
+        sub_service.send(:valid_paypal_subscription?, { subscription: { use_paypal: true } })
+      ).to be true
+    end
+
+    it 'returns FALSE if :use_paypal is not passed as a param' do
+      expect(
+        sub_service.send(:valid_paypal_subscription?, { subscription: { another: true } })
+      ).not_to be true
+    end
+  end
+
+  describe '#valid_stripe_subscription?' do
+    it 'returns TRUE if :stripe_token is passed as a param' do
+      expect(
+        sub_service.send(:valid_stripe_subscription?, { subscription: { stripe_token: true } })
+      ).to be true
+    end
+
+    it 'returns FALSE if :stripe_token is not passed as a param' do
+      expect(
+        sub_service.send(:valid_stripe_subscription?, { subscription: { another: true } })
+      ).not_to be true
+    end
   end
 end
 
@@ -58,14 +150,6 @@ end
 #     end
 #   end
 
-#   def paypal?
-#     (@subscription.use_paypal.present? && @subscription.use_paypal == 'true') || @subscription.paypal_token.present?
-#   end
-
-#   def stripe?
-#     @subscription.stripe_token.present? || @subscription.stripe_guid.present?
-#   end
-
 #   def check_valid_subscription?(params)
 #     if valid_paypal_subscription?(params) || valid_stripe_subscription?(params)
 #       true
@@ -81,18 +165,4 @@ end
 #         subscription_id: @subscription.id
 #       )
 #     end
-#   end
-
-#   private
-
-#   def valid_paypal_subscription?(params)
-#     params[:subscription][:use_paypal].present? &&
-#       @subscription &&
-#       @subscription.subscription_plan
-#   end
-
-#   def valid_stripe_subscription?(params)
-#     params[:subscription][:stripe_token].present? &&
-#       @subscription &&
-#       @subscription.subscription_plan
 #   end
