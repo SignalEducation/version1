@@ -3,16 +3,62 @@ require 'rails_helper'
 describe PaypalService, type: :service do
 
   describe 'subscription crud actions' do
+    let(:subscription_plan) { create(:subscription_plan) }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
     describe '#create_plan' do
-      it 'does stuff'
+      it 'calls CREATE on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+        allow_any_instance_of(PayPal::SDK::REST::DataTypes::Plan).to receive(:update)
+        expect_any_instance_of(PayPal::SDK::REST::DataTypes::Plan).to receive(:create)
+
+        subject.create_plan(subscription_plan)
+      end
+
+      it 'calls #update_subscription_plan' do
+        allow_any_instance_of(PayPal::SDK::REST::DataTypes::Plan).to receive(:update)
+        allow_any_instance_of(PayPal::SDK::REST::DataTypes::Plan).to receive(:create)
+        expect(subject).to receive(:update_subscription_plan).with(subscription_plan, anything)
+
+        subject.create_plan(subscription_plan)
+      end
+
+      it 'calls #update_subscription_plan_state' do
+        allow_any_instance_of(PayPal::SDK::REST::DataTypes::Plan).to receive(:update).and_return(true)
+        allow_any_instance_of(PayPal::SDK::REST::DataTypes::Plan).to receive(:create)
+        expect(subject).to receive(:update_subscription_plan_state).with(subscription_plan, 'ACTIVE')
+
+        subject.create_plan(subscription_plan)
+      end
     end
 
     describe '#update_plan' do
-      it 'does stuff'
+      it 'calls #delete_plan followed by #create_plan' do
+        expect(subject).to receive(:delete_plan)
+        expect(subject).to receive(:create_plan)
+
+        subject.update_plan(subscription_plan)
+      end
     end
 
     describe '#delete_plan' do
-      it 'does stuff'
+      it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+        dbl = double
+        allow(dbl).to receive(:update)
+        expect(PayPal::SDK::REST::DataTypes::Plan).to receive(:find).and_return(dbl)
+
+        subject.delete_plan('stub_paypal_plan_id')
+      end
+
+      it 'calls UPDATE on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+        dbl = double
+        expect(dbl).to receive(:update)
+        allow(PayPal::SDK::REST::DataTypes::Plan).to receive(:find).and_return(dbl)
+
+        subject.delete_plan('stub_paypal_plan_id')
+      end
     end
   end
 
