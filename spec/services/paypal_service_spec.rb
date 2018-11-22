@@ -239,17 +239,36 @@ describe PaypalService, type: :service do
     end
   end
 
-  # describe '#patch' do
-  #   let(:)
-  # end
+  describe '#patch' do
+    before :each do
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Patch).to receive(:op=)
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Patch).to receive(:path=)
+      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Patch).to receive(:value=)
+    end
 
-  # def patch(op, update_attributes)
-  #   patch = Patch.new
-  #   patch.op = op
-  #   patch.path = "/"
-  #   patch.value = update_attributes
-  #   patch
-  # end  
+    it 'sets the OP on the patch' do
+      expect_any_instance_of(PayPal::SDK::REST::DataTypes::Patch).to receive(:op=)
+
+      subject.send(:patch, 'CREATE', {})
+    end
+
+    it 'sets the path on the patch to /' do
+      expect_any_instance_of(PayPal::SDK::REST::DataTypes::Patch).to receive(:path=)
+
+      subject.send(:patch, 'CREATE', {})
+    end
+
+    it 'sets the value on the patch to the passed in attributes' do
+      attributes = { attr_1: 'test_1', attr_2: 'test_2' }
+      expect_any_instance_of(PayPal::SDK::REST::DataTypes::Patch).to receive(:value=).with(attributes)
+
+      subject.send(:patch, 'CREATE', attributes)
+    end
+
+    it 'returns the patch object' do
+      expect(subject.send(:patch, 'CREATE', {})).to be_instance_of(PayPal::SDK::REST::DataTypes::Patch)
+    end
+  end
 
   describe 'async methods that communicate with PayPal / Stripe' do
     before :each do

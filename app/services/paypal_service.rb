@@ -76,7 +76,6 @@ class PaypalService
 
   def create_billing_agreement(subscription)
     agreement = Agreement.new(agreement_attributes(subscription))
-    binding.pry
     if agreement.create
       agreement
     else
