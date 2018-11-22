@@ -52,6 +52,70 @@ describe StripeService, type: :service do
     end
   end
 
+  describe '#get_plan' do
+    it 'calls #retrieve on Stripe::Plan with the correct args' do
+      expect(Stripe::Plan).to receive(:retrieve).with({id: 'test_id'})
+
+      subject.get_plan('test_id')
+    end
+  end
+
+  describe '#update_plan' do
+    let(:plan) { build_stubbed(:subscription_plan, stripe_guid: 'test_id') }
+
+    before :each do
+      @dbl = double
+      allow(subject).to receive(:get_plan).with('test_id').and_return(@dbl)
+      allow(@dbl).to receive(:name=)
+      allow(@dbl).to receive(:save)
+    end
+
+    it 'calls #get_plan with the correct args' do
+      expect(subject).to receive(:get_plan).with('test_id').and_return(@dbl)
+
+      subject.update_plan(plan)
+    end
+
+    it 'calls #name= on the Plan with the correct args' do
+      expect(@dbl).to receive(:name=).with("LearnSignal #{plan.name}")
+
+      subject.update_plan(plan)
+    end
+
+    it 'calls #save on the Plan' do
+      expect(@dbl).to receive(:save)
+
+      subject.update_plan(plan)
+    end
+  end
+
+  describe '#delete_plan' do
+    let(:plan) { build_stubbed(:subscription_plan) }
+
+    it 'calls #get_plan with the correct args' do
+      dbl = double
+      expect(subject).to receive(:get_plan).with('test_id').and_return(dbl)
+      allow(dbl).to receive(:delete)
+
+      subject.delete_plan('test_id')
+    end
+
+    it 'calls #delete on a PayPal plan if it exists' do
+      dbl = double
+      allow(subject).to receive(:get_plan).with('test_id').and_return(dbl)
+      expect(dbl).to receive(:delete)
+
+      subject.delete_plan('test_id')
+    end
+
+    it 'does not call #delete on a PayPal plan if it does not exist' do
+      dbl = double
+      allow(subject).to receive(:get_plan).with('test_id').and_return(nil)
+      expect(dbl).not_to receive(:delete)
+
+      subject.delete_plan('test_id')
+    end
+  end
 
   # PRIVATE METHODS ############################################################
 end
