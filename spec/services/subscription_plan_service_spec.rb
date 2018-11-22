@@ -65,25 +65,6 @@ describe SubscriptionPlanService, type: :service do
     end
   end
 
-  describe '#create_remote_plans' do
-    before :each do
-      allow_any_instance_of(StripeService).to receive(:create_plan)
-      allow_any_instance_of(PaypalService).to receive(:create_plan)
-    end
-
-    it 'calls #create_plan on an instance of StripeService' do
-      expect_any_instance_of(StripeService).to receive(:create_plan)
-
-      sub_plan_service.send(:create_remote_plans)
-    end
-
-    it 'calls #create_plan on an instance of PaypalService' do
-      expect_any_instance_of(PaypalService).to receive(:create_plan)
-
-      sub_plan_service.send(:create_remote_plans)
-    end
-  end
-
   describe '#update_remote_plans' do
     before :each do
       allow_any_instance_of(StripeService).to receive(:update_plan)
