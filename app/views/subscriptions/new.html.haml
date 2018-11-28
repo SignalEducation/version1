@@ -1,7 +1,14 @@
 .upgrade
   #wrapper
     #upgrade-subscription
-      =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+      =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
+        =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+        =f.hidden_field :user_id, value: current_user.id
+        =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
+        =f.hidden_field :stripe_token
+        =f.hidden_field :use_paypal, value: false
+        -if params[:coupon]
+          =hidden_field_tag :hidden_coupon_code
 
         .bg-asphalt
           .container
@@ -14,154 +21,127 @@
               %h1.h1-mega Select one of our plans
               %p.text-lg.mb-0 Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
               %p.text-lg People learn in different ways. Whatever way you want to learn, we've got you covered.
-          .container
-            =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form', class: 'payment'} do |f|
-              =f.hidden_field :user_id, value: current_user.id
-              =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
-              =f.hidden_field :stripe_token
-              =f.hidden_field :use_paypal, value: false
-              -if params[:coupon]
-                =hidden_field_tag :hidden_coupon_code
+          .container.payment
+            .row
+              .col-lg-6.mb-5.mb-xl-0
+                %fieldset
+                  %legend.sr-only Select a Plan
+                  .form-group
+                    .custom-control.custom-radio
+                      %input#monthly.custom-control-input.custom-control-input-card.style-checkbox{:checked => "checked", :name => "plans", :type => "radio"}/
+                      %label.custom-control-label{:for => "monthly"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            %span Monthly
+                        %span.custom-label-amount
+                          %span.text-purple5.text-xl €34.99
+                          %span.p Billed every month
+                        %span.custom-check
+                          / custom checkbox
+                  .form-group
+                    .custom-control.custom-radio
+                      %input#quarterly.custom-control-input.custom-control-input-card.style-checkbox{:name => "plans", :type => "radio"}/
+                      %label.custom-control-label{:for => "quarterly"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            %span Quarterly
+                          %span.discount
+                            %span.text-with-bg.bg-torquoise4 16%
+                            off monthly price
+                        %span.custom-label-amount
+                          %span.text-purple5.text-xl €84.99
+                          %span.p Billed every 3 months
+                        %span.custom-check
+                          / custom checkbox
+                  .form-group
+                    .custom-control.custom-radio
+                      %input#yearly.custom-control-input.custom-control-input-card.style-checkbox{:name => "plans", :type => "radio"}/
+                      %label.custom-control-label{:for => "yearly"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            %span Yearly
+                          %span.discount
+                            %span.text-with-bg.bg-torquoise4 30%
+                            off monthly price
+                        %span.custom-label-amount
+                          %span.text-purple5.text-xl €349.99
+                          %span.p Billed every year
+                        %span.custom-check
+                          / custom checkbox
 
-              .row.row-lg
-                .col-xl-6.mb-5.mb-xl-0
-                  %fieldset
-                    %legend.sr-only Select a Plan
-                    .form-group
-                      .custom-control.custom-radio
-                      <input class="custom-control-input custom-control-input-card style-checkbox"
-                             type="radio" id="monthly" name="plans" checked >
-                      <label class="custom-control-label" for="monthly">
-                        <span class="custom-label-info">
-                          <span class="h3 m-0"><span>Monthly</span></span>
-                          
-                        </span>
-                        <span class="custom-label-amount">
-                          <span class="text-purple5 text-xl">&euro;34.99</span>
-                          <span class="p">Billed every month</span>
-                        </span>
-                        
-                        <span class="custom-check"><!-- custom checkbox --></span>
-                      </label>
-                      </div>                  </div>
-                    <div class="form-group">
-                      <div class="custom-control custom-radio">
-                      <input class="custom-control-input custom-control-input-card style-checkbox"
-                             type="radio" id="quarterly" name="plans"  >
-                      <label class="custom-control-label" for="quarterly">
-                        <span class="custom-label-info">
-                          <span class="h3 m-0"><span>Quarterly</span></span>
-                          <span class="discount"><span class="text-with-bg bg-torquoise4">16%</span> off monthly price</span>
-                        </span>
-                        <span class="custom-label-amount">
-                          <span class="text-purple5 text-xl">&euro;84.99</span>
-                          <span class="p">Billed every 3 months</span>
-                        </span>
-                        
-                        <span class="custom-check"><!-- custom checkbox --></span>
-                      </label>
-                      </div>                  </div>
-                    <div class="form-group">
-                      <div class="custom-control custom-radio">
-                      <input class="custom-control-input custom-control-input-card style-checkbox"
-                             type="radio" id="yearly" name="plans"  >
-                      <label class="custom-control-label" for="yearly">
-                        <span class="custom-label-info">
-                          <span class="h3 m-0"><span>Yearly</span></span>
-                          <span class="discount"><span class="text-with-bg bg-torquoise4">30%</span> off monthly price</span>
-                        </span>
-                        <span class="custom-label-amount">
-                          <span class="text-purple5 text-xl">&euro;349.99</span>
-                          <span class="p">Billed every year</span>
-                        </span>
-                        
-                        <span class="custom-check"><!-- custom checkbox --></span>
-                      </label>
-                      </div>                  </div>
-                </fieldset>
-              </div>
-              <div class="col-xl-6">
-                <fieldset class="card">
-                  <p class="h2 mb-1">Choose a way to pay</p>
-                  <p class="mb-4">Choose your preferred method of payment</p>
-                  <div class="form-group form-group-expandable">
-                    <div class="custom-control custom-radio">
-                    <input class="custom-control-input  style-radio"
-                           type="radio" id="pay-with-card" name="payment-options"  >
-                    <label class="custom-control-label" for="pay-with-card">
-                      <span class="custom-label-info">
-                        <span class="h3 m-0"><img class="logo-icon mr-2 mr-sm-3" src="assets/img/ico-card.svg" alt="Credit Card Icon"><span>Credit / Debit Card</span></span>
-                        
-                      </span>
-                      
-                      
-                      <span class="custom-check"><!-- custom checkbox --></span>
-                    </label>
-                    </div>
-                    <div class="payment-details credit-card">
-                        <div class="input-group mb-4">
-                          <label class="sr-only" for="credit-card-number">Credit Card</label>
-                          <input class="form-control mb-1 " type="text" placeholder="Enter Card Number" id="credit-card-number" name="credit-card-info" >
-                          <label class="sr-only" for="credit-card-expiration-date">Expiration Date</label>
-                          <input class="form-control text-sm-right " type="text" placeholder="MM/YY" id="credit-card-expiration-date" name="credit-card-info" >
-                          <div class="invalid-feedback">Error Message</div>
-                        </div>
-                      <div class="mb-2">
-                        <h4 class="m-0">Total: <span>&euro;34.99</span></h4>
-                        <p>Billed every month</p>
-                      </div>
-                        <button class="btn btn-primary w-100 mb-3" type="submit">Get unlimited access</button>
-                      <small><span class="font-weight-medium">Note</span> You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.</small>
-                    </div>                  </div>
-                  <div class="form-group form-group-expandable">
-                    <div class="custom-control custom-radio">
-                    <input class="custom-control-input  style-radio"
-                           type="radio" id="pay-with-paypal" name="payment-options"  >
-                    <label class="custom-control-label" for="pay-with-paypal">
-                      <span class="custom-label-info">
-                        <span class="h3 m-0"><img class="logo-icon mr-2 mr-sm-3" src="assets/img/ico-paypal.svg" alt="PayPal Logo"><span>PayPal</span></span>
-                        
-                      </span>
-                      
-                      
-                      <span class="custom-check"><!-- custom checkbox --></span>
-                    </label>
-                    </div>                    
-                    <div class="payment-details pay-pal">
-                      <div class="mb-2">
-                        <h4 class="m-0">Total: <span>&euro;34.99</span></h4>
-                        <p>Billed every month</p>
-                      </div>
-                        <div class="text-center">
-                          <input type="image" class="btn btn-img mb-4" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png" alt="PayPal Dummy Button">
-                        </div>
-                      <small><span class="font-weight-medium">Note</span> You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.</small>
-                    </div>                  </div>
-                </fieldset>
-              </div>
-            </div>
-          </form>
-        </div>
+
+              .col-lg-6
+                %fieldset.card
+                  %p.h2.mb-1 Choose a way to pay
+                  %p.mb-4 Choose your preferred method of payment
+                  .form-group.form-group-expandable
+                    .custom-control.custom-radio
+                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}/
+                      %label.custom-control-label{:for => "pay-with-card"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                            %span Credit / Debit Card
+                        %span.custom-check
+                          / custom checkbox
+                    .payment-details.credit-card
+                      .input-group.mb-4
+                        %label.sr-only{:for => "credit-card-number"} Credit Card
+                        %input#credit-card-number.form-control.mb-1{:name => "credit-card-info", :placeholder => "Enter Card Number", :type => "text"}/
+                        %label.sr-only{:for => "credit-card-expiration-date"} Expiration Date
+                        %input#credit-card-expiration-date.form-control.text-sm-right{:name => "credit-card-info", :placeholder => "MM/YY", :type => "text"}/
+                        .invalid-feedback Error Message
+                      .mb-2
+                        %h4.m-0
+                          Total:
+                          %span €34.99
+                        %p Billed every month
+                      %button.btn.btn-primary.w-100.mb-3{:type => "submit"} Get unlimited access
+                      %small
+                        %span.font-weight-medium Note
+                        You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
+                  .form-group.form-group-expandable
+                    .custom-control.custom-radio
+                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}/
+                      %label.custom-control-label{:for => "pay-with-paypal"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                            %span PayPal
+                        %span.custom-check
+                          / custom checkbox
+                    .payment-details.pay-pal
+                      .mb-2
+                        %h4.m-0
+                          Total:
+                          %span €34.99
+                        %p Billed every month
+                      .text-center
+                        %input.btn.btn-img.mb-4{:alt => "PayPal Dummy Button", :src => "https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png", :type => "image"}/
+                      %small
+                        %span.font-weight-medium Note
+                        You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
 
         .bg-white
           .container
             .py-6
               %h2.mb-5 Included in Your LearnSignal Membership
               .row
-                .col-lg-5
+                .col-md-5
                   .with-icon-checked
                     %p Topic&ndash;by&ndash;topic, online 15&ndash;minute lectures
                   .with-icon-checked
                     %p Notes &amp; MCQs
                   .with-icon-checked
                     %p Practice CBE's
-                .col-lg-5
+                .col-md-5
                   .with-icon-checked
                     %p 24&#47;7 hour Support
                   .with-icon-checked
                     %p Exam Bootcamp
                   .with-icon-checked
                     %p Webinar Week
+
 
 :javascript
 
