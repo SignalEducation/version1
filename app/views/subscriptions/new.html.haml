@@ -26,49 +26,26 @@
               .col-lg-6.mb-5.mb-xl-0
                 %fieldset
                   %legend.sr-only Select a Plan
-                  .form-group
-                    .custom-control.custom-radio
-                      %input#monthly.custom-control-input.custom-control-input-card.style-checkbox{:checked => "checked", :name => "plans", :type => "radio"}/
-                      %label.custom-control-label{:for => "monthly"}
-                        %span.custom-label-info
-                          %span.h3.m-0
-                            %span Monthly
-                        %span.custom-label-amount
-                          %span.text-purple5.text-xl €34.99
-                          %span.p Billed every month
-                        %span.custom-check
-                          / custom checkbox
-                  .form-group
-                    .custom-control.custom-radio
-                      %input#quarterly.custom-control-input.custom-control-input-card.style-checkbox{:name => "plans", :type => "radio"}/
-                      %label.custom-control-label{:for => "quarterly"}
-                        %span.custom-label-info
-                          %span.h3.m-0
-                            %span Quarterly
-                          %span.discount
-                            %span.text-with-bg.bg-torquoise4 16%
-                            off monthly price
-                        %span.custom-label-amount
-                          %span.text-purple5.text-xl €84.99
-                          %span.p Billed every 3 months
-                        %span.custom-check
-                          / custom checkbox
-                  .form-group
-                    .custom-control.custom-radio
-                      %input#yearly.custom-control-input.custom-control-input-card.style-checkbox{:name => "plans", :type => "radio"}/
-                      %label.custom-control-label{:for => "yearly"}
-                        %span.custom-label-info
-                          %span.h3.m-0
-                            %span Yearly
-                          %span.discount
-                            %span.text-with-bg.bg-torquoise4 30%
-                            off monthly price
-                        %span.custom-label-amount
-                          %span.text-purple5.text-xl €349.99
-                          %span.p Billed every year
-                        %span.custom-check
-                          / custom checkbox
-
+                  -@subscription_plans.each do |plan|
+                    .form-group
+                      .custom-control.custom-radio
+                        %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :checked => ("checked" if @subscription.subscription_plan_id == plan.id)}/
+                        %label.custom-control-label{:for => plan.interval_name.downcase}
+                          %span.custom-label-info
+                            %span.h3.m-0
+                              %span
+                                =plan.interval_name
+                            %span.discount
+                              %span.text-with-bg.bg-torquoise4
+                                16%
+                              off monthly price
+                          %span.custom-label-amount
+                            %span.text-purple5.text-xl
+                              =plan.currency.format_number(plan.price)
+                            %span.p
+                              ="Billed every #{pluralize(plan.payment_frequency_in_months, 'month')}"
+                          %span.custom-check
+                            / custom checkbox
 
               .col-lg-6
                 %fieldset.card
@@ -84,22 +61,7 @@
                             %span Credit / Debit Card
                         %span.custom-check
                           / custom checkbox
-                    .payment-details.credit-card
-                      .input-group.mb-4
-                        %label.sr-only{:for => "credit-card-number"} Credit Card
-                        %input#credit-card-number.form-control.mb-1{:name => "credit-card-info", :placeholder => "Enter Card Number", :type => "text"}/
-                        %label.sr-only{:for => "credit-card-expiration-date"} Expiration Date
-                        %input#credit-card-expiration-date.form-control.text-sm-right{:name => "credit-card-info", :placeholder => "MM/YY", :type => "text"}/
-                        .invalid-feedback Error Message
-                      .mb-2
-                        %h4.m-0
-                          Total:
-                          %span €34.99
-                        %p Billed every month
-                      %button.btn.btn-primary.w-100.mb-3{:type => "submit"} Get unlimited access
-                      %small
-                        %span.font-weight-medium Note
-                        You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
+                    =render partial: 'subscription_payment_cards/form', locals: {f: f}
                   .form-group.form-group-expandable
                     .custom-control.custom-radio
                       %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}/
@@ -144,7 +106,6 @@
 
 
 :javascript
-
 
   var couponCode = $('#coupon_code');
   var plan_id = '1';
@@ -308,6 +269,29 @@
       } else if (this.value == 'paypal') {
         selectPaypal();
       }
+    });
+
+    // Bojan Stuff
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"]', function() {
+      $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
+      if ($(this).is(':checked')) {
+        $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+      }
+    });
+    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+
+
+    $('#all-plans').collapse({
+      toggle: false
+    });
+
+    $('#all-plans').on('show.bs.collapse', function() {
+      $('.js-show-more-plans').addClass('disabled');
+    });
+    $('#all-plans').on('shown.bs.collapse', function() {
+      $('.js-show-more-plans').on('click', function() {
+        return false;
+      });
     });
 
     $('#stripe_option').on('click', function() {

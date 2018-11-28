@@ -1,58 +1,28 @@
-.payment-errors
+.payment-details.credit-card
   .form-group.cc
     #card-element
     #card-errors{role: 'alert'}
+  .mb-2
+    %h4.m-0
+      Total:
+      %span.value#stripe-total-value
+    %p Billed every month
+  = f.button :submit, class: 'btn btn-primary w-100 mb-3' do
+    Get unlimited access
+  .sk-circle.text-center
+    .sk-circle1.sk-child
+    .sk-circle2.sk-child
+    .sk-circle3.sk-child
+    .sk-circle4.sk-child
+    .sk-circle5.sk-child
+    .sk-circle6.sk-child
+    .sk-circle7.sk-child
+    .sk-circle8.sk-child
+    .sk-circle9.sk-child
+    .sk-circle10.sk-child
+    .sk-circle11.sk-child
+    .sk-circle12.sk-child
 
-
-  -if params[:coupon]
-    .form-group.l-margin-bottom-big
-      .col-xs-6{style: 'padding-left: 5px;'}
-        %label
-          %h4{style: 'padding-bottom: 0;'}
-            =t('views.subscriptions.new_subscription.coupon_code')
-      .col-xs-6.invalid-code{style: 'color: #EF5153;'}
-        ='Invalid Code'
-      %input{type: 'text_field', id: 'coupon_code', class: 'form-control', placeholder: 'Valid Coupon Code'}
-
-  .form-group.l-margin-top
-    .tot-get
-      .price
-        %span.total Total:
-        %span.value#stripe-total-value
-        %p
-
-    %div
-      = f.button :submit, class: 'lsbtn full-width', id: 'card_submit' do
-        %i.fa.fa-lock
-        =t('views.users.upgrade_subscription.upgrade_subscription')
-
-      .sk-circle.text-center
-        .sk-circle1.sk-child
-        .sk-circle2.sk-child
-        .sk-circle3.sk-child
-        .sk-circle4.sk-child
-        .sk-circle5.sk-child
-        .sk-circle6.sk-child
-        .sk-circle7.sk-child
-        .sk-circle8.sk-child
-        .sk-circle9.sk-child
-        .sk-circle10.sk-child
-        .sk-circle11.sk-child
-        .sk-circle12.sk-child
-
-
-  .form-group.l-margin-top
-    .obs
-      -#
-        -time_now = Proc.new{Time.now}.call
-        -number_of_months = default_plan.payment_frequency_in_months
-        ="Your next recurring payment will be on "
-        #next-payment-date
-          =humanize_datetime(time_now + number_of_months.months)
-
-      %p
-        <strong>NOTE</strong> - You are subscribing to a <strong>recurring payment</strong> which will continue until you cancel your subscription.
-
-
-      %p
-        =t('views.subscriptions.new_subscription.remember_cancel_anytime')
+  %small
+    %span.font-weight-medium Note
+    You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.

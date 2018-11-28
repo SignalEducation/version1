@@ -1,12 +1,20 @@
 #upgrade-subscription {
   font-size: 16px;
   font-family: Rubik,sans-serif;
-  h1, h2, h3, h4 {
+  h1, h2, .h2, h3, h4 {
     color: #424366;
+  }
+  h4 {
+    font-weight: 500;
   }
   p {
     color: #7f8599;
     font-weight: 400;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #f34664;
+    border-color: #f34664;
   }
 }
 .text-torquoise {
@@ -309,7 +317,10 @@ h3 {
 }
 .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label span,
 .custom-control.custom-radio .custom-control-input.custom-control-input-card + label span {
-  display: block
+  display: block;
+  .p {
+    color: #7f8599;
+  }
 }
 .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label > .custom-label-info,
 .custom-control.custom-radio .custom-control-input.custom-control-input-card + label > .custom-label-info {
@@ -341,6 +352,7 @@ h3 {
 }
 .custom-control.custom-checkbox .custom-control-input.custom-control-input-card + label > .custom-label-info .discount,
 .custom-control.custom-radio .custom-control-input.custom-control-input-card + label > .custom-label-info .discount {
+  font-weight: normal;
   font-size: .8125em;
   color: #05a4af
 }
