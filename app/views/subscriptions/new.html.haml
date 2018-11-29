@@ -54,7 +54,7 @@
                   %p.mb-4 Choose your preferred method of payment
                   .form-group.form-group-expandable
                     .custom-control.custom-radio
-                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}
+                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
                       %label.custom-control-label{:for => "pay-with-card"}
                         %span.custom-label-info
                           %span.h3.m-0
@@ -65,7 +65,7 @@
                     =render partial: 'subscription_payment_cards/form', locals: {f: f}
                   .form-group.form-group-expandable
                     .custom-control.custom-radio
-                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}
+                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
                       %label.custom-control-label{:for => "pay-with-paypal"}
                         %span.custom-label-info
                           %span.h3.m-0
@@ -223,7 +223,7 @@
     $('.discounted-price').hide();
 
     // Bojan Stuff
-    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"]', function() {
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
@@ -245,31 +245,18 @@
       });
     });
 
-    function selectSripe() {
-      $('#card_inputs').slideDown();
-      $('#paypal_inputs').slideUp();
-      $('#subscription_use_paypal').val(false);
-      $('#select_card').prop("checked", true);
-
-      updateCheckoutTotal();
+    function selectPaymentMethod(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#subscription_use_paypal').val(true);
+          break;
+        case 'stripe':
+          $('#subscription_use_paypal').val(false);
+          break;
+        default:
+          $('#subscription_use_paypal').val(false);
+      }
     }
-
-    function selectPaypal() {
-      $('#card_inputs').slideUp();
-      $('#paypal_inputs').slideDown();
-      $('#subscription_use_paypal').val(true);
-      $('#select_paypal').prop("checked", true);
-
-      updateCheckoutTotal();
-    }
-
-    $('#stripe_option').on('click', function() {
-      selectSripe();
-    })
-
-    $('#paypal_option').on('click', function() {
-      selectPaypal();
-    });
 
     // Custom styling can be passed to options when creating an Element.
     var style = {
