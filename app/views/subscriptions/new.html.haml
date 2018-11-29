@@ -35,10 +35,11 @@
                             %span.h3.m-0
                               %span
                                 =plan.interval_name
-                            %span.discount
-                              %span.text-with-bg.bg-torquoise4
-                                16%
-                              off monthly price
+                            - if plan.monthly_percentage_off.present?
+                              %span.discount
+                                %span.text-with-bg.bg-torquoise4
+                                  ="#{plan.monthly_percentage_off}%"
+                                off monthly price
                           %span.custom-label-amount
                             %span.text-purple5.text-xl
                               =plan.currency.format_number(plan.price)
