@@ -10,10 +10,16 @@
           =render partial: 'management_consoles/course_content_nav'
 
       .row.l-margin-top.l-margin-bottom
-        .col-md-4.col-sm-4.l-margin-top
+        .col-sm-4
           =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
 
-        .col-md-offset-4.col-md-4.l-margin-top
+        .col-sm-4
+          =form_tag(subject_courses_url, method: :get, role: 'form', class: 'form-horizontal') do
+            .col-sm-10.col-sm-offset-2
+              .input-group.input-group-lg.full-width
+                =select_tag :group_id, options_for_select(Group.all.collect {|p| [ p.name, p.id ] }, params[:group_id]), {include_blank: 'All', class: 'form-control', onchange: 'this.form.submit(); return false;'}
+
+        .col-sm-4
           =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
               =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
@@ -36,7 +42,7 @@
                     %th
                     %th
                 %tbody
-                  -@courses.each do |subject_course|
+                  -@subject_courses.each do |subject_course|
                     %tr
                       %td=subject_course.name
                       %td=tick_or_cross(subject_course.active)
@@ -49,9 +55,6 @@
                         %td
                           =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-small btn-red'
 
-
-
-              =will_paginate @subject_courses, renderer: BootstrapPagination::Rails
 
 
 
