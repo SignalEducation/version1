@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181115173342) do
+ActiveRecord::Schema.define(version: 20181129113006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -159,6 +159,14 @@ ActiveRecord::Schema.define(version: 20181115173342) do
   end
 
   add_index "constructed_responses", ["course_module_element_id"], name: "index_constructed_responses_on_course_module_element_id", using: :btree
+
+  create_table "content_page_sections", force: :cascade do |t|
+    t.integer  "content_page_id"
+    t.text     "text_content"
+    t.string   "panel_colour"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
 
   create_table "content_pages", force: :cascade do |t|
     t.string   "name"
@@ -691,6 +699,7 @@ ActiveRecord::Schema.define(version: 20181115173342) do
     t.decimal  "price"
     t.string   "stripe_sku_guid"
     t.integer  "subject_course_id"
+    t.integer  "sorting_order"
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
@@ -1078,6 +1087,7 @@ ActiveRecord::Schema.define(version: 20181115173342) do
     t.boolean  "livemode",                      default: false
     t.string   "paypal_guid"
     t.string   "paypal_state"
+    t.integer  "monthly_percentage_off"
   end
 
   add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree

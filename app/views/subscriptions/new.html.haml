@@ -10,61 +10,93 @@
         -if params[:coupon]
           =hidden_field_tag :hidden_coupon_code
 
-        %section#simply
+        .bg-asphalt
           .container
             -if flash[:success] || flash[:error] || flash[:warning]
               .row.subscription-flash
                 .col-xs-12
                   =render partial: 'layouts/flash_messages'
+            .hero
+              %h5.text-red Upgrade Your Account
+              %h1.h1-mega Select one of our plans
+              %p.text-lg.mb-0 Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
+              %p.text-lg People learn in different ways. Whatever way you want to learn, we've got you covered.
+          .container.payment
             .row
-              .col-lg-6
-                .plans-container
-                  %h2.title1
-                    %i.fa.fa-book
-                    Pick a plan
-
-                  .row.plan-options
-                    .col-sm-6
-                      .plan-select
-                        -@subscription_plans.each do |plan|
-                          %div{ :class => "plan #{'chosen' if @subscription.subscription_plan_id == plan.id}", id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months, plan_name: plan.interval_name} }
-                            %span.plan-title
-                              =plan.interval_name
-                            %span.price
+              .col-lg-6.mb-5.mb-xl-0
+                %fieldset
+                  %legend.sr-only Select a Plan
+                  -@subscription_plans.each do |plan|
+                    .form-group
+                      .custom-control.custom-radio
+                        %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if @subscription.subscription_plan_id == plan.id)}
+                        %label.custom-control-label{:for => plan.interval_name.downcase}
+                          %span.custom-label-info
+                            %span.h3.m-0
+                              %span
+                                =plan.interval_name
+                            - if plan.monthly_percentage_off.present?
+                              %span.discount
+                                %span.text-with-bg.bg-torquoise4
+                                  ="#{plan.monthly_percentage_off}%"
+                                off monthly price
+                          %span.custom-label-amount
+                            %span.text-purple5.text-xl
                               =plan.currency.format_number(plan.price)
-
-                    .col-sm-6
-                      .plan-summary
-                        .summary-container
-                          %span.plan-title
-                          %span.price
-                          %p.summary
+                            %span.p
+                              ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+                          %span.custom-check
+                            / custom checkbox
 
               .col-lg-6
-                .payment-options-container
-                  %h2.title1
-                    Choose a way to pay
+                %fieldset.card
+                  %p.h2.mb-1 Choose a way to pay
+                  %p.mb-4 Choose your preferred method of payment
+                  .form-group.form-group-expandable
+                    .custom-control.custom-radio
+                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                      %label.custom-control-label{:for => "pay-with-card"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                            %span Credit / Debit Card
+                        %span.custom-check
+                          / custom checkbox
+                    =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                  .form-group.form-group-expandable
+                    .custom-control.custom-radio
+                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                      %label.custom-control-label{:for => "pay-with-paypal"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                            %span PayPal
+                        %span.custom-check
+                          / custom checkbox
+                    =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
-                  .payment-options
-                    %div{ :class => "option", :id => "stripe_option" }
-                      %i.fa.fa-credit-card
-                      Credit / Debit Card
-                      .pretty-radio.choose-payment-option
-                        %input{ :type => "radio", :name => "payment_radio", :id => "select_card", :value => "stripe" }
-                        %label{ :for => "select_card" }
-                    %div{ :id => 'card_inputs', :class => 'checkout-form' }
-                      =render partial: 'subscription_payment_cards/form', locals: {f: f}
-                    %div{ :class => "option", :id => "paypal_option" }
-                      =image_tag('https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_200x51.png', height: 30)
-                      .pretty-radio.choose-payment-option
-                        %input{ :type => "radio", :name => "payment_radio", :id => "select_paypal", :value => "paypal" }
-                        %label{ :for => "select_paypal" }
-                    %div{ :id => 'paypal_inputs', :class => 'checkout-form' }
-                      =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
+        .bg-white
+          .container
+            .py-6
+              %h2.mb-5 Included in Your LearnSignal Membership
+              .row
+                .col-md-5
+                  .with-icon-checked
+                    %p Topic&ndash;by&ndash;topic, online 15&ndash;minute lectures
+                  .with-icon-checked
+                    %p Notes &amp; MCQs
+                  .with-icon-checked
+                    %p Practice CBE's
+                .col-md-5
+                  .with-icon-checked
+                    %p 24&#47;7 hour Support
+                  .with-icon-checked
+                    %p Exam Bootcamp
+                  .with-icon-checked
+                    %p Webinar Week
 
 
 :javascript
-
 
   var couponCode = $('#coupon_code');
   var plan_id = '1';
@@ -82,26 +114,10 @@
     }
   }
 
-  function updatePlanSummary(selectedPlan) {
-    $('.summary-container > span.plan-title').text($(selectedPlan).attr('data-plan-name'));
-    $('.summary-container > span.price').text($(selectedPlan).attr('data-price'));
-    $('.summary-container > p.summary').text(intervalSummary($(selectedPlan).attr('data-interval')));
-  }
-
   function choosePlan(selectedPlan) {
-    var preChosen = $('.plan-select').find('div.chosen');
-    if (preChosen) {
-      preChosen.removeClass('chosen');
-      $(selectedPlan).addClass('chosen');
-    }
-    $('#subscription_subscription_plan_id').val($(selectedPlan).attr('data-plan-id'));
+    $('#subscription_subscription_plan_id').val(selectedPlan);
 
     updateCheckoutTotal();
-    updatePlanSummary(selectedPlan);
-
-    // plan_id = $('#subscription_subscription_plan_id').val();
-
-    // Need to trigger Ajax call here if the coupon field already has a value
     if ($('#coupon_code').val()) {
       validateCoupon();
     }
@@ -183,68 +199,79 @@
   });
 
   function updateCheckoutTotal() {
-    var selectedPlan = $(".plan-select > .plan.chosen");
+    var selectedPlan = $("input[name='plans']:checked");
 
-    $('.tot-get > .price > span.value').text($(selectedPlan).attr('data-price'));
-    $('.tot-get > .price > p').text(intervalSummary($(selectedPlan).attr('data-interval')));
-  }
-
-  function selectSripe() {
-    $('#card_inputs').slideDown();
-    $('#paypal_inputs').slideUp();
-    $('#subscription_use_paypal').val(false);
-    $('#select_card').prop("checked", true);
-
-    updateCheckoutTotal();
-  }
-
-  function selectPaypal() {
-    $('#card_inputs').slideUp();
-    $('#paypal_inputs').slideDown();
-    $('#subscription_use_paypal').val(true);
-    $('#select_paypal').prop("checked", true);
-
-    updateCheckoutTotal();
+    $('.payment-details span.value').text($(selectedPlan).attr('data-price'));
+    $('.payment-details p.billing-summary').text(intervalSummary($(selectedPlan).attr('data-frequency')));
   }
 
   function initializePlan() {
-    var selectedPlan = $('.plan-select').find('div.chosen');
+    var selectedPlan = $("input[name='plans']:checked").val();
     choosePlan(selectedPlan);
   }
 
   $(document).on('ready', function() {
     initializePlan();
-    $(".plan-select > .plan").bind('click', function(event) {
+    $('input[type=radio][name=plans]').bind('change', function(event) {
       event.preventDefault();
-      choosePlan(this);
+      choosePlan($(this).val());
     });
     $(".sk-circle").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
 
-    $('input[type=radio][name=payment_radio]').change(function() {
-      if (this.value == 'stripe') {
-        selectSripe();
-      } else if (this.value == 'paypal') {
-        selectPaypal();
+    // Bojan Stuff
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+      $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
+      if ($(this).is(':checked')) {
+        $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+        selectPaymentMethod($(this).val())
       }
     });
+    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
 
-    $('#stripe_option').on('click', function() {
-      selectSripe();
-    })
 
-    $('#paypal_option').on('click', function() {
-      selectPaypal();
+    $('#all-plans').collapse({
+      toggle: false
     });
+
+    $('#all-plans').on('show.bs.collapse', function() {
+      $('.js-show-more-plans').addClass('disabled');
+    });
+    $('#all-plans').on('shown.bs.collapse', function() {
+      $('.js-show-more-plans').on('click', function() {
+        return false;
+      });
+    });
+
+    function selectPaymentMethod(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#subscription_use_paypal').val(true);
+          break;
+        case 'stripe':
+          $('#subscription_use_paypal').val(false);
+          break;
+        default:
+          $('#subscription_use_paypal').val(false);
+      }
+    }
 
     // Custom styling can be passed to options when creating an Element.
     var style = {
       base: {
-        fontWeight: 300,
-        fontFamily: "Rubik, HelveticaNeue",
-        fontSize: '20px',
-        lineHeight: '24px'
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Rubik", "Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
       }
     };
 
@@ -262,6 +289,7 @@
       $('#card_submit').prop('disabled',true);
       $('#card_submit').hide();
       $('#paypal_submit').prop('disabled',true);
+      $('#paypal_submit').hide();
       $(".sk-circle").show();
       if ($('#subscription_use_paypal').val() === 'true') {
         document.getElementById('upgrade-form').submit();
@@ -278,34 +306,34 @@
         displayError.textContent = '';
       }
     });
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('upgrade-form');
+      $('#subscription_stripe_token').val(token.id);
+      $('#hidden_coupon_code').val($('#coupon_code').val());
+
+      // Submit the form
+      form.submit();
+    }
+
+    function createToken() {
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+          //Replace spinning JS with Submit button
+          $('#card_submit').prop('disabled',false);
+          $('#card_submit').show();
+          $(".sk-circle").hide();
+
+        } else {
+          // Send the token to your server
+          stripeTokenHandler(result.token);
+        }
+      });
+    };
   })
-
-  function stripeTokenHandler(token) {
-    // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('upgrade-form');
-    $('#subscription_stripe_token').val(token.id);
-    $('#hidden_coupon_code').val($('#coupon_code').val());
-
-    // Submit the form
-    form.submit();
-  }
-
-  function createToken() {
-    stripe.createToken(card).then(function(result) {
-      if (result.error) {
-        // Inform the user if there was an error
-        var errorElement = document.getElementById('card-errors');
-        errorElement.textContent = result.error.message;
-        //Replace spinning JS with Submit button
-        $('#card_submit').prop('disabled',false);
-        $('#card_submit').show();
-        $(".sk-circle").hide();
-
-      } else {
-        // Send the token to your server
-        stripeTokenHandler(result.token);
-      }
-    });
-  };
 
 
