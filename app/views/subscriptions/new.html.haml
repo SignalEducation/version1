@@ -54,7 +54,7 @@
                   %p.mb-4 Choose your preferred method of payment
                   .form-group.form-group-expandable
                     .custom-control.custom-radio
-                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
                       %label.custom-control-label{:for => "pay-with-card"}
                         %span.custom-label-info
                           %span.h3.m-0
@@ -227,6 +227,8 @@
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+        console.log($(this).val())
+        selectPaymentMethod($(this).val())
       }
     });
     $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
