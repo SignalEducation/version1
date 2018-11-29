@@ -347,7 +347,9 @@ class User < ActiveRecord::Base
   # Trial Access
 
   def trial_user?
-    self.trial_or_sub_user? && self.student_access.trial_access? && !self.student_access.subscription_id
+    self.trial_or_sub_user? &&
+      (self.student_access.trial_access? && !self.student_access.subscription_id) ||
+      (self.student_access.subscription_id? && self.student_access.subscription.pending?)
   end
 
   def valid_trial_user?
