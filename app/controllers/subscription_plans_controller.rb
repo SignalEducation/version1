@@ -19,6 +19,7 @@
 #  livemode                      :boolean          default(FALSE)
 #  paypal_guid                   :string
 #  paypal_state                  :string
+#  monthly_percentage_off        :integer
 #
 
 class SubscriptionPlansController < ApplicationController

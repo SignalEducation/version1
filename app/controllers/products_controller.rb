@@ -4,7 +4,6 @@
 #
 #  id                :integer          not null, primary key
 #  name              :string
-#  subject_course_id :integer
 #  mock_exam_id      :integer
 #  stripe_guid       :string
 #  live_mode         :boolean          default(FALSE)
@@ -14,6 +13,8 @@
 #  currency_id       :integer
 #  price             :decimal(, )
 #  stripe_sku_guid   :string
+#  subject_course_id :integer
+#  sorting_order     :integer
 #
 
 class ProductsController < ApplicationController

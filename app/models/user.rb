@@ -295,7 +295,7 @@ class User < ActiveRecord::Base
   end
 
   def trial_or_sub_user?
-    self.student_user? && self.user_group.trial_or_sub_required && self.student_access
+    self.student_user? && self.user_group.trial_or_sub_required && self.student_access.present?
   end
 
   def complimentary_user?
@@ -389,8 +389,6 @@ class User < ActiveRecord::Base
     self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
   end
 
-
-
   # Subscription Access
 
   def subscription_user?
@@ -410,13 +408,12 @@ class User < ActiveRecord::Base
   end
 
   def current_subscription
-    self.student_access.subscription
+    student_access.subscription if student_access.subscription && %w(active errored pending_cancellation cancelled).include?(student_access.subscription.state)
   end
 
   def default_card
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
   end
-
 
   def user_subscription_status
     current_subscription = self.current_subscription

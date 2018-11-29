@@ -65,10 +65,10 @@ class Subscription < ActiveRecord::Base
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
 
-
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
-  after_create :update_coupon_count, :convert_student_access
+  after_create :update_coupon_count
+  after_create :convert_student_access, if: :stripe_token
   after_save :update_student_access, if: :active
 
   # scopes
@@ -367,11 +367,15 @@ class Subscription < ActiveRecord::Base
   end
 
   def convert_student_access
-    self.user.student_access.convert_to_subscription_access(self.id)
+    user.student_access.convert_to_subscription_access(id)
   end
 
   def update_student_access
-    self.user.student_access.check_student_access
+    if paypal_token && !user.student_access.subscription_access?
+      user.student_access.convert_to_subscription_access(id)
+    else
+      user.student_access.check_student_access
+    end
   end
 
   def prefix
