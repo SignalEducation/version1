@@ -197,6 +197,7 @@ Rails.application.routes.draw do
     get 'welcome_video', to: 'footer_pages#welcome_video', as: :welcome_video
 
     resources :users, only: [:new, :create]
+    post 'search_users', to: 'users#index', as: :search_users
 
     post :preview_csv_upload, to: 'users#preview_csv_upload'
     post :import_csv_upload, to: 'users#import_csv_upload'
