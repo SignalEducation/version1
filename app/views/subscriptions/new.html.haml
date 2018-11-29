@@ -73,17 +73,7 @@
                             %span PayPal
                         %span.custom-check
                           / custom checkbox
-                    .payment-details.pay-pal
-                      .mb-2
-                        %h4.m-0
-                          Total:
-                          %span.value#paypal-total-value
-                        %p.billing-summary Billed every month
-                      .text-center
-                        %input.btn.btn-img.mb-4{:alt => "PayPal Dummy Button", :src => "https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png", :type => "image"}/
-                      %small
-                        %span.font-weight-medium Note
-                        You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
+                    =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
         .bg-white
           .container
@@ -125,22 +115,9 @@
   }
 
   function choosePlan(selectedPlan) {
-    console.log(selectedPlan);
-    // var preChosen = $("input[name='plans']:checked").val();
-    // var preChosen = $('.plan-select').find('div.chosen');
-    // if (preChosen) {
-    //   preChosen.removeClass('chosen');
-    //   $(selectedPlan).addClass('chosen');
-    // }
-
-    // console.log(preChosen);
     $('#subscription_subscription_plan_id').val(selectedPlan);
 
     updateCheckoutTotal();
-
-    // plan_id = $('#subscription_subscription_plan_id').val();
-
-    // Need to trigger Ajax call here if the coupon field already has a value
     if ($('#coupon_code').val()) {
       validateCoupon();
     }
@@ -268,6 +245,24 @@
       });
     });
 
+    function selectSripe() {
+      $('#card_inputs').slideDown();
+      $('#paypal_inputs').slideUp();
+      $('#subscription_use_paypal').val(false);
+      $('#select_card').prop("checked", true);
+
+      updateCheckoutTotal();
+    }
+
+    function selectPaypal() {
+      $('#card_inputs').slideUp();
+      $('#paypal_inputs').slideDown();
+      $('#subscription_use_paypal').val(true);
+      $('#select_paypal').prop("checked", true);
+
+      updateCheckoutTotal();
+    }
+
     $('#stripe_option').on('click', function() {
       selectSripe();
     })
@@ -279,10 +274,18 @@
     // Custom styling can be passed to options when creating an Element.
     var style = {
       base: {
-        fontWeight: 300,
-        fontFamily: "Rubik, HelveticaNeue",
-        fontSize: '20px',
-        lineHeight: '24px'
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Rubik", "Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
       }
     };
 
