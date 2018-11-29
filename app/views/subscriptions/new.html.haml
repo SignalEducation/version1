@@ -200,8 +200,6 @@
 
   function updateCheckoutTotal() {
     var selectedPlan = $("input[name='plans']:checked");
-    console.log(selectedPlan);
-    console.log($(selectedPlan).attr('data-price'));
 
     $('.payment-details span.value').text($(selectedPlan).attr('data-price'));
     $('.payment-details p.billing-summary').text(intervalSummary($(selectedPlan).attr('data-frequency')));
@@ -227,7 +225,6 @@
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
         $(this).closest('.custom-control').siblings('.payment-details').slideDown();
-        console.log($(this).val())
         selectPaymentMethod($(this).val())
       }
     });
@@ -292,6 +289,7 @@
       $('#card_submit').prop('disabled',true);
       $('#card_submit').hide();
       $('#paypal_submit').prop('disabled',true);
+      $('#paypal_submit').hide();
       $(".sk-circle").show();
       if ($('#subscription_use_paypal').val() === 'true') {
         document.getElementById('upgrade-form').submit();
@@ -308,34 +306,34 @@
         displayError.textContent = '';
       }
     });
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('upgrade-form');
+      $('#subscription_stripe_token').val(token.id);
+      $('#hidden_coupon_code').val($('#coupon_code').val());
+
+      // Submit the form
+      form.submit();
+    }
+
+    function createToken() {
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+          //Replace spinning JS with Submit button
+          $('#card_submit').prop('disabled',false);
+          $('#card_submit').show();
+          $(".sk-circle").hide();
+
+        } else {
+          // Send the token to your server
+          stripeTokenHandler(result.token);
+        }
+      });
+    };
   })
-
-  function stripeTokenHandler(token) {
-    // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('upgrade-form');
-    $('#subscription_stripe_token').val(token.id);
-    $('#hidden_coupon_code').val($('#coupon_code').val());
-
-    // Submit the form
-    form.submit();
-  }
-
-  function createToken() {
-    stripe.createToken(card).then(function(result) {
-      if (result.error) {
-        // Inform the user if there was an error
-        var errorElement = document.getElementById('card-errors');
-        errorElement.textContent = result.error.message;
-        //Replace spinning JS with Submit button
-        $('#card_submit').prop('disabled',false);
-        $('#card_submit').show();
-        $(".sk-circle").hide();
-
-      } else {
-        // Send the token to your server
-        stripeTokenHandler(result.token);
-      }
-    });
-  };
 
 

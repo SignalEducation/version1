@@ -5,11 +5,8 @@
       %span.value#paypal-total-value
     %p.billing-summary.mb-4 Billed every month
   .text-center
-    = f.button :submit, class: 'btn btn-img mb-4' do
+    = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit' do
       =image_tag("https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png", :alt => "PayPal Dummy Button")
-  %small
-    %span.font-weight-medium Note
-    You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
 
   .sk-circle.text-center
     .sk-circle1.sk-child
@@ -24,6 +21,10 @@
     .sk-circle10.sk-child
     .sk-circle11.sk-child
     .sk-circle12.sk-child
+
+  %small
+    %span.font-weight-medium Note
+    You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
 
 
 
