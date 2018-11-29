@@ -25,12 +25,10 @@ class PaypalWebhooksService
   end
 
   def valid?
-    webhook_id = "0UT24471LT528120V"
-
     WebhookEvent.verify(
       transmission_id,
       timestamp,
-      webhook_id,
+      ENV['PAYPAL_WEBHOOK_ID'],
       @paypal_body,
       cert_url,
       actual_signature,
