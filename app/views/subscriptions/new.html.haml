@@ -29,7 +29,7 @@
                   -@subscription_plans.each do |plan|
                     .form-group
                       .custom-control.custom-radio
-                        %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :checked => ("checked" if @subscription.subscription_plan_id == plan.id)}/
+                        %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if @subscription.subscription_plan_id == plan.id)}
                         %label.custom-control-label{:for => plan.interval_name.downcase}
                           %span.custom-label-info
                             %span.h3.m-0
@@ -44,7 +44,7 @@
                             %span.text-purple5.text-xl
                               =plan.currency.format_number(plan.price)
                             %span.p
-                              ="Billed every #{pluralize(plan.payment_frequency_in_months, 'month')}"
+                              ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
                           %span.custom-check
                             / custom checkbox
 
@@ -54,7 +54,7 @@
                   %p.mb-4 Choose your preferred method of payment
                   .form-group.form-group-expandable
                     .custom-control.custom-radio
-                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}/
+                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}
                       %label.custom-control-label{:for => "pay-with-card"}
                         %span.custom-label-info
                           %span.h3.m-0
@@ -65,7 +65,7 @@
                     =render partial: 'subscription_payment_cards/form', locals: {f: f}
                   .form-group.form-group-expandable
                     .custom-control.custom-radio
-                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}/
+                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio"}
                       %label.custom-control-label{:for => "pay-with-paypal"}
                         %span.custom-label-info
                           %span.h3.m-0
@@ -77,8 +77,8 @@
                       .mb-2
                         %h4.m-0
                           Total:
-                          %span €34.99
-                        %p Billed every month
+                          %span.value#paypal-total-value
+                        %p.billing-summary Billed every month
                       .text-center
                         %input.btn.btn-img.mb-4{:alt => "PayPal Dummy Button", :src => "https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png", :type => "image"}/
                       %small
@@ -124,22 +124,19 @@
     }
   }
 
-  function updatePlanSummary(selectedPlan) {
-    $('.summary-container > span.plan-title').text($(selectedPlan).attr('data-plan-name'));
-    $('.summary-container > span.price').text($(selectedPlan).attr('data-price'));
-    $('.summary-container > p.summary').text(intervalSummary($(selectedPlan).attr('data-interval')));
-  }
-
   function choosePlan(selectedPlan) {
-    var preChosen = $('.plan-select').find('div.chosen');
-    if (preChosen) {
-      preChosen.removeClass('chosen');
-      $(selectedPlan).addClass('chosen');
-    }
-    $('#subscription_subscription_plan_id').val($(selectedPlan).attr('data-plan-id'));
+    console.log(selectedPlan);
+    // var preChosen = $("input[name='plans']:checked").val();
+    // var preChosen = $('.plan-select').find('div.chosen');
+    // if (preChosen) {
+    //   preChosen.removeClass('chosen');
+    //   $(selectedPlan).addClass('chosen');
+    // }
+
+    // console.log(preChosen);
+    $('#subscription_subscription_plan_id').val(selectedPlan);
 
     updateCheckoutTotal();
-    updatePlanSummary(selectedPlan);
 
     // plan_id = $('#subscription_subscription_plan_id').val();
 
@@ -225,52 +222,28 @@
   });
 
   function updateCheckoutTotal() {
-    var selectedPlan = $(".plan-select > .plan.chosen");
+    var selectedPlan = $("input[name='plans']:checked");
+    console.log(selectedPlan);
+    console.log($(selectedPlan).attr('data-price'));
 
-    $('.tot-get > .price > span.value').text($(selectedPlan).attr('data-price'));
-    $('.tot-get > .price > p').text(intervalSummary($(selectedPlan).attr('data-interval')));
-  }
-
-  function selectSripe() {
-    $('#card_inputs').slideDown();
-    $('#paypal_inputs').slideUp();
-    $('#subscription_use_paypal').val(false);
-    $('#select_card').prop("checked", true);
-
-    updateCheckoutTotal();
-  }
-
-  function selectPaypal() {
-    $('#card_inputs').slideUp();
-    $('#paypal_inputs').slideDown();
-    $('#subscription_use_paypal').val(true);
-    $('#select_paypal').prop("checked", true);
-
-    updateCheckoutTotal();
+    $('.payment-details span.value').text($(selectedPlan).attr('data-price'));
+    $('.payment-details p.billing-summary').text(intervalSummary($(selectedPlan).attr('data-frequency')));
   }
 
   function initializePlan() {
-    var selectedPlan = $('.plan-select').find('div.chosen');
+    var selectedPlan = $("input[name='plans']:checked").val();
     choosePlan(selectedPlan);
   }
 
   $(document).on('ready', function() {
     initializePlan();
-    $(".plan-select > .plan").bind('click', function(event) {
+    $('input[type=radio][name=plans]').bind('change', function(event) {
       event.preventDefault();
-      choosePlan(this);
+      choosePlan($(this).val());
     });
     $(".sk-circle").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
-
-    $('input[type=radio][name=payment_radio]').change(function() {
-      if (this.value == 'stripe') {
-        selectSripe();
-      } else if (this.value == 'paypal') {
-        selectPaypal();
-      }
-    });
 
     // Bojan Stuff
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"]', function() {
