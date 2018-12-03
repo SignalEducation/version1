@@ -371,7 +371,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def update_student_access
-    if paypal_token && !user.student_access.subscription_access?
+    if paypal_token && !(user.student_access.subscription_access? && user.student_access.content_access)
       user.student_access.convert_to_subscription_access(id)
     else
       user.student_access.check_student_access
