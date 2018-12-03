@@ -68,7 +68,7 @@ class Subscription < ActiveRecord::Base
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_coupon_count
-  after_create :convert_student_access, if: :stripe_token
+  after_create :convert_student_access, if: :stripe_guid
   after_save :update_student_access, if: :active
 
   # scopes
@@ -371,7 +371,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def update_student_access
-    if paypal_token && !user.student_access.subscription_access?
+    if paypal_token && !(user.student_access.subscription_access? && user.student_access.content_access)
       user.student_access.convert_to_subscription_access(id)
     else
       user.student_access.check_student_access

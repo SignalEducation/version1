@@ -66,7 +66,7 @@ class Invoice < ActiveRecord::Base
 
   # validation
   validates :user_id, :subscription_id, :number_of_users, :currency_id, :total, presence: true
-  validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}
+  validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}, if: :strip_invoice?
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true
   validates_length_of :charge_guid, maximum: 255, allow_blank: true
@@ -162,10 +162,10 @@ class Invoice < ActiveRecord::Base
             raise ActiveRecord::Rollback
           end
         else
-          Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
+          Rails.logger.error "ERROR: Invoice#build_from_paypal_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{paypal_body}."
         end
       else
-        Rails.logger.error "ERROR: Invoice#build_from_stripe_data find User-#{stripe_data_hash[:customer]}, Subscription-#{stripe_data_hash[:subscription]} OR Currency-#{stripe_data_hash[:currency].upcase}"
+        Rails.logger.error "ERROR: Invoice#build_from_paypal_data find Billing Agreement-#{paypal_body['resource']['billing_agreement_id']}}"
       end
     end
     inv
@@ -233,5 +233,9 @@ class Invoice < ActiveRecord::Base
       vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).try(:id)
       self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
     end
+  end
+
+  def strip_invoice?
+    subscription_guid.present?
   end
 end
