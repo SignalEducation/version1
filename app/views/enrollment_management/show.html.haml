@@ -70,7 +70,7 @@
                         -set.course_module_element_user_logs.each do |log|
                           %tr
                             %td
-                              =log.course_module_element.name
+                              =log.course_module_element.try(:name)
                             %td
                               =tick_or_cross(log.element_completed)
                             %td

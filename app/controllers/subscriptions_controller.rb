@@ -98,6 +98,7 @@ class SubscriptionsController < ApplicationController
       flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
       redirect_to new_subscription_url
     end
+
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
     redirect_to new_subscription_url
@@ -108,7 +109,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def change_plan
-    if current_user && current_user.current_subscription && !current_user.current_subscription.active_status?
+    if current_user && current_user.trial_user?
+      redirect_to new_subscription_url
+    elsif current_user && current_user.subscription_user? && current_user.current_subscription && !current_user.current_subscription.active_status?
       redirect_to account_url(anchor: :subscriptions)
     else
       @current_subscription = current_user.current_subscription

@@ -128,4 +128,14 @@ describe ContentPagesController, type: :controller do
 
   end
 
+  context 'Not logged in...' do
+
+    describe "GET 'show/1'" do
+      it 'should see content_page_1' do
+        get :show, content_public_url: content_page_1.public_url
+        expect_show_success_with_model('content_page', content_page_1.id)
+      end
+    end
+  end
+
 end

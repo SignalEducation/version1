@@ -6,7 +6,81 @@
       =render 'layouts/landing_navbar'
 
 
-    %section#highlighter_person.diag-r-down
+    %section#bootcamp_guarantee
+      .tmain
+        .tbase
+          .container
+            .row
+              .col-md-9
+                %h1.title1
+                  ='Welcome to the ACCA Exam Bootcamp'
+              .col-md-3
+                .logo-center
+                  =image_tag('acca_approved.png')
+
+          .container.l-margin-top
+            .row
+              .col-md-8
+
+                %h2.subtitle
+                  ='LearnSignal Bootcamp is your daily dose of motivation, coaching and support ensuring you pass your ACCA exams.'
+                %p.subtitle
+                  ='LearnSignal is inviting you to join Exam Bootcamp starting on Monday 12 November for the 21 days leading up to the December ACCA exams.'
+
+                %p.subtitle{style: 'font-weight: bold; margin-bottom: 4px;margin-top: 8px;'}
+                  ='What Is Exam Bootcamp?'
+                %p.subtitle
+                  ='Every day, we will send you an email with a link to that day’s Exam Bootcamp activity page. On that day’s page, you’ll find the activity for your chosen exam paper and off you go!'
+
+
+
+                %p.subtitle{style: 'margin-bottom: 4px; margin-top: 8px;'}
+                  ='Existing LearnSignal members will have access to the solutions and accompanying videos, remember,  you can become an existing member today - cancel anytime.'
+                .list.l-margin-bottom-big
+                  %ul
+                    %li
+                      ='Sign-Up For Exam Bootcamp Email Now (It’s Free)'
+                    %li
+                      ='For full access to course material & videos you can subscribe here'
+
+                %p.subtitle
+                  ='Give yourself the best chance of a PASS this December'
+
+
+              .col-md-4
+                -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?
+                  #response.form
+                    =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
+                      =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
+                      .row
+                        .col-sm-12
+                          =label(:first_name, 'First Name')
+                          .input-group.input-group-lg.full-width
+                            =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control', style: 'border-radius: 6px;'})
+                          %br/
+                          =label(:first_name, 'Last Name')
+                          .input-group.input-group-lg.full-width
+                            =text_field(:last_name, :address, {id: 'name', placeholder: 'Your last name', class: 'form-control', style: 'border-radius: 6px;'})
+                          %br/
+                          =label(:email, 'Email Address')
+                          .input-group.input-group-lg.full-width
+                            =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control', style: 'border-radius: 6px;'})
+
+                          %br/
+                          =label(:course_name, 'Course')
+                          .input-group.input-group-lg.full-width
+                            =select_tag('course', options_for_select(@group.subject_courses.all_in_order.all_active.collect{ |u| [u.name, u.name] }), {include_blank: t('views.general.select'), class: 'form-control'})
+
+
+                          .l-margin-top
+                            %button.btn.btn-red{:type => "submit"}
+                              ='Register Now'
+
+
+
+
+
+    -#%section#highlighter_person.diag-r-down
       .tmain
         .tbase
           .container
@@ -28,51 +102,6 @@
                 .approved
                   =image_tag('acca_approved.png')
 
-
-
-    %section#what{style: 'background: #F5F5FC;'}
-      .container
-        %h2.title1{style: 'margin-bottom: 20px;'}
-          -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_heading && !@home_page.mailchimp_section_heading.empty?)
-            =@home_page.mailchimp_section_heading
-          -else
-            ='Sign-Up For Exam Bootcamp Now'
-
-        %h2.subtitle{style: 'margin-bottom: 20px;'}
-          -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_subheading && !@home_page.mailchimp_section_subheading.empty?)
-            =@home_page.mailchimp_section_subheading
-          -else
-            ='(It’s Free)'
-
-        #response.l-margin-bottom-huge.l-margin-top-huge
-          =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-            -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
-              =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
-            .row
-              .col-md-4.col-md-offset-1.col-sm-6
-                .form-group
-                  =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
-              .col-md-4.col-sm-6
-                .form-group
-                  =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
-              .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
-                .form-group
-                  %button.lsbtn.s{:type => "submit", style: 'padding-top: 12px; padding-bottom: 12px;'} Subscribe
-
-
-
-    %section#trusted
-      .container
-        .inner
-          %h2.title1 Trusted by learners all over the world.
-          %p The days of in-person training have become impractical. Issues with memory retention, data overload and poor quality trainers have made in-person training ineffective. That’s why we’ve created our adaptive learning platform, so you can access your learning anywhere and anytime that you need it.
-        .lsbtn-base
-          -if current_user && current_user.trial_or_sub_user?
-            =link_to 'Try us out now', new_subscription_url, class: 'lsbtn'
-          -else
-            =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
-
-        .obs-nocc No credit card details needed!
 
 
 

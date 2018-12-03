@@ -60,26 +60,30 @@ class StudentSignUpsController < ApplicationController
     if params[:mailchimp_list_guid] && !params[:mailchimp_list_guid].empty?
       list_id = params[:mailchimp_list_guid]
     else
-      list_id = 'ac6c0d8c35' # Development List
+      list_id = 'a716c282e2' # Newsletter List
     end
 
     email = params[:email][:address]
-    name = params[:first_name][:address]
+    full_name = params[:full_name][:address] if params[:full_name]
+    first_name = params[:first_name][:address] if params[:first_name]
+    last_name = params[:last_name][:address] if params[:last_name]
     student_number = params[:student_number][:address] if params[:student_number]
     course_name = params[:course]
     date_of_birth = params[:date_of_birth][:address] if params[:date_of_birth]
 
     if !email.blank?
       begin
-        if params[:course] && params[:student_number][:address]
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name,
+        # Bootcamp Guarantee List has Student Number Field other do not
+        if params[:student_number]
+          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => full_name,
                                                             'snumber' => student_number,
                                                             'dob' => date_of_birth,
                                                             'coursename' => course_name})
         else
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
+          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => first_name,
+                                                            'lname' => last_name,
+                                                            'coursename' => course_name})
         end
-
 
         respond_to do |format|
           format.json{render json: {message: 'Success! Check your email to confirm your subscription.'}}
@@ -150,7 +154,7 @@ class StudentSignUpsController < ApplicationController
       @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
 
       # Send User Activation email through Mandrill
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code))
+      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
 
       # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
       if cookies.encrypted[:referral_data]

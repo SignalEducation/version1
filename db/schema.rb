@@ -164,8 +164,10 @@ ActiveRecord::Schema.define(version: 20181129113006) do
     t.integer  "content_page_id"
     t.text     "text_content"
     t.string   "panel_colour"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "subject_course_id"
+    t.integer  "sorting_order"
   end
 
   create_table "content_pages", force: :cascade do |t|

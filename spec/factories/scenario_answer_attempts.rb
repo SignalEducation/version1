@@ -17,14 +17,11 @@
 FactoryBot.define do
   factory :scenario_answer_attempt do
     scenario_question_attempt_id 1
-    constructed_response_attempt_id 1
-    course_module_element_user_log_id 1
     user_id 1
-    scenario_question_id 1
-    constructed_response_id 1
     scenario_answer_template_id 1
     original_answer_template_text "MyText"
     user_edited_answer_template_text "MyText"
     editor_type "MyString"
+    sorting_order 1
   end
 end

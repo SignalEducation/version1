@@ -189,7 +189,9 @@ class CourseModule < ActiveRecord::Base
   def percentage_complete_for_enrollment(enrollment_id)
     enrollment = Enrollment.where(id: enrollment_id).first
     if enrollment
-      set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).first
+      #TODO - investigate why two SET records exist
+      # Created At - [Thu, 11 Oct 2018 18:07:25 IST +01:00, Thu, 11 Oct 2018 18:05:52 IST +01:00]
+      set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).all_in_order.first
       set.try(:percentage_complete) || 0
     else
       0

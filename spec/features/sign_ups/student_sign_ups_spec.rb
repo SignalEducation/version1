@@ -3,7 +3,6 @@ require 'support/users_and_groups_setup'
 
 require 'support/system_setup'
 require 'support/course_content'
-require 'stripe_mock'
 
 describe 'The student sign-up process', type: :feature do
 
@@ -12,7 +11,6 @@ describe 'The student sign-up process', type: :feature do
   include_context 'system_setup'
   include_context 'course_content'
 
-  after { StripeMock.stop }
 
   before(:each) do
     activate_authlogic

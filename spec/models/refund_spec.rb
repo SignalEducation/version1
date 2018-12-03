@@ -20,68 +20,78 @@
 #
 
 require 'rails_helper'
+require 'support/stripe_web_mock_helpers'
 
 describe Refund do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  Refund.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
   it { expect(Refund.const_defined?(:REASONS)).to eq(true) }
 
-  # relationships
-  it { should belong_to(:charge) }
-  it { should belong_to(:invoice) }
-  it { should belong_to(:subscription) }
-  it { should belong_to(:user) }
-  it { should belong_to(:manager) }
+  describe 'relationships' do
+    it { should belong_to(:charge) }
+    it { should belong_to(:invoice) }
+    it { should belong_to(:subscription) }
+    it { should belong_to(:user) }
+    it { should belong_to(:manager) }
+  end
 
-  # validation
-  it { should validate_presence_of(:stripe_guid) }
+  describe 'validations' do
+    before(:each) do
+      response_body = {}
+      stub_request(:post, "https://api.stripe.com/v1/refunds").
+          with(
+              headers: {
+                  'Accept'=>'*/*',
+                  'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+                  'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+                  'Content-Type'=>'application/x-www-form-urlencoded',
+                  'Stripe-Version'=>'2017-06-05',
+                  'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
+                  'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+              }).
+          to_return(status: 200, body: response_body.to_json, headers: {})
+    end
 
-  it { should validate_presence_of(:charge_id) }
-  it { should validate_numericality_of(:charge_id) }
 
-  it { should validate_presence_of(:stripe_charge_guid) }
+    it { should validate_presence_of(:stripe_guid) }
 
-  it { should validate_presence_of(:invoice_id) }
-  it { should validate_numericality_of(:invoice_id) }
+    it { should validate_presence_of(:charge_id) }
+    it { should validate_numericality_of(:charge_id) }
 
-  it { should validate_presence_of(:subscription_id) }
-  it { should validate_numericality_of(:subscription_id) }
+    it { should validate_presence_of(:stripe_charge_guid) }
 
-  it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
+    it { should validate_presence_of(:invoice_id) }
+    it { should validate_numericality_of(:invoice_id) }
 
-  it { should validate_presence_of(:manager_id) }
-  it { should validate_numericality_of(:manager_id) }
+    it { should validate_presence_of(:subscription_id) }
+    it { should validate_numericality_of(:subscription_id) }
 
-  it { should validate_presence_of(:amount) }
+    it { should validate_presence_of(:user_id) }
+    it { should validate_numericality_of(:user_id) }
 
-  it { should validate_presence_of(:reason) }
+    it { should validate_presence_of(:manager_id) }
+    it { should validate_numericality_of(:manager_id) }
 
-  it { should validate_presence_of(:status) }
+    it { should validate_presence_of(:amount) }
 
-  it { should validate_presence_of(:stripe_refund_data) }
+    it { should validate_presence_of(:reason) }
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:create_on_stripe).before(:validation) }
+    it { should validate_presence_of(:status) }
 
-  # scopes
-  it { expect(Refund).to respond_to(:all_in_order) }
+    xit { should validate_presence_of(:stripe_refund_data) }
+  end
 
-  # class methods
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+    it { should callback(:create_on_stripe).before(:validation) }
+  end
 
-  # instance methods
-  it { should respond_to(:destroyable?) }
+  describe 'scopes' do
+    it { expect(Refund).to respond_to(:all_in_order) }
+  end
 
+
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+  end
 
 end

@@ -50,10 +50,14 @@ class SubjectCoursesController < ApplicationController
 
   # Standard Actions #
   def index
-    @subject_courses = SubjectCourse.paginate(per_page: 50, page: params[:page])
-    @courses = params[:search].to_s.blank? ?
-        @courses = @subject_courses.all_in_order :
-        @courses = @subject_courses.search(params[:search])
+    if params[:group_id]
+      @subject_courses = SubjectCourse.where(group_id: params[:group_id]).all_in_order
+    else
+      @subject_courses = SubjectCourse.all_in_order
+    end
+    @subject_courses = params[:search].to_s.blank? ?
+                           @subject_courses = @subject_courses.all_in_order :
+                           @subject_courses = @subject_courses.search(params[:search])
   end
 
   def show
@@ -150,7 +154,7 @@ class SubjectCoursesController < ApplicationController
     if params[:id].to_i > 0
       @subject_course = SubjectCourse.where(id: params[:id]).first
     end
-    @groups = Group.all_active.all_in_order
+    @groups = Group.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
     @layout = 'management'
