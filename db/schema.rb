@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181102133803) do
+ActiveRecord::Schema.define(version: 20181108183423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -164,8 +164,10 @@ ActiveRecord::Schema.define(version: 20181102133803) do
     t.integer  "content_page_id"
     t.text     "text_content"
     t.string   "panel_colour"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "subject_course_id"
+    t.integer  "sorting_order"
   end
 
   create_table "content_pages", force: :cascade do |t|

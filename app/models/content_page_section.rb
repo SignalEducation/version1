@@ -2,35 +2,41 @@
 #
 # Table name: content_page_sections
 #
-#  id              :integer          not null, primary key
-#  content_page_id :integer
-#  text_content    :text
-#  panel_colour    :string
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
+#  id                :integer          not null, primary key
+#  content_page_id   :integer
+#  text_content      :text
+#  panel_colour      :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  subject_course_id :integer
+#  sorting_order     :integer
 #
 
 class ContentPageSection < ActiveRecord::Base
 
   # attr-accessible
-  attr_accessible :content_page_id, :text_content, :panel_colour
+  attr_accessible :content_page_id, :text_content, :panel_colour,
+                  :subject_course_id, :sorting_order
 
   # Constants
 
   # relationships
   belongs_to :content_page
+  belongs_to :subject_course
 
   # validation
   validates :content_page_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :text_content, presence: true
   validates :panel_colour, presence: true
+  validates :sorting_order, presence: true,
+            numericality: {only_integer: true}
 
   # callbacks
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:content_page_id) }
+  scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
 
   # class methods
 

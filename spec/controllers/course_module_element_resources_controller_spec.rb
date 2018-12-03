@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: course_module_element_resources
+#
+#  id                       :integer          not null, primary key
+#  course_module_element_id :integer
+#  name                     :string
+#  web_url                  :string
+#  created_at               :datetime
+#  updated_at               :datetime
+#  upload_file_name         :string
+#  upload_content_type      :string
+#  upload_file_size         :integer
+#  upload_updated_at        :datetime
+#  destroyed_at             :datetime
+#
+
 require 'rails_helper'
 require 'support/course_content'
 
