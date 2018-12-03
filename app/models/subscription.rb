@@ -68,7 +68,6 @@ class Subscription < ActiveRecord::Base
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_coupon_count
-  after_create :convert_student_access, if: :stripe_guid
   after_save :update_student_access, if: :active
 
   # scopes
@@ -112,6 +111,12 @@ class Subscription < ActiveRecord::Base
     state :active, :errored, :pending_cancellation do
       def valid_subscription?
         true
+      end
+    end
+
+    after_transition pending: :active do |subscription, _transition|
+      if !(subscription.user.student_access.subscription_access? && subscription.user.student_access.content_access)
+        subscription.user.student_access.convert_to_subscription_access(subscription.id)
       end
     end
 
@@ -253,6 +258,10 @@ class Subscription < ActiveRecord::Base
       #self.livemode == Invoice::STRIPE_LIVE_MODE &&
   end
 
+  def stripe_guid_present?
+    @stripe_guid.present?
+  end
+
   # setter method
   def stripe_token=(t)
     @stripe_token = t
@@ -371,11 +380,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def update_student_access
-    if paypal_token && !(user.student_access.subscription_access? && user.student_access.content_access)
-      user.student_access.convert_to_subscription_access(id)
-    else
-      user.student_access.check_student_access
-    end
+    user.student_access.check_student_access
   end
 
   def prefix
