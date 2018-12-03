@@ -11,27 +11,25 @@
           %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
             .base
               .topbox
-                -if plan.payment_frequency_in_months == 12
-                  -#%span Our most popular payment plan
-                  %span Black Friday Offer
+                -if plan.payment_frequency_in_months == 3
+                  %span Our most popular payment plan
               .box
                 .name
                   =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                 %ul.details.fa-ul
-                  -if plan.payment_frequency_in_months == 12
-                    %li
-                      %i.fa-li.fa.fa-check
-                      ='40% off original plan'
-                    %li
-                      %i.fa-li.fa.fa-check
-                      ='Limited time offer'
-                  -else
-                    %li
-                      %i.fa-li.fa.fa-check
-                      Get unlimited access
-                    %li
-                      %i.fa-li.fa.fa-check
-                      Cancel anytime
+                  %li
+                    %i.fa-li.fa.fa-check
+                    Get unlimited access
+                  %li
+                    %i.fa-li.fa.fa-check
+                    Cancel anytime
+                  -#%li
+                    %i.fa-li.fa.fa-check
+                    =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
+                  -#%li
+                    %i.fa-li.fa.fa-check
+                    -# TODO Add plans free mock exams count here
+                    =#'corrected mock exams'
 
                 .price
                   =plan.currency.format_number(plan.price)
