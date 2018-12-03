@@ -253,6 +253,9 @@ GEM
       money (~> 6.5)
       prawn (~> 1.0.0)
       prawn-svg (~> 0.15.0.0)
+    paypal-sdk-rest (1.7.2)
+      multi_json (~> 1.0)
+      xml-simple
     pdf-core (0.2.5)
     pg (0.18.4)
     poltergeist (1.8.1)
@@ -413,6 +416,13 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    state_machines (0.5.0)
+    state_machines-activemodel (0.5.1)
+      activemodel (>= 4.1, < 6.0)
+      state_machines (>= 0.5.0)
+    state_machines-activerecord (0.5.2)
+      activerecord (>= 4.1, < 6.0)
+      state_machines-activemodel (>= 0.5.0)
     stripe (2.8.0)
       faraday (~> 0.9)
     summernote-rails (0.7.1.0)
@@ -427,6 +437,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.6)
     tilt (1.4.1)
+    timecop (0.9.1)
     ttfunk (1.1.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
@@ -454,6 +465,7 @@ GEM
     will_paginate (3.1.0)
     will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
+    xml-simple (1.1.5)
     xpath (2.0.0)
       nokogiri (~> 1.3)
     zeroclipboard-rails (0.1.1)
@@ -510,6 +522,7 @@ DEPENDENCIES
   paperclip (~> 4.2.1)
   paperclip-dimension-validator
   payday
+  paypal-sdk-rest
   pg
   poltergeist
   powder
@@ -534,10 +547,12 @@ DEPENDENCIES
   simplecov
   sinatra
   spring
+  state_machines-activerecord
   stripe (= 2.8.0)
   summernote-rails
   therubyracer
   thin
+  timecop
   uglifier (>= 1.3.0)
   ultrahook
   utf8-cleaner

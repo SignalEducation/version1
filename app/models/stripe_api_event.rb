@@ -159,7 +159,7 @@ class StripeApiEvent < ActiveRecord::Base
         if stripe_subscription
           status = stripe_subscription.cancel_at_period_end ? 'canceled-pending' : stripe_subscription.status
           subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-          subscription.current_status = status
+          subscription.stripe_status = status
           subscription.livemode = stripe_subscription[:plan][:livemode]
           subscription.save(validate: false)
         end

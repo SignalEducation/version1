@@ -1,0 +1,4 @@
+.pretty-checkbox {
+  @include prettyCheckbox();
+  padding-left: 20px;
+}

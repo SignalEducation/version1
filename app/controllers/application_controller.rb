@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :setup_mcapi
 
   def authenticate_if_staging
-    if Rails.env.staging? && controller_name != 'stripe_v02'
+    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
         name == 'signal' && password == '27(South!)'
       end

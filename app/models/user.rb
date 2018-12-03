@@ -347,7 +347,9 @@ class User < ActiveRecord::Base
   # Trial Access
 
   def trial_user?
-    self.trial_or_sub_user? && self.student_access.trial_access? && !self.student_access.subscription_id
+    self.trial_or_sub_user? &&
+      (self.student_access.trial_access? && !self.student_access.subscription_id) ||
+      (self.student_access.subscription_id? && self.student_access.subscription.pending?)
   end
 
   def valid_trial_user?
@@ -389,8 +391,6 @@ class User < ActiveRecord::Base
     self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
   end
 
-
-
   # Subscription Access
 
   def subscription_user?
@@ -398,45 +398,29 @@ class User < ActiveRecord::Base
   end
 
   def valid_subscription?
-    self.trial_or_sub_user? && self.current_subscription && %w(active past_due).include?(self.current_subscription.current_status)
+    self.trial_or_sub_user? && self.current_subscription && self.current_subscription.valid_subscription?
   end
 
   def canceled_pending?
-    self.subscription_user? && self.current_subscription && self.current_subscription.current_status == 'canceled-pending'
+    self.subscription_user? && self.current_subscription && self.current_subscription.stripe_status == 'canceled-pending'
   end
 
   def canceled_member?
-    self.subscription_user? && self.current_subscription && self.current_subscription.current_status == 'canceled'
+    self.subscription_user? && self.current_subscription && self.current_subscription.cancelled?
   end
 
   def current_subscription
-    self.student_access.subscription
+    student_access.subscription
   end
 
   def default_card
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
   end
 
-
   def user_subscription_status
     current_subscription = self.current_subscription
     if current_subscription
-      case current_subscription.current_status
-        when 'active'
-          'Active Subscription'
-        when 'past_due'
-          'Past Due Subscription'
-        when 'canceled-pending'
-          'Canceled-pending Subscription'
-        when 'canceled'
-          'Canceled Subscription'
-        when 'unpaid'
-          'Unpaid Subscription'
-        when 'suspended'
-          'Suspended Subscription'
-        else
-          'Invalid Subscription'
-      end
+      current_subscription.user_readable_status
     else
       'Invalid Subscription'
     end
@@ -483,19 +467,16 @@ class User < ActiveRecord::Base
     #Returns true if an active enrollment exists for this user/course
 
     self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
-
   end
 
   def enrolled_in_course?(course_id)
     #Returns true if a non-expired active enrollment exists for this user/course
 
     self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
-
   end
 
-
-  def referred_user
-    self.student_user? && self.referred_signup
+  def referred_user?
+    student_user? && referred_signup
   end
 
   # Orders/Products
@@ -783,7 +764,7 @@ class User < ActiveRecord::Base
           complimentary: false,
           active: true,
           livemode: stripe_subscription_object.plan.livemode,
-          current_status: stripe_subscription_object.status,
+          stripe_status: stripe_subscription_object.status,
       )
       subscription.stripe_guid = stripe_subscription_object.id
       subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)

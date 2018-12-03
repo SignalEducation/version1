@@ -269,8 +269,7 @@
 #plans .plans .plan .base { position: relative; padding: 0 25px; }
 #plans .plans .plan .base:after { content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.3); visibility: hidden; opacity: 0; z-index: 100; transition: all 0.2s; }
 #plans .plans .plan .base .topbox { z-index: 199; position: relative; }
-//#plans .plans .plan .base .topbox span { display: block; background: #EF5153; color: #fff; line-height: 1.222em; padding: 0.889em 0.4em; border-radius: 6px 6px 0 0; z-index: 199; position: relative; }
-#plans .plans .plan .base .topbox span { display: block; background: #3D3D5B; color: #fff; line-height: 1.222em; padding: 0.889em 0.4em; border-radius: 6px 6px 0 0; z-index: 199; position: relative; }
+#plans .plans .plan .base .topbox span { display: block; background: #EF5153; color: #fff; line-height: 1.222em; padding: 0.889em 0.4em; border-radius: 6px 6px 0 0; z-index: 199; position: relative; }
 #plans .plans .plan .base .topbox + .box { margin-top: -6px; }
 
 
@@ -518,7 +517,7 @@
 #community { padding: 105px 0; background: asset-url('community.jpg') center center no-repeat; background-size: cover; color: #fff; position: relative; }
 #community .inner { max-width: 630px; margin: auto; }
 
-#simply { background: #f6f6f6; padding: 70px 0 120px 0; position: relative; }
+#simply { background: #fff; padding: 70px 0 120px 0; position: relative; }
 #simply.africa { background: #EFF3F6; padding: 70px 0 120px 0; position: relative; }
 #simply .subtitle1 { margin: 0 0 2.7em 0; }
 #simply .cc { overflow: hidden; margin-bottom: 2.333em; }

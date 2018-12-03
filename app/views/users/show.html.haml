@@ -110,8 +110,7 @@
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_status')
                   .h6
-                    -if @subscription.current_status
-                      =@subscription.current_status.camelcase
+                    =@subscription.state.camelcase
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
@@ -162,8 +161,7 @@
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
                   .h6
-                    -if @subscription.current_status
-                      =@subscription.current_status.to_s.capitalize
+                    =@subscription.state.capitalize
 
 
                 .col-sm-4.col-xs-6.l-margin-top

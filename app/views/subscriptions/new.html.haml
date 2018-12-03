@@ -1,151 +1,123 @@
 .upgrade
   #wrapper
-    %section#free
-      .tmain
-        .tbase
-          -if flash[:success] || flash[:error] || flash[:warning]
-            .col-sm-8.col-sm-offset-2.col-xs-12
-              =render partial: 'layouts/flash_messages'
-          .container
-            .row
-              .col-md-10.col-md-offset-1
-                %h1.title1
-                  =#'Upgrade now for Unlimited Access'
-                  ='Black Friday / Cyber Monday Sale'
-                %h2.subtitle
-                  =#t('views.subscriptions.new_subscription.h2a')
-                  ='Ready to have your ACCA tuition sorted for the next year?'
-                %h2.subtitle
-                  =#t('views.subscriptions.new_subscription.h2b')
-                  ='LearnSignal is delighted to offer 40% off our annual subscriptions as part of a Black Friday special'
-
-            -#if @user.trial_user?
-              .row
-                .col-md-10.col-md-offset-1
-                  %h1.title1
-                    ='Upgrade now for Unlimited Access'
-                  %h2.subtitle
-                    =t('views.subscriptions.new_subscription.h2a')
-                  %h2.subtitle
-                    =t('views.subscriptions.new_subscription.h2b')
-            -#else
-              .row
-                .col-md-10.col-md-offset-1
-                  %h1.title1
-                    =t('views.subscriptions.new_subscription.h2e')
-
-
-      .go-down
-        %a.anchor{:href => "#plans"}
-          %i.fa.fa-angle-down
-      .bottom-arrow
-
-
-
     #upgrade-subscription
       =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
         =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
-        =f.hidden_field :user_id, value: @user.id
-        =f.hidden_field :subscription_plan_id
+        =f.hidden_field :user_id, value: current_user.id
+        =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
         =f.hidden_field :stripe_token
-        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        =f.hidden_field :use_paypal, value: false
         -if params[:coupon]
           =hidden_field_tag :hidden_coupon_code
 
-
-        %section#plans
+        .bg-asphalt
           .container
-
-            %h2.title1
-              =#t('views.subscriptions.new_subscription.h2c')
-              ='Passing your ACCA is worth it'
-            %h2.subtitle1
-              =t('views.subscriptions.new_subscription.h2d')
-
-            %ul.plans.clearfix
-              -@subscription_plans.each do |plan|
-                %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, price: plan.currency.format_number(plan.price), interval: plan.payment_frequency_in_months}}
-                  .base
-                    .topbox
-                      -if plan.payment_frequency_in_months == 12
-                        %span
-                          =#t('views.subscriptions.new_subscription.h2d')
-                          ='Cyber Monday Offer'
-                    .box
-                      .name
-                        =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                      %ul.details.fa-ul
-                        -if plan.payment_frequency_in_months == 12
-                          %li
-                            %i.fa-li.fa.fa-check
-                            ='40% off original plan'
-                          %li
-                            %i.fa-li.fa.fa-check
-                            ='Limited time offer'
-                        -else
-                          %li
-                            %i.fa-li.fa.fa-check
-                            =t('views.subscriptions.new_subscription.get_unlimited_access')
-                          %li
-                            %i.fa-li.fa.fa-check
-                            =t('views.subscriptions.new_subscription.cancel_anytime')
-
-                      .price
-                        =plan.currency.format_number(plan.price)
-                    .lsbtn-base
-                      %label.lsbtn.plan-option
-                        %input{id: 'chk-plan-' + plan.id.to_s, type: 'radio', class: 'option'}
-                        =t('views.subscriptions.new_subscription.select_this_plan')
-
-
-
-
-        %section#cancel.bg-gradient1
-          .container
-            %h1.title1
-              %span
-                =t('views.subscriptions.new_subscription.and_dont_forget')
-                %strong
-                  =t('views.subscriptions.new_subscription.you_can_cancel_anytime')
-            %h1.title1
-              %span
-                =t('views.subscriptions.new_subscription.no_commitments')
-                %br/
-
-
-        %section#simply
-          .container
+            -if flash[:success] || flash[:error] || flash[:warning]
+              .row.subscription-flash
+                .col-xs-12
+                  =render partial: 'layouts/flash_messages'
+            .hero
+              %h5.text-red Upgrade Your Account
+              %h1.h1-mega Select one of our plans
+              %p.text-lg.mb-0 Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
+              %p.text-lg People learn in different ways. Whatever way you want to learn, we've got you covered.
+          .container.payment
             .row
-              .col-lg-10.col-lg-offset-1
-                %h2.title1
-                  =t('views.subscriptions.new_subscription.enter_payment_details')
-                %h2.subtitle1
-                  =t('views.subscriptions.new_subscription.continue_right_away')
+              .col-lg-6.mb-5.mb-xl-0
+                %fieldset
+                  %legend.sr-only Select a Plan
+                  -@subscription_plans.each do |plan|
+                    .form-group
+                      .custom-control.custom-radio
+                        %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if @subscription.subscription_plan_id == plan.id)}
+                        %label.custom-control-label{:for => plan.interval_name.downcase}
+                          %span.custom-label-info
+                            %span.h3.m-0
+                              %span
+                                =plan.interval_name
+                            - if plan.monthly_percentage_off.present?
+                              %span.discount
+                                %span.text-with-bg.bg-torquoise4
+                                  ="#{plan.monthly_percentage_off}%"
+                                off monthly price
+                          %span.custom-label-amount
+                            %span.text-purple5.text-xl
+                              =plan.currency.format_number(plan.price)
+                            %span.p
+                              ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+                          %span.custom-check
+                            / custom checkbox
 
-            .row
-              .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-                =render partial: 'subscription_payment_cards/form', locals: {f: f}
+              .col-lg-6
+                %fieldset.card
+                  %p.h2.mb-1 Choose a way to pay
+                  %p.mb-4 Choose your preferred method of payment
+                  .form-group.form-group-expandable
+                    .custom-control.custom-radio
+                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                      %label.custom-control-label{:for => "pay-with-card"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                            %span Credit / Debit Card
+                        %span.custom-check
+                          / custom checkbox
+                    =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                  .form-group.form-group-expandable
+                    .custom-control.custom-radio
+                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                      %label.custom-control-label{:for => "pay-with-paypal"}
+                        %span.custom-label-info
+                          %span.h3.m-0
+                            =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                            %span PayPal
+                        %span.custom-check
+                          / custom checkbox
+                    =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
+        .bg-white
+          .container
+            .py-6
+              %h2.mb-5 Included in Your LearnSignal Membership
+              .row
+                .col-md-5
+                  .with-icon-checked
+                    %p Topic&ndash;by&ndash;topic, online 15&ndash;minute lectures
+                  .with-icon-checked
+                    %p Notes &amp; MCQs
+                  .with-icon-checked
+                    %p Practice CBE's
+                .col-md-5
+                  .with-icon-checked
+                    %p 24&#47;7 hour Support
+                  .with-icon-checked
+                    %p Exam Bootcamp
+                  .with-icon-checked
+                    %p Webinar Week
 
 
 :javascript
 
-
   var couponCode = $('#coupon_code');
   var plan_id = '1';
 
-  // UnChecks radio buttons except the one that was clicked.
-  // Finds the id value of the sub plan that the radio button belongs to.
-  // Sets the hidden field subscription_plan_id to that id.
-  function choosePlan(theThing) {
-    $('.option[type="radio"]:checked').prop('checked', false);
-    $(theThing).find('.option[type="radio"]').prop('checked', true);
-    $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().attr('data-plan-id'));
-    $('#total-value').text($(theThing).parent().parent().parent().attr('data-price'));
-    //$('#next-payment-date').text($(theThing).parent().parent().parent().attr('data-interval'));
-    plan_id = $('#subscription_subscription_plan_id').val();
+  function intervalSummary(frequency) {
+    switch (frequency) {
+      case '1':
+        return 'Billed every month';
+      case '3':
+        return 'Billed every 3 months';
+      case '12':
+        return 'Billed every 12 months';
+      default:
+        return 'Billed every month';
+    }
+  }
 
-    // Need to trigger Ajax call here if the coupon field already has a value
+  function choosePlan(selectedPlan) {
+    $('#subscription_subscription_plan_id').val(selectedPlan);
+
+    updateCheckoutTotal();
     if ($('#coupon_code').val()) {
       validateCoupon();
     }
@@ -226,21 +198,142 @@
     }
   });
 
-  $(document).on('ready', function() {
-    //choosePlan($('.plan-option')[1]);
-    choosePlan($('.plan-option')[2]);
-    $('.option').bind('click', function(event) {
-      event.stopPropagation();
-      choosePlan(this.parentElement);
-    });
+  function updateCheckoutTotal() {
+    var selectedPlan = $("input[name='plans']:checked");
 
-    $(".plan-option").bind('click', function(event) {
+    $('.payment-details span.value').text($(selectedPlan).attr('data-price'));
+    $('.payment-details p.billing-summary').text(intervalSummary($(selectedPlan).attr('data-frequency')));
+  }
+
+  function initializePlan() {
+    var selectedPlan = $("input[name='plans']:checked").val();
+    choosePlan(selectedPlan);
+  }
+
+  $(document).on('ready', function() {
+    initializePlan();
+    $('input[type=radio][name=plans]').bind('change', function(event) {
       event.preventDefault();
-      choosePlan(this);
+      choosePlan($(this).val());
     });
     $(".sk-circle").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
+
+    // Bojan Stuff
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+      $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
+      if ($(this).is(':checked')) {
+        $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+        selectPaymentMethod($(this).val())
+      }
+    });
+    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+
+
+    $('#all-plans').collapse({
+      toggle: false
+    });
+
+    $('#all-plans').on('show.bs.collapse', function() {
+      $('.js-show-more-plans').addClass('disabled');
+    });
+    $('#all-plans').on('shown.bs.collapse', function() {
+      $('.js-show-more-plans').on('click', function() {
+        return false;
+      });
+    });
+
+    function selectPaymentMethod(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#subscription_use_paypal').val(true);
+          break;
+        case 'stripe':
+          $('#subscription_use_paypal').val(false);
+          break;
+        default:
+          $('#subscription_use_paypal').val(false);
+      }
+    }
+
+    // Custom styling can be passed to options when creating an Element.
+    var style = {
+      base: {
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Rubik", "Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
+    };
+
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements = stripe.elements();
+
+    var card = elements.create('card', {hidePostalCode: true, style: style});
+    card.mount('#card-element');
+
+    // Create a token when the form is submitted.
+    var form = document.getElementById('upgrade-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      //Replace submit button with spinning JS
+      $('#card_submit').prop('disabled',true);
+      $('#card_submit').hide();
+      $('#paypal_submit').prop('disabled',true);
+      $('#paypal_submit').hide();
+      $(".sk-circle").show();
+      if ($('#subscription_use_paypal').val() === 'true') {
+        document.getElementById('upgrade-form').submit();
+      } else {
+        createToken();
+      }
+    });
+
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('upgrade-form');
+      $('#subscription_stripe_token').val(token.id);
+      $('#hidden_coupon_code').val($('#coupon_code').val());
+
+      // Submit the form
+      form.submit();
+    }
+
+    function createToken() {
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+          //Replace spinning JS with Submit button
+          $('#card_submit').prop('disabled',false);
+          $('#card_submit').show();
+          $(".sk-circle").hide();
+
+        } else {
+          // Send the token to your server
+          stripeTokenHandler(result.token);
+        }
+      });
+    };
   })
 
 

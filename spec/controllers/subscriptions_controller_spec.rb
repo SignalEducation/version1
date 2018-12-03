@@ -2,21 +2,25 @@
 #
 # Table name: subscriptions
 #
-#  id                   :integer          not null, primary key
-#  user_id              :integer
-#  subscription_plan_id :integer
-#  stripe_guid          :string
-#  next_renewal_date    :date
-#  complimentary        :boolean          default(FALSE), not null
-#  current_status       :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  stripe_customer_id   :string
-#  stripe_customer_data :text
-#  livemode             :boolean          default(FALSE)
-#  active               :boolean          default(FALSE)
-#  terms_and_conditions :boolean          default(FALSE)
-#  coupon_id            :integer
+#  id                       :integer          not null, primary key
+#  user_id                  :integer
+#  subscription_plan_id     :integer
+#  stripe_guid              :string
+#  next_renewal_date        :date
+#  complimentary            :boolean          default(FALSE), not null
+#  stripe_status            :string
+#  created_at               :datetime
+#  updated_at               :datetime
+#  stripe_customer_id       :string
+#  stripe_customer_data     :text
+#  livemode                 :boolean          default(FALSE)
+#  active                   :boolean          default(FALSE)
+#  terms_and_conditions     :boolean          default(FALSE)
+#  coupon_id                :integer
+#  paypal_subscription_guid :string
+#  paypal_token             :string
+#  paypal_status            :string
+#  state                    :string
 #
 
 require 'rails_helper'

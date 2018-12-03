@@ -17,6 +17,9 @@
 #  name                          :string
 #  subscription_plan_category_id :integer
 #  livemode                      :boolean          default(FALSE)
+#  paypal_guid                   :string
+#  paypal_state                  :string
+#  monthly_percentage_off        :integer
 #
 
 FactoryBot.define do
