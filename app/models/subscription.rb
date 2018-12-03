@@ -149,7 +149,7 @@ class Subscription < ActiveRecord::Base
 
   # INSTANCE METHODS ===========================================================
 
-  def cancel
+  def cancel_by_user
     if self.stripe_customer_id && self.stripe_guid
       # call stripe and cancel the subscription
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
@@ -168,6 +168,8 @@ class Subscription < ActiveRecord::Base
       end
       # return true or false - if everything went well
       errors.messages.count == 0
+    elsif paypal_subscription_guid.present?
+      SubscriptionService.new(self).cancel_subscription
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end

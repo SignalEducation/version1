@@ -31,6 +31,12 @@ class SubscriptionService
     end
   end
 
+  def cancel_subscription
+    if self.paypal?
+      PaypalService.new.cancel_billing_agreement(@subscription)
+    end
+  end
+
   def paypal?
     (@subscription.use_paypal.present? && @subscription.use_paypal == 'true') || @subscription.paypal_token.present?
   end

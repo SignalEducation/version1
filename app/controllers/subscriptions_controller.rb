@@ -154,7 +154,7 @@ class SubscriptionsController < ApplicationController
   #Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
   def destroy
     if @subscription
-      if @subscription.cancel
+      if @subscription.cancel_by_user
         flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
       else
         Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
