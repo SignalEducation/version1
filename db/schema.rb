@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108183423) do
+ActiveRecord::Schema.define(version: 20181129113006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -594,6 +594,7 @@ ActiveRecord::Schema.define(version: 20181108183423) do
     t.decimal  "tax_percent"
     t.decimal  "tax"
     t.text     "original_stripe_data"
+    t.string   "paypal_payment_guid"
   end
 
   add_index "invoices", ["currency_id"], name: "index_invoices_on_currency_id", using: :btree
@@ -677,6 +678,16 @@ ActiveRecord::Schema.define(version: 20181108183423) do
   add_index "orders", ["stripe_guid"], name: "index_orders_on_stripe_guid", using: :btree
   add_index "orders", ["subject_course_id"], name: "index_orders_on_subject_course_id", using: :btree
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+
+  create_table "paypal_webhooks", force: :cascade do |t|
+    t.string   "guid"
+    t.string   "event_type"
+    t.text     "payload"
+    t.datetime "processed_at"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "verified",     default: true
+  end
 
   create_table "products", force: :cascade do |t|
     t.string   "name"
@@ -1076,6 +1087,9 @@ ActiveRecord::Schema.define(version: 20181108183423) do
     t.string   "name"
     t.integer  "subscription_plan_category_id"
     t.boolean  "livemode",                      default: false
+    t.string   "paypal_guid"
+    t.string   "paypal_state"
+    t.integer  "monthly_percentage_off"
   end
 
   add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree
@@ -1112,20 +1126,24 @@ ActiveRecord::Schema.define(version: 20181108183423) do
     t.integer  "subscription_plan_id"
     t.string   "stripe_guid"
     t.date     "next_renewal_date"
-    t.boolean  "complimentary",        default: false, null: false
-    t.string   "current_status"
+    t.boolean  "complimentary",            default: false, null: false
+    t.string   "stripe_status"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "stripe_customer_id"
     t.text     "stripe_customer_data"
-    t.boolean  "livemode",             default: false
-    t.boolean  "active",               default: false
-    t.boolean  "terms_and_conditions", default: false
+    t.boolean  "livemode",                 default: false
+    t.boolean  "active",                   default: false
+    t.boolean  "terms_and_conditions",     default: false
     t.integer  "coupon_id"
+    t.string   "paypal_subscription_guid"
+    t.string   "paypal_token"
+    t.string   "paypal_status"
+    t.string   "state"
   end
 
-  add_index "subscriptions", ["current_status"], name: "index_subscriptions_on_current_status", using: :btree
   add_index "subscriptions", ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date", using: :btree
+  add_index "subscriptions", ["stripe_status"], name: "index_subscriptions_on_stripe_status", using: :btree
   add_index "subscriptions", ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id", using: :btree
   add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id", using: :btree
 

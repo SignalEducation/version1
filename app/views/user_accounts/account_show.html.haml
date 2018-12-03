@@ -4,6 +4,10 @@
   .l-wrap
     .container-fluid
       .col-sm-12
+        -if flash[:error] || flash[:warning]
+          .row.subscription-flash
+            .col-xs-12
+              =render partial: 'layouts/flash_messages'
         %h1.h1.h-separator.h-separator-left.l-margin-bottom
           =t('views.user_accounts.account_show.h1')
 

@@ -53,7 +53,7 @@ class SubscriptionManagementController < ApplicationController
 
   def un_cancel_subscription
     @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    if @subscription && @subscription.current_status == 'canceled-pending'
+    if @subscription && @subscription.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
       if @subscription && @subscription.errors.count == 0

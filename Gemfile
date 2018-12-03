@@ -51,7 +51,9 @@ gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
+gem 'state_machines-activerecord'
 gem 'stripe', '=2.8.0' #, git: 'https://github.com/stripe/stripe-ruby'
+gem 'paypal-sdk-rest'
 gem 'summernote-rails'
 #gem 'turbolinks' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
@@ -100,6 +102,7 @@ group :test do
   gem 'webmock' # stub http requestes
   gem 'webrat' # Runs tests in a "headless" browser
   gem 'launchy'
+  gem 'timecop'
 end
 
 group :staging do

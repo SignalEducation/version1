@@ -17,22 +17,22 @@
 #  name                          :string
 #  subscription_plan_category_id :integer
 #  livemode                      :boolean          default(FALSE)
+#  paypal_guid                   :string
+#  paypal_state                  :string
+#  monthly_percentage_off        :integer
 #
 
 class SubscriptionPlan < ActiveRecord::Base
-
   include ActionView::Helpers::TextHelper
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :available_to_students, :all_you_can_eat,
-                  :payment_frequency_in_months, :currency_id,
-                  :price, :available_from, :available_to,
-                  :trial_period_in_days, :name, :subscription_plan_category_id,
-                  :livemode
-
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
+  PAYPAL_STATES = [
+    'CREATED',
+    'ACTIVE',
+    'INACTIVE'
+  ]
 
   # relationships
   belongs_to :currency
@@ -42,7 +42,8 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # validation
   validates :name, presence: true, length: { maximum: 255 }
-  validates :payment_frequency_in_months, inclusion: {in: PAYMENT_FREQUENCIES}
+  validates :payment_frequency_in_months, inclusion: { in: PAYMENT_FREQUENCIES }
+  validates :paypal_state, inclusion: { in: PAYPAL_STATES }, allow_nil: true
   validates :currency_id, presence: true
   validates :price, presence: true
   validates :available_from, presence: true
@@ -54,15 +55,15 @@ class SubscriptionPlan < ActiveRecord::Base
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
 
   # callbacks
-  before_create :create_on_stripe_platform
-  before_update :update_on_stripe_platform
-  after_destroy :delete_on_stripe_platform
+  after_create :create_remote_plans
+  after_update :update_remote_plans, if: :name_changed?
+  after_destroy :delete_remote_plans
 
   # scopes
   scope :all_in_order, -> { order(:currency_id, :available_from, :price) }
   scope :all_in_display_order, -> { order(:created_at) }
   scope :all_in_update_order, -> { order(:updated_at) }
-  scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{Time.now.gmtime.to_date}.call) }
+  scope :all_active, -> { where('available_from <= :date AND available_to >= :date', date: Proc.new{ Time.now.gmtime.to_date }.call) }
   scope :for_students, -> { where(available_to_students: true) }
   scope :for_non_standard_students, -> { where(available_to_students: false) }
   scope :generally_available, -> { where(subscription_plan_category_id: nil) }
@@ -83,36 +84,17 @@ class SubscriptionPlan < ActiveRecord::Base
     self.available_from < Proc.new{Time.now}.call && self.available_to > Proc.new{Time.now}.call
   end
 
-  def age_status
-    right_now = Proc.new{Time.now}.call.to_date
-    if self.available_from > right_now
-       'info' # future
-    elsif self.available_to < right_now
-      'active' # expired
-    else
-      'success' # live
-    end
-  end
-
   def description
-    self.description_without_trial + "\r\n" +
-            (self.trial_period_in_days > 0 ?
-                (self.trial_period_in_days).to_s + (I18n.t('views.general.day') + I18n.t('views.general.free_trial')) +
-                     "\r\n" : '')
-  end
-
-  def unlimited_access
-    I18n.t('views.general.all_you_can_eat_yes')
-  end
-
-  def cancel_anytime
-    I18n.t('views.general.cancel_anytime')
-  end
-
-  def description_without_trial
-    self.currency.format_number(self.price) + "\r\n" + (self.all_you_can_eat ?
-                                              I18n.t('views.general.all_you_can_eat_yes') :
-                                              I18n.t('views.general.all_you_can_eat_yes') )
+    case payment_frequency_in_months
+    when 1
+      I18n.t('models.subscription_plans.monthly_description')
+    when 3
+      I18n.t('models.subscription_plans.quarterly_description')
+    when 12
+      I18n.t('models.subscription_plans.yearly_description')
+    else
+      'A subscription for the LearnSignal online training service.'
+    end
   end
 
   def destroyable?
@@ -121,6 +103,19 @@ class SubscriptionPlan < ActiveRecord::Base
 
   def amount
     self.currency.format_number(self.price)
+  end
+
+  def interval_name
+    case payment_frequency_in_months
+    when 1
+      'Monthly'
+    when 3
+      'Quarterly'
+    when 12
+      'Yearly'
+    else
+      'Monthly'
+    end
   end
 
   protected
@@ -134,51 +129,15 @@ class SubscriptionPlan < ActiveRecord::Base
     end
   end
 
-  def create_on_stripe_platform
-    if self.stripe_guid.nil? && Rails.env.production?
-      stripe_plan = Stripe::Plan.create(
-              amount: (self.price.to_f * 100).to_i,
-              currency: self.currency.try(:iso_code).try(:downcase),
-              interval: 'month',
-              interval_count: self.payment_frequency_in_months.to_i,
-              trial_period_days: self.trial_period_in_days.to_i,
-              name: 'LearnSignal ' + self.name.to_s,
-              statement_descriptor: 'LearnSignal',
-              id: Rails.env + '-' + ApplicationController::generate_random_code(20)
-      )
-      self.stripe_guid = stripe_plan.id
-      self.livemode = stripe_plan[:livemode]
-      if self.livemode == Invoice::STRIPE_LIVE_MODE
-        true
-      else
-        errors.add(:stripe, I18n.t('models.general.live_mode_error'))
-        return false
-      end
-    else
-      true
-    end
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+  def create_remote_plans
+    SubscriptionPlanService.new(self).queue_async(:create)
   end
 
-  def delete_on_stripe_platform
-    if self.destroyable?
-      stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
-      stripe_plan.delete
-    end
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+  def delete_remote_plans
+    SubscriptionPlanService.new(self).queue_async(:delete)
   end
 
-  def update_on_stripe_platform
-    stripe_plan = Stripe::Plan.retrieve(self.stripe_guid)
-    stripe_plan.name = 'Learnsignal ' + self.name
-    stripe_plan.save
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+  def update_remote_plans
+    SubscriptionPlanService.new(self).queue_async(:update)
   end
-
 end

@@ -12,6 +12,8 @@
 @import "remodal-default-theme";
 @import "remodal";
 @import "jquery-tosrus";
+@import "mixins/master";
+@import "components/master";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. Colours & Fonts
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2111,7 +2113,7 @@ a.list-group-item {
 
 
 .StripeElement {
-  background-color: white;
+  background-color: #F4F6FA;
   padding: 8px 12px;
   border-radius: 4px;
   border: 1px solid transparent;
@@ -2307,6 +2309,27 @@ spinner {
   max-width: 75px;
   margin: 0 auto $gutter auto;
   @include border-radius(100%);
+}
+
+//
+// Radios
+// --------------------------------------------------
+
+
+input[type="checkbox"],
+input[type="radio"] {
+  &.styled:checked + label:after {
+    font-family: $font-family-icon;
+    content: $check-icon;
+  }
+  .styled:checked + label {
+    &::before {
+      color: #fff;
+    }
+    &::after {
+      color: #fff;
+    }
+  }
 }
 
 
@@ -2885,3 +2908,5 @@ spinner {
 @import "nav_and_footer.scss";
 @import "calculator.scss";
 @import "extras.scss";
+
+@import "components/master";
