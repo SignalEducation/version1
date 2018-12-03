@@ -34,7 +34,7 @@
       .row
         -@default_group.subject_courses.all_in_order.each do |course|
           .col-sm-6
-            =link_to library_special_link(course), class: 'card card-course' do
+            =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
               .card-inner.text-center
                 %h3.h3.card-title{style: 'color: #3E3F5B; '}
                   =course.try(:name)
