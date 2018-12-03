@@ -62,6 +62,6 @@
             =t('views.users.show.confirm_subscription_cancellation')
       .col-sm-12
         %p
-          =t('views.users.show.confirm_cancellation_modal') + "#{humanize_stripe_date_full(@current_subscription.next_renewal_date)} and you will then lose access to all the benefits shown above."
+          = account_cancellation_message(@current_subscription)
 
 
