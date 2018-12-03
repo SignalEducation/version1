@@ -162,10 +162,10 @@ class Invoice < ActiveRecord::Base
             raise ActiveRecord::Rollback
           end
         else
-          Rails.logger.error "ERROR: Invoice#build_from_stripe_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{stripe_data_hash}."
+          Rails.logger.error "ERROR: Invoice#build_from_paypal_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{paypal_body}."
         end
       else
-        Rails.logger.error "ERROR: Invoice#build_from_stripe_data find User-#{stripe_data_hash[:customer]}, Subscription-#{stripe_data_hash[:subscription]} OR Currency-#{stripe_data_hash[:currency].upcase}"
+        Rails.logger.error "ERROR: Invoice#build_from_paypal_data find Billing Agreement-#{paypal_body['resource']['billing_agreement_id']}}"
       end
     end
     inv
