@@ -159,9 +159,11 @@ class ApplicationController < ActionController::Base
 
   def set_session_stuff
     cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
-    cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
-    cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
-    cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
+
+    #TODO These are being filled with ConstructedResponse JSON in courses_controller tests (L125)
+    #cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    #cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    #cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
   end
 
   def reset_latest_session_landing_url

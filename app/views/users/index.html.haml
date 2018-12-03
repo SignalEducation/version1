@@ -19,7 +19,7 @@
 
 
         .col-sm-4.l-margin-top
-          =form_tag(users_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
+          =form_tag(search_users_url, role: 'form', class: 'form-inline input-group-lg') do
             .form-group.input-group.input-group-lg
               =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
               .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}

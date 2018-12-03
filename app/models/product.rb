@@ -24,7 +24,7 @@ class Product < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid,
-                  :live_mode, :stripe_guid
+                  :live_mode, :stripe_guid, :sorting_order
 
   # Constants
 
@@ -48,7 +48,7 @@ class Product < ActiveRecord::Base
   before_destroy :check_dependencies
 
   # scopes
-  scope :all_in_order, -> { order(:name) }
+  scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
 

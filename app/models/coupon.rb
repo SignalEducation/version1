@@ -48,9 +48,9 @@ class Coupon < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  before_create :create_on_stripe, unless: 'Rails.env.test?'
+  before_create :create_on_stripe
   after_create :activate
-  before_destroy :delete_on_stripe, unless: 'Rails.env.test?'
+  before_destroy :delete_on_stripe
 
   # scopes
   scope :all_in_order, -> { order(:name) }

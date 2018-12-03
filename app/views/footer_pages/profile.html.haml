@@ -30,7 +30,7 @@
                 -@courses.each do |course|
                   -if course.parent && course.parent.active && course.active_children
                     .col-sm-4
-                      =link_to library_special_link(course), class: 'card card-course' do
+                      =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
                         .card-inner.text-center
                           %h3.h3.card-title
                             =course.try(:name)

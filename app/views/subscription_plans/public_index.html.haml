@@ -2,9 +2,9 @@
   %section#plans{style: 'padding-top: 20px;'}
     .container
       %h1.title1
-        Some great savings can be made.
+        ='Passing your ACCA is worth it'
       %h2.subtitle1
-        Pick which plan suits you best.
+        Pick which plan suits you best
 
       %ul.plans.clearfix
         -@subscription_plans.each do |plan|
@@ -33,14 +33,6 @@
 
                 .price
                   =plan.currency.format_number(plan.price)
-                  -#€34,99
-                -#unless plan.payment_frequency_in_months == 1
-                  -# TODO change this display actual discount and saving values
-                  .promo
-                    .line1
-                      18% OFF
-                    .line2
-                      Save €25
 
               -if current_user && current_user.trial_or_sub_user?
                 .lsbtn-base

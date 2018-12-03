@@ -29,5 +29,4 @@ class ContentActivationsController < ApplicationController
     @layout = 'management'
   end
 
-
 end

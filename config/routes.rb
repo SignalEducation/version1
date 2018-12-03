@@ -151,11 +151,11 @@ Rails.application.routes.draw do
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
-    resources :mock_exams, concerns: :supports_reordering
+    resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
     resources :orders, except: [:new]
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     get 'order/order_complete/:reference_guid', to: 'orders#order_complete', as: :order_complete
-    resources :products
+    resources :products, concerns: :supports_reordering
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
 
     get '/reports', to: 'reports#index', as: :reports
@@ -203,6 +203,7 @@ Rails.application.routes.draw do
     get 'welcome_video', to: 'footer_pages#welcome_video', as: :welcome_video
 
     resources :users, only: [:new, :create]
+    post 'search_users', to: 'users#index', as: :search_users
 
     post :preview_csv_upload, to: 'users#preview_csv_upload'
     post :import_csv_upload, to: 'users#import_csv_upload'
@@ -218,7 +219,8 @@ Rails.application.routes.draw do
     resources :refunds
 
     resources :white_papers, concerns: :supports_reordering
-    get 'media_library', to: 'footer_pages#media_library', as: :media_library
+    get 'mock_exams', to: 'footer_pages#media_library', as: :media_library
+    get 'media_library', to: 'footer_pages#media_library'
     get 'white_paper/:white_paper_name_url', to: 'footer_pages#white_paper_request', as: :public_white_paper
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper

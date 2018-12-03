@@ -22,14 +22,16 @@ class ContentPage < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :public_url, :seo_title, :seo_description, :text_content,
                   :h1_text, :h1_subtext, :nav_type, :footer_link, :active,
-                  :external_banners_attributes
+                  :external_banners_attributes, :content_page_sections_attributes
 
   # Constants
   NAV_OPTIONS = %w(solid transparent)
 
   # relationships
+  has_many :content_page_sections
   has_many :external_banners
 
+  accepts_nested_attributes_for :content_page_sections, allow_destroy: true
   accepts_nested_attributes_for :external_banners, allow_destroy: true, limit: 1
 
   # validation
@@ -70,6 +72,9 @@ class ContentPage < ActiveRecord::Base
     #to allow content_page records be created without nested banners
     if self.external_banners.any? && self.external_banners[0].name.blank?
       self.external_banners[0].destroy
+    end
+    if self.content_page_sections.any? && self.content_page_sections[0].panel_colour == '#000000'
+      self.content_page_sections[0].destroy
     end
   end
 

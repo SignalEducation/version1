@@ -139,7 +139,7 @@ class StripeApiEvent < ActiveRecord::Base
     invoice = Invoice.find_by_stripe_guid(stripe_invoice_guid)
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
+      invoice.update_from_stripe(stripe_invoice_guid)
       self.processed = true
       self.processed_at = Time.now
       self.error = false
@@ -149,7 +149,7 @@ class StripeApiEvent < ActiveRecord::Base
       url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
       invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en',
                                                                                    format: 'pdf', host: url_host)
-      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url)
+      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
       Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
 
       #Update the subscription from fresh stripe object
@@ -180,7 +180,7 @@ class StripeApiEvent < ActiveRecord::Base
     invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
 
     if user && invoice && subscription
-      invoice.update_from_stripe(stripe_invoice_guid) unless Rails.env.test?
+      invoice.update_from_stripe(stripe_invoice_guid)
       subscription.update_from_stripe
 
       self.processed = true
@@ -190,10 +190,10 @@ class StripeApiEvent < ActiveRecord::Base
 
       if stripe_next_attempt
         #A NextPaymentAttempt Date value means that another payment attempt will be made
-        MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url)
+        MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url) unless Rails.env.test?
       else
         #Final payment attempt has failed on stripe so we cancel the current subscription
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email')
+        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
       end
     else
       set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"

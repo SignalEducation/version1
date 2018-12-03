@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'stripe_mock'
 
 shared_context 'system_setup' do
 

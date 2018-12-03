@@ -56,13 +56,6 @@ class CourseModuleElementResourcesController < ApplicationController
     end
   end
 
-  def reorder
-    array_of_ids = params[:array_of_ids]
-    array_of_ids.each_with_index do |the_id, counter|
-      CourseModuleElementResource.find(the_id.to_i).update_columns(sorting_order: (counter + 1))
-    end
-    render json: {}, status: 200
-  end
 
   def destroy
     if @course_module_element_resource.destroy

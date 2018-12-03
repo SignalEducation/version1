@@ -23,7 +23,6 @@
 #
 
 require 'rails_helper'
-require 'stripe_mock'
 
 describe SubscriptionPlansController, type: :controller do
 
@@ -34,24 +33,19 @@ describe SubscriptionPlansController, type: :controller do
   let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
   let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
 
-  let(:stripe_helper) { StripeMock.create_test_helper }
-  let!(:start_stripe_mock) { StripeMock.start }
   let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
   let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
-  let!(:stripe_student_user) { FactoryBot.create(:student_user,
-                                                  stripe_customer_id: (Stripe::Customer.create({email: student_user.email})).id) }
+  let!(:stripe_student_user) { FactoryBot.create(:student_user) }
+  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access,
+                                                               user_id: stripe_student_user.id) }
 
   let!(:subscription_1) { FactoryBot.create(:subscription,
                           subscription_plan_id: subscription_plan_1.id,
-                          user_id: stripe_student_user.id,
-                          stripe_token: stripe_helper.generate_card_token) }
+                          user_id: stripe_student_user.id) }
 
   let!(:valid_params) { FactoryBot.attributes_for(:subscription_plan) }
 
-  #before { StripeMock.start }
-  after { StripeMock.stop }
 
-  #TODO - review all these. Is StripeMock needed?
   context 'Logged in as a stripe_management_user: ' do
 
     before(:each) do
@@ -60,7 +54,7 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'index'" do
-      xit 'should respond OK' do
+      it 'should respond OK' do
         get :index
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -72,45 +66,45 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      xit 'should see subscription_plan_1' do
+      it 'should see subscription_plan_1' do
         get :show, id: subscription_plan_1.id
         expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
       end
 
       # optional - some other object
-      xit 'should see subscription_plan_2' do
+      it 'should see subscription_plan_2' do
         get :show, id: subscription_plan_2.id
         expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
       end
     end
 
     describe "GET 'new'" do
-      xit 'should respond OK' do
+      it 'should respond OK' do
         get :new
         expect_new_success_with_model('subscription_plan')
       end
     end
 
     describe "GET 'edit/1'" do
-      xit 'should respond OK with subscription_plan_1' do
+      it 'should respond OK with subscription_plan_1' do
         get :edit, id: subscription_plan_1.id
         expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
       end
 
       # optional
-      xit 'should respond OK with subscription_plan_2' do
+      it 'should respond OK with subscription_plan_2' do
         get :edit, id: subscription_plan_2.id
         expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
       end
     end
 
     describe "POST 'create'" do
-      xit 'should report OK for valid params' do
+      it 'should report OK for valid params' do
         post :create, subscription_plan: valid_params
         expect_create_success_with_model('subscription_plan', subscription_plans_url)
       end
 
-      xit 'should report error for invalid params' do
+      it 'should report error for invalid params' do
         post :create, subscription_plan: {valid_params.keys.first => ''}
         expect_create_error_with_model('subscription_plan')
       end
@@ -123,7 +117,7 @@ describe SubscriptionPlansController, type: :controller do
         expect(assigns(:subscription_plan).name).to eq('new-name')
       end
 
-      xit 'should reject invalid params' do
+      it 'should reject invalid params' do
         put :update, id: subscription_plan_1.id, subscription_plan: {name: nil}
         expect_update_error_with_model('subscription_plan')
         expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
