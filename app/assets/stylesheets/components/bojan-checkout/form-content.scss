@@ -24,6 +24,23 @@
     height: 44px;
     padding: 0;
   }
+  .btn {
+    font-family: 'Rubik',sans-serif;
+    &:not(:disabled):not(.disabled) {
+      cursor: pointer;
+    }
+    &.btn-text{
+      color: #7f8599;
+      &:hover {
+        color: #424366;
+        background-color: rgba(0,0,0,0);
+        border-color: rgba(0,0,0,0);
+      }
+    }
+  }
+  #all-plans {
+    display: none;
+  }  
 }
 .text-torquoise {
   color: #05a4af;

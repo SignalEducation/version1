@@ -23,10 +23,13 @@
               %p.text-lg People learn in different ways. Whatever way you want to learn, we've got you covered.
           .container.payment
             .row
-              .col-lg-6.mb-5.mb-xl-0
+              .col-lg-6.mb-5.mb-xl-0.mt-2
                 %fieldset
                   %legend.sr-only Select a Plan
-                  =render partial: 'multi_plans', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
+                  - if @subscription.subscription_plan.payment_frequency_in_months == 12
+                    =render partial: 'single_plan_checkout', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
+                  - else
+                    =render partial: 'multi_plans', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
 
               .col-lg-6
                 %fieldset.card
