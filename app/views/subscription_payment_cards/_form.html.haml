@@ -5,6 +5,7 @@
   .mb-2.mt-sm-5
     %h4.m-0
       Total:
+      = @subscription_plans.first.currency.leading_symbol
       %span.value#stripe-total-value
     %p.billing-summary Billed every month
   = f.button :submit, class: 'btn btn-primary w-100 mb-3', id: 'card_submit' do

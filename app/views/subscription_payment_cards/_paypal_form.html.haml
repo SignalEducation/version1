@@ -2,6 +2,7 @@
   .mb-2
     %h4.m-0
       Total:
+      = @subscription_plans.first.currency.leading_symbol
       %span.value#paypal-total-value
     %p.billing-summary.mb-4 Billed every month
   .text-center
