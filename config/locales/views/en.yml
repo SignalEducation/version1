@@ -827,6 +827,7 @@ en:
         seo_description: SEO Description or Meta description
         seo_description_placeholder: SEO Description Placeholder
         subscription_plan_category_id: Subscription Plan Category
+        monthly_percentage_off: Optional percentage saving
         group_id: Related Group
         subject_course_id: Related Course
         public_url: Public URL
@@ -1289,6 +1290,7 @@ en:
         trial_period_in_days: Trial
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
+        monthly_percentage_off: Optional monthly percentage saving
         active: Active
 
       edit:
