@@ -295,7 +295,7 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        if current_user.permission_to_see_content
+        if current_user.permission_to_see_content(the_thing.course_module.subject_course.id, the_thing.id)
           if current_user.enrolled_in_course?(the_thing.course_module.subject_course.id)
             course_url(
                 the_thing.course_module.subject_course.name_url,
@@ -320,6 +320,7 @@ class ApplicationController < ActionController::Base
       else
         new_student_url
       end
+    elsif the_thing.class == SubjectCourseResource
 
     else
       library_special_link(the_thing)

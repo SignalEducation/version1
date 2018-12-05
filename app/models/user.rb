@@ -411,15 +411,20 @@ class User < ActiveRecord::Base
   end
 
 
-  def permission_to_see_content
-    # After successful update of all users to have a
-    # StudentAccess record change this to be only one line
-    # self.student_access.content_access
+  def permission_to_see_content(subject_course_id, course_module_element_id=nil, subject_course_resources=nil)
 
-    if self.student_user?
-      self.student_access.content_access
-    elsif self.non_student_user?
-      self.student_access.content_access
+    if self.trial_user?
+      #TODO logic for params entered compared to allowed trial content
+      false
+    elsif self.subscription_user?
+      if self.valid_subscription?
+        true
+      else
+        #TODO logic for params entered compared to allowed restricted content
+        false
+      end
+    elsif self.complimentary_user?
+      true
     else
       false
     end
