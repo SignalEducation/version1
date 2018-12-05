@@ -142,7 +142,6 @@ class StudentSignUpsController < ApplicationController
     if cookies.encrypted[:latest_subscription_plan_category_guid]
       subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
       @user.subscription_plan_category_id = subscription_plan_category.try(:id)
-      @user.student_access.trial_days_limit = subscription_plan_category.trial_period_in_days.to_i
     end
 
     if @user.valid? && @user.save

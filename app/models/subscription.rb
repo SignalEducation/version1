@@ -113,8 +113,9 @@ class Subscription < ActiveRecord::Base
       end
     end
 
+    #TODO - can the if condition be removed? can the transition include all states transitioning to active?
     after_transition pending: :active do |subscription, _transition|
-      if !(subscription.user.student_access.subscription_access? && subscription.user.student_access.content_access)
+      if !subscription.user.student_access.subscription_access?
         subscription.user.student_access.convert_to_subscription_access(subscription.id)
       end
     end
@@ -183,7 +184,7 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'canceled'
         self.update_attribute(:stripe_status, 'canceled')
         self.cancel
-        self.user.student_access.update_attributes(content_access: false)
+        self.user.student_access.convert_to_trial_access
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
@@ -241,7 +242,7 @@ class Subscription < ActiveRecord::Base
             active: true
         )
         self.start
-        self.user.student_access.update_attributes(content_access: true)
+        self.user.student_access.convert_to_subscription_access(self.id)
       end
 
     end

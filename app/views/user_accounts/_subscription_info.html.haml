@@ -9,12 +9,9 @@
 
       .col-md-6.col-sm-12
         .h3
-          =t('views.user_accounts.subscription_info.member_since')
+          =t('views.user_accounts.account_info.member_since')
         .h6
-          -# Create a account started date that uses account_create if
-          -# not trial_started_date value
-          -if @user.student_access && @user.student_access.trial_started_date
-            =humanize_datetime(@user.student_access.trial_started_date)
+          =humanize_datetime_full(@user.created_at)
 
 
     -if @current_subscription.active_status?

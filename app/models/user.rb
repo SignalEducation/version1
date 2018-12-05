@@ -741,10 +741,7 @@ class User < ActiveRecord::Base
       #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
 
       if subscription_saved
-        time_now = Proc.new{Time.now.to_datetime}.call
-        self.student_access.update_attributes(trial_ended_date: time_now, content_access: true,
-                                              subscription_id: subscription_saved.id,
-                                              account_type: 'Subscription')
+        self.student_access.convert_to_subscription_access(subscription_saved.id)
       end
     end
 

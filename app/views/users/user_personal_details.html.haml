@@ -88,10 +88,10 @@
 
               .col-sm-6
                 .h3
-                  Trial Started
+                  Account Verified
                 .h6
-                  -if @user.student_access && @user.student_access.trial_started_date
-                    =humanize_datetime(@user.student_access.trial_started_date)
+                  -if @user.email_verified
+                    =humanize_datetime(@user.email_verified_at)
 
 
 

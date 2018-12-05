@@ -202,9 +202,9 @@ class UsersController < ApplicationController
   protected
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image,
-                                 :date_of_birth, :description, :student_number, :stripe_account_balance,
-                                 student_access_attributes: [:id, :trial_seconds_limit, :trial_days_limit, :account_type]
+    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id,
+                                 :profile_image, :date_of_birth, :description, :student_number,
+                                 :stripe_account_balance, student_access_attributes: [:id, :account_type]
     )
   end
 

@@ -36,32 +36,6 @@
           =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
 
-    .col-md-12.l-margin-bottom-big.l-margin-top
-      %hr/
-      %h2='Trial Limits'
-      .col-md-6
-        =f.fields_for :student_access do |student_access|
-          =student_access.hidden_field :account_type
-
-          =student_access.label :trial_seconds_limit, t('views.users.form.student_access.trial_seconds_limit'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =student_access.number_field :trial_seconds_limit, placeholder: t('views.users.form.student_access.trial_seconds_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-          %br/
-          =student_access.label :trial_days_limit, t('views.users.form.student_access.trial_days_limit'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =student_access.number_field :trial_days_limit, placeholder: t('views.users.form.student_access.trial_days_limit_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-
-      .col-md-6
-        -unless @user.new_record?
-          %h4
-            Current Seconds Consumed:
-          %p
-            =@user.student_access.content_seconds_consumed
-          %h4
-            Trial Started:
-          %p
-            -if @user.student_access.trial_started_date
-              =humanize_datetime(@user.student_access.trial_started_date)
 
 
 

@@ -70,8 +70,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
-  after_create :calculate_score, :update_user_seconds_consumed, :create_lesson_intercom_event
-  after_save :update_user_seconds_consumed_for_videos, :create_or_update_student_exam_track
+  after_create :calculate_score, :create_lesson_intercom_event
+  after_save :create_or_update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -185,29 +185,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
     end
   end
 
-  # After Create
-  # Need to always update the student_access limit to the new limit
-  # Trigger the check trial access still valid if a trial user
-  def update_user_seconds_consumed
-    unless self.preview_mode
-      user = self.user
-      current_seconds_consumed = user.student_access.content_seconds_consumed
-      updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
-      user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-    end
-  end
-
-  # After Save
-  # Only update the student_access if it is a video log
-  # TODO - Issue here with video seconds watched. Update there when Vimeo tracking is accurate
-  def update_user_seconds_consumed_for_videos
-    if self.is_video && !self.preview_mode
-      user = self.user
-      current_seconds_consumed = user.student_access.content_seconds_consumed
-      updated_seconds_consumed = current_seconds_consumed + self.try(:time_taken_in_seconds)
-      user.student_access.update_attribute(:content_seconds_consumed, updated_seconds_consumed)
-    end
-  end
 
   # Before Create
   def set_booleans
