@@ -93,9 +93,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                               trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
-                               account_type: 'Trial')
+    @user.build_student_access(account_type: 'Trial')
   end
 
   def create

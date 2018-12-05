@@ -136,7 +136,7 @@ class StudentSignUpsController < ApplicationController
     @user.email_verification_code = SecureRandom.hex(10)
     @user.password_confirmation = @user.password
 
-    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+    @user.build_student_access(account_type: 'Trial')
 
     # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
     if cookies.encrypted[:latest_subscription_plan_category_guid]
@@ -147,11 +147,9 @@ class StudentSignUpsController < ApplicationController
 
     if @user.valid? && @user.save
       # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(
-          email: @user.try(:email)
-      )
-      @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-      @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
+      stripe_customer = Stripe::Customer.create(email: @user.email)
+      @user.update_column(:stripe_customer_id, stripe_customer.id)
+      @user.update_column(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
 
       # Send User Activation email through Mandrill
       MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
