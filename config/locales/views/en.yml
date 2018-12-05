@@ -1571,6 +1571,12 @@ en:
         remaning_minutes: Remaining Trial Minutes
         upgrade_button: Upgrade Account
 
+      account_info:
+        tab_heading: Account Info
+        member_since: Member Since
+        account_type: Account Type
+        upgrade_button: Upgrade Account
+
 
       subscription_info:
         tab_heading: Subscription Info

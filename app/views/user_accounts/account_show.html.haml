@@ -16,10 +16,10 @@
           %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             =t('views.user_accounts.personal_info.tab_heading')
 
-          -if @user.trial_or_sub_user? && @user.student_access
+          -if @user.trial_or_sub_user?
             -if @user.trial_user?
-              %a{href: '#trial', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                =t('views.user_accounts.trial_info.tab_heading')
+              %a{href: '#account_info', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                =t('views.user_accounts.account_info.tab_heading')
             -elsif @user.subscription_user?
               %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
                 =t('views.user_accounts.subscription_info.tab_heading')
@@ -48,13 +48,13 @@
               .content-box-inner
                 =render partial: 'personal_info'
 
-        -if @user.trial_or_sub_user? && @user.student_access
+        -if @user.trial_or_sub_user?
           -if @user.trial_user?
-            .tab-pane.fade#trial{role: 'tabpanel'}
+            .tab-pane.fade#account_info{role: 'tabpanel'}
               .col-md-12
                 .content-box.content-box-outer.l-margin-bottom-huge
                   .content-box-inner
-                    =render partial: 'trial_info'
+                    =render partial: 'account_info'
           -elsif @user.subscription_user?
             .tab-pane.fade#subscriptions{role: 'tabpanel'}
               .col-md-12

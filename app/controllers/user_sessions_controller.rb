@@ -18,10 +18,6 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit
-      if @user_session.user.email_verified && !@user_session.user.student_access.trial_started_date
-        # This starts the student_access trial if it was not started from the verification process
-        @user_session.user.student_access.start_trial_access
-      end
       flash[:error] = nil
       if session[:return_to]
         redirect_back_or_default(student_dashboard_url)

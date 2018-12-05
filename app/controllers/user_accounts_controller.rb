@@ -9,12 +9,9 @@ class UserAccountsController < ApplicationController
     @referral_code = @user.referral_code
     @enrollments = current_user.active_enrollments_in_sitting_order
 
-    #@enrollments = @user.enrollments.all_in_account_order.sort_by { |enrollment| enrollment.active ? 0 : 1 }
-    if current_user.student_access
-      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-      @current_subscription = @user.current_subscription
-      @invoices = @user.invoices
-    end
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    @current_subscription = @user.current_subscription
+    @invoices = @user.invoices
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
