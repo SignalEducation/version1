@@ -68,7 +68,7 @@ class Subscription < ActiveRecord::Base
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_coupon_count
-  after_save :update_student_access, if: :active
+  #after_save :update_student_access, if: :active
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }

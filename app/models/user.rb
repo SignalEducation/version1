@@ -178,7 +178,7 @@ class User < ActiveRecord::Base
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.start_trial_access
+      user.student_access.check_student_access #Updates to complimentary if the user_group is complimentary
       return user
     end
   end
@@ -295,7 +295,7 @@ class User < ActiveRecord::Base
   end
 
   def trial_or_sub_user?
-    self.student_user? && self.user_group.trial_or_sub_required && self.student_access
+    self.student_user? && self.user_group.trial_or_sub_required
   end
 
   def complimentary_user?
@@ -347,48 +347,12 @@ class User < ActiveRecord::Base
   # Trial Access
 
   def trial_user?
-    self.trial_or_sub_user? &&
-      (self.student_access.trial_access? && !self.student_access.subscription_id) ||
+    self.trial_or_sub_user? && self.student_access.trial_access? ||
       (self.student_access.subscription_id? && self.student_access.subscription.pending?)
   end
 
-  def valid_trial_user?
-    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date
-  end
-
   def not_started_trial_user?
-    self.trial_user? && !self.student_access.trial_started_date
-  end
-
-  def expired_trial_user?
-    self.trial_user? && self.student_access && self.student_access.trial_ended_date && !self.student_access.content_access
-  end
-
-  # Trial Limits
-  def trial_limits_valid?
-    self.trial_days_valid? && self.trial_seconds_valid?
-  end
-
-  def trial_days_valid?
-    time_now =Proc.new{Time.now.to_datetime}.call
-    self.student_access.trial_ending_at_date && !self.student_access.trial_ended_date && time_now <= student_access.trial_ending_at_date
-  end
-
-  def trial_seconds_valid?
-    self.student_access.content_seconds_consumed <= self.student_access.trial_seconds_limit
-  end
-
-  def trial_days_left
-    time_now = Proc.new{Time.now.to_date}.call
-    ((self.student_access.trial_started_date + self.student_access.trial_days_limit.days).to_date - time_now).to_i
-  end
-
-  def trial_seconds_left
-    self.student_access.trial_seconds_limit - self.student_access.content_seconds_consumed
-  end
-
-  def trial_minutes_left
-    self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
+    self.trial_user? && !self.email_verified
   end
 
   # Subscription Access
@@ -429,15 +393,13 @@ class User < ActiveRecord::Base
   def user_account_status
     if self.trial_or_sub_user?
       if self.not_started_trial_user?
-        'Trial Not Started'
-      elsif self.valid_trial_user?
-        'Valid Trial'
-      elsif self.expired_trial_user?
-        'Expired Trial'
+        'Unverified'
+      elsif self.trial_user?
+        'Trial'
       elsif self.current_subscription
         self.user_subscription_status
       else
-        'Unknown Student'
+        'Unknown'
       end
     else
       if self.user_group_id
@@ -728,8 +690,7 @@ class User < ActiveRecord::Base
                            email_verification_code: verification_code, free_trial: true,
                            user_group_id: user_group.id)
 
-    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                              trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+    user.build_student_access(account_type: 'Trial')
 
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
