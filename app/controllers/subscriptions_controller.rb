@@ -124,7 +124,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def un_cancel_subscription
-    if @subscription && @subscription.current_status == 'canceled-pending'
+    if @subscription && @subscription.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
       if @subscription && @subscription.errors.count == 0
