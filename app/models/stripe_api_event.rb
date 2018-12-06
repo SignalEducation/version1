@@ -213,6 +213,7 @@ class StripeApiEvent < ActiveRecord::Base
       self.error_message = nil
 
       subscription.update_from_stripe
+      subscription.cancel!
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end
