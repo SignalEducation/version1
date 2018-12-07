@@ -88,7 +88,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # instance methods
   def active?
-    self.available_from < Proc.new{Time.now}.call && self.available_to > Proc.new{Time.now}.call
+    self.available_from <= Proc.new{ Time.now.gmtime.to_date }.call && self.available_to >= Proc.new{ Time.now.gmtime.to_date }.call
   end
 
   def description

@@ -159,14 +159,14 @@ class PaypalService
   end
 
   def update_subscription_plan(subscription_plan, paypal_plan)
-    subscription_plan.update(
+    subscription_plan.update_columns(
       paypal_guid: paypal_plan.id,
       paypal_state: paypal_plan.state
     )    
   end
 
   def update_subscription_plan_state(subscription_plan, state)
-    subscription_plan.update(
+    subscription_plan.update_columns(
       paypal_state: state
     ) 
   end
