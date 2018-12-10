@@ -31,7 +31,8 @@ class SubscriptionPlan < ActiveRecord::Base
                   :payment_frequency_in_months, :currency_id,
                   :price, :available_from, :available_to,
                   :trial_period_in_days, :name, :subscription_plan_category_id,
-                  :livemode, :monthly_percentage_off
+                  :livemode, :paypal_guid, :paypal_state, :stripe_guid,
+                  :monthly_percentage_off
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
