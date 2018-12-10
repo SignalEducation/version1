@@ -288,7 +288,7 @@ describe PaypalService, type: :service do
         subject.send(:update_subscription_plan, plan, paypal_plan)
 
         expect(plan.paypal_state).to eq 'ACTIVE'
-        expect(plan.paypal_state).not_to be_nil
+        expect(plan.paypal_guid).not_to be_nil
       end
     end
 
