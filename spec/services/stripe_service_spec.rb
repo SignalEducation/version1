@@ -129,6 +129,26 @@ describe StripeService, type: :service do
 
   # PRIVATE METHODS ============================================================
 
+  describe 'async methods that communicate with PayPal / Stripe' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async).and_return(true)
+    end
+
+    describe '#update_subscription_plan' do
+      let(:plan) { create(:subscription_plan, paypal_state: 'CREATED') }
+      let(:stripe_plan) { double({ id: 'plan_ff43br4535j4h53j' }) }
+
+      it 'updates the stripe_guid of a subscription' do
+        allow(stripe_plan).to receive(:[]).with(:livemode).and_return(true)
+        expect(plan.stripe_guid).to be_nil
+
+        subject.send(:update_subscription_plan, plan, stripe_plan)
+
+        expect(plan.stripe_guid).to eq 'plan_ff43br4535j4h53j'
+      end
+    end
+  end
+
   describe '#stripe_plan_id' do
     it 'should return a properly formatted id' do
       expect(subject.send(:stripe_plan_id)).to match 'test-'
