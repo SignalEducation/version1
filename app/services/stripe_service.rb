@@ -144,7 +144,7 @@ class StripeService
   end
 
   def update_subscription_plan(subscription_plan, stripe_plan)
-    subscription_plan.update_columns(
+    subscription_plan.update(
       stripe_guid: stripe_plan.id,
       livemode: stripe_plan[:livemode]
     )    
