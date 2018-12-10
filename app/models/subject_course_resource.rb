@@ -15,13 +15,14 @@
 #  external_url             :string
 #  active                   :boolean          default(FALSE)
 #  sorting_order            :integer
+#  available_on_trial       :boolean          default(FALSE)
 #
 
 class SubjectCourseResource < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url,
-                  :active, :sorting_order
+                  :active, :sorting_order, :available_on_trial
 
   # Constants
 

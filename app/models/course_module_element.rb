@@ -21,6 +21,7 @@
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
 #  is_constructed_response   :boolean          default(FALSE), not null
+#  available_on_trial        :boolean          default(FALSE)
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -36,7 +37,8 @@ class CourseModuleElement < ActiveRecord::Base
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
                   :course_module_element_resources_attributes,
-                  :video_resource_attributes, :constructed_response_attributes
+                  :video_resource_attributes, :constructed_response_attributes,
+                  :available_on_trial
 
   # Constants
 

@@ -3,7 +3,7 @@
     Contact Tutor
 
   -if current_user
-    -if current_user && current_user.permission_to_see_content
+    -if current_user && !current_user.trial_user?
       =render partial: 'courses/tutor_contact'
       %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
         Ask The Tutor
@@ -43,20 +43,12 @@
     %ul.course-resources
       -@subject_course_resources.each do |resource|
         -if current_user
-          -if current_user && current_user.permission_to_see_content && !current_user.student_access.trial_access? && current_user.enrolled_in_course?(@course.id)
+          -if current_user.permission_to_see_content(@course.id, nil, resource.id)
             %li
-              -if resource.external_url.blank?
-                =link_to resource.file_upload.url, target: '_blank' do
-                  .btn.btn-secondary.btn-red.btn-list
-                    =resource.name
-              -else
-                =link_to resource.external_url, target: '_blank' do
-                  .btn.btn-secondary.btn-red.btn-list
-                    =resource.name
-          -elsif current_user && current_user.permission_to_see_content && current_user.student_access.trial_access? && current_user.enrolled_in_course?(@course.id)
-            %li
-              %a{data: {remodal: {target: 'resources-unavailable-modal'}}, class: 'btn btn-secondary btn-red btn-list'}
-                =resource.name
+              =link_to resource.external_url.blank? ? resource.file_upload.url : resource.external_url, target: '_blank' do
+                .btn.btn-secondary.btn-red.btn-list
+                  =resource.name
+
           -else
             %li
               %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-secondary btn-red btn-list'}

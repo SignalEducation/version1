@@ -21,6 +21,7 @@
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
 #  is_constructed_response   :boolean          default(FALSE), not null
+#  available_on_trial        :boolean          default(FALSE)
 #
 
 require 'rails_helper'

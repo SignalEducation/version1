@@ -411,11 +411,15 @@ class User < ActiveRecord::Base
   end
 
 
-  def permission_to_see_content(subject_course_id, course_module_element_id=nil, subject_course_resources=nil)
+  def permission_to_see_content(subject_course_id, course_module_element_id=nil, subject_course_resource_id=nil)
+    cme = CourseModuleElement.find(course_module_element_id) if course_module_element_id
+    resource = SubjectCourseResource.find(subject_course_resource_id) if subject_course_resource_id
 
     if self.trial_user?
-      #TODO logic for params entered compared to allowed trial content
-      false
+
+      cme.available_on_trial if cme
+      resource.available_on_trial if resource
+
     elsif self.subscription_user?
       if self.valid_subscription?
         true

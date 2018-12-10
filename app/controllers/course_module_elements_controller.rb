@@ -21,6 +21,7 @@
 #  duration                  :float            default(0.0)
 #  temporary_label           :string
 #  is_constructed_response   :boolean          default(FALSE), not null
+#  available_on_trial        :boolean          default(FALSE)
 #
 
 class CourseModuleElementsController < ApplicationController
@@ -292,6 +293,7 @@ class CourseModuleElementsController < ApplicationController
         :seo_no_index,
         :number_of_questions,
         :temporary_label,
+        :available_on_trial,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,

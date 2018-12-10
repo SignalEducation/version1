@@ -288,27 +288,19 @@ class ApplicationController < ActionController::Base
   helper_method :library_special_link
 
 
-  def course_special_link(the_thing, direction='forwards')
+  def course_special_link(the_thing)
     if the_thing.class == CourseModule
       library_special_link(
               the_thing.subject_course
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        if current_user.permission_to_see_content(the_thing.course_module.subject_course.id, the_thing.id)
-          if current_user.enrolled_in_course?(the_thing.course_module.subject_course.id)
-            course_url(
-                the_thing.course_module.subject_course.name_url,
-                the_thing.course_module.name_url,
-                the_thing.name_url
-            )
-          else
-            library_course_url(
-                the_thing.parent.parent.parent.name_url,
-                the_thing.parent.parent.name_url,
-                anchor: 'enrollment-modal'
-            )
-          end
+        if current_user.permission_to_see_content(the_thing.course_module.subject_course.id, the_thing.id, nil)
+          course_url(
+              the_thing.course_module.subject_course.name_url,
+              the_thing.course_module.name_url,
+              the_thing.name_url
+          )
 
         else
           library_course_url(
@@ -320,7 +312,6 @@ class ApplicationController < ActionController::Base
       else
         new_student_url
       end
-    elsif the_thing.class == SubjectCourseResource
 
     else
       library_special_link(the_thing)

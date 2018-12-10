@@ -41,6 +41,7 @@
                           %tr
                             %th Name
                             %th Active
+                            %th Trial
                             %th Type
                             %th
                             %th
@@ -52,6 +53,8 @@
                                 =cme.name.to_s
                               %td
                                 =tick_or_cross(cme.active)
+                              %td
+                                =tick_or_cross(cme.available_on_trial)
                               %td
                                 =cme.type_name
                               %td

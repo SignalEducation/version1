@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181129113006) do
+ActiveRecord::Schema.define(version: 20181210144109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -313,6 +313,7 @@ ActiveRecord::Schema.define(version: 20181129113006) do
     t.float    "duration",                  default: 0.0
     t.string   "temporary_label"
     t.boolean  "is_constructed_response",   default: false, null: false
+    t.boolean  "available_on_trial",        default: false
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -958,6 +959,7 @@ ActiveRecord::Schema.define(version: 20181129113006) do
     t.string   "external_url"
     t.boolean  "active",                   default: false
     t.integer  "sorting_order"
+    t.boolean  "available_on_trial",       default: false
   end
 
   add_index "subject_course_resources", ["name"], name: "index_subject_course_resources_on_name", using: :btree

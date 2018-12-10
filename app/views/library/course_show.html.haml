@@ -10,29 +10,27 @@
                 =@course.parent.name
 
 
-      -if current_user
+      -unless current_user
+        =render partial: 'layouts/account_notice'
+        %h1.h1.h-separator.h-separator-left
+          =@course.name
+        =render partial: 'course_info'
 
-        -if @active_enrollment && @active_enrollment.expired
-          =render partial: 'layouts/enrollment_notice', locals: {active_enrollment: @active_enrollment}
-          =render partial: 'enrollment_form'
-          =render partial: 'course_enrollment_modal'
-
-        -elsif @active_enrollment && !@active_enrollment.expired
-          =render partial: 'enrollment_info'
-
-          -if current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
-            =render partial: 'user_exam_body_details_modal'
-
+      -else
+        -if @active_enrollment
+          -if @active_enrollment.expired
+            =render partial: 'layouts/enrollment_notice', locals: {active_enrollment: @active_enrollment}
+            =render partial: 'enrollment_form'
+            =render partial: 'course_enrollment_modal'
+          -elsif !@active_enrollment.expired
+            =render partial: 'enrollment_info'
+            -if current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
+              =render partial: 'user_exam_body_details_modal'
         -else
           =render partial: 'enrollment_form'
           =render partial: 'course_enrollment_modal'
           =render partial: 'course_info'
 
-      -else
-        =render partial: 'layouts/account_notice'
-        %h1.h1.h-separator.h-separator-left
-          =@course.name
-        =render partial: 'course_info'
 
 
       .row
@@ -77,8 +75,8 @@
         .l-margin-top-huge
           =render partial: 'course_info'
 
-=render partial: 'courses/access_denied_modal'
-=render partial: 'courses/resources_unavailable_modal'
+-if current_user
+  =render partial: 'courses/access_denied_modal'
 
 :javascript
 

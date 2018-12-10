@@ -15,6 +15,7 @@
 #  external_url             :string
 #  active                   :boolean          default(FALSE)
 #  sorting_order            :integer
+#  available_on_trial       :boolean          default(FALSE)
 #
 
 class SubjectCourseResourcesController < ApplicationController
@@ -85,8 +86,9 @@ class SubjectCourseResourcesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description,:file_upload,
-                                                    :external_url, :active, :sorting_order)
+    params.require(:subject_course_resource).permit(:name, :subject_course_id, :description,
+                                                    :file_upload, :external_url, :active,
+                                                    :sorting_order, :available_on_trial)
   end
 
 end
