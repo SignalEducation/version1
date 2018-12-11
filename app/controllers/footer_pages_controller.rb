@@ -36,7 +36,6 @@ class FooterPagesController < ApplicationController
   end
 
   def media_library
-
     mock_exams = MockExam.all_in_order
     mock_exam_ids = mock_exams.map(&:id)
     if current_user
@@ -46,8 +45,8 @@ class FooterPagesController < ApplicationController
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     end
     @currency_id = @country.currency_id
-    @products = Product.includes(:currency).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-
+    @products = Product.includes(:currency).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+    @questions = @products
   end
 
   def white_paper_request
