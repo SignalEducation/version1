@@ -1,74 +1,27 @@
-.upgrade
-  #wrapper
-    %section#free
-      .tmain
-        .tbase
-          .container
-            .row
-              .col-md-10.col-md-offset-1
-                %h1.title1
-                  =@mock_exam.name
-                %h2.subtitle
-                  Purchase Process
-
-
-    -if flash[:success] || flash[:error] || flash[:warning]
+.bg-asphalt
+  -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
-
-    .l-section-small
-      .container
-
-        .col-md-12
-          .col-sm-4.l-margin-top
-            .course-side-info
-              %h2.h-separator.h-separator-left.l-margin-bottom
-                =@mock_exam.name
-              %p.h3.l-margin-bottom
-                ='Total: '
+  .container
+    %article.hero
+      %h1.h1-mega.mb-3 
+        =@mock_exam.name
+      %h5.text-red Purchase Process
+  .container
+    %form.payment
+      .row.row-lg.justify-content-center
+        .col-xl-4.mb-5.mb-xl-0
+          %fieldset.text-center
+            %h3.mb-3 
+              =@mock_exam.name
+            %p.h4.mb-3.text-torquoise
+              Total:
+              %span
                 =number_in_local_currency(@product.price, @product.currency_id)
-              .box.box-profile
-                .box-inner
-                  =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
-
-
-
-          .col-sm-8.l-margin-top-small
-            .new-order-text-box
-              .faq-inner
-                .faq-title.h6
-                  %p
-                    The LearnSignal Mock Exam
-                  %p
-                    When you purchase a LearnSignal Mock Exam, you will receive a pdf formatted exam.
-                  %p
-                    Please complete this exam.  It is important that you give yourself a genuine attempt at the exam; the result will give you feedback on how your study is progressing.
-                  %p
-                    After you have completed the exam you can submit your paper by emailing mockexams@learnsignal.com
-                  %p
-                    We will reply with your result within 3 days.
-
-            .new-product-user-form.l-margin-top-big
-              -if current_user.purchased_products && current_user.purchased_products.include?(@product)
-                .row
-                  .col-md-12
-                    .payment-heading.text-center
-                      %p.p
-                        You have already purchased this Product. Visit your account page to view your purchase history.
-
-
-              -else
-                =form_for(@order, html: {id: 'orders-form', class: 'form-horizontal', role: 'form'}) do |f|
-                  =f.hidden_field :product_id, value: @product.id
-                  =f.hidden_field :stripe_token
-                  =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-                  =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
-                  .row
-                    .col-md-12
-                      .payment-heading
-
-                      .col-sm-12
-                        %h3.l-margin-bottom
-                          Payment details
-                        =render partial: 'orders/order_card_form', locals: {f: f}
-
+            .mb-4
+              =image_tag 'ico-exam-2.svg', alt: 'Exam'
+            .px-4
+              %p.text-left Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
+        .col-xl-6.mb-5
+          %fieldset.card
+            %p.h2.mb-2 Choose a way to pay
 
