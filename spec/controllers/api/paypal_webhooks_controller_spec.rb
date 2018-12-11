@@ -4,10 +4,12 @@ describe Api::PaypalWebhooksController, type: :controller do
 
   describe 'POST #create' do
     describe 'with a valid Webhook' do
-      let(:webhook_params) {
-        {
-          "id": "evt_00000000000001", "event_type": "event", "api_version": "2017-05-25", "created": 1326853478, "data": {"object": {"id": "in_1APVed2eZvKYlo2CP6dsoJTo", "object": "invoice", "amount_due": 599, "application_fee": nil, "attempt_count": 1, "attempted": true, "charge": "ch_1APVed2eZvKYlo2C1QNH6jru", "closed": true, "currency": "gbp", "customer": 'fdasfdsf', "date": 1496232623, "description": nil, "discount": nil, "ending_balance": 0, "forgiven": false, "lines": {"data": [{"id": 'afdsfafsdf', "object": "line_item", "amount": 599, "currency": "gbp", "description": nil, "discountable": true, "livemode": true, "metadata": {}, "period": {"start": 1498824623, "end": 1501503023}, "plan": {"id": 'dsfdsafaf', "object": "plan", "amount": 999, "created": 1496222010, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "name": 'afdsafdasfdsaf', "statement_descriptor": nil, "trial_period_days": nil}, "proration": false, "quantity": 1, "subscription": nil, "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE", "type": "subscription"}], "total_count": 1, "object": "list", "url": "/v1/invoices/in_1APVed2eZvKYlo2CP6dsoJTo/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "paid": true, "period_end": 1496232623, "period_start": 1496232623, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": 'asfdasfsaf', "subtotal": 599, "tax": nil, "tax_percent": nil, "total": 599, "webhooks_delivered_at": 1496232630}}, "livemode": false, "pending_webhooks": 1, "request": "req_Al1inviVvNH7df", "type": "invoice.created"
-        }
+      let(:webhook_params) { 
+        JSON.parse(
+          File.read(
+            Rails.root.join('spec/fixtures/paypal/webhook_payment_sale_completed.json').to_s
+          )
+        )
       }
 
       it 'creates a new instance of PaypalWebhookService' do
