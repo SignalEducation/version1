@@ -993,8 +993,8 @@ en:
         question: Question
         quiz: Quiz
         quizzes: MCQs
-        steps: Steps
-        step: Step
+        lessons: Steps
+        lesson: Step
         mcq: MCQ
         mcqs: MCQs
         video: Video

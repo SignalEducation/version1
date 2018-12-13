@@ -1230,10 +1230,11 @@ a.card {
   //margin: 0 0 $gutter*2 0;
   padding-left: 0;
 }
-.lib-panel {
+.box-item.lib-panel {
   cursor: pointer;
+  background-color: darken($white, 5);
   &:hover {
-    background: darken($white, 5);
+    background: gainsboro;
   }
 }
 .left-side-meta {
@@ -1728,7 +1729,8 @@ a.box-item {
   @include border-radius(5px);
 }
 .panel > .list-group .list-group-item {
-  border-color: $colour-3;
+  //border-color: $colour-3;
+  background-color: darken($white, 5);
   border-top-width: 2px;
 }
 .list-group-item:first-child {
@@ -2079,7 +2081,7 @@ a.list-group-item {
 }
 .signal-tab {
   background: $white;
-  padding: $gutter/2;
+  padding: $gutter/2 $gutter*2;
   display: inherit;
   @include breakpoint(sm-min) {
     display: inline;
@@ -2094,7 +2096,7 @@ a.list-group-item {
   position: relative;
   text-align: left;
   a {
-    color: $white;
+    
     text-decoration: none;
   }
 }

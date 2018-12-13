@@ -11,7 +11,7 @@
 
   -if @course.course_tutor_details.any?
     .col-md-6
-      %p.h4.l-margin-bottom.l-margin-top
+      -#%p.h4.l-margin-bottom.l-margin-top
         =t('views.general.course_tutors')
       .col-sm-12
         -@course_tutor_details.each do |course_tutor|

@@ -18,6 +18,7 @@
             =link_to 'Trial Content', subject_course_trial_content_url(@subject_course), class: 'btn btn-green'
             =link_to t('views.subject_course_resources.show.h2'), course_resources_url(@subject_course), class: 'btn btn-purple'
             =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-red'
+            =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-orange'
         .row.l-margin-top.l-margin-bottom
           .col-md-12.l-margin-top
             .ol.sortable-area

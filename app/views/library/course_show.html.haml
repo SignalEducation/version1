@@ -10,84 +10,77 @@
                 =@course.parent.name
 
 
-      -unless current_user
-        =render partial: 'layouts/account_notice'
-        %h1.h1.h-separator.h-separator-left
-          =@course.name
-        =render partial: 'course_info'
+      =render partial: 'layouts/account_notice'
+      %h1.h1.h-separator.h-separator-left
+        =@course.name
 
-      -else
-        -if @active_enrollment
-          -if @active_enrollment.expired
-            =render partial: 'layouts/enrollment_notice', locals: {active_enrollment: @active_enrollment}
-            =render partial: 'enrollment_form'
-            =render partial: 'course_enrollment_modal'
-          -elsif !@active_enrollment.expired
-            =render partial: 'enrollment_info'
-            -if current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
-              =render partial: 'user_exam_body_details_modal'
-        -else
-          =render partial: 'enrollment_form'
-          =render partial: 'course_enrollment_modal'
-          =render partial: 'course_info'
+      =#render partial: 'course_info'
 
+      .l-margin-top-big.l-margin-bottom-huge{role: 'tablist'}
+        .col-sm-12
+          .signal-tabs
+            -@course.course_sections.each do |course_section|
+              %a{href: "##{course_section.name_url}", role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+                =course_section.name
 
+          .tab-content
+            -@course.course_sections.each do |course_section|
+              .tab-pane.fade{id: course_section.name_url, role: 'tabpanel'}
+                .content-box.content-box-outer
+                  .content-box-inner
 
-      .row
-        .col-md-8.l-margin-top-big
+                    .panel-group#accordion
+                      %ul.course-topics-list
+                        -course_section.course_modules.each_with_index do |child, counter|
+                          -if child.children.any?
+                            %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_tuition_#{counter}"}
+                              .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_tuition_#{counter}"}}
+                                .col-xs-1.col-sm-1
+                                  .left-side-meta
+                                    =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                                .col-xs-9.xs-padding
+                                  .box-topic-item
+                                    =truncate(child.name, length: 50)
+                                .col-xs-2
+                                  .time.hidden-xs
+                                    -if child.cme_count.to_i > 1
+                                      =child.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                    -else
+                                      =child.cme_count.to_s + ' ' + t('views.library.show.lesson')
 
-          -if @course.tuition_children? || @course.test_children? || @course.revision_children?
-            -if @course.tuition_children?
-              -# First Section for Course Modules for Tuition
-              %p.h4.l-margin-bottom
-                =t('views.general.course_tuition')
-              =render partial: 'library/tuition'
-
-            -if @course.test_children?
-              -# Second Section for Course Modules for Test
-              %br/
-              %p.h4.l-margin-bottom
-                -#=t('views.general.course_test')
-                Additional Content
-              =render partial: 'library/test'
-
-            -if @course.revision_children?
-              -# Third Section for Course Modules for Revision
-              %br/
-              %p.h4.l-margin-bottom
-                =t('views.general.question_bank')
-              =render partial: 'library/revision'
-
-          -else
-            -# Third Section for Course Modules for Revision
-            %br/
-            %p.h4.l-margin-bottom
-              =t('views.general.course_content')
-            =render partial: 'library/all_content'
+                          -else
+                            %li
+                              .box-item.lib-panel
+                                .col-xs-1.col-sm-1
+                                  .left-side-meta
+                                    .img-responsive
+                                      =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                                .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
+                                  .box-topic-item
+                                    =truncate(child.name, length: 50)
+                                .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
+                                  .time.pull-right
+                                    %p{style: 'color: #EE5457;'}
+                                      ='Coming Soon!'
 
 
 
-        .col-md-4
-          =render partial: 'additional_content'
+                          .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_tuition_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+                            -child.children.all_in_order.all_active.each do |grandchild|
+
+                              -if @course.preview
+                                =link_to '#', class: 'list-group-item link-purple box-topic-item', style: 'pointer-events: none;' do
+                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
+                              -else
+                                =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
 
 
-      -if current_user && current_user.enrollment_for_course?(@course.id)
-        .l-margin-top-huge
-          =render partial: 'course_info'
 
--if current_user
-  =render partial: 'courses/access_denied_modal'
 
-:javascript
 
-  $('.lib-panel').click(function(){
-    if($(this).is('.radius')){$(this).removeClass('radius'); return;}
-    $(this).addClass('radius').siblings().removeClass('radius');
-  });
 
--if current_user && current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
-  :javascript
-    $(document).ready(function() {
-      var inst = $('[data-remodal-id=user-exam-body-modal]').remodal();
-      inst.open();
-    });
+
+
+
+=render partial: 'shared/activate_tab'
