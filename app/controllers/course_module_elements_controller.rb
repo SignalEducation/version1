@@ -64,11 +64,12 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def new
-    @course_module_element = CourseModuleElement.new(
-        sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i, active: true)
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
+    @course_module_element = CourseModuleElement.new(
+        sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
+        course_module_id: cm.id, course_section_id: cm.course_section_id, active: true)
+
     if params[:type] == 'video'
 
       @course_module_element.is_video = true
@@ -137,7 +138,7 @@ class CourseModuleElementsController < ApplicationController
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
         redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
-        redirect_to course_module_special_link(@course_module_element.course_module)
+        redirect_to show_course_module_url(@subject_course.id, @course_module_element.course_section.id, @course_module_element.course_module.id)
       end
     else
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')

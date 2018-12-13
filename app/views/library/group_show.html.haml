@@ -30,4 +30,4 @@
                   .row
                     .col-md-12.col-xs-12.text-center
                       %h4{style: 'color: #fff;'}
-                        =course.category_label ? course.category_label : 'Enrol Now'
+                        =(course.category_label && !course.category_label.blank?) ? course.category_label : 'Enrol Now'

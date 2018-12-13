@@ -7,10 +7,6 @@ class CourseSectionsController < ApplicationController
   before_action :get_variables
 
   # Standard Actions #
-  def show
-    #TODO this will take over from subject_course show
-
-  end
 
   def new
     @subject_course = SubjectCourse.where(id: params[:id]).first

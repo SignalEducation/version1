@@ -31,7 +31,7 @@
                         .pull-right
                           =tick_or_cross(course_section.active)
 
-                      %table.table.sorted_table{data: {destination: course_module_elements_url}, id: course_section.id, style: 'font-size: 18px;'}
+                      %table.table.sorted_table{data: {destination: course_modules_url}, id: course_section.id}
                         %thead
                           %tr
                             %th Name
@@ -42,7 +42,7 @@
                             %th
                         %tbody
                           -course_section.course_modules.all_in_order.each do |course_module|
-                            %tr{id: course_module.id, data: {parent: course_module.id, destination: course_module_elements_url}}
+                            %tr{id: course_module.id, data: {parent: course_section.id, destination: course_module_url}}
                               %td
                                 =course_module.name.to_s
                               %td
@@ -51,7 +51,7 @@
                                 =course_module.cme_count
                               %td
                                 =link_to t('views.general.edit'), edit_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-small btn-cyan'
-                                =link_to 'Edit Content', course_module_url(course_module.id), class: 'btn btn-small btn-purple'
+                                =link_to 'Edit Content', show_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-small btn-purple'
                                 -if course_module.destroyable?
                                   =link_to t('views.general.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
                               %td

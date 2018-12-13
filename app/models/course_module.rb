@@ -56,10 +56,12 @@ class CourseModule < ActiveRecord::Base
 
   # validation
   validates :subject_course_id, presence: true
+  validates :course_section_id, presence: true
   validates :name, presence: true,
-            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
-  validates :name_url, presence: true,
-            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
+            uniqueness: {scope: :course_section}, length: {maximum: 255}
+  validates :name_url, uniqueness: { scope: :course_section,
+                                     message: "must be unique within a course section" }
+
   validates :sorting_order, presence: true
   validates_length_of :seo_description, maximum: 255, allow_blank: true
 
