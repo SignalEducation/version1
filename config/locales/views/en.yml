@@ -375,10 +375,39 @@ en:
         previous_attempts: Previous Attempts
         no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
 
+
+    course_sections:
+      form:
+        course_module_elements: Course Module Elements
+        subject_course_id: Course
+        name: Name
+        name_placeholder: Course Section (tab) Name
+        name_url: Name URL
+        name_url_placeholder: course-section-name
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+        counts_towards_completion: Counts towards Completion
+        assumed_knowledge: Assumed Knowledge
+
+      edit:
+        h1: Edit Course Section
+
+      index:
+        h1: Course Sections
+        delete: Delete Course Section
+
+      new:
+        h1: New Course Section
+
+      show:
+        h1: Course Section
+
     course_modules:
       form:
         course_module_elements: Course Module Elements
         subject_course_id: Course
+        course_section_id: Course Section (tab)
         name: Name
         name_placeholder: Course Module Name
         name_url: Name URL

@@ -24,6 +24,7 @@
 #  tuition                   :boolean          default(FALSE)
 #  test                      :boolean          default(FALSE)
 #  revision                  :boolean          default(FALSE)
+#  course_section_id         :integer
 #
 
 FactoryBot.define do

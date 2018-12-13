@@ -61,6 +61,7 @@ class SubjectCourse < ActiveRecord::Base
   belongs_to :exam_body
   belongs_to :group
   has_many :course_modules
+  has_many :course_sections
   has_many :course_module_elements, through: :course_modules
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_tutor_details

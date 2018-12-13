@@ -5,9 +5,9 @@
       =f.hidden_field :sorting_order
       =f.hidden_field :subject_course_id
 
-      =f.label :subject_course_id, t('views.course_modules.form.subject_course_id'), class: 'control-label'
+      =f.label :course_section_id, t('views.course_modules.form.course_section_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
-        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+        =f.collection_select :course_section_id, @course_sections, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
       %br/
       =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
       .input-group.input-group-lg.full-width

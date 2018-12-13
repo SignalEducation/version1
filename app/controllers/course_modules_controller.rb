@@ -24,6 +24,7 @@
 #  tuition                   :boolean          default(FALSE)
 #  test                      :boolean          default(FALSE)
 #  revision                  :boolean          default(FALSE)
+#  course_section_id         :integer
 #
 
 class CourseModulesController < ApplicationController
@@ -35,12 +36,11 @@ class CourseModulesController < ApplicationController
   before_action :get_variables
 
   # Standard Actions #
-  def show
-    redirect_to subject_course_url
-  end
-
   def new
-    @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
+    @subject_course = SubjectCourse.where(id: params[:id]).first
+    @course_sections = @subject_course.course_sections.all_in_order
+
+    @course_section = CourseSection.where(id: params[:course_section_id]).first
     if @subject_course && @subject_course.children.count > 0
       @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id)
     elsif @subject_course
@@ -54,13 +54,17 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.new(allowed_params)
     if @course_module.save
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
-      redirect_to course_module_special_link(@course_module)
+      redirect_to subject_course_url(@subject_course.id)
     else
       render action: :new
     end
   end
 
   def edit
+    @subject_course = SubjectCourse.where(id: params[:id]).first
+    @course_section = CourseSection.where(id: params[:course_section_id]).first
+    @course_module = CourseModule.where(id: params[:course_module_id]).first
+    @course_sections = @subject_course.course_sections.all_in_order
   end
 
   def update
@@ -101,7 +105,7 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision)
+    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision, :course_section_id)
   end
 
 end

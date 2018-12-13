@@ -24,6 +24,7 @@
 #  tuition                   :boolean          default(FALSE)
 #  test                      :boolean          default(FALSE)
 #  revision                  :boolean          default(FALSE)
+#  course_section_id         :integer
 #
 
 class CourseModule < ActiveRecord::Base
@@ -37,12 +38,14 @@ class CourseModule < ActiveRecord::Base
                   :seo_description, :seo_no_index, :number_of_questions,
                   :subject_course_id, :highlight_colour, :tuition, :test,
                   :revision, :quiz_count, :video_duration,
-                  :video_count, :course_module_elements_attributes
+                  :video_count, :course_module_elements_attributes,
+                  :course_section_id
 
   # Constants
 
   # relationships
   belongs_to :subject_course
+  belongs_to :course_section
   has_many :course_module_elements
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_element_videos, through: :course_module_elements

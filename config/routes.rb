@@ -111,8 +111,11 @@ Rails.application.routes.draw do
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
-    get 'course_modules/:subject_course_name_url', to: 'course_modules#show',
-        as: :course_modules_for_subject_course
+    get 'subject_courses/:id/new_course_section', to: 'course_sections#new', as: :new_course_section
+    get 'subject_courses/:id/course_section/:course_section_id/new_course_module', to: 'course_modules#new', as: :new_course_module
+    get 'subject_courses/:id/course_section/:course_section_id/edit_course_module/:course_module_id', to: 'course_modules#edit', as: :edit_course_module
+
+    resources :course_sections, concerns: :supports_reordering
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering do
       resources :course_module_element_resources, except: [:show], concerns: :supports_reordering

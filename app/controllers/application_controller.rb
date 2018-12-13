@@ -221,6 +221,10 @@ class ApplicationController < ActionController::Base
       subject_course_url(
                 the_thing.subject_course)
 
+    elsif the_thing.class == CourseSection
+      subject_course_url(
+          the_thing.subject_course)
+
     elsif the_thing.class == SubjectCourse
       new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
 

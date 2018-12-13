@@ -22,6 +22,7 @@
 #  temporary_label           :string
 #  is_constructed_response   :boolean          default(FALSE), not null
 #  available_on_trial        :boolean          default(FALSE)
+#  course_section_id         :integer
 #
 
 require 'rails_helper'
