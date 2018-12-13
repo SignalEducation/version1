@@ -174,6 +174,8 @@ Rails.application.routes.draw do
     end
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
+    get 'subject_courses/:id/trial_content', to: 'subject_courses#trial_content', as: :subject_course_trial_content
+    patch 'subject_courses/:id/trial_content', to: 'subject_courses#update_trial_content', as: :subject_course_update_trial_content
     get 'subject_courses/:id/resources', to: 'subject_courses#subject_course_resources', as: :course_resources
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources

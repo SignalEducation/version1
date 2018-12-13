@@ -52,7 +52,8 @@ class SubjectCourse < ActiveRecord::Base
                   :total_video_duration, :exam_body_id, :survey_url,
                   :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
                   :background_image, :preview, :computer_based, :highlight_colour,
-                  :category_label, :additional_text_label
+                  :category_label, :additional_text_label, :course_modules_attributes,
+                  :subject_course_resources_attributes
 
   # Constants
 
@@ -75,6 +76,8 @@ class SubjectCourse < ActiveRecord::Base
   has_many :exam_sittings
   has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
+  accepts_nested_attributes_for :course_modules
+  accepts_nested_attributes_for :subject_course_resources
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}

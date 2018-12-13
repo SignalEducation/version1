@@ -37,7 +37,7 @@ class CourseModule < ActiveRecord::Base
                   :seo_description, :seo_no_index, :number_of_questions,
                   :subject_course_id, :highlight_colour, :tuition, :test,
                   :revision, :quiz_count, :video_duration,
-                  :video_count
+                  :video_count, :course_module_elements_attributes
 
   # Constants
 
@@ -48,6 +48,8 @@ class CourseModule < ActiveRecord::Base
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
   has_many :student_exam_tracks
+
+  accepts_nested_attributes_for :course_module_elements
 
   # validation
   validates :subject_course_id, presence: true
