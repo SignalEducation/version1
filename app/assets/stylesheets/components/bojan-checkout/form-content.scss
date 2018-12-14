@@ -691,3 +691,29 @@ h3 {
     border-bottom-left-radius: 0
   }
 }
+
+.custom-control.custom-control-simple {
+  margin-bottom: 1.75rem
+}
+label.custom-control-label {
+  padding: 0;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start
+}
+.custom-control.custom-control-simple .custom-control-input + .custom-control-label {
+  padding: 0;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start
+}
+.custom-control.custom-control-simple .custom-control-input + .custom-control-label .custom-check {
+  margin-top: -1px;
+  margin-right: 1rem;
+  border-color: #b4bbd4
+}
+.custom-control.custom-control-simple .custom-control-input + .custom-control-label .custom-label {
+  color: #424366
+}

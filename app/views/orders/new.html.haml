@@ -9,12 +9,17 @@
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
   .container#product_purchase
-    %form.payment
-      =form_for @order, html: {id: 'orders-form', class: 'form-horizontal', role: 'form'} do |f|
+    -if current_user.purchased_products && current_user.purchased_products.include?(@product)
+      .row
+        .col-md-12
+          .payment-heading.text-center
+            %p.p
+              You have already purchased this Product. Visit your account page to view your purchase history.
+    -else
+      =form_for(@order, html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
         =f.hidden_field :product_id, value: @product.id
         =f.hidden_field :stripe_token
         =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-        =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
         =f.hidden_field :use_paypal, value: false
 
         .row.row-lg.justify-content-center
@@ -56,3 +61,80 @@
                     %span.custom-check
                       / custom checkbox
                 =render partial: 'orders/paypal_form', locals: {f: f}
+
+:javascript
+
+  $(document).on('ready', function() {
+
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+      $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
+      if ($(this).is(':checked')) {
+        $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+        selectPaymentMethod($(this).val())
+      }
+    });
+    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+
+
+
+    function selectPaymentMethod(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#subscription_use_paypal').val(true);
+          break;
+        case 'stripe':
+          $('#subscription_use_paypal').val(false);
+          break;
+        default:
+          $('#subscription_use_paypal').val(false);
+      }
+    }
+
+
+    $(".sk-circle").hide();
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#terms_and_conditions').prop('checked') == true) {
+        $("#hidden_term_and_conditions").val('true');
+      } else if($('#terms_and_conditions').prop('checked') == false) {
+        $("#hidden_term_and_conditions").val('false');
+      }
+    });
+
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements = stripe.elements();
+    var card = elements.create('card', {hidePostalCode: true,});
+    card.mount('#card-element');
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('orders-form');
+      $('#order_stripe_token').val(token.id);
+
+      // Submit the form
+      form.submit();
+      $('#card_submit').hide();
+      $(".sk-circle").show();
+
+    }
+
+    function createToken() {
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+        } else {
+          // Send the token to your server
+          stripeTokenHandler(result.token);
+        }
+      });
+    };
+
+
+    // Create a token when the form is submitted.
+    var form = document.getElementById('orders-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      createToken();
+    });
+  });
