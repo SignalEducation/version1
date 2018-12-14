@@ -17,6 +17,8 @@
 #  mock_exam_id              :integer
 #  terms_and_conditions      :boolean          default(FALSE)
 #  reference_guid            :string
+#  paypal_guid               :string
+#  paypal_status             :string
 #
 
 class OrdersController < ApplicationController
