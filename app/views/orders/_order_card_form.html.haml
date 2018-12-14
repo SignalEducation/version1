@@ -1,45 +1,44 @@
-.col-sm-12{style: 'padding-left: 0;'}
-  .payment-errors
-    .col-sm-10
-      .form-group.cc
-        %label
-          Credit or debit card
-        .clearfix
-          #card-element
+.payment-details.credit-card
+  .col-sm-12{style: 'padding-left: 0;'}
+    .payment-errors
+      .col-sm-10
+        .form-group.cc
+          .clearfix
+            #card-element
 
-          #card-errors{role: 'alert'}
+            #card-errors{role: 'alert'}
 
-      .form-group.l-margin-top
-        %label.check
-          %input{type: "checkbox", id: 'terms_and_conditions', required: true}
-            %span
-              %i.fa.fa-check
-            =t('views.general.terms_and_conditions')
+        .form-group.l-margin-top
+          %label.check
+            %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+              %span
+                %i.fa.fa-check
+              =t('views.general.terms_and_conditions')
 
-      .form-group.l-margin-top
-        .tot-get
-          .price
-            %span.total Total:
-            %span.value
-              =number_in_local_currency(@product.price, @product.currency_id)
-          %div.l-margin-top
-            = f.button :submit, class: 'lsbtn', id: 'card_submit' do
-              %i.fa.fa-lock
-              ='Purchase Mock Exam'
+        .form-group.l-margin-top
+          .tot-get
+            .price
+              %span.total Total:
+              %span.value
+                =number_in_local_currency(@product.price, @product.currency_id)
+            %div.l-margin-top
+              = f.button :submit, class: 'lsbtn', id: 'card_submit' do
+                %i.fa.fa-lock
+                ='Purchase Mock Exam'
 
-            .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
-              .sk-circle1.sk-child
-              .sk-circle2.sk-child
-              .sk-circle3.sk-child
-              .sk-circle4.sk-child
-              .sk-circle5.sk-child
-              .sk-circle6.sk-child
-              .sk-circle7.sk-child
-              .sk-circle8.sk-child
-              .sk-circle9.sk-child
-              .sk-circle10.sk-child
-              .sk-circle11.sk-child
-              .sk-circle12.sk-child
+              .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+                .sk-circle1.sk-child
+                .sk-circle2.sk-child
+                .sk-circle3.sk-child
+                .sk-circle4.sk-child
+                .sk-circle5.sk-child
+                .sk-circle6.sk-child
+                .sk-circle7.sk-child
+                .sk-circle8.sk-child
+                .sk-circle9.sk-child
+                .sk-circle10.sk-child
+                .sk-circle11.sk-child
+                .sk-circle12.sk-child
 
 
 

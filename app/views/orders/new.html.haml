@@ -1,27 +1,58 @@
 .bg-asphalt
   -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
+    =render partial: 'layouts/flash_messages'
   .container
     %article.hero
       %h1.h1-mega.mb-3 
         =@mock_exam.name
       %h5.text-red Purchase Process
-  .container
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+  .container#product_purchase
     %form.payment
-      .row.row-lg.justify-content-center
-        .col-xl-4.mb-5.mb-xl-0
-          %fieldset.text-center
-            %h3.mb-3 
-              =@mock_exam.name
-            %p.h4.mb-3.text-torquoise
-              Total:
-              %span
-                =number_in_local_currency(@product.price, @product.currency_id)
-            .mb-4
-              =image_tag 'ico-exam-2.svg', alt: 'Exam'
-            .px-4
-              %p.text-left Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
-        .col-xl-6.mb-5
-          %fieldset.card
-            %p.h2.mb-2 Choose a way to pay
+      =form_for @order, html: {id: 'orders-form', class: 'form-horizontal', role: 'form'} do |f|
+        =f.hidden_field :product_id, value: @product.id
+        =f.hidden_field :stripe_token
+        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+        =f.hidden_field :use_paypal, value: false
 
+        .row.row-lg.justify-content-center
+          .col-xl-4.mb-5.mb-xl-0
+            %fieldset.text-center
+              %h3.mb-3 
+                =@mock_exam.name
+              %p.h4.mb-3.text-torquoise
+                Total:
+                %span
+                  =number_in_local_currency(@product.price, @product.currency_id)
+              .mb-4
+                =image_tag 'ico-exam-2.svg', alt: 'Exam'
+              .px-4
+                %p Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
+          .col-xl-6.mb-5
+            %fieldset.card
+              %p.h2.mb-1 Choose a way to pay
+              %p.mb-4 Choose your preferred method of payment
+              .form-group.form-group-expandable
+                .custom-control.custom-radio
+                  %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                  %label.custom-control-label{:for => "pay-with-card"}
+                    %span.custom-label-info
+                      %span.h3.m-0
+                        =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                        %span Credit / Debit Card
+                    %span.custom-check
+                      / custom checkbox
+                =render partial: 'orders/order_card_form', locals: {f: f}
+              .form-group.form-group-expandable
+                .custom-control.custom-radio
+                  %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                  %label.custom-control-label{:for => "pay-with-paypal"}
+                    %span.custom-label-info
+                      %span.h3.m-0
+                        =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                        %span PayPal
+                    %span.custom-check
+                      / custom checkbox
+                =render partial: 'orders/paypal_form', locals: {f: f}
