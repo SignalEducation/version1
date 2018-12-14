@@ -1,8 +1,10 @@
 .payment-details.pay-pal
   .md-2
-    .form-group.l-margin-top
-      %label.check
-        %input{type: "checkbox", id: 'terms_and_conditions', required: true}
+    .custom-control.custom-control-simple.custom-checkbox
+      %input{type: "checkbox", id: 'terms_and_conditions', class: 'custom-control-input style-checkbox', required: true}
+      %label.custom-control-label{for: 'terms_and_conditions'}
+        %span.custom-check
+        %span.custom-label
           =t('views.general.terms_and_conditions')
   .mb-2
     %h4.m-0

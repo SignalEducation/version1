@@ -1,6 +1,10 @@
 form.payment {
   border-bottom: 1px solid grey;
-  margin-top: 30px;
+  // margin-top: 30px;
+
+  label {
+    font-weight: 400;
+  }
 
   .option {
     height: 100px;
