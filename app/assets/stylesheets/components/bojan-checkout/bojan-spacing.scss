@@ -3,6 +3,9 @@
 }
 .text-center {
   text-align: center!important;
+  .text-left {
+    text-align: center;
+  }
 }
 .text-ellipsis {
   white-space: nowrap;
@@ -173,7 +176,7 @@
 }
 .mb-5,
 .my-5 {
-  margin-bottom: 1.5em!important
+  margin-bottom: 3em!important
 }
 .ml-5,
 .mx-5 {

@@ -133,7 +133,7 @@
   }  
 }
 .text-torquoise {
-  color: #05a4af;
+  color: #05a4af !important;
 }
 .text-red {
   color: #f34664;
@@ -192,7 +192,8 @@ h3 {
 }
 .h4,
 h4 {
-  font-size: 1.1875em;
+  font-size: 1.1875em !important;
+  font-weight: 700 !important;
 }
 .h5,
 h5 {
@@ -640,8 +641,8 @@ h3 {
 }
 @media (min-width:576px) {
   .payment {
-    padding-top: 5em;
-    padding-bottom: 5em
+    padding-top: 4em;
+    padding-bottom: 4em
   }
 }
 .payment-details {
