@@ -9,7 +9,7 @@
 #  stripe_guid               :string
 #  stripe_customer_id        :string
 #  live_mode                 :boolean          default(FALSE)
-#  current_status            :string
+#  stripe_status             :string
 #  coupon_code               :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -52,6 +52,7 @@ class Order < ActiveRecord::Base
   validates :current_status, presence: true
 
   # callbacks
+  before_create :assign_random_guid
   before_destroy :check_dependencies
   after_create :create_order_transaction
 
@@ -83,6 +84,10 @@ class Order < ActiveRecord::Base
   end
 
   protected
+
+  def assign_random_guid
+    reference_guid = "Order_#{ApplicationController.generate_random_number(10)}"
+  end
 
   def check_dependencies
     unless self.destroyable?

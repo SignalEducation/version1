@@ -152,7 +152,11 @@ Rails.application.routes.draw do
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
     resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
-    resources :orders, except: [:new]
+    resources :orders, except: [:new] do
+      member do
+        get 'execute'
+      end
+    end
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     get 'order/order_complete/:reference_guid', to: 'orders#order_complete', as: :order_complete
     resources :products, concerns: :supports_reordering

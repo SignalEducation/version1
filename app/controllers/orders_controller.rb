@@ -9,7 +9,7 @@
 #  stripe_guid               :string
 #  stripe_customer_id        :string
 #  live_mode                 :boolean          default(FALSE)
-#  current_status            :string
+#  stripe_status             :string
 #  coupon_code               :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -125,6 +125,27 @@ class OrdersController < ApplicationController
     end
 
     @navbar = false
+  end
+
+  def execute
+    case params[:payment_processor]
+    when 'paypal'
+      if PaypalService.new.execute_payment(@order, params[:token])
+        @subscription.start
+        SubscriptionService.new(@subscription).validate_referral
+        redirect_to order_complete_url(@order.reference_guid)
+      else
+        Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@order.inspect}"
+        flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
+        redirect_to new_order_path(@order)
+      end
+    else
+      flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
+      redirect_to new_order_path(@order)
+    end
+  rescue Learnsignal::PaymentError => e
+    flash[:error] = e.message
+    redirect_to new_order_path(@order)
   end
 
   def order_complete

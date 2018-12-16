@@ -9,7 +9,7 @@
 #  stripe_guid               :string
 #  stripe_customer_id        :string
 #  live_mode                 :boolean          default(FALSE)
-#  current_status            :string
+#  stripe_status             :string
 #  coupon_code               :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null

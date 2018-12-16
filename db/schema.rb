@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181214184420) do
+ActiveRecord::Schema.define(version: 20181214200008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -663,7 +663,7 @@ ActiveRecord::Schema.define(version: 20181214184420) do
     t.string   "stripe_guid"
     t.string   "stripe_customer_id"
     t.boolean  "live_mode",                 default: false
-    t.string   "current_status"
+    t.string   "stripe_status"
     t.string   "coupon_code"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
