@@ -1,61 +1,60 @@
-.l-margin-top-big
-  %p.h4.l-margin-bottom.l-margin-top
-    Contact Tutor
+.row
+  .resources-inner
+    -if @products.any?
+      %p.h4
+        Mock Exams
+      %ul
+        -@products.each do |product|
+          -if @course.preview
+            %li
+              =link_to '#', class: 'resource-box resource-box-inner full-width' do
+                .col-xs-10
+                  =product.mock_exam.name
+                .col-xs-2
+                  .glyphicon.glyphicon-download{style: 'top: 3px;'}
 
-  -if current_user
-    -if current_user && !current_user.trial_user?
-      =render partial: 'courses/tutor_contact'
-      %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange btn-wide'}
-        Ask The Tutor
-    -else
-      %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange btn-wide'}
-        Ask The Tutor
-  -else
-    =link_to new_student_url, class: 'btn btn-orange btn-wide' do
-      Ask The Tutor
+          -else
+            -if current_user
+              %li
+                =link_to new_order_url(product), class: 'resource-box resource-box-inner full-width' do
+                  .col-xs-10
+                    =product.mock_exam.name
+                  .col-xs-2
+                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
+            -else
+              %li
+                =link_to new_student_url, class: 'resource-box resource-box-inner full-width' do
+                  .col-xs-10
+                    =product.mock_exam.name
+                  .col-xs-2
+                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
 
-
-  -if @products.any?
-    %p.h4.l-margin-bottom.l-margin-top-huge
-      Mock Exams
-    %ul.course-resources
-      -@products.each do |product|
-        -if @course.preview
-          %li
-            =link_to '#', style: 'pointer-events: none;' do
-              .btn.btn-secondary.btn-red.btn-list
-                =product.mock_exam.name
-        -else
+  .resources-inner
+    -if @subject_course_resources
+      %p.h4
+        Course Resources
+      %ul
+        -@subject_course_resources.each do |resource|
           -if current_user
-            %li
-              =link_to new_order_url(product) do
-                .btn.btn-secondary.btn-red.btn-list
-                  =product.mock_exam.name
+            -if current_user.permission_to_see_content(@course.id, nil, resource.id)
+              %li
+                =link_to resource.external_url.blank? ? resource.file_upload.url : resource.external_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
+                  .col-xs-10
+                    =resource.name
+                  .col-xs-2
+                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
+
+            -else
+              %li
+                =link_to '#access-denied-modal', class: 'resource-box resource-box-inner full-width' do
+                  .col-xs-10
+                    =resource.name
+                  .col-xs-2
+                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
           -else
             %li
-              =link_to new_student_url do
-                .btn.btn-secondary.btn-red.btn-list
-                  =product.mock_exam.name
-
-  -if @subject_course_resources
-    %p.h4.l-margin-bottom.l-margin-top-huge
-      Course Resources
-    %ul.course-resources
-      -@subject_course_resources.each do |resource|
-        -if current_user
-          -if current_user.permission_to_see_content(@course.id, nil, resource.id)
-            %li
-              =link_to resource.external_url.blank? ? resource.file_upload.url : resource.external_url, target: '_blank' do
-                .btn.btn-secondary.btn-red.btn-list
+              =link_to new_student_url, class: 'resource-box resource-box-inner full-width' do
+                .col-xs-10
                   =resource.name
-
-          -else
-            %li
-              %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-secondary btn-red btn-list'}
-                =resource.name
-        -else
-          %li
-            =link_to new_student_url do
-              .btn.btn-secondary.btn-red.btn-list
-                =resource.name
-
+                .col-xs-2
+                  .glyphicon.glyphicon-download{style: 'top: 3px;'}

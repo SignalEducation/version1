@@ -40,6 +40,7 @@ class CourseSection < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
+  scope :all_active, -> { where(active: true) }
 
   # class methods
 

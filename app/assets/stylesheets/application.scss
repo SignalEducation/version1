@@ -68,10 +68,10 @@ html {
   background: $colour-3;
   .margin-top {                   // These Ensure content is not hidden behind Navbar
     @include breakpoint(xs-min) {
-      margin-top: 40px;
+      margin-top: 50px;
     }
     @include breakpoint(sm-min) {
-      margin-top: 40px;
+      margin-top: 50px;
     }
     @include breakpoint(md-min) {
       margin-top: 60px;
@@ -705,6 +705,12 @@ label, .label {
     padding: 0 $gutter/2;
     max-width: 1000px;
   }
+
+}
+// Management Console
+.l-wrap-large {
+  padding: 0 $gutter;
+  margin: 0 auto;
 
 }
 .container-fluid {
@@ -2094,9 +2100,8 @@ a.list-group-item {
   display: block;
   background: $white;
   position: relative;
-  text-align: left;
+
   a {
-    
     text-decoration: none;
   }
 }
@@ -2104,9 +2109,12 @@ a.list-group-item {
   min-height: 300px;
 }
 .content-box-inner {
-  padding: $gutter*2;
+  padding: $gutter*2 $gutter*4 $gutter*2 $gutter*2;
 }
+.resources-inner {
 
+
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

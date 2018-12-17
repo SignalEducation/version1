@@ -2,10 +2,10 @@
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
-        .col-sm-6
+        .col-sm-3.col-xs-12
           .l-margin-bottom
             -if @course.parent
-              =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
+              =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary full-width' do
                 .fa.fa-arrow-left
                 =@course.parent.name
 
@@ -17,64 +17,74 @@
       =#render partial: 'course_info'
 
       .l-margin-top-big.l-margin-bottom-huge{role: 'tablist'}
-        .col-sm-12
-          .signal-tabs
-            -@course.course_sections.each do |course_section|
-              %a{href: "##{course_section.name_url}", role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                =course_section.name
+        .signal-tabs
+          -@course.course_sections.all_active.all_in_order.each do |course_section|
+            %a{href: "##{course_section.name_url}", role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+              =course_section.name
 
-          .tab-content
-            -@course.course_sections.each do |course_section|
-              .tab-pane.fade{id: course_section.name_url, role: 'tabpanel'}
-                .content-box.content-box-outer
-                  .content-box-inner
+          %a{href: "#resources", role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+            ='Resources'
 
-                    .panel-group#accordion
-                      %ul.course-topics-list
-                        -course_section.course_modules.each_with_index do |child, counter|
-                          -if child.children.any?
-                            %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_tuition_#{counter}"}
-                              .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_tuition_#{counter}"}}
-                                .col-xs-1.col-sm-1
-                                  .left-side-meta
+
+        .tab-content
+          -@course.course_sections.all_active.all_in_order.each do |course_section|
+            .tab-pane.fade{id: course_section.name_url, role: 'tabpanel'}
+              .content-box.content-box-outer
+                .content-box-inner
+
+                  .panel-group#accordion
+                    %ul.course-topics-list
+                      -course_section.course_modules.all_in_order.each_with_index do |child, counter|
+                        -if child.children.any?
+                          %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{course_section.name_url}_#{counter}"}
+                            .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{course_section.name_url}_#{counter}"}}
+                              .col-xs-1.col-sm-1
+                                .left-side-meta
+                                  =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                              .col-xs-9.xs-padding
+                                .box-topic-item
+                                  =truncate(child.name, length: 50)
+                              .col-xs-2
+                                .time.hidden-xs
+                                  -if child.cme_count.to_i > 1
+                                    =child.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                  -else
+                                    =child.cme_count.to_s + ' ' + t('views.library.show.lesson')
+
+                        -else
+                          %li
+                            .box-item.lib-panel
+                              .col-xs-1.col-sm-1
+                                .left-side-meta
+                                  .img-responsive
                                     =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
-                                .col-xs-9.xs-padding
-                                  .box-topic-item
-                                    =truncate(child.name, length: 50)
-                                .col-xs-2
-                                  .time.hidden-xs
-                                    -if child.cme_count.to_i > 1
-                                      =child.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                    -else
-                                      =child.cme_count.to_s + ' ' + t('views.library.show.lesson')
-
-                          -else
-                            %li
-                              .box-item.lib-panel
-                                .col-xs-1.col-sm-1
-                                  .left-side-meta
-                                    .img-responsive
-                                      =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
-                                .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
-                                  .box-topic-item
-                                    =truncate(child.name, length: 50)
-                                .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
-                                  .time.pull-right
-                                    %p{style: 'color: #EE5457;'}
-                                      ='Coming Soon!'
+                              .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
+                                .box-topic-item
+                                  =truncate(child.name, length: 50)
+                              .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
+                                .time.pull-right
+                                  %p{style: 'color: #EE5457;'}
+                                    ='Coming Soon!'
 
 
 
-                          .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_tuition_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
-                            -child.children.all_in_order.all_active.each do |grandchild|
+                        .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+                          -child.children.all_in_order.all_active.each do |grandchild|
 
-                              -if @course.preview
-                                =link_to '#', class: 'list-group-item link-purple box-topic-item', style: 'pointer-events: none;' do
-                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
-                              -else
-                                =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
-                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
+                            -if @course.preview
+                              =link_to '#', class: 'list-group-item link-purple box-topic-item', style: 'pointer-events: none;' do
+                                =render partial: 'panel_content', locals: {grandchild: grandchild}
+                            -else
+                              =link_to course_special_link(grandchild), class: 'list-group-item link-purple box-topic-item' do
+                                =render partial: 'panel_content', locals: {grandchild: grandchild}
 
+
+
+
+          .tab-pane.fade{id: 'resources', role: 'tabpanel'}
+            .content-box.content-box-outer
+              .content-box-inner
+                =render partial: 'library/additional_content'
 
 
 

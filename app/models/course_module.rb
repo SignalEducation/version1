@@ -109,6 +109,9 @@ class CourseModule < ActiveRecord::Base
 
   ## Methods allow for navigation from one CM to the next ##
 
+  #TODO - these do not work when latest course modules are made inactive
+  # Needs a fallback
+
   def array_of_sibling_ids
     self.parent.course_modules.all_active.all_in_order.map(&:id)
   end
