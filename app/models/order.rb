@@ -27,7 +27,7 @@ class Order < ActiveRecord::Base
   serialize :stripe_order_payment_data, JSON
 
   # attr-accessible
-  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_order_payment_data, :stripe_token, :stripe_order_payment_data, :mock_exam_id, :terms_and_conditions, :reference_guid
+  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :stripe_status, :stripe_order_payment_data, :stripe_token, :stripe_order_payment_data, :mock_exam_id, :terms_and_conditions, :reference_guid
 
   # Constants
   ORDER_STATUS = %w(created paid canceled)
@@ -49,7 +49,7 @@ class Order < ActiveRecord::Base
             uniqueness: true
   validates :terms_and_conditions, presence: true
   validates :stripe_customer_id, presence: true
-  validates :current_status, presence: true
+  validates :stripe_status, presence: true
 
   # callbacks
   before_create :assign_random_guid

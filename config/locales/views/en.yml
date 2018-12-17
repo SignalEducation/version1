@@ -176,7 +176,7 @@ en:
         product_id: Product
         order: Order
         user_id: User
-        current_status: Status
+        stripe_status: Status
 
 
       show:
@@ -186,7 +186,7 @@ en:
         user_id: User
         stripe_guid: Stripe Id
         stripe_customer_id: Stripe Customer Id
-        current_status: Order Status
+        stripe_status: Order Status
 
       new:
         h1: New Order

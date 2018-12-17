@@ -83,7 +83,7 @@ class OrdersController < ApplicationController
         @order.stripe_customer_id = stripe_order.customer
         @order.stripe_guid = stripe_order.id
         @order.live_mode = stripe_order.livemode
-        @order.current_status = stripe_order.status
+        @order.stripe_status = stripe_order.status
         random_guid = "Order_#{ApplicationController.generate_random_number(10)}"
         @order.reference_guid = random_guid
 
@@ -93,7 +93,7 @@ class OrdersController < ApplicationController
           @pay_order = order.pay(source: stripe_token)
         end
         order = Stripe::Order.retrieve(@order.stripe_guid)
-        @order.current_status = order.status
+        @order.stripe_status = order.status
         @order.stripe_order_payment_data = @pay_order
 
         if @order.save
