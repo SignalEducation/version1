@@ -425,7 +425,7 @@ describe SubscriptionsController, type: :controller do
 
         delete :destroy, id: valid_subscription.id
         valid_subscription.reload
-        expect(valid_subscription.current_status).to eq('canceled-pending')
+        expect(valid_subscription.stripe_status).to eq('canceled-pending')
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)

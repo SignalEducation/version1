@@ -29,7 +29,7 @@ FactoryBot.define do
     stripe_guid "MyString"
     stripe_customer_id "MyString"
     live_mode false
-    current_status "MyString"
+    stripe_status "MyString"
     coupon_code "MyString"
     terms_and_conditions true
     sequence(:reference_guid)      { |n| "Order_#{ApplicationController.generate_random_number(10)}#{n}" }

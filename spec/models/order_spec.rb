@@ -57,7 +57,7 @@ describe Order do
 
   it { should validate_presence_of(:stripe_customer_id) }
 
-  it { should validate_presence_of(:current_status) }
+  it { should validate_presence_of(:stripe_status) }
 
   it { should_not validate_presence_of(:coupon_code) }
 
