@@ -24,31 +24,16 @@
       %h4.l-margin-bottom
         ='Additional Resources'
       -@course_module_element.course_module_element_resources.each do |r|
-        -if current_user && current_user.permission_to_see_content && !current_user.student_access.trial_access? && current_user.enrolled_in_course?(@course.id)
-          -if r.web_url && r.web_url.length > 0
-            =link_to r.web_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-              =r.name
-          -else
-            =link_to r.upload.url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-              .col-xs-10
-                =r.name
-              .col-xs-2
-                .glyphicon.glyphicon-download{style: 'top: 3px;'}
-
-        -elsif current_user && current_user.permission_to_see_content && current_user.student_access.trial_access? && current_user.enrolled_in_course?(@course.id)
-          %a{data: {remodal: {target: 'resources-unavailable-modal'}}, class: 'resource-box resource-box-inner full-width'}
-            .col-xs-10
-              =r.name
-            .col-xs-2
-              .glyphicon.glyphicon-download{style: 'top: 3px;'}
-
+        -if r.web_url && r.web_url.length > 0
+          =link_to r.web_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
+            =r.name
         -else
-          %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'resource-box resource-box-inner full-width'}
+          =link_to r.upload.url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
             .col-xs-10
               =r.name
             .col-xs-2
               .glyphicon.glyphicon-download{style: 'top: 3px;'}
-
+                
 
 
 

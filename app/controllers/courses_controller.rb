@@ -5,23 +5,11 @@ class CoursesController < ApplicationController
   before_action :check_permission, only: [:show, :show_constructed_response]
 
   def show
-    if @course_module && @course_module.active_children
-      @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
-      #@course_module_element ||= @course_module.active_children.all_in_order.first
 
-      #CME name is not in the seo title because it is html_safe
-      seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
-
-      if @course_module_element.is_quiz
-        set_up_quiz
-      elsif @course_module_element.is_constructed_response
-        set_up_constructed_response_start_screen
-      end
-    else
-      ## The URL params are wrong ##
-      flash[:warning] = t('controllers.courses.show.warning')
-      Rails.logger.warn "WARN: CoursesController#show failed to find content. Params: #{request.filtered_parameters}."
-      redirect_to library_special_link(@course)
+    if @course_module_element.is_quiz
+      set_up_quiz
+    elsif @course_module_element.is_constructed_response
+      set_up_constructed_response_start_screen
     end
   end
 
@@ -346,32 +334,21 @@ class CoursesController < ApplicationController
 
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
-    @course_module = @course.course_modules.find_by(name_url: params[:course_module_name_url]) if @course
+    @course_section = @course.course_sections.find_by(name_url: params[:course_section_name_url]) if @course
+    @course_module = @course_section.course_modules.find_by(name_url: params[:course_module_name_url]) if @course_section
+    @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url]) if @course_module
 
-    if @course && @course_module && current_user && current_user.permission_to_see_content
+    if @course && @course.active && @course_section && @course_section.active && @course_module && @course_module.active && @course_module_element && @course_module_element.active && current_user && current_user.permission_to_see_content(@course_module_element, nil)
 
-      @active_enrollment = current_user.enrollments.all_active.all_not_expired.for_subject_course(@course.id).last
+      @active_enrollment = current_user.enrollments.all_active.for_subject_course(@course.id).last
       if @active_enrollment
         @subject_course_user_log = @active_enrollment.subject_course_user_log
-        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
-      elsif current_user && current_user.non_student_user?
-
-
-      else
-        flash[:warning] = 'Sorry, you are not permitted to access that content.'
-        redirect_to root_url
+        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id:
+                                                                                     @course_module.id).last
       end
     else
-      if current_user.expired_trial_user?
-        flash[:warning] = 'Sorry, your free trial has expired. Please Upgrade to a paid subscription to continue'
-        redirect_to new_subscription_url
-      elsif current_user.current_subscription && current_user.canceled_member?
-        flash[:warning] = 'Sorry, your Subscription is no longer valid. Please Upgrade to a valid subscription to continue'
-        redirect_to new_subscription_url
-      else
-        flash[:warning] = 'Sorry, you are not permitted to access that content.'
-        redirect_to root_url
-      end
+      flash[:warning] = 'Sorry, you are not permitted to access that content. '
+      redirect_to subject_course_url(@course)
     end
   end
 

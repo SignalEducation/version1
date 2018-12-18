@@ -124,18 +124,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_has_access_rights
 
-  def paywall_checkpoint
-    allowed     = {course_content: {view_all: true, reason: nil}}
-    not_allowed     = {course_content: {view_all: false, reason: nil}}
-
-    if current_user && current_user.permission_to_see_content
-      result = allowed
-    else
-      result = not_allowed
-    end
-    result
-  end
-  helper_method :paywall_checkpoint
 
   #### Locale
 

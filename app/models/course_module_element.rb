@@ -64,10 +64,11 @@ class CourseModuleElement < ActiveRecord::Base
                                 reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
-  validates :name, presence: true, length: {maximum: 255}
-  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
-  validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
+  validates :name, presence: true, length: {maximum: 255}
+  validates :name_url, uniqueness: { scope: :course_module,
+                                     message: "must be unique within the course module" }
+  validates :description, presence: true, if: :cme_is_video?
   validates :sorting_order, presence: true
 
   # callbacks

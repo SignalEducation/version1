@@ -4,10 +4,11 @@
       -#TODO fix this hidden sections by screen-width
       .row.l-margin-bottom.hidden-xs.visible-sm.visible-md.visible-lg
         .col-sm-6.col-md-4
-          =link_to library_special_link(@course_module.parent) do
+          -#TODO add course_section name_url to link so as to open tab
+          =link_to library_special_link(@course) do
             .btn.btn-red.btn-secondary
               &#60;
-              ="Back To #{@course_module.try(:subject_course).try(:name)}"
+              ="Back To #{@course.name}"
         .col-md-4
         .col-sm-6.col-md-4
           -if @course_module_element && @course_module_element.is_video?
@@ -18,10 +19,10 @@
 
       .row.l-margin-bottom.l-margin-top.visible-xs.hidden-sm
         .col-xs-12
-          =link_to library_special_link(@course_module.parent) do
+          =link_to library_special_link(@course) do
             .btn.btn-red.btn-secondary.full-width
               &#60;
-              ="Back To #{@course_module.try(:subject_course).try(:name)}"
+              ="Back To #{@course.name}"
         .col-xs-12.l-margin-top
           -if @course_module_element && @course_module_element.is_video?
             =link_to course_special_link(@course_module_element.next_element) do
@@ -35,9 +36,7 @@
       .row.l-margin-bottom-big
         -if defined?(@results)
           =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-        -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
-          =render partial: 'courses/content_denied'
-        -elsif (@course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true) || @course_module_element && paywall_checkpoint[:course_content][:view_all] == true
+        -else
           -if @course_module_element.try(:is_video)
             =render partial: 'courses/show_video', locals: {cme: @course_module_element}
           -elsif @course_module_element.try(:is_quiz)
@@ -47,12 +46,6 @@
           -else
             %h2 Course module element - type unknown
             -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
-        -elsif @course_module
-          .well
-            %h3=t('views.general.coming_soon')
-            %p=t('views.courses.show.coming_soon')
-
-
 
 
       -# Tabs for Question, Answer, Notes and Description
