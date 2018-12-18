@@ -9,28 +9,36 @@
             ="Select the trial content available"
 
       .row.l-margin-top.l-margin-bottom
-
         =form_for(@subject_course, url: subject_course_update_trial_content_url) do |f|
-          .col-md-12.l-margin-top-big
-            =f.fields_for :course_modules do |cm|
-              .table-box
-                .table-responsive
-                  %h4=cm.object.name
-                  %table.table.sorted_table
-                    %thead
-                      %tr
-                        %th Name
-                        %th Trial
-                        %th
-                    %tbody
-                      =cm.fields_for :course_module_elements do |cme|
-                        %tr
-                          %td
-                            =cme.object.name
-                          %td
-                            =cme.check_box :available_on_trial
 
-            %hr/
+          =f.fields_for :course_sections, f.object.course_sections.all_in_order do |cs|
+            .col-md-12.l-margin-top
+              %h3=cs.object.try(:name)
+              =cs.fields_for :course_modules, cs.object.course_modules.all_in_order do |cm|
+                .table-box
+                  .table-responsive
+                    .col-md-9.l-margin-bottom
+                      %h4=cm.object.try(:name)
+                    .col-md-3
+                      .pull-right
+                        =tick_or_cross(cm.object.active)
+
+                    %table.table.sorted_table
+                      %thead
+                        %tr
+                          %th Name
+                          %th Trial
+                          %th
+                      %tbody
+                        =cm.fields_for :course_module_elements, cm.object.course_module_elements.all_in_order do |cme|
+                          %tr
+                            %td
+                              =cme.object.name
+                            %td
+                              =cme.check_box :available_on_trial
+              %hr/
+
+          .col-md-12.l-margin-top
             .table-box
               .table-responsive
                 %h3{style: 'color: #54a4ee;'}
@@ -42,7 +50,7 @@
                       %th Trial
                       %th
                   %tbody
-                    =f.fields_for :subject_course_resources do |resource|
+                    =f.fields_for :subject_course_resources, f.object.subject_course_resources.all_in_order do |resource|
                       %tr
                         %td
                           =resource.object.name
@@ -50,7 +58,7 @@
                           =resource.check_box :available_on_trial
 
 
+          .col-md-12.l-margin-top
             =f.submit t('views.general.save'), class: 'btn btn-red'
-
             .pull-right
               =link_to t('views.subject_courses.course_modules_order.return'), subject_course_url(@subject_course), class: 'btn btn-red'

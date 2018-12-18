@@ -48,11 +48,10 @@ class SubjectCourse < ActiveRecord::Base
                   :cme_count, :description, :short_description,
                   :default_number_of_possible_exam_answers,
                   :email_content, :external_url, :external_url_name,
-                  :quiz_count, :question_count, :video_count,
-                  :total_video_duration, :exam_body_id, :survey_url,
-                  :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
+                  :quiz_count, :video_count, :exam_body_id, :survey_url,
+                  :group_id, :quiz_pass_rate,
                   :background_image, :preview, :computer_based, :highlight_colour,
-                  :category_label, :additional_text_label, :course_modules_attributes,
+                  :category_label, :additional_text_label, :course_sections_attributes,
                   :subject_course_resources_attributes
 
   # Constants
@@ -77,8 +76,8 @@ class SubjectCourse < ActiveRecord::Base
   has_many :exam_sittings
   has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
-  accepts_nested_attributes_for :course_modules
   accepts_nested_attributes_for :subject_course_resources
+  accepts_nested_attributes_for :course_sections
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
@@ -141,7 +140,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def children
-    self.course_modules.all
+    self.course_sections.all
   end
 
   def active_children
@@ -151,7 +150,7 @@ class SubjectCourse < ActiveRecord::Base
   def valid_children
     # Temp addition here - filter out the test boolean true records
     # so as not to count these in the %_complete
-    self.children.all_active.where(test: false).all_in_order
+    self.children.all_active.all_in_order
   end
 
   def first_active_child
@@ -162,17 +161,6 @@ class SubjectCourse < ActiveRecord::Base
     self.active_children.first.try(:first_active_cme)
   end
 
-  def tuition_children?
-    self.active_children.all_tuition.count >= 1
-  end
-
-  def test_children?
-    self.active_children.all_test.count >= 1
-  end
-
-  def revision_children?
-    self.active_children.all_revision.count >= 1
-  end
 
   #######################################################################
 
@@ -183,7 +171,7 @@ class SubjectCourse < ActiveRecord::Base
 
   def destroyable_children
     the_list = []
-    the_list += self.course_modules.to_a
+    the_list += self.course_sections.to_a
     the_list
   end
 
@@ -199,12 +187,9 @@ class SubjectCourse < ActiveRecord::Base
 
     cme_count = self.valid_children.sum(:cme_count)
     quiz_count = self.valid_children.sum(:quiz_count)
-    question_count = self.valid_children.sum(:number_of_questions)
     video_count = self.valid_children.sum(:video_count)
-    video_duration = self.valid_children.sum(:video_duration)
-    total_estimated_time_in_seconds = self.valid_children.sum(:estimated_time_in_seconds)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, question_count: question_count, video_count: video_count, total_video_duration: video_duration, total_estimated_time_in_seconds: total_estimated_time_in_seconds)
+    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, video_count: video_count)
   end
 
   ### Callback before_save ###
@@ -214,14 +199,13 @@ class SubjectCourse < ActiveRecord::Base
 
     self.cme_count = self.valid_children.sum(:cme_count)
     self.quiz_count = self.valid_children.sum(:quiz_count)
-    self.question_count = self.valid_children.sum(:number_of_questions)
     self.video_count = self.valid_children.sum(:video_count)
-    self.total_video_duration = self.valid_children.sum(:video_duration)
-    self.total_estimated_time_in_seconds = self.valid_children.sum(:estimated_time_in_seconds)
   end
 
 
   ########################################################################
+
+  #TODO - only factor-in course_sections with counts_towards_completion true
 
   ## User Course Tracking ##
   def enrolled_user_ids

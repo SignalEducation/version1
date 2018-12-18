@@ -30,9 +30,6 @@ class LibraryController < ApplicationController
       tag_manager_data_layer(@course.name)
       seo_title_maker(@course.name, @course.description, nil)
       @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
-      @tuition_course_modules = @course_modules.all_tuition.all_in_order
-      @test_course_modules = @course_modules.all_test.all_in_order
-      @revision_course_modules = @course_modules.all_revision.all_in_order
 
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -68,6 +65,7 @@ class LibraryController < ApplicationController
               # User can view and click on all links/buttons
 
               @latest_element_id = @subject_course_user_log.latest_course_module_element_id
+              #TODO - @next_element can be a CME, CM or CS
               @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
             end
 

@@ -153,7 +153,7 @@ class SubjectCoursesController < ApplicationController
   def update_trial_content
     if @subject_course.update_attributes(nested_trial_params)
       flash[:success] = I18n.t('controllers.subject_courses.update.flash.success')
-      redirect_to subject_courses_url
+      redirect_to subject_course_url(@subject_course)
     else
       render action: :trial_content
     end
@@ -183,19 +183,26 @@ class SubjectCoursesController < ApplicationController
                                            :quiz_pass_rate, :group_id, :preview,
                                            :computer_based, :highlight_colour,
                                            :category_label, :additional_text_label,
-                                           course_modules_attributes: [
-                                               course_module_elements_attributes: [
-                                                   :available_on_trial
-                                               ]
+                                           course_sections_attributes: [
+                                             course_modules_attributes: [
+                                                 course_module_elements_attributes: [
+                                                     :available_on_trial
+                                                 ]
+                                             ]
                                            ]
     )
   end
 
   def nested_trial_params
     params.require(:subject_course).permit(subject_course_resources_attributes: [:id, :available_on_trial],
-                                           course_modules_attributes: [
-                                               :id, course_module_elements_attributes:
-                                                                           [:id, :available_on_trial]])
+                                           course_sections_attributes: [
+                                               :id, course_modules_attributes: [
+                                                 :id, course_module_elements_attributes:
+                                                                             [:id, :available_on_trial]
+                                               ]
+                                           ]
+    )
+
   end
 
   def resource_allowed_params

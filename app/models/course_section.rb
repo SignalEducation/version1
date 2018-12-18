@@ -12,13 +12,21 @@
 #  assumed_knowledge         :boolean          default(FALSE)
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
+#  cme_count                 :integer          default(0)
+#  video_count               :integer          default(0)
+#  quiz_count                :integer          default(0)
+#  destroyed_at              :datetime
 #
 
 class CourseSection < ActiveRecord::Base
 
+  include LearnSignalModelExtras
+  include Archivable
+
   # attr-accessible
   attr_accessible :subject_course_id, :name, :name_url, :sorting_order, :active,
-                  :counts_towards_completion, :assumed_knowledge
+                  :counts_towards_completion, :assumed_knowledge, :cme_count,
+                  :video_count, :quiz_count, :_destroy, :course_modules_attributes
 
   # Constants
 
@@ -26,6 +34,8 @@ class CourseSection < ActiveRecord::Base
   belongs_to :subject_course
   has_many :course_modules
   has_many :course_module_elements
+
+  accepts_nested_attributes_for :course_modules
 
   # validation
   validates :subject_course_id, presence: true,
@@ -45,11 +55,76 @@ class CourseSection < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def destroyable?
-    false
+
+  ## Parent & Child associations ##
+  def parent
+    self.subject_course
   end
 
+  def children
+    self.course_modules.all
+  end
+
+  def active_children
+    self.children.all_active.all_in_order
+  end
+
+  def first_active_course_module
+    self.active_children.first
+  end
+
+  def first_active_cme
+    self.first_active_course_module.first_active_cme
+  end
+
+  def children_available_count
+    self.active_children.all_active.count
+  end
+
+
+  #######################################################################
+
+  ## Archivable ability ##
+
+  def destroyable?
+    true
+  end
+
+  def destroyable_children
+    # not destroyable:
+    # - self.course_module_element_user_logs
+    # - self.student_exam_tracks.empty?
+    the_list = []
+    the_list += self.course_modules.to_a
+    the_list
+  end
+
+  #######################################################################
+
+  ## Keeping Model Count Attributes Up-to-Date ##
+
+  ### Triggered by child CM after_save callback ###
+  def update_video_and_quiz_counts
+    quiz_count = self.active_children.quiz_count
+    video_count = self.active_children.video_count
+    self.update_attributes(quiz_count: quiz_count, video_count: video_count, cme_count: quiz_count + video_count)
+  end
+
+
+  ########################################################################
+
   protected
+
+  #TODO - is this needed???
+  def set_count_fields
+    self.quiz_count = self.active_children.quiz_count
+    self.video_count = self.active_children.video_count
+    self.cme_count = children_available_count
+  end
+
+  def update_parent
+    self.parent.try(:recalculate_fields)
+  end
 
   def check_dependencies
     unless self.destroyable?

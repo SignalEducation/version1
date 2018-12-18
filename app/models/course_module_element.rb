@@ -33,7 +33,7 @@ class CourseModuleElement < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
-                  :is_constructed_response, :seo_description, :seo_no_index,
+                  :is_constructed_response,
                   :temporary_label, :number_of_questions, :_destroy,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
@@ -58,8 +58,10 @@ class CourseModuleElement < ActiveRecord::Base
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video
   accepts_nested_attributes_for :constructed_response
-  accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
-  accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :video_resource,
+                                reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
+  accepts_nested_attributes_for :course_module_element_resources,
+                                reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :name, presence: true, length: {maximum: 255}
@@ -67,7 +69,6 @@ class CourseModuleElement < ActiveRecord::Base
   validates :course_module_id, presence: true
   validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
   validates :sorting_order, presence: true
-  validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
@@ -105,24 +106,26 @@ class CourseModuleElement < ActiveRecord::Base
     self.array_of_sibling_ids.index(self.id)
   end
 
+  def with_active_parents?
+    course_module.active && course_module.course_section.active
+  end
+
   def next_element
-    if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
-      CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
-    elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
-      if self.course_module.next_module && self.course_module.next_module.try(:course_module_elements).try(:all_active).any?
-        #End of CourseModule continue on to first CME of next CourseModule
-        next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
-        if next_id
-          CourseModuleElement.find(next_id)
-        else
-          CourseModule.where(id: self.course_module_id).first
-        end
+    #TODO - need to factor in whether the next element is available to the student [trial or restricted]
+    if self.with_active_parents? && self.my_position_among_siblings
+      if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+        # Find the next CME in the current CM
+        CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
+      elsif self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1) && (self.course_module.next_module && self.course_module.next_module.active_children.any?)
+        # There is no next CME in current CM - find first CME in next CM
+        course_module.next_module.first_active_cme
       else
-        #End of Course redirect to Course library#live
-        self.course_module
+        # There is no next CM in current CS - return the CourseSection
+        # (makes link to course_show with CS name_url to open CS tab)
+        course_module.course_section
       end
     else
-      CourseModule.where(id: self.course_module_id).first
+      self.subject_course.first_active_child
     end
   end
 
@@ -209,7 +212,7 @@ class CourseModuleElement < ActiveRecord::Base
   def log_count_fields
     if self.is_video && course_module_element_video
       self.duration = self.course_module_element_video.duration
-      self.estimated_time_in_seconds = self.duration.round
+      self.estimated_time_in_seconds = self.duration.round if self.duration
     elsif self.is_constructed_response
       self.estimated_time_in_seconds = 900
     elsif self.is_quiz && course_module_element_quiz

@@ -36,7 +36,7 @@
       %ul
         -@subject_course_resources.each do |resource|
           -if current_user
-            -if current_user.permission_to_see_content(@course.id, nil, resource.id)
+            -if current_user.permission_to_see_content(nil, resource.id)
               %li
                 =link_to resource.external_url.blank? ? resource.file_upload.url : resource.external_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
                   .col-xs-10

@@ -12,6 +12,10 @@
 #  assumed_knowledge         :boolean          default(FALSE)
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
+#  cme_count                 :integer          default(0)
+#  video_count               :integer          default(0)
+#  quiz_count                :integer          default(0)
+#  destroyed_at              :datetime
 #
 
 require 'rails_helper'

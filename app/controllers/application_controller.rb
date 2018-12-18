@@ -299,17 +299,18 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        if current_user.permission_to_see_content(the_thing.course_module.subject_course.id, the_thing.id, nil)
+        if current_user.permission_to_see_content(the_thing.id, nil)
           course_url(
-              the_thing.course_module.subject_course.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
+              the_thing.course_module.course_section.name_url,
               the_thing.course_module.name_url,
               the_thing.name_url
           )
 
         else
           library_course_url(
-              the_thing.parent.parent.parent.name_url,
-              the_thing.parent.parent.name_url,
+              the_thing.course_module.course_section.subject_course.group.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
               anchor: 'access-denied-modal'
           )
         end

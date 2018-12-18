@@ -34,10 +34,8 @@ class CourseModule < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :name_url, :description, :sorting_order,
-                  :estimated_time_in_seconds, :active, :cme_count,
-                  :seo_description, :seo_no_index, :number_of_questions,
-                  :subject_course_id, :highlight_colour, :tuition, :test,
-                  :revision, :quiz_count, :video_duration,
+                  :active, :cme_count, :subject_course_id,
+                  :highlight_colour, :quiz_count,
                   :video_count, :course_module_elements_attributes,
                   :course_section_id
 
@@ -63,7 +61,6 @@ class CourseModule < ActiveRecord::Base
                                      message: "must be unique within a course section" }
 
   validates :sorting_order, presence: true
-  validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
@@ -72,11 +69,8 @@ class CourseModule < ActiveRecord::Base
   after_update :update_parent
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order) }
+  scope :all_in_order, -> { order(:sorting_order, :course_section_id) }
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
-  scope :all_tuition, -> { where(tuition: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
-  scope :all_revision, -> { where(revision: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
-  scope :all_test, -> { where(test: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
@@ -86,7 +80,7 @@ class CourseModule < ActiveRecord::Base
 
   ## Parent & Child associations ##
   def parent
-    self.subject_course
+    self.course_section
   end
 
   def children
@@ -169,13 +163,11 @@ class CourseModule < ActiveRecord::Base
 
   ### Triggered by child CME after_save callback ###
   def update_video_and_quiz_counts
-    estimated_time = self.active_children.sum(:estimated_time_in_seconds)
-    num_questions = self.active_children.sum(:number_of_questions)
-    duration = self.active_children.sum(:duration)
     quiz_count = self.active_children.all_active.all_quizzes.count
     video_count = self.active_children.all_active.all_videos.count
 
-    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, video_duration: duration, quiz_count: quiz_count, video_count: video_count, cme_count: quiz_count + video_count)
+    self.update_attributes(quiz_count: quiz_count, video_count: video_count,
+                           cme_count: quiz_count + video_count)
   end
 
 
@@ -211,33 +203,12 @@ class CourseModule < ActiveRecord::Base
 
   ########################################################################
 
-  ## Model info for Views ##
-
-  def category
-    if self.revision
-      'Question Bank'
-    elsif self.tuition
-      'Tuition'
-    elsif self.test
-      'Additional'
-    else
-      ''
-    end
-  end
-
-  def full_name
-    self.parent.name + ' > ' + self.name
-  end
-
 
   protected
 
   def set_count_fields
-    self.estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
-    self.number_of_questions = self.active_children.sum(:number_of_questions)
     self.quiz_count = self.active_children.all_active.all_quizzes.count
     self.video_count = self.active_children.all_active.all_videos.count
-    self.video_duration = self.active_children.sum(:duration)
     self.cme_count = children_available_count
   end
 
