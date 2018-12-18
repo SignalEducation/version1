@@ -416,9 +416,13 @@ class User < ActiveRecord::Base
     resource = SubjectCourseResource.find(subject_course_resource_id) if subject_course_resource_id
 
     if self.trial_user?
-
-      cme.available_on_trial if cme
-      #resource.available_on_trial if resource
+      if course_module_element_id
+        cme.available_on_trial
+      elsif subject_course_resource_id
+        resource.available_on_trial
+      else
+        false
+      end
 
     elsif self.subscription_user?
       if self.valid_subscription?
@@ -434,7 +438,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def enrollment_for_course?(course_id)
+  def enrolled_course?(course_id)
     #Returns true if an active enrollment exists for this user/course
 
     self.enrollments.all_active.map(&:subject_course_id).include?(course_id)

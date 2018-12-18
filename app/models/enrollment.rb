@@ -23,7 +23,7 @@ class Enrollment < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id,
-                  :active, :exam_body_id, :exam_date, :expired, :updated_at,
+                  :active, :exam_body_id, :exam_date, :updated_at,
                   :exam_sitting_id, :computer_based_exam, :percentage_complete
 
   # Constants
@@ -40,17 +40,19 @@ class Enrollment < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_sitting_id, presence: true,
+  validates :exam_sitting_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, allow_nil: true,
+  validates :subject_course_user_log_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :exam_body_id, allow_nil: true,
+  validates :exam_body_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
+  validates :exam_date, allow_nil: true, inclusion:
+      {in: Date.today..Date.today + 2.years, message: "%{value} is not a valid date" }
 
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event, :update_percentage_complete
+  after_create :create_expiration_worker
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -63,14 +65,7 @@ class Enrollment < ActiveRecord::Base
   scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_not_active, -> { includes(:subject_course).where(active: false) }
-  scope :all_expired, -> { where(expired: true) }
-  scope :all_valid, -> { where(active: true, expired: false) }
-  scope :all_not_expired, -> { where(expired: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
-  scope :all_paused, -> { where(paused: true) }
-  scope :all_un_paused, -> { where(paused: false) }
-  scope :all_for_notifications, -> { where(notifications: true) }
-  scope :all_not_for_notifications, -> { where(notifications: false) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :by_sitting, lambda { |sitting_id| where(exam_sitting_id: sitting_id) }
 
@@ -102,10 +97,6 @@ class Enrollment < ActiveRecord::Base
   # instance methods
   def destroyable?
     false # Can never be destroyed because the CSV data files will not be accurate
-  end
-
-  def valid_enrollment?
-    self.active && !self.expired
   end
 
   def enrollment_date
@@ -166,20 +157,16 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  #def quiz_logs_count
-  #  self.subject_course_user_log.course_module_element_user_logs.quizzes.count if self.subject_course_user_log
-  #end
-
-  #def cme_quiz_count
-  #  self.subject_course.quiz_count
-  #end
-
   def sibling_enrollments
     self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def status
-    self.expired ? 'Expired' : 'Active'
+    self.active ? 'Active' : 'In-Active'
+  end
+
+  def type
+    self.computer_based_exam ? 'Computer Based' : 'Standard'
   end
 
   def days_until_exam
@@ -209,28 +196,10 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  def deactivate_siblings
-    if self.sibling_enrollments.any?
-      self.sibling_enrollments.each do |enrollment|
-        enrollment.update_attributes(active: false, notifications: false)
-      end
-    end
-  end
-
   def create_expiration_worker
     if self.computer_based_exam && self.exam_date
       EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) unless Rails.env.test?
     end
-  end
-
-  def update_percentage_complete
-    if self.subject_course_user_log_id && self.active
-      self.update_attribute(:percentage_complete, self.subject_course_user_log.percentage_complete)
-    end
-  end
-
-  def create_intercom_event
-    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.enrollment_date) unless Rails.env.test?
   end
 
 end

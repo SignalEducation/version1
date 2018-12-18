@@ -29,7 +29,6 @@ class LibraryController < ApplicationController
       # Course is active Data necessary for logged out state
       tag_manager_data_layer(@course.name)
       seo_title_maker(@course.name, @course.description, nil)
-      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
 
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
@@ -42,44 +41,25 @@ class LibraryController < ApplicationController
 
       if current_user
         # User Session present
-        @user = current_user
         if session[:user_exam_body_errors]
-          @user.errors.add(:base, 'Details entered are not valid!')
+          current_user.errors.add(:base, 'Details entered are not valid!')
           session[:user_exam_body_errors] = nil
         end
 
-
-        if current_user.enrollment_for_course?(@course.id)
-          # User has a valid trial or valid sub
-          # User has an enrollment for this course
-
+        if current_user.enrolled_course?(@course.id)
           @active_enrollment = current_user.enrollments.for_subject_course(@course.id).all_active.all_in_order.last
           @subject_course_user_log = @active_enrollment.subject_course_user_log
 
-            if @active_enrollment.expired
-              # User's enrollment is expired - needs to create a new one
-              # User can view all links/buttons but they trigger the enrollment modal
-              get_enrollment_form_variables(@course.id, @course.exam_body_id)
-            else
-              # User's enrollment is not expired - full access allowed
-              # User can view and click on all links/buttons
+          @latest_element_id = @subject_course_user_log.latest_course_module_element_id
+          #TODO - @next_element can be a CME, CM or CS
+          @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
 
-              @latest_element_id = @subject_course_user_log.latest_course_module_element_id
-              #TODO - @next_element can be a CME, CM or CS
-              @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-            end
+          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+          @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+          @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+          @form_type = "Course Tutor Question. Course: #{@course.name}"
 
-
-            @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-            @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-            @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-            @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
-            @form_type = "Course Tutor Question. Course: #{@course.name}"
-
-        else
-          # Both modals need rendering
-          # Enrollment and permission-denied
-          get_enrollment_form_variables(@course.id, @course.exam_body_id)
         end
       end
 
@@ -113,19 +93,10 @@ class LibraryController < ApplicationController
 
   def tutor_contact_form
     user_id = current_user ? current_user.id : nil
-    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name],
+                                              params[:question], params[:type])
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to request.referrer
-  end
-
-  def get_enrollment_form_variables(course_id, exam_body_id)
-    subject_course = SubjectCourse.find(course_id)
-
-    @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true, exam_body_id: subject_course.exam_body_id).all_in_order.first #Should only be one
-
-    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: course_id, exam_body_id: subject_course.exam_body_id).all_in_order
-
-    @new_enrollment = Enrollment.new(subject_course_id: course_id, exam_body_id: exam_body_id)
   end
 
 end

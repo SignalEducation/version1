@@ -25,6 +25,9 @@
           %a{href: "#resources", role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
             ='Resources'
 
+          -#%a{href: "#assumed-knowledge", role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
+            ='Assumed Knowledge'
+
 
         .tab-content
           -@course.course_sections.all_active.all_in_order.each do |course_section|
@@ -83,10 +86,10 @@
               .content-box-inner
                 =render partial: 'library/additional_content'
 
-
-
-
-
+          -#.tab-pane.fade{id: 'assumed-knowledge', role: 'tabpanel'}
+            .content-box.content-box-outer
+              .content-box-inner
+                =render partial: 'library/additional_content'
 
 
 
