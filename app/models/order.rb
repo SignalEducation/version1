@@ -28,7 +28,12 @@ class Order < ActiveRecord::Base
   attr_accessor :use_paypal, :paypal_approval_url
 
   # attr-accessible
-  attr_accessible :use_paypal, :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :stripe_status, :stripe_order_payment_data, :stripe_token, :stripe_order_payment_data, :mock_exam_id, :terms_and_conditions, :reference_guid, :paypal_approval_url
+  attr_accessible :use_paypal, :product_id, :subject_course_id, :user_id,
+                  :stripe_guid, :stripe_customer_id, :live_mode, :stripe_status,
+                  :stripe_order_payment_data, :stripe_token,
+                  :stripe_order_payment_data, :mock_exam_id,
+                  :terms_and_conditions, :reference_guid, :paypal_approval_url,
+                  :paypal_guid, :paypal_status
 
   # Constants
   ORDER_STATUS = %w(created paid canceled)

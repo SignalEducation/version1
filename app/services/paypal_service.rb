@@ -12,7 +12,7 @@ class PaypalService
       order.assign_attributes(
         paypal_guid: payment.id,
         paypal_approval_url: payment.links.find{|v| v.rel == "approval_url" }.href,
-        paypal_status: agreement.state
+        paypal_status: payment.state
       )
       order
     else
@@ -24,11 +24,11 @@ class PaypalService
     raise Learnsignal::PaymentError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
   end
 
-  def execute_payment(order, payer_id)
+  def execute_payment(order, payment_id, payer_id)
     payment = Payment.find(order.paypal_guid)
-    if payment.execute(payer_id: payer_id)
+    if payment_id == order.paypal_guid && payment.execute(payer_id: payer_id)
       order.update!(
-        paypal_status: agreement.state,
+        paypal_status: payment.state,
       )
       order.complete
     else
@@ -163,7 +163,7 @@ class PaypalService
       },
       redirect_urls: {
         return_url: execute_order_url(id: order.id, host: learnsignal_host, payment_processor: 'paypal'),
-        cancel_url: new_order_url(host: learnsignal_host, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
+        cancel_url: new_order_url(product_id: order.product_id, host: learnsignal_host, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
       },
       transactions: [
         {
@@ -178,7 +178,7 @@ class PaypalService
             ]
           },
           amount: {
-            price: order.product.price.to_s,
+            total: order.product.price.to_s,
             currency: order.product.currency.iso_code
           },
           description: "Mock exam purchase - #{order.product.name}" 
