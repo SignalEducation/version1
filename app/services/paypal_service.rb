@@ -24,9 +24,9 @@ class PaypalService
     raise Learnsignal::PaymentError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
   end
 
-  def execute_payment(order, payment_id, payer_id)
+  def execute_payment(order, payer_id)
     payment = Payment.find(order.paypal_guid)
-    if payment_id == order.paypal_guid && payment.execute(payer_id: payer_id)
+    if payment.execute(payer_id: payer_id)
       order.update!(
         paypal_status: agreement.state,
       )
@@ -36,6 +36,9 @@ class PaypalService
       Rails.logger.error "DEBUG: Order#create Failure to execute PayPal Payment for Order: ##{order.id} - Error: #{payment.inspect}"
       raise Learnsignal::PaymentError.new('Sorry! Something went wrong with PayPal. Please contact us for assistance.')
     end
+  rescue PayPal::SDK::Core::Exceptions::ServerError => e
+    Rails.logger.error "DEBUG: Order#execute Failure to execute Payment - PayPal Error - Error: #{e.message}"
+    raise Learnsignal::PaymentError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
   end
 
   # PLANS ======================================================================

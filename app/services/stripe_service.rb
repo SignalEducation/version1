@@ -44,20 +44,23 @@ class StripeService
 
   # ORDERS =====================================================================
 
-  def create_order(product, user)
-    Stripe::Order.create(
-      currency: product.currency.iso_code,
-      customer: user.stripe_customer_id,
-      email: user.email,
-      items: [
-        {
-          amount: (product.price.to_f * 100).to_i,
-          currency: product.currency.iso_code,
-          quantity: 1,
-          parent: product.stripe_sku_guid
-        }
-      ]
+  def complete_purchase(order)
+    stripe_order = create_order(order.product, order.user)
+    order.assign_attributes(
+      stripe_customer_id: stripe_order.customer,
+      stripe_guid: stripe_order.id,
+      live_mode: stripe_order.livemode,
+      stripe_status: stripe_order.status,
     )
+    if order.valid?
+      pay_order = stripe_order.pay(source: order.stripe_token)
+      order.stripe_status = pay_order.status
+      order.stripe_order_payment_data = pay_order
+      order
+    else
+      Rails.logger.error "DEBUG: Orders#create Unable to PAY an order - Order ID #{order.id} is not valid"
+      raise Learnsignal::PaymentError.new('Sorry Something went wrong! Please contact us for assistance.')
+    end
   rescue Stripe::CardError => e
     body = e.json_body
     err  = body[:error]
@@ -66,54 +69,6 @@ class StripeService
   rescue => e
     Rails.logger.error "DEBUG: Orders#create Failure for unknown reason - Error: #{e.inspect}"
     raise Learnsignal::PaymentError.new('Sorry Something went wrong! Please contact us for assistance.')
-  end
-
-  def complete_purchase(order, stripe_token, user)
-    #TODO - This is all too complicated. Needs simplification.
-
-    #   user = current_user
-    #   @product = Product.find(params[:order][:product_id])
-    #   @mock_exam = @product.mock_exam
-    #   currency = Currency.find(@product.currency_id)
-    #   stripe_token = params[:order][:stripe_token]
-
-    #   @order = Order.new(allowed_params)
-    #   @order.user_id = user.id
-    #   @order.product_id = @product.id
-
-    #   stripe_order = create_order(order.product, user)
-
-    #   order.assign_attributes(
-    #     stripe_customer_id: stripe_order.customer,
-    #     stripe_guid: stripe_order.id,
-    #     livemode: stripe_order.livemode,
-    #     stripe_status: stripe_order.status,
-    #   )
-    #   subscription
-
-    #   @order.stripe_customer_id = stripe_order.customer
-    #   @order. = stripe_order.id
-    #   @order.live_mode = stripe_order.livemode
-    #   @order.current_status = stripe_order.status
-
-
-    #   if @order.valid?
-    #     order = Stripe::Order.retrieve(@order.stripe_guid)
-    #     @pay_order = order.pay(source: stripe_token)
-    #   end
-    #   order = Stripe::Order.retrieve(@order.stripe_guid)
-    #   @order.current_status = order.status
-    #   @order.stripe_order_payment_data = @pay_order
-
-    #   if @order.save
-    #     flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-    #     MandrillWorker.perform_async(user.id, 'send_mock_exam_email', account_url, @mock_exam.name, @mock_exam.file, @order.reference_guid)
-    #     redirect_to order_complete_url(@order.reference_guid)
-    #   else
-    #     redirect_to request.referrer
-    #   end
-
-    # @navbar = false
   end
 
   # SUBSCRIPTIONS ==============================================================
@@ -182,6 +137,30 @@ class StripeService
   # PRIVATE ====================================================================
 
   private
+
+  def create_order(product, user)
+    Stripe::Order.create(
+      currency: product.currency.iso_code,
+      customer: user.stripe_customer_id,
+      email: user.email,
+      items: [
+        {
+          amount: (product.price.to_f * 100).to_i,
+          currency: product.currency.iso_code,
+          quantity: 1,
+          parent: product.stripe_sku_guid
+        }
+      ]
+    )
+  rescue Stripe::CardError => e
+    body = e.json_body
+    err  = body[:error]
+    Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
+    raise Learnsignal::PaymentError.new("Sorry! Your request was declined because - #{err[:message]}")
+  rescue => e
+    Rails.logger.error "DEBUG: Orders#create Failure for unknown reason - Error: #{e.inspect}"
+    raise Learnsignal::PaymentError.new('Sorry Something went wrong! Please contact us for assistance.')
+  end
 
   def get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
     stripe_customer = get_customer(old_sub.stripe_customer_id)
