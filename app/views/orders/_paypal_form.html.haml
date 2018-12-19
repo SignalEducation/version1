@@ -13,7 +13,7 @@
         =number_in_local_currency(@product.price, @product.currency_id)
   .text-center
     = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit' do
-      =image_tag("https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-large.png", :alt => "PayPal Dummy Button")
+      =image_tag('checkout-logo-large.png', :alt => "PayPal Button")
 
   .sk-circle.text-center
     .sk-circle1.sk-child
