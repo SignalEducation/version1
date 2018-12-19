@@ -9,7 +9,7 @@
 #  stripe_guid               :string
 #  stripe_customer_id        :string
 #  live_mode                 :boolean          default(FALSE)
-#  current_status            :string
+#  stripe_status             :string
 #  coupon_code               :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -17,6 +17,8 @@
 #  mock_exam_id              :integer
 #  terms_and_conditions      :boolean          default(FALSE)
 #  reference_guid            :string
+#  paypal_guid               :string
+#  paypal_status             :string
 #
 
 require 'rails_helper'

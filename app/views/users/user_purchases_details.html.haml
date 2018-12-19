@@ -38,7 +38,7 @@
                       %td
                         =humanize_datetime(order.created_at)
                       %td
-                        =order.current_status.to_s.capitalize
+                        =order.stripe_status.to_s.capitalize
                       %td
                         =number_in_local_currency(order.product.price, order.product.currency_id)
                       %td

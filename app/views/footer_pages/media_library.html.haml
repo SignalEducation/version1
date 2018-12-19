@@ -1,31 +1,37 @@
 =render partial: 'layouts/external_banner'
-.hero-library
-  .l-wrap-small
-    =render partial: 'layouts/transparent_navbar'
-    .l-section-footer-pages
-      .container-fluid
-        .row
-          .col-md-8.col-md-offset-2
-            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
-              ACCA LearnSignal Mock Exams
-            %p.h5.h-white.text-center.l-margin-bottom-big
-              Passing is worth it
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
+=render partial: 'layouts/navbar'
+.bg-asphalt.fixed-header
+  .container
+    %article.hero.mb-6
+      %h1.h1-mega ACCA LearnSignal Mock Exams
+      %h5.text-red Passing is worth it
 
--if @products.any?
-
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .col-md-12
+  -if @products.any?
+    .container
+      .pb-4
+        %h2 Mock Exams
+        .row.row-lg
           -@products.each do |product|
             .col-xs-12.col-sm-6.col-md-4
-              =link_to new_order_url(product), class: 'product-box' do
-                .product-box-title
+              =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
+                %h4.text-ellipsis.mb-4 
                   =product.mock_exam.try(:name)
-                .product-box-inner
-                  =image_tag product.mock_exam.try(:cover_image).try(:url), class: 'media-pic'
-                .product-box-label
-                  ='Buy Now'
+                .mb-4
+                  =image_tag 'ico-exam.svg', alt: 'Exam'
+                %div
+                  %span.btn.btn-link.with-arrow Buy Now
 
+  -if @questions.any?
+    .container
+      .pb-6
+        %h2 Exam Questions
+        .row.row-lg
+          -@products.each do |product|
+            .col-xs-12.col-sm-6.col-md-4
+              =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
+                %h4.text-ellipsis.mb-4 
+                  =product.mock_exam.try(:name)
+                .mb-4
+                  =image_tag 'ico-questions-2.svg', alt: 'Question'
+                %div
+                  %span.btn.btn-link.with-arrow Buy Now
