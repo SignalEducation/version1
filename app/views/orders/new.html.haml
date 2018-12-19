@@ -153,7 +153,7 @@
       $('#paypal_submit').prop('disabled',true);
       $('#paypal_submit').hide();
       $(".sk-circle").show();
-      if ($('#subscription_use_paypal').val() === 'true') {
+      if ($('#order_use_paypal').val() === 'true') {
         if(acceptedTerms('paypal')){
           document.getElementById('orders-form').submit();
         }
