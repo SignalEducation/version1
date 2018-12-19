@@ -68,24 +68,24 @@ class OrdersController < ApplicationController
       @order.product_id = @product.id
 
       begin
-        stripe_order = Stripe::Order.create(
-            currency: currency.iso_code,
-            customer: user.stripe_customer_id,
-            email: user.email,
-            items: [{
-                        amount: (@product.price.to_f * 100).to_i,
-                        currency: currency.iso_code,
-                        quantity: 1,
-                        parent: @product.stripe_sku_guid
-                    }]
-        )
+        # stripe_order = Stripe::Order.create(
+        #     currency: currency.iso_code,
+        #     customer: user.stripe_customer_id,
+        #     email: user.email,
+        #     items: [{
+        #                 amount: (@product.price.to_f * 100).to_i,
+        #                 currency: currency.iso_code,
+        #                 quantity: 1,
+        #                 parent: @product.stripe_sku_guid
+        #             }]
+        # )
 
-        @order.stripe_customer_id = stripe_order.customer
-        @order.stripe_guid = stripe_order.id
-        @order.live_mode = stripe_order.livemode
-        @order.stripe_status = stripe_order.status
-        random_guid = "Order_#{ApplicationController.generate_random_number(10)}"
-        @order.reference_guid = random_guid
+        # @order.stripe_customer_id = stripe_order.customer
+        # @order.stripe_guid = stripe_order.id
+        # @order.live_mode = stripe_order.livemode
+        # @order.stripe_status = stripe_order.status
+        # random_guid = "Order_#{ApplicationController.generate_random_number(10)}"
+        # @order.reference_guid = random_guid
 
 
         if @order.valid?
