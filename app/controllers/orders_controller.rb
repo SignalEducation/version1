@@ -77,23 +77,16 @@ class OrdersController < ApplicationController
   def execute
     case params[:payment_processor]
     when 'paypal'
-      if PaypalService.new.execute_payment(@order, params[:token])
-        @subscription.start
-        SubscriptionService.new(@subscription).validate_referral
-        flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-        redirect_to order_complete_url(@order.reference_guid)
-      else
-        Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@order.inspect}"
-        flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
-        redirect_to new_order_path(@order)
-      end
+      PaypalService.new.execute_payment(@order, params[:paymentId], params[:PayerID])
+      flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+      redirect_to order_complete_url(@order.reference_guid)
     else
       flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
-      redirect_to new_order_path(@order)
+      redirect_to new_order_url(product_id: @order.product_id)
     end
   rescue Learnsignal::PaymentError => e
     flash[:error] = e.message
-    redirect_to new_order_path(@order)
+    redirect_to new_order_path(product_id: @order.product_id)
   end
 
   def order_complete
