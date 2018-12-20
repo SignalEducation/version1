@@ -76,7 +76,7 @@ class Order < ActiveRecord::Base
       transition pending: :errored
     end
 
-    after_transition all => :complete do |order, _transition|
+    after_transition all => :completed do |order, _transition|
       order.execute_order_completion
     end
   end
