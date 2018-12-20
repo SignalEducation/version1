@@ -26,7 +26,7 @@ class Product < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid,
-                  :live_mode, :stripe_guid, :sorting_order
+                  :live_mode, :stripe_guid, :sorting_order, :product_type
 
   # Constants
 

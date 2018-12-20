@@ -1011,6 +1011,7 @@ en:
         active: Active
         currency: Currency
         mock_exam_id: Mock Exam
+        product_type: Product Type
         subject_course: Course
         type: Type
         currency: Currency
