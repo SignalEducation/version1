@@ -11,11 +11,11 @@
       .pb-6
         %h2 Correction Packs
         .row.row-lg
-          -@products.each do |product|
+          -@questions.each do |question|
             .col-xs-12.col-sm-6.col-md-4
-              =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
+              =link_to new_order_url(question), class: 'card card-link text-center mb-5' do
                 %h4.text-ellipsis.mb-4 
-                  =product.mock_exam.try(:name)
+                  =question.mock_exam.try(:name)
                 .mb-4
                   =image_tag 'ico-questions-2.svg', alt: 'Question'
                 %div
