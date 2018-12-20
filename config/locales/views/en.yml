@@ -1291,6 +1291,7 @@ en:
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
         monthly_percentage_off: Optional monthly percentage saving
+        previous_plan_price: Optional previous plan price
         active: Active
 
       edit:

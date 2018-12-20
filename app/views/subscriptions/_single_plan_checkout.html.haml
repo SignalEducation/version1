@@ -6,7 +6,7 @@
         %span.h3.m-0
           %span
             =subscription.subscription_plan.interval_name
-        - if subscription.subscription_plan.monthly_percentage_off.present?
+        - if subscription.subscription_plan.monthly_percentage_off.present? && subscription.subscription_plan.monthly_percentage_off > 0
           %span.discount
             %span.text-with-bg.bg-torquoise4
               ="#{subscription.subscription_plan.monthly_percentage_off}%"
@@ -29,7 +29,7 @@
             %span.h3.m-0
               %span
                 =plan.interval_name
-            - if plan.monthly_percentage_off.present?
+            - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
               %span.discount
                 %span.text-with-bg.bg-torquoise4
                   ="#{plan.monthly_percentage_off}%"
@@ -42,25 +42,19 @@
           %span.custom-check
             / custom checkbox
 
-%a.btn.btn-text.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans'} Show all Plans
+#info-text
+  - if @yearly_subscription_plan && @yearly_subscription_plan.previous_plan_price.present? && @yearly_subscription_plan.previous_plan_price > 0
+    %p.mb-2.price
+      %span
+        25%
+      =' off original plan price'
+      %span
+        =@yearly_subscription_plan.currency.format_number(@yearly_subscription_plan.previous_plan_price)
 
-#info-text.hidden-xs
-  %p.mb-0 Sort your ACCA Tuition for 2019
-  %p.mb-0 Save money, pass quicker and embrace your future
   %p.mb-2
-    Original plan price
-    %span
-      €334.99
-  .list
-    %ul
-      %li
-        Get unlimited access to the LearnSignal ACCA Gold Approved tuition at the best possible price
-      %li
-        High high-quality lectures, notes and exam preparation materials all specifically designed to help you pass  - accessible wherever, whenever
-      %li
-        24 hour expert tutor support
-      %li
-        x 4 Exam Bootcamp + Webinar Week
+    Sort your ACCA Tuition for 2019.  Save money, pass quicker and embrace your future
+
+%a.btn.btn-text.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans'} Show all Plans
 
 :javascript
 

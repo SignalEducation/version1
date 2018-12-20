@@ -19,13 +19,11 @@
             .hero
               %h5.text-red Upgrade your account
               %h1.h1-mega Get your tuition sorted for 2019
-              %p.text-lg.mb-0 Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study.
-              %p.text-lg.mb-0 Our high-quality lectures, notes and exam preparation materials are all specifically designed to help you pass.
-              - if @yearly_subscription_plan && @yearly_subscription_plan.monthly_percentage_off
-                %p.text-lg
-                  ="The LearnSignal yearly plan is now better value than ever, "
-                  %span{style: 'font-weight: bold;'}
-                    ="with #{@yearly_subscription_plan.monthly_percentage_off}% off the monthly price."
+              %p.text-lg.mb-0
+                ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
+                %span{style: 'font-weight: bold;'}
+                  ="with 3 months free on our annual subscription."
+
 
           .container.payment
             .row

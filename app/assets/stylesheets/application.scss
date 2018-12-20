@@ -2333,19 +2333,13 @@ input[type="radio"] {
 }
 
 #info-text{
-  .list {
-    padding-left: 40px;
-  }
+  margin-left: 2px;
   span {
+    font-weight: bold;
+  }
+  span:nth-child(2) {
     text-decoration: line-through;
-  }
-  ul li {
-    display: list-item;
-    list-style-type: disc;
-  }
-  li {
-    font-size: 1.1em;
-    line-height: 1.333em;
+    font-weight: normal;
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -27,6 +27,8 @@
   .btn {
     font-family: 'Rubik',sans-serif;
     &:not(:disabled):not(.disabled) {
+      margin-left: 2px;
+      padding: 0;
       cursor: pointer;
     }
     &.btn-text{
