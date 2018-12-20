@@ -1026,7 +1026,7 @@ a.card {
   display: block;
   background: $white;
   position: relative;
-  margin: $gutter*.5 0 $gutter 0;
+  margin: $gutter*.5 $gutter*.5 $gutter $gutter*.5;
   text-align: left;
   @include border-radius(5px);
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
