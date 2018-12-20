@@ -26,7 +26,7 @@ class OrdersController < ApplicationController
   #TODO Review this controller split student and admin actions
 
   before_action :logged_in_required
-  before_action except: [:new, :create, :order_complete] do
+  before_action except: [:new, :create, :order_complete, :execute] do
     ensure_user_has_access_rights(%w(user_management_access stripe_management_access))
   end
   before_action :get_variables
