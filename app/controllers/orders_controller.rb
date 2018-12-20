@@ -19,6 +19,7 @@
 #  reference_guid            :string
 #  paypal_guid               :string
 #  paypal_status             :string
+#  state                     :string
 #
 
 class OrdersController < ApplicationController
@@ -35,7 +36,6 @@ class OrdersController < ApplicationController
     @orders = Order.paginate(per_page: 50, page: params[:page]).all_in_order
     @layout = 'management'
     seo_title_maker('Orders', '', true)
-
   end
 
   def show

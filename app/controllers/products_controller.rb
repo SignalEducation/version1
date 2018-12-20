@@ -15,6 +15,7 @@
 #  stripe_sku_guid   :string
 #  subject_course_id :integer
 #  sorting_order     :integer
+#  product_type      :integer          default(0)
 #
 
 class ProductsController < ApplicationController
