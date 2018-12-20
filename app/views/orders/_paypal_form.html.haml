@@ -1,10 +1,16 @@
 .payment-details.pay-pal
+  .md-2
+    .custom-control.custom-control-simple.custom-checkbox
+      %input{type: "checkbox", id: 'paypal_terms_and_conditions', class: 'custom-control-input style-checkbox terms-and-conditions', required: true}
+      %label.custom-control-label{for: 'paypal_terms_and_conditions'}
+        %span.custom-check
+        %span.custom-label
+          =t('views.general.terms_and_conditions')
   .mb-2
     %h4.m-0
       Total:
-      = @subscription_plans.first.currency.leading_symbol
       %span.value#paypal-total-value
-    %p.billing-summary.mb-4 Billed every month
+        =number_in_local_currency(@product.price, @product.currency_id)
   .text-center
     = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit' do
       =image_tag('checkout-logo-large.png', :alt => "PayPal Button")
@@ -22,10 +28,3 @@
     .sk-circle10.sk-child
     .sk-circle11.sk-child
     .sk-circle12.sk-child
-
-  %small
-    %span.font-weight-medium Note
-    You are subscribing to a recurring payment which will continue until you cancel your subscription. Remember, you can cancel anytime.
-
-
-
