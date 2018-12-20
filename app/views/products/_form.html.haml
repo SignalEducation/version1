@@ -17,6 +17,10 @@
       =f.label :mock_exam_id, t('views.products.form.mock_exam_id'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.collection_select :mock_exam_id, @mock_exams, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+      %br/
+      =f.label :product_type, t('views.products.form.product_type'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.select :product_type, [['Mock Exam', 'mock_exam'], ['Correction Pack', 'correction_pack']], {}, {class: 'form-control', style: 'border-radius: 6px;'}
 
       %br/
       .form-group

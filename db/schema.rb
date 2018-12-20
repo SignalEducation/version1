@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181219152913) do
+ActiveRecord::Schema.define(version: 20181220164615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -705,6 +705,7 @@ ActiveRecord::Schema.define(version: 20181219152913) do
     t.string   "stripe_sku_guid"
     t.integer  "subject_course_id"
     t.integer  "sorting_order"
+    t.integer  "product_type",      default: 0
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree

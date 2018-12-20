@@ -19,6 +19,7 @@
 #  reference_guid            :string
 #  paypal_guid               :string
 #  paypal_status             :string
+#  state                     :string
 #
 
 FactoryBot.define do
