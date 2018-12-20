@@ -5,10 +5,10 @@
       .row.l-margin-bottom.hidden-xs.visible-sm.visible-md.visible-lg
         .col-sm-6.col-md-4
           -#TODO add course_section name_url to link so as to open tab
-          =link_to library_special_link(@course) do
+          =link_to library_special_link(@course_module_element.course_module.course_section.subject_course) do
             .btn.btn-red.btn-secondary
               &#60;
-              ="Back To #{@course.name}"
+              ="Back To #{@course_module_element.course_module.course_section.subject_course.name}"
         .col-md-4
         .col-sm-6.col-md-4
           -if @course_module_element && @course_module_element.is_video?
@@ -19,10 +19,10 @@
 
       .row.l-margin-bottom.l-margin-top.visible-xs.hidden-sm
         .col-xs-12
-          =link_to library_special_link(@course) do
+          =link_to library_special_link(@course_module_element.course_module.course_section.subject_course) do
             .btn.btn-red.btn-secondary.full-width
               &#60;
-              ="Back To #{@course.name}"
+              ="Back To #{@course_module_element.course_module.course_section.subject_course.name}"
         .col-xs-12.l-margin-top
           -if @course_module_element && @course_module_element.is_video?
             =link_to course_special_link(@course_module_element.next_element) do

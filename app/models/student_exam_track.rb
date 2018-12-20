@@ -53,11 +53,15 @@ class StudentExamTrack < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
 
   # callbacks
+  before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
+  #TODO - create_or_update_course_section_user_log
   after_save :update_subject_course_user_log
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
+  scope :for_course_module, lambda { |cm_id| where(course_module_id: cm_id) }
+  scope :for_user_and_module, lambda { |cm_id, user_id| where(course_module_id: cm_id, user_id: user_id) }
   scope :with_active_cmes, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.cme_count > 0').references(:course_module) }
   scope :with_valid_course_module, -> { includes(:course_module).where('course_modules.active = ?', true).where('course_modules.test = ?', false).where('course_modules.cme_count > 0').references(:course_module) }
   scope :all_complete, -> { where('percentage_complete > 99') }
@@ -66,10 +70,20 @@ class StudentExamTrack < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def update_subject_course_user_log
-    log = self.subject_course_user_log
-    log.latest_course_module_element_id = self.latest_course_module_element_id
-    log.recalculate_completeness # Includes a save
+  def create_or_update_subject_course_user_log
+    if self.subject_course_user_log
+      #Update SCUL record
+      scul = self.subject_course_user_log
+      scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
+      scul.recalculate_completeness # Includes a save!
+    else
+      #Create SET and assign it id to this record
+      scul = SubjectCourseUserLog.new(user_id: self.user_id, subject_course_id: self.course_module.subject_course_id)
+      scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
+      saved_scul = scul.recalculate_completeness # Includes a save!
+      self.update_column(:subject_course_user_log_id, saved_scul.id)
+    end
+
   end
 
   def completed_cme_user_logs
@@ -158,5 +172,21 @@ class StudentExamTrack < ActiveRecord::Base
 
 
   protected
+
+  # Before Validation
+  def create_subject_course_user_log
+    scul = SubjectCourseUserLog.new(user_id: self.user_id, course_module_id: self.course_module_id,
+                                    subject_course_id: self.course_module.subject_course_id)
+    scul.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+    scul.save!
+    self.subject_course_user_log_id = scul.id
+  end
+
+  # After Save
+  def update_subject_course_user_log
+    scul = self.subject_course_user_log
+    scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
+    scul.recalculate_completeness # Includes a save!
+  end
 
 end

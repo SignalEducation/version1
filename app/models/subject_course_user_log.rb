@@ -104,6 +104,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
       self.completed = true if (self.percentage_complete > 99)
     end
     self.save
+    self
   end
 
   def student_exam_track_course_module_ids

@@ -61,17 +61,18 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :session_guid, allow_nil: true, length: {maximum: 255}
-  validates :student_exam_track_id, allow_nil: true,
+  validates :student_exam_track_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, allow_nil: true,
+  validates :subject_course_user_log_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
   # callbacks
+  before_validation :create_student_exam_track, unless: :student_exam_track_id
   before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score, :create_lesson_intercom_event
-  after_save :create_or_update_student_exam_track
+  after_save :update_student_exam_track
 
   # scopes
   scope :all_in_order, -> { order(:course_module_element_id) }
@@ -157,34 +158,13 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   protected
 
-  # After Create
-  def calculate_score
-    if self.is_quiz
-      course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
-      percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
-      passed = percentage_score >= course_pass_rate ? true : false
-      self.update_columns(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
-    end
+  # Before Validation
+  def create_student_exam_track
+    set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id)
+    set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+    set.save!
+    self.student_exam_track_id = set.id
   end
-
-  # After Save
-  def create_or_update_student_exam_track
-    unless self.preview_mode
-      if self.student_exam_track
-        #Update SET record
-        set = self.student_exam_track
-        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-        set.recalculate_completeness # Includes a save!
-      else
-        #Create SET and assign it id to this record
-        set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id, subject_course_user_log_id: self.subject_course_user_log_id)
-        set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-        saved_set = set.recalculate_completeness # Includes a save!
-        self.update_column(:student_exam_track_id, saved_set.id)
-      end
-    end
-  end
-
 
   # Before Create
   def set_booleans
@@ -208,6 +188,23 @@ class CourseModuleElementUserLog < ActiveRecord::Base
       others.update_all(latest_attempt: false)
       true
     end
+  end
+
+  # After Create
+  def calculate_score
+    if self.is_quiz
+      course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
+      percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
+      passed = percentage_score >= course_pass_rate ? true : false
+      self.update_columns(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
+    end
+  end
+
+  # After Save
+  def update_student_exam_track
+    set = self.student_exam_track
+    set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
+    set.recalculate_completeness # Includes a save!
   end
 
   # After Save

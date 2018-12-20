@@ -15,37 +15,35 @@ class CoursesController < ApplicationController
 
   def create
     # Create course_module_element_user_log for QUIZ from params sent in from previously initiated CMEUL record that was not saved
-    if current_user
-      @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
-      @course_module_element_user_log.session_guid = current_session_guid
+    @course_module_element_user_log = CourseModuleElementUserLog.new(allowed_params)
+    @course_module_element_user_log.session_guid = current_session_guid
 
-      @course_module_element = @course_module_element_user_log.course_module_element
-      @course_module = @course_module_element_user_log.course_module
-      @course_module_element_user_log.subject_course_id = @course_module.subject_course_id
-      @results = true
-      if @course_module_element_user_log.save
-        pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
-        percentage_score = @course_module_element_user_log.quiz_score_actual || 0
+    @course_module_element = @course_module_element_user_log.course_module_element
+    @course_module = @course_module_element_user_log.course_module
+    @course = @course_module.subject_course
+    @course_module_element_user_log.subject_course_id = @course.id
+    @results = true
 
-        @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
+    if @course_module_element_user_log.save
+      pass_rate = @course_module_element.course_module.subject_course.quiz_pass_rate ? @course_module_element.course_module.subject_course.quiz_pass_rate : 65
+      percentage_score = @course_module_element_user_log.quiz_score_actual || 0
 
-        if @course_module && @course_module_element && @course_module_element_user_log
-          render :show
-        else
-          redirect_to library_url
-        end
-        @mathjax_required = true
+      @pass = percentage_score >= pass_rate ? 'Pass' : 'Fail'
 
+      if @course_module && @course_module_element && @course_module_element_user_log
+        render :show
       else
-        # it did not save
-        Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
-        flash[:error] = I18n.t('controllers.courses.create.flash.error')
-        redirect_to library_special_link(@course_module.parent)
+        redirect_to library_url
       end
+      @mathjax_required = true
 
     else
-      redirect_to library_url
+      # it did not save
+      Rails.logger.error "ERROR: CoursesController#create: Failed to save. CME-UserLog.inspect #{@course_module_element_user_log.errors.inspect}."
+      flash[:error] = I18n.t('controllers.courses.create.flash.error')
+      redirect_to library_special_link(@course_module.parent)
     end
+
   end
 
   def video_watched_data
@@ -215,7 +213,7 @@ class CoursesController < ApplicationController
             session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,
             subject_course_id: @course_module_element.course_module.subject_course_id,
-            subject_course_user_log_id: @subject_course_user_log.id,
+            subject_course_user_log_id: @subject_course_user_log.try(:id),
             student_exam_track_id: @student_exam_track.try(:id),
             course_module_element_id: @course_module_element.id,
             is_quiz: true,
@@ -343,8 +341,12 @@ class CoursesController < ApplicationController
       @active_enrollment = current_user.enrollments.all_active.for_subject_course(@course.id).last
       if @active_enrollment
         @subject_course_user_log = @active_enrollment.subject_course_user_log
-        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id:
-                                                                                     @course_module.id).last
+        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+      else
+        @student_exam_track = StudentExamTrack.for_user_and_module(@course_module.id, current_user.id).all_in_order.first
+        #@course_section_user_log = @student_exam_track.course_section_user_log
+        @subject_course_user_log = @student_exam_track.subject_course_user_log
+
       end
     else
       flash[:warning] = 'Sorry, you are not permitted to access that content. '
