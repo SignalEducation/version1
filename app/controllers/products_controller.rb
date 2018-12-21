@@ -15,6 +15,7 @@
 #  stripe_sku_guid   :string
 #  subject_course_id :integer
 #  sorting_order     :integer
+#  product_type      :integer          default(0)
 #
 
 class ProductsController < ApplicationController
@@ -93,7 +94,10 @@ class ProductsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:product).permit(:name, :active, :price, :currency_id, :livemode, :mock_exam_id, :sorting_order)
+    params.require(:product).permit(
+      :name, :active, :price, :currency_id, :livemode, :mock_exam_id,
+      :sorting_order, :product_type
+    )
   end
 
 end

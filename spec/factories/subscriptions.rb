@@ -30,46 +30,46 @@ FactoryBot.define do
     sequence(:stripe_guid)      { |n| "sub_DUMMY-#{n}" }
     next_renewal_date     { 6.days.from_now}
     complimentary         false
-    current_status        'active'
+    stripe_status        'active'
     livemode              false
     terms_and_conditions              true
 
 
     factory :valid_subscription do
-      current_status        'active'
+      stripe_status        'active'
       active                true
     end
 
     factory :invalid_subscription do
-      current_status        'canceled'
+      stripe_status        'canceled'
       active                true
     end
 
     factory :active_subscription do
-      current_status        'active'
+      stripe_status        'active'
       active                true
     end
 
     factory :past_due_subscription do
-      current_status        'past_due'
+      stripe_status        'past_due'
       active                true
 
     end
 
     factory :canceled_pending_subscription do
-      current_status        'canceled-pending'
+      stripe_status        'canceled-pending'
       active                true
 
     end
 
     factory :canceled_subscription do
-      current_status        'canceled'
+      stripe_status        'canceled'
       active                true
 
     end
 
     factory :unpaid_subscription do
-      current_status        'unpaid'
+      stripe_status        'unpaid'
       active                true
 
     end

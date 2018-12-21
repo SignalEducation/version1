@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-$sans-font: 'Rubik', HelveticaNeue;
+$sans-font: 'Rubik', HelveticaNeue, sans-serif;
 $gutter: 20px;
 $white: #fff;
 $purple1: #3D3D5B;
@@ -33,7 +33,7 @@ $colour-3: #EFF3F6;
 $colour-4: #F8FAFF;
 $colour-5: #C0CFD5;
 $colour-6: #edeff0;
-$colour-7: #3E3F5B;
+$colour-7: $purple1;
 $colour-8: #4E3F5B;
 $colour-9: rgb(83, 84, 112);
 $colour-10: #9E9FAD;
@@ -1026,7 +1026,7 @@ a.card {
   display: block;
   background: $white;
   position: relative;
-  margin: $gutter*.5 0 $gutter 0;
+  margin: $gutter*.5 $gutter*.5 $gutter $gutter*.5;
   text-align: left;
   @include border-radius(5px);
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
@@ -2383,6 +2383,12 @@ input[type="radio"] {
     background: $colour-8 asset-url('bg-library.jpg') no-repeat;
     background-size: cover;
   }
+}
+
+.hero {
+  padding-top: 5.5rem;
+  padding-bottom: 0;
+  text-align: center;
 }
 
 

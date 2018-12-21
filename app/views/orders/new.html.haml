@@ -1,74 +1,204 @@
-.upgrade
-  #wrapper
-    %section#free
-      .tmain
-        .tbase
-          .container
-            .row
-              .col-md-10.col-md-offset-1
-                %h1.title1
-                  =@mock_exam.name
-                %h2.subtitle
-                  Purchase Process
-
-
+.bg-asphalt
+  .container
+    %article.hero
+      %h1.h1-mega.mb-3 
+        =@mock_exam.name
+      %h5.text-red Purchase Process
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
-
-    .l-section-small
-      .container
-
+  .container#product_purchase
+    -if current_user.purchased_products && current_user.purchased_products.include?(@product)
+      .row
         .col-md-12
-          .col-sm-4.l-margin-top
-            .course-side-info
-              %h2.h-separator.h-separator-left.l-margin-bottom
+          .payment-heading.text-center
+            %p.p
+              You have already purchased this Product. Visit your account page to view your purchase history.
+    -else
+      =form_for(@order, html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
+        =f.hidden_field :product_id, value: @product.id
+        =f.hidden_field :stripe_token
+        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
+        =f.hidden_field :use_paypal, value: false
+        =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+
+        .row.row-lg.justify-content-center
+          .col-lg-6.mb-5.mb-xl-0
+            %fieldset.text-center
+              %h3.mb-3 
                 =@mock_exam.name
-              %p.h3.l-margin-bottom
-                ='Total: '
-                =number_in_local_currency(@product.price, @product.currency_id)
-              .box.box-profile
-                .box-inner
-                  =image_tag @mock_exam.try(:cover_image).try(:url), class: 'media-pic'
+              %p.h4.mb-3.text-torquoise
+                Total:
+                %span
+                  =number_in_local_currency(@product.price, @product.currency_id)
+              .mb-4
+                =image_tag 'ico-exam-2.svg', alt: 'Exam'
+              .px-4
+                %p.text-left Get started on your ACCA journey in less than 5 minutes. Passing your exam is worth it.
+          .col-lg-6.mb-5
+            %fieldset.card
+              %p.h2.mb-1 Choose a way to pay
+              %p.mb-4 Choose your preferred method of payment
+              .form-group.form-group-expandable
+                .custom-control.custom-radio
+                  %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                  %label.custom-control-label{:for => "pay-with-card"}
+                    %span.custom-label-info
+                      %span.h3.m-0
+                        =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                        %span Credit / Debit Card
+                    %span.custom-check
+                =render partial: 'orders/order_card_form', locals: {f: f}
+              .form-group.form-group-expandable
+                .custom-control.custom-radio
+                  %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                  %label.custom-control-label{:for => "pay-with-paypal"}
+                    %span.custom-label-info
+                      %span.h3.m-0
+                        =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                        %span PayPal
+                    %span.custom-check
+                =render partial: 'orders/paypal_form', locals: {f: f}
+
+:javascript
+
+  $(document).on('ready', function() {
+
+    $('.terms-and-conditions').on('change', function() {
+      if ($(this).is(':checked')) {
+        $('#paypal_terms_and_conditions, #stripe_terms_and_conditions').prop('checked', true);
+        $('#hidden_term_and_conditions').val(true);
+      } else {
+        $('#paypal_terms_and_conditions, #stripe_terms_and_conditions').prop('checked', false);
+        $('#hidden_term_and_conditions').val(false);
+      }
+    })
+
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+      $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
+      if ($(this).is(':checked')) {
+        $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+        selectPaymentMethod($(this).val());
+        $('#stripe_terms_and_conditions').prop('required', true);
+        $('#paypal_terms_and_conditions').prop('required', true);
+      }
+    });
+    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+
+    function selectPaymentMethod(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#order_use_paypal').val(true);
+          break;
+        case 'stripe':
+          $('#order_use_paypal').val(false);
+          break;
+        default:
+          $('#order_use_paypal').val(false);
+      }
+    }
+
+    function acceptedTerms(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#stripe_terms_and_conditions').prop('required', false);
+          return true;
+        case 'stripe':
+          $('#paypal_terms_and_conditions').prop('required', false);
+          return true;
+        default:
+          return false;
+      }
+    }
 
 
+    $(".sk-circle").hide();
+    $('input[type="checkbox"]').on('change', function() {
+      if($('#terms_and_conditions').prop('checked') == true) {
+        $("#hidden_term_and_conditions").val('true');
+      } else if($('#terms_and_conditions').prop('checked') == false) {
+        $("#hidden_term_and_conditions").val('false');
+      }
+    });
 
-          .col-sm-8.l-margin-top-small
-            .new-order-text-box
-              .faq-inner
-                .faq-title.h6
-                  %p
-                    The LearnSignal Mock Exam
-                  %p
-                    When you purchase a LearnSignal Mock Exam, you will receive a pdf formatted exam.
-                  %p
-                    Please complete this exam.  It is important that you give yourself a genuine attempt at the exam; the result will give you feedback on how your study is progressing.
-                  %p
-                    After you have completed the exam you can submit your paper by emailing mockexams@learnsignal.com
-                  %p
-                    We will reply with your result within 3 days.
+    var style = {
+      base: {
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Rubik", "Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
+    };
 
-            .new-product-user-form.l-margin-top-big
-              -if current_user.purchased_products && current_user.purchased_products.include?(@product)
-                .row
-                  .col-md-12
-                    .payment-heading.text-center
-                      %p.p
-                        You have already purchased this Product. Visit your account page to view your purchase history.
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements = stripe.elements();
 
+    var card = elements.create('card', {hidePostalCode: true, style: style});
+    card.mount('#card-element');
 
-              -else
-                =form_for(@order, html: {id: 'orders-form', class: 'form-horizontal', role: 'form'}) do |f|
-                  =f.hidden_field :product_id, value: @product.id
-                  =f.hidden_field :stripe_token
-                  =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-                  =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
-                  .row
-                    .col-md-12
-                      .payment-heading
+    // Create a token when the form is submitted.
+    var form = document.getElementById('orders-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      //Replace submit button with spinning JS
+      $('#card_submit').prop('disabled',true);
+      $('#card_submit').hide();
+      $('#paypal_submit').prop('disabled',true);
+      $('#paypal_submit').hide();
+      $(".sk-circle").show();
+      if ($('#order_use_paypal').val() === 'true') {
+        if(acceptedTerms('paypal')){
+          document.getElementById('orders-form').submit();
+        }
+      } else {
+        if(acceptedTerms('stripe')){
+          createToken();
+        }
+      }
+    });
 
-                      .col-sm-12
-                        %h3.l-margin-bottom
-                          Payment details
-                        =render partial: 'orders/order_card_form', locals: {f: f}
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
 
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('orders-form');
+      $('#order_stripe_token').val(token.id);
 
+      // Submit the form
+      form.submit();
+      $('#card_submit').hide();
+      $(".sk-circle").show();
+    }
+
+    function createToken() {
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+          //Replace spinning JS with Submit button
+          $('#card_submit').prop('disabled',false);
+          $('#card_submit').show();
+          $(".sk-circle").hide();
+
+        } else {
+          // Send the token to your server
+          stripeTokenHandler(result.token);
+        }
+      });
+    };
+  });

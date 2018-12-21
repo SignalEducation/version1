@@ -58,7 +58,7 @@ describe Subscription do
 
   it { should validate_presence_of(:subscription_plan_id) }
 
-  it { should validate_inclusion_of(:current_status).in_array(Subscription::STATUSES).on(:update) }
+  it { should validate_inclusion_of(:stripe_status).in_array(Subscription::STATUSES).on(:update) }
 
   it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE]).on(:update) }
 

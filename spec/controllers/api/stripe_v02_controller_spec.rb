@@ -120,7 +120,7 @@ describe Api::StripeV02Controller, type: :controller do
           stub_subscription_get_request(subscription_url, subscription)
 
           # Add Mandrill Post Stub
-          expect(valid_subscription.current_status).to eq('active')
+          expect(valid_subscription.stripe_status).to eq('active')
           post :create, post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
@@ -129,7 +129,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
-          expect(valid_subscription.current_status).to eq('past_due')
+          expect(valid_subscription.stripe_status).to eq('past_due')
 
           expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
           expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
@@ -185,7 +185,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
-          expect(valid_subscription.current_status).to eq('canceled')
+          expect(valid_subscription.stripe_status).to eq('canceled')
 
           expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
           expect(a_request(:get, invoice_url).with(body: nil)).to have_been_made.once
@@ -230,7 +230,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
-          expect(valid_subscription.current_status).to eq('active')
+          expect(valid_subscription.stripe_status).to eq('active')
 
           expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
           expect(a_request(:get, invoice_url).with(body: nil)).to have_been_made.once
@@ -239,7 +239,7 @@ describe Api::StripeV02Controller, type: :controller do
         end
 
         it 'invoice.payment_succeeded after failed attempt' do
-          valid_subscription.update_column(:current_status, 'past_due')
+          valid_subscription.update_column(:stripe_status, 'past_due')
 
           post_request_body = {"id": "evt_00000000000002", "object": "event", "api_version": "2017-05-25", "created": 1326853478, "data": {"object": {"id": "in_1APVed2eZvKYlo2CP6dsoJTo", "object": "invoice", "amount_due": 599, "application_fee": nil, "attempt_count": 1, "attempted": true, "charge": "ch_1APVed2eZvKYlo2C1QNH6jru", "closed": true, "currency": "gbp", "customer": valid_subscription_student.stripe_customer_id, "date": 1496232623, "description": nil, "discount": nil, "ending_balance": 0, "forgiven": false, "lines": {"data": [{"id": valid_subscription.stripe_guid, "object": "line_item", "amount": 599, "currency": "gbp", "description": nil, "discountable": true, "livemode": true, "metadata": {}, "period": {"start": 1498824623, "end": 1501503023}, "plan": {"id": subscription_plan_gbp_m.stripe_guid, "object": "plan", "amount": 999, "created": 1496222010, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "name": subscription_plan_gbp_m.name, "statement_descriptor": nil, "trial_period_days": nil}, "proration": false, "quantity": 1, "subscription": nil, "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE", "type": "subscription"}], "total_count": 1, "object": "list", "url": "/v1/invoices/in_1APVed2eZvKYlo2CP6dsoJTo/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "paid": true, "period_end": 1496232623, "period_start": 1496232623, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": valid_subscription.stripe_guid, "subtotal": 599, "tax": nil, "tax_percent": nil, "total": 599, "webhooks_delivered_at": 1496232630}}, "livemode": false, "pending_webhooks": 1, "request": "req_Al1inviVfg7df", "type": "invoice.payment_succeeded"}
 
@@ -270,7 +270,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
-          expect(valid_subscription.current_status).to eq('active')
+          expect(valid_subscription.stripe_status).to eq('active')
           expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
           expect(a_request(:get, invoice_url).with(body: nil)).to have_been_made.once
           expect(a_request(:get, subscription_url).with(body: nil)).to have_been_made.once
@@ -318,7 +318,7 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error).to eq(false)
           expect(sae.error_message).to eq(nil)
           valid_subscription.reload
-          expect(valid_subscription.current_status).to eq('canceled')
+          expect(valid_subscription.stripe_status).to eq('canceled')
 
           expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
           expect(a_request(:get, customer_url).with(body: nil)).to have_been_made.once
@@ -343,7 +343,7 @@ describe Api::StripeV02Controller, type: :controller do
         expect(sae.error).to eq(false)
         expect(sae.error_message).to eq(nil)
         valid_subscription.reload
-        expect(valid_subscription.current_status).to eq('active')
+        expect(valid_subscription.stripe_status).to eq('active')
 
         expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
 
@@ -364,7 +364,7 @@ describe Api::StripeV02Controller, type: :controller do
         expect(sae.error).to eq(false)
         expect(sae.error_message).to eq(nil)
         valid_subscription.reload
-        expect(valid_subscription.current_status).to eq('active')
+        expect(valid_subscription.stripe_status).to eq('active')
         expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
 
       end
