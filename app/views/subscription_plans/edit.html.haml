@@ -29,6 +29,10 @@
             =f.label :monthly_percentage_off, t('views.subscription_plans.form.monthly_percentage_off'), class: 'control-label'
             .input-group.input-group-lg.full-width
               =f.number_field :monthly_percentage_off, placeholder: 0, class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            =f.label :previous_plan_price, t('views.subscription_plans.form.previous_plan_price'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =f.text_field :previous_plan_price, placeholder: 0, class: 'form-control', style: 'border-radius: 6px;'
 
         .row.l-margin-top-big
           =f.submit t('views.general.save'), class: 'btn btn-red'

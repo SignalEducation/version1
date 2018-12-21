@@ -1094,6 +1094,7 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.string   "paypal_guid"
     t.string   "paypal_state"
     t.integer  "monthly_percentage_off"
+    t.float    "previous_plan_price"
   end
 
   add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree
