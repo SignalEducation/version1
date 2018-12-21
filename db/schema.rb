@@ -313,8 +313,6 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.float    "duration",                  default: 0.0
     t.string   "temporary_label"
     t.boolean  "is_constructed_response",   default: false, null: false
-    t.boolean  "available_on_trial",        default: false
-    t.integer  "course_section_id"
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree
@@ -342,30 +340,10 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.boolean  "tuition",                   default: false
     t.boolean  "test",                      default: false
     t.boolean  "revision",                  default: false
-    t.integer  "course_section_id"
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
   add_index "course_modules", ["sorting_order"], name: "index_course_modules_on_sorting_order", using: :btree
-
-  create_table "course_sections", force: :cascade do |t|
-    t.integer  "subject_course_id"
-    t.string   "name"
-    t.string   "name_url"
-    t.integer  "sorting_order"
-    t.boolean  "active",                    default: false
-    t.boolean  "counts_towards_completion", default: false
-    t.boolean  "assumed_knowledge",         default: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.integer  "cme_count",                 default: 0
-    t.integer  "video_count",               default: 0
-    t.integer  "quiz_count",                default: 0
-    t.datetime "destroyed_at"
-  end
-
-  add_index "course_sections", ["name"], name: "index_course_sections_on_name", using: :btree
-  add_index "course_sections", ["subject_course_id"], name: "index_course_sections_on_subject_course_id", using: :btree
 
   create_table "course_tutor_details", force: :cascade do |t|
     t.integer  "subject_course_id"
@@ -984,7 +962,6 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.string   "external_url"
     t.boolean  "active",                   default: false
     t.integer  "sorting_order"
-    t.boolean  "available_on_trial",       default: false
   end
 
   add_index "subject_course_resources", ["name"], name: "index_subject_course_resources_on_name", using: :btree
