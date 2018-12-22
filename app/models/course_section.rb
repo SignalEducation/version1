@@ -32,9 +32,11 @@ class CourseSection < ActiveRecord::Base
 
   # relationships
   belongs_to :subject_course
+  has_many :course_section_user_logs
   has_many :course_modules
+  has_many :student_exam_tracks
+  has_many :course_module_element_user_logs
   has_many :course_module_elements
-
   accepts_nested_attributes_for :course_modules
 
   # validation

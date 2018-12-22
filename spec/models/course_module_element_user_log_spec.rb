@@ -24,6 +24,8 @@
 #  subject_course_user_log_id :integer
 #  is_constructed_response    :boolean          default(FALSE)
 #  preview_mode               :boolean          default(FALSE)
+#  course_section_id          :integer
+#  course_section_user_log_id :integer
 #
 
 require 'rails_helper'

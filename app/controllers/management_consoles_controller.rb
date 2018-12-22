@@ -26,7 +26,7 @@ class ManagementConsolesController < ApplicationController
     @active_quizzes = active_cmes.all_quizzes.count
     @total_enrollments = Enrollment.count
     @active_enrollments = Enrollment.all_active.count
-    @expired_enrollments = Enrollment.all_expired.count
+
   end
 
   def system_requirements

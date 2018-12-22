@@ -24,6 +24,8 @@
 #  subject_course_user_log_id :integer
 #  is_constructed_response    :boolean          default(FALSE)
 #  preview_mode               :boolean          default(FALSE)
+#  course_section_id          :integer
+#  course_section_user_log_id :integer
 #
 
 class CourseModuleElementUserLog < ActiveRecord::Base
@@ -40,31 +42,44 @@ class CourseModuleElementUserLog < ActiveRecord::Base
                   :subject_course_id, :student_exam_track_id,
                   :subject_course_user_log_id, :is_constructed_response,
                   :constructed_response_attempt_attributes,
-                  :scenario_question_attempts_attributes, :preview_mode
+                  :scenario_question_attempts_attributes, :preview_mode,
+                  :course_section_id, :course_section_user_log_id
 
   # Constants
 
   # relationships
-  belongs_to :subject_course_user_log
-  belongs_to :student_exam_track
-  belongs_to :subject_course
-  belongs_to :course_module
-  belongs_to :course_module_element
   belongs_to :user
+
+  belongs_to :subject_course
+  belongs_to :subject_course_user_log
+
+  belongs_to :course_section
+  belongs_to :course_section_user_log
+
+  belongs_to :course_module
+  belongs_to :student_exam_track
+
+  belongs_to :course_module_element
+
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
+
   has_one   :constructed_response_attempt
 
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
 
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :session_guid, allow_nil: true, length: {maximum: 255}
-  validates :student_exam_track_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
+
+  validates :subject_course_id, presence: true
+  validates :subject_course_user_log_id, presence: true
+
+  validates :course_section_id, presence: true
+  validates :course_section_user_log_id, presence: true
+
+  validates :course_module_id, presence: true
+  validates :student_exam_track_id, presence: true
+
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 

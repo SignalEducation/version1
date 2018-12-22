@@ -59,21 +59,23 @@ class SubjectCourse < ActiveRecord::Base
   # relationships
   belongs_to :exam_body
   belongs_to :group
-  has_many :course_modules
-  has_many :course_sections
-  has_many :course_module_elements, through: :course_modules
-  has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_tutor_details
   has_many :quiz_questions
-  has_many :enrollments
   has_many :home_pages
-  has_many :student_exam_tracks
-  has_many :subject_course_user_logs
   has_many :subject_course_resources
   has_many :orders
   has_many :white_papers
   has_many :mock_exams
   has_many :exam_sittings
+  has_many :enrollments
+  has_many :subject_course_user_logs
+  has_many :course_sections
+  has_many :course_section_user_logs
+  has_many :course_modules
+  has_many :student_exam_tracks
+  has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_module_elements, through: :course_modules
+  has_many :course_module_element_user_logs
   has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
   accepts_nested_attributes_for :subject_course_resources

@@ -44,11 +44,11 @@ class CourseModule < ActiveRecord::Base
   # relationships
   belongs_to :subject_course
   belongs_to :course_section
+  has_many :student_exam_tracks
   has_many :course_module_elements
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
-  has_many :student_exam_tracks
 
   accepts_nested_attributes_for :course_module_elements
 

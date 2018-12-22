@@ -5,6 +5,18 @@ class CoursesController < ApplicationController
   before_action :check_permission, only: [:show, :show_constructed_response]
 
   def show
+    if current_user.subject_course_user_logs.any?
+      @subject_course_user_log = current_user.subject_course_user_logs.all_active.for_subject_course(@course.id).last
+      if @subject_course_user_log
+        @course_section_user_log = @subject_course_user_log.course_sections.where(course_section_id: @course_section.id).last
+        @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+
+      else
+
+      end
+    else
+
+    end
 
     if @course_module_element.is_quiz
       set_up_quiz
@@ -336,19 +348,10 @@ class CoursesController < ApplicationController
     @course_module = @course_section.course_modules.find_by(name_url: params[:course_module_name_url]) if @course_section
     @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url]) if @course_module
 
-    if @course && @course.active && @course_section && @course_section.active && @course_module && @course_module.active && @course_module_element && @course_module_element.active && current_user && current_user.permission_to_see_content(@course_module_element, nil)
+    unless @course && @course.active && @course_section && @course_section.active && @course_module &&
+        @course_module.active && @course_module_element && @course_module_element.active &&
+        current_user && current_user.permission_to_see_content(@course_module_element, nil)
 
-      @active_enrollment = current_user.enrollments.all_active.for_subject_course(@course.id).last
-      if @active_enrollment
-        @subject_course_user_log = @active_enrollment.subject_course_user_log
-        @student_exam_track = @subject_course_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
-      else
-        @student_exam_track = StudentExamTrack.for_user_and_module(@course_module.id, current_user.id).all_in_order.first
-        #@course_section_user_log = @student_exam_track.course_section_user_log
-        @subject_course_user_log = @student_exam_track.subject_course_user_log
-
-      end
-    else
       flash[:warning] = 'Sorry, you are not permitted to access that content. '
       redirect_to subject_course_url(@course)
     end

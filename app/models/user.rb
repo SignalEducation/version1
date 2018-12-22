@@ -99,6 +99,7 @@ class User < ActiveRecord::Base
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
+  has_many :course_section_user_logs
   has_many :subject_course_user_logs
   belongs_to :user_group
   has_many :visits
@@ -595,12 +596,14 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
+  #TODO - valid enrollments ??
   def valid_enrollments_in_sitting_order
-    self.enrollments.all_valid.by_sitting_date
+    self.enrollments.all_active.by_sitting_date
   end
 
+  #TODO - invalid enrollments ??
   def expired_enrollments_in_sitting_order
-    self.enrollments.all_active.all_expired.by_sitting_date
+    self.enrollments.all_active.by_sitting_date
   end
 
   def active_enrollments_in_sitting_order

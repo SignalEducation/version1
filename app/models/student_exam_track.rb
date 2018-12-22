@@ -19,6 +19,8 @@
 #  count_of_videos_taken                :integer
 #  subject_course_user_log_id           :integer
 #  count_of_constructed_responses_taken :integer
+#  course_section_user_log_id           :integer
+#  course_section_id                    :integer
 #
 
 #This should have been called CourseModuleUserLog
@@ -30,27 +32,33 @@ class StudentExamTrack < ActiveRecord::Base
   attr_accessible :user_id, :latest_course_module_element_id,
                   :session_guid, :course_module_id, :percentage_complete,
                   :count_of_cmes_completed, :subject_course_id,
-                  :subject_course_user_log_id
+                  :subject_course_user_log_id, :course_section_user_log_id,
+                  :course_section_id
 
   # Constants
 
   # relationships
   belongs_to :user
+
   belongs_to :subject_course
   belongs_to :subject_course_user_log
+
+  belongs_to :course_section
+  belongs_to :course_section_user_log
+
   belongs_to :course_module
+
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
+
   has_many :course_module_element_user_logs
 
   # validation
-  validates :session_guid, allow_nil: true, length: { maximum: 255 }
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :course_module_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
+  validates :course_module_id, presence: true
+  validates :course_section_user_log_id, presence: true
+  validates :course_section_id, presence: true
+  validates :subject_course_user_log_id, presence: true
 
   # callbacks
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id

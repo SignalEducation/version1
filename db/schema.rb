@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181220164615) do
+ActiveRecord::Schema.define(version: 20181222100249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,6 +276,8 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.integer  "subject_course_user_log_id"
     t.boolean  "is_constructed_response",    default: false
     t.boolean  "preview_mode",               default: false
+    t.integer  "course_section_id"
+    t.integer  "course_section_user_log_id"
   end
 
   add_index "course_module_element_user_logs", ["course_module_element_id"], name: "cme_user_logs_cme_id", using: :btree
@@ -347,6 +349,24 @@ ActiveRecord::Schema.define(version: 20181220164615) do
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
   add_index "course_modules", ["sorting_order"], name: "index_course_modules_on_sorting_order", using: :btree
+
+  create_table "course_section_user_logs", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "course_section_id"
+    t.integer  "subject_course_user_log_id"
+    t.integer  "latest_course_module_element_id"
+    t.float    "percentage_complete"
+    t.integer  "count_of_cmes_completed"
+    t.integer  "count_of_quizzes_taken"
+    t.integer  "count_of_videos_taken"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.integer  "subject_course_id"
+  end
+
+  add_index "course_section_user_logs", ["course_section_id"], name: "index_course_section_user_logs_on_course_section_id", using: :btree
+  add_index "course_section_user_logs", ["subject_course_user_log_id"], name: "index_course_section_user_logs_on_subject_course_user_log_id", using: :btree
+  add_index "course_section_user_logs", ["user_id"], name: "index_course_section_user_logs_on_user_id", using: :btree
 
   create_table "course_sections", force: :cascade do |t|
     t.integer  "subject_course_id"
@@ -965,6 +985,8 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.integer  "count_of_videos_taken"
     t.integer  "subject_course_user_log_id"
     t.integer  "count_of_constructed_responses_taken"
+    t.integer  "course_section_id"
+    t.integer  "course_section_user_log_id"
   end
 
   add_index "student_exam_tracks", ["exam_schedule_id"], name: "index_student_exam_tracks_on_exam_schedule_id", using: :btree

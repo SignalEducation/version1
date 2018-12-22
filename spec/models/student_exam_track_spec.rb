@@ -19,6 +19,8 @@
 #  count_of_videos_taken                :integer
 #  subject_course_user_log_id           :integer
 #  count_of_constructed_responses_taken :integer
+#  course_section_user_log_id           :integer
+#  course_section_id                    :integer
 #
 
 require 'rails_helper'
