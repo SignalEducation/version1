@@ -37,14 +37,15 @@
 
 
 
--if cme.course_module_element_video.vimeo_guid && @subject_course_user_log
+-if cme.course_module_element_video.vimeo_guid
 
   :javascript
-    var video_cme_id = #{@course_module_element.id};
-    var course_log_id = #{@subject_course_user_log.id};
-    var exam_track_id = "#{@student_exam_track.try(:id)}";
-    var logId = '';
-    var options = {
+    let video_cme_id = "#{@course_module_element.id || ''}";
+    let course_log_id = "#{@subject_course_user_log.try(:id) || ''}";
+    let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
+    let exam_track_id = "#{@student_exam_track.try(:id) || ''}";
+    let logId = '';
+    let options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
       frameborder: 0,
       webkitAllowFullScreen: true,
@@ -52,9 +53,9 @@
       allowFullScreen: true
     };
 
-    var player = new Vimeo.Player('vimeo-player-window', options);
+    let player = new Vimeo.Player('vimeo-player-window', options);
 
-    var timeUpdate = function(data) {
+    let timeUpdate = function(data) {
       if (data.percent >= 0.75) {
         $.ajax({
           url: '#{video_watched_data_courses_path}',
@@ -68,12 +69,12 @@
     };
 
     //When the player starts send JSON request to create CMEUL
-    var onPlay = function(data) {
+    let onPlay = function(data) {
       if (logId === '') {
         $.ajax({
           url: '#{create_video_user_log_courses_path}',
           dataType: 'json',
-          data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'set_id': exam_track_id }),
+          data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'csul_id': section_log_id, 'set_id': exam_track_id }),
           method: 'POST',
           contentType: "application/json; charset=utf-8",
           success: function(data,status,xhr){
@@ -93,16 +94,3 @@
 
 
 
--elsif cme.course_module_element_video.vimeo_guid && !@subject_course_user_log
-
-  :javascript
-
-    var options = {
-      id: "#{cme.course_module_element_video.vimeo_guid}",
-      frameborder: 0,
-      webkitAllowFullScreen: true,
-      mozallowfullscreen: true,
-      allowFullScreen: true
-    };
-
-    var player = new Vimeo.Player('vimeo-player-window', options);

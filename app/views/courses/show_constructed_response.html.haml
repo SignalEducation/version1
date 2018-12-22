@@ -2,7 +2,7 @@
   .container-fluid{style: 'margin-bottom: 60px;'}
 
     .row
-      -if @course_module_element && @course_module_element_user_log && (@course_module_element.active || @course_module_element_user_log.preview_mode) && paywall_checkpoint[:course_content][:view_all] == true
+      -if @course_module_element && @course_module_element_user_log && (@course_module_element.active || @course_module_element_user_log.preview_mode) && current_user.permission_to_see_content(@course_module_element.id, nil)
         -if @course_module_element.try(:is_constructed_response)
           #constructed-response-window
             :javascript

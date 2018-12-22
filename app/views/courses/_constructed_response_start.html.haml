@@ -29,7 +29,10 @@
                   =resource.name
 
     .col-sm-6
-      =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.subject_course.name_url, course_module_name_url: @course_module_element.course_module.name_url, course_module_element_name_url: @course_module_element.name_url), id: 'newConstructedResponseButton' do
+      =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.course_section.subject_course.name_url,
+       course_section_name_url: @course_module_element.course_module.course_section.name_url,
+        course_module_name_url: @course_module_element.course_module.name_url,
+         course_module_element_name_url: @course_module_element.name_url), id: 'newConstructedResponseButton' do
         .btn.btn-red.btn-secondary.full-width
           ='New Constructed Response'
 

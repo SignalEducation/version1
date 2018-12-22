@@ -46,9 +46,8 @@ class LibraryController < ApplicationController
           session[:user_exam_body_errors] = nil
         end
 
-        if current_user.enrolled_course?(@course.id)
-          @active_enrollment = current_user.enrollments.for_subject_course(@course.id).all_active.all_in_order.last
-          @subject_course_user_log = @active_enrollment.subject_course_user_log
+        if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
+          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).first
 
           @latest_element_id = @subject_course_user_log.latest_course_module_element_id
           #TODO - @next_element can be a CME, CM or CS
@@ -59,6 +58,8 @@ class LibraryController < ApplicationController
           @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
           @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
           @form_type = "Course Tutor Question. Course: #{@course.name}"
+
+        else
 
         end
       end

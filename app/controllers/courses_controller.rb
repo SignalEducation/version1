@@ -72,14 +72,6 @@ class CoursesController < ApplicationController
     respond_to do |format|
       format.json {
         course_module_element = CourseModuleElement.find(params[:course][:cmeId])
-        param_id = params[:course][:set_id]
-        if param_id && !param_id.empty?
-          student_exam_track_id = param_id
-        elsif param_id && param_id.empty?
-          student_exam_track_id = nil
-        else
-          student_exam_track_id = nil
-        end
 
         if course_module_element
           @video_cme_user_log = CourseModuleElementUserLog.create!(
@@ -91,9 +83,11 @@ class CoursesController < ApplicationController
               is_video: true,
               is_quiz: false,
               course_module_id: course_module_element.course_module_id,
-              subject_course_id: course_module_element.course_module.subject_course_id,
-              subject_course_user_log_id: params[:course][:scul_id],
-              student_exam_track_id: student_exam_track_id
+              course_section_id: course_module_element.course_module.course_section_id,
+              subject_course_id: course_module_element.course_module.course_section.subject_course_id,
+              subject_course_user_log_id: params[:course][:scul_id].presence,
+              course_section_user_log_id: params[:course][:csul_id].presence,
+              student_exam_track_id: params[:course][:set_id].presence
           )
         end
         data = {video_log_id: @video_cme_user_log.id}
@@ -249,7 +243,7 @@ class CoursesController < ApplicationController
 
   def set_up_constructed_response_start_screen
     #Order by most recently updated_at
-    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse[0...8]
+    @course_module_element_user_logs = @subject_course_user_log.course_module_element_user_logs.for_course_module_element(@course_module_element.id).reverse[0...8] if @subject_course_user_log
 
   end
 
@@ -261,13 +255,13 @@ class CoursesController < ApplicationController
     @all_question_ids = @constructed_response.scenario.scenario_questions.all_in_order.map(&:id)
 
     #Creates CONSTRUCTED_RESPONSE log when page renders
-    @course_module_element_user_log = CourseModuleElementUserLog.create(
+    @course_module_element_user_log = CourseModuleElementUserLog.create!(
         preview_mode: @preview_mode,
         session_guid: current_session_guid,
         course_module_id: @course_module_element.course_module_id,
         course_section_id: @course_module_element.course_module.course_section_id,
-        subject_course_id: @course_module_element.course_module.subject_course_id,
-        subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.id,
+        subject_course_id: @course_module_element.course_module.course_section.subject_course_id,
+        subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.try(:id),
         course_section_user_log_id: @preview_mode ? nil : @course_section_user_log.try(:id),
         student_exam_track_id: @preview_mode ? nil : @student_exam_track.try(:id),
         course_module_element_id: @course_module_element.id,
@@ -277,7 +271,7 @@ class CoursesController < ApplicationController
         is_constructed_response: true,
         user_id: current_user.id
     )
-    @constructed_response_attempt = ConstructedResponseAttempt.create(
+    @constructed_response_attempt = ConstructedResponseAttempt.create!(
         constructed_response_id: @constructed_response.id,
         scenario_id: @constructed_response.scenario.id,
         course_module_element_id: @constructed_response.course_module_element_id,
@@ -291,7 +285,7 @@ class CoursesController < ApplicationController
 
     )
     @all_questions.each do |scenario_question|
-      scenario_question_attempt = ScenarioQuestionAttempt.create(
+      scenario_question_attempt = ScenarioQuestionAttempt.create!(
           constructed_response_attempt_id: @constructed_response_attempt.id,
           user_id: current_user.id,
           scenario_question_id: scenario_question.id,
@@ -306,7 +300,7 @@ class CoursesController < ApplicationController
 
         text_content = scenario_answer_template.spreadsheet_editor? ? scenario_answer_template.spreadsheet_editor_content : scenario_answer_template.text_editor_content
 
-        scenario_answer_attempt = ScenarioAnswerAttempt.create(
+        scenario_answer_attempt = ScenarioAnswerAttempt.create!(
             scenario_question_attempt_id: scenario_question_attempt.id,
             user_id: current_user.id,
             scenario_answer_template_id: scenario_answer_template.id,
