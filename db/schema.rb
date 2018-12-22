@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181217104745) do
+ActiveRecord::Schema.define(version: 20181220164615) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -685,7 +685,7 @@ ActiveRecord::Schema.define(version: 20181217104745) do
     t.string   "stripe_guid"
     t.string   "stripe_customer_id"
     t.boolean  "live_mode",                 default: false
-    t.string   "current_status"
+    t.string   "stripe_status"
     t.string   "coupon_code"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
@@ -693,6 +693,9 @@ ActiveRecord::Schema.define(version: 20181217104745) do
     t.integer  "mock_exam_id"
     t.boolean  "terms_and_conditions",      default: false
     t.string   "reference_guid"
+    t.string   "paypal_guid"
+    t.string   "paypal_status"
+    t.string   "state"
   end
 
   add_index "orders", ["product_id"], name: "index_orders_on_product_id", using: :btree
@@ -724,6 +727,7 @@ ActiveRecord::Schema.define(version: 20181217104745) do
     t.string   "stripe_sku_guid"
     t.integer  "subject_course_id"
     t.integer  "sorting_order"
+    t.integer  "product_type",      default: 0
   end
 
   add_index "products", ["mock_exam_id"], name: "index_products_on_mock_exam_id", using: :btree
@@ -1113,6 +1117,7 @@ ActiveRecord::Schema.define(version: 20181217104745) do
     t.string   "paypal_guid"
     t.string   "paypal_state"
     t.integer  "monthly_percentage_off"
+    t.float    "previous_plan_price"
   end
 
   add_index "subscription_plans", ["available_from"], name: "index_subscription_plans_on_available_from", using: :btree

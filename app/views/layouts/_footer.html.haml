@@ -5,11 +5,9 @@
         =link_to home_url do
           =image_tag('ls-logo-transparent.svg', class: 'logo')
 
-
         -unless current_user
           .lsbtn-base
             =link_to 'Become a member now', new_student_url, class: 'lsbtn pull-left'
-
 
       .col-md-9
         .col-md-3.col-sm-3.col-xs-6
@@ -33,7 +31,7 @@
             %li
               =link_to 'Lecturers', tutors_url
             %li
-              =link_to 'Mock Exams', media_library_url
+              =link_to 'Prep Products', prep_products_url
             %li
               =link_to 'FAQs', public_faqs_url
 

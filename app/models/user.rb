@@ -458,7 +458,7 @@ class User < ActiveRecord::Base
   def valid_order_ids
     order_ids = []
     self.orders.each do |order|
-      if %w(paid).include?(order.current_status)
+      if %w(paid).include?(order.stripe_status)
         order_ids << order.id
       end
     end

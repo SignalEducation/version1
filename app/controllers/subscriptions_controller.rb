@@ -48,6 +48,7 @@ class SubscriptionsController < ApplicationController
       end
 
       @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+      @yearly_subscription_plan = @subscription_plans.where(payment_frequency_in_months: 12).first
       if params[:prioritise_plan_frequency].present?
         @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id)
       else
@@ -124,7 +125,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def un_cancel_subscription
-    if @subscription && @subscription.current_status == 'canceled-pending'
+    if @subscription && @subscription.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
       if @subscription && @subscription.errors.count == 0

@@ -6,7 +6,7 @@
         %span.h3.m-0
           %span
             =subscription.subscription_plan.interval_name
-        - if subscription.subscription_plan.monthly_percentage_off.present?
+        - if subscription.subscription_plan.monthly_percentage_off.present? && subscription.subscription_plan.monthly_percentage_off > 0
           %span.discount
             %span.text-with-bg.bg-torquoise4
               ="#{subscription.subscription_plan.monthly_percentage_off}%"
@@ -29,7 +29,7 @@
             %span.h3.m-0
               %span
                 =plan.interval_name
-            - if plan.monthly_percentage_off.present?
+            - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
               %span.discount
                 %span.text-with-bg.bg-torquoise4
                   ="#{plan.monthly_percentage_off}%"
@@ -41,6 +41,18 @@
               ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
           %span.custom-check
             / custom checkbox
+
+#info-text
+  - if @yearly_subscription_plan && @yearly_subscription_plan.previous_plan_price.present? && @yearly_subscription_plan.previous_plan_price > 0
+    %p.mb-2.price
+      %span
+        25%
+      =' off original plan price'
+      %span
+        =@yearly_subscription_plan.currency.format_number(@yearly_subscription_plan.previous_plan_price)
+
+  %p.mb-2
+    Sort your ACCA Tuition for 2019.  Save money, pass quicker and embrace your future
 
 %a.btn.btn-text.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans'} Show all Plans
 
