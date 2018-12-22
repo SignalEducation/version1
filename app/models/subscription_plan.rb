@@ -20,6 +20,7 @@
 #  paypal_guid                   :string
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
+#  previous_plan_price           :float
 #
 
 class SubscriptionPlan < ActiveRecord::Base
