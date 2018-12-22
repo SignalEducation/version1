@@ -5,7 +5,6 @@
 #  id                                   :integer          not null, primary key
 #  user_id                              :integer
 #  latest_course_module_element_id      :integer
-#  exam_schedule_id                     :integer
 #  created_at                           :datetime
 #  updated_at                           :datetime
 #  session_guid                         :string
@@ -19,8 +18,8 @@
 #  count_of_videos_taken                :integer
 #  subject_course_user_log_id           :integer
 #  count_of_constructed_responses_taken :integer
-#  course_section_user_log_id           :integer
 #  course_section_id                    :integer
+#  course_section_user_log_id           :integer
 #
 
 #This should have been called CourseModuleUserLog
@@ -57,7 +56,7 @@ class StudentExamTrack < ActiveRecord::Base
   validates :subject_course_user_log_id, presence: true
 
   # callbacks
-  before_validation :create_course_section_user_log, unless: :subject_course_user_log_id
+  before_validation :create_course_section_user_log, unless: :course_section_user_log_id
   after_save :update_course_section_user_log
 
   # scopes
@@ -73,24 +72,13 @@ class StudentExamTrack < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def create_or_update_subject_course_user_log
-    if self.subject_course_user_log
-      #Update SCUL record
-      scul = self.subject_course_user_log
-      scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
-      scul.recalculate_completeness # Includes a save!
-    else
-      #Create SET and assign it id to this record
-      scul = SubjectCourseUserLog.new(user_id: self.user_id, subject_course_id: self.course_module.subject_course_id)
-      scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
-      saved_scul = scul.recalculate_completeness # Includes a save!
-      self.update_column(:subject_course_user_log_id, saved_scul.id)
-    end
 
+  def cme_user_logs
+    self.course_module_element_user_logs.with_elements_active
   end
 
   def completed_cme_user_logs
-    self.course_module_element_user_logs.with_elements_active.all_completed
+    cme_user_logs.all_completed
   end
 
   def destroyable?
@@ -117,22 +105,14 @@ class StudentExamTrack < ActiveRecord::Base
     self.subject_course_user_log.active_enrollment
   end
 
-  def calculate_completeness
-    self.count_of_cmes_completed = self.unique_logs.count
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    self.save!
-  end
-
   def worker_update_completeness
-    #This can only be called from the SubjectCourseUserLogWorker to ensure the parent SCUL is not updated
-    questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
-    questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
-    video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
-    unique_video_ids = video_ids.uniq
-    quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
-    unique_quiz_ids = quiz_ids.uniq
-    constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id)
-    unique_constructed_response_ids = constructed_response_ids.uniq
+    #Called from the SubjectCourseUserLogWorker resulting from course content changes
+    questions_taken = cme_user_logs.sum(:count_of_questions_taken)
+    questions_correct = cme_user_logs.sum(:count_of_questions_correct)
+
+    unique_video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id).uniq
+    unique_quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id).uniq
+    unique_constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id).uniq
     videos_taken = unique_video_ids.count
     quizzes_taken = unique_quiz_ids.count
     constructed_responses_taken = unique_constructed_response_ids.count
@@ -142,35 +122,18 @@ class StudentExamTrack < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    #This is the only way an SET can be created; and can only be called externally from CMEUL callback
-    self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
-    self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
-    video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
-    unique_video_ids = video_ids.uniq
-    quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
-    unique_quiz_ids = quiz_ids.uniq
-
-    constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id)
-    unique_constructed_response_ids = constructed_response_ids.uniq
-
+    #Called only from the CourseModuleElementUserLog after_save
+    self.count_of_questions_taken = cme_user_logs.sum(:count_of_questions_taken)
+    self.count_of_questions_correct = cme_user_logs.sum(:count_of_questions_correct)
+    unique_video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id).uniq
+    unique_quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id).uniq
+    unique_constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id).uniq
     self.count_of_videos_taken = unique_video_ids.count
     self.count_of_quizzes_taken = unique_quiz_ids.count
-
     self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
-
     self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count + unique_constructed_response_ids.count)
     self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
-
-    begin
-      self.save!
-
-    rescue Exception => e
-      puts "SQL error in #{ __method__ }"
-      ActiveRecord::Base.connection.execute 'ROLLBACK'
-
-      raise e
-    end
-    self
+    self.save!
   end
 
 
@@ -179,17 +142,18 @@ class StudentExamTrack < ActiveRecord::Base
   # Before Validation
   def create_course_section_user_log
     csul = CourseSectionUserLog.create!(user_id: self.user_id, course_section_id: self.course_section_id,
-                                        subject_course_id: self.course_module.subject_course_id)
-
+                                        subject_course_id: self.course_module.subject_course_id,
+                                        course_section_user_log_id: self.try(:course_section_user_log_id),
+                                        subject_course_user_log_id: self.try(:subject_course_user_log_id))
     self.course_section_user_log_id = csul.id
-    self.subject_course_user_log_id = csul.id
+    self.subject_course_user_log_id = csul.subject_course_user_log_id
   end
 
   # After Save
   def update_course_section_user_log
-    scul = self.subject_course_user_log
-    scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
-    scul.recalculate_completeness # Includes a save!
+    csul = self.course_section_user_log
+    csul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
+    csul.recalculate_completeness # Includes a save!
   end
 
 end

@@ -66,6 +66,10 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.subject_course.try(:cme_count) || 0
   end
 
+  def elements_total_for_completion
+    self.subject_course.course_sections.all_for_completion.sum(:cme_count)
+  end
+
   def active_enrollment
     self.enrollments.where(active: true).last
   end
@@ -91,19 +95,15 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def recalculate_completeness
-    # Temp fix replaced SET scope with_active_cmes with with_valid_course_module scope
-    self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
-    self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)
-    self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
-    self.count_of_constructed_responses_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed = self.student_exam_tracks.with_valid_course_module.sum(:count_of_cmes_completed)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    unless self.percentage_complete.nil?
-      self.completed = true if (self.percentage_complete > 99)
-    end
-    self.save
-    self
+    self.count_of_videos_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
+    self.count_of_constructed_responses_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed = self.course_section_user_logs.with_valid_course_section.sum(:count_of_cmes_completed)
+
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total_for_completion.to_f) * 100 if self.elements_total_for_completion > 0
+
+    self.completed = true if (self.percentage_complete > 99) unless self.percentage_complete.nil?
+    self.save!
   end
 
   def student_exam_track_course_module_ids

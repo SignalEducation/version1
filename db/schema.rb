@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181222100249) do
+ActiveRecord::Schema.define(version: 20181222132221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -359,9 +359,10 @@ ActiveRecord::Schema.define(version: 20181222100249) do
     t.integer  "count_of_cmes_completed"
     t.integer  "count_of_quizzes_taken"
     t.integer  "count_of_videos_taken"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "subject_course_id"
+    t.integer  "count_of_constructed_responses_taken"
   end
 
   add_index "course_section_user_logs", ["course_section_id"], name: "index_course_section_user_logs_on_course_section_id", using: :btree
@@ -971,7 +972,6 @@ ActiveRecord::Schema.define(version: 20181222100249) do
   create_table "student_exam_tracks", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "latest_course_module_element_id"
-    t.integer  "exam_schedule_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "session_guid"
@@ -989,7 +989,6 @@ ActiveRecord::Schema.define(version: 20181222100249) do
     t.integer  "course_section_user_log_id"
   end
 
-  add_index "student_exam_tracks", ["exam_schedule_id"], name: "index_student_exam_tracks_on_exam_schedule_id", using: :btree
   add_index "student_exam_tracks", ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id", using: :btree
   add_index "student_exam_tracks", ["user_id"], name: "index_student_exam_tracks_on_user_id", using: :btree
 

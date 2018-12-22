@@ -49,10 +49,13 @@ class CourseSection < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  before_save :set_count_fields, :sanitize_name_url
+  after_update :update_parent
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :subject_course_id) }
   scope :all_active, -> { where(active: true) }
+  scope :all_for_completion, -> { where(counts_towards_completion: true) }
 
   # class methods
 
@@ -104,24 +107,28 @@ class CourseSection < ActiveRecord::Base
   #######################################################################
 
   ## Keeping Model Count Attributes Up-to-Date ##
+  ### Triggered by Child Model ###
+  def recalculate_fields
+    # Temp change here - active_children to valid_children
+    # filter out the test boolean true records so as not to count these in the %_complete
 
-  ### Triggered by child CM after_save callback ###
-  def update_video_and_quiz_counts
-    quiz_count = self.active_children.quiz_count
-    video_count = self.active_children.video_count
-    self.update_attributes(quiz_count: quiz_count, video_count: video_count, cme_count: quiz_count + video_count)
+    cme_count = self.active_children.sum(:cme_count)
+    quiz_count = self.active_children.sum(:quiz_count)
+    video_count = self.active_children.sum(:video_count)
+
+    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, video_count: video_count)
   end
+
 
 
   ########################################################################
 
   protected
 
-  #TODO - is this needed???
   def set_count_fields
-    self.quiz_count = self.active_children.quiz_count
-    self.video_count = self.active_children.video_count
-    self.cme_count = children_available_count
+    self.cme_count = self.active_children.sum(:cme_count)
+    self.quiz_count = self.active_children.sum(:quiz_count)
+    self.video_count = self.active_children.sum(:video_count)
   end
 
   def update_parent

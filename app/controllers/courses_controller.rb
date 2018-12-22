@@ -5,18 +5,10 @@ class CoursesController < ApplicationController
   before_action :check_permission, only: [:show, :show_constructed_response]
 
   def show
-    if current_user.subject_course_user_logs.any?
-      @subject_course_user_log = current_user.subject_course_user_logs.all_active.for_subject_course(@course.id).last
-      if @subject_course_user_log
-        @course_section_user_log = @subject_course_user_log.course_sections.where(course_section_id: @course_section.id).last
-        @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last
+    @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
+    @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
+    @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
 
-      else
-
-      end
-    else
-
-    end
 
     if @course_module_element.is_quiz
       set_up_quiz
@@ -171,6 +163,7 @@ class CoursesController < ApplicationController
             :student_exam_track_id,
             :subject_course_user_log_id,
             :course_section_id,
+            :course_section_user_log_id,
             :course_module_id,
             :course_module_element_id,
             :user_id,
@@ -224,12 +217,13 @@ class CoursesController < ApplicationController
     #Creates QUIZ log when page renders but does not save log, data is sent as params to create method where a new CMEUL is initiated and saved
     @course_module_element_user_log = CourseModuleElementUserLog.new(
             session_guid: current_session_guid,
+            course_module_element_id: @course_module_element.id,
             course_module_id: @course_module_element.course_module_id,
             course_section_id: @course_module_element.course_module.course_section_id,
             subject_course_id: @course_module_element.course_module.subject_course_id,
             subject_course_user_log_id: @subject_course_user_log.try(:id),
+            course_section_user_log_id: @course_section_user_log.try(:id),
             student_exam_track_id: @student_exam_track.try(:id),
-            course_module_element_id: @course_module_element.id,
             is_quiz: true,
             is_video: false,
             user_id: current_user.try(:id))
@@ -274,6 +268,7 @@ class CoursesController < ApplicationController
         course_section_id: @course_module_element.course_module.course_section_id,
         subject_course_id: @course_module_element.course_module.subject_course_id,
         subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.id,
+        course_section_user_log_id: @preview_mode ? nil : @course_section_user_log.try(:id),
         student_exam_track_id: @preview_mode ? nil : @student_exam_track.try(:id),
         course_module_element_id: @course_module_element.id,
         time_taken_in_seconds: @course_module_element.estimated_time_in_seconds,

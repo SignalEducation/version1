@@ -5,7 +5,6 @@
 #  id                                   :integer          not null, primary key
 #  user_id                              :integer
 #  latest_course_module_element_id      :integer
-#  exam_schedule_id                     :integer
 #  created_at                           :datetime
 #  updated_at                           :datetime
 #  session_guid                         :string
@@ -19,8 +18,8 @@
 #  count_of_videos_taken                :integer
 #  subject_course_user_log_id           :integer
 #  count_of_constructed_responses_taken :integer
-#  course_section_user_log_id           :integer
 #  course_section_id                    :integer
+#  course_section_user_log_id           :integer
 #
 
 require 'rails_helper'
