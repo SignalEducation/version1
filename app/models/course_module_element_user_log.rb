@@ -49,37 +49,26 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-
   belongs_to :subject_course
   belongs_to :subject_course_user_log
-
   belongs_to :course_section
   belongs_to :course_section_user_log
-
   belongs_to :course_module
   belongs_to :student_exam_track
-
   belongs_to :course_module_element
-
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
-
   has_one   :constructed_response_attempt
-
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt
 
 
   # validation
   validates :user_id, presence: true
-
   validates :subject_course_id, presence: true
   validates :subject_course_user_log_id, presence: true
-
   validates :course_section_id, presence: true
   validates :course_section_user_log_id, presence: true
-
   validates :course_module_id, presence: true
   validates :student_exam_track_id, presence: true
-
   validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
   validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
 
@@ -175,10 +164,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # Before Validation
   def create_student_exam_track
-    set = StudentExamTrack.new(user_id: self.user_id, course_module_id: self.course_module_id, subject_course_id: self.course_module.subject_course_id)
-    set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    set.save!
+    set = StudentExamTrack.create!(user_id: self.user_id, course_module_id: self.course_module_id,
+                                   course_section_id: self.course_section_id,
+                                   subject_course_id: self.course_section.subject_course_id)
     self.student_exam_track_id = set.id
+    self.course_section_user_log_id = set.course_section_user_log_id
+    self.subject_course_user_log_id = set.subject_course_user_log_id
   end
 
   # Before Create

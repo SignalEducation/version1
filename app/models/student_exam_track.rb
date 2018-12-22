@@ -39,21 +39,17 @@ class StudentExamTrack < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-
   belongs_to :subject_course
   belongs_to :subject_course_user_log
-
   belongs_to :course_section
   belongs_to :course_section_user_log
-
   belongs_to :course_module
-
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id
-
   has_many :course_module_element_user_logs
 
   # validation
+  validates :user_id, presence: true
   validates :subject_course_id, presence: true
   validates :course_module_id, presence: true
   validates :course_section_user_log_id, presence: true
@@ -61,9 +57,8 @@ class StudentExamTrack < ActiveRecord::Base
   validates :subject_course_user_log_id, presence: true
 
   # callbacks
-  before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
-  #TODO - create_or_update_course_section_user_log
-  after_save :update_subject_course_user_log
+  before_validation :create_course_section_user_log, unless: :subject_course_user_log_id
+  after_save :update_course_section_user_log
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -182,16 +177,16 @@ class StudentExamTrack < ActiveRecord::Base
   protected
 
   # Before Validation
-  def create_subject_course_user_log
-    scul = SubjectCourseUserLog.new(user_id: self.user_id, course_module_id: self.course_module_id,
-                                    subject_course_id: self.course_module.subject_course_id)
-    scul.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    scul.save!
-    self.subject_course_user_log_id = scul.id
+  def create_course_section_user_log
+    csul = CourseSectionUserLog.create!(user_id: self.user_id, course_section_id: self.course_section_id,
+                                        subject_course_id: self.course_module.subject_course_id)
+
+    self.course_section_user_log_id = csul.id
+    self.subject_course_user_log_id = csul.id
   end
 
   # After Save
-  def update_subject_course_user_log
+  def update_course_section_user_log
     scul = self.subject_course_user_log
     scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
     scul.recalculate_completeness # Includes a save!

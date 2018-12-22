@@ -39,11 +39,9 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :session_guid, allow_nil: true, length: { maximum: 255 }
+  validates :user_id, presence: true
+  validates :subject_course_id, presence: true
+  validates :percentage_complete, presence: true
 
   # callbacks
   before_destroy :check_dependencies

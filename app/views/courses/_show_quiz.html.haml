@@ -16,9 +16,11 @@
 
       =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
         =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
+        =f.hidden_field :course_section_user_log_id, value: @course_section_user_log.try(:id)
         =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
         =f.text_field :user_id
         =f.text_field :course_module_id
+        =f.text_field :course_section_id
         =f.text_field :course_module_element_id
         =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
         =f.fields_for :quiz_attempts do |attempt|

@@ -30,15 +30,11 @@ class CourseSectionUserLog < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-
   belongs_to :subject_course
   belongs_to :subject_course_user_log
-
   belongs_to :course_section
-
   belongs_to :latest_course_module_element, class_name: 'StudentExamTrack',
              foreign_key: :latest_course_module_element_id
-
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
 
@@ -46,11 +42,6 @@ class CourseSectionUserLog < ActiveRecord::Base
   validates :user_id, presence: true
   validates :course_section_id, presence: true
   validates :subject_course_user_log_id, presence: true
-  validates :latest_course_module_element_id, presence: true
-  validates :percentage_complete, presence: true
-  validates :count_of_cmes_completed, presence: true
-  validates :count_of_quizzes_taken, presence: true
-  validates :count_of_videos_taken, presence: true
 
   # callbacks
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
@@ -75,10 +66,7 @@ class CourseSectionUserLog < ActiveRecord::Base
   protected
 
   def create_subject_course_user_log
-    scul = SubjectCourseUserLog.new(user_id: self.user_id, course_module_id: self.course_module_id,
-                                    subject_course_id: self.course_module.subject_course_id)
-    scul.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    scul.save!
+    scul = SubjectCourseUserLog.create!(user_id: self.user_id, subject_course_id: self.subject_course_id)
     self.subject_course_user_log_id = scul.id
   end
 

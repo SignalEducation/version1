@@ -170,6 +170,7 @@ class CoursesController < ApplicationController
             :subject_course_id,
             :student_exam_track_id,
             :subject_course_user_log_id,
+            :course_section_id,
             :course_module_id,
             :course_module_element_id,
             :user_id,
@@ -224,6 +225,7 @@ class CoursesController < ApplicationController
     @course_module_element_user_log = CourseModuleElementUserLog.new(
             session_guid: current_session_guid,
             course_module_id: @course_module_element.course_module_id,
+            course_section_id: @course_module_element.course_module.course_section_id,
             subject_course_id: @course_module_element.course_module.subject_course_id,
             subject_course_user_log_id: @subject_course_user_log.try(:id),
             student_exam_track_id: @student_exam_track.try(:id),
@@ -269,6 +271,7 @@ class CoursesController < ApplicationController
         preview_mode: @preview_mode,
         session_guid: current_session_guid,
         course_module_id: @course_module_element.course_module_id,
+        course_section_id: @course_module_element.course_module.course_section_id,
         subject_course_id: @course_module_element.course_module.subject_course_id,
         subject_course_user_log_id: @preview_mode ? nil : @subject_course_user_log.id,
         student_exam_track_id: @preview_mode ? nil : @student_exam_track.try(:id),

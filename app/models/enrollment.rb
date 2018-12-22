@@ -36,16 +36,10 @@ class Enrollment < ActiveRecord::Base
   belongs_to :subject_course_user_log
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :exam_sitting_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :exam_body_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
+  validates :subject_course_id, presence: true
+  validates :subject_course_user_log_id, presence: true
+  validates :exam_body_id, presence: true
   validates :exam_date, allow_nil: true, inclusion:
       {in: Date.today..Date.today + 2.years, message: "%{value} is not a valid date" }
 
