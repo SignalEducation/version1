@@ -36,7 +36,7 @@ class LibraryController < ApplicationController
       mock_exam_ids = @course.mock_exams.map(&:id)
       @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
       @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
-
+      @form_type = "Course Tutor Question. Course: #{@course.name}"
 
 
       if current_user
@@ -48,20 +48,37 @@ class LibraryController < ApplicationController
 
         if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
           @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).first
-
           @latest_element_id = @subject_course_user_log.latest_course_module_element_id
           #TODO - @next_element can be a CME, CM or CS
           @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
-
           @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
           @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
           @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
           @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
-          @form_type = "Course Tutor Question. Course: #{@course.name}"
 
-        else
+          @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
+
+          #TODO - add in if valid enrollment or expired/inactive enrollment
+          unless current_user.enrollments.for_subject_course(@course.id).any?
+
+            if @course.computer_based
+              @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true,
+                                                         exam_body_id: @course.exam_body_id,
+                                                         subject_course_id: @course.id).all_in_order.first #Should only be one
+            else
+              @exam_sittings = ExamSitting.where(active: true, computer_based: false,
+                                                 subject_course_id: @course.id,
+                                                 exam_body_id: @course.exam_body_id).all_in_order
+            end
+
+            @new_enrollment = Enrollment.new(subject_course_user_log_id: @subject_course_user_log.id,
+                                             subject_course_id: @course.id, exam_body_id: @course.exam_body_id)
+
+          end
 
         end
+
+
       end
 
     elsif @course && @course.active && @course.preview

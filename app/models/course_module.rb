@@ -187,19 +187,19 @@ class CourseModule < ActiveRecord::Base
     set.try(:percentage_complete) || 0
   end
 
-  def completed_for_enrollment(enrollment_id)
-    self.percentage_complete_for_enrollment(enrollment_id) >= 100
+  def completed_for_scul(scul_id)
+    self.percentage_complete_for_scul(scul_id) >= 100
   end
 
-  def percentage_complete_for_enrollment(enrollment_id)
-    enrollment = Enrollment.where(id: enrollment_id).first
-    if enrollment
+  def percentage_complete_for_scul(scul_id)
+    scul = SubjectCourseUserLog.where(id: scul_id).first
+    if scul
       #TODO - investigate why two SET records exist
       # Created At - [Thu, 11 Oct 2018 18:07:25 IST +01:00, Thu, 11 Oct 2018 18:05:52 IST +01:00]
-      set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).all_in_order.first
-      set.try(:percentage_complete) || 0
+      set = scul.student_exam_tracks.where(course_module_id: self.id).all_in_order.first
+      set.try(:percentage_complete) || 0.0
     else
-      0
+      0.0
     end
   end
 

@@ -25,30 +25,20 @@ class EnrollmentsController < ApplicationController
   before_action :get_variables
 
   def create
-    @course = SubjectCourse.where(id: params[:enrollment][:subject_course_id]).first
+    @enrollment = Enrollment.new(allowed_params)
 
-    if @course
-      @enrollment = Enrollment.new(allowed_params)
-
-      @enrollment.user_id = current_user.id
-      @enrollment.exam_body_id = @course.exam_body.id
-      @enrollment.computer_based_exam = true if @enrollment.exam_date && @course.computer_based
-      @enrollment.active = true
-
-      #If scul_id is not sent in as param then make a new one, or if this is first enrollment find old one
-      @enrollment.subject_course_user_log_id = find_or_create_scul(@course.id) unless @enrollment.subject_course_user_log_id
+    @enrollment.computer_based_exam = true if @enrollment.exam_date && @enrollment.subject_course.computer_based
+    @enrollment.user_id = current_user.id
+    @enrollment.active = true
 
 
-      if @enrollment.save
-        redirect_to library_special_link(@course)
-        flash[:success] = t('controllers.enrollments.create.flash.success')
-      else
-        flash[:error] = t('controllers.enrollments.create.flash.error')
-        redirect_to library_special_link(@course)
-      end
+    if @enrollment.save
+      #TODO - go to first CME (make next_element_id default to first CME id)
+      redirect_to library_special_link(@enrollment.subject_course)
+      flash[:success] = t('controllers.enrollments.create.flash.success')
     else
       flash[:error] = t('controllers.enrollments.create.flash.error')
-      redirect_to library_url
+      redirect_to library_special_link(@enrollment.subject_course)
     end
   end
 
@@ -57,7 +47,8 @@ class EnrollmentsController < ApplicationController
     @subject_course = @enrollment.subject_course
     @exam_body = @subject_course.exam_body if @subject_course
 
-    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: @subject_course.id, exam_body_id: @subject_course.exam_body_id).all_in_order
+    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: @subject_course.id,
+                                       exam_body_id: @subject_course.exam_body_id).all_in_order
 
 
   end
@@ -84,27 +75,9 @@ class EnrollmentsController < ApplicationController
     MandrillWorker.perform_at(5.minute.from_now, user_id, 'send_enrollment_welcome_email', course_name, account_url)
   end
 
-  #Only find and attach a SCUL if it's the first Enrollment
-  def find_or_create_scul(course_id)
-    #Users second+ Enrollment - so wants a new scul
-    if current_user.enrolled_course_ids.include?(course_id)
-      scul = SubjectCourseUserLog.create!(user_id: current_user.id, session_guid: current_session_guid, subject_course_id: course_id)
-    else
-      #Users first Enrollment for this course - so find or create new scul
-      scul = current_user.subject_course_user_logs.where(subject_course_id: course_id).last
-      if scul
-        scul
-      else
-        scul = SubjectCourseUserLog.create!(user_id: current_user.id, session_guid: current_session_guid, subject_course_id: course_id)
-      end
-    end
-    # Must return Id of a SCUL
-    scul.id
-  end
-
   def allowed_params
     params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id,
-                                       :exam_sitting_id, :percentage_complete)
+                                       :exam_sitting_id, :percentage_complete, :exam_body_id)
   end
 
   def get_variables

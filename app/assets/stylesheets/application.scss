@@ -1298,6 +1298,7 @@ a.link-purple {
     }
     &:hover, &:active {
       text-decoration: none;
+      cursor: pointer;
       @include box-shadow(0, 0, 12px, rgba(#000, .25));
     }
   }
@@ -1311,6 +1312,12 @@ a.link-purple {
     }
     &.profile-pic-small {
       max-width: 80px;
+    }
+    img {
+      @include border-radius(100%);
+      &:hover, &:active {
+        @include box-shadow(0, 0, 12px, rgba(#000, .25));
+      }
     }
   }
 }

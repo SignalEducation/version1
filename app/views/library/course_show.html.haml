@@ -9,26 +9,38 @@
                 .fa.fa-arrow-left
                 =@course.parent.name
 
+        .col-sm-3.col-xs-12.pull-right
+          .l-margin-bottom
+            -if @course.exam_body && @course.exam_sittings && @subject_course_user_log && !@enrollment
+              %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width', id: 'enrol-now-button'}
+                Enrol Now
+
 
       =render partial: 'layouts/account_notice'
       %h1.h1.h-separator.h-separator-left
         =@course.name
 
-      =#render partial: 'course_info'
+      -if @subject_course_user_log && !@enrollment
+        =render partial: 'course_enrollment_modal'
 
-      .enrollment-info.hidden-xs
-        .card.card-library
-          .card-library-outer
-            .card-inner
-              .col-sm-8.col-xs-12
-                .card-info
-                  -total_lesson = @subject_course_user_log.subject_course.cme_count
-                  -complete_lesson = @subject_course_user_log.try(:count_of_cmes_completed) || 0
-                  -complete_percent = @subject_course_user_log.try(:percentage_complete)
-                  %p
-                    ="#{complete_lesson} out of #{total_lesson} steps completed"
-                  .progress
-                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+      -unless @subject_course_user_log
+        =render partial: 'course_info'
+
+
+      -if @subject_course_user_log
+        .enrollment-info.hidden-xs
+          .card.card-library
+            .card-library-outer
+              .card-inner
+                .col-sm-8.col-xs-12
+                  .card-info
+                    -total_lesson = @subject_course_user_log.subject_course.cme_count
+                    -complete_lesson = @subject_course_user_log.try(:count_of_cmes_completed) || 0
+                    -complete_percent = @subject_course_user_log.try(:percentage_complete)
+                    %p
+                      ="#{complete_lesson} out of #{total_lesson} steps completed"
+                    .progress
+                      .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
       .l-margin-top-big.l-margin-bottom-huge{role: 'tablist'}
         .signal-tabs
@@ -58,7 +70,7 @@
                             .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{course_section.name_url}_#{counter}"}}
                               .col-xs-1.col-sm-1
                                 .left-side-meta
-                                  =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                                  =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
                               .col-xs-9.xs-padding
                                 .box-topic-item
                                   =truncate(child.name, length: 50)
@@ -75,7 +87,7 @@
                               .col-xs-1.col-sm-1
                                 .left-side-meta
                                   .img-responsive
-                                    =image_tag(child.completed_for_enrollment(@active_enrollment.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                                    =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
                               .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
                                 .box-topic-item
                                   =truncate(child.name, length: 50)

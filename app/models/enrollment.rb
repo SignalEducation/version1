@@ -46,6 +46,7 @@ class Enrollment < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
+  before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
   after_create :create_expiration_worker
   after_update :create_expiration_worker, if: :exam_date_changed?
 
@@ -60,6 +61,8 @@ class Enrollment < ActiveRecord::Base
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_not_active, -> { includes(:subject_course).where(active: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
+  scope :for_course_and_user, lambda { |course_id, user_id| where(subject_course_id: course_id, user_id: user_id) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :by_sitting, lambda { |sitting_id| where(exam_sitting_id: sitting_id) }
 
@@ -188,6 +191,13 @@ class Enrollment < ActiveRecord::Base
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
     end
+  end
+
+  def create_subject_course_user_log
+    subject_course_user_log = SubjectCourseUserLog.create!(user_id: self.user_id,
+                                                           session_guid: self.user.try(:session_guid),
+                                                           subject_course_id: self.subject_course_id)
+    self.subject_course_user_log_id = subject_course_user_log.id
   end
 
   def create_expiration_worker
