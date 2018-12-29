@@ -19,7 +19,7 @@
                 =label_tag :email, t('views.user_passwords.new.email')
                 %br/
                 %div#validation-div
-                  =email_field_tag :email_address, nil, placeholder: t('views.user_passwords.new.email_placeholder'), class: 'form-control', id: '#email-field', required: true
+                  =email_field_tag :email_address, nil, placeholder: t('views.user_passwords.new.email_placeholder'), class: 'form-control', id: '#email-field'
               .col-sm-12.l-margin-top-big
                 =submit_tag t('views.user_passwords.new.submit'), class: 'btn btn-red full-width', id: 'btn-send-password'
 

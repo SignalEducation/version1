@@ -8,16 +8,16 @@
       =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
       .col-sm-6
         .form-group
-          =f.text_field :first_name, placeholder: t('views.users.form.your_first_name'), class: 'form-control', required: true
+          =f.text_field :first_name, placeholder: t('views.users.form.your_first_name'), class: 'form-control'
       .col-sm-6
         .form-group
-          =f.text_field :last_name, placeholder: t('views.users.form.your_last_name'), class: 'form-control', required: true
+          =f.text_field :last_name, placeholder: t('views.users.form.your_last_name'), class: 'form-control'
       .col-sm-6
         .form-group
-          =f.email_field :email, placeholder: t('views.users.form.your_email'), class: 'form-control', required: true
+          =f.email_field :email, placeholder: t('views.users.form.your_email'), class: 'form-control'
       .col-sm-6
         .form-group
-          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', required: true
+          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control'
 
       .col-sm-6
         .form-group.l-margin-top
