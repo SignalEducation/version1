@@ -2,20 +2,21 @@
 #
 # Table name: course_sections
 #
-#  id                        :integer          not null, primary key
-#  subject_course_id         :integer
-#  name                      :string
-#  name_url                  :string
-#  sorting_order             :integer
-#  active                    :boolean          default(FALSE)
-#  counts_towards_completion :boolean          default(FALSE)
-#  assumed_knowledge         :boolean          default(FALSE)
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  cme_count                 :integer          default(0)
-#  video_count               :integer          default(0)
-#  quiz_count                :integer          default(0)
-#  destroyed_at              :datetime
+#  id                         :integer          not null, primary key
+#  subject_course_id          :integer
+#  name                       :string
+#  name_url                   :string
+#  sorting_order              :integer
+#  active                     :boolean          default(FALSE)
+#  counts_towards_completion  :boolean          default(FALSE)
+#  assumed_knowledge          :boolean          default(FALSE)
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  cme_count                  :integer          default(0)
+#  video_count                :integer          default(0)
+#  quiz_count                 :integer          default(0)
+#  destroyed_at               :datetime
+#  constructed_response_count :integer          default(0)
 #
 
 class CourseSection < ActiveRecord::Base
@@ -26,7 +27,8 @@ class CourseSection < ActiveRecord::Base
   # attr-accessible
   attr_accessible :subject_course_id, :name, :name_url, :sorting_order, :active,
                   :counts_towards_completion, :assumed_knowledge, :cme_count,
-                  :video_count, :quiz_count, :_destroy, :course_modules_attributes
+                  :video_count, :quiz_count, :_destroy, :course_modules_attributes,
+                  :constructed_response_count
 
   # Constants
 
@@ -115,8 +117,10 @@ class CourseSection < ActiveRecord::Base
     cme_count = self.active_children.sum(:cme_count)
     quiz_count = self.active_children.sum(:quiz_count)
     video_count = self.active_children.sum(:video_count)
+    cr_count = self.active_children.sum(:constructed_response_count)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, video_count: video_count)
+    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count,
+                           video_count: video_count, constructed_response_count: cr_count)
   end
 
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181222132221) do
+ActiveRecord::Schema.define(version: 20181229092245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -328,23 +328,24 @@ ActiveRecord::Schema.define(version: 20181222132221) do
     t.text     "description"
     t.integer  "sorting_order"
     t.integer  "estimated_time_in_seconds"
-    t.boolean  "active",                    default: false, null: false
+    t.boolean  "active",                     default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "cme_count",                 default: 0
+    t.integer  "cme_count",                  default: 0
     t.string   "seo_description"
-    t.boolean  "seo_no_index",              default: false
+    t.boolean  "seo_no_index",               default: false
     t.datetime "destroyed_at"
-    t.integer  "number_of_questions",       default: 0
+    t.integer  "number_of_questions",        default: 0
     t.integer  "subject_course_id"
-    t.float    "video_duration",            default: 0.0
-    t.integer  "video_count",               default: 0
-    t.integer  "quiz_count",                default: 0
+    t.float    "video_duration",             default: 0.0
+    t.integer  "video_count",                default: 0
+    t.integer  "quiz_count",                 default: 0
     t.string   "highlight_colour"
-    t.boolean  "tuition",                   default: false
-    t.boolean  "test",                      default: false
-    t.boolean  "revision",                  default: false
+    t.boolean  "tuition",                    default: false
+    t.boolean  "test",                       default: false
+    t.boolean  "revision",                   default: false
     t.integer  "course_section_id"
+    t.integer  "constructed_response_count", default: 0
   end
 
   add_index "course_modules", ["name_url"], name: "index_course_modules_on_name_url", using: :btree
@@ -374,15 +375,16 @@ ActiveRecord::Schema.define(version: 20181222132221) do
     t.string   "name"
     t.string   "name_url"
     t.integer  "sorting_order"
-    t.boolean  "active",                    default: false
-    t.boolean  "counts_towards_completion", default: false
-    t.boolean  "assumed_knowledge",         default: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.integer  "cme_count",                 default: 0
-    t.integer  "video_count",               default: 0
-    t.integer  "quiz_count",                default: 0
+    t.boolean  "active",                     default: false
+    t.boolean  "counts_towards_completion",  default: false
+    t.boolean  "assumed_knowledge",          default: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.integer  "cme_count",                  default: 0
+    t.integer  "video_count",                default: 0
+    t.integer  "quiz_count",                 default: 0
     t.datetime "destroyed_at"
+    t.integer  "constructed_response_count", default: 0
   end
 
   add_index "course_sections", ["name"], name: "index_course_sections_on_name", using: :btree
@@ -1067,6 +1069,7 @@ ActiveRecord::Schema.define(version: 20181222132221) do
     t.string   "highlight_colour",                        default: "#ef475d"
     t.string   "category_label"
     t.string   "additional_text_label"
+    t.integer  "constructed_response_count",              default: 0
   end
 
   add_index "subject_courses", ["name"], name: "index_subject_courses_on_name", using: :btree

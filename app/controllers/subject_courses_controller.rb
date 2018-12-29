@@ -36,6 +36,7 @@
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
 #  additional_text_label                   :string
+#  constructed_response_count              :integer          default(0)
 #
 
 class SubjectCoursesController < ApplicationController

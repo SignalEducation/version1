@@ -16,6 +16,20 @@
 
       =#render partial: 'course_info'
 
+      .enrollment-info.hidden-xs
+        .card.card-library
+          .card-library-outer
+            .card-inner
+              .col-sm-8.col-xs-12
+                .card-info
+                  -total_lesson = @subject_course_user_log.subject_course.cme_count
+                  -complete_lesson = @subject_course_user_log.try(:count_of_cmes_completed) || 0
+                  -complete_percent = @subject_course_user_log.try(:percentage_complete)
+                  %p
+                    ="#{complete_lesson} out of #{total_lesson} steps completed"
+                  .progress
+                    .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+
       .l-margin-top-big.l-margin-bottom-huge{role: 'tablist'}
         .signal-tabs
           -@course.course_sections.all_active.all_in_order.each do |course_section|

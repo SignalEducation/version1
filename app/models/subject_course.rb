@@ -36,6 +36,7 @@
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
 #  additional_text_label                   :string
+#  constructed_response_count              :integer          default(0)
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -52,7 +53,7 @@ class SubjectCourse < ActiveRecord::Base
                   :group_id, :quiz_pass_rate,
                   :background_image, :preview, :computer_based, :highlight_colour,
                   :category_label, :additional_text_label, :course_sections_attributes,
-                  :subject_course_resources_attributes
+                  :subject_course_resources_attributes, :constructed_response_count
 
   # Constants
 
@@ -150,8 +151,6 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def valid_children
-    # Temp addition here - filter out the test boolean true records
-    # so as not to count these in the %_complete
     self.children.all_active.all_in_order
   end
 
@@ -184,14 +183,14 @@ class SubjectCourse < ActiveRecord::Base
 
   ### Triggered by Child Model ###
   def recalculate_fields
-    # Temp change here - active_children to valid_children
-    # filter out the test boolean true records so as not to count these in the %_complete
 
-    cme_count = self.valid_children.sum(:cme_count)
-    quiz_count = self.valid_children.sum(:quiz_count)
-    video_count = self.valid_children.sum(:video_count)
+    cme_count = self.valid_children.all_for_completion.sum(:cme_count)
+    quiz_count = self.valid_children.all_for_completion.sum(:quiz_count)
+    video_count = self.valid_children.all_for_completion.sum(:video_count)
+    cr_count = self.valid_children.all_for_completion.sum(:constructed_response_count)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, video_count: video_count)
+    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count,
+                           video_count: video_count, constructed_response_count: cr_count)
   end
 
   ### Callback before_save ###
@@ -199,9 +198,10 @@ class SubjectCourse < ActiveRecord::Base
     # Temp change here - active_children to valid_children
     # filter out the test boolean true records so as not to count these in the %_complete
 
-    self.cme_count = self.valid_children.sum(:cme_count)
-    self.quiz_count = self.valid_children.sum(:quiz_count)
-    self.video_count = self.valid_children.sum(:video_count)
+    self.cme_count = self.valid_children.all_for_completion.sum(:cme_count)
+    self.quiz_count = self.valid_children.all_for_completion.sum(:quiz_count)
+    self.video_count = self.valid_children.all_for_completion.sum(:video_count)
+    self.constructed_response_count = self.valid_children.all_for_completion.sum(:constructed_response_count)
   end
 
 
