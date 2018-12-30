@@ -11,18 +11,16 @@
 
         .col-sm-3.col-xs-12.pull-right
           .l-margin-bottom
-            -if @course.exam_body && @course.exam_sittings && @subject_course_user_log && !@enrollment
+            -if @course.exam_body && @course.exam_sittings && (!@enrollment || @enrollment.expired) && (@computer_exam_sitting || @exam_sittings)
               %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width', id: 'enrol-now-button'}
                 Enrol Now
+              =render partial: 'course_enrollment_modal'
+
 
 
       =render partial: 'layouts/account_notice'
       %h1.h1.h-separator.h-separator-left
         =@course.name
-
-      -if @subject_course_user_log && !@enrollment
-        =render partial: 'course_enrollment_modal'
-
       -unless @subject_course_user_log
         =render partial: 'course_info'
 
@@ -120,3 +118,20 @@
 
 
 =render partial: 'shared/activate_tab'
+
+-if current_user && current_user.subscription_user?
+
+  -if @course.exam_body && (!@enrollment || @enrollment.expired) && (@computer_exam_sitting || @exam_sittings)
+    :javascript
+      $(document).ready(function() {
+        var inst = $('[data-remodal-id=enrollment-modal]').remodal();
+        inst.open();
+      });
+
+  -unless current_user.student_number || current_user.date_of_birth
+    :javascript
+      $(document).ready(function() {
+        var inst = $('[data-remodal-id=user-exam-body-modal]').remodal();
+        inst.open();
+      });
+

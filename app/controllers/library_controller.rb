@@ -47,9 +47,11 @@ class LibraryController < ApplicationController
         end
 
         if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
-          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).first
+          #TODO - need to ensure correct SCUL is found under all conditions
+          # including expired enrollments, active enrollments, no enrollments
+          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
           @latest_element_id = @subject_course_user_log.latest_course_module_element_id
-          #TODO - @next_element can be a CME, CM or CS
+          #TODO - @next_element can be a CME, CM or CS OR is first CME in course
           @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
           @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
           @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
@@ -58,26 +60,13 @@ class LibraryController < ApplicationController
 
           @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
 
-          #TODO - add in if valid enrollment or expired/inactive enrollment
-          unless current_user.enrollments.for_subject_course(@course.id).any?
-
-            if @course.computer_based
-              @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true,
-                                                         exam_body_id: @course.exam_body_id,
-                                                         subject_course_id: @course.id).all_in_order.first #Should only be one
-            else
-              @exam_sittings = ExamSitting.where(active: true, computer_based: false,
-                                                 subject_course_id: @course.id,
-                                                 exam_body_id: @course.exam_body_id).all_in_order
-            end
-
-            @new_enrollment = Enrollment.new(subject_course_user_log_id: @subject_course_user_log.id,
-                                             subject_course_id: @course.id, exam_body_id: @course.exam_body_id)
-
+          if @enrollment.expired || !@enrollment
+            get_enrollment_form_variables(@course, @subject_course_user_log)
           end
 
+        else
+          get_enrollment_form_variables(@course, nil)
         end
-
 
       end
 
@@ -115,6 +104,21 @@ class LibraryController < ApplicationController
                                               params[:question], params[:type])
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to request.referrer
+  end
+
+  def get_enrollment_form_variables(course, scul=nil)
+    if course.computer_based
+      @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true,
+                                                 exam_body_id: course.exam_body_id,
+                                                 subject_course_id: course.id).all_in_order.first #Should only be one
+    else
+      @exam_sittings = ExamSitting.where(active: true, computer_based: false,
+                                         subject_course_id: course.id,
+                                         exam_body_id: course.exam_body_id).all_in_order
+    end
+
+    @new_enrollment = Enrollment.new(subject_course_user_log_id: scul.try(:id),
+                                     subject_course_id: course.id, exam_body_id: course.exam_body_id)
   end
 
 end

@@ -23,7 +23,7 @@ class Enrollment < ActiveRecord::Base
 
   # attr-accessible
   attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id,
-                  :active, :exam_body_id, :exam_date, :updated_at,
+                  :active, :exam_body_id, :exam_date, :updated_at, :expired,
                   :exam_sitting_id, :computer_based_exam, :percentage_complete
 
   # Constants
@@ -47,7 +47,7 @@ class Enrollment < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
-  after_create :create_expiration_worker
+  after_create :create_expiration_worker, :deactivate_siblings
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -60,6 +60,9 @@ class Enrollment < ActiveRecord::Base
   scope :all_in_recent_order, -> { order(:updated_at).reverse }
   scope :all_active, -> { includes(:subject_course).where(active: true) }
   scope :all_not_active, -> { includes(:subject_course).where(active: false) }
+  scope :all_expired, -> { where(expired: true) }
+  scope :all_valid, -> { where(active: true, expired: false) }
+  scope :all_not_expired, -> { where(expired: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :for_course_and_user, lambda { |course_id, user_id| where(subject_course_id: course_id, user_id: user_id) }
@@ -94,6 +97,10 @@ class Enrollment < ActiveRecord::Base
   # instance methods
   def destroyable?
     false # Can never be destroyed because the CSV data files will not be accurate
+  end
+
+  def valid_enrollment?
+    self.active && !self.expired
   end
 
   def enrollment_date
@@ -159,11 +166,7 @@ class Enrollment < ActiveRecord::Base
   end
 
   def status
-    self.active ? 'Active' : 'In-Active'
-  end
-
-  def type
-    self.computer_based_exam ? 'Computer Based' : 'Standard'
+    self.expired ? 'Expired' : 'Active'
   end
 
   def days_until_exam
@@ -190,6 +193,14 @@ class Enrollment < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def deactivate_siblings
+    if self.sibling_enrollments.any?
+      self.sibling_enrollments.each do |enrollment|
+        enrollment.update_attribute(:active, false)
+      end
     end
   end
 

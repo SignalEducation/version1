@@ -48,7 +48,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   after_save :update_enrollment
 
   # scopes
-  scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
+  scope :all_in_order, -> { order(user_id: :asc, created_at: :asc) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
@@ -59,7 +59,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.student_exam_tracks.empty?
+    self.course_section_user_logs.empty? && self.student_exam_tracks.empty?
   end
 
   def elements_total

@@ -1258,6 +1258,7 @@ en:
         registered: Registered
         exam_date: Select your Exam Date
         computer_based_exam_date: Select Computer Based Exam Date
+        select_exam_date: Select Exam Date
         exam_sitting_id: Select your Exam Sitting
         student_number: Student Number
         student_number_placeholder: Student Number
