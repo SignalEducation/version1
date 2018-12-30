@@ -68,6 +68,11 @@ class LibraryController < ApplicationController
           get_enrollment_form_variables(@course, nil)
         end
 
+        @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id)
+        unless @exam_body_user_details.any?
+          @exam_body_user_details = current_user.exam_body_user_details.build(exam_body_id: @course.exam_body_id)
+        end
+
       end
 
     elsif @course && @course.active && @course.preview

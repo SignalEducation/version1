@@ -25,13 +25,14 @@
       .h6
         =@user.date_of_birth || '--------'
 
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.student_number')
-      .h6
-        =@user.student_number || '--------'
+    - @exam_body_user_details.each do |exam_body_user_details|
+      .col-sm-6.l-margin-top
+        .h3
+          ="#{exam_body_user_details.exam_body.name} Student Number"
+        .h6
+          =exam_body_user_details.student_number
 
-    .col-sm-6.l-margin-top
+
 
 
 

@@ -118,6 +118,7 @@
 
 
 =render partial: 'shared/activate_tab'
+=render partial: 'user_exam_body_details_modal'
 
 -if current_user && current_user.subscription_user?
 
@@ -131,7 +132,7 @@
   -unless current_user.student_number || current_user.date_of_birth
     :javascript
       $(document).ready(function() {
-        var inst = $('[data-remodal-id=user-exam-body-modal]').remodal();
+        var inst = $('[data-remodal-id=exam-body-user-details-modal]').remodal();
         inst.open();
       });
 

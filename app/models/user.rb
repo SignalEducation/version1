@@ -77,7 +77,7 @@ class User < ActiveRecord::Base
                   :terms_and_conditions, :date_of_birth, :description,
                   :student_number, :student_access_attributes,
                   :unsubscribed_from_emails, :communication_approval_datetime,
-                  :communication_approval
+                  :communication_approval, :exam_body_user_details_attributes
 
   # Constants
   LOCALES = %w(en)
@@ -91,6 +91,7 @@ class User < ActiveRecord::Base
   has_many :incomplete_course_module_element_user_logs, -> {where(element_completed: false)},
            class_name: 'CourseModuleElementUserLog'
   has_many :course_tutor_details
+  has_many :exam_body_user_details
   has_many :enrollments
   has_many :invoices
   has_many :quiz_attempts
@@ -114,6 +115,7 @@ class User < ActiveRecord::Base
                     default_url: '/assets/images/missing_corporate_logo.png'
 
   accepts_nested_attributes_for :student_access
+  accepts_nested_attributes_for :exam_body_user_details, :reject_if => lambda { |c| c[:student_number].blank? }
 
   # validation
   validates :email, presence: true, uniqueness: true, length: {within: 5..50}

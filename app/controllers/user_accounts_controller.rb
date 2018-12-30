@@ -12,6 +12,11 @@ class UserAccountsController < ApplicationController
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @current_subscription = @user.current_subscription
     @invoices = @user.invoices
+    @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)
+
+    ExamBody.where.not(id: @exam_body_user_details.map(&:exam_body_id)).all.each do |exam_body|
+      @user.exam_body_user_details.build(exam_body_id: exam_body.id)
+    end
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
@@ -89,12 +94,19 @@ class UserAccountsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number,
-    :unsubscribed_from_emails)
+    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth,
+                                 :unsubscribed_from_emails, exam_body_user_details_attributes: [
+                                                                              :id,
+                                                                              :exam_body_id,
+                                                                              :student_number]
+    )
   end
 
   def exam_body_user_allowed_params
-    params.require(:user).permit(:date_of_birth, :student_number)
+    params.require(:user).permit(:date_of_birth, exam_body_user_details_attributes: [
+        :id,
+        :exam_body_id,
+        :student_number])
   end
 
   def get_variables
