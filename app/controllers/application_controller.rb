@@ -280,14 +280,14 @@ class ApplicationController < ActionController::Base
   helper_method :library_special_link
 
 
-  def course_special_link(the_thing)
+  def course_special_link(the_thing, scul=nil)
     if the_thing.class == CourseModule
       library_special_link(
               the_thing.subject_course
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        if current_user.permission_to_see_content(the_thing.id, nil)
+        if current_user.permission_to_see_content(the_thing.id, nil, scul)
           course_url(
               the_thing.course_module.course_section.subject_course.name_url,
               the_thing.course_module.course_section.name_url,

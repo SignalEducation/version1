@@ -2,27 +2,28 @@
 #
 # Table name: course_module_elements
 #
-#  id                        :integer          not null, primary key
-#  name                      :string
-#  name_url                  :string
-#  description               :text
-#  estimated_time_in_seconds :integer
-#  course_module_id          :integer
-#  sorting_order             :integer
-#  created_at                :datetime
-#  updated_at                :datetime
-#  is_video                  :boolean          default(FALSE), not null
-#  is_quiz                   :boolean          default(FALSE), not null
-#  active                    :boolean          default(TRUE), not null
-#  seo_description           :string
-#  seo_no_index              :boolean          default(FALSE)
-#  destroyed_at              :datetime
-#  number_of_questions       :integer          default(0)
-#  duration                  :float            default(0.0)
-#  temporary_label           :string
-#  is_constructed_response   :boolean          default(FALSE), not null
-#  available_on_trial        :boolean          default(FALSE)
-#  course_section_id         :integer
+#  id                               :integer          not null, primary key
+#  name                             :string
+#  name_url                         :string
+#  description                      :text
+#  estimated_time_in_seconds        :integer
+#  course_module_id                 :integer
+#  sorting_order                    :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  is_video                         :boolean          default(FALSE), not null
+#  is_quiz                          :boolean          default(FALSE), not null
+#  active                           :boolean          default(TRUE), not null
+#  seo_description                  :string
+#  seo_no_index                     :boolean          default(FALSE)
+#  destroyed_at                     :datetime
+#  number_of_questions              :integer          default(0)
+#  duration                         :float            default(0.0)
+#  temporary_label                  :string
+#  is_constructed_response          :boolean          default(FALSE), not null
+#  available_on_trial               :boolean          default(FALSE)
+#  course_section_id                :integer
+#  related_course_module_element_id :integer
 #
 
 class CourseModuleElementsController < ApplicationController
@@ -66,6 +67,7 @@ class CourseModuleElementsController < ApplicationController
   def new
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
+    @related_cmes = cm.course_module_elements.all_active
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
         course_module_id: cm.id, course_section_id: cm.course_section_id, active: true)
@@ -273,7 +275,7 @@ class CourseModuleElementsController < ApplicationController
 
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
-      @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
+      @related_cmes = @course_module_element.course_module.course_module_elements
     else
       @related_cmes = CourseModuleElement.none
     end
@@ -296,6 +298,7 @@ class CourseModuleElementsController < ApplicationController
         :number_of_questions,
         :temporary_label,
         :available_on_trial,
+        :related_course_module_element_id,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,

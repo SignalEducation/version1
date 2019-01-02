@@ -414,13 +414,24 @@ class User < ActiveRecord::Base
   end
 
 
-  def permission_to_see_content(course_module_element_id=nil, subject_course_resource_id=nil)
+  #TODO - separate related_cme into new method and trial/subscription into new method
+  #TODO - remove multiple DB calls to inefficient
+  #TODO - factor-in blocking when no scul is present - block all with related_cme_id
+  def permission_to_see_content(course_module_element_id=nil, subject_course_resource_id=nil, scul_id=nil)
     cme = CourseModuleElement.find(course_module_element_id) if course_module_element_id
     resource = SubjectCourseResource.find(subject_course_resource_id) if subject_course_resource_id
+    scul = SubjectCourseUserLog.find(scul_id) if scul_id
+    set = scul.student_exam_tracks.for_course_module(cme.course_module_id).first if scul_id & course_module_element_id
+
 
     if self.trial_user?
       if course_module_element_id
-        cme.available_on_trial
+        if cme.related_course_module_element_id && scul_id && !set.completed_cme_user_logs.map(&:id).include?(cme.related_course_module_element_id)
+          false
+        else
+          cme.available_on_trial
+        end
+
       elsif subject_course_resource_id
         resource.available_on_trial
       else
@@ -429,10 +440,20 @@ class User < ActiveRecord::Base
 
     elsif self.subscription_user?
       if self.valid_subscription?
-        true
+        if cme.related_course_module_element_id && scul_id && !set.completed_cme_user_logs.map(&:id).include?(cme.related_course_module_element_id)
+          false
+        else
+          true
+        end
       else
-        #TODO logic for params entered compared to allowed restricted content
-        false
+        #Currently restricted subscription users have same access as trial users
+        if course_module_element_id
+          cme.available_on_trial
+        elsif subject_course_resource_id
+          resource.available_on_trial
+        else
+          false
+        end
       end
     elsif self.complimentary_user?
       true

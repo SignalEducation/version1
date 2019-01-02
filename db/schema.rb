@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181230182354) do
+ActiveRecord::Schema.define(version: 20190102103040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -305,18 +305,19 @@ ActiveRecord::Schema.define(version: 20181230182354) do
     t.integer  "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_video",                  default: false, null: false
-    t.boolean  "is_quiz",                   default: false, null: false
-    t.boolean  "active",                    default: true,  null: false
+    t.boolean  "is_video",                         default: false, null: false
+    t.boolean  "is_quiz",                          default: false, null: false
+    t.boolean  "active",                           default: true,  null: false
     t.string   "seo_description"
-    t.boolean  "seo_no_index",              default: false
+    t.boolean  "seo_no_index",                     default: false
     t.datetime "destroyed_at"
-    t.integer  "number_of_questions",       default: 0
-    t.float    "duration",                  default: 0.0
+    t.integer  "number_of_questions",              default: 0
+    t.float    "duration",                         default: 0.0
     t.string   "temporary_label"
-    t.boolean  "is_constructed_response",   default: false, null: false
-    t.boolean  "available_on_trial",        default: false
+    t.boolean  "is_constructed_response",          default: false, null: false
+    t.boolean  "available_on_trial",               default: false
     t.integer  "course_section_id"
+    t.integer  "related_course_module_element_id"
   end
 
   add_index "course_module_elements", ["course_module_id"], name: "index_course_module_elements_on_course_module_id", using: :btree

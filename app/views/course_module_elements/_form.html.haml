@@ -23,6 +23,11 @@
       .input-group.input-group-lg.full-width
         =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
       %br/
+      -# Dropdown list of other CMEs in current course module
+      =f.label :related_course_module_element_id, t('views.course_module_elements.form.related_course_module_element_id'), class: 'control-label'
+      .input-group.input-group-lg.full-width
+        =f.collection_select :related_course_module_element_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+      %br/
 
 
 

@@ -50,9 +50,11 @@ class LibraryController < ApplicationController
           #TODO - need to ensure correct SCUL is found under all conditions
           # including expired enrollments, active enrollments, no enrollments
           @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
-          @latest_element_id = @subject_course_user_log.latest_course_module_element_id
+
           #TODO - @next_element can be a CME, CM or CS OR is first CME in course
+          @latest_element_id = @subject_course_user_log.latest_course_module_element_id
           @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+
           @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
           @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
           @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
