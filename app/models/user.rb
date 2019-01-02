@@ -426,7 +426,7 @@ class User < ActiveRecord::Base
 
     if self.trial_user?
       if course_module_element_id
-        if cme.related_course_module_element_id && scul_id && !set.completed_cme_user_logs.map(&:id).include?(cme.related_course_module_element_id)
+        if cme.related_course_module_element_id && scul_id && !set.completed_cme_user_logs.map(&:course_module_element_id).include?(cme.related_course_module_element_id)
           false
         else
           cme.available_on_trial
@@ -440,7 +440,7 @@ class User < ActiveRecord::Base
 
     elsif self.subscription_user?
       if self.valid_subscription?
-        if cme.related_course_module_element_id && scul_id && !set.completed_cme_user_logs.map(&:id).include?(cme.related_course_module_element_id)
+        if cme.related_course_module_element_id && scul_id && !set.completed_cme_user_logs.map(&:course_module_element_id).include?(cme.related_course_module_element_id)
           false
         else
           true
