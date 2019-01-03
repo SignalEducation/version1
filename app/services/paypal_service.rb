@@ -94,10 +94,10 @@ class PaypalService
       subscription.update!(
         paypal_status: agreement.state,
         complimentary: false,
-        active: agreement.state == 'Active',
+        active: agreement.state != 'Cancelled',
         paypal_subscription_guid: agreement.id
       )
-      agreement.state == 'Active'
+      agreement.state != 'Cancelled'
     else
       subscription.record_error!
       Rails.logger.error "DEBUG: Subscription#execute Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
