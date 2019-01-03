@@ -912,7 +912,14 @@ ol.example li.placeholder:before {
 // 8. Library Pages Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Used on library#index to display each Group in a box as a link
+
+// 8.1 Course Show Page
+#tab-section {
+  margin: 6px 0;
+}
+
+
+  // Used on library#index to display each Group in a box as a link
 a.box {
   text-decoration: none;
   &:link {
@@ -1238,9 +1245,9 @@ a.card {
 }
 .box-item.lib-panel {
   cursor: pointer;
-  background-color: darken($white, 5);
+  background-color: $white;
   &:hover {
-    background: gainsboro;
+    background-color: darken($white, 3);
   }
 }
 .left-side-meta {
@@ -2100,26 +2107,6 @@ a.list-group-item {
     display: inline;
 
   }
-
-}
-
-.content-box {
-  display: block;
-  background: $white;
-  position: relative;
-
-  a {
-    text-decoration: none;
-  }
-}
-.content-box-outer {
-  min-height: 300px;
-}
-.content-box-inner {
-  padding: $gutter*2 $gutter*4 $gutter*2 $gutter*2;
-}
-.resources-inner {
-
 
 }
 

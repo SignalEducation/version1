@@ -1,0 +1,51 @@
+.course-section-tabs {
+  padding: 12px 0 14px 0;
+
+  a {
+    color: #6E6D75;
+    letter-spacing: .1rem;
+    @include font-size(1.4);
+    @include breakpoint(md-min) {
+      @include font-size(1.8);
+    }
+    text-decoration: initial;
+  }
+  font-weight: bold;
+}
+.course-section-tabs .underline {
+  background: lighten(#3D3D5B, 65%);
+  border-bottom: 5px solid;
+  box-sizing: content-box;
+  color: #3D3D5B;
+}
+
+.course-section-tab {
+  background: #fff;
+  padding: 10px 40px;
+  display: inherit;
+  @include breakpoint(sm-min) {
+    display: inline;
+
+  }
+
+}
+
+.content-box {
+  display: block;
+  background: #EFF3F6;
+  position: relative;
+
+  a {
+    text-decoration: none;
+  }
+}
+.content-box-outer {
+  min-height: 300px;
+}
+.content-box-inner {
+  padding: 40px 10px;
+}
+.resources-inner {
+
+
+}
