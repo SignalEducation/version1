@@ -91,10 +91,11 @@ class SubscriptionsController < ApplicationController
     case params[:payment_processor]
     when 'paypal'
       if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
-        @subscription.start
+        @subscription.start!
         SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url
       else
+        @subscription.cancel!
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
         flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
         redirect_to new_subscription_url
