@@ -303,6 +303,11 @@ class Subscription < ActiveRecord::Base
                            available_to_students: true).where('price > 0.0').generally_available.all_active.all_in_order
   end
 
+  def schedule_paypal_cancellation
+    self.cancel_pending!
+    PaypalService.new.set_cancellation_date(self)
+  end
+
   def upgrade_options
     SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).for_students.in_currency(subscription_plan.currency_id).all_active.all_in_order
   end

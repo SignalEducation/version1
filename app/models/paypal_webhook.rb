@@ -36,13 +36,11 @@ class PaypalWebhook < ActiveRecord::Base
   end
 
   def process_sale_completed
-    Rails.logger.info "WEBHOOK: Processing PAYMENT.SALE.COMPLETED"
     if (invoice = Invoice.build_from_paypal_data(payload)) && invoice.valid?
-      Rails.logger.info "WEBHOOK: BUILT INVOICE SUCCESSFULLY"
       invoice.update!(paid: true, payment_closed: true)
-      Rails.logger.info "WEBHOOK: UPDATED INVOICE SUCCESSFULLY"
+      PaypalService.new.update_next_billing_date(invoice.subscription)
       update!(processed_at: Time.now)
-      Rails.logger.info "WEBHOOK: UPDATED WEBHOOK processed_at SUCCESSFULLY"
+      invoice.subscription.update!(paypal_status: 'Active') unless invoice.subscription.paypal_status == 'Active'
     else
       update!(verified: false)
     end
@@ -62,7 +60,7 @@ class PaypalWebhook < ActiveRecord::Base
 
   def process_subscription_cancelled
     if subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['id'])
-      subscription.cancel!
+      subscription.schedule_paypal_cancellation
     else
       update!(verified: false)
     end
