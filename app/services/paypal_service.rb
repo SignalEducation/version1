@@ -100,9 +100,12 @@ class PaypalService
       agreement.state == 'Active'
     else
       subscription.record_error!
-      Rails.logger.error "DEBUG: Subscription#create Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
+      Rails.logger.error "DEBUG: Subscription#execute Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
     end
+  rescue PayPal::SDK::Core::Exceptions::ServerError
+    Rails.logger.error "DEBUG: Subscription#execute Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Paypal is 500-ing"
+    raise Learnsignal::SubscriptionError.new('Paypal is currently not responding. Please try again.')
   end
 
   def suspend_billing_agreement
