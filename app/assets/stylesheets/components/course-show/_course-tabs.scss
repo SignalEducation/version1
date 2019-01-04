@@ -45,7 +45,93 @@
 .content-box-inner {
   padding: 40px 10px;
 }
-.resources-inner {
+.course-product-box {
+  display: inline-block;
+  background: #fff;
+  color: #ef475d;
+  font-weight: 500;
+  margin: 12px 12px 12px 0;
+  width: 100%;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  @include border-radius(4px);
+  @include transition(box-shadow .1s ease);
+  &:hover, &:active {
+    text-decoration: none;
+    color: #fff;
+    background: darken(#ef475d, 15%);
+    cursor: pointer;
+  }
+}
+.course-product-box-inner {
+  padding: 10px 20px;
 
+  .product-box-label {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 80%;
+    font-size: 16px;
+
+  }
+
+  .product-box-icon {
+    display: inline-block;
+
+    img {
+      max-height: 50px;
+    }
+  }
+
+}
+
+.course-resource-box {
+  display: inline-block;
+  background: #fff;
+  color: #ef475d;
+  font-weight: 500;
+  margin: 12px 12px 12px 0;
+  width: 100%;
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  @include border-radius(4px);
+  @include transition(box-shadow .1s ease);
+  &:hover, &:active {
+    text-decoration: none;
+    color: #fff;
+    background: darken(#ef475d, 15%);
+    cursor: pointer;
+  }
+
+}
+.course-resource-box-inner {
+  padding: 10px 20px;
+
+
+  .resource-box-label {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 80%;
+    white-space: nowrap;
+    font-size: 16px;
+
+  }
+
+  .resource-box-icon {
+    display: inline-block;
+    position: absolute;
+    right: 30px;
+
+
+    .glyphicon {
+
+    }
+  }
 
 }

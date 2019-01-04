@@ -1,60 +1,66 @@
-.row
-  .resources-inner
-    -if @products.any?
-      %p.h4
-        Mock Exams
-      %ul
-        -@products.each do |product|
-          -if @course.preview
-            %li
-              =link_to '#', class: 'resource-box resource-box-inner full-width' do
-                .col-xs-10
-                  =product.mock_exam.name
-                .col-xs-2
-                  .glyphicon.glyphicon-download{style: 'top: 3px;'}
+-if @subject_course_resources
+  .col-sm-6
+    %p.h4
+      Course Resources
 
-          -else
-            -if current_user
-              %li
-                =link_to new_order_url(product), class: 'resource-box resource-box-inner full-width' do
-                  .col-xs-10
-                    =product.mock_exam.name
-                  .col-xs-2
-                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
-            -else
-              %li
-                =link_to new_student_url, class: 'resource-box resource-box-inner full-width' do
-                  .col-xs-10
-                    =product.mock_exam.name
-                  .col-xs-2
-                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
-
-  .resources-inner
-    -if @subject_course_resources
-      %p.h4
-        Course Resources
-      %ul
-        -@subject_course_resources.each do |resource|
-          -if current_user
-            -if current_user.permission_to_see_content(nil, resource.id)
-              %li
-                =link_to resource.external_url.blank? ? resource.file_upload.url : resource.external_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-                  .col-xs-10
-                    =resource.name
-                  .col-xs-2
-                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
-
-            -else
-              %li
-                =link_to '#access-denied-modal', class: 'resource-box resource-box-inner full-width' do
-                  .col-xs-10
-                    =resource.name
-                  .col-xs-2
-                    .glyphicon.glyphicon-download{style: 'top: 3px;'}
-          -else
-            %li
-              =link_to new_student_url, class: 'resource-box resource-box-inner full-width' do
-                .col-xs-10
+    - @subject_course_resources.each do |resource|
+      .col-sm-12.col-md-6{style: 'padding-left: 0;'}
+        -if current_user
+          -if current_user.permission_to_see_content(nil, resource.id)
+            =link_to resource.external_url.blank? ? resource.file_upload.url : resource.external_url, class: 'course-resource-box', target: '_blank' do
+              .course-resource-box-inner
+                .resource-box-label
                   =resource.name
-                .col-xs-2
-                  .glyphicon.glyphicon-download{style: 'top: 3px;'}
+                .resource-box-icon
+                  .glyphicon.glyphicon-download
+
+          -else
+            =link_to '#access-denied-modal', class: 'course-resource-box' do
+              .course-resource-box-inner
+                .resource-box-label
+                  =resource.name
+                .resource-box-icon
+                  .glyphicon.glyphicon-download
+        -else
+          =link_to new_student_url, class: 'course-resource-box' do
+            .course-resource-box-inner
+              .resource-box-label
+                =resource.name
+              .resource-box-icon
+                .glyphicon.glyphicon-download
+
+
+
+-if @products.any?
+  .col-sm-6
+    %p.h4
+      Exam Preparation Products
+
+    - @products.each do |product|
+      .col-sm-12{style: 'padding-left: 0;'}
+        -if @course.preview
+          =link_to '#', class: 'course-product-box' do
+            .course-product-box-inner
+              .product-box-label
+                =product.mock_exam.name
+              .product-box-icon
+                =image_tag 'ico-exam.svg', alt: 'Exam'
+
+        -else
+          -if current_user
+            =link_to new_order_url(product), class: 'course-product-box' do
+              .course-product-box-inner
+                .product-box-label
+                  =product.mock_exam.name
+                .product-box-icon
+                  =image_tag 'ico-exam.svg', alt: 'Exam'
+
+
+          -else
+            =link_to new_student_url, class: 'course-product-box' do
+              .course-product-box-inner
+                .product-box-label
+                  =product.mock_exam.name
+                .product-box-icon
+                  =image_tag 'ico-exam.svg', alt: 'Exam'
+
