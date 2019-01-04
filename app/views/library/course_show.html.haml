@@ -50,54 +50,65 @@
 
 
         .tab-content
-          -@course.course_sections.all_active.all_in_order.each do |course_section|
+          - @course.course_sections.all_active.all_in_order.each do |course_section|
             .tab-pane.fade{id: course_section.name_url, role: 'tabpanel'}
               .content-box.content-box-outer
                 .content-box-inner
 
-                  .panel-group#accordion
-                    %ul.course-topics-list
-                      -course_section.course_modules.all_active.all_in_order.each_with_index do |child, counter|
+                  .col-sm-12.col-md-9
+                    .panel-group#accordion
+                      %ul.course-modules-list
+                        - course_section.course_modules.all_active.all_in_order.each_with_index do |child, counter|
 
-                        -if child.children.any?
-                          %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{course_section.name_url}_#{counter}"}
-                            .box-item.lib-panel#headingOne{ aria: {expand: true, controls: "collapse_#{course_section.name_url}_#{counter}"}}
-                              .col-xs-1.col-sm-1
-                                .left-side-meta
-                                  =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
-                              .col-xs-9.xs-padding
-                                .box-topic-item
-                                  =truncate(child.name, length: 50)
-                              .col-xs-2
-                                .time.hidden-xs
-                                  -if child.cme_count.to_i > 1
-                                    =child.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                  -else
-                                    =child.cme_count.to_s + ' ' + t('views.library.show.lesson')
-
-                        -else
-                          %li
-                            .box-item.lib-panel
-                              .col-xs-1.col-sm-1
-                                .left-side-meta
-                                  .img-responsive
+                          - if child.children.any?
+                            %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{course_section.name_url}_#{counter}"}
+                              .course-module-panel#headingOne{ aria: {expand: true, controls: "collapse_#{course_section.name_url}_#{counter}"}}
+                                .col-xs-1.col-sm-1
+                                  .left-side-meta
                                     =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
-                              .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
-                                .box-topic-item
-                                  =truncate(child.name, length: 50)
-                              .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
-                                .time.pull-right
-                                  %p{style: 'color: #EE5457;'}
-                                    ='Coming Soon!'
+                                .col-xs-9.xs-padding
+                                  .box-topic-item
+                                    =truncate(child.name, length: 50)
+                                .col-xs-2
+                                  .time.hidden-xs
+                                    -if child.cme_count.to_i > 1
+                                      =child.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                    -else
+                                      =child.cme_count.to_s + ' ' + t('views.library.show.lesson')
+
+                          - else
+                            %li
+                              .box-item.lib-panel
+                                .col-xs-1.col-sm-1
+                                  .left-side-meta
+                                    .img-responsive
+                                      =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                                .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
+                                  .box-topic-item
+                                    =truncate(child.name, length: 50)
+                                .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
+                                  .time.pull-right
+                                    %p{style: 'color: #EE5457;'}
+                                      ='Coming Soon!'
 
 
 
-                        .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
-                          -child.children.all_in_order.all_active.each do |grandchild|
+                          .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
+                            -child.children.all_in_order.all_active.each do |grandchild|
 
-                            =link_to course_special_link(grandchild, @subject_course_user_log.try(:id)), class: 'list-group-item link-purple box-topic-item' do
-                              =render partial: 'panel_content', locals: {grandchild: grandchild}
+                              =link_to course_special_link(grandchild, @subject_course_user_log.try(:id)), class: 'list-group-item link-purple box-topic-item' do
+                                =render partial: 'panel_content', locals: {grandchild: grandchild}
 
+
+                  .col-sm-12.col-md-3
+                    .l-margin-top-small
+                      -if current_user
+                        =render partial: 'courses/tutor_contact'
+                        %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange full-width'}
+                          Ask The Tutor
+                      -else
+                        %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange full-width'}
+                          Ask The Tutor
 
 
 

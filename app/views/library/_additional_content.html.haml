@@ -1,4 +1,4 @@
--if @subject_course_resources
+-if @subject_course_resources && @subject_course_resources.any?
   .col-sm-6
     %p.h4
       Course Resources
@@ -44,7 +44,7 @@
               .product-box-label
                 =product.mock_exam.name
               .product-box-icon
-                =image_tag 'ico-exam.svg', alt: 'Exam'
+                =image_tag 'ico-exam.svg', alt: "#{product.mock_exam.name} Product"
 
         -else
           -if current_user
@@ -53,7 +53,7 @@
                 .product-box-label
                   =product.mock_exam.name
                 .product-box-icon
-                  =image_tag 'ico-exam.svg', alt: 'Exam'
+                  =image_tag 'ico-exam.svg', alt: "#{product.mock_exam.name} Product"
 
 
           -else
@@ -62,5 +62,5 @@
                 .product-box-label
                   =product.mock_exam.name
                 .product-box-icon
-                  =image_tag 'ico-exam.svg', alt: 'Exam'
+                  =image_tag 'ico-exam.svg', alt: "#{product.mock_exam.name} Product"
 
