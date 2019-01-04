@@ -136,12 +136,15 @@ class Subscription < ActiveRecord::Base
       # UserMailer.subscription_auto_delete_email(subscription.user).deliver
     end
 
-    after_transition active: :cancelled do |subscription, _transition|
-      # An admin or user has deactivated the account - most likely because the user
-      # want's to cancel the subscription
-      # Need to update the stripe subscription with 'cancel_at_period_end'
-      # Need to allow the user access until the end of the current period
-      # UserMailer.subscription_request_delete_email(subscription.user).deliver
+    after_transition active: :pending_cancellation do |subscription, _transition|
+      # Email the user to tell them how many days of access they have left on
+      # the platform. For Stripe they can 'un-cancel' but for PayPal they will
+      # need to setup a new subscription
+    end
+
+    after_transition pending_cancellation: :cancelled do |subscription, _transition|
+      # The user has reached the max_failed_payments limit or has been manually
+      # cancelled and reached the end of the last billing period.
     end
   end
 
