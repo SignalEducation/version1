@@ -67,12 +67,12 @@ class SubscriptionService
   def valid_paypal_subscription?(params)
     params[:subscription][:use_paypal].present? &&
       @subscription &&
-      @subscription.subscription_plan
+      @subscription.subscription_plan.present?
   end
 
   def valid_stripe_subscription?(params)
     params[:subscription][:stripe_token].present? &&
       @subscription &&
-      @subscription.subscription_plan
+      @subscription.subscription_plan.present?
   end
 end

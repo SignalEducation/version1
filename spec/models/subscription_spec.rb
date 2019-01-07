@@ -37,9 +37,19 @@ describe Subscription do
     end
   end
 
+  describe 'valid factory' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    it 'should have a valid factory' do
+      expect(build(:subscription)).to be_valid
+    end
+  end
+
   # Constants
   it { expect(Subscription.const_defined?(:STATUSES)).to eq(true) }
-  it { expect(Subscription.const_defined?(:VALID_STATES)).to eq(true) }
+  it { expect(Subscription.const_defined?(:STRIPE_VALID_STATES)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
@@ -59,8 +69,6 @@ describe Subscription do
   it { should validate_presence_of(:subscription_plan_id) }
 
   it { should validate_inclusion_of(:stripe_status).in_array(Subscription::STATUSES).on(:update) }
-
-  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE]).on(:update) }
 
   it { should validate_length_of(:stripe_guid).is_at_most(255) }
   it { should validate_length_of(:stripe_customer_id).is_at_most(255) }
@@ -95,12 +103,10 @@ describe Subscription do
   it { should respond_to(:past_due_status?) }
   it { should respond_to(:unpaid_status?) }
   it { should respond_to(:canceled_pending_status?) }
-  it { should respond_to(:suspended_status?) }
   it { should respond_to(:billing_amount) }
 
   it { should respond_to(:reactivation_options) }
   it { should respond_to(:upgrade_options) }
-  it { should respond_to(:upgrade_plan) }
   it { should respond_to(:update_from_stripe) }
   it { should respond_to(:un_cancel) }
 
