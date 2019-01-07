@@ -147,6 +147,8 @@ describe PaypalService, type: :service do
   describe '#suspend_billing_agreement' do
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      @dbl = double
+      allow(@dbl).to receive(:state).and_return('Suspended')
     end
 
     let!(:subscription) { create(:subscription) }
@@ -156,27 +158,36 @@ describe PaypalService, type: :service do
     end
 
     it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
-      dbl = double
-      allow(dbl).to receive(:suspend).and_return(true)
-      allow(dbl).to receive(:state).and_return('Suspended')
-      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(@dbl).to receive(:suspend).and_return(true)
 
       subject.suspend_billing_agreement(subscription)
     end
 
     it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
-      dbl = double
-      expect(dbl).to receive(:suspend).and_return(true)
-      allow(dbl).to receive(:state).and_return('Suspended')
-      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+      expect(@dbl).to receive(:suspend).and_return(true)
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
 
       subject.suspend_billing_agreement(subscription)
+    end
+
+    it 'updates the state of the subscription to PAUSED' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(@dbl).to receive(:suspend).and_return(true)
+      new_subscription = create(:subscription, state: 'active')
+
+      subject.suspend_billing_agreement(new_subscription)
+
+      new_subscription.reload
+      expect(new_subscription.state).to eq 'paused'
     end
   end
 
   describe '#reactivate_billing_agreement' do
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      @dbl = double
+      allow(@dbl).to receive(:state).and_return('Active')
     end
 
     let!(:subscription) { create(:subscription) }
@@ -186,21 +197,28 @@ describe PaypalService, type: :service do
     end
 
     it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
-      dbl = double
-      allow(dbl).to receive(:re_activate).and_return(true)
-      allow(dbl).to receive(:state).and_return('Active')
-      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+      allow(@dbl).to receive(:re_activate).and_return(true)
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
 
       subject.reactivate_billing_agreement(subscription)
     end
 
     it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
-      dbl = double
-      expect(dbl).to receive(:re_activate).and_return(true)
-      allow(dbl).to receive(:state).and_return('Active')
-      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+      expect(@dbl).to receive(:re_activate).and_return(true)
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
 
       subject.reactivate_billing_agreement(subscription)
+    end
+
+    it 'updates the state of the subscription to ACTIVE' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(@dbl).to receive(:re_activate).and_return(true)
+      new_subscription = create(:subscription, state: 'paused')
+
+      subject.reactivate_billing_agreement(new_subscription)
+
+      new_subscription.reload
+      expect(new_subscription.state).to eq 'active'
     end
   end
 
