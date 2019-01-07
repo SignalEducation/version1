@@ -96,7 +96,7 @@
                           .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
                             -child.children.all_in_order.all_active.each do |grandchild|
 
-                              =link_to course_special_link(grandchild, @subject_course_user_log.try(:id)), class: 'list-group-item link-purple box-topic-item' do
+                              =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
                                 =render partial: 'panel_content', locals: {grandchild: grandchild}
 
 
@@ -125,6 +125,10 @@
 
 
 =render partial: 'user_exam_body_details_modal'
+=render partial: 'trial_restriction_modal'
+=render partial: 'subscription_restriction_modal'
+=render partial: 'related_lesson_restriction_modal'
+=render partial: 'account_issue_modal'
 
 -if current_user && current_user.subscription_user?
 

@@ -177,6 +177,39 @@ class CourseModuleElement < ActiveRecord::Base
     cmeuls.any?
   end
 
+  def previous_cme_restriction(scul)
+
+    if scul && self.related_course_module_element_id
+      student_exam_track = scul.student_exam_tracks.for_course_module(self.course_module_id).first
+      !student_exam_track.completed_cme_user_logs.map(&:course_module_element_id).include?(self.related_course_module_element_id)
+    else
+      false
+    end
+  end
+
+  def available_for_trial(scul=nil)
+    if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+      'related-lesson-restriction'
+    else
+      self.available_on_trial ? 'valid' : 'trial-restriction'
+    end
+  end
+
+  def available_for_subscription(scul=nil)
+    if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+      'related-lesson-restriction'
+    else
+      'valid'
+    end
+  end
+
+  def available_for_complimentary(scul=nil)
+    if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+      'related-lesson-restriction'
+    else
+      'valid'
+    end
+  end
 
   ########################################################################
 

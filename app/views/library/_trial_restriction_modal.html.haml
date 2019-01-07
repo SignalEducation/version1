@@ -1,0 +1,22 @@
+.remodal{"data-remodal-id" => "trial-restriction"}
+
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          ='Sorry! That content is not available on a trial account'
+
+    .row
+      .col-sm-12
+        .col-sm-12.l-margin-top
+          %p
+            Upgrade your account to get full access
+
+    %br/
+    .col-sm-12#actions_btns
+      .col-sm-4.col-sm-offset-4
+        =link_to new_subscription_url, class: 'btn btn-red' do
+          ='Upgrade Account'
+
+

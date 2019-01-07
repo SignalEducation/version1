@@ -1,0 +1,23 @@
+.remodal{"data-remodal-id" => "related-lesson-restriction"}
+
+  .row
+    .col-md-12
+      %button.remodal-close{"data-remodal-action" => "close"}
+      .col-md-12
+        %h2
+          ='Restricted lesson'
+
+    .row
+      .col-sm-12
+        .col-sm-12.l-margin-top-big
+          %p
+            ="This lesson is restricted until you have completed the ### lesson"
+
+
+    %br/
+    .col-sm-12#actions_btns
+      .col-sm-6
+        =link_to 'Contact Us', contact_url, class: 'btn btn-red'
+      .col-sm-6
+        =link_to t('views.users.show.h1'), account_url, class: 'btn btn-red'
+

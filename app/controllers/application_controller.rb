@@ -287,7 +287,8 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        if current_user.permission_to_see_content(the_thing.id, nil, scul)
+        permission = current_user.student_access.permission_to_see_content(the_thing, nil, scul)
+        if permission == 'valid'
           course_url(
               the_thing.course_module.course_section.subject_course.name_url,
               the_thing.course_module.course_section.name_url,
@@ -299,7 +300,7 @@ class ApplicationController < ActionController::Base
           library_course_url(
               the_thing.course_module.course_section.subject_course.group.name_url,
               the_thing.course_module.course_section.subject_course.name_url,
-              anchor: 'access-denied-modal'
+              anchor: permission
           )
         end
       else
@@ -311,6 +312,30 @@ class ApplicationController < ActionController::Base
     end
   end
   helper_method :course_special_link
+
+  def course_resource_special_link(the_thing)
+    if the_thing.class == SubjectCourseResource
+
+      if current_user
+        permission = current_user.student_access.permission_to_see_content(nil, the_thing, nil)
+        if permission == 'valid'
+          the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
+        else
+          library_course_url(
+              the_thing.subject_course.group.name_url,
+              the_thing.subject_course.name_url,
+              anchor: permission
+          )
+        end
+      else
+        new_student_url
+      end
+
+    else
+      library_special_link(the_thing)
+    end
+  end
+  helper_method :course_resource_special_link
 
   def seo_title_maker(seo_title, seo_description, seo_no_index)
     @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
