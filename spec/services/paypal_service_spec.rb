@@ -223,7 +223,42 @@ describe PaypalService, type: :service do
   end
 
   describe '#cancel_billing_agreement' do
-    it 'calls the correct paypal REST API method'
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      @dbl = double
+      allow(@dbl).to receive(:state).and_return('Cancelled')
+    end
+
+    let!(:subscription) { create(:subscription) }
+
+    it 'must have a subscription' do
+      expect { subject.cancel_billing_agreement() }.to raise_error ArgumentError
+    end
+
+    it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(@dbl).to receive(:cancel).and_return(true)
+
+      subject.cancel_billing_agreement(subscription)
+    end
+
+    it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      expect(@dbl).to receive(:cancel).and_return(true)
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+
+      subject.cancel_billing_agreement(subscription)
+    end
+
+    it 'updates the state of the subscription to PAUSED' do
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      allow(@dbl).to receive(:cancel).and_return(true)
+      new_subscription = create(:subscription, state: 'active')
+
+      subject.cancel_billing_agreement(new_subscription)
+
+      new_subscription.reload
+      expect(new_subscription.state).to eq 'pending_cancellation'
+    end
   end
 
   # PRIVATE METHODS ############################################################
