@@ -242,14 +242,14 @@ describe PaypalService, type: :service do
       subject.cancel_billing_agreement(subscription)
     end
 
-    it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+    it 'calls CANCEL on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
       expect(@dbl).to receive(:cancel).and_return(true)
       allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
 
       subject.cancel_billing_agreement(subscription)
     end
 
-    it 'updates the state of the subscription to PAUSED' do
+    it 'updates the state of the subscription to PENDING_CANCELLATION' do
       allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
       allow(@dbl).to receive(:cancel).and_return(true)
       new_subscription = create(:subscription, state: 'active')
