@@ -175,7 +175,33 @@ describe PaypalService, type: :service do
   end
 
   describe '#reactivate_billing_agreement' do
-    it 'calls the correct paypal REST API method'
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    let!(:subscription) { create(:subscription) }
+
+    it 'must have a subscription' do
+      expect { subject.reactivate_billing_agreement() }.to raise_error ArgumentError
+    end
+
+    it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      dbl = double
+      allow(dbl).to receive(:re_activate).and_return(true)
+      allow(dbl).to receive(:state).and_return('Active')
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+
+      subject.reactivate_billing_agreement(subscription)
+    end
+
+    it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      dbl = double
+      expect(dbl).to receive(:re_activate).and_return(true)
+      allow(dbl).to receive(:state).and_return('Active')
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+
+      subject.reactivate_billing_agreement(subscription)
+    end
   end
 
   describe '#cancel_billing_agreement' do
