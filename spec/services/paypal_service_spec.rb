@@ -98,16 +98,6 @@ describe PaypalService, type: :service do
        .and change { subscription.active }.from(false).to(true)
        .and change { subscription.paypal_subscription_guid }.from(nil).to('AGREEMENT_ID')
     end
-
-    it 'starts the subscription' do
-      allow_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:execute).and_return(true)
-      expect(subscription.state).to eq 'pending'
-
-      subject.execute_billing_agreement(subscription, 'dummy_token')
-
-      subscription.reload
-      expect(subscription.state).to eq 'active'
-    end
   end
 
   describe '#create_and_return_subscription' do
@@ -155,7 +145,33 @@ describe PaypalService, type: :service do
   end
 
   describe '#suspend_billing_agreement' do
-    it 'calls the correct paypal REST API method'
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    let!(:subscription) { create(:subscription) }
+
+    it 'must have a subscription' do
+      expect { subject.suspend_billing_agreement() }.to raise_error ArgumentError
+    end
+
+    it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      dbl = double
+      allow(dbl).to receive(:suspend).and_return(true)
+      allow(dbl).to receive(:state).and_return('Suspended')
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+
+      subject.suspend_billing_agreement(subscription)
+    end
+
+    it 'calls SUSPEND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      dbl = double
+      expect(dbl).to receive(:suspend).and_return(true)
+      allow(dbl).to receive(:state).and_return('Suspended')
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(dbl)
+
+      subject.suspend_billing_agreement(subscription)
+    end
   end
 
   describe '#reactivate_billing_agreement' do
