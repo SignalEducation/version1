@@ -16,7 +16,7 @@
                 Enrol Now
               =render partial: 'course_enrollment_modal'
 
-      =render partial: 'layouts/account_notice'
+      =#render partial: 'layouts/account_notice'
 
 
 
@@ -124,7 +124,8 @@
 
 
 
-=render partial: 'user_exam_body_details_modal'
+- if current_user
+  =render partial: 'user_exam_body_details_modal'
 =render partial: 'trial_restriction_modal'
 =render partial: 'subscription_restriction_modal'
 =render partial: 'related_lesson_restriction_modal'

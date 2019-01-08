@@ -92,35 +92,6 @@ class StudentAccess < ActiveRecord::Base
     end
   end
 
-  def permission_to_see_content(course_module_element=nil, subject_course_resource=nil, scul=nil)
-
-    if course_module_element
-      case account_type
-      when 'Trial'
-        course_module_element.available_for_trial(scul)
-      when 'Subscription'
-        self.subscription.valid_subscription? ? course_module_element.available_for_subscription(scul) : 'subscription-restriction'
-      when 'Complimentary'
-        course_module_element.available_for_complimentary(scul)
-      else
-        'account-issue'
-      end
-
-    else
-      case account_type
-      when 'Trial'
-        subject_course_resource.available_on_trial ? 'valid' : 'trial-restriction'
-      when 'Subscription'
-        'valid'
-      when 'Complimentary'
-        'valid'
-      else
-        'account-issue'
-      end
-
-    end
-
-  end
 
   protected
 

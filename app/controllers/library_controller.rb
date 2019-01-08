@@ -63,7 +63,7 @@ class LibraryController < ApplicationController
 
           @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
 
-          if @enrollment.expired || !@enrollment
+          if @enrollment && (@enrollment.expired || !@enrollment)
             get_enrollment_form_variables(@course, @subject_course_user_log)
           end
 

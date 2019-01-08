@@ -287,8 +287,8 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        permission = current_user.student_access.permission_to_see_content(the_thing, nil, scul)
-        if permission == 'valid'
+        permission = the_thing.available_to_user(current_user.student_access.account_type, scul)
+        if permission[:view]
           course_url(
               the_thing.course_module.course_section.subject_course.name_url,
               the_thing.course_module.course_section.name_url,
@@ -300,7 +300,7 @@ class ApplicationController < ActionController::Base
           library_course_url(
               the_thing.course_module.course_section.subject_course.group.name_url,
               the_thing.course_module.course_section.subject_course.name_url,
-              anchor: permission
+              anchor: permission[:reason]
           )
         end
       else
@@ -317,14 +317,14 @@ class ApplicationController < ActionController::Base
     if the_thing.class == SubjectCourseResource
 
       if current_user
-        permission = current_user.student_access.permission_to_see_content(nil, the_thing, nil)
-        if permission == 'valid'
+        permission = the_thing.available_to_user(current_user)
+        if permission[:view]
           the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
         else
           library_course_url(
               the_thing.subject_course.group.name_url,
               the_thing.subject_course.name_url,
-              anchor: permission
+              anchor: permission[:reason]
           )
         end
       else

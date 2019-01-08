@@ -189,26 +189,49 @@ class CourseModuleElement < ActiveRecord::Base
 
   def available_for_trial(scul=nil)
     if self.related_course_module_element_id && self.previous_cme_restriction(scul)
-      'related-lesson-restriction'
+      {view: false, reason: 'related-lesson-restriction'}
     else
-      self.available_on_trial ? 'valid' : 'trial-restriction'
+      self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'trial-restriction'}
+
     end
   end
 
   def available_for_subscription(scul=nil)
     if self.related_course_module_element_id && self.previous_cme_restriction(scul)
-      'related-lesson-restriction'
+      {view: false, reason: 'related-lesson-restriction'}
     else
-      'valid'
+      {view: true, reason: nil}
     end
   end
 
   def available_for_complimentary(scul=nil)
     if self.related_course_module_element_id && self.previous_cme_restriction(scul)
-      'related-lesson-restriction'
+      {view: false, reason: 'related-lesson-restriction'}
     else
-      'valid'
+      {view: true, reason: nil}
     end
+  end
+
+  def available_to_user(user_account_type, scul)
+    result = {view: false, reason: nil}
+
+    case user_account_type
+
+    when 'Trial'
+      result = available_for_trial(scul)
+    when 'Subscription'
+      result = available_for_subscription(scul)
+    when 'Complimentary'
+      result = available_for_complimentary(scul)
+    else
+      result[:reason] = 'account-issue'
+    end
+
+    result
+
+    # Return true/false and reason
+    # false will display lock icon
+    # reason will populate modal
   end
 
   ########################################################################

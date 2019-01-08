@@ -3,27 +3,34 @@
     .col-xs-12
       .col-xs-1.col-sm-1
         .left-side-meta
-          -if current_user && @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(grandchild.id)
-            -if grandchild.is_video?
-              =image_tag('cm_green_play.png')
-            -elsif grandchild.is_quiz?
-              =image_tag('cm_green_tick.png')
-            -elsif grandchild.is_constructed_response?
-              =image_tag('cr_green.png')
-          -elsif current_user && @incomplete_cmeuls_cme_ids && @incomplete_cmeuls_cme_ids.include?(grandchild.id)
-            -if grandchild.is_video?
-              =image_tag('cm_red_play.png')
-            -elsif grandchild.is_quiz?
-              =image_tag('cm_red_tick.png')
-            -elsif grandchild.is_constructed_response?
-              =image_tag('cr_red.png')
-          -else
-            -if grandchild.is_video?
-              =image_tag('cm_grey_play.png')
-            -elsif grandchild.is_quiz?
-              =image_tag('cm_grey_tick.png')
-            -elsif grandchild.is_constructed_response?
-              =image_tag('cr_grey.png')
+          - if current_user && grandchild.available_to_user(current_user.student_access.account_type, @subject_course_user_log)
+
+            -if current_user && @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(grandchild.id)
+              -if grandchild.is_video?
+                =image_tag('cm_green_play.png')
+              -elsif grandchild.is_quiz?
+                =image_tag('cm_green_tick.png')
+              -elsif grandchild.is_constructed_response?
+                =image_tag('cr_green.png')
+            -elsif current_user && @incomplete_cmeuls_cme_ids && @incomplete_cmeuls_cme_ids.include?(grandchild.id)
+              -if grandchild.is_video?
+                =image_tag('cm_red_play.png')
+              -elsif grandchild.is_quiz?
+                =image_tag('cm_red_tick.png')
+              -elsif grandchild.is_constructed_response?
+                =image_tag('cr_red.png')
+            -else
+              -if grandchild.is_video?
+                =image_tag('cm_grey_play.png')
+              -elsif grandchild.is_quiz?
+                =image_tag('cm_grey_tick.png')
+              -elsif grandchild.is_constructed_response?
+                =image_tag('cr_grey.png')
+
+          - else
+            =image_tag('cm_grey_tick.png')
+
+
       .col-xs-8.col-sm-7{style: 'padding-left: 12px; padding-top: 4px;'}
         .pull-left
           =grandchild.name

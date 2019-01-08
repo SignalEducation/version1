@@ -47,6 +47,28 @@ class SubjectCourseResource < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def available_to_user(user_account_type)
+    result = {view: false, reason: nil}
+
+    case user_account_type
+
+    when 'Trial'
+      result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'trial-restriction'}
+    when 'Subscription'
+      result = {view: true, reason: nil}
+    when 'Complimentary'
+      result = {view: true, reason: nil}
+    else
+      result[:reason] = 'account-issue'
+    end
+
+    result
+
+    # Return true/false and reason
+    # false will display lock icon
+    # reason will populate modal
+  end
+
   def destroyable?
     true
   end
