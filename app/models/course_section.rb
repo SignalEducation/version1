@@ -88,6 +88,11 @@ class CourseSection < ActiveRecord::Base
     self.active_children.all_active.count
   end
 
+  def all_content_restricted?
+    child_array = active_children.map(&:all_content_restricted?)
+    active_children.count == child_array.select { |child| child == true }.count
+  end
+
 
   #######################################################################
 

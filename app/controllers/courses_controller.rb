@@ -349,7 +349,7 @@ class CoursesController < ApplicationController
 
     unless @course && @course.active && @course_section && @course_section.active && @course_module &&
         @course_module.active && @course_module_element && @course_module_element.active &&
-        current_user && @course_module_element.available_to_user(current_user.student_access.account_type, @subject_course_user_log)
+        current_user && @course_module_element.available_to_user(current_user.account_type, @subject_course_user_log)
 
       flash[:warning] = 'Sorry, you are not permitted to access that content. '
       redirect_to subject_course_url(@course)

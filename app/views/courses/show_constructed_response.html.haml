@@ -2,7 +2,7 @@
   .container-fluid{style: 'margin-bottom: 60px;'}
 
     .row
-      -if @course_module_element && @course_module_element_user_log && (@course_module_element.active || @course_module_element_user_log.preview_mode) && @course_module_element.available_to_user(current_user.student_access.account_type, @subject_course_user_log)
+      -if @course_module_element && @course_module_element_user_log && (@course_module_element.active || @course_module_element_user_log.preview_mode) && @course_module_element.available_to_user(current_user.account_type, @subject_course_user_log)
         -if @course_module_element.try(:is_constructed_response)
           #constructed-response-window
             :javascript

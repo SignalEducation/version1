@@ -287,7 +287,7 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        permission = the_thing.available_to_user(current_user.student_access.account_type, scul)
+        permission = the_thing.available_to_user(current_user.account_type, scul)
         if permission[:view]
           course_url(
               the_thing.course_module.course_section.subject_course.name_url,

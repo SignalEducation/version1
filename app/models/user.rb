@@ -79,6 +79,8 @@ class User < ActiveRecord::Base
                   :unsubscribed_from_emails, :communication_approval_datetime,
                   :communication_approval, :exam_body_user_details_attributes
 
+  delegate :account_type, :to => :student_access
+
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)

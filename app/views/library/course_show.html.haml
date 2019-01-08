@@ -41,6 +41,8 @@
             -@course.course_sections.all_active.all_in_order.each do |course_section|
               %a{href: "##{course_section.name_url}", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
                 =course_section.name
+                - if current_user && current_user.account_type == 'Trial' &&  course_section.all_content_restricted?
+                  =image_tag('grey_lock_icon.png')
 
             %a{href: "#resources", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
               ='Resources'
@@ -65,7 +67,10 @@
                               .course-module-panel#headingOne{ aria: {expand: true, controls: "collapse_#{course_section.name_url}_#{counter}"}}
                                 .col-xs-1.col-sm-1
                                   .left-side-meta
-                                    =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
+                                    - if current_user && current_user.account_type == 'Trial' && child.all_content_restricted?
+                                      =image_tag('grey_lock_icon.png')
+                                    - else
+                                      =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
                                 .col-xs-9.xs-padding
                                   .box-topic-item
                                     =truncate(child.name, length: 50)

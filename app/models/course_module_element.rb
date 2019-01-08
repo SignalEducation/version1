@@ -179,9 +179,15 @@ class CourseModuleElement < ActiveRecord::Base
 
   def previous_cme_restriction(scul)
 
-    if scul && self.related_course_module_element_id
-      student_exam_track = scul.student_exam_tracks.for_course_module(self.course_module_id).first
-      !student_exam_track.completed_cme_user_logs.map(&:course_module_element_id).include?(self.related_course_module_element_id)
+    if self.related_course_module_element_id
+
+      if scul
+        student_exam_track = scul.student_exam_tracks.for_course_module(self.course_module_id).last
+        !student_exam_track.completed_cme_user_logs.map(&:course_module_element_id).include?(self.related_course_module_element_id)
+      else
+        true
+      end
+
     else
       false
     end

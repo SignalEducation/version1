@@ -203,6 +203,9 @@ class CourseModule < ActiveRecord::Base
     end
   end
 
+  def all_content_restricted?
+    active_children.count == active_children.where(available_on_trial: false).count
+  end
 
   ########################################################################
 
