@@ -5,12 +5,24 @@
 
     - @subject_course_resources.each do |resource|
       .col-sm-12.col-md-6{style: 'padding-left: 0;'}
-        =link_to course_resource_special_link(resource), class: 'course-resource-box', target: '_blank' do
-          .course-resource-box-inner
-            .resource-box-label
-              =resource.name
-            .resource-box-icon
-              .glyphicon.glyphicon-download
+        - if current_user && resource.available_to_user(current_user.account_type)[:view]
+          =link_to course_resource_special_link(resource), class: 'course-resource-box', target: '_blank' do
+            .course-resource-box-inner
+              .resource-box-label
+                =resource.name
+              .resource-box-icon
+                .glyphicon.glyphicon-download
+
+        - else
+          =link_to course_resource_special_link(resource), class: 'course-resource-box' do
+            .course-resource-box-inner
+              .resource-box-label
+                =resource.name
+              .resource-box-icon
+                .left-side-meta
+                  =image_tag('grey_lock_icon.png')
+
+
 
 
 

@@ -317,7 +317,7 @@ class ApplicationController < ActionController::Base
     if the_thing.class == SubjectCourseResource
 
       if current_user
-        permission = the_thing.available_to_user(current_user)
+        permission = the_thing.available_to_user(current_user.account_type)
         if permission[:view]
           the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
         else
