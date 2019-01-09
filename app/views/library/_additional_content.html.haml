@@ -1,10 +1,44 @@
+-if @products.any?
+  .col-sm-6
+    %p.h4
+      Exam Preparation Products
+
+    - @products.each do |product|
+      .col-sm-12{style: 'padding-left: 0;'}
+        -if @course.preview
+          =link_to '#', class: 'course-product-box' do
+            .course-product-box-inner
+              .product-box-label
+                =product.mock_exam.name
+              .product-box-icon
+                =image_tag product.product_type == 'mock_exam' ? 'ico-exam.svg' : 'ico-questions-2.svg', alt: "#{product.mock_exam.name} Product"
+
+        -else
+          -if current_user
+            =link_to new_order_url(product), class: 'course-product-box' do
+              .course-product-box-inner
+                .product-box-label
+                  =product.mock_exam.name
+                .product-box-icon
+                  =image_tag product.product_type == 'mock_exam' ? 'ico-exam.svg' : 'ico-questions-2.svg', alt: "#{product.mock_exam.name} Product"
+
+
+          -else
+            =link_to new_student_url, class: 'course-product-box' do
+              .course-product-box-inner
+                .product-box-label
+                  =product.mock_exam.name
+                .product-box-icon
+                  =image_tag product.product_type == 'mock_exam' ? 'ico-exam.svg' : 'ico-questions-2.svg', alt: "#{product.mock_exam.name} Product"
+
+
 -if @subject_course_resources && @subject_course_resources.any?
   .col-sm-6
     %p.h4
       Course Resources
 
     - @subject_course_resources.each do |resource|
-      .col-sm-12.col-md-6{style: 'padding-left: 0;'}
+      .col-sm-12{style: 'padding-left: 0;'}
         - if current_user && resource.available_to_user(current_user.account_type)[:view]
           =link_to course_resource_special_link(resource), class: 'course-resource-box', target: '_blank' do
             .course-resource-box-inner
@@ -22,41 +56,4 @@
                 .left-side-meta
                   =image_tag('grey_lock_icon.png')
 
-
-
-
-
-
--if @products.any?
-  .col-sm-6
-    %p.h4
-      Exam Preparation Products
-
-    - @products.each do |product|
-      .col-sm-12{style: 'padding-left: 0;'}
-        -if @course.preview
-          =link_to '#', class: 'course-product-box' do
-            .course-product-box-inner
-              .product-box-label
-                =product.mock_exam.name
-              .product-box-icon
-                =image_tag 'ico-exam.svg', alt: "#{product.mock_exam.name} Product"
-
-        -else
-          -if current_user
-            =link_to new_order_url(product), class: 'course-product-box' do
-              .course-product-box-inner
-                .product-box-label
-                  =product.mock_exam.name
-                .product-box-icon
-                  =image_tag 'ico-exam.svg', alt: "#{product.mock_exam.name} Product"
-
-
-          -else
-            =link_to new_student_url, class: 'course-product-box' do
-              .course-product-box-inner
-                .product-box-label
-                  =product.mock_exam.name
-                .product-box-icon
-                  =image_tag 'ico-exam.svg', alt: "#{product.mock_exam.name} Product"
 

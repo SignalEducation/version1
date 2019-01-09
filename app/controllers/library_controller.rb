@@ -33,8 +33,19 @@ class LibraryController < ApplicationController
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
       @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+      correction_packs = Product.includes(:currency)
+                       .in_currency(@currency_id)
+                       .all_active
+                       .all_in_order
+                       .where("mock_exam_id IS NOT NULL")
+                       .where("product_type = ?", Product.product_types[:correction_pack])
       mock_exam_ids = @course.mock_exams.map(&:id)
-      @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
+      mock_exams = Product.includes(:mock_exam)
+                       .in_currency(@currency_id)
+                       .all_active
+                       .all_in_order
+                       .where(mock_exam_id: mock_exam_ids)
+      @products = correction_packs + mock_exams
       #TODO - Add in the three correction packs here
       @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
       @form_type = "Course Tutor Question. Course: #{@course.name}"

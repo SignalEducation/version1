@@ -45,7 +45,7 @@
                   =image_tag('grey_lock_icon.png')
 
             %a{href: "#resources", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
-              ='Resources'
+              ='Exam Prep'
 
             -#%a{href: "#assumed-knowledge", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
               ='Assumed Knowledge'
@@ -101,8 +101,13 @@
                           .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
                             -child.children.all_in_order.all_active.each do |grandchild|
 
-                              =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
-                                =render partial: 'panel_content', locals: {grandchild: grandchild}
+                              - permission = grandchild.available_to_user(current_user.account_type, @subject_course_user_log)
+                              - if current_user && permission[:view] == true
+                                =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
+                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
+                              - else
+                                %a{class: 'list-group-item link-purple box-topic-item', onclick: "openDialog('#{permission[:reason]}', '#{grandchild.related_course_module_element.try(:name)}');"}
+                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
 
 
                   .col-sm-12.col-md-3
@@ -127,14 +132,20 @@
               .content-box-inner
                 =render partial: 'library/additional_content'
 
+    #trial-restriction-dialog.restriction-dialog
+      .row
+        .col-sm-12
+          %h2='Sorry! That content is not available on a trial account'
+
+        .col-sm-12.l-margin-top
+          %p
+            Upgrade your account to get full access
+
 
 
 - if current_user
   =render partial: 'user_exam_body_details_modal'
-=render partial: 'trial_restriction_modal'
-=render partial: 'subscription_restriction_modal'
-=render partial: 'related_lesson_restriction_modal'
-=render partial: 'account_issue_modal'
+
 
 -if current_user && current_user.subscription_user?
 
@@ -151,4 +162,42 @@
         var inst = $('[data-remodal-id=exam-body-user-details-modal]').remodal();
         inst.open();
       });
+
+
+:javascript
+
+  $("#trial-restriction-dialog").kendoDialog({
+    width: "50%",
+    scrollable: false,
+    title: "Trial Access Restriction",
+    closable: true,
+    modal: true,
+    visible: false,
+    actions: [
+      { text: 'Close' },
+      { text: 'Upgrade', primary: true, action: upgradeRedirect }
+    ]
+  });
+  let trialRestrictionDialog = $("#trial-restriction-dialog").data("kendoDialog");
+
+
+  function openDialog(reason, relatedName) {
+    if (reason === 'related-lesson-restriction') {
+      relatedLessonDialog(relatedName)
+    } else if (reason === 'trial-restriction') {
+      openTrialRestrictionDialog()
+    }
+  }
+
+  function relatedLessonDialog(relatedName) {
+    kendo.alert("Sorry! That lesson is blocked until you complete the " + relatedName + " lesson.");
+  }
+
+  function openTrialRestrictionDialog() {
+    trialRestrictionDialog.open();
+  }
+
+  function upgradeRedirect(e) {
+    window.location.href = "#{new_subscription_url}";
+  }
 
