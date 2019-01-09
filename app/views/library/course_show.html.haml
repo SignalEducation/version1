@@ -101,12 +101,17 @@
                           .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
                             -child.children.all_in_order.all_active.each do |grandchild|
 
-                              - permission = grandchild.available_to_user(current_user.account_type, @subject_course_user_log)
-                              - if current_user && permission[:view] == true
+                              - if current_user
+                                - permission = grandchild.available_to_user(current_user.account_type, @subject_course_user_log)
+                                - if permission[:view]
+                                  =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
+                                    =render partial: 'panel_content', locals: {grandchild: grandchild}
+                                - else
+                                  %a{class: 'list-group-item link-purple box-topic-item', onclick: "openDialog('#{permission[:reason]}', '#{grandchild.related_course_module_element.try(:name)}');"}
+                                    =render partial: 'panel_content', locals: {grandchild: grandchild}
+
+                              -else
                                 =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
-                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
-                              - else
-                                %a{class: 'list-group-item link-purple box-topic-item', onclick: "openDialog('#{permission[:reason]}', '#{grandchild.related_course_module_element.try(:name)}');"}
                                   =render partial: 'panel_content', locals: {grandchild: grandchild}
 
 
@@ -190,7 +195,7 @@
   }
 
   function relatedLessonDialog(relatedName) {
-    kendo.alert("Sorry! That lesson is blocked until you complete the " + relatedName + " lesson.");
+    window.lessonRestrictedAlert("Access to this lesson is restricted until you complete the <b>" + relatedName + "</b> lesson.");
   }
 
   function openTrialRestrictionDialog() {
@@ -201,3 +206,9 @@
     window.location.href = "#{new_subscription_url}";
   }
 
+  function lessonRestrictedAlert(content){
+    $("<div></div>").kendoAlert({
+      title: "Lesson Restricted",
+      content: content
+    }).data("kendoAlert").open();
+  }
