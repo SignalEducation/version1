@@ -100,7 +100,7 @@ describe StripeService, type: :service do
       subject.delete_plan('test_id')
     end
 
-    it 'calls #delete on a PayPal plan if it exists' do
+    it 'calls #delete on a Stripe plan if it exists' do
       dbl = double
       allow(subject).to receive(:get_plan).with('test_id').and_return(dbl)
       expect(dbl).to receive(:delete)
@@ -108,7 +108,7 @@ describe StripeService, type: :service do
       subject.delete_plan('test_id')
     end
 
-    it 'does not call #delete on a PayPal plan if it does not exist' do
+    it 'does not call #delete on a Stripe plan if it does not exist' do
       dbl = double
       allow(subject).to receive(:get_plan).with('test_id').and_return(nil)
       expect(dbl).not_to receive(:delete)
@@ -125,6 +125,70 @@ describe StripeService, type: :service do
 
   describe '#create_and_return_subscription' do
     it 'creates and returns a subscription on Stripe'
+  end
+
+  describe '#pause_subscription' do
+    let(:subscription) { create(:subscription, state: 'active') }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    it 'requires a subscription to be passed in' do
+      expect { subject.pause_subscription() }.to raise_error ArgumentError
+    end
+
+    it 'calls the Stripe API correctly' do
+      dbl = double
+      allow(Stripe::Subscription).to receive(:retrieve).with(subscription.stripe_guid).and_return(dbl)
+      expect(dbl).to receive(:coupon=).with('paused-subscription')
+      expect(dbl).to receive(:save)
+
+      subject.pause_subscription(subscription)
+    end
+
+    it 'updates the subscription state to PAUSED' do
+      dbl = double
+      allow(Stripe::Subscription).to receive(:retrieve).with(subscription.stripe_guid).and_return(dbl)
+      expect(dbl).to receive(:coupon=).with('paused-subscription')
+      allow(dbl).to receive(:save)
+      expect(subscription.state).to eq 'active'
+
+      subject.pause_subscription(subscription)
+
+      expect(subscription.state).to eq 'paused'
+    end
+  end
+
+  describe '#reactivate_subscription' do
+    let(:subscription) { create(:subscription, state: 'paused') }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    it 'requires a subscription to be passed in' do
+      expect { subject.reactivate_subscription() }.to raise_error ArgumentError
+    end
+
+    it 'calls the Stripe API correctly' do
+      dbl = double
+      allow(Stripe::Subscription).to receive(:retrieve).with(subscription.stripe_guid).and_return(dbl)
+      expect(dbl).to receive(:delete_discount)
+
+      subject.reactivate_subscription(subscription)
+    end
+
+    it 'updates the subscription state to PAUSED' do
+      dbl = double
+      allow(Stripe::Subscription).to receive(:retrieve).with(subscription.stripe_guid).and_return(dbl)
+      allow(dbl).to receive(:delete_discount)
+      expect(subscription.state).to eq 'paused'
+
+      subject.reactivate_subscription(subscription)
+
+      expect(subscription.state).to eq 'active'
+    end
   end
 
   # PRIVATE METHODS ============================================================
