@@ -147,6 +147,7 @@ class StripeService
   def reactivate_subscription(subscription)
     stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_guid)
     stripe_sub.delete_discount
+    subscription.restart
   rescue Stripe::StripeError => e
     Rails.logger.error "DEBUG: Subscription#restart Failure to revoke paused coupon for Subscription: ##{subscription.id}"
     raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong restarting your subscription. Please try again or contact us for assistance.')
