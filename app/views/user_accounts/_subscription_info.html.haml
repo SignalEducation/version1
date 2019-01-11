@@ -138,6 +138,9 @@
           .btn.btn-purple.full-width.l-margin-bottom
             =t('views.users.show.change_subscription_plan')
 
+      %a{data: {remodal: {target: 'confirm-pause-modal'}}, class: 'btn btn-orange full-width l-margin-bottom confirm-pause-modal'}
+        =t('views.users.show.pause_your_subscription_plan')
+
       %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
