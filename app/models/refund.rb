@@ -39,7 +39,7 @@ class Refund < ActiveRecord::Base
   validates :stripe_guid, presence: true, uniqueness: true
   validates :charge_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_charge_guid, presence: true, uniqueness: true
+  validates :stripe_charge_guid, presence: true
   validates :invoice_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :subscription_id, presence: true,
