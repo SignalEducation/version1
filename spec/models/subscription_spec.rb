@@ -91,6 +91,44 @@ describe Subscription do
   # class methods
 
   # instance methods
+
+  describe '#schedule_paypal_cancellation' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    context 'for pending_cancellation subscriptions' do
+      let(:subscription) { build_stubbed(:subscription, state: 'pending_cancellation')}
+
+      it 'calls #set_cancellation_date on the subscription' do
+        expect_any_instance_of(PaypalService).to receive(:set_cancellation_date).with(subscription)
+
+        subscription.schedule_paypal_cancellation
+      end
+    end
+
+    context 'for active subscriptions' do
+      let(:subscription) { create(:subscription, state: 'active')}
+
+      it 'updates the state to #cancelled_pending' do
+        allow_any_instance_of(PaypalService).to receive(:set_cancellation_date).with(subscription)
+        expect(subscription.state).to eq 'active'
+
+        subscription.schedule_paypal_cancellation
+
+        subscription.reload
+        expect(subscription.state).to eq 'pending_cancellation'
+      end
+
+      it 'calls #set_cancellation_date on the subscription' do
+        expect_any_instance_of(PaypalService).to receive(:set_cancellation_date).with(subscription)
+
+        subscription.schedule_paypal_cancellation
+      end
+    end
+  end
+
+
   it { should respond_to(:cancel) }
   it { should respond_to(:immediate_cancel) }
   it { should respond_to(:reactivate_canceled) }

@@ -1457,7 +1457,9 @@ en:
         change_your_password:
           link: Change password
           h4: Change your password
-        cancel_your_subscription_plan: Cancel Recurring Payments
+        pause_your_subscription_plan: Pause Recurring Payments
+        cancel_your_subscription_plan: Cancel Subscription
+        confirm_subscription_pause: Pause My Subscription
         confirm_subscription_cancellation: Cancel My Subscription
         keep_subscription: Keep my subscription
         card_expired: "Expired"

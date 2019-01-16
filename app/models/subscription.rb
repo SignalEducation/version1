@@ -86,6 +86,10 @@ class Subscription < ActiveRecord::Base
       transition pending: :active
     end
 
+    event :pause do
+      transition active: :paused
+    end
+
     event :record_error do
       transition [:active, :pending] => :errored
     end
@@ -95,11 +99,11 @@ class Subscription < ActiveRecord::Base
     end
 
     event :cancel do
-      transition [:pending, :active, :errored, :pending_cancellation] => :cancelled
+      transition [:pending, :active, :errored, :pending_cancellation, :paused] => :cancelled
     end
 
     event :restart do
-      transition [:errored, :pending_cancellation] => :active
+      transition [:errored, :pending_cancellation, :paused] => :active
     end
 
     state all - [:active, :errored, :pending_cancellation] do
@@ -134,6 +138,10 @@ class Subscription < ActiveRecord::Base
       # Update card details (how-to)
       # UserMailer.subscription_delete_email(subscription.user).deliver
       # UserMailer.subscription_auto_delete_email(subscription.user).deliver
+    end
+
+    after_transition active: :paused do |subscription, _transition|
+      # Notify the user that their sub is paused
     end
 
     after_transition active: :pending_cancellation do |subscription, _transition|
