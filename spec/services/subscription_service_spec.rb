@@ -35,6 +35,56 @@ describe SubscriptionService, type: :service do
     it 'does stuff'
   end
 
+  describe '#pause' do
+    describe 'for PayPal subscriptions' do
+      before :each do
+        allow(sub_service).to receive(:paypal?).and_return(true)
+      end
+
+      it 'raises an error' do
+        expect { sub_service.send(:change_plan, 'new_plan_id') }.to raise_error Learnsignal::SubscriptionError
+      end
+    end
+
+    describe 'for Stripe subscriptions' do
+      before :each do
+        allow(sub_service).to receive(:paypal?).and_return(false)
+        allow(subscription).to receive(:stripe_guid).and_return('test_guid')
+      end
+
+      it 'calls #change_plan on the StripeService' do
+        expect_any_instance_of(StripeService).to receive(:change_plan).with(subscription, 'new_plan_id')
+
+        sub_service.send(:change_plan, 'new_plan_id')
+      end
+    end
+  end
+
+  describe '#re_activate' do
+    describe 'for PayPal subscriptions' do
+      before :each do
+        allow(sub_service).to receive(:paypal?).and_return(true)
+      end
+
+      it 'raises an error' do
+        expect { sub_service.send(:change_plan, 'new_plan_id') }.to raise_error Learnsignal::SubscriptionError
+      end
+    end
+
+    describe 'for Stripe subscriptions' do
+      before :each do
+        allow(sub_service).to receive(:paypal?).and_return(false)
+        allow(subscription).to receive(:stripe_guid).and_return('test_guid')
+      end
+
+      it 'calls #change_plan on the StripeService' do
+        expect_any_instance_of(StripeService).to receive(:change_plan).with(subscription, 'new_plan_id')
+
+        sub_service.send(:change_plan, 'new_plan_id')
+      end
+    end
+  end
+
   describe '#paypal?' do
     describe 'with :use_paypal param' do
       let(:paypal_sub) { build_stubbed(:subscription, use_paypal: 'true') }
