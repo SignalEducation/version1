@@ -1,0 +1,31 @@
+.remodal{"data-remodal-id" => "confirm-pause-modal"}
+  .row
+    .col-md-12
+      .col-xs-11
+        %h2
+          ='Are you sure you want to pause your subscription?'
+      .col-xs-1
+        %button.remodal-close{"data-remodal-action" => "close"}
+
+  .row{style: 'text-align: left;'}
+    .col-sm-12.l-margin-top
+      .col-sm-12
+        .col-sm-12
+          %p.h4
+            Your account will be downgraded immediately and you will lose access to all premium content. 
+
+  .row.l-margin-top
+    .col-sm-12.l-margin-top
+      .col-sm-6
+        %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
+          =t('views.users.show.keep_subscription')
+
+      .col-sm-6
+        =link_to subscriptions_suspensions_path(id: @current_subscription.id), method: :post do
+          .btn.btn-orange.full-width.l-margin-bottom
+            =t('views.users.show.confirm_subscription_pause')
+      .col-sm-12
+        %p
+          You can re-activate your subscription again at any time
+
+
