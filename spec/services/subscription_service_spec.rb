@@ -41,21 +41,22 @@ describe SubscriptionService, type: :service do
         allow(sub_service).to receive(:paypal?).and_return(true)
       end
 
-      it 'raises an error' do
-        expect { sub_service.send(:change_plan, 'new_plan_id') }.to raise_error Learnsignal::SubscriptionError
+      it 'calls #suspend_billing_agreement on the PaypalService' do
+        expect_any_instance_of(PaypalService).to receive(:suspend_billing_agreement).with(subscription)
+
+        sub_service.pause
       end
     end
 
     describe 'for Stripe subscriptions' do
       before :each do
-        allow(sub_service).to receive(:paypal?).and_return(false)
-        allow(subscription).to receive(:stripe_guid).and_return('test_guid')
+        allow(sub_service).to receive(:stripe?).and_return(true)
       end
 
-      it 'calls #change_plan on the StripeService' do
-        expect_any_instance_of(StripeService).to receive(:change_plan).with(subscription, 'new_plan_id')
+      it 'calls #pause_subscription on the StripeService' do
+        expect_any_instance_of(StripeService).to receive(:pause_subscription).with(subscription)
 
-        sub_service.send(:change_plan, 'new_plan_id')
+        sub_service.pause
       end
     end
   end
@@ -66,21 +67,22 @@ describe SubscriptionService, type: :service do
         allow(sub_service).to receive(:paypal?).and_return(true)
       end
 
-      it 'raises an error' do
-        expect { sub_service.send(:change_plan, 'new_plan_id') }.to raise_error Learnsignal::SubscriptionError
+      it 'calls #reactivate_billing_agreement on the PaypalService' do
+        expect_any_instance_of(PaypalService).to receive(:reactivate_billing_agreement).with(subscription)
+
+        sub_service.re_activate
       end
     end
 
     describe 'for Stripe subscriptions' do
       before :each do
-        allow(sub_service).to receive(:paypal?).and_return(false)
-        allow(subscription).to receive(:stripe_guid).and_return('test_guid')
+        allow(sub_service).to receive(:stripe?).and_return(true)
       end
 
-      it 'calls #change_plan on the StripeService' do
-        expect_any_instance_of(StripeService).to receive(:change_plan).with(subscription, 'new_plan_id')
+      it 'calls #reactivate_subscription on the StripeService' do
+        expect_any_instance_of(StripeService).to receive(:reactivate_subscription).with(subscription)
 
-        sub_service.send(:change_plan, 'new_plan_id')
+        sub_service.re_activate
       end
     end
   end
