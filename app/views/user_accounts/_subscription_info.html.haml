@@ -144,6 +144,10 @@
       %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
+    -elsif @current_subscription.paused?
+      =link_to subscriptions_suspension_path(id: @current_subscription.id), method: :delete do
+        .btn.btn-orange.full-width.l-margin-bottom
+          =t('views.users.show.confirm_subscription_reactivate')
 
     -elsif @current_subscription.canceled_pending_status?
 

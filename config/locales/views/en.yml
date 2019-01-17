@@ -1461,6 +1461,8 @@ en:
         cancel_your_subscription_plan: Cancel Subscription
         confirm_subscription_pause: Pause My Subscription
         confirm_subscription_cancellation: Cancel My Subscription
+        confirm_subscription_pause: Pause My Subscription
+        confirm_subscription_reactivate: Reactivate My Subscription
         keep_subscription: Keep my subscription
         card_expired: "Expired"
         card_expires: "Expires"

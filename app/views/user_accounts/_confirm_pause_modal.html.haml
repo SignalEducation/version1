@@ -3,7 +3,7 @@
     .col-md-12
       .col-xs-11
         %h2
-          ='Are you really sure you want to cancel?'
+          ='Are you sure you want to pause your subscription?'
       .col-xs-1
         %button.remodal-close{"data-remodal-action" => "close"}
 
@@ -12,43 +12,7 @@
       .col-sm-12
         .col-sm-12
           %p.h4
-            ="If you quit now, your chances of passing the next exam will significantly decrease. You'll also miss out on:"
-          .cancel-sub-list
-            %ul
-              %li
-                %span.strong
-                  ='Tired of studying alone?'
-                ='New student community'
-                ='coming soon!'
-              %li
-                %span.strong
-                  ='Stuck on a study question?'
-                ='Get a real answer, 24 hours a day.'
-              %li
-                ='Our bigger and better'
-                %span.strong
-                  ='ACCA Study Bootcamp'
-                ='coming soon!'
-              %li.hidden-xs
-                ='More online'
-                %span.strong
-                  ='Question & Answer sessions'
-                ='to help you.'
-              %li.hidden-xs
-                %span.strong
-                  ='Busy at work or home?'
-                ='Study at any time in any place.'
-              %li
-                ='New'
-                %span.strong
-                  ='online Computer Based Exam practice'
-                ='coming soon!'
-              %li
-                %span.strong
-                  ='Prices may rise.'
-                ='Lock in your low rate.'
-
-
+            Your account will be downgraded immediately and you will lose access to all premium content. 
 
   .row.l-margin-top
     .col-sm-12.l-margin-top
@@ -57,11 +21,11 @@
           =t('views.users.show.keep_subscription')
 
       .col-sm-6
-        =link_to @current_subscription, method: :delete, id: 'confirm_cancellation_button' do
-          .btn.btn-red.full-width.l-margin-bottom
-            =t('views.users.show.confirm_subscription_cancellation')
+        =link_to subscriptions_suspensions_path(id: @current_subscription.id), method: :post do
+          .btn.btn-orange.full-width.l-margin-bottom
+            =t('views.users.show.confirm_subscription_pause')
       .col-sm-12
         %p
-          = account_cancellation_message(@current_subscription)
+          You can re-activate your subscription again at any time
 
 
