@@ -22,7 +22,6 @@
 #  temporary_label                  :string
 #  is_constructed_response          :boolean          default(FALSE), not null
 #  available_on_trial               :boolean          default(FALSE)
-#  course_section_id                :integer
 #  related_course_module_element_id :integer
 #
 

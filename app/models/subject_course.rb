@@ -297,8 +297,5 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  def update_course_logs
-    SubjectCourseUserLogWorker.perform_async(self.id)
-  end
 
 end

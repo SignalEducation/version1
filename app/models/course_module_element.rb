@@ -22,7 +22,6 @@
 #  temporary_label                  :string
 #  is_constructed_response          :boolean          default(FALSE), not null
 #  available_on_trial               :boolean          default(FALSE)
-#  course_section_id                :integer
 #  related_course_module_element_id :integer
 #
 
@@ -34,7 +33,7 @@ class CourseModuleElement < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
-                  :is_constructed_response, :course_section_id,
+                  :is_constructed_response,
                   :temporary_label, :number_of_questions, :_destroy,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
@@ -129,7 +128,7 @@ class CourseModuleElement < ActiveRecord::Base
         course_module.course_section
       end
     else
-      self.subject_course.first_active_child
+      self.course_module.course_section.first_active_cme
     end
   end
 
