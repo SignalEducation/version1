@@ -34,7 +34,7 @@ class CourseModuleElement < ActiveRecord::Base
   # attr-accessible
   attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
                   :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
-                  :is_constructed_response,
+                  :is_constructed_response, :course_section_id,
                   :temporary_label, :number_of_questions, :_destroy,
                   :course_module_element_video_attributes,
                   :course_module_element_quiz_attributes,
@@ -183,7 +183,12 @@ class CourseModuleElement < ActiveRecord::Base
 
       if scul
         student_exam_track = scul.student_exam_tracks.for_course_module(self.course_module_id).last
-        !student_exam_track.completed_cme_user_logs.map(&:course_module_element_id).include?(self.related_course_module_element_id)
+        if student_exam_track
+          !student_exam_track.completed_cme_user_logs.map(&:course_module_element_id).include?(self.related_course_module_element_id)
+        else
+          true
+        end
+
       else
         true
       end
