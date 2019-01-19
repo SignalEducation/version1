@@ -34,8 +34,8 @@ class StudentAccess < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}, on: :update
   validates :account_type, presence: true, inclusion: {in: ACCOUNT_TYPES}
 
-  # When no subscription_id is present the user is on a trial access plan
-  # Remove the content_access boolean, the subscription will determine access to each exam_body content
+  #TODO When no subscription_id is present the user is on a trial access plan
+  #TODO Remove the content_access boolean, the subscription will determine access to each exam_body content
 
   # callbacks
   before_destroy :check_dependencies

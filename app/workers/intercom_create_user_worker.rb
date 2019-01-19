@@ -14,7 +14,7 @@ class IntercomCreateUserWorker
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,
-                            custom_data: {guid: user.guid,
+                            custom_attributes: {guid: user.guid,
                                           user_group: user.user_group,
                                           account_status: user.user_account_status,
                                           email_verified: user.email_verified,
