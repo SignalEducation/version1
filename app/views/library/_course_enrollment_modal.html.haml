@@ -20,7 +20,7 @@
                   #custom_exam_date
                     =f.label :exam_date, t('views.enrollments.form.select_exam_date'), class: 'control-label'
                     .input-group.input-group-lg.full-width
-                      =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
+                      =f.text_field :exam_date, placeholder: 'Select Date ...', autocomplete: 'off', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
                 -else
                   =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
                   .input-group.input-group-lg.full-width
@@ -34,9 +34,9 @@
                       %input{type: "checkbox", id: 'use_new_scul'}
                         %span
                           %i.fa.fa-check
-                        ='Clear all course progress'
+                        ='Reset all course progress'
 
-            .col-sm-12
+            .col-sm-12.l-margin-top-big
               %p.p.text-center
                 ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
 
@@ -84,8 +84,11 @@
 
   // Date Picker
   $(function () {
-    $('#exam_date_timepicker').datetimepicker();
-      format: 'DD/MM/YYYY'
+    $('#exam_date_timepicker').datetimepicker({
+      useCurrent: false,
+      minDate: moment(), // Current day
+      maxDate: moment().add(365, 'days'), // 365 days from the current day
+    });
   });
 
 -if @subject_course_user_log
