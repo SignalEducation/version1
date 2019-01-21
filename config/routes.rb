@@ -190,6 +190,7 @@ Rails.application.routes.draw do
     end
     namespace :subscriptions do
       resources :suspensions, only: [:create, :destroy]
+      resources :cancellations, only: :create
     end
 
     resources :subscription_payment_cards, only: [:create, :update, :destroy]

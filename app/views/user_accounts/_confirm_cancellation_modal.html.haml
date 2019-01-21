@@ -52,13 +52,13 @@
 
   .row.l-margin-top
     .col-sm-12.l-margin-top
-      =form_for(@current_subscription) do |f|
+      =form_for @current_subscription, url: subscriptions_cancellations_path(id: @current_subscription.id), method: :post do |f|
         .form-group
           =f.label :cancellation_reason, class: 'block-label'
           =f.select :cancellation_reason, ['Completed Exams', 'No Longer Studying', 'Need a Break', 'Too Expensive'], include_blank: false, prompt: 'Please select'
         .form-group
           =f.label :cancellation_note, 'Cancellation feedback', class: 'block-label'
-          =f.text_area :cancellation_note, :cols => 50, :rows => 10
+          =f.text_area :cancellation_note, :cols => 40, :rows => 7
         .row.l-margin-top
           .col-sm-12.l-margin-top
             .col-sm-6

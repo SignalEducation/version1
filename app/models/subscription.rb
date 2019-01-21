@@ -29,14 +29,15 @@
 class Subscription < ActiveRecord::Base
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
-  attr_accessor :use_paypal, :paypal_approval_url
+  attr_accessor :use_paypal, :paypal_approval_url, :cancellation_attempt
 
   attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
                   :paypal_approval_url, :user_id, :subscription_plan_id,
                   :stripe_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
                   :stripe_guid, :stripe_customer_data, :coupon_id,
-                  :complimentary, :paypal_status, :state
+                  :complimentary, :paypal_status, :state, :cancellation_reason, 
+                  :cancellation_note
 
   # delegate :currency, to: :subscription_plan
 
@@ -64,6 +65,7 @@ class Subscription < ActiveRecord::Base
   # validates :next_renewal_date, presence: true
   validates :stripe_status, inclusion: { in: STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
+  validates :cancellation_reason, presence: true, if: Proc.new { |sub| sub.cancellation_attempt }
   # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
