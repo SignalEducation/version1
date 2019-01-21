@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181220164615) do
+ActiveRecord::Schema.define(version: 20190121134857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1145,6 +1145,9 @@ ActiveRecord::Schema.define(version: 20181220164615) do
     t.string   "paypal_token"
     t.string   "paypal_status"
     t.string   "state"
+    t.datetime "cancelled_at"
+    t.string   "cancellation_reason"
+    t.text     "cancellation_note"
   end
 
   add_index "subscriptions", ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date", using: :btree
