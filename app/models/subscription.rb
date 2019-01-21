@@ -192,6 +192,7 @@ class Subscription < ActiveRecord::Base
       SubscriptionService.new(self).cancel_subscription
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
+      false
     end
   end
 
