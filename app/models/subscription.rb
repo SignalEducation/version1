@@ -153,6 +153,10 @@ class Subscription < ActiveRecord::Base
       # need to setup a new subscription
     end
 
+    after_transition [:active, :paused] => :pending_cancellation do |subscription, _transition|
+      subscription.update(cancelled_at: Time.zone.now)
+    end
+
     after_transition pending_cancellation: :cancelled do |subscription, _transition|
       # The user has reached the max_failed_payments limit or has been manually
       # cancelled and reached the end of the last billing period.

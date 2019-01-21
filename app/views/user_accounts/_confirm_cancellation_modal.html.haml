@@ -52,6 +52,10 @@
 
   .row.l-margin-top
     .col-sm-12.l-margin-top
+      =form_for(@current_subscription, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}) do |f|
+        =f.select :cancellation_reason, ['Completed Exams', 'No Longer Studying', 'Need a Break', 'Too Expensive'], include_blank: false, prompt: 'Select a reason'
+        =f.text_field :cancellation_note
+    .col-sm-12.l-margin-top
       .col-sm-6
         %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
           =t('views.users.show.keep_subscription')
