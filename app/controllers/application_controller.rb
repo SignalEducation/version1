@@ -281,9 +281,23 @@ class ApplicationController < ActionController::Base
 
 
   def course_special_link(the_thing, scul=nil)
-    if the_thing.class == CourseModule
-      library_special_link(
-              the_thing.subject_course
+    if the_thing.class == SubjectCourse
+      library_course_url(
+          the_thing.parent.name_url,
+          the_thing.name_url
+      )
+    elsif the_thing.class == CourseSection
+      library_course_url(
+          the_thing.subject_course.group.name_url,
+          the_thing.subject_course.name_url,
+          anchor: the_thing.name_url
+      )
+    elsif the_thing.class == CourseModule
+      library_course_url(
+          the_thing.course_section.subject_course.group.name_url,
+          the_thing.course_section.subject_course.name_url,
+          the_thing.course_section.name_url,
+          anchor: the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
       if current_user

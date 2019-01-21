@@ -48,7 +48,7 @@ class SubjectCourseUserLog < ActiveRecord::Base
   after_save :update_enrollment
 
   # scopes
-  scope :all_in_order, -> { order(user_id: :asc, created_at: :asc) }
+  scope :all_in_order, -> { order(:user_id, :created_at) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }

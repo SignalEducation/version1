@@ -11,13 +11,10 @@
 
         .col-sm-3.col-xs-12.pull-right
           .l-margin-bottom
-            -if @course.exam_body && @course.exam_sittings && (!@enrollment || @enrollment.expired) && (@computer_exam_sitting || @exam_sittings)
+            -if @new_enrollment
               %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width', id: 'enrol-now-button'}
                 Enrol Now
               =render partial: 'course_enrollment_modal'
-
-      =#render partial: 'layouts/account_notice'
-
 
 
       #tab-section
@@ -34,6 +31,17 @@
                 ="#{complete_lesson} out of #{total_lesson} steps completed"
               .progress
                 .progress-bar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
+
+              .pull-right
+                -if current_user
+                  =link_to 'Resume', course_special_link(@next_element, @subject_course_user_log), class: 'btn btn-cyan'
+                -else
+                  =link_to 'Continue', new_subscription_url, class: 'btn full-width btn-cyan'
+
+                -if @enrollment && !@enrollment.expired
+                  .edit-enrollment.l-margin-top
+                    =link_to 'Edit Enrolment', edit_enrollment_url(@active_enrollment), class: 'btn btn-small btn-purple pull-right'
+
             -else
               =render partial: 'course_info'
 
@@ -154,7 +162,7 @@
 
 -if current_user && current_user.subscription_user?
 
-  -if @course.exam_body && (!@enrollment || @enrollment.expired) && (@computer_exam_sitting || @exam_sittings)
+  -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >=3
     :javascript
       $(document).ready(function() {
         var inst = $('[data-remodal-id=enrollment-modal]').remodal();

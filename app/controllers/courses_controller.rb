@@ -9,7 +9,6 @@ class CoursesController < ApplicationController
     @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
     @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
 
-
     if @course_module_element.is_quiz
       set_up_quiz
     elsif @course_module_element.is_constructed_response
@@ -145,7 +144,7 @@ class CoursesController < ApplicationController
 
     @course_module_element_user_log.update_attributes(element_completed: true)
 
-    redirect_to course_special_link(@course_module_element_user_log.course_module_element)
+    redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log)
   end
 
   private

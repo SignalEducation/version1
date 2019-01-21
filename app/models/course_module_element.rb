@@ -115,7 +115,9 @@ class CourseModuleElement < ActiveRecord::Base
 
   def next_element
     #TODO - need to factor in whether the next element is available to the student [trial or restricted]
-    if self.with_active_parents? && self.my_position_among_siblings
+    # And if the next element is active
+
+    if self.active && self.with_active_parents? && self.my_position_among_siblings
       if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
         # Find the next CME in the current CM
         CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
@@ -124,11 +126,10 @@ class CourseModuleElement < ActiveRecord::Base
         course_module.next_module.first_active_cme
       else
         # There is no next CM in current CS - return the CourseSection
-        # (makes link to course_show with CS name_url to open CS tab)
         course_module.course_section
       end
     else
-      self.course_module.course_section.first_active_cme
+      course_module.course_section.subject_course
     end
   end
 
