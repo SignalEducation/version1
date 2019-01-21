@@ -52,20 +52,23 @@
 
   .row.l-margin-top
     .col-sm-12.l-margin-top
-      =form_for(@current_subscription, html: {class: 'form-horizontal', role: 'form', id: 'new-subscription-payment-card-form'}) do |f|
-        =f.select :cancellation_reason, ['Completed Exams', 'No Longer Studying', 'Need a Break', 'Too Expensive'], include_blank: false, prompt: 'Select a reason'
-        =f.text_field :cancellation_note
-    .col-sm-12.l-margin-top
-      .col-sm-6
-        %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
-          =t('views.users.show.keep_subscription')
+      =form_for(@current_subscription) do |f|
+        .form-group
+          =f.label :cancellation_reason, class: 'block-label'
+          =f.select :cancellation_reason, ['Completed Exams', 'No Longer Studying', 'Need a Break', 'Too Expensive'], include_blank: false, prompt: 'Please select'
+        .form-group
+          =f.label :cancellation_note, 'Cancellation feedback', class: 'block-label'
+          =f.text_area :cancellation_note, :cols => 50, :rows => 10
+        .row.l-margin-top
+          .col-sm-12.l-margin-top
+            .col-sm-6
+              %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
+                =t('views.users.show.keep_subscription')
 
-      .col-sm-6
-        =link_to @current_subscription, method: :delete, id: 'confirm_cancellation_button' do
-          .btn.btn-red.full-width.l-margin-bottom
-            =t('views.users.show.confirm_subscription_cancellation')
-      .col-sm-12
-        %p
-          = account_cancellation_message(@current_subscription)
+            .col-sm-6
+              =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-red full-width l-margin-bottom'
+            .col-sm-12
+              %p
+                = account_cancellation_message(@current_subscription)
 
 
