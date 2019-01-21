@@ -161,7 +161,7 @@
         inst.open();
       });
 
-  -unless current_user.student_number || current_user.date_of_birth
+  -unless @exam_body_user_details || current_user.date_of_birth
     :javascript
       $(document).ready(function() {
         var inst = $('[data-remodal-id=exam-body-user-details-modal]').remodal();

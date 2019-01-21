@@ -29,7 +29,7 @@
             .col-sm-6
               =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
               .input-group.input-group-lg.full-width
-                =f.date_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.text_field :date_of_birth, placeholder: 'Select Date ...', class: 'form-control', style: 'border-radius: 6px;', id: 'dob_datepicker'
 
 
 
@@ -48,3 +48,13 @@
     document.forms['user_modal_form'].submit();
   });
 
+  // Date Picker
+  $(function () {
+    $('#dob_datepicker').datetimepicker({
+      viewMode: 'years',
+      useCurrent: false,
+      format: 'DD/MM/YYYY',
+      minDate: moment().subtract(100, 'years'),
+      maxDate: moment()
+    });
+  });
