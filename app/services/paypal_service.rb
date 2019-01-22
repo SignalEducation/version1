@@ -94,15 +94,18 @@ class PaypalService
       subscription.update!(
         paypal_status: agreement.state,
         complimentary: false,
-        active: true,
+        active: agreement.state != 'Cancelled',
         paypal_subscription_guid: agreement.id
       )
-      subscription.start!
+      agreement.state != 'Cancelled'
     else
       subscription.record_error!
-      Rails.logger.error "DEBUG: Subscription#create Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
+      Rails.logger.error "DEBUG: Subscription#execute Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
     end
+  rescue PayPal::SDK::Core::Exceptions::ServerError
+    Rails.logger.error "DEBUG: Subscription#execute Failure to execute BillingAgreement for Subscription: ##{subscription.id} - Paypal is 500-ing"
+    raise Learnsignal::SubscriptionError.new('Paypal is currently not responding. Please try again.')
   end
 
   def suspend_billing_agreement
@@ -118,11 +121,23 @@ class PaypalService
     state_descriptor = AgreementStateDescriptor.new(note: "Cancelling the agreement")
     if agreement.cancel(state_descriptor)
       subscription.update!(paypal_status: agreement.state)
-      subscription.cancel!
+      subscription.cancel_pending
     else
       Rails.logger.error "DEBUG: Subscription#cancel Failure to cancel BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong cancelling your subscription with PayPal. Please contact us for assistance.')
     end
+  end
+
+  def update_next_billing_date(subscription)
+    agreement = Agreement.find(subscription.paypal_subscription_guid)
+    subscription.update!(next_renewal_date: agreement.agreement_details.next_billing_date)
+  end
+
+  def set_cancellation_date(subscription)
+    agreement = Agreement.find(subscription.paypal_subscription_guid)
+    future = agreement.agreement_details.last_payment_date.to_time + 
+      subscription.subscription_plan.payment_frequency_in_months.months
+    SubscriptionCancellationWorker.perform_at(future, subscription.id)
   end
 
   private
