@@ -47,15 +47,26 @@ class SubjectCourseResource < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def available_to_user(user_account_type)
+  def available_for_subscription(user)
+
+    if user.valid_subscription?
+      {view: true, reason: nil}
+    else
+      self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+    end
+
+  end
+
+
+  def available_to_user(user)
     result = {view: false, reason: nil}
 
-    case user_account_type
+    case user.account_type
 
     when 'Trial'
       result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'trial-restriction'}
     when 'Subscription'
-      result = {view: true, reason: nil}
+      result = available_for_subscription(user)
     when 'Complimentary'
       result = {view: true, reason: nil}
     else

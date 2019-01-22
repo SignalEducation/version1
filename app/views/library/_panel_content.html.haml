@@ -3,7 +3,7 @@
     .col-xs-12
       .col-xs-1.col-sm-1
         .left-side-meta
-          - if current_user && grandchild.available_to_user(current_user.account_type, @subject_course_user_log)[:view] == true
+          - if current_user && grandchild.available_to_user(current_user, @subject_course_user_log)[:view] == true
 
             -if current_user && @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(grandchild.id)
               -if grandchild.is_video?

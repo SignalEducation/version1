@@ -44,7 +44,6 @@
 
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
-      %script{type: 'text/javascript', src: 'https://cdn.optimizely.com/js/5168310932.js'}
       =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/survicate_pixel'

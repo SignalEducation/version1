@@ -39,7 +39,7 @@
 
     - @subject_course_resources.each do |resource|
       .col-sm-12{style: 'padding-left: 0;'}
-        - if current_user && resource.available_to_user(current_user.account_type)[:view]
+        - if current_user && resource.available_to_user(current_user)[:view]
           =link_to course_resource_special_link(resource), class: 'course-resource-box', target: '_blank' do
             .course-resource-box-inner
               .resource-box-label

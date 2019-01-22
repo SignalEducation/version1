@@ -110,7 +110,7 @@
                             -child.children.all_in_order.all_active.each do |grandchild|
 
                               - if current_user
-                                - permission = grandchild.available_to_user(current_user.account_type, @subject_course_user_log)
+                                - permission = grandchild.available_to_user(current_user, @subject_course_user_log)
                                 - if permission[:view]
                                   =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
                                     =render partial: 'panel_content', locals: {grandchild: grandchild}

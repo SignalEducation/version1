@@ -301,7 +301,7 @@ class ApplicationController < ActionController::Base
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        permission = the_thing.available_to_user(current_user.account_type, scul)
+        permission = the_thing.available_to_user(current_user, scul)
         if permission[:view]
           course_url(
               the_thing.course_module.course_section.subject_course.name_url,
@@ -331,7 +331,7 @@ class ApplicationController < ActionController::Base
     if the_thing.class == SubjectCourseResource
 
       if current_user
-        permission = the_thing.available_to_user(current_user.account_type)
+        permission = the_thing.available_to_user(current_user)
         if permission[:view]
           the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
         else
