@@ -25,12 +25,10 @@ class ContentPageSection < ActiveRecord::Base
   belongs_to :subject_course
 
   # validation
-  validates :content_page_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}, on: :update
+  validates :content_page_id, presence: true, on: :update
   validates :text_content, presence: true
   validates :panel_colour, presence: true
-  validates :sorting_order, presence: true,
-            numericality: {only_integer: true}
+  validates :sorting_order, presence: true
 
   # callbacks
   before_destroy :check_dependencies

@@ -80,6 +80,7 @@ describe User do
   it { should have_many(:completed_course_module_element_user_logs) }
   it { should have_many(:incomplete_course_module_element_user_logs) }
   it { should have_many(:course_tutor_details) }
+  it { should have_many(:exam_body_user_details) }
   it { should have_many(:enrollments) }
   it { should have_many(:invoices) }
   it { should have_many(:quiz_attempts) }
@@ -88,6 +89,7 @@ describe User do
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:student_exam_tracks) }
+  it { should have_many(:course_section_user_logs) }
   it { should have_many(:subject_course_user_logs) }
   it { should belong_to(:user_group) }
   it { should have_many(:visits) }
@@ -176,6 +178,7 @@ describe User do
 
   # instance methods
   it { should respond_to(:date_of_birth_is_possible?) }
+
   it { should respond_to(:student_user?) }
   it { should respond_to(:non_student_user?) }
   it { should respond_to(:trial_or_sub_user?) }
@@ -191,29 +194,21 @@ describe User do
   it { should respond_to(:user_group_management_access?) }
 
   it { should respond_to(:trial_user?) }
-  it { should respond_to(:valid_trial_user?) }
   it { should respond_to(:not_started_trial_user?) }
-  it { should respond_to(:expired_trial_user?) }
-  it { should respond_to(:trial_limits_valid?) }
-  it { should respond_to(:trial_days_valid?) }
-  it { should respond_to(:trial_seconds_valid?) }
-  it { should respond_to(:trial_days_left) }
-  it { should respond_to(:trial_seconds_left) }
-  it { should respond_to(:trial_minutes_left) }
-
   it { should respond_to(:subscription_user?) }
   it { should respond_to(:valid_subscription?) }
   it { should respond_to(:canceled_pending?) }
   it { should respond_to(:canceled_member?) }
+
   it { should respond_to(:current_subscription) }
   it { should respond_to(:default_card) }
   it { should respond_to(:user_subscription_status) }
   it { should respond_to(:user_account_status) }
-  it { should respond_to(:permission_to_see_content) }
-  it { should respond_to(:enrollment_for_course?) }
+
+  it { should respond_to(:enrolled_course?) }
   it { should respond_to(:enrolled_in_course?) }
 
-  it { should respond_to(:referred_user) }
+  it { should respond_to(:referred_user?) }
   it { should respond_to(:valid_order_ids) }
   it { should respond_to(:valid_orders?) }
   it { should respond_to(:purchased_products) }

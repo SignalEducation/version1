@@ -31,6 +31,7 @@
 FactoryBot.define do
   factory :course_module do
     association               :subject_course
+    association               :course_section
     sequence(:name)           { |n| "Course Module #{n}" }
     sequence(:name_url)       { |n| "course-module-#{n}" }
     description               'Lorem ipsum'

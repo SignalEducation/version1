@@ -26,66 +26,75 @@ require 'rails_helper'
 
 describe StudentExamTrack do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at exam_level_id exam_section_id exam_schedule_id count_of_questions_taken count_of_questions_correct count_of_quizzes_taken count_of_videos_taken count_of_constructed_responses_taken)
-  StudentExamTrack.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
+  describe 'relationships' do
+    it { should belong_to(:user) }
+    it { should belong_to(:subject_course) }
+    it { should belong_to(:subject_course_user_log) }
+    it { should belong_to(:course_section) }
+    it { should belong_to(:course_section_user_log) }
+    it { should belong_to(:course_module) }
+    it { should belong_to(:latest_course_module_element) }
+    it { should have_many(:course_module_element_user_logs) }
+  end
+
+  describe 'validations' do
+    before do
+      @set = build(:student_exam_track, user_id: 1, subject_course_id: 1,
+                  course_module_id: 1, course_section_user_log_id: 1,
+                  course_section_id: 1, subject_course_user_log_id: 1)
+    end
+
+    it 'should have a valid user_id' do
+      expect{ @set.user_id = nil }.to change{ @set.valid? }.to false
+    end
+
+    it 'should have a valid subject_course_id' do
+      expect{ @set.subject_course_id = nil }.to change{ @set.valid? }.to false
+    end
+
+    it 'should have a valid course_module_id' do
+      expect{ @set.course_module_id = nil }.to change{ @set.valid? }.to false
+    end
+
+    it 'should have a valid course_section_id' do
+      expect{ @set.course_section_id = nil }.to change{ @set.valid? }.to false
+    end
+
+    it 'should have a valid subject_course_user_log_id' do
+      expect{ @set.subject_course_user_log_id = nil }.to change{ @set.valid? }.to false
     end
   end
 
-  # Constants
 
-  # relationships
-  it { should belong_to(:user) }
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:subject_course_user_log) }
-  it { should belong_to(:course_module) }
-  it { should belong_to(:latest_course_module_element) }
-  it { should have_many(:course_module_element_user_logs) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+    it { should callback(:create_course_section_user_log).before(:validation), unless: :course_section_user_log_id }
+    it { should callback(:update_course_section_user_log).after(:save) }
+  end
 
-  # validation
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  describe 'scopes' do
+    it { expect(StudentExamTrack).to respond_to(:all_in_order) }
+    it { expect(StudentExamTrack).to respond_to(:for_user) }
+    it { expect(StudentExamTrack).to respond_to(:for_course_module) }
+    it { expect(StudentExamTrack).to respond_to(:for_user_and_module) }
+    it { expect(StudentExamTrack).to respond_to(:with_active_cmes) }
+    it { expect(StudentExamTrack).to respond_to(:with_valid_course_module) }
+    it { expect(StudentExamTrack).to respond_to(:all_complete) }
+    it { expect(StudentExamTrack).to respond_to(:all_incomplete) }
+  end
 
-  it { should validate_presence_of(:course_module_id) }
-  it { should validate_numericality_of(:course_module_id) }
+  describe 'instance methods' do
+    it { should respond_to(:cme_user_logs) }
+    it { should respond_to(:completed_cme_user_logs) }
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:elements_total) }
+    it { should respond_to(:elements_complete) }
+    it { should respond_to(:latest_cme_user_logs) }
+    it { should respond_to(:unique_logs) }
+    it { should respond_to(:enrollment) }
+    it { should respond_to(:worker_update_completeness) }
+    it { should respond_to(:recalculate_completeness) }
+  end
 
-  it { should validate_presence_of(:subject_course_user_log_id) }
-  it { should validate_numericality_of(:subject_course_user_log_id) }
-
-  it { should_not validate_presence_of(:session_guid) }
-  it { should validate_length_of(:session_guid).is_at_most(255) }
-
-  it { should_not validate_presence_of(:user_id) }
-  it { should_not validate_presence_of(:latest_course_module_element_id) }
-
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:update_subject_course_user_log).after(:save) }
-
-  # scopes
-  it { expect(StudentExamTrack).to respond_to(:all_in_order) }
-  it { expect(StudentExamTrack).to respond_to(:for_user) }
-  it { expect(StudentExamTrack).to respond_to(:with_active_cmes) }
-  it { expect(StudentExamTrack).to respond_to(:all_complete) }
-  it { expect(StudentExamTrack).to respond_to(:all_incomplete) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:update_subject_course_user_log) }
-  it { should respond_to(:completed_cme_user_logs) }
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:elements_total) }
-  it { should respond_to(:elements_complete) }
-  it { should respond_to(:latest_cme_user_logs) }
-  it { should respond_to(:unique_logs) }
-  it { should respond_to(:enrollment) }
-  it { should respond_to(:calculate_completeness) }
-  it { should respond_to(:worker_update_completeness) }
-  it { should respond_to(:recalculate_completeness) }
 
 end
