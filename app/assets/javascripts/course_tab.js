@@ -1,17 +1,26 @@
 $(document).ready(function(){
 
-    $('.course-section-tabs a').on('click', function(){
-        $(this).addClass('underline').siblings().removeClass('underline');
+    $('.courses-nav a').on('click', function(){
+        //$(this).addClass('underline').siblings().removeClass('underline');
     });
+
+    // Prevent browser jump to anchor tag
+    if (location.hash) {
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 1);
+    }
 
     hash = window.location.hash;
     elements = $('a[href="' + hash + '"]');
     if (elements.length === 0) {
-        $(".course-section-tabs a:first").addClass("active").show();
-        $(".course-section-tabs a:first").click();
+        let selectedTab = $(".courses-nav a:first");
+        selectedTab.addClass("active").show();
+        selectedTab.attr('aria-selected', 'true');
+        selectedTab.click();
+
     } else {
         elements.click();
     }
-
 
 });

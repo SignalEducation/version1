@@ -7,7 +7,6 @@
 @import 'bootstrap-datetimepicker';
 @import "font-awesome";
 @import "mixins.scss";
-@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"); // Is this needed anymore??
 @import "summernote";
 @import "remodal-default-theme";
 @import "remodal";
@@ -46,7 +45,7 @@ $colour-16: #34495e;
 $colour-17: #D0F6BD;
 $colour-18: #00cc66;
 $colour-19: #FED4CD;
-$colour-20: #3D3F5B; // Ebow Text Colour
+$colour-20: #7f8599; // Default Text Colour
 $colour-21: #2c9676;
 $colour-22: #ED3438;
 $colour-23: #F9845B;
@@ -65,6 +64,7 @@ $colour-34: #cedbe4; // Modal background
 
 
 html {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
   background: $colour-3;
   .margin-top {                   // These Ensure content is not hidden behind Navbar
     @include breakpoint(xs-min) {
@@ -98,15 +98,27 @@ html {
 }
 
 body {
+  max-width: 1960px;
+  margin-left: auto;
+  margin-right: auto;
   font-family: $sans-font;
   background: $white;
   color: $colour-20;
-  font-size: 18px;
-  line-height: 1.333em;
-  font-weight: 300;
+  font-size: 1rem;
+  text-rendering: optimizeLegibility;
+  font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
   @include breakpoint(md-min) {
     margin: 0 auto;
   }
+}
+legend {
+  float: left
+}
+img{
+  max-width: 100%;
 }
 
 
@@ -114,7 +126,6 @@ body {
 // 2. Standard Text Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-img{ max-width: 100%;}
 
 :focus{ outline: none;}
 .wrapper{
@@ -123,20 +134,19 @@ img{ max-width: 100%;}
 }
 
 a {
+  display: inline-block;
   color: $colour-20;
   outline: none;
   text-decoration: none;
 }
 a:hover {
   color: inherit;
-  //text-decoration: underline;
-}
-a:active,
-a:focus { color: inherit;
   text-decoration: none;
 }
-a:active {
-  color: $colour-7;
+a:active,
+a:focus {
+  color: inherit;
+  text-decoration: none;
 }
 blockquote {
   border-left: 2px solid $colour-12;
@@ -145,17 +155,101 @@ blockquote {
 a, button, input {
   outline: none;
 }
-
-// This changes the onclick behaviour of quiz answers
-//a, a *, button, input, div, span {
-  //transition: color 0.2s, background-color 0.2s, border-color 0.2s, opacity 0.2s;
-//}
-
+.link-purple-turquoise {
+  color: #424366
+}
+.link-purple-turquoise:hover {
+  color: #05a4af!important
+}
+.profile-name {
+  font-weight: 500;
+  color: #424366
+}
 ul, li {
-  display: block;
-  list-style: none;
+  list-style-type: none
   margin: 0;
   padding: 0;
+  padding-left: 1.25rem;
+}
+ul.list li {
+  position: relative;
+  margin-bottom: 1rem
+}
+ul.list li::before {
+  position: absolute;
+  left: -1.25rem;
+  top: 7px;
+  display: block;
+  width: 8px;
+  height: 8px;
+  content: '';
+  background-color: #e6eaf2
+}
+b,
+strong {
+  font-weight: 500
+}
+@media (min-width:576px) {
+  .flex-order-sm-first {
+    -webkit-box-ordinal-group: 0;
+    -webkit-order: -1;
+    -ms-flex-order: -1;
+    order: -1
+  }
+}
+@media (min-width:992px) {
+  .flex-order-lg-first {
+    -webkit-box-ordinal-group: 0;
+    -webkit-order: -1;
+    -ms-flex-order: -1;
+    order: -1
+  }
+}
+.text-torquoise {
+  color: #05a4af
+}
+.text-red {
+  color: #f34664
+}
+.text-purple {
+  color: #424366
+}
+.text-purple3 {
+  color: #7f8599
+}
+.text-purple5 {
+  color: #424366
+}
+.text-lg {
+  font-size: 1rem
+}
+@media (min-width:576px) {
+  .text-lg {
+    font-size: 1.125rem
+  }
+}
+.text-xl {
+  font-size: 2.25rem
+}
+@media (min-width:576px) {
+  .text-xl {
+    font-size: 2.75rem;
+    line-height: 1
+  }
+}
+.text-with-bg {
+  display: inline-block!important;
+  padding-left: .3rem;
+  padding-right: .3rem;
+  background-color: #f4f6fa
+}
+.text-ellipsis {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+.font-weight-medium {
+  font-weight: 500!important
 }
 
 p, .p, ol, .ol, address, dl {
@@ -649,7 +743,37 @@ label, .label {
 // 6. Page Layouts and Spacing
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+.bg-purple {
+  background-color: #424366
+}
+.bg-asphalt {
+  background-color: #f4f6fa
+}
+.bg-torquoise4 {
+  background-color: #def9fa
+}
+.row-lg {
+  margin-left: -30px;
+  margin-right: -30px
+}
+@media (max-width:767.98px) {
+  .row-lg {
+    margin-left: -15px;
+    margin-right: -15px
+  }
+}
+.row-lg > .col,
+.row-lg > [class*=col-] {
+  padding-right: 30px;
+  padding-left: 30px
+}
+@media (max-width:767.98px) {
+  .row-lg > .col,
+  .row-lg > [class*=col-] {
+    padding-left: 15px;
+    padding-right: 15px
+  }
+}
 .l-section {
   background: $colour-3;
   padding: 5rem 0;
@@ -2925,6 +3049,7 @@ input[type="radio"] {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+@import "custom-spacing.scss";
 @import "nav_and_footer.scss";
 @import "calculator.scss";
 @import "extras.scss";

@@ -1,22 +1,110 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-sm-3.col-xs-12
-          .l-margin-bottom
-            -if @course.parent
-              =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary full-width' do
-                .fa.fa-arrow-left
-                =@course.parent.name
+.bg-white
+  .container
+    .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-5.pb-4
 
-        .col-sm-3.col-xs-12.pull-right
-          .l-margin-bottom
-            -if @new_enrollment
-              %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-cyan full-width', id: 'enrol-now-button'}
-                Enrol Now
-              =render partial: 'course_enrollment_modal'
+      -if @course.parent
+        =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm with-arrow-sm mb-3 mb-sm-0' do
+          =@course.parent.name
+
+      -if @new_enrollment
+        %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-primary btn-sm', id: 'enrol-now-button'}
+          Enroll
+        =render partial: 'course_enrollment_modal'
 
 
+    .courses-performance-management
+      %h1.h1-mega.mb-4.mb-sm-3
+        =@course.name
+
+      -if @subject_course_user_log
+        -total_lessons = @subject_course_user_log.subject_course.cme_count
+        -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
+        -complete_percent = @subject_course_user_log.try(:percentage_complete)
+
+        .row.row-lg
+          .col-xl-8
+            .pb-5
+              .progress-section
+                .small.mb-3
+                  %span.current-step-indicator=completed_lessons
+                  out of
+                  %span.total-steps-indicator=total_lessons
+                  steps completed
+                .progress
+                  .progress-bar{"aria-valuemax" => "#{complete_percent}", "aria-valuemin" => "0", "aria-valuenow" => "100", 'style'=>"width: #{complete_percent}% ;", :role => "progressbar"}
+
+      -else
+        =render partial: 'course_info'
+
+
+      %nav.courses-nav
+        %ul.nav.nav-tabs{id: 'coursesTab', role: 'tablist'}
+          -@course.course_sections.all_active.all_in_order.each do |course_section|
+            %li.nav-item
+              %a{href: "##{course_section.name_url}", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "#{course_section.name_url}", selected: 'false'}}
+                =course_section.name
+                - if current_user && current_user.account_type == 'Trial' &&  course_section.all_content_restricted?
+                  =image_tag('grey_lock_icon.png')
+
+          %li.nav-item
+            %a{href: "#exam-prep", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "exam-prep", selected: 'false'}}
+              ='Exam Prep'
+
+
+
+.bg-asphalt
+  .container.py-5
+
+    .tab-content#course-tabs
+      - @course.course_sections.all_active.all_in_order.each do |course_section|
+        .tab-pane.fade{id: course_section.name_url, role: 'tabpanel', 'aria-labelledby': "#{course_section.name_url}-tab"}
+          .ow-lg
+            .col-xl-8
+              .mb-5.mb-xl-0
+
+
+                - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
+                  - if course_module.children.any?
+                    .card.card-panel-course
+                      %a.btn.btn-collapse.w-100{data: {toggle: 'collapse'}, href: '#governance-risk-coming-soon', role: 'button', aria: {expanded: 'false', controls: 'governance-risk-coming-soon'} }
+                        .course-item.course-item-collapse
+                          .course-item-icon
+                            %span.icon-custom
+                              %i.material-icons{aria: {hidden: "true"}}
+                                check
+
+                          .course-item-title.text-truncate
+                            %span.pr-sm-4
+                              =course_module.name
+
+                          .course-item-tag
+                            %span.course-tag.small.text-with-bg
+                              Coming Soon
+
+                    -course_module.children.all_in_order.all_active.each do |cme|
+                      .collapse.card-panel-course-inner{id: 'governance-risk-coming-soon'}
+                        %ul.mb-3
+                          %li
+                            %a.course-item-link{href: '#'}
+                              .course-item.course-item-static
+                                .course-item-icon
+                                  %span.icon-custom
+                                    %i.material-icons{'aria-hidden': 'true'}
+                                      check
+
+                                .course-item-title
+                                  %span.pr-sm-4
+                                    =cme.name
+
+                                .course-item-tag
+                                  %span.course-tag.small.text-with-bg
+                                    Coming Soon
+
+
+
+
+
+-#
       #tab-section
 
         .heading-card
