@@ -675,3 +675,69 @@
 
 
 
+
+// Landing Page BTNs
+.lsbtn-base {
+  text-align: center;
+  clear: both;
+}
+
+.lsbtn {
+  display: inline-block;
+  background: $red1;
+  color: $white;
+  text-transform: uppercase;
+  font-size: 0.889em;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.2em;
+  line-height: 1.375em;
+  padding: 1.5em 2em;
+  border-radius: 0.375em;
+  border: none;
+}
+.lsbtn:hover {
+  color: #fff;
+  background: $red1;
+  text-decoration: none;
+}
+
+.lsbtn.v2 {
+  border: solid 0.25em #fff;
+  background: none;
+  border-radius: 0.62em;
+}
+.lsbtn.v2:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.lsbtn.v3 {
+  border: solid 0.25em #3D3D5B;
+  background: none;
+  border-radius: 0.62em;
+  color: $purple1;
+}
+.lsbtn.v3:hover {
+  background: $purple1;
+  color: #fff;
+}
+
+.lsbtn.v4 {
+  border: solid 0.25em $cyan1;
+  background: none;
+  border-radius: 0.62em;
+  color: $cyan1;
+}
+.lsbtn.v4:hover {
+  background: $cyan1;
+  color: #fff;
+}
+
+.lsbtn.change-plan {
+  background: $cyan1;
+  border-radius: 0.62em;
+}
+.lsbtn.change-plan:hover {
+  background: $cyan1;
+  color: #fff;
+}

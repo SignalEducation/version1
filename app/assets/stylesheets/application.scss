@@ -64,6 +64,11 @@ $colour-34: #cedbe4; // Modal background
 
 
 html {
+  font-family: $sans-font;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -ms-overflow-style: scrollbar;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   background: $colour-3;
   .margin-top {                   // These Ensure content is not hidden behind Navbar
@@ -98,27 +103,17 @@ html {
 }
 
 body {
-  max-width: 1960px;
-  margin-left: auto;
-  margin-right: auto;
   font-family: $sans-font;
   background: $white;
   color: $colour-20;
+  max-width: 1960px;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 1rem;
   text-rendering: optimizeLegibility;
-  font-smoothing: antialiased;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-  @include breakpoint(md-min) {
-    margin: 0 auto;
-  }
-}
-legend {
-  float: left
-}
-img{
-  max-width: 100%;
+  -webkit-text-size-adjust: 100%
 }
 
 
@@ -126,6 +121,7 @@ img{
 // 2. Standard Text Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+img{ max-width: 100%;}
 
 :focus{ outline: none;}
 .wrapper{
@@ -134,19 +130,20 @@ img{
 }
 
 a {
-  display: inline-block;
   color: $colour-20;
   outline: none;
   text-decoration: none;
 }
 a:hover {
   color: inherit;
-  text-decoration: none;
+  //text-decoration: underline;
 }
 a:active,
-a:focus {
-  color: inherit;
+a:focus { color: inherit;
   text-decoration: none;
+}
+a:active {
+  color: $colour-7;
 }
 blockquote {
   border-left: 2px solid $colour-12;
@@ -155,101 +152,17 @@ blockquote {
 a, button, input {
   outline: none;
 }
-.link-purple-turquoise {
-  color: #424366
-}
-.link-purple-turquoise:hover {
-  color: #05a4af!important
-}
-.profile-name {
-  font-weight: 500;
-  color: #424366
-}
+
+// This changes the onclick behaviour of quiz answers
+//a, a *, button, input, div, span {
+  //transition: color 0.2s, background-color 0.2s, border-color 0.2s, opacity 0.2s;
+//}
+
 ul, li {
-  list-style-type: none
+  display: block;
+  list-style: none;
   margin: 0;
   padding: 0;
-  padding-left: 1.25rem;
-}
-ul.list li {
-  position: relative;
-  margin-bottom: 1rem
-}
-ul.list li::before {
-  position: absolute;
-  left: -1.25rem;
-  top: 7px;
-  display: block;
-  width: 8px;
-  height: 8px;
-  content: '';
-  background-color: #e6eaf2
-}
-b,
-strong {
-  font-weight: 500
-}
-@media (min-width:576px) {
-  .flex-order-sm-first {
-    -webkit-box-ordinal-group: 0;
-    -webkit-order: -1;
-    -ms-flex-order: -1;
-    order: -1
-  }
-}
-@media (min-width:992px) {
-  .flex-order-lg-first {
-    -webkit-box-ordinal-group: 0;
-    -webkit-order: -1;
-    -ms-flex-order: -1;
-    order: -1
-  }
-}
-.text-torquoise {
-  color: #05a4af
-}
-.text-red {
-  color: #f34664
-}
-.text-purple {
-  color: #424366
-}
-.text-purple3 {
-  color: #7f8599
-}
-.text-purple5 {
-  color: #424366
-}
-.text-lg {
-  font-size: 1rem
-}
-@media (min-width:576px) {
-  .text-lg {
-    font-size: 1.125rem
-  }
-}
-.text-xl {
-  font-size: 2.25rem
-}
-@media (min-width:576px) {
-  .text-xl {
-    font-size: 2.75rem;
-    line-height: 1
-  }
-}
-.text-with-bg {
-  display: inline-block!important;
-  padding-left: .3rem;
-  padding-right: .3rem;
-  background-color: #f4f6fa
-}
-.text-ellipsis {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden
-}
-.font-weight-medium {
-  font-weight: 500!important
 }
 
 p, .p, ol, .ol, address, dl {
@@ -500,229 +413,7 @@ label, .label {
 // 5. Standard Button and Link Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-.btn {
-  @include font-size(1.1);
-  @include transition(background-color .2s ease);
 
-  @include breakpoint(xs-min) {
-    display: inline-block;
-  }
-
-  @include breakpoint(sm-min) {
-    display: inline-block;
-    @include font-size(1.2);
-  }
-
-  display: block;
-  height: 40px;
-  padding: 0 $gutter;
-  line-height: 40px;
-  letter-spacing: .2rem;
-  text-transform: uppercase;
-  border: 0;
-
-  &:link, &:visited {
-    text-decoration: none;
-    color: $colour-12;
-  }
-  &:hover {
-    color: shade($colour-12, 20%);
-  }
-  &:active {
-    @include box-shadow(0, 0, 0, 0);
-  }
-  &.btn-red {
-    background: $colour-12;
-    color: $white;
-    &:hover {
-      background: darken($colour-12, 15%);
-    }
-    &:active {
-      background: ($colour-12);
-    }
-  }
-  &.btn-orange {
-    background: $colour-24;
-    color: $white;
-    &:hover {
-      background: shade($colour-24, 10%);
-    }
-    &:active {
-      background: ($colour-24);
-    }
-  }
-  &.btn-green {
-    background: $colour-26;
-    color: $white;
-    &:hover {
-      background: shade($colour-26, 10%);
-    }
-    &:active {
-      background: ($colour-26);
-    }
-  }
-  &.btn-wide {
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-
-  }
-  &.btn-lg-text {
-    line-height: 60px;
-    font-size: large;
-  }
-  &.btn-purple {
-    background: $colour-7;
-    color: $white;
-    &:hover {
-      background: darken($colour-7, 8%);
-    }
-    &:active {
-      background: ($colour-7);
-    }
-  }
-  &.btn-cyan {
-    background: $colour-13;
-    color: $white;
-    &:hover {
-      background: darken($colour-13, 6%);
-    }
-    &:active {
-      background: ($colour-13);
-    }
-  }
-  &.btn-secondary {
-    @include box-shadow(0, 0, 0, 0);
-
-    color: $colour-12;
-    background: transparent;
-    border: 2px solid $white;
-    line-height: 38px;
-    &:hover, &:active {
-      background: transparent;
-      color: shade($colour-12, 20%);
-    }
-    &.btn-red{
-      color: $red1;
-      border: 2px solid $red1;
-      &:hover {
-        background: transparent;
-        color: $colour-24;
-        border: 2px solid $colour-24;
-        //border: 1px solid shade($colour-12, 20%);
-      }
-    }
-    &.btn-green {
-      color: $colour-18;
-      border: 2px solid $colour-18;
-    }
-    &.btn-purple {
-      color: $colour-7;
-      border: 2px solid $colour-7;
-      &:hover {
-        background: transparent;
-        color: shade($colour-7, 20%);
-        border: 2px solid shade($colour-7, 20%);
-      }
-    }
-    &.btn-cyan {
-      color: $colour-13;
-      border: 2px solid $colour-13;
-      &:hover {
-        background: transparent;
-        color: darken($colour-13, 10%);
-        border: 2px solid darken($colour-13, 10%);
-      }
-    }
-  }
-  &.btn-small {
-    line-height: 28px;
-    height: 28px;
-  }
-  &.btn-lg {
-    width: 50%;
-    height: 60px;
-    line-height: 60px;
-  }
-  &.btn-list {
-    width: 95%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-bottom: 10px;
-  }
-
-}
-.input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
-  margin-left: 0; // for horizontal forms and .input-group
-}
-
-
-// Landing Page BTNs
-.lsbtn-base {
-  text-align: center;
-  clear: both;
-}
-
-.lsbtn {
-  display: inline-block;
-  background: $red1;
-  color: $white;
-  text-transform: uppercase;
-  font-size: 0.889em;
-  font-weight: 500;
-  text-align: center;
-  letter-spacing: 0.2em;
-  line-height: 1.375em;
-  padding: 1.5em 2em;
-  border-radius: 0.375em;
-  border: none;
-}
-.lsbtn:hover {
-  color: #fff;
-  background: $red1;
-  text-decoration: none;
-}
-
-.lsbtn.v2 {
-  border: solid 0.25em #fff;
-  background: none;
-  border-radius: 0.62em;
-}
-.lsbtn.v2:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-.lsbtn.v3 {
-  border: solid 0.25em #3D3D5B;
-  background: none;
-  border-radius: 0.62em;
-  color: $purple1;
-}
-.lsbtn.v3:hover {
-  background: $purple1;
-  color: #fff;
-}
-
-.lsbtn.v4 {
-  border: solid 0.25em $cyan1;
-  background: none;
-  border-radius: 0.62em;
-  color: $cyan1;
-}
-.lsbtn.v4:hover {
-  background: $cyan1;
-  color: #fff;
-}
-
-.lsbtn.change-plan {
-  background: $cyan1;
-  border-radius: 0.62em;
-}
-.lsbtn.change-plan:hover {
-  background: $cyan1;
-  color: #fff;
-}
 
 
 .pagination > li > a, .pagination > li > span {
@@ -751,6 +442,12 @@ label, .label {
 }
 .bg-torquoise4 {
   background-color: #def9fa
+}
+.bg-white {
+  background-color: #fff!important
+}
+.bg-transparent {
+  background-color: transparent!important
 }
 .row-lg {
   margin-left: -30px;
