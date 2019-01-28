@@ -12,7 +12,7 @@
         =render partial: 'course_enrollment_modal'
 
 
-    .courses-performance-management
+    .courses-header-section
       %h1.h1-mega.mb-4.mb-sm-3
         =@course.name
 
@@ -34,7 +34,8 @@
                   .progress-bar{"aria-valuemax" => "#{complete_percent}", "aria-valuemin" => "0", "aria-valuenow" => "100", 'style'=>"width: #{complete_percent}% ;", :role => "progressbar"}
 
       -else
-        =render partial: 'course_info'
+        .course-info
+          =render partial: 'course_info'
 
 
       %nav.courses-nav

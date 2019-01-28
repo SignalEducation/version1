@@ -1,19 +1,44 @@
+.course-info {
+  .tutor-header {
+    color: #424366;
+    font-weight: 500;
+    font-size: 1.1875rem;
+    line-height: 1.2rem;
+    margin-top: 0;
+  }
 
+  .profile-item {
 
+  }
 
+  .profile-item:hover .profile-name {
+    color: #05a4af;
+    text-decoration: none!important;
+  }
 
+  .img-thumbnail-wrap {
+    padding: 0;
+    width: 60px;
+    min-width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden
+  }
 
+  .profile-name {
+    font-weight: 500;
+    color: #424366;
+    text-decoration: none;
+  }
+  .profile-title {
+    font-weight: 500;
+    color: #7f8599;
+    font-size: 0.75rem;
+    line-height: 14px;
+    text-transform: uppercase;
+  }
 
-
-
-
-
-
-
-
-
-
-
+}
 
 
 
@@ -25,9 +50,9 @@
   a {
     color: #6E6D75;
     letter-spacing: .1rem;
-    @include font-size(1.4);
+    font-size: 1.4rem;
     @include breakpoint(md-min) {
-      @include font-size(1.8);
+      font-size: 1.8rem;
     }
     text-decoration: initial;
   }

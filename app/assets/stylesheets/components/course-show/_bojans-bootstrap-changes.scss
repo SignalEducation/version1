@@ -1,23 +1,4 @@
-body {
-  max-width: 1960px;
-  margin-left: auto;
-  margin-right: auto;
-  font-family: Rubik,Arial,sans-serif;
-  font-size: 1rem;
-  color: #7f8599;
-  background-color: #424366;
-  text-rendering: optimizeLegibility;
-  font-smoothing: antialiased;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%
-}
-legend {
-  float: left
-}
-img {
-  max-width: 100%
-}
+
 //a {
   //display: inline-block
 //}
@@ -1312,12 +1293,5 @@ label {
   width: 100%
 }
 .course-item-link:hover .course-item-title {
-  color: #424366
-}
-.profile-item:hover .profile-name {
-  color: #05a4af
-}
-.profile-name {
-  font-weight: 500;
   color: #424366
 }
