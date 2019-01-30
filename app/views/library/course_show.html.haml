@@ -54,20 +54,23 @@
 
 
 .bg-asphalt
-  .container.py-5
+  #tab-area
+    .container.py-5
 
-    .tab-content#course-tabs
-      - @course.course_sections.all_active.all_in_order.each do |course_section|
-        .tab-pane.fade{id: course_section.name_url, role: 'tabpanel', 'aria-labelledby': "#{course_section.name_url}-tab"}
-          .ow-lg
-            .col-xl-8
-              .mb-5.mb-xl-0
+      .tab-content#course-tabs
+        - @course.course_sections.all_active.all_in_order.each do |course_section|
+          .tab-pane.fade{id: course_section.name_url, role: 'tabpanel', 'aria-labelledby': "#{course_section.name_url}-tab"}
+            .ow-lg
+              .col-lg-8{style: 'padding-left: 0;'}
+                .mb-5.mb-xl-0
 
 
-                - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
-                  - if course_module.children.any?
-                    .card.card-panel-course
-                      %a.btn.btn-collapse.w-100{data: {toggle: 'collapse'}, href: '#governance-risk-coming-soon', role: 'button', aria: {expanded: 'false', controls: 'governance-risk-coming-soon'} }
+                  - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
+
+                    .card.card-course
+
+                      %a.btn.btn-collapse.w-100{'data-toggle': "collapse", href: "#collapse_#{course_section.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_section.name_url}_#{counter}"}
+
                         .course-item.course-item-collapse
                           .course-item-icon
                             %span.icon-custom
@@ -79,28 +82,57 @@
                               =course_module.name
 
                           .course-item-tag
-                            %span.course-tag.small.text-with-bg
-                              Coming Soon
+                            - if course_module.children.any?
+                              %span.course-tag.small
+                                -if course_module.cme_count.to_i > 1
+                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                -else
+                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
+                            -else
+                              %span.course-tag.small.text-with-bg
+                                Coming Soon
 
-                    -course_module.children.all_in_order.all_active.each do |cme|
-                      .collapse.card-panel-course-inner{id: 'governance-risk-coming-soon'}
-                        %ul.mb-3
-                          %li
-                            %a.course-item-link{href: '#'}
-                              .course-item.course-item-static
-                                .course-item-icon
-                                  %span.icon-custom
-                                    %i.material-icons{'aria-hidden': 'true'}
-                                      check
 
-                                .course-item-title
-                                  %span.pr-sm-4
-                                    =cme.name
+                      .collapse.card-course-inner{id: "collapse_#{course_section.name_url}_#{counter}"}
+                        -course_module.children.all_in_order.all_active.each do |cme|
 
-                                .course-item-tag
-                                  %span.course-tag.small.text-with-bg
-                                    Coming Soon
+                          %ul.mb-3
+                            %li
+                              %a.course-item-link{href: '#'}
+                                .course-item.course-item-static
+                                  .course-item-icon
+                                    %span.icon-custom
+                                      %i.material-icons{'aria-hidden': 'true'}
+                                        check
 
+                                  .course-item-title
+                                    %span.pr-sm-4
+                                      =cme.name
+
+                                  .course-item-tag
+                                    %span.course-tag.small.text-with-bg
+                                      Coming Soon
+
+
+
+              .col-lg-4.mb-5
+                %div
+                  %a.d-inline-flex.align-items-center.mb-4.w-100.link-purple-turquoise{href: "#", 'data-toggle': 'modal', 'data-target': '#ask-a-tutor-modal-23434234'}
+                    .icon-custom.icon-custom-lg.mr-3
+                      %i.material-icons{'aria-hidden': "true"}
+                    %span.p.mb-0.font-weight-medium
+                      Ask the Tutor
+
+
+                  %h3.mb-3
+                    Course Resources
+                  %ul.list
+                    %li
+                      %a{href: "#"}
+                        SBR - ACCA Syllabus
+                    %li
+                      %a{href: "#"}
+                        SBR &ndash; Useful Formulas
 
 
 
