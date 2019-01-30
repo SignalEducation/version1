@@ -224,99 +224,7 @@ p {
   text-decoration: none
 }
 
-.nav-item:first-child .social-link {
-  padding-left: 0
-}
-@media (min-width:992px) {
-  .nav-item:first-child .social-link {
-    padding-left: 1.75rem
-  }
-}
-.nav-link {
-  font-size: .9375rem;
-  color: #e6eaf2
-}
-.nav-link:focus,
-.nav-link:hover {
-  color: #fff
-}
-.nav-link.social-link {
-  padding: 0;
-  padding-left: 1.75rem;
-  font-size: 1.5rem
-}
-.nav-tabs {
-  display: block;
-  border-bottom: 0 none
-}
-.nav-tabs .nav-item {
-  display: block;
-  margin-bottom: 0;
-  margin-right: .25rem
-}
-@media (min-width:576px) {
-  .nav-tabs .nav-item {
-    display: inline-block
-  }
-}
-.nav-tabs .nav-item:last-child {
-  margin-right: 0
-}
-.nav-tabs .nav-link {
-  padding: .3rem .7rem;
-  font-size: .9rem;
-  font-weight: 500;
-  color: #7f8599;
-  border: 0 none;
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-  border-color: #e6eaf2;
-  -webkit-transition: all .15s ease-in 0s;
-  -o-transition: all .15s ease-in 0s;
-  transition: all .15s ease-in 0s
-}
-@media (min-width:576px) {
-  .nav-tabs .nav-link {
-    border-color: transparent
-  }
-}
-@media (min-width:576px) {
-  .nav-tabs .nav-link {
-    border-bottom-width: 3px;
-    padding: .4rem .9rem;
-    font-size: 1rem
-  }
-}
-.nav-tabs .nav-link.locked {
-  position: relative;
-  padding-left: 2.5rem;
-  pointer-events: none
-}
-.nav-tabs .nav-link.locked::before {
-  position: absolute;
-  left: .6rem;
-  top: -1px;
-  content: '\e899';
-  font-family: 'Material Icons';
-  font-size: 20px;
-  color: #b4bbd4
-}
-@media (min-width:576px) {
-  .nav-tabs .nav-link.locked::before {
-    font-size: 24px
-  }
-}
-.nav-tabs .nav-link.disabled {
-  color: #6c757d;
-  background-color: transparent;
-  border-color: transparent
-}
-.nav-tabs .nav-link:hover {
-  color: #424366
-}
-.tab-content {
-  padding-bottom: 1rem
-}
+
 
 .form-control {
   padding: 1.35rem .75rem
@@ -1252,7 +1160,7 @@ label {
     max-width: 32px;
     height: 32px;
     min-height: 32px;
-    max-width: 32px
+    max-width: 32px;
   }
 }
 .course-item .course-item-title {

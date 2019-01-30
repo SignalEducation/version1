@@ -40,249 +40,95 @@
 
 }
 
-
-
-
-
-.course-section-tabs {
-  padding: 12px 0 14px 0;
-
-  a {
-    color: #6E6D75;
-    letter-spacing: .1rem;
-    font-size: 1.4rem;
-    @include breakpoint(md-min) {
-      font-size: 1.8rem;
-    }
-    text-decoration: initial;
+.courses-nav {
+  .nav-item:first-child .social-link {
+    padding-left: 0
   }
-  font-weight: bold;
-}
-.course-section-tabs .underline {
-  background: lighten(#3D3D5B, 65%);
-  border-bottom: 5px solid;
-  box-sizing: content-box;
-  color: #3D3D5B;
-}
-
-.course-section-tab {
-  background: #fff;
-  padding: 10px 20px;
-  display: inherit;
-  @include breakpoint(sm-min) {
-    display: inline;
-
-  }
-  img {
-    height: 18px;
-    width: 18px;
-    float: right;
-    @include breakpoint(sm-min) {
-      height: 20px;
-      width: 20px;
-      margin-left: 6px;
-      float: none;
-    }
-
-  }
-}
-
-.content-box {
-  display: block;
-  background: #EFF3F6;
-  position: relative;
-
-  a {
-    text-decoration: none;
-  }
-}
-.content-box-outer {
-  min-height: 300px;
-}
-.content-box-inner {
-  padding: 40px 10px;
-}
-.course-product-box {
-  display: inline-block;
-  background: #fff;
-  color: #ef475d;
-  font-weight: 500;
-  margin: 12px 12px 12px 0;
-  width: 100%;
-  a {
-    color: #fff;
-    text-decoration: none;
-  }
-  @include border-radius(4px);
-  @include transition(box-shadow .1s ease);
-  &:hover, &:active {
-    text-decoration: none;
-    color: #fff;
-    background: darken(#ef475d, 15%);
-    cursor: pointer;
-  }
-}
-.course-product-box-inner {
-  padding: 10px 20px;
-
-  .product-box-label {
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 80%;
-    font-size: 16px;
-
-  }
-
-  .product-box-icon {
-    display: inline-block;
-
-    img {
-      max-height: 50px;
+  @media (min-width: 992px) {
+    .nav-item:first-child .social-link {
+      padding-left: 1.75rem
     }
   }
-
-}
-
-.course-resource-box {
-  display: inline-block;
-  background: #fff;
-  color: #ef475d;
-  font-weight: 500;
-  margin: 12px 12px 12px 0;
-  width: 100%;
-  height: 70px;
-  a {
-    color: #fff;
-    text-decoration: none;
+  .nav-link {
+    font-size: .9375rem;
+    color: #e6eaf2
   }
-  @include border-radius(4px);
-  @include transition(box-shadow .1s ease);
-  &:hover, &:active {
-    text-decoration: none;
-    color: #fff;
-    background: darken(#ef475d, 15%);
-    cursor: pointer;
+  .nav-link:focus,
+  .nav-link:hover {
+    color: #fff
+  }
+  .nav-link.social-link {
+    padding: 0;
+    padding-left: 1.75rem;
+    font-size: 1.5rem
+  }
+  .nav-tabs {
+    display: block;
+    border-bottom: 0 none
+  }
+  .nav-tabs .nav-item {
+    display: block;
+    margin-bottom: 0;
+    margin-right: .25rem
+  }
+  @media (min-width: 576px) {
+    .nav-tabs .nav-item {
+      display: inline-block
+    }
+  }
+  .nav-tabs .nav-item:last-child {
+    margin-right: 0
+  }
+  .nav-tabs .nav-link {
+    padding: .3rem .7rem;
+    font-size: .9rem;
+    font-weight: 500;
+    color: #7f8599;
+    border: 0 none;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-color: #e6eaf2;
+    -webkit-transition: all .15s ease-in 0s;
+    -o-transition: all .15s ease-in 0s;
+    transition: all .15s ease-in 0s
   }
 
-}
-.course-resource-box-inner {
-  padding: 10px 20px;
-
-
-  .resource-box-label {
-    display: inline-block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 80%;
-    white-space: nowrap;
-    font-size: 16px;
-
+  @media (min-width: 576px) {
+    .nav-tabs .nav-link {
+      border-color: transparent;
+      border-bottom-width: 3px;
+      padding: .4rem .9rem;
+      font-size: 1rem
+    }
   }
-
-  .resource-box-icon {
-    display: inline-block;
+  .nav-tabs .nav-link.locked {
+    position: relative;
+    padding-left: 2.5rem;
+    pointer-events: none
+  }
+  .nav-tabs .nav-link.locked::before {
     position: absolute;
-    right: 30px;
-
-    .glyphicon {
-
+    left: .6rem;
+    top: -1px;
+    content: '\e899';
+    font-family: 'Material Icons';
+    font-size: 20px;
+    color: #b4bbd4
+  }
+  @media (min-width: 576px) {
+    .nav-tabs .nav-link.locked::before {
+      font-size: 24px
     }
   }
-
-}
-
-.course-modules-list {
-  list-style: none;
-  padding-left: 0;
-}
-
-a.course-module-panel {
-  color: #3D3D5B;
-  text-decoration: none;
-  display: block;
-  border: 1px solid #fff;
-  @include transition(border .1s ease);
-  &:hover, &:active {
-    border: 1px solid #3D3D5B;
-    @include box-shadow(0, 0, 12px, darken(#EFF3F6, 15%));
+  .nav-tabs .nav-link.disabled {
+    color: #6c757d;
+    background-color: transparent;
+    border-color: transparent
   }
-}
-.course-module-panel {
-  cursor: pointer;
-  display: block;
-  background: #fff;
-  position: relative;
-  margin: 10px 0 0 0;
-  color: #3D3D5B;
-  padding: 20px 10px 20px 10px;
-  @include clearfix();
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 3px, darken(#EFF3F6, 20%));
-  @include transition(box-shadow .1s ease);
-  @include breakpoint(sm-min) {
-    padding: 20px 10px 20px 10px;
+  .nav-tabs .nav-link:hover {
+    color: #424366
   }
-  &:hover {
-    background-color: darken(#fff, 3);
+  .tab-content {
+    padding-bottom: 1rem
   }
-}
-
-.course-module-panel-item {
-  padding-right: 40px;
-}
-
-.panel > .list-group .list-group-item {
-  //border-color: $colour-3;
-  background-color: darken(#fff, 5);
-  border-top-width: 2px;
-}
-.list-group-item:first-child {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-.list-group {
-  @include box-shadow(0, 0, 2px, darken(#EFF3F6, 20%));
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  border-top: 2px solid #dddddd;
-}
-a.list-group-item {
-  //color: rgba(0,0,0,0);
-  padding: 17px;
-  p {
-    margin-bottom: 5px;
-  }
-}
-.left-side-meta {
-  color: tint(#3D3D5B, 50%);
-  display: block;
-  text-align: left;
-  height: 22px;
-  width: 22px;
-  @include breakpoint(sm-min) {
-    text-align: left;
-  }
-}
-.side-meta {
-  color: tint(#3D3D5B, 50%);
-  display: block;
-  text-align: left;
-  @include breakpoint(sm-min) {
-    text-align: right;
-  }
-}
-
-.restriction-dialog {
-  //max-width: 600px;
-  text-align: center;
-}
-
-.k-dialog.k-alert .k-dialog-titlebar {
-  background-color: #EF5153 !important;
-}
-
-.k-dialog .k-dialog-titlebar {
-  background-color: #EF5153 !important;
 }

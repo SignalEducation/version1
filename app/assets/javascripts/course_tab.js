@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
-    $('.courses-nav a').on('click', function(){
+    $('.courses-nav .nav-tabs .nav-link').on('click', function(){
         //$(this).addClass('underline').siblings().removeClass('underline');
+        $(this).attr('aria-selected', 'true');
     });
 
     // Prevent browser jump to anchor tag
@@ -16,7 +17,7 @@ $(document).ready(function(){
     if (elements.length === 0) {
         let selectedTab = $(".courses-nav a:first");
         selectedTab.addClass("active").show();
-        selectedTab.attr('aria-selected', 'true');
+
         selectedTab.click();
 
     } else {
