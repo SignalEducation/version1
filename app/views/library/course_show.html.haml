@@ -42,7 +42,7 @@
         %ul.nav.nav-tabs{id: 'coursesTab', role: 'tablist'}
           -@course.course_sections.all_active.all_in_order.each do |course_section|
             %li.nav-item
-              %a{href: "##{course_section.name_url}", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "#{course_section.name_url}", selected: 'false'}}
+              %a{class: 'nav-link', id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                 =course_section.name
                 - if current_user && current_user.account_type == 'Trial' &&  course_section.all_content_restricted?
                   =image_tag('grey_lock_icon.png')
