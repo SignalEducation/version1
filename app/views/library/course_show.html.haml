@@ -125,10 +125,11 @@
                                           =cme.name
 
                                       .course-item-tag
-                                        %span.course-tag.small
-                                          -if cme.temporary_label && !cme.temporary_label.empty?
-                                            =cme.temporary_label
-                                          -else
+                                        -if cme.temporary_label && !cme.temporary_label.empty?
+                                          %span.course-tag.small.text-with-bg
+                                          =cme.temporary_label
+                                        -else
+                                          %span.course-tag.small
                                             -if cme.is_video
                                               -if cme.try(:course_module_element_video).try(:duration)
                                                 =humanize_time(cme.course_module_element_video.duration)
@@ -142,20 +143,32 @@
 
 
                                 - else
-                                  -# TODO Trigger a modal explaining sign up required
                                   %li
-                                    %a.course-item-link{href: '#'}
+                                    %a.course-item-link{data: {target: '#trial-access-restricted', toggle: 'modal'}, href: '#'}
                                       .course-item.course-item-static{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
                                         .course-item-icon
                                           %span.icon-custom
                                             %i.material-icons{'aria-hidden': 'true'}
-                                              check
+                                              lock_outline
                                         .course-item-title
                                           %span.pr-sm-4
                                             =cme.name
                                         .course-item-tag
-                                          %span.course-tag.small.text-with-bg
-                                            Coming Soon
+                                          -if cme.temporary_label && !cme.temporary_label.empty?
+                                            %span.course-tag.small.text-with-bg
+                                              =cme.temporary_label
+                                          -else
+                                            %span.course-tag.small
+                                              -if cme.is_video
+                                                -if cme.try(:course_module_element_video).try(:duration)
+                                                  =humanize_time(cme.course_module_element_video.duration)
+                                                -elsif cme.try(:estimated_time_in_seconds)
+                                                  =humanize_time(cme.try(:estimated_time_in_seconds))
+                                              -elsif cme.is_quiz
+                                                -if cme.number_of_questions.to_i > 1
+                                                  =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                -else
+                                                  =cme.number_of_questions.to_s + ' ' +  'Question'
 
                               - else #Anonymous User
                                 -# TODO Trigger a modal explaining sign up required
@@ -179,11 +192,48 @@
 
               .col-lg-4.mb-5
                 %div
-                  %a.d-inline-flex.align-items-center.mb-4.w-100.link-purple-turquoise{href: "#", 'data-toggle': 'modal', 'data-target': '#ask-a-tutor-modal-23434234'}
+                  %a.d-inline-flex.align-items-center.mb-4.w-100.link-purple-turquoise{href: "#", 'data-toggle': 'modal', 'data-target': '#ask-a-tutor-modal'}
                     .icon-custom.icon-custom-lg.mr-3
                       %i.material-icons{'aria-hidden': "true"}
                     %span.p.mb-0.font-weight-medium
                       Ask the Tutor
+
+                  .modal.fade{id: 'ask-a-tutor-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'askTutorQuestion', 'aria-hidden': 'true'}
+                    .modal-dialog{role: 'document'}
+                      .modal-content
+                        %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+                          %span
+                            Close
+                          %i.material-icons.ml-1{'aria-hidden': 'true'}
+                            close
+                        .modal-header
+                          %h3.text-red{id: 'askTutorQuestion'}
+                            Ask The Tutor A Question
+
+                        .modal-body
+                          %form.py-2
+                            .row
+                              .col-sm-6
+                                .form-group
+                                  %label{for: "name"}
+                                    Name
+                                  %input{type: 'text', class: 'form-control', id: 'name', placeholder: 'Full Name'}
+
+                              .col-sm-6
+                                .form-group
+                                  %label{for: "email"}
+                                    Email
+                                  %input{type: 'email', class: 'form-control', id: 'email', placeholder: 'Email Address'}
+
+                              .col-12
+                                .form-group
+                                  %label{for: "question"}
+                                    Question
+                                  %textarea.form-control{id: "question", placeholder: 'Question', rows: '3'}
+
+                            .pt-1
+                              %button.btn.btn-primary{type: 'submit'}
+                                Send The Question
 
 
                   %h3.mb-3
@@ -197,145 +247,51 @@
                         SBR &ndash; Useful Formulas
 
 
+    -# Modals
+
+    .modal.fade{id: 'trial-access-restricted', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'trialAccessRestricted', 'aria-hidden': 'true'}
+      .modal-dialog{role: 'document'}
+        .modal-content
+          %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+            %span
+              Close
+            %i.material-icons.ml-1{'aria-hidden': 'true'}
+              close
+          .modal-header
+            %h3.text-red{id: 'trialAccessRestricted'}
+              Trial Access Restricted
+
+          .modal-body
+            %p.font-weight-medium.mb-4.text-purple
+              Sorry! That content is not available on a trial account.
+            %p.mb-4.text-purple
+              Upgrade your account to get full access
+
+          .modal-footer
+            %a.btn.btn-primary{href: '#'}
+              Upgrade
+
+    .modal.fade{id: 'lesson-restricted-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'lessonRestricted', 'aria-hidden': 'true'}
+      .modal-dialog{role: 'document'}
+        .modal-content
+          %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+            %span
+              Close
+            %i.material-icons.ml-1{'aria-hidden': 'true'}
+              close
+          .modal-header
+            %h3.text-red{id: 'lessonRestricted'}
+              Lesson Restricted
+
+          .modal-body
+            %p.mb-4.text-purple
+              This lesson is restricted until you complete the <b class="font-weight-medium">Test Quiz</b> lesson.
 
 
--#
-      #tab-section
+          .modal-footer
+            %a.btn.btn-primary{href: '#'}
+              Upgrade
 
-        .heading-card
-          .heading-card-inner
-            %h1.h2.h-separator.h-separator-left
-              =@course.name
-            -if @subject_course_user_log
-              -total_lesson = @subject_course_user_log.subject_course.cme_count
-              -complete_lesson = @subject_course_user_log.try(:count_of_cmes_completed) || 0
-              -complete_percent = @subject_course_user_log.try(:percentage_complete)
-              %p
-                ="#{complete_lesson} out of #{total_lesson} steps completed"
-              .progress
-                .progress-bar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
-
-              .pull-right
-                -if current_user
-                  =link_to 'Resume', course_special_link(@next_element, @subject_course_user_log), class: 'btn btn-cyan'
-                -else
-                  =link_to 'Continue', new_subscription_url, class: 'btn full-width btn-cyan'
-
-                -if @enrollment && !@enrollment.expired
-                  .edit-enrollment.l-margin-top
-                    =link_to 'Edit Enrolment', edit_enrollment_url(@active_enrollment), class: 'btn btn-small btn-purple pull-right'
-
-            -else
-              =render partial: 'course_info'
-
-          .course-section-tabs{role: 'tablist'}
-            -@course.course_sections.all_active.all_in_order.each do |course_section|
-              %a{href: "##{course_section.name_url}", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
-                =course_section.name
-                - if current_user && current_user.account_type == 'Trial' &&  course_section.all_content_restricted?
-                  =image_tag('grey_lock_icon.png')
-
-            %a{href: "#resources", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
-              ='Exam Prep'
-
-            -#%a{href: "#assumed-knowledge", role: 'tab', class: 'course-section-tab', data: {toggle: 'tab'}}
-              ='Assumed Knowledge'
-
-
-        .tab-content
-          - @course.course_sections.all_active.all_in_order.each do |course_section|
-            .tab-pane.fade{id: course_section.name_url, role: 'tabpanel'}
-              .content-box.content-box-outer
-                .content-box-inner
-
-                  .col-sm-12.col-md-9
-                    .panel-group#accordion
-                      %ul.course-modules-list
-                        - course_section.course_modules.all_active.all_in_order.each_with_index do |child, counter|
-
-                          - if child.children.any?
-                            %li{role: 'tab', data: {toggle: 'collapse', parent: '#accordion'}, href: "#collapse_#{course_section.name_url}_#{counter}"}
-                              .course-module-panel#headingOne{ aria: {expand: true, controls: "collapse_#{course_section.name_url}_#{counter}"}}
-                                .col-xs-1.col-sm-1
-                                  .left-side-meta
-                                    - if current_user && current_user.account_type == 'Trial' && child.all_content_restricted?
-                                      =image_tag('grey_lock_icon.png')
-                                    - else
-                                      =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
-                                .col-xs-9.xs-padding
-                                  .box-topic-item
-                                    =truncate(child.name, length: 50)
-                                .col-xs-2
-                                  .time.hidden-xs
-                                    -if child.cme_count.to_i > 1
-                                      =child.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                    -else
-                                      =child.cme_count.to_s + ' ' + t('views.library.show.lesson')
-
-                          - else
-                            %li
-                              .box-item.lib-panel
-                                .col-xs-1.col-sm-1
-                                  .left-side-meta
-                                    .img-responsive
-                                      =image_tag(child.completed_for_scul(@subject_course_user_log.try(:id)) ? 'cm_green_tick.png' : 'cm_grey_tick.png')
-                                .col-xs-8.col-sm-7.xs-padding{style: 'padding-top: 4px;'}
-                                  .box-topic-item
-                                    =truncate(child.name, length: 50)
-                                .col-xs-3.col-sm-3.pull-right.hidden-xs{style: 'padding-top: 4px;'}
-                                  .time.pull-right
-                                    %p{style: 'color: #EE5457;'}
-                                      ='Coming Soon!'
-
-
-
-                          .panel-collapse.collapse.list-group.l-margin-bottom{id: "collapse_#{course_section.name_url}_#{counter}", class: (child.id == @child_id ? 'in' : ''), role: 'tabpanel', aria: {labelledby: 'headingOne'}}
-                            -child.children.all_in_order.all_active.each do |grandchild|
-
-                              - if current_user
-                                - permission = grandchild.available_to_user(current_user, @subject_course_user_log)
-                                - if permission[:view]
-                                  =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
-                                    =render partial: 'panel_content', locals: {grandchild: grandchild}
-                                - else
-                                  %a{class: 'list-group-item link-purple box-topic-item', onclick: "openDialog('#{permission[:reason]}', '#{grandchild.related_course_module_element.try(:name)}');"}
-                                    =render partial: 'panel_content', locals: {grandchild: grandchild}
-
-                              -else
-                                =link_to course_special_link(grandchild, @subject_course_user_log), class: 'list-group-item link-purple box-topic-item' do
-                                  =render partial: 'panel_content', locals: {grandchild: grandchild}
-
-
-                  .col-sm-12.col-md-3
-                    .l-margin-top-small
-                      -if current_user
-                        =render partial: 'courses/tutor_contact'
-                        %a{data: {remodal: {target: 'tutor-contact-modal'}}, class: 'btn btn-orange full-width'}
-                          Ask The Tutor
-                      -else
-                        %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'btn btn-orange full-width'}
-                          Ask The Tutor
-
-
-
-          .tab-pane.fade{id: 'resources', role: 'tabpanel'}
-            .content-box.content-box-outer
-              .content-box-inner
-                =render partial: 'library/additional_content'
-
-          -#.tab-pane.fade{id: 'assumed-knowledge', role: 'tabpanel'}
-            .content-box.content-box-outer
-              .content-box-inner
-                =render partial: 'library/additional_content'
-
-    #trial-restriction-dialog.restriction-dialog
-      .row
-        .col-sm-12
-          %h2='Sorry! That content is not available on a trial account'
-
-        .col-sm-12.l-margin-top
-          %p
-            Upgrade your account to get full access
 
 
 
@@ -359,47 +315,3 @@
         inst.open();
       });
 
-
-:javascript
-
-  $("#trial-restriction-dialog").kendoDialog({
-    width: "50%",
-    scrollable: false,
-    title: "Trial Access Restriction",
-    closable: true,
-    modal: true,
-    visible: false,
-    actions: [
-      { text: 'Close' },
-      { text: 'Upgrade', primary: true, action: upgradeRedirect }
-    ]
-  });
-  let trialRestrictionDialog = $("#trial-restriction-dialog").data("kendoDialog");
-
-
-  function openDialog(reason, relatedName) {
-    if (reason === 'related-lesson-restriction') {
-      relatedLessonDialog(relatedName)
-    } else if (reason === 'trial-restriction') {
-      openTrialRestrictionDialog()
-    }
-  }
-
-  function relatedLessonDialog(relatedName) {
-    window.lessonRestrictedAlert("Access to this lesson is restricted until you complete the <b>" + relatedName + "</b> lesson.");
-  }
-
-  function openTrialRestrictionDialog() {
-    trialRestrictionDialog.open();
-  }
-
-  function upgradeRedirect(e) {
-    window.location.href = "#{new_subscription_url}";
-  }
-
-  function lessonRestrictedAlert(content){
-    $("<div></div>").kendoAlert({
-      title: "Lesson Restricted",
-      content: content
-    }).data("kendoAlert").open();
-  }

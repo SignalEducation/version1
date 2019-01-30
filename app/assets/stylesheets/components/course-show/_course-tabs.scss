@@ -382,10 +382,66 @@
   }
   .course-item-link:hover {
     text-decoration: none;
+    cursor: pointer;
   }
 
   .course-item-link:hover .course-item-title {
     color: #424366;
     text-decoration: none;
   }
+}
+
+.modal-dialog {
+  margin-top: .75rem
+}
+@media (min-width:576px) {
+  .modal-dialog {
+    margin-top: 2rem
+  }
+}
+@media (min-width:992px) {
+  .modal-dialog {
+    margin-top: 9rem
+  }
+}
+.modal-content {
+  position: relative;
+  padding: 2rem 1rem;
+  padding-top: 2.5rem;
+  -webkit-box-shadow: 0 0 19px #434a6e;
+  box-shadow: 0 0 19px #434a6e
+}
+@media (min-width:576px) {
+  .modal-content {
+    padding: 2rem
+  }
+}
+.modal-close {
+  position: absolute;
+  top: .1rem;
+  right: -.5rem
+}
+@media (min-width:576px) {
+  .modal-close {
+    top: .25rem
+  }
+}
+.modal-close:hover {
+  color: #7f8599
+}
+.modal-close:hover .material-icons {
+  -webkit-transition: all .15s linear 0s;
+  -o-transition: all .15s linear 0s;
+  transition: all .15s linear 0s;
+  color: #424366
+}
+.modal-header {
+  border-bottom: 0;
+}
+.modal-footer {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  border-top: 0;
 }
