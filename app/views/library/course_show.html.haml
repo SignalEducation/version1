@@ -71,17 +71,20 @@
 
                       %a.btn.btn-collapse.w-100{'data-toggle': "collapse", href: "#collapse_#{course_section.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_section.name_url}_#{counter}"}
 
-                        .course-item.course-item-collapse
+                        .course-item.course-item-collapse{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
                           .course-item-icon
                             %span.icon-custom
                               %i.material-icons{aria: {hidden: "true"}}
-                                check
+                                - if current_user && current_user.account_type == 'Trial' && course_module.all_content_restricted?
+                                  lock_outline
+                                - else
+                                  check
 
                           .course-item-title.text-truncate
                             %span.pr-sm-4
                               =course_module.name
 
-                          .course-item-tag
+                          .course-item-tag{style: 'margin-right: 30px;'}
                             - if course_module.children.any?
                               %span.course-tag.small
                                 -if course_module.cme_count.to_i > 1
@@ -94,24 +97,83 @@
 
 
                       .collapse.card-course-inner{id: "collapse_#{course_section.name_url}_#{counter}"}
-                        -course_module.children.all_in_order.all_active.each do |cme|
+                        %ul.mb-3
+                          -course_module.children.all_in_order.all_active.each do |cme|
 
-                          %ul.mb-3
                             %li
-                              %a.course-item-link{href: '#'}
-                                .course-item.course-item-static
-                                  .course-item-icon
-                                    %span.icon-custom
-                                      %i.material-icons{'aria-hidden': 'true'}
-                                        check
+                              - if current_user #Logged In User
+                                - permission = cme.available_to_user(current_user, @subject_course_user_log)
+                                - if permission[:view]
 
-                                  .course-item-title
-                                    %span.pr-sm-4
-                                      =cme.name
+                                  =link_to course_special_link(cme, @subject_course_user_log), class: 'course-item-link' do
+                                    .course-item.course-item-static{class: @cmeuls && @cmeuls.include?(cme.id) ? (@completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                      .course-item-icon
+                                        %span.icon-custom
+                                          %i.material-icons{'aria-hidden': 'true'}
+                                            -if cme.is_video?
+                                              ondemand_video
+                                            -elsif cme.is_quiz?
+                                              playlist_add_check
+                                            -elsif is_constructed_response?
+                                              grid_on
+                                            -else
+                                              checked
 
-                                  .course-item-tag
-                                    %span.course-tag.small.text-with-bg
-                                      Coming Soon
+
+                                      .course-item-title
+                                        %span.pr-sm-4
+                                          =cme.name
+
+                                      .course-item-tag
+                                        %span.course-tag.small
+                                          -if cme.temporary_label && !cme.temporary_label.empty?
+                                            =cme.temporary_label
+                                          -else
+                                            -if cme.is_video
+                                              -if cme.try(:course_module_element_video).try(:duration)
+                                                =humanize_time(cme.course_module_element_video.duration)
+                                              -elsif cme.try(:estimated_time_in_seconds)
+                                                =humanize_time(cme.try(:estimated_time_in_seconds))
+                                            -elsif cme.is_quiz
+                                              -if cme.number_of_questions.to_i > 1
+                                                =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                              -else
+                                                =cme.number_of_questions.to_s + ' ' +  'Question'
+
+
+                                - else
+                                  -# TODO Trigger a modal explaining sign up required
+                                  %li
+                                    %a.course-item-link{href: '#'}
+                                      .course-item.course-item-static{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
+                                        .course-item-icon
+                                          %span.icon-custom
+                                            %i.material-icons{'aria-hidden': 'true'}
+                                              check
+                                        .course-item-title
+                                          %span.pr-sm-4
+                                            =cme.name
+                                        .course-item-tag
+                                          %span.course-tag.small.text-with-bg
+                                            Coming Soon
+
+                              - else #Anonymous User
+                                -# TODO Trigger a modal explaining sign up required
+                                =link_to course_special_link(cme, @subject_course_user_log), class: 'course-item-link' do
+                                  .course-item.course-item-static
+                                    .course-item-icon
+                                      %span.icon-custom
+                                        %i.material-icons{'aria-hidden': 'true'}
+                                          check
+
+                                    .course-item-title
+                                      %span.pr-sm-4
+                                        =cme.name
+
+                                    .course-item-tag
+                                      %span.course-tag.small.text-with-bg
+                                        Coming Soon
+
 
 
 
