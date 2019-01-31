@@ -1,42 +1,67 @@
 .remodal{"data-remodal-id" => "confirm-cancellation-modal"}
-  .row
-    .col-md-12
-      .col-xs-11
-        %h2
-          ='Are you sure you want to cancel?'
-      .col-xs-1
-        %button.remodal-close{"data-remodal-action" => "close"}
+  #cancellation_initiation
+    .row
+      .col-md-12
+        =render partial: 'layouts/error_messages', locals: {thing: @current_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+        .col-xs-11
+          %h2
+            ='Are you sure you want to cancel?'
+        .col-xs-1
+          %button.remodal-close{"data-remodal-action" => "close"}
 
-  .row{style: 'text-align: left;'}
-    .col-sm-12.l-margin-top
+    .row{style: 'text-align: left;'}
+      .col-sm-12.l-margin-top
+        %p.h4
+          Don’t miss out on ACCA gold approved tuition and expert guidance which helps students worldwide pass their ACCA.
+        %p
+          If you cancel, you’ll miss out on unique gold approved learning tools that you can use any time, anywhere. Not to mention the ACCA Study Bootcamp, 24 hour tutor support, full exam schedules, practice questions and webinar week.
+
+        .row#cancellation_initial_options
+          .col-md-4
+            %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
+              =t('views.users.show.keep_subscription')
+          .col-md-4
+            %a{data: {remodal: {target: 'confirm-pause-modal'}}, class: 'btn btn-orange full-width l-margin-bottom'}
+              PAUSE ACCOUNT
+          .col-md-4
+            %a{id: 'continue_cancelling_button', class: 'btn btn-red reduced-padding full-width l-margin-bottom'}
+              CONTINUE CANCELLING
+
+  #cancellation_completion
+    .row
+      .col-md-12
+        .col-xs-11
+          %h2
+            Complete cancellation
+        .col-xs-1
+          %button.remodal-close{"data-remodal-action" => "close"}
+    .row.l-margin-top{style: 'text-align: left;'}
       .col-sm-12
-        .col-sm-12
-          %p.h4
-            Don’t miss out on ACCA gold approved tuition and expert guidance which helps students worldwide pass their ACCA.
-          %p
-            If you cancel, you’ll miss out on unique gold approved learning tools that you can use any time, anywhere. Not to mention the ACCA Study Bootcamp, 24 hour tutor support, full exam schedules, practice questions and webinar week. 
+        %p
+          At LearnSignal we’re keen to keep improving our service.
+        %p.h6.l-margin-bottom
+          Why do you want to cancel?
+        =form_for @current_subscription, url: subscriptions_cancellations_path(id: @current_subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
+          .form-group.cancellation-reason
+            =f.label :cancellation_reason, 'Please tick the box which is most applicable to you', class: 'block-label h4'
+            #cancellation-reason-error
+            =f.collection_radio_buttons(:cancellation_reason, [['I’ve come to the end of my studies', 'I’ve come to the end of my studies'], ['The service is too expensive', 'The service is too expensive'], ['I wasn’t using it enough', 'I wasn’t using it enough'], ['I didn’t feel like it was helping me', 'I didn’t feel like it was helping me'], ['My next exam is 3 months away', 'My next exam is 3 months away'], ['I didn’t understand the content', 'I didn’t understand the content'], ['I didn’t know how to use the platform', 'I didn’t know how to use the platform'], ['Other', 'Other']], :first, :last) do |b|
+              %span.label.cancellation-label
+                =b.radio_button
+                =b.label
+          .form-group
+            =f.label :cancellation_note, 'Please let us know if there’s any other way we could improve our service:', class: 'block-label'
+            #cancellation-note-error
+            =f.text_area :cancellation_note, :cols => 2, :rows => 7
+          .row.l-margin-top
+            .col-sm-12.l-margin-top
+              .col-sm-6
+                %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
+                  =t('views.users.show.keep_subscription')
 
-
-
-  .row.l-margin-top
-    .col-sm-12.l-margin-top
-      =form_for @current_subscription, url: subscriptions_cancellations_path(id: @current_subscription.id), method: :post do |f|
-        .form-group
-          =f.label :cancellation_reason, class: 'block-label'
-          =f.select :cancellation_reason, ['Completed Exams', 'No Longer Studying', 'Need a Break', 'Too Expensive'], include_blank: false, prompt: 'Please select'
-        .form-group
-          =f.label :cancellation_note, 'Cancellation feedback', class: 'block-label'
-          =f.text_area :cancellation_note, :cols => 40, :rows => 7
-        .row.l-margin-top
-          .col-sm-12.l-margin-top
-            .col-sm-6
-              %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
-                =t('views.users.show.keep_subscription')
-
-            .col-sm-6
-              =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-red full-width l-margin-bottom'
-            .col-sm-12
-              %p
-                = account_cancellation_message(@current_subscription)
-
+              .col-sm-6
+                =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-red full-width l-margin-bottom'
+              .col-sm-12
+                %p
+                  = account_cancellation_message(@current_subscription)
 
