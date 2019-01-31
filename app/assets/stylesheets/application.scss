@@ -290,7 +290,6 @@ hr {
 // 3. Form Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 .form-group {
   margin: 0 0 20px 0;
 }
@@ -426,6 +425,10 @@ label, .label {
   letter-spacing: .2rem;
   text-transform: uppercase;
   border: 0;
+
+  &.reduced-padding {
+    padding: 0 $gutter/2;
+  }
 
   &:link, &:visited {
     text-decoration: none;
@@ -2913,6 +2916,10 @@ input[type="radio"] {
 
 .k-block>.k-action-window>.k-window-content, .k-editor-table-wizard-dialog {
   width: 500px !important;
+}
+
+.block-label {
+  display: block;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

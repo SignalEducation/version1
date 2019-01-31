@@ -3,7 +3,7 @@
     .col-md-12
       .col-xs-11
         %h2
-          ='Are you sure you want to pause your subscription?'
+          ='PAUSE ACCOUNT'
       .col-xs-1
         %button.remodal-close{"data-remodal-action" => "close"}
 
@@ -12,7 +12,9 @@
       .col-sm-12
         .col-sm-12
           %p.h4
-            Your account will be downgraded immediately and you will lose access to all premium content. 
+            We understand that students sometimes take a break between exams. That’s why we’ve set up the pause function.
+          %p.h4
+            Your billing will be paused, and when you resume your subscription you’ll secure your current low price when you return to study for your next exam. 
 
   .row.l-margin-top
     .col-sm-12.l-margin-top
@@ -24,8 +26,5 @@
         =link_to subscriptions_suspensions_path(id: @current_subscription.id), method: :post do
           .btn.btn-orange.full-width.l-margin-bottom
             =t('views.users.show.confirm_subscription_pause')
-      .col-sm-12
-        %p
-          You can re-activate your subscription again at any time
 
 

@@ -21,19 +21,23 @@
 #  paypal_token             :string
 #  paypal_status            :string
 #  state                    :string
+#  cancelled_at             :datetime
+#  cancellation_reason      :string
+#  cancellation_note        :text
 #
 
 class Subscription < ActiveRecord::Base
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
-  attr_accessor :use_paypal, :paypal_approval_url
+  attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription
 
   attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
                   :paypal_approval_url, :user_id, :subscription_plan_id,
                   :stripe_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
                   :stripe_guid, :stripe_customer_data, :coupon_id,
-                  :complimentary, :paypal_status, :state
+                  :complimentary, :paypal_status, :state, :cancellation_reason, 
+                  :cancellation_note, :cancelling_subscription
 
   # delegate :currency, to: :subscription_plan
 
@@ -61,6 +65,8 @@ class Subscription < ActiveRecord::Base
   # validates :next_renewal_date, presence: true
   validates :stripe_status, inclusion: { in: STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
+  validates :cancellation_reason, presence: true, if: Proc.new { |sub| sub.cancelling_subscription }
+
   # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
@@ -150,6 +156,10 @@ class Subscription < ActiveRecord::Base
       # need to setup a new subscription
     end
 
+    after_transition [:active, :paused] => :pending_cancellation do |subscription, _transition|
+      subscription.update(cancelled_at: Time.zone.now)
+    end
+
     after_transition pending_cancellation: :cancelled do |subscription, _transition|
       # The user has reached the max_failed_payments limit or has been manually
       # cancelled and reached the end of the last billing period.
@@ -183,6 +193,7 @@ class Subscription < ActiveRecord::Base
       SubscriptionService.new(self).cancel_subscription
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
+      false
     end
   end
 
