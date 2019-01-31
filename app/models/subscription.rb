@@ -387,6 +387,8 @@ class Subscription < ActiveRecord::Base
         'Past Due Subscription'
       when 'pending_cancellation'
         'Subscription Pending Cancellation'
+      when 'paused'
+        'Subscription Paused'
       when 'cancelled'
         'Canceled Subscription'
       else
