@@ -44,10 +44,8 @@
 
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
-      =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/cookie_banner'
       =render partial: 'layouts/survicate_pixel'
-      =render partial: 'layouts/quora_js_pixel'
 
   %body
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
@@ -60,7 +58,6 @@
 
     -if Rails.env.production?
       =render partial: 'layouts/google_tag_manager'
-      =render partial: 'layouts/linkedin_pixel'
 
     -if @layout == 'standard'
       -if @navbar

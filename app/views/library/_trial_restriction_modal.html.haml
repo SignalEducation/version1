@@ -1,22 +1,21 @@
-.remodal{"data-remodal-id" => "trial-restriction"}
+.modal.fade{id: 'trial-restriction', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'trialAccessRestricted', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3.text-red{id: 'trialAccessRestricted'}
+          Trial Access Restricted
 
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
-        %h2
-          ='Sorry! That content is not available on a trial account'
+      .modal-body
+        %p.font-weight-medium.mb-4.text-purple
+          Sorry! That content is not available on a trial account.
+        %p.mb-4.text-purple
+          Upgrade your account to get full access
 
-    .row
-      .col-sm-12
-        .col-sm-12.l-margin-top
-          %p
-            Upgrade your account to get full access
-
-    %br/
-    .col-sm-12#actions_btns
-      .col-sm-4.col-sm-offset-4
-        =link_to new_subscription_url, class: 'btn btn-red' do
-          ='Upgrade Account'
-
+      .modal-footer
+        =link_to 'Upgrade', new_subscription_url, class: 'btn btn-primary', title: 'Upgrade your account'
 

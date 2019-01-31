@@ -7,7 +7,7 @@
           =@course.parent.name
 
       -if @new_enrollment
-        %a{data: {remodal: {target: 'enrollment-modal'}}, class: 'btn btn-primary btn-sm', id: 'enrol-now-button'}
+        %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm'}
           Enroll
         =render partial: 'course_enrollment_modal'
 
@@ -144,7 +144,7 @@
 
                                 - else
                                   %li
-                                    %a.course-item-link{data: {target: "##{permission[:reason]}", toggle: 'modal', relatedLessonName: cme.related_course_module_element.try(:name)}, href: '#'}
+                                    %a.course-item-link{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
                                       .course-item.course-item-static{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
                                         .course-item-icon
                                           %span.icon-custom
@@ -218,122 +218,15 @@
                     %span.p.mb-0.font-weight-medium
                       Ask the Tutor
 
-                  .modal.fade{id: 'ask-a-tutor-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'askTutorQuestion', 'aria-hidden': 'true'}
-                    .modal-dialog{role: 'document'}
-                      .modal-content
-                        %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-                          %span
-                            Close
-                          %i.material-icons.ml-1{'aria-hidden': 'true'}
-                            close
-                        .modal-header
-                          %h3.text-red{id: 'askTutorQuestion'}
-                            Ask The Tutor A Question
 
-                        .modal-body
-                          %form.py-2
-                            .row
-                              .col-sm-6
-                                .form-group
-                                  %label{for: "name"}
-                                    Name
-                                  %input{type: 'text', class: 'form-control', id: 'name', placeholder: 'Full Name'}
-
-                              .col-sm-6
-                                .form-group
-                                  %label{for: "email"}
-                                    Email
-                                  %input{type: 'email', class: 'form-control', id: 'email', placeholder: 'Email Address'}
-
-                              .col-12
-                                .form-group
-                                  %label{for: "question"}
-                                    Question
-                                  %textarea.form-control{id: "question", placeholder: 'Question', rows: '3'}
-
-                            .pt-1
-                              %button.btn.btn-primary{type: 'submit'}
-                                Send The Question
-
-
-                  %h3.mb-3.l-margin-top-big
-                    Course Resources
-                  %ul.list
-                    %li
-                      %a{href: "#"}
-                        SBR - ACCA Syllabus
-                    %li
-                      %a{href: "#"}
-                        SBR &ndash; Useful Formulas
-
-
-    -# Modals
-
-    .modal.fade{id: 'trial-restriction', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'trialAccessRestricted', 'aria-hidden': 'true'}
-      .modal-dialog{role: 'document'}
-        .modal-content
-          %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-            %span
-              Close
-            %i.material-icons.ml-1{'aria-hidden': 'true'}
-              close
-          .modal-header
-            %h3.text-red{id: 'trialAccessRestricted'}
-              Trial Access Restricted
-
-          .modal-body
-            %p.font-weight-medium.mb-4.text-purple
-              Sorry! That content is not available on a trial account.
-            %p.mb-4.text-purple
-              Upgrade your account to get full access
-
-          .modal-footer
-            =link_to 'Upgrade', new_subscription_url, class: 'btn btn-primary', title: 'Upgrade your account'
-
-    .modal.fade{id: 'account-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'accountRequired', 'aria-hidden': 'true'}
-      .modal-dialog{role: 'document'}
-        .modal-content
-          %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-            %span
-              Close
-            %i.material-icons.ml-1{'aria-hidden': 'true'}
-              close
-          .modal-header
-            %h3.text-red{id: 'accountRequired'}
-              Account Required
-
-          .modal-body
-            %p.font-weight-medium.mb-4.text-purple
-              Sorry! A valid account is required to access that content
-            %p.mb-4.text-purple
-              Sign Up or Sign In
-
-          .modal-footer
-            =link_to 'Sign In', sign_in_url, class: 'btn btn-primary', title: 'Sign In'
-            =link_to 'Sign Up Now', new_student_url, class: 'btn btn-primary', title: 'Sign Up'
-
-
-    .modal.fade{id: 'related-lesson-restriction', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'lessonRestricted', 'aria-hidden': 'true'}
-      .modal-dialog{role: 'document'}
-        .modal-content
-          %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-            %span
-              Close
-            %i.material-icons.ml-1{'aria-hidden': 'true'}
-              close
-          .modal-header
-            %h3.text-red{id: 'lessonRestricted'}
-              Lesson Restricted
-
-          .modal-body
-            %p.mb-4.text-purple
-              This lesson is restricted until you complete the <b class="font-weight-medium">Test Quiz</b> lesson.
-
-
-
-
+-# Modals
+=render partial: 'account_required_modal'
+=render partial: 'tutor_contact'
 - if current_user
   =render partial: 'user_exam_body_details_modal'
+  =render partial: 'trial_restriction_modal'
+  =render partial: 'related_lesson_restriction_modal'
+
 
 
 -if current_user && current_user.subscription_user?
@@ -351,14 +244,3 @@
         var inst = $('[data-remodal-id=exam-body-user-details-modal]').remodal();
         inst.open();
       });
-
-:javascript
-  $('#related-lesson-restriction').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget); // Button that triggered the modal
-    var recipient = button.data('relatedLessonName'); // Extract info from data-* attributes
-    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-    var modal = $(this);
-    modal.find('.modal-body p').text('This lesson is restricted until you complete the ' + recipient + ' lesson.')
-
-  })
