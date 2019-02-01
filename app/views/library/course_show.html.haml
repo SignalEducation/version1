@@ -225,22 +225,21 @@
 - if current_user
   =render partial: 'user_exam_body_details_modal'
   =render partial: 'trial_restriction_modal'
+  =render partial: 'subscription_restriction_modal'
   =render partial: 'related_lesson_restriction_modal'
 
 
 
 -if current_user && current_user.subscription_user?
 
-  -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >=3
+  -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >= 3
     :javascript
       $(document).ready(function() {
-        var inst = $('[data-remodal-id=enrollment-modal]').remodal();
-        inst.open();
+        $('#enrollment-modal').modal('show');
       });
 
-  -unless @exam_body_user_details || current_user.date_of_birth
+  -if !@exam_body_user_details.student_number || !current_user.date_of_birth
     :javascript
       $(document).ready(function() {
-        var inst = $('[data-remodal-id=exam-body-user-details-modal]').remodal();
-        inst.open();
+        $('#exam-body-details-required').modal('show');
       });

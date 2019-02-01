@@ -1,23 +1,21 @@
-.remodal{"data-remodal-id" => "subscription-restriction"}
+.modal.fade{id: 'invalid-subscription', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'invalidSubscription', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3.text-red{id: 'invalidSubscription'}
+          Valid Subscription Required
 
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
-        %h2
-          ='Sorry! That content is not available on your current subscription.'
+      .modal-body
+        %p.font-weight-medium.mb-4.text-purple
+          Sorry! A valid subscription is required to access that content
+        %p.mb-4.text-purple
+          Upgrade to a subscription to get full access
 
-    .row
-      .col-sm-12
-        .col-sm-12.l-margin-top-big
-          %p
-            ='Please review your account details'
-
-
-    %br/
-    .col-sm-12#actions_btns
-      .col-sm-6
-        =link_to 'Contact Us', contact_url, class: 'btn btn-red'
-      .col-sm-6
-        =link_to t('views.users.show.h1'), account_url, class: 'btn btn-red'
+      .modal-footer
+        =link_to 'Upgrade', new_subscription_url, class: 'btn btn-primary', title: 'Subscription Upgrade'
 

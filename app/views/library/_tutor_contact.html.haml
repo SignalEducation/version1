@@ -7,7 +7,7 @@
         %i.material-icons.ml-1{'aria-hidden': 'true'}
           close
       .modal-header
-        %h3.text-red{id: 'askTutorQuestion'}
+        %h3{id: 'askTutorQuestion'}
           Ask The Tutor A Question
 
 
@@ -30,7 +30,7 @@
               .col-sm-12
                 .form-group
                   =label_tag :question, 'Question'
-                  =text_area_tag :question, nil, class: 'form-control', placeholder: 'Please outline your question', required: true
+                  =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
             .pt-1
               =submit_tag 'Send The Question', class: 'btn btn-primary'
 

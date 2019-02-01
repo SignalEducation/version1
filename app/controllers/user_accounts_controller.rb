@@ -46,7 +46,7 @@ class UserAccountsController < ApplicationController
   def update_exam_body_user_details
     if @user && @user.update_attributes(exam_body_user_allowed_params)
       flash[:success] = I18n.t('controllers.users.update_exam_body_details.flash.success')
-      redirect_to course_special_link(@user.enrollments.last.subject_course)
+      redirect_to request.referrer
     else
       session[:user_exam_body_errors] = @user.errors unless @user.errors.empty?
       redirect_to request.referrer

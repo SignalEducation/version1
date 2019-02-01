@@ -7,6 +7,7 @@
 @import 'bootstrap-datetimepicker';
 @import "font-awesome";
 @import "mixins.scss";
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css");
 @import "summernote";
 @import "remodal-default-theme";
 @import "remodal";
@@ -141,7 +142,7 @@ a {
 }
 a:hover {
   color: inherit;
-  //text-decoration: underline;
+  text-decoration: none;
 }
 a:active,
 a:focus { color: inherit;
@@ -349,7 +350,7 @@ label, .label {
 }
 .form-control {
   display: block;
-  background: #fff;
+  background: #F4F6FA;
   color: #666;
   font-size: inherit;
   font-weight: 300;
@@ -360,9 +361,12 @@ label, .label {
   border: none;
   height: 45px;
   width: 100%;
+  box-shadow: none;
   &:focus {
-    background: $colour-14;
-    @include box-shadow(2px, 0, 0, rgba(#000, .07));
+    box-shadow: none;
+    background: #f4f6fa;
+    color: #424366;
+    border: 1px solid #7f8599!important;
   }
 }
 .form-control.coupon-error {

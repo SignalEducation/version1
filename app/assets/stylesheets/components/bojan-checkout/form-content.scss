@@ -245,34 +245,8 @@ h3 {
   padding-bottom: 0;
   text-align: center
 }
-.form-control {
-  padding: 1.35em .75em
-}
-@media (min-width:576px) {
-  .form-control {
-    padding: 1.35em 1.25em
-  }
-}
-.form-control.is-invalid,
-.form-control:invalid {
-  color: #f34664;
-  background-color: #ffe5e8;
-  border-color: #ffe5e8!important
-}
-.form-control.is-valid,
-.form-control:valid {
-  border-color: #f4f6fa!important;
-  -webkit-box-shadow: none;
-  box-shadow: none
-}
-.form-control.is-valid.focus,
-.form-control.is-valid:focus,
-.form-control:valid.focus,
-.form-control:valid:focus {
-  border-color: #7f8599!important;
-  -webkit-box-shadow: none!important;
-  box-shadow: none!important
-}
+
+
 .invalid-feedback {
   margin-top: 0;
   padding-left: .75em;

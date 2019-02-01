@@ -220,42 +220,6 @@ p {
 
 
 
-.form-control {
-  padding: 1.35rem .75rem
-}
-@media (min-width:576px) {
-  .form-control {
-    padding: 1.35rem 1.25rem
-  }
-}
-.form-control.is-invalid,
-.form-control:invalid {
-  color: #f34664;
-  background-color: #ffe5e8;
-  border-color: #ffe5e8!important
-}
-.form-control.is-valid,
-.form-control:valid {
-  border-color: #f4f6fa!important;
-  -webkit-box-shadow: none;
-  box-shadow: none
-}
-.form-control.is-valid.focus,
-.form-control.is-valid:focus,
-.form-control:valid.focus,
-.form-control:valid:focus {
-  border-color: #7f8599!important;
-  -webkit-box-shadow: none!important;
-  box-shadow: none!important
-}
-textarea.form-control {
-  padding: .85rem 1.15rem
-}
-@media (min-width:576px) {
-  textarea.form-control {
-    padding: .85rem 1.15rem
-  }
-}
 .label,
 label {
   font-size: 1rem;

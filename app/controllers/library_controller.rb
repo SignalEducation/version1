@@ -33,8 +33,8 @@ class LibraryController < ApplicationController
 
     if current_user
       # exam_body_user_details modal form variable and any session errors
-      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id)
-      unless @exam_body_user_details.any?
+      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id).last
+      unless @exam_body_user_details
         @exam_body_user_details = current_user.exam_body_user_details.build(exam_body_id: @course.exam_body_id)
       end
       if session[:user_exam_body_errors]
@@ -57,7 +57,7 @@ class LibraryController < ApplicationController
         end
 
         @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
-        get_enrollment_form_variables(@course, @subject_course_user_log) if @enrollment && @enrollment.expired
+        get_enrollment_form_variables(@course, @subject_course_user_log) if (@enrollment && @enrollment.expired) || !@enrollment
 
       else
         get_enrollment_form_variables(@course, nil)
