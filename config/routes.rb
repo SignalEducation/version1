@@ -188,6 +188,10 @@ Rails.application.routes.draw do
         get 'unapproved'
       end
     end
+    namespace :subscriptions do
+      resources :suspensions, only: [:create, :destroy]
+      resources :cancellations, only: :create
+    end
 
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
     resources :subscription_plans

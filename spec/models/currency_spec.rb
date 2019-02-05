@@ -29,6 +29,10 @@ describe Currency do
 
   subject { FactoryBot.build(:currency) }
 
+  it 'should have a valid factory' do
+    expect(build_stubbed(:currency)).to be_valid
+  end
+
   # Constants
 
   # relationships

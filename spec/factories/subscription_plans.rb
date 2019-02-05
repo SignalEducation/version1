@@ -20,6 +20,7 @@
 #  paypal_guid                   :string
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
+#  previous_plan_price           :float
 #
 
 FactoryBot.define do
@@ -27,7 +28,7 @@ FactoryBot.define do
     sequence(:name)                 { |n| "Test #{n}" }
     all_you_can_eat                 true
     payment_frequency_in_months     1
-    currency_id                     { Currency.first.try(:id) || FactoryBot.create(:euro).id }
+    association                     :currency
     price                           9.99
     available_from                  { 14.days.ago }
     available_to                    { 7.days.from_now }

@@ -21,6 +21,9 @@
 #  paypal_token             :string
 #  paypal_status            :string
 #  state                    :string
+#  cancelled_at             :datetime
+#  cancellation_reason      :string
+#  cancellation_note        :text
 #
 
 class SubscriptionsController < ApplicationController

@@ -37,6 +37,22 @@ class SubscriptionService
     end
   end
 
+  def pause
+    if self.paypal?
+      PaypalService.new.suspend_billing_agreement(@subscription)
+    elsif self.stripe?
+      StripeService.new.pause_subscription(@subscription)
+    end
+  end
+
+  def re_activate
+    if self.paypal?
+      PaypalService.new.reactivate_billing_agreement(@subscription)
+    elsif self.stripe?
+      StripeService.new.reactivate_subscription(@subscription)
+    end
+  end
+
   def paypal?
     (@subscription.use_paypal.present? && @subscription.use_paypal == 'true') || @subscription.paypal_token.present?
   end
@@ -67,12 +83,12 @@ class SubscriptionService
   def valid_paypal_subscription?(params)
     params[:subscription][:use_paypal].present? &&
       @subscription &&
-      @subscription.subscription_plan
+      @subscription.subscription_plan.present?
   end
 
   def valid_stripe_subscription?(params)
     params[:subscription][:stripe_token].present? &&
       @subscription &&
-      @subscription.subscription_plan
+      @subscription.subscription_plan.present?
   end
 end

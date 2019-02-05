@@ -70,6 +70,10 @@ describe User do
     end
   end
 
+  it 'should have a valid factory' do
+    expect(build(:user)).to be_valid
+  end
+
   # Constants
   it { expect(User.const_defined?(:LOCALES)).to eq(true) }
   it { expect(User.const_defined?(:SORT_OPTIONS)).to eq(true) }
