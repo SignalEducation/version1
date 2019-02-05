@@ -71,11 +71,8 @@ class LibraryController < ApplicationController
   def course_preview
     tag_manager_data_layer(@course.name)
     seo_title_maker(@course.name, @course.description, nil)
-
-    @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
-    @tuition_course_modules = @course_modules.all_tuition.all_in_order
-    @test_course_modules = @course_modules.all_test.all_in_order
-    @revision_course_modules = @course_modules.all_revision.all_in_order
+    @form_type = "Course Tutor Question. Course: #{@course.name}"
+    @course_tutor_details = @course.course_tutor_details.all_in_order
 
   end
 
@@ -95,7 +92,7 @@ class LibraryController < ApplicationController
     if @course && !@course.active
       redirect_to library_url
     elsif @course && @course.active && @course.preview
-      redirect_to library_preview_url(@course)
+
     end
   end
 

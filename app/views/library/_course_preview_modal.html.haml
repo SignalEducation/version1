@@ -1,0 +1,22 @@
+.modal.fade{id: 'course-preview', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'coursePreview', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3{id: 'coursePreview'}
+          Course Preview
+
+      .modal-body
+        %p.font-weight-medium.mb-4.text-purple
+          Sorry! This course is still under development
+        %p.mb-4.text-purple
+          Please contact us to find out when it will go live
+
+      .modal-footer
+        =link_to 'Sign In', sign_in_url, class: 'btn btn-primary', title: 'Sign In'
+        =link_to 'Sign Up Now', new_student_url, class: 'btn btn-primary', title: 'Sign Up'
+
