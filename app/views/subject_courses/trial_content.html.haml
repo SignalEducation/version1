@@ -27,15 +27,17 @@
                       %thead
                         %tr
                           %th Name
+                          %th Type
+                          %th Time (Sec)
                           %th Trial
-                          %th
+
                       %tbody
                         =cm.fields_for :course_module_elements, cm.object.course_module_elements.all_in_order do |cme|
                           %tr
-                            %td
-                              =cme.object.name
-                            %td
-                              =cme.check_box :available_on_trial
+                            %td=cme.object.name
+                            %td=cme.object.type_name
+                            %td=cme.object.estimated_time_in_seconds
+                            %td=cme.check_box :available_on_trial
               %hr/
 
           .col-md-12.l-margin-top
@@ -59,6 +61,5 @@
 
 
           .col-md-12.l-margin-top
-            =f.submit t('views.general.save'), class: 'btn btn-red'
-            .pull-right
-              =link_to t('views.subject_courses.course_modules_order.return'), subject_course_url(@subject_course), class: 'btn btn-red'
+            =f.submit t('views.general.save'), class: 'btn btn-primary'
+            =link_to 'Cancel', subject_course_url(@subject_course), class: 'btn btn-secondary'

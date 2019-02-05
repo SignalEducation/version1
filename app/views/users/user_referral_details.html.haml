@@ -18,7 +18,7 @@
             =@referral_code.referred_signups.count
         .col-sm-6
           .pull-right
-            =link_to 'CSV Download', export_referred_signups_path(format: :xls, id: @referral_code.id), class: 'btn btn-cyan'
+            =link_to 'CSV Download', export_referred_signups_path(format: :xls, id: @referral_code.id), class: 'btn btn-secondary-reverse'
 
         .col-md-12
           -if @referral_code

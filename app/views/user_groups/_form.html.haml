@@ -1,17 +1,17 @@
 =form_for(@user_group, html: {class: 'form-horizontal', role: 'form'}) do |f|
   .row
     .col-sm-12
-      .col-md-6
-        =render partial: '/layouts/error_messages', locals: {thing: @user_group, message: nil}
-        =f.label :name, t('views.user_groups.form.name'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+      .box-item
+        .col-md-6
+          =render partial: '/layouts/error_messages', locals: {thing: @user_group, message: nil}
+          =f.label :name, t('views.user_groups.form.name'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
 
-      .col-md-6
-
-        =f.label :description, t('views.user_groups.form.description'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+        .col-md-6
+          =f.label :description, t('views.user_groups.form.description'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
 
 
   .row
@@ -108,5 +108,5 @@
 
 
   .row.l-margin-top-big
-    =f.submit t('views.general.save'), class: 'btn btn-red'
-    =link_to t('views.general.cancel'), user_groups_path, class: 'btn btn-cyan'
+    =f.submit t('views.general.save'), class: 'btn btn-primary'
+    =link_to t('views.general.cancel'), user_groups_path, class: 'btn btn-secondary'

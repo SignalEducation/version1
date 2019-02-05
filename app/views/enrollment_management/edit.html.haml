@@ -7,47 +7,49 @@
             Edit Enrolment
 
       =form_for(@enrollment, url: enrollment_management_url, html: {class: 'form-horizontal', role: 'form'}) do |f|
-        .col-sm-10.col-sm-offset-2.l-margin-bottom
-          .row
-            .col-sm-6
-              =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
-              %br/
+        .col-sm-12.l-margin-bottom
+          .box-item
+            .row
+              .col-sm-12
+                .col-sm-6
+                  =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
+                  %br/
 
-            .col-sm-6
-              #custom_exam_date
-                =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
-                .input-group.input-group-lg.full-width
-                  =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
+                .col-sm-6
+                  #custom_exam_date
+                    =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
+                    .input-group.input-group-lg.full-width
+                      =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
 
 
-        .col-sm-10.col-sm-offset-2.l-margin-bottom
-          .row
-            .col-sm-6
-              .form-group.l-margin-top
-                .col-sm-11.col-sm-offset-1
-                  %label.check
-                    =f.check_box :active
-                    =t('views.enrollments.admin_form.active')
-            .col-sm-6
-              .form-group.l-margin-top
-                .col-sm-11.col-sm-offset-1
-                  %label.check
-                    =f.check_box :expired
-                    =t('views.enrollments.admin_form.expired')
-            .col-sm-6
-              .form-group.l-margin-top
-                .col-sm-11.col-sm-offset-1
-                  %label.check
-                    =f.check_box :notifications
-                    =t('views.enrollments.admin_form.notifications')
+            .row
+              .col-sm-12
+                .col-sm-6
+                  .form-group.l-margin-top
+                    .col-sm-11.col-sm-offset-1
+                      %label.check
+                        =f.check_box :active
+                        =t('views.enrollments.admin_form.active')
+                .col-sm-6
+                  .form-group.l-margin-top
+                    .col-sm-11.col-sm-offset-1
+                      %label.check
+                        =f.check_box :expired
+                        =t('views.enrollments.admin_form.expired')
+                .col-sm-6
+                  .form-group.l-margin-top
+                    .col-sm-11.col-sm-offset-1
+                      %label.check
+                        =f.check_box :notifications
+                        =t('views.enrollments.admin_form.notifications')
 
 
           .row.l-margin-top-huge
             .col-sm-12
-              =f.submit t('views.general.save'), class: 'btn btn-red', id: 'enroll_now'
-              =link_to t('views.general.cancel'), enrollment_management_url(@enrollment), anchor: :enrollments, class: 'btn btn-cyan'
+              =f.submit t('views.general.save'), class: 'btn btn-primary', id: 'enroll_now'
+              =link_to t('views.general.cancel'), enrollment_management_url(@enrollment), anchor: :enrollments, class: 'btn btn-secondary'
 
 
 

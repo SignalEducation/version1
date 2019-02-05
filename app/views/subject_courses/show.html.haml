@@ -11,14 +11,14 @@
               %p.h6.text-center
                 Please create a Course Module to begin.  A course module will hold a collection of Videos and Quizzes under the same topic.  Each topic should have a separate Module.  The name of the Module should reflect the topic.
           .row.l-margin-top-big.text-center
-            =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-red'
+            =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-primary'
         -else
           .pull-right
-            =link_to 'Trial Content', subject_course_trial_content_url(@subject_course), class: 'btn btn-green'
-            =link_to t('views.subject_course_resources.show.h2'), course_resources_url(@subject_course), class: 'btn btn-purple'
-            =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-red'
-            =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-orange'
-            =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-red'
+            =link_to 'Trial Content', subject_course_trial_content_url(@subject_course), class: 'btn btn-secondary-reverse'
+            =link_to t('views.subject_course_resources.show.h2'), course_resources_url(@subject_course), class: 'btn btn-secondary'
+            =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-primary'
+            =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-secondary-reverse'
+            =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-secondary'
         .row.l-margin-top.l-margin-bottom
           .col-md-12.l-margin-top
             .ol.sortable-area
@@ -51,18 +51,18 @@
                               %td
                                 =course_module.cme_count
                               %td
-                                =link_to t('views.general.edit'), edit_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-small btn-cyan'
-                                =link_to 'Edit Content', show_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-small btn-purple'
+                                =link_to t('views.general.edit'), edit_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-small btn-primary'
+                                =link_to t('views.general.show'), show_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-small btn-secondary'
                                 -if course_module.destroyable?
-                                  =link_to t('views.general.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+                                  =link_to t('views.general.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-small'
                               %td
                                 %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 
-                      .col-md-6
-                        =link_to 'New Course Module', new_course_module_url(@subject_course.id, course_section.id), class: 'btn btn-purple'
-                      .col-md-6
-                        .pull-right
-                          =link_to t('views.course_sections.edit.h1'), edit_course_section_url(course_section), class: 'btn btn-purple'
-                          =link_to I18n.t('views.course_sections.index.delete'), course_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
+                    .col-md-6
+                      =link_to 'New Course Module', new_course_module_url(@subject_course.id, course_section.id), class: 'btn btn-primary'
+                    .col-md-6
+                      .pull-right
+                        =link_to t('views.course_sections.edit.h1'), edit_course_section_url(course_section), class: 'btn btn-primary'
+                        =link_to I18n.t('views.course_sections.index.delete'), course_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse'
 

@@ -35,8 +35,8 @@ class MockExam < ActiveRecord::Base
   has_many :products
   has_many :orders
 
-  has_attached_file :file, default_url: '/assets/images/missing.png'
-  has_attached_file :cover_image, default_url: '/assets/images/missing.png'
+  has_attached_file :file, default_url: '/assets/images/404_V1.png'
+  has_attached_file :cover_image, default_url: '/assets/images/404_V1.png'
 
   # validation
   validates :name, presence: true

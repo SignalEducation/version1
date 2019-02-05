@@ -1,9 +1,9 @@
 .col-xs-4.text-left
-  =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-cyan full-width' do
+  =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-primary full-width' do
     =t('views.course_module_elements.show.retake_quiz')
 .col-xs-4.text-center
 .col-xs-4.text-right
-  =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-red full-width' do
+  =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-secondary-reverse full-width' do
     -if @course_module_element_user_log && @course_module_element_user_log.element_completed
       =t('views.course_module_elements.show.next_step')
     -else

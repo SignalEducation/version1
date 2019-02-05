@@ -2400,9 +2400,9 @@ input[type="radio"] {
   list-style: none;
   padding: 0;
   color: $colour-7;
-  font-size: 1.6rem;
+  font-size: 1.1rem;
   @include breakpoint(md-min) {
-    font-size: 1.8rem;
+    font-size: 1.1rem;
     margin-left: 5%;
     margin-right: 5%;
   }
@@ -2422,7 +2422,7 @@ input[type="radio"] {
     color: $colour-7;
     text-decoration: none;
     @include opacity(0.8);
-    font-size: 1.6rem;
+    font-size: 1.1rem;
     &:hover {
       @include opacity(2);
     }

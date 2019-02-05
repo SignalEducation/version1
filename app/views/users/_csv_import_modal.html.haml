@@ -28,9 +28,9 @@
               =file_field_tag :upload, class: 'form-control', style: 'border-radius: 6px;', required: true
             %br/
 
-        %button{type: 'button', class: 'btn btn-cyan', data: {dismiss: 'modal'}}
+        %button{type: 'button', class: 'btn btn-secondary', data: {dismiss: 'modal'}}
           =t('views.general.cancel')
-        =submit_tag t('views.general.upload'), class: 'btn btn-red'
+        =submit_tag t('views.general.upload'), class: 'btn btn-primary'
 
 :javascript
   $(document).on('confirmation', '.remodal', function () {

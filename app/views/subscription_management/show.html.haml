@@ -86,18 +86,18 @@
             .col-md-3.col-sm-12.col-xs-12
               -if @subscription.active_status? || @subscription.past_due_status?
                 =link_to subscription_management_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to cancel subscription?'} do
-                  .btn.btn-cyan.full-width
+                  .btn.btn-primary.full-width
                     =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
 
                 =link_to subscription_management_immediate_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to immediately cancel this subscription?'} do
-                  .btn.btn-red.full-width.l-margin-top
+                  .btn.btn-secondary-reverse.full-width.l-margin-top
                     =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
 
               -elsif @subscription.canceled_pending_status?
-                =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_management_un_cancel_subscription_url(@subscription.id), method: :put, class: 'btn btn-red full-width', data: {confirm: 'Are you sure you want to Un-Cancel this subscription?'}
+                =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), subscription_management_un_cancel_subscription_url(@subscription.id), method: :put, class: 'btn btn-primary full-width', data: {confirm: 'Are you sure you want to Un-Cancel this subscription?'}
 
               -elsif @subscription.canceled_status? && @subscription.id == @user.current_subscription.id
-                =link_to t('views.users.show.un_cancel_subscription.reactivate_sub'), subscription_management_reactivate_subscription_url(@subscription.id), method: :put, class: 'btn btn-red full-width', data: {confirm: "Are you sure you want to Reactivate this subscription? The student will be charged immediately and subscribed to the #{@subscription.subscription_plan.currency.format_number(@subscription.subscription_plan.price)} - #{@subscription.subscription_plan.name} Plan"}
+                =link_to t('views.users.show.un_cancel_subscription.reactivate_sub'), subscription_management_reactivate_subscription_url(@subscription.id), method: :put, class: 'btn btn-primary full-width', data: {confirm: "Are you sure you want to Reactivate this subscription? The student will be charged immediately and subscribed to the #{@subscription.subscription_plan.currency.format_number(@subscription.subscription_plan.price)} - #{@subscription.subscription_plan.name} Plan"}
 
 
 

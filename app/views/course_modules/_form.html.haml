@@ -1,73 +1,70 @@
 =form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_form'}) do |f|
-  .row
-    =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
-    .col-md-6
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
+        =f.hidden_field :sorting_order
+        =f.hidden_field :subject_course_id
+        =f.hidden_field :course_section_id
 
-      =f.hidden_field :sorting_order
-      =f.hidden_field :subject_course_id
-      =f.hidden_field :course_section_id
+        .col-md-6
+          =f.label :course_section_id, t('views.course_modules.form.course_section_id'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.collection_select :course_section_id, @course_sections, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
 
-      =f.label :course_section_id, t('views.course_modules.form.course_section_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :course_section_id, @course_sections, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+          =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
+          %br/
+          =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          .col-sm-11.col-sm-offset-1
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.course_modules.form.active')
 
-      =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
-      %br/
-      =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      .col-sm-11.col-sm-offset-1
-        .checkbox
-          %label
-            =f.check_box :active
-            =t('views.course_modules.form.active')
+        .col-md-6
+          =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
 
-    .col-md-6
-      =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+          %br/
+          .col-sm-11.col-sm-offset-1
+            .form-group{style: 'margin-left: 0px;'}
+              %table.col-sm-12
+                %thead
+                  %tr
+                    %th=t('views.course_modules.form.tuition')
+                    -#%th=t('views.course_modules.form.test')
+                    %th='Additional'
+                    %th=t('views.course_modules.form.question_bank')
+                    %th
+                %tbody
+                  %tr
+                    %td.check
+                      =f.check_box :tuition
+                    %td.check
+                      =f.check_box :test
+                    %td.check
+                      =f.check_box :revision
+                    %td
+                      =link_to('Clear', '#', class: 'check clear')
+          %br/
+          =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          -if f.object.new_record?
+            :javascript
+              document.querySelector('input[type="color"]').value = '#FFFFFF'
 
-      %br/
-      %br/
-      .col-sm-11.col-sm-offset-1
-        .form-group{style: 'margin-left: 0px;'}
-          %table.col-sm-12
-            %thead
-              %tr
-                %th=t('views.course_modules.form.tuition')
-                -#%th=t('views.course_modules.form.test')
-                %th='Additional'
-                %th=t('views.course_modules.form.question_bank')
-                %th
-            %tbody
-              %tr
-                %td.check
-                  =f.check_box :tuition
-                %td.check
-                  =f.check_box :test
-                %td.check
-                  =f.check_box :revision
-                %td
-                  =link_to('Clear', '#', class: 'check clear')
-      %br/
-      =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      -if f.object.new_record?
-        :javascript
-          document.querySelector('input[type="color"]').value = '#FFFFFF'
-
-  %br/
-  %br/
-  %br/
-  %br/
-  .row
+  .row.l-margin-top
     .col-md-12
-      =f.submit t('views.general.save'), class: 'btn btn-red'
-      =link_to t('views.general.cancel'), course_module_special_link(@course_module), class: 'btn btn-cyan'
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), course_module_special_link(@course_module), class: 'btn btn-secondary'
 
 
 

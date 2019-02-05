@@ -1,34 +1,35 @@
 .l-section-small.is-bg-asphalt
-  .l-wrap
+  .l-wrap-large
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Courses
+
       .row.l-margin-top.l-margin-bottom
         .col-md-12
           =render partial: 'management_consoles/course_content_nav'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-sm-4
-          =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
-
-        .col-sm-4
-          =form_tag(subject_courses_url, method: :get, role: 'form', class: 'form-horizontal') do
-            .col-sm-10.col-sm-offset-2
-              .input-group.input-group-lg.full-width
-                =select_tag :group_id, options_for_select(Group.all.collect {|p| [ p.name, p.id ] }, params[:group_id]), {include_blank: 'All', class: 'form-control', onchange: 'this.form.submit(); return false;'}
-
-        .col-sm-4
-          =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
-            .form-group.input-group.input-group-lg
-              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                %span.glyphicon.glyphicon-search
-
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top
+      .row
+        .col-sm-12.l-margin-top.l-margin-bottom
           .table-box
+            .row.l-margin-top.l-margin-bottom
+              .col-sm-4
+                =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-primary', title: t('views.general.new_tooltip')
+
+              .col-sm-4
+                =form_tag(subject_courses_url, method: :get, role: 'form', class: 'form-horizontal') do
+                  .col-sm-10.col-sm-offset-2
+                    .input-group.input-group-lg.full-width
+                      =select_tag :group_id, options_for_select(Group.all.collect {|p| [ p.name, p.id ] }, params[:group_id]), {include_blank: 'All', class: 'form-control', onchange: 'this.form.submit(); return false;'}
+
+              .col-sm-4
+                =form_tag(subject_courses_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+                  .form-group.input-group.input-group-lg
+                    =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                    .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                      %span.glyphicon.glyphicon-search
+
             .table-responsive
               %table.table.sorted_table{style: 'font-size: 18px;'}
                 %thead
@@ -48,12 +49,14 @@
                       %td=tick_or_cross(subject_course.active)
                       %td=tick_or_cross(subject_course.preview)
                       %td
-                        =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-purple'
+                        =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-small btn-primary'
                       %td
-                        =link_to t('views.subject_courses.index.edit_content'), subject_course_url(subject_course), class: 'btn btn-small btn-orange'
-                      -if subject_course.destroyable?
-                        %td
-                          =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-small btn-red'
+                        =link_to t('views.general.show'), subject_course_url(subject_course), class: 'btn btn-small btn-secondary'
+                      %td
+                        -if subject_course.destroyable?
+                          =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-small btn-secondary-reverse'
+                      %td
+                      %td
 
 
 

@@ -135,7 +135,7 @@
           .btn.btn-purple.full-width.l-margin-bottom
             =t('views.users.show.change_subscription_plan')
 
-      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
+      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
 
@@ -148,12 +148,12 @@
     -elsif @current_subscription.canceled_status?
 
       %h3=t('views.users.show.reactivate_subscription.h3')
-      =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-red full-width'
+      =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-primary full-width'
 
 
 
     -elsif @current_subscription.past_due_status?
-      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
+      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
 
