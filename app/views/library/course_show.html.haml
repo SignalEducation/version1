@@ -117,7 +117,7 @@
                                               ondemand_video
                                             -elsif cme.is_quiz?
                                               playlist_add_check
-                                            -elsif is_constructed_response?
+                                            -elsif cme.is_constructed_response?
                                               grid_on
                                             -else
                                               checked
@@ -183,7 +183,7 @@
                                             ondemand_video
                                           -elsif cme.is_quiz?
                                             playlist_add_check
-                                          -elsif is_constructed_response?
+                                          -elsif cme.is_constructed_response?
                                             grid_on
                                           -else
                                             checked

@@ -6,9 +6,9 @@
 
   .start-screen-box
     .col-sm-6.l-margin-bottom
-      %h3.l-margin-bottom
+      .welcome-text
         ='WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL'
-      %h6.l-margin-bottom
+      .before-text
         ='Before you attempt this question for the first time:'
 
       %ul
@@ -33,7 +33,7 @@
        course_section_name_url: @course_module_element.course_module.course_section.name_url,
         course_module_name_url: @course_module_element.course_module.name_url,
          course_module_element_name_url: @course_module_element.name_url), id: 'newConstructedResponseButton' do
-        .btn.btn-red.btn-secondary.full-width
+        .btn.btn-primary.full-width
           ='New Constructed Response'
 
       .sk-circle

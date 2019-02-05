@@ -7,7 +7,7 @@ class DashboardController < ApplicationController
   def show
     @default_group = Group.all_active.all_in_order.first
     @enrollments = current_user.valid_enrollments_in_sitting_order
-
+    @expired_enrollments = current_user.expired_enrollments_in_sitting_order
   end
 
 
