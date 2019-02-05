@@ -120,6 +120,17 @@ class PaypalService
     end
   end
 
+  def charge_billing_agreement_balance(subscription)
+    agreement = Agreement.find(subscription.paypal_subscription_guid)
+    state_descriptor = AgreementStateDescriptor.new(note: 'Billing the outstanding balance on the subscription')
+    if agreement.bill_balance(state_descriptor)
+      subscription.update!(paypal_status: agreement.state)
+    else
+      Rails.logger.error "DEBUG: Subscription#re-activate Failure to re-activate BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
+      raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong while re-activating your subscription with PayPal. Please contact us for assistance.')
+    end
+  end
+
   def reactivate_billing_agreement(subscription)
     agreement = Agreement.find(subscription.paypal_subscription_guid)
     state_descriptor = AgreementStateDescriptor.new(note: 'Re-activating the subscription')
