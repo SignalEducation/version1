@@ -66,6 +66,14 @@ class PaypalWebhook < ActiveRecord::Base
     end
   end
 
+  def process_subscription_suspended
+    if subscription = Subscription.find_by(paypal_subscription_guid: payload['resource']['id'])
+      subscription.schedule_paypal_cancellation
+    else
+      update!(verified: false)
+    end
+  end
+
   private
 
   def check_dependencies
