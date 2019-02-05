@@ -1,10 +1,10 @@
 class UserSessionsController < ApplicationController
 
-  before_filter :logged_out_required, only: [:new, :create]
-  before_filter :logged_in_required,  only: :destroy
-  before_filter :set_variables
-  before_filter :check_email_verification, only: [:create]
-  before_filter :check_user_group, only: [:create]
+  before_action :logged_out_required, only: [:new, :create]
+  before_action :logged_in_required,  only: :destroy
+  before_action :set_variables
+  before_action :check_email_verification, only: [:create]
+  before_action :check_user_group, only: [:create]
 
   def new
     @user_session = UserSession.new
