@@ -183,11 +183,53 @@ describe PaypalService, type: :service do
     end
   end
 
+  describe '#charge_billing_agreement_balance' do
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      @dbl = double
+      allow(@dbl).to receive(:state).and_return('Suspended')
+    end
+
+    let!(:subscription) { create(:subscription) }
+
+    it 'must have a subscription' do
+      expect { subject.charge_billing_agreement_balance() }.to raise_error ArgumentError
+    end
+
+    it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      allow(@dbl).to receive(:bill_balance).and_return(true)
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+
+      subject.charge_billing_agreement_balance(subscription)
+    end
+
+    it 'calls BILL_BALANCE on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
+      expect(@dbl).to receive(:bill_balance).and_return(true)
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+
+      subject.charge_billing_agreement_balance(subscription)
+    end
+
+    it 'returns TRUE if BILL_BALANCE succeeds with the PayPal API' do
+      allow(@dbl).to receive(:bill_balance).and_return(true)
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+
+      expect(subject.charge_billing_agreement_balance(subscription)).to be true
+    end
+
+    it 'raises and error if BILL_BALANCE does not succeed with the PayPal API' do
+      allow(@dbl).to receive(:bill_balance).and_return(false)
+      allow(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+
+      expect { subject.charge_billing_agreement_balance(subscription)}.to raise_error(Learnsignal::SubscriptionError)
+    end
+  end
+
   describe '#reactivate_billing_agreement' do
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
       @dbl = double
-      allow(@dbl).to receive(:state).and_return('Active')
+      allow(@dbl).to receive(:state).and_return('Suspended')
     end
 
     let!(:subscription) { create(:subscription) }
