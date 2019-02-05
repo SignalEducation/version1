@@ -8,7 +8,7 @@ gem 'rails', '5.2.2'
 gem 'puma', '~> 3.11'
 
 # Core gems - common to all environments
-gem 'airbrake', '~> 4.3.4'
+gem 'airbrake', '~> 8.0.1'
 gem 'authlogic', '~> 5.0.0'
 gem 'ahoy_matey' # visit tracking
 gem 'blazer'
