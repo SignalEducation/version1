@@ -12,12 +12,12 @@
         .tutor-header.mb-3
           Course Tutors
         -@course_tutor_details.each do |course_tutor|
-          .col-md-12.l-margin-bottom{style: 'padding: 0;'}
+          .col-sm-12.l-margin-bottom{style: 'padding: 0;'}
             =link_to profile_url(course_tutor.user), class: 'profile-item d-flex align-items-center mb-3' do
-              .col-md-6.img-thumbnail-wrap.mr-3
+              .col-sm-6.img-thumbnail-wrap.mr-3
                 =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail', alt: 'Tutor Profile Image'
 
-              .col-md-6.l-margin-top-small
+              .col-sm-6.l-margin-top-small
                 %p.profile-name.mb-1
                   =course_tutor.user.full_name.to_s
                 %p.profile-title.mb-0.text-purple3

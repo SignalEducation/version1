@@ -206,6 +206,13 @@
     color: #424366
   }
 
+  .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover{
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: 3px solid #424366;
+    cursor: pointer;
+  }
 }
 
 
