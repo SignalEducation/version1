@@ -1,4 +1,4 @@
-class Ahoy::Store < Ahoy::Stores::ActiveRecordStore
+class Ahoy::Store < Ahoy::DatabaseStore
   # customize here
   #Ahoy.track_visits_immediately = true
 end
