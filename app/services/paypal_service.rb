@@ -144,6 +144,11 @@ class PaypalService
     end
   end
 
+  def update_billing_agreement(subscription)
+    agreement = Agreement.find(subscription.paypal_subscription_guid)
+    subscription.update!(paypal_status: agreement.state)
+  end
+
   def update_next_billing_date(subscription)
     agreement = Agreement.find(subscription.paypal_subscription_guid)
     subscription.update!(next_renewal_date: agreement.agreement_details.next_billing_date)

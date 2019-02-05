@@ -320,6 +320,11 @@ class Subscription < ActiveRecord::Base
     subscription_plan.try(:amount)
   end
 
+  def paypal_suspended
+    PaypalService.new.update_billing_agreement(subscription)
+    self.record_error
+  end
+
   def reactivation_options
     SubscriptionPlan
       .where(
