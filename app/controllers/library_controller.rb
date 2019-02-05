@@ -33,9 +33,12 @@ class LibraryController < ApplicationController
 
     if current_user
       # exam_body_user_details modal form variable and any session errors
-      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id).last
+      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(
+          current_user.id).last
       unless @exam_body_user_details
-        @exam_body_user_details = current_user.exam_body_user_details.build(exam_body_id: @course.exam_body_id)
+        @exam_body_user_details = current_user.exam_body_user_details.build(
+            exam_body_id: @course.exam_body_id
+        )
       end
       if session[:user_exam_body_errors]
         current_user.errors.add(:base, 'Details entered are not valid!')
@@ -100,19 +103,19 @@ class LibraryController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-    correction_packs = Product.includes(:currency)
+    @correction_pack_products = Product.includes(:currency)
                            .in_currency(@currency_id)
                            .all_active
                            .all_in_order
                            .where("mock_exam_id IS NOT NULL")
                            .where("product_type = ?", Product.product_types[:correction_pack])
     mock_exam_ids = @course.mock_exams.map(&:id)
-    mock_exams = Product.includes(:mock_exam)
+    @mock_exam_products = Product.includes(:mock_exam)
                      .in_currency(@currency_id)
                      .all_active
                      .all_in_order
                      .where(mock_exam_id: mock_exam_ids)
-    @products = correction_packs + mock_exams
+    @products = @correction_pack_products + @mock_exam_products
     @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
 
   end

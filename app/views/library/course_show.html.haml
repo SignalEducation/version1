@@ -209,9 +209,6 @@
                                             -else
                                               =cme.number_of_questions.to_s + ' ' +  'Question'
 
-
-
-
               .col-lg-4.mb-5
                 %div.tutor-contact
                   %a.tutor-contact-link.d-inline-flex.align-items-center.mb-4.w-100.link-purple-turquoise{href: "#", 'data-toggle': 'modal', 'data-target': '#ask-a-tutor-modal'}
@@ -220,6 +217,72 @@
                         question_answer
                     %span.p.mb-0.font-weight-medium
                       Ask the Tutor
+
+
+
+          .tab-pane.tab-courses.tab-exam-prep{id: 'exam-prep', role: 'tabpanel', 'aria-labelledby': 'exam-prep-tab'}
+            .row.row-lg
+              .col-lg-6
+                .mb-5
+                  %h3='Exam Preparation Products'
+
+                  - @correction_pack_products.each do |product|
+                    =link_to new_order_url(product), class: 'card card-link card-link-alt mb-4' do
+                      .col-xs-2
+                        .card-link-alt-img.mr-3.mr-sm-4
+                          =image_tag('ico-questions-2.svg', alt: "#{product.mock_exam.try(:name)} Product")
+                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
+                        %h4.text-ellipsis.mb-0.pr-sm-4
+                          =product.mock_exam.try(:name)
+
+                  - @mock_exam_products.each do |product|
+                    =link_to new_order_url(product), class: 'card card-link card-link-alt mb-4' do
+                      .col-xs-2
+                        .card-link-alt-img.mr-3.mr-sm-4
+                          =image_tag('ico-exam.svg', alt: "#{product.mock_exam.try(:name)} Product")
+                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
+                        %h4.text-ellipsis.mb-0.pr-sm-4
+                          =product.mock_exam.try(:name)
+
+
+              .col-lg-6
+                .mb-5
+                  %h3='Course Resources'
+
+                  - @subject_course_resources.each do |resource|
+
+                    - if current_user
+                      - permission = resource.available_to_user(current_user)
+                      - if  permission[:view]
+                        =link_to course_resource_special_link(resource), class: 'card card-link card-link-alt mb-4', target: '_blank' do
+                          .col-xs-2
+                            .icon-custom.icon-custom-xl.mr-3.mr-sm-4
+                              %i.material-icons{'aria-hidden': 'true'}
+                                file_download
+                          .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
+                            %h4.text-ellipsis.mb-0.pr-sm-4
+                              =resource.name
+                      - else
+                        %a.card.card-link.card-link-alt.mb-4.locked{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
+                          .col-xs-2
+                            .icon-custom.icon-custom-xl.mr-3.mr-sm-4
+                              %i.material-icons{'aria-hidden': 'true'}
+                                lock_outline
+                          .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
+                            %h4.text-ellipsis.mb-0.pr-sm-4
+                              =resource.name
+
+                    - else
+                      %a.card.card-link.card-link-alt.mb-4.locked{data: {target: '#account-required', toggle: 'modal', href: '#'}}
+                        .col-xs-2
+                          .icon-custom.icon-custom-xl.mr-3.mr-sm-4
+                            %i.material-icons{'aria-hidden': 'true'}
+                              lock_outline
+                        .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
+                          %h4.text-ellipsis.mb-0.pr-sm-4
+                            =resource.name
+
+
 
 
 -# Modals
