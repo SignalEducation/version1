@@ -99,6 +99,7 @@ end
 group :test do
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
+  gem "rspec_junit_formatter"
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
