@@ -11,9 +11,9 @@
           =render partial: 'management_consoles/course_content_nav'
 
       .row
-        .col-md-12.l-margin-top.l-margin-bottom
-          .table-box
-            .row.l-margin-bottom.l-margin-top
+        .col-sm-12
+          .box-item.table-box
+            .row.l-margin-bottom
               .col-sm-12
                 =link_to 'New Mock Exam', new_mock_exam_url, class: 'btn btn-primary'
 
@@ -22,6 +22,7 @@
                 %thead
                   %tr
                     %th=t('views.mock_exams.form.name')
+                    %th
                     %th
                     %th
                     %th

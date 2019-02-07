@@ -24,9 +24,9 @@
             .ol.sortable-area
               -@subject_course.course_sections.all_in_order.each do |course_section|
                 .li.l-margin-bottom-big
-                  .table-box
+                  .box-item.table-box
                     .table-responsive
-                      .col-md-9.l-margin-bottom
+                      .col-md-9
                         %h2=course_section.name.to_s.truncate(50)
                       .col-md-3
                         .pull-right

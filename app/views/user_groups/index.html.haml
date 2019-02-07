@@ -11,10 +11,11 @@
           =render partial: 'management_consoles/user_management_nav'
 
       .row
-        .col-sm-12.l-margin-top.l-margin-bottom
-          .table-box
-            .l-margin-bottom
-              =link_to 'New User Group', new_user_group_url, class: 'btn btn-primary btn-small'
+        .col-sm-12
+          .box-item.table-box
+            .row.l-margin-bottom
+              .col-xs-8
+                =link_to 'New User Group', new_user_group_url, class: 'btn btn-primary btn-small'
 
             .table-responsive
               =will_paginate @user_groups, renderer: BootstrapPagination::Rails
