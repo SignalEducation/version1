@@ -28,6 +28,9 @@ require 'rails_helper'
 describe SubscriptionPlan do
   # Constants
   it { expect(SubscriptionPlan.const_defined?(:PAYMENT_FREQUENCIES)).to eq(true) }
+  it 'should have a valid factory' do
+    expect(build(:subscription_plan)).to be_valid
+  end
 
   describe 'relationships' do
     it { should belong_to(:currency) }
@@ -46,7 +49,7 @@ describe SubscriptionPlan do
 
     it { should validate_inclusion_of(:payment_frequency_in_months).in_array(SubscriptionPlan::PAYMENT_FREQUENCIES) }
 
-    it { should validate_presence_of(:currency_id) }
+    it { should validate_presence_of(:currency) }
 
     it { should validate_presence_of(:price) }
 
@@ -65,9 +68,6 @@ describe SubscriptionPlan do
 
   describe 'callbacks' do
     it { should callback(:check_dependencies).before(:destroy) }
-    it { should callback(:create_on_stripe_platform).before(:create) }
-    it { should callback(:update_on_stripe_platform).before(:update) }
-    it { should callback(:delete_on_stripe_platform).after(:destroy) }
   end
 
   describe 'class methods' do
@@ -86,7 +86,7 @@ describe SubscriptionPlan do
   end
 
   describe 'instance methods' do
-    let(:subscription_plan) { create(:subscription_plan) }
+    let(:subscription_plan) { build_stubbed(:subscription_plan) }
     it { should respond_to(:destroyable?) }
 
     describe '#amount' do
@@ -121,22 +121,19 @@ describe SubscriptionPlan do
       it 'returns the correct description for monthly subscription_plans' do
         plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 1)
 
-        expect(plan.description).to include('monthly')
-        expect(plan.description).to include('billed every month')
+        expect(plan.description).to include('Pay for LearnSignal online training service every month.')
       end
 
       it 'returns the correct description for quarterly subscription_plans' do
         plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 3)
 
-        expect(plan.description).to include('quarterly')
-        expect(plan.description).to include('billed every three months')
+        expect(plan.description).to include('Pay for LearnSignal online training service every three months.')
       end
 
       it 'returns the correct description for yearly subscription_plans' do
         plan = build_stubbed(:subscription_plan, payment_frequency_in_months: 12)
 
-        expect(plan.description).to include('yearly')
-        expect(plan.description).to include('billed every 12 months')
+        expect(plan.description).to include('Pay for LearnSignal online training service every 12 months.')
       end
 
       it 'returns a default description for non-standard subscription_plans' do

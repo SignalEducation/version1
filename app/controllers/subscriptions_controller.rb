@@ -21,6 +21,9 @@
 #  paypal_token             :string
 #  paypal_status            :string
 #  state                    :string
+#  cancelled_at             :datetime
+#  cancellation_reason      :string
+#  cancellation_note        :text
 #
 
 class SubscriptionsController < ApplicationController
@@ -95,7 +98,6 @@ class SubscriptionsController < ApplicationController
         SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url
       else
-        @subscription.cancel!
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
         flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
         redirect_to new_subscription_url

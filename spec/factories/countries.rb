@@ -22,6 +22,8 @@ FactoryBot.define do
     sequence(:sorting_order)  {|n| n * 10 }
     continent                 'Europe'
 
+    association(:currency)
+
     factory :eu_country do
       in_the_eu true
 

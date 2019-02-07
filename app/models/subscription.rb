@@ -21,21 +21,25 @@
 #  paypal_token             :string
 #  paypal_status            :string
 #  state                    :string
+#  cancelled_at             :datetime
+#  cancellation_reason      :string
+#  cancellation_note        :text
 #
 
 class Subscription < ActiveRecord::Base
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
-  attr_accessor :use_paypal, :paypal_approval_url
+  attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription
 
   attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
                   :paypal_approval_url, :user_id, :subscription_plan_id,
                   :stripe_status, :stripe_customer_id, :stripe_token,
                   :livemode, :next_renewal_date, :active, :terms_and_conditions,
                   :stripe_guid, :stripe_customer_data, :coupon_id,
-                  :complimentary, :paypal_status, :state
+                  :complimentary, :paypal_status, :state, :cancellation_reason, 
+                  :cancellation_note, :cancelling_subscription
 
-  delegate :currency, to: :subscription_plan
+  # delegate :currency, to: :subscription_plan
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
@@ -61,6 +65,8 @@ class Subscription < ActiveRecord::Base
   # validates :next_renewal_date, presence: true
   validates :stripe_status, inclusion: { in: STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
+  validates :cancellation_reason, presence: true, if: Proc.new { |sub| sub.cancelling_subscription }
+
   # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_id, maximum: 255, allow_blank: true
@@ -85,6 +91,10 @@ class Subscription < ActiveRecord::Base
       transition pending: :active
     end
 
+    event :pause do
+      transition active: :paused
+    end
+
     event :record_error do
       transition [:active, :pending] => :errored
     end
@@ -94,11 +104,11 @@ class Subscription < ActiveRecord::Base
     end
 
     event :cancel do
-      transition [:pending, :active, :errored, :pending_cancellation] => :cancelled
+      transition [:pending, :active, :errored, :pending_cancellation, :paused] => :cancelled
     end
 
     event :restart do
-      transition [:errored, :pending_cancellation] => :active
+      transition [:errored, :pending_cancellation, :paused] => :active
     end
 
     state all - [:active, :errored, :pending_cancellation] do
@@ -136,10 +146,18 @@ class Subscription < ActiveRecord::Base
       # UserMailer.subscription_auto_delete_email(subscription.user).deliver
     end
 
+    after_transition active: :paused do |subscription, _transition|
+      # Notify the user that their sub is paused
+    end
+
     after_transition active: :pending_cancellation do |subscription, _transition|
       # Email the user to tell them how many days of access they have left on
       # the platform. For Stripe they can 'un-cancel' but for PayPal they will
       # need to setup a new subscription
+    end
+
+    after_transition [:active, :paused] => :pending_cancellation do |subscription, _transition|
+      subscription.update(cancelled_at: Time.zone.now)
     end
 
     after_transition pending_cancellation: :cancelled do |subscription, _transition|
@@ -175,6 +193,7 @@ class Subscription < ActiveRecord::Base
       SubscriptionService.new(self).cancel_subscription
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
+      false
     end
   end
 
@@ -302,8 +321,12 @@ class Subscription < ActiveRecord::Base
   end
 
   def reactivation_options
-    SubscriptionPlan.where(currency_id: self.subscription_plan.currency_id,
-                           available_to_students: true).where('price > 0.0').generally_available.all_active.all_in_order
+    SubscriptionPlan
+      .where(
+        currency_id: self.subscription_plan.currency_id,
+        available_to_students: true
+      )
+      .where('price > 0.0').generally_available.all_active.all_in_order
   end
 
   def schedule_paypal_cancellation
@@ -364,6 +387,8 @@ class Subscription < ActiveRecord::Base
         'Past Due Subscription'
       when 'pending_cancellation'
         'Subscription Pending Cancellation'
+      when 'paused'
+        'Subscription Paused'
       when 'cancelled'
         'Canceled Subscription'
       else

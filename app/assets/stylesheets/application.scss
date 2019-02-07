@@ -332,7 +332,6 @@ hr {
 // 3. Form Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 .form-group {
   margin: 0 0 20px 0;
 }
@@ -457,6 +456,14 @@ label, .label {
 .pagination > li > a, .pagination > li > span {
   padding: 10px 18px;
   color: $colour-7;
+  &.reduced-padding {
+    padding: 0 $gutter/2;
+  }
+
+  &:link, &:visited {
+    text-decoration: none;
+    color: $colour-12;
+  }
   &:hover {
 
   }
@@ -2618,6 +2625,10 @@ input[type="radio"] {
 // 22. Kendo UI Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+.block-label {
+  display: block;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 23. CSS Partials that depend on existing classes in this file so must be imported last

@@ -1,6 +1,6 @@
 require 'paypal-sdk-rest'
 
-class PaypalWebhooksService
+class PaypalWebhookService
   include PayPal::SDK::REST
   include PayPal::SDK::Core::Logging
 
@@ -11,17 +11,16 @@ class PaypalWebhooksService
   end
 
   def process
-    Rails.logger.info "WEBHOOK: Processing"
     trigger_payment_actions
   end
 
   def record_webhook
-    Rails.logger.info "WEBHOOK: Recording"
-    @webhook = PaypalWebhook.create(
+    @webhook = PaypalWebhook.new(
       guid: @paypal_body['id'], 
       event_type: @paypal_body['event_type'], 
       payload: @paypal_body
     )
+    @webhook.save
   end
 
   def valid?
