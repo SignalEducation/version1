@@ -22,7 +22,7 @@ gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
 gem 'bootstrap-sass', '~> 3.4.0' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
-gem 'chart-js-rails' #Graphs
+gem 'chart-js-rails', '~> 0.1.6' #Graphs
 gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.15.4'

@@ -515,7 +515,7 @@ DEPENDENCIES
   bullet
   byebug
   capybara (>= 2.15)
-  chart-js-rails
+  chart-js-rails (~> 0.1.6)
   chromedriver-helper
   coffee-rails (~> 4.2)
   database_cleaner
