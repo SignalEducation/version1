@@ -29,7 +29,7 @@
                     %th
                     %th
                 %tbody
-                  -@groups.each do |group|
+                  -@groups.all_in_order.each do |group|
                     %tr{id: group.id}
                       %td=group.name
                       %td=tick_or_cross(group.active)

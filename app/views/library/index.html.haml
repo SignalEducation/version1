@@ -1,4 +1,33 @@
-.l-section-small.is-bg-asphalt
+.bg-asphalt
+  .container
+    %article.hero.pb-5
+      %h1.h1-mega
+        Learn anytime, anywhere
+      %p.px-2.p-50
+        Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
+
+  #library.container.py-5
+    .row.row-lg
+      -@groups.each do |group|
+        .col-lg-4.col-md-6
+          %a.card.card-lg.mb-6.text-center{href: '#'}
+            =image_tag('ico-course.svg', class: 'card-ico-top', alt: 'Course icon')
+            .card-body
+              %h3.mb-3
+                =group.name
+              %p.mb-2.text-purple3
+                =group.description
+
+            .card-footer.bg-red
+              %span.btn.btn-link.with-arrow
+                Browse Courses
+
+
+
+
+
+
+-#.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom
