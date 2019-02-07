@@ -3,14 +3,16 @@
     .container
       .row
         .col-lg-10.col-lg-offset-1
-          %h1.title1
-            ='Start your free trial today'
-          %h2.subtitle1
-            ='Explore our innovative learning platform and discover how LearnSignal helps you pass your ACCA faster'
+          %h1.h1-mega.mb-4.mb-sm-3.text-center
+            ='Start your free account today'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-          #sign_up.l-margin-top
+      .row
+        .col-lg-10.col-lg-offset-1.col-md-10.col-md-offset-1.col-xs-12
+          #sign_up.box-item.form-box
+            .l-margin-bottom-big
+              %h2.h5.text-center
+                ='Explore our innovative learning platform and discover how LearnSignal helps you pass your exams faster'
+
             =form_for @user, url: create_student_url do |f|
               =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
               =f.hidden_field :locale, value: (params[:locale] || 'en')
@@ -54,8 +56,8 @@
                     %p.h5.text-center
                       ='No credit card required. Set-up takes one minute.'
 
-                  .col-sm-12.l-margin-top
-                    =f.submit 'START FREE TRIAL NOW', class: 'btn btn-red btn-wide btn-lg-text', id: 'signUp'
+                  .col-sm-12.l-margin-top.text-center
+                    =f.submit 'START FREE ACCOUNT NOW', class: 'btn btn-primary btn-wide btn-lg-text', id: 'signUp'
                     .sk-circle
                       .sk-circle1.sk-child
                       .sk-circle2.sk-child

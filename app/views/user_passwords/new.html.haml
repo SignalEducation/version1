@@ -3,25 +3,26 @@
     .container
       .row
         .col-lg-10.col-lg-offset-1
-          %h1.title1.l-margin-top
+          %h1.h1-mega.mb-4.mb-sm-3.text-center
             =t('views.user_passwords.new.h1')
 
       .row.l-margin-top
         .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-          .forgot-password-modal.l-margin-top
+          .box-item.form-box
             =form_tag(user_passwords_url, {class: 'form', role: 'form'}) do
-              .col-sm-12
-                %p.text-center
+              .col-sm-12.text-center
+                %h5.l-margin-bottom
                   =t('views.user_passwords.new.paragraph_1')
-                %p.text-center
+                %p
                   =t('views.user_passwords.new.paragraph_2')
 
+              .col-sm-12.l-margin-top-big
                 =label_tag :email, t('views.user_passwords.new.email')
                 %br/
                 %div#validation-div
                   =email_field_tag :email_address, nil, placeholder: t('views.user_passwords.new.email_placeholder'), class: 'form-control', id: '#email-field'
               .col-sm-12.l-margin-top-big
-                =submit_tag t('views.user_passwords.new.submit'), class: 'btn btn-red full-width', id: 'btn-send-password'
+                =submit_tag t('views.user_passwords.new.submit'), class: 'btn btn-primary full-width', id: 'btn-send-password'
 
 
 

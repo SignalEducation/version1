@@ -60,9 +60,9 @@
 
 
                     .col-md-6
-                      =link_to 'New Course Module', new_course_module_url(@subject_course.id, course_section.id), class: 'btn btn-primary'
+                      =link_to 'New Course Module', new_course_module_url(@subject_course.id, course_section.id), class: 'btn btn-primary btn-small'
                     .col-md-6
                       .pull-right
-                        =link_to t('views.course_sections.edit.h1'), edit_course_section_url(course_section), class: 'btn btn-primary'
-                        =link_to I18n.t('views.course_sections.index.delete'), course_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse'
+                        =link_to t('views.course_sections.edit.h1'), edit_course_section_url(course_section), class: 'btn btn-primary btn-small'
+                        =link_to I18n.t('views.course_sections.index.delete'), course_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-small'
 

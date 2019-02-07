@@ -1,14 +1,14 @@
 .l-section-small.is-bg-asphalt
   .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+    .container
+      .row
+        .col-lg-10.col-lg-offset-1
+          %h1.h1-mega.mb-4.mb-sm-3.text-center
             Reset password
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          .col-md-8.col-md-offset-2.l-margin-top-small
+
+      .row.l-margin-top.l-margin-bottom-huge
+        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+          .box-item.form-box
             %p
               Check your mailbox for further instructions. If you don't receive an email within a couple of minutes, check your spam folder.
-          = form_tag  do
-            .col-md-8.col-md-offset-2.l-margin-top-big
-              =link_to t('views.general.home'), root_url, class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+

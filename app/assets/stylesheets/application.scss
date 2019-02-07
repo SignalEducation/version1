@@ -1591,6 +1591,15 @@ a.box-item {
   }
 
 }
+.box-item.form-box {
+  padding: $gutter*2 $gutter;
+  margin-top: $gutter;
+  margin-bottom: $gutter*2;
+}
+.box-item.table-box {
+  padding: $gutter*2 $gutter;
+}
+
 .border-same-backcolor {
   border-color: $colour-3;
   border-width: 2px;
@@ -2334,7 +2343,7 @@ input[type="radio"] {
 
 #sign_up .check { display: block; cursor: pointer; overflow: hidden; margin: 0 0 3em 0; }
 #sign_up .check input { position: absolute; opacity: 0; left: -30px; top: -30px; }
-#sign_up .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
+#sign_up .check input + span { display: inline-block; background: #F4F6FA; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
 #sign_up .check input + span .fa { opacity: 0; }
 #sign_up .check input:checked + span .fa { opacity: 1; }
 

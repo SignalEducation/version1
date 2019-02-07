@@ -3,24 +3,24 @@
     .container
       .row
         .col-lg-10.col-lg-offset-1
-          %h1.title1
+          %h1.h1-mega.mb-4.mb-sm-3.text-center
             =t('views.user_sessions.new.h1')
 
       .row.l-margin-top.l-margin-bottom-huge
         .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-          #sign-in.l-margin-top
+          #sign-in.box-item.form-box
             =form_for(@user_session) do |f|
               =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
               .col-sm-12
                 .form-group
                   =f.label :email, t('views.user_sessions.form.email'), class: 'control-label'
-                  =f.email_field :email, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true
+                  =f.email_field :email, placeholder: 'Enter your email here', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;', autofocus: true
               .col-sm-12
                 .form-group
                   =f.label :password, t('views.user_sessions.form.password'), class: 'control-label'
-                  =f.password_field :password, class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
+                  =f.password_field :password, placeholder: 'Enter your password here', class: 'form-control input-group input-group-lg full-width', style: 'border-radius: 6px;'
 
               .col-sm-6.l-margin-top
-                =f.submit t('views.general.sign_in'), class: 'btn btn-red btn-wide btn-lg-text'
+                =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-wide btn-lg-text'
               .col-sm-6.l-margin-top-big.text-center
                 =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password'
