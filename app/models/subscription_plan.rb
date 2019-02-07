@@ -39,7 +39,7 @@ class SubscriptionPlan < ActiveRecord::Base
   belongs_to :currency
   has_many :invoice_line_items
   has_many :subscriptions
-  belongs_to :subscription_plan_category
+  belongs_to :subscription_plan_category, optional: true
 
   # validation
   validates :name, presence: true, length: { maximum: 255 }

@@ -91,7 +91,7 @@ class User < ActiveRecord::Base
   has_one :referral_code
   has_one :student_access
   has_one :referred_signup
-  belongs_to :subscription_plan_category
+  belongs_to :subscription_plan_category, optional: true
   has_attached_file :profile_image,
                     default_url: '/assets/images/missing_corporate_logo.png'
 
