@@ -28,7 +28,6 @@ class ContentPageSection < ActiveRecord::Base
   validates :content_page_id, presence: true, on: :update
   validates :text_content, presence: true
   validates :panel_colour, presence: true
-  validates :sorting_order, presence: true
 
   # callbacks
   before_destroy :check_dependencies

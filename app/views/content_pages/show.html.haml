@@ -27,11 +27,9 @@
         .row.l-margin-top-big
           -@content_page.content_page_sections.all_in_order.each do |section|
             .col-md-12
-              =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-course' do
-
+              =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-course', style: 'padding: 0;' do
                 .card-info-lg
                   =section.text_content.html_safe
-
                 .card-label{style: "background: #{section.panel_colour};"}
                   .row
                     .col-md-12.col-xs-12.text-center
