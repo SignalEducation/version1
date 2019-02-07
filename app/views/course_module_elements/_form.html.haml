@@ -92,10 +92,7 @@
           =render partial: 'course_module_element_videos/fields_for_video_resources', locals: {f: f}
 
     -if @course_module_element.course_module_element_resources.size > 0
-      .box-item
-        .row
-          .col-sm-12
-            =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
+      =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
 
   -elsif @course_module_element.constructed_response
     %br/
