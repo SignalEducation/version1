@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
-  validates_confirmation_of :password, if: '!password.blank?'
+  validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :user_group_id, presence: true
   #validate :date_of_birth_is_possible?
   validates :locale, inclusion: {in: LOCALES}
