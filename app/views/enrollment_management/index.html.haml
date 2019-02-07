@@ -1,5 +1,5 @@
 .l-section-small.is-bg-asphalt
-  .l-wrap
+  .l-wrap-large
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
@@ -10,26 +10,26 @@
         .col-md-12
           =render partial: 'enrollment_management/enrollment_management_navbar'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-sm-6
-          .col-sm-10
-            =form_tag(enrollments_management_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
-              .form-group.input-group.input-group-lg
-                =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-                .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                  %span.glyphicon.glyphicon-search
+      .row
+        .col-sm-12
+          .box-item.table-box
+            .row.l-margin-bottom
+              .col-sm-6
+                .col-sm-10
+                  =form_tag(enrollments_management_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+                    .form-group.input-group.input-group-lg
+                      =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                      .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                        %span.glyphicon.glyphicon-search
 
 
-        .col-sm-6
-          =form_tag(enrollments_management_url, method: :get, role: 'form', class: 'form-horizontal') do
-            .col-sm-10.col-sm-offset-2
-              .input-group.input-group-lg.full-width
-                =collection_select(:exam_sitting, :id, ExamSitting.all_active.all_in_order, :id, :name, {include_blank: 'Exam Sitting Filter'}, {class: 'form-control', onchange: 'this.form.submit(); return false;'})
+              .col-sm-6
+                =form_tag(enrollments_management_url, method: :get, role: 'form', class: 'form-horizontal') do
+                  .col-sm-10.col-sm-offset-2
+                    .input-group.input-group-lg.full-width
+                      =collection_select(:exam_sitting, :id, ExamSitting.all_active.all_in_order, :id, :name, {include_blank: 'Exam Sitting Filter'}, {class: 'form-control', onchange: 'this.form.submit(); return false;'})
 
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
             .table-responsive
 
               %table.table.sorted_table
@@ -50,9 +50,9 @@
                       %td
                         =tick_or_cross(enrollment.expired)
                       %td
-                        =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-small btn-purple'
+                        =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-small btn-secondary'
                       %td
-                        =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-cyan btn-small'
+                        =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-primary btn-small'
               =will_paginate @enrollments, renderer: BootstrapPagination::Rails
 
 

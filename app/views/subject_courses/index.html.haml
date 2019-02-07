@@ -15,7 +15,7 @@
           .box-item.table-box
             .row.l-margin-bottom
               .col-sm-4
-                =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-primary', title: t('views.general.new_tooltip')
+                =link_to t('views.subject_courses.index.add_course'), new_subject_course_url, class: 'btn btn-primary btn-small', title: t('views.general.new_tooltip')
 
               .col-sm-4
                 =form_tag(subject_courses_url, method: :get, role: 'form', class: 'form-horizontal') do

@@ -1,5 +1,5 @@
 .l-section-small.is-bg-asphalt
-  .l-wrap
+  .l-wrap-large
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
@@ -10,7 +10,7 @@
 
         .row.l-margin-top.l-margin-bottom-huge
           .col-md-12
-            .box-item
+            .box-item.table-box
               .col-sm-10.l-margin-top
                 .col-sm-6
                   .h3
@@ -52,7 +52,7 @@
           .row.l-margin-top.l-margin-bottom
             -@enrollment.subject_course_user_log.student_exam_tracks.each do |set|
               .col-md-12
-                .table-box
+                .box-item.table-box
                   %h4
                     =set.course_module.name
                   .table-responsive

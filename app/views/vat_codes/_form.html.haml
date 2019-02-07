@@ -1,41 +1,41 @@
 =form_for(@vat_code, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  .row
-    .col-md-6
-      =render partial: '/layouts/error_messages', locals: {thing: @vat_code, message: nil}
-      =f.hidden_field :country_id, value: 1
+  .box-item.form-box
+    .row
+      .col-md-12
+        =render partial: '/layouts/error_messages', locals: {thing: @vat_code, message: nil}
+        =f.hidden_field :country_id, value: 1
 
-      =f.label :country_id, t('views.vat_codes.form.country_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      %br/
-      =f.label :name, t('views.vat_codes.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.vat_codes.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :label, t('views.vat_codes.form.label'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :label, placeholder: t('views.vat_codes.form.label_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        .col-md-6
+          =f.label :country_id, t('views.vat_codes.form.country_id'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.collection_select :country_id, @countries, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
+          %br/
+        .col-md-6
+          =f.label :name, t('views.vat_codes.form.name'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :name, placeholder: t('views.vat_codes.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+        .col-md-6
+          =f.label :label, t('views.vat_codes.form.label'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :label, placeholder: t('views.vat_codes.form.label_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-    .col-md-6
-      -#if f.object.id.nil?
-      =f.fields_for :vat_rates do |rate|
-        =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =rate.text_field :percentage_rate, placeholder: t('views.vat_rates.form.percentage_rate_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-        %br/
-        =rate.label :effective_from, t('views.vat_rates.form.effective_from'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
+        .col-md-6
+          -#if f.object.id.nil?
+          =f.fields_for :vat_rates do |rate|
+            =rate.label :percentage_rate, t('views.vat_rates.form.percentage_rate'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =rate.text_field :percentage_rate, placeholder: t('views.vat_rates.form.percentage_rate_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+            %br/
+            =rate.label :effective_from, t('views.vat_rates.form.effective_from'), class: 'control-label'
+            .input-group.input-group-lg.full-width
+              =rate.text_field :effective_from, placeholder: t('views.vat_rates.form.effective_from_placeholder'), class: 'form-control date', style: 'border-radius: 6px;', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker1'
 
 
-
-  %br/
-  %br/
-  %br/
   .row
     .col-md-12
-      =f.submit t('views.general.save'), class: 'btn btn-red'
-      =link_to t('views.general.cancel'), vat_codes_path, class: 'btn btn-cyan'
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), vat_codes_path, class: 'btn btn-secondary'
 
 
 :javascript

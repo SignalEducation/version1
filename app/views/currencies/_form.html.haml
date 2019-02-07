@@ -1,35 +1,42 @@
 =form_for(@currency, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  =render partial: '/layouts/error_messages', locals: {thing: @currency, message: nil}
-  =f.hidden_field :sorting_order
+  .box-item.form-box
+    =render partial: '/layouts/error_messages', locals: {thing: @currency, message: nil}
+    =f.hidden_field :sorting_order
+    .row
+      .col-md-12
+        .col-md-6
+          =f.label :iso_code, t('views.currencies.form.iso_code'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :iso_code, placeholder: t('views.currencies.form.iso_code_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
+          %br/
+
+        .col-md-6
+          =f.label :name, t('views.currencies.form.name'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :name, placeholder: t('views.currencies.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+
+        .col-md-6
+          =f.label :leading_symbol, t('views.currencies.form.leading_symbol'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :leading_symbol, placeholder: t('views.currencies.form.leading_symbol_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+          %br/
+
+        .col-md-6
+          =f.label :trailing_symbol, t('views.currencies.form.trailing_symbol'), class: 'control-label'
+          .input-group.input-group-lg.full-width
+            =f.text_field :trailing_symbol, placeholder: t('views.currencies.form.trailing_symbol_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+
+        .col-md-6
+          %br/
+          .form-group
+            .col-sm-8.col-sm-offset-4
+              .checkbox
+                %label
+                  =f.check_box :active
+                  =t('views.currencies.form.active')
+
   .row
-    .col-md-8.col-md-offset-2
-      =f.label :iso_code, t('views.currencies.form.iso_code'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :iso_code, placeholder: t('views.currencies.form.iso_code_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-
-      =f.label :name, t('views.currencies.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.currencies.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-
-      =f.label :leading_symbol, t('views.currencies.form.leading_symbol'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :leading_symbol, placeholder: t('views.currencies.form.leading_symbol_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
-      %br/
-      =f.label :trailing_symbol, t('views.currencies.form.trailing_symbol'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :trailing_symbol, placeholder: t('views.currencies.form.trailing_symbol_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
-      %br/
-      .form-group
-        .col-sm-8.col-sm-offset-4
-          .checkbox
-            %label
-              =f.check_box :active
-              =t('views.currencies.form.active')
-
-  .row
-    =f.submit t('views.general.save'), class: 'btn btn-red'
-    =link_to t('views.general.cancel'), currencies_path, class: 'btn btn-cyan'
+    .col-sm-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), currencies_path, class: 'btn btn-secondary'

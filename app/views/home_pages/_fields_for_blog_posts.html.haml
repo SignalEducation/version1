@@ -1,6 +1,7 @@
 .col-md-12
+  %hr/
   =f.fields_for :blog_posts do |blog_post|
-    .question-box-item.l-margin-top
+    .l-margin-top
       -if blog_post.object.new_record?
         %h4
           New Blog Post
