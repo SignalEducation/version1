@@ -22,9 +22,6 @@
 
 class SubjectCourseUserLog < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :session_guid, :subject_course_id, :completed_at
-
   # Constants
 
   # relationships

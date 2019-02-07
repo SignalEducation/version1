@@ -21,10 +21,6 @@
 
 class Refund < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :stripe_guid, :charge_id, :stripe_charge_guid, :invoice_id, :subscription_id, :user_id,
-                  :manager_id, :amount, :reason, :status, :livemode, :stripe_refund_data
-
   # Constants
   REASONS = %w(duplicate fraudulent requested_by_customer)
 

@@ -21,10 +21,6 @@
 
 class ExternalBanner < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :sorting_order, :active, :background_colour, :text_content, :user_sessions,
-                  :library, :subscription_plans, :footer_pages, :student_sign_ups, :home_page_id, :content_page_id
-
   # Constants
   BANNER_CONTROLLERS = %w(user_sessions library subscription_plans footer_pages student_sign_ups)
 

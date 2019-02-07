@@ -23,9 +23,6 @@ class IpAddress < ActiveRecord::Base
     end
   end
 
-  # attr-accessible
-  attr_accessible :ip_address, :country_id, :alert_level
-
   # Constants
 
   # relationships

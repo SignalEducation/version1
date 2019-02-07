@@ -19,12 +19,6 @@ class QuizQuestion < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :course_module_element_quiz_id, :difficulty_level,
-                  :quiz_answers_attributes, :quiz_contents_attributes,
-                  :quiz_solutions_attributes, :subject_course_id, :sorting_order,
-                  :custom_styles
-
   # Constants
 
   # relationships

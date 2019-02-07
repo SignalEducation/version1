@@ -18,15 +18,8 @@
 #
 
 class SubscriptionTransaction < ActiveRecord::Base
-
   include LearnSignalModelExtras
-
   serialize :original_data, Hash
-
-  # attr-accessible
-  attr_accessible :user_id, :subscription_id, :stripe_transaction_guid,
-                  :transaction_type, :amount, :currency_id, :alarm,
-                  :live_mode, :original_data, :subscription_payment_card_id
 
   # Constants
   ## All SubscriptionTransactions are 'payment'

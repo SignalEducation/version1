@@ -20,11 +20,6 @@ class InvoiceLineItem < ActiveRecord::Base
 
   serialize :original_stripe_data, Hash
 
-  # attr-accessible
-  attr_accessible :invoice_id, :amount, :currency_id, :prorated, :period_start_at,
-                  :period_end_at, :subscription_id, :subscription_plan_id,
-                  :original_stripe_data
-
   # Constants
 
   # relationships

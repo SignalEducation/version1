@@ -13,9 +13,6 @@
 
 class ExamBody < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :url, :modal_heading, :modal_text
-
   # Constants
 
   # relationships

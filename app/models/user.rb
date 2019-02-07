@@ -56,28 +56,11 @@
 #
 
 class User < ActiveRecord::Base
-
   include LearnSignalModelExtras
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
-
-  # attr-accessible
-  attr_accessible :email, :first_name, :last_name, :active,
-                  :country_id, :user_group_id, :password_reset_requested_at,
-                  :password_reset_token, :password_reset_at,
-                  :stripe_customer_id, :password, :password_confirmation,
-                  :current_password, :locale, :subscriptions_attributes,
-                  :password_change_required, :address,
-                  :profile_image, :email_verification_code, :email_verified_at,
-                  :email_verified, :account_activated_at,
-                  :account_activation_code, :session_key,
-                  :stripe_account_balance, :free_trial,
-                  :terms_and_conditions, :date_of_birth, :description,
-                  :student_number, :student_access_attributes,
-                  :unsubscribed_from_emails, :communication_approval_datetime,
-                  :communication_approval
 
   # Constants
   LOCALES = %w(en)

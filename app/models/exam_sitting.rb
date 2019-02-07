@@ -15,9 +15,6 @@
 
 class ExamSitting < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :subject_course_id, :date, :exam_body_id, :active, :computer_based
-
   # Constants
   SORT_OPTIONS = %w(active not-active all)
 

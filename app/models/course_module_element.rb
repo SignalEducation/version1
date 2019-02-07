@@ -28,16 +28,6 @@ class CourseModuleElement < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
-                  :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
-                  :is_constructed_response, :seo_description, :seo_no_index,
-                  :temporary_label, :number_of_questions, :_destroy,
-                  :course_module_element_video_attributes,
-                  :course_module_element_quiz_attributes,
-                  :course_module_element_resources_attributes,
-                  :video_resource_attributes, :constructed_response_attributes
-
   # Constants
 
   # relationships

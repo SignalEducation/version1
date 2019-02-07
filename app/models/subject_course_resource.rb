@@ -18,11 +18,6 @@
 #
 
 class SubjectCourseResource < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url,
-                  :active, :sorting_order
-
   # Constants
 
   # relationships

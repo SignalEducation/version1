@@ -30,18 +30,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :course_module_element_id, :user_id, :session_guid,
-                  :element_completed, :time_taken_in_seconds,
-                  :quiz_score_actual, :quiz_score_potential,
-                  :is_video, :is_quiz, :course_module_id,
-                  :quiz_attempts_attributes, :seconds_watched,
-                  :count_of_questions_taken, :count_of_questions_correct,
-                  :subject_course_id, :student_exam_track_id,
-                  :subject_course_user_log_id, :is_constructed_response,
-                  :constructed_response_attempt_attributes,
-                  :scenario_question_attempts_attributes, :preview_mode
-
   # Constants
 
   # relationships

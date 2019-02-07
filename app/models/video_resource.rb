@@ -14,12 +14,8 @@
 #
 
 class VideoResource < ActiveRecord::Base
-
   include LearnSignalModelExtras
   include Archivable
-
-  # attr-accessible
-  attr_accessible :question, :answer, :notes, :course_module_element_id, :transcript
 
   # Constants
 

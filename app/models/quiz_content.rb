@@ -22,11 +22,6 @@ class QuizContent < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
-                  :text_content, :sorting_order, :image, :image_file_name,
-                  :image_content_type, :image_file_size, :image_updated_at
-
   # Constants
 
   # relationships
