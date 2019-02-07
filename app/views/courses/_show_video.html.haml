@@ -58,6 +58,7 @@
     let timeUpdate = function(data) {
       if (data.percent >= 0.75) {
         $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',
           data: JSON.stringify({'videoLogId': logId}),
@@ -72,6 +73,7 @@
     let onPlay = function(data) {
       if (logId === '') {
         $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
           url: '#{create_video_user_log_courses_path}',
           dataType: 'json',
           data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'csul_id': section_log_id, 'set_id': exam_track_id }),
