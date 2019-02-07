@@ -53,8 +53,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
-  validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
+  validates :quiz_score_actual, presence: true, if: Proc.new { |log| log.is_quiz == true }, on: :update
+  validates :quiz_score_potential, presence: true, if: Proc.new { |log| log.is_quiz == true }, on: :update
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
