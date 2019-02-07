@@ -13,10 +13,6 @@
 
 class ScenarioQuestion < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :scenario_id, :sorting_order, :text_content,
-                  :scenario_answer_templates_attributes
-
   # Constants
 
   # relationships

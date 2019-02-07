@@ -151,6 +151,7 @@ class PaypalService
 
   def set_cancellation_date(subscription)
     agreement = Agreement.find(subscription.paypal_subscription_guid)
+    subscription.update(paypal_status: agreement.state)
     future = agreement.agreement_details.last_payment_date.to_time + 
       subscription.subscription_plan.payment_frequency_in_months.months
     SubscriptionCancellationWorker.perform_at(future, subscription.id)

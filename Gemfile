@@ -1,61 +1,61 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+ 
+ruby '2.5.0'
+gem 'rails', '5.2.2'
 
-ruby '2.2.9'
-gem 'rails', '4.2.1'
+# Use Puma as the app server
+gem 'puma', '~> 3.11'
 
 # Core gems - common to all environments
-gem 'airbrake', '~> 4.3.4'
-gem 'authlogic', '~> 3.4.3'
+gem 'airbrake', '~> 8.0.1'
+gem 'authlogic', '~> 5.0.0'
 gem 'ahoy_matey' # visit tracking
+gem 'uuidtools', '~> 2.1', '>= 2.1.5'
 gem 'blazer'
 gem 'scrypt' # S-Crypt for Authlogic
-gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
-#gem 'aws-sdk' # enables AWS functionality - use with AWS::...
-gem 'aws-sdk-v1' # enables AWS functionality - use with AWS::...
-gem 'aws-sdk-core' # v2 of AWS SDK - use with Aws::..., not AWS::...
-#gem 'aws-s3' # grants timeout-able URLs
-gem 'bootstrap-sass', '~> 3.3.2' # loads Twitter Bootstrap UI framework
+# gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
+gem 'aws-sdk-s3', '~> 1'
+gem 'bootstrap-sass', '~> 3.4.0' # loads Twitter Bootstrap UI framework
 gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
 gem 'browser' # user-agent detection
-gem 'chart-js-rails' #Graphs
-gem 'coffee-rails', '~> 4.0.0' # enables CoffeeScript (abbreviated javascript)
+gem 'chart-js-rails', '~> 0.1.6' #Graphs
+gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
 gem 'dynamic_sitemaps' # Sitemap generation grm
-gem 'faraday', '~> 0.9.2'
+gem 'faraday', '~> 0.15.4'
 gem 'geocoder', '~> 1.3', '>= 1.3.7'#  a public API for geo-locating IP addresses
 gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails' # communicate with Intercom.io
 gem 'intercom', '~> 3.5.23' # Intercom API
-gem 'jbuilder', '~> 2.0' # https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 2.5' # https://github.com/rails/jbuilder
 gem 'jquery-rails' # include jQuery for Rails
 gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'prawn' # PDF creator
-gem 'paperclip', '~> 4.2.1' # for uploading files (works with RemotiPart)
-gem 'paperclip-dimension-validator'
-gem 'payday' #Invoice PDF's
+gem 'paperclip', '~> 6.1.0' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'
 gem 'modernizr-rails'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'multipart-post' #To allow uploading wistia api
 gem 'pg' # PostgreSQL database engine
-gem 'protected_attributes' # allows 'attr_accessible' in Rails 4's models
 gem 'rack-attack'
 gem 'redis-rails' #use redis from AWS Elasticache service
+# gem 'redis', '~> 4.0'
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'remodal-rails'
 gem 'rollbar'
-gem 'sass-rails', '~> 4.0.3' # Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
 gem 'sinatra' # needed for sidekiq's web UI
 gem 'state_machines-activerecord'
-gem 'stripe', '=2.8.0' #, git: 'https://github.com/stripe/stripe-ruby'
+gem 'stripe', '~> 4.5.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'paypal-sdk-rest'
 gem 'summernote-rails'
-#gem 'turbolinks' # speeds up page loading - has negative side-effects
+gem 'turbolinks', '~> 5' # speeds up page loading - has negative side-effects
 gem 'uglifier', '>= 1.3.0' # compresses Javascript when sending it to users in production
 gem 'utf8-cleaner' # removes illegal characters from inbound requests
 gem 'will_paginate' # manage long web pages
@@ -64,38 +64,42 @@ gem 'font-awesome-rails' # Font Awesome with lot of useful icons
 gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
 gem 'mandrill-api' # official Mandrill's gem
 
+# Use ActiveStorage variant
+# gem 'mini_magick', '~> 4.8'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+
 # Environment-specific gems
 
 group :development do
   gem 'annotate' # adds the list of fields in each table to the models and test files
   gem 'better_errors' # gives more useful error report in the browser
-  gem 'binding_of_caller' # allows interactivity in the browser during errors
   gem 'bullet' # Warnings about n+1 and other query problems
-  gem 'spring' # Spring speeds up development by keeping your application running
-          # in the background. Read more: https://github.com/rails/spring
+  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'powder'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 group :development, :test do
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry-byebug' # halts code so you can experiment with it
   #gem 'pry-remote'
   gem 'hirb'
   gem 'pry-stack_explorer'
-  gem 'capybara' # Runs tests in a browser
-  gem 'capybara-webkit'
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
-  gem 'poltergeist'
   gem 'rspec-rails' # our core testing environment
-  gem 'selenium-webdriver'
-  gem 'chromedriver-helper'
-  gem 'thin' # new web server
   gem 'ultrahook' # allows incoming webhooks from stripe
 end
 
 group :test do
-  # https://semaphoreapp.com/blog/2013/08/14/setting-up-bdd-stack-on-a-new-rails-4-application.html
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
+  gem "rspec_junit_formatter"
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
@@ -103,10 +107,11 @@ group :test do
   gem 'webrat' # Runs tests in a "headless" browser
   gem 'launchy'
   gem 'timecop'
-end
-
-group :staging do
-
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '>= 2.15'
+  gem 'selenium-webdriver'
+  # Easy installation and use of chromedriver to run system tests with Chrome
+  gem 'chromedriver-helper'
 end
 
 group :staging, :production do
@@ -114,27 +119,18 @@ group :staging, :production do
   gem 'newrelic_rpm' # support for the newrelic.com performance monitoring service
   #gem 'rails_serve_static_assets' # needed for Heroku
   #gem 'rails_12factor' # needed for Heroku
-  gem 'therubyracer', platforms: :ruby
+  gem 'mini_racer', platforms: :ruby
 end
 
-group :production do
-end
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 #############################################
 ## Optional things to think about later on ##
 #############################################
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer',  platforms: :ruby
-
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0',          group: :doc
-
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
-# Use unicorn as the app server
-# gem 'unicorn'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

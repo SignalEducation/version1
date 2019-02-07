@@ -19,12 +19,6 @@
 
 class StudentAccess < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :trial_started_date, :trial_ending_at_date,
-                  :trial_ended_date, :trial_seconds_limit, :trial_days_limit,
-                  :content_seconds_consumed, :subscription_id, :account_type,
-                  :content_access
-
   # Constants
   ACCOUNT_TYPES = %w(Trial Subscription Complimentary)
 

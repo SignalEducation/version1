@@ -1,10 +1,10 @@
 class UserSessionsController < ApplicationController
 
-  before_filter :logged_out_required, only: [:new, :create]
-  before_filter :logged_in_required,  only: :destroy
-  before_filter :set_variables
-  before_filter :check_email_verification, only: [:create]
-  before_filter :check_user_group, only: [:create]
+  before_action :logged_out_required, only: [:new, :create]
+  before_action :logged_in_required,  only: :destroy
+  before_action :set_variables
+  before_action :check_email_verification, only: [:create]
+  before_action :check_user_group, only: [:create]
 
   def new
     @user_session = UserSession.new
@@ -12,7 +12,7 @@ class UserSessionsController < ApplicationController
   end
 
   def create
-    @user_session = UserSession.new(allowed_params)
+    @user_session = UserSession.new(user_session_params.to_h)
     if @user_session.save
       @user_session.user.update_attribute(:session_key, session[:session_id])
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
@@ -40,7 +40,7 @@ class UserSessionsController < ApplicationController
 
   protected
 
-  def allowed_params
+  def user_session_params
     params.require(:user_session).permit(:email, :password)
   end
 
