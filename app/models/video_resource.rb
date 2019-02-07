@@ -20,7 +20,7 @@ class VideoResource < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :course_module_element, inverse_of: :video_resource
+  belongs_to :course_module_element, inverse_of: :video_resource, optional: true
 
   # validation
   validates :course_module_element_id, presence: true, on: :update

@@ -37,8 +37,8 @@ class Charge < ActiveRecord::Base
   belongs_to :user
   belongs_to :subscription_payment_card
   belongs_to :currency
-  belongs_to :coupon
-  belongs_to :stripe_api_event
+  belongs_to :coupon, optional: true
+  belongs_to :stripe_api_event, optional: true
   has_many :refunds
 
   # validation
