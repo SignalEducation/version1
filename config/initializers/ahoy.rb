@@ -1,4 +1,6 @@
 class Ahoy::Store < Ahoy::DatabaseStore
-  # customize here
-  #Ahoy.track_visits_immediately = true
+  protected
+  def visit_model
+    ::Visit
+  end
 end
