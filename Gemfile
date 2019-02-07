@@ -11,6 +11,7 @@ gem 'puma', '~> 3.11'
 gem 'airbrake', '~> 8.0.1'
 gem 'authlogic', '~> 5.0.0'
 gem 'ahoy_matey' # visit tracking
+gem 'uuidtools', '~> 2.1', '>= 2.1.5'
 gem 'blazer'
 gem 'scrypt' # S-Crypt for Authlogic
 # gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
