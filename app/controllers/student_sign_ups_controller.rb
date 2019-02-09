@@ -201,8 +201,10 @@ class StudentSignUpsController < ApplicationController
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
+    if @country
+      @user.country_id = @country.id
+      @currency_id = @country.currency_id
+    end
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home or landing actions
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|

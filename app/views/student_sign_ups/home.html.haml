@@ -20,25 +20,26 @@
                 =image_tag('acca_approved.png')
 
 
-  %section#explore
-    .container
-      %h2.title1
-        Explore our ACCA courses
-      %h2.subtitle
-        Taking your accounting skills to the next level.
-      .row
-        -@group.active_children.all_in_order.each do |course|
-          .col-md-4.col-sm-6
-            =link_to library_special_link(course) do
-              .course
-                .tmain
-                  .tbase
-                    =course.name
-                .bg{style: "background: url(#{course.background_image.url});"}
+  -if @group
+    %section#explore
+      .container
+        %h2.title1
+          Explore our ACCA courses
+        %h2.subtitle
+          Taking your accounting skills to the next level.
+        .row
+          -@group.active_children.all_in_order.each do |course|
+            .col-md-4.col-sm-6
+              =link_to library_special_link(course) do
+                .course
+                  .tmain
+                    .tbase
+                      =course.name
+                  .bg{style: "background: url(#{course.background_image.url});"}
 
 
-      .lsbtn-base
-        =link_to 'Get started', new_student_url, class: 'lsbtn'
+        .lsbtn-base
+          =link_to 'Get started', new_student_url, class: 'lsbtn'
 
 
 
