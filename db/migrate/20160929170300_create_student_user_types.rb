@@ -1,4 +1,4 @@
-class CreateStudentUserTypes < ActiveRecord::Migration
+class CreateStudentUserTypes < ActiveRecord::Migration[4.2]
   def up
     create_table :student_user_types do |t|
       t.string :name, index: true

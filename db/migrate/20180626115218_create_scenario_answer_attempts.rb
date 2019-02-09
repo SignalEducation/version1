@@ -1,4 +1,4 @@
-class CreateScenarioAnswerAttempts < ActiveRecord::Migration
+class CreateScenarioAnswerAttempts < ActiveRecord::Migration[4.2]
   def change
     create_table :scenario_answer_attempts do |t|
       t.integer :scenario_question_attempt_id

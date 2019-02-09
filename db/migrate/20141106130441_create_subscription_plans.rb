@@ -1,4 +1,4 @@
-class CreateSubscriptionPlans < ActiveRecord::Migration
+class CreateSubscriptionPlans < ActiveRecord::Migration[4.2]
   def change
     create_table :subscription_plans do |t|
       t.boolean :available_to_students, default: false, null: false, index: true

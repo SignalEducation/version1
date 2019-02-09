@@ -1,4 +1,4 @@
-class AddLogoToCorporateCustomer < ActiveRecord::Migration
+class AddLogoToCorporateCustomer < ActiveRecord::Migration[4.2]
   def up
     add_attachment :corporate_customers, :logo
   end

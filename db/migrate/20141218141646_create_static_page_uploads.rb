@@ -1,4 +1,4 @@
-class CreateStaticPageUploads < ActiveRecord::Migration
+class CreateStaticPageUploads < ActiveRecord::Migration[4.2]
   def up
     create_table :static_page_uploads do |t|
       t.string :description

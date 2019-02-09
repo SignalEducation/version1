@@ -1,4 +1,4 @@
-class AddImageToQuizContents < ActiveRecord::Migration
+class AddImageToQuizContents < ActiveRecord::Migration[4.2]
   def up
     add_attachment :quiz_contents, :image
   end

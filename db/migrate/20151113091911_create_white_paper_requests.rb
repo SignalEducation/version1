@@ -1,4 +1,4 @@
-class CreateWhitePaperRequests < ActiveRecord::Migration
+class CreateWhitePaperRequests < ActiveRecord::Migration[4.2]
   def change
     create_table :white_paper_requests do |t|
       t.string :name, index: true

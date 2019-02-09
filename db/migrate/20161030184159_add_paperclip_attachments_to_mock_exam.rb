@@ -1,4 +1,4 @@
-class AddPaperclipAttachmentsToMockExam < ActiveRecord::Migration
+class AddPaperclipAttachmentsToMockExam < ActiveRecord::Migration[4.2]
   def up
     add_attachment :mock_exams, :file
   end

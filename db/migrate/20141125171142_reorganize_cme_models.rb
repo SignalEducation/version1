@@ -1,4 +1,4 @@
-class ReorganizeCmeModels < ActiveRecord::Migration
+class ReorganizeCmeModels < ActiveRecord::Migration[4.2]
   def up
     remove_column :course_module_elements, :course_module_element_video_id
     remove_column :course_module_elements, :course_module_element_quiz_id
