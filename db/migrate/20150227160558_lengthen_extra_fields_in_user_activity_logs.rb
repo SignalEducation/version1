@@ -1,4 +1,4 @@
-class LengthenExtraFieldsInUserActivityLogs < ActiveRecord::Migration
+class LengthenExtraFieldsInUserActivityLogs < ActiveRecord::Migration[4.2]
   def up
     change_column :user_activity_logs, :first_session_landing_page, :text
     change_column :user_activity_logs, :latest_session_landing_page, :text

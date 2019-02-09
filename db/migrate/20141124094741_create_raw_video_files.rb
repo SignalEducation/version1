@@ -1,4 +1,4 @@
-class CreateRawVideoFiles < ActiveRecord::Migration
+class CreateRawVideoFiles < ActiveRecord::Migration[4.2]
   def change
     create_table :raw_video_files do |t|
       t.string :file_name, index: true

@@ -1,4 +1,4 @@
-class AddSubdomainUsernameAndPasswordToCorporateCustomer < ActiveRecord::Migration
+class AddSubdomainUsernameAndPasswordToCorporateCustomer < ActiveRecord::Migration[4.2]
   def change
     add_column :corporate_customers, :subdomain, :string, default: nil, index: true
     add_column :corporate_customers, :user_name, :string, default: nil, index: true

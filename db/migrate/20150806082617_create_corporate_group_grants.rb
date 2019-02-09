@@ -1,4 +1,4 @@
-class CreateCorporateGroupGrants < ActiveRecord::Migration
+class CreateCorporateGroupGrants < ActiveRecord::Migration[4.2]
   def change
     create_table :corporate_group_grants do |t|
       t.references :corporate_group, index: true

@@ -1,4 +1,4 @@
-class CreateCorporateCustomers < ActiveRecord::Migration
+class CreateCorporateCustomers < ActiveRecord::Migration[4.2]
   def change
     create_table :corporate_customers do |t|
       t.string :organisation_name

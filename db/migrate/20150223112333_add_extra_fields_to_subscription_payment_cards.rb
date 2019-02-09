@@ -1,4 +1,4 @@
-class AddExtraFieldsToSubscriptionPaymentCards < ActiveRecord::Migration
+class AddExtraFieldsToSubscriptionPaymentCards < ActiveRecord::Migration[4.2]
   def change
     add_column :subscription_payment_cards, :stripe_object_name, :string, index: true
     add_column :subscription_payment_cards, :funding, :string, index: true

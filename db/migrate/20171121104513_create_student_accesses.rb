@@ -1,4 +1,4 @@
-class CreateStudentAccesses < ActiveRecord::Migration
+class CreateStudentAccesses < ActiveRecord::Migration[4.2]
   def change
     create_table :student_accesses do |t|
       t.integer :user_id

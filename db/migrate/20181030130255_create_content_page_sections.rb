@@ -1,4 +1,4 @@
-class CreateContentPageSections < ActiveRecord::Migration
+class CreateContentPageSections < ActiveRecord::Migration[4.2]
   def change
     create_table :content_page_sections do |t|
       t.integer :content_page_id

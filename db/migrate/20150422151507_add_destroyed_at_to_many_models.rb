@@ -1,4 +1,4 @@
-class AddDestroyedAtToManyModels < ActiveRecord::Migration
+class AddDestroyedAtToManyModels < ActiveRecord::Migration[4.2]
   def change
     add_column :course_modules, :destroyed_at, :datetime, index: true
     add_column :course_module_jumbo_quizzes, :destroyed_at, :datetime, index: true

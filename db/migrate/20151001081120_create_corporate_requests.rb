@@ -1,4 +1,4 @@
-class CreateCorporateRequests < ActiveRecord::Migration
+class CreateCorporateRequests < ActiveRecord::Migration[4.2]
   def change
     create_table :corporate_requests do |t|
       t.string :name, index: true

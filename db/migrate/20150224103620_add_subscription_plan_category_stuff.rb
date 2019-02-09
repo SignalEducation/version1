@@ -1,4 +1,4 @@
-class AddSubscriptionPlanCategoryStuff < ActiveRecord::Migration
+class AddSubscriptionPlanCategoryStuff < ActiveRecord::Migration[4.2]
   def change
     add_column :static_pages, :subscription_plan_category_id, :integer, index: true
     add_column :static_pages, :student_sign_up_h1, :string

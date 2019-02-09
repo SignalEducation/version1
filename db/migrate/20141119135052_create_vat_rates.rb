@@ -1,4 +1,4 @@
-class CreateVatRates < ActiveRecord::Migration
+class CreateVatRates < ActiveRecord::Migration[4.2]
   def change
     create_table :vat_rates do |t|
       t.integer :vat_code_id, index: true

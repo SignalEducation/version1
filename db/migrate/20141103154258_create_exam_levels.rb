@@ -1,4 +1,4 @@
-class CreateExamLevels < ActiveRecord::Migration
+class CreateExamLevels < ActiveRecord::Migration[4.2]
   def change
     create_table :exam_levels do |t|
       t.integer :qualification_id, index: true

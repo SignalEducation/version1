@@ -1,4 +1,4 @@
-class AddImagePaperclipAttributesToBlogPost < ActiveRecord::Migration
+class AddImagePaperclipAttributesToBlogPost < ActiveRecord::Migration[4.2]
   def up
     add_attachment :blog_posts, :image
   end

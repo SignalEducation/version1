@@ -1,4 +1,4 @@
-class CreateQuizContents < ActiveRecord::Migration
+class CreateQuizContents < ActiveRecord::Migration[4.2]
   def change
     create_table :quiz_contents do |t|
       t.integer :quiz_question_id, index: true

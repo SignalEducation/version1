@@ -1,4 +1,4 @@
-class CreateStripeDeveloperCalls < ActiveRecord::Migration
+class CreateStripeDeveloperCalls < ActiveRecord::Migration[4.2]
   def change
     create_table :stripe_developer_calls do |t|
       t.integer :user_id, index: true

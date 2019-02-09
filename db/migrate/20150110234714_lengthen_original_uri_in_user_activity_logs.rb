@@ -1,4 +1,4 @@
-class LengthenOriginalUriInUserActivityLogs < ActiveRecord::Migration
+class LengthenOriginalUriInUserActivityLogs < ActiveRecord::Migration[4.2]
   def up
     change_column :user_activity_logs, :original_uri, :text
   end

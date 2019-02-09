@@ -1,4 +1,4 @@
-class AddSeoFieldsToContentHierarchy < ActiveRecord::Migration
+class AddSeoFieldsToContentHierarchy < ActiveRecord::Migration[4.2]
   def up
     add_column :subject_areas, :seo_description, :string
     add_column :subject_areas, :seo_no_index, :boolean, default: false
