@@ -22,11 +22,6 @@ class CourseSectionUserLog < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :user_id, :latest_course_module_element_id, :course_section_id, :percentage_complete,
-                  :count_of_cmes_completed, :subject_course_user_log_id, :count_of_quizzes_taken,
-                  :count_of_videos_taken, :count_of_constructed_responses_taken, :subject_course_id
-
   # Constants
 
   # relationships

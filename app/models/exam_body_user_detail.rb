@@ -12,9 +12,6 @@
 
 class ExamBodyUserDetail < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :exam_body_id, :student_number
-
   # Constants
 
   # relationships

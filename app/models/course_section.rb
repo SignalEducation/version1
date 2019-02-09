@@ -24,14 +24,6 @@ class CourseSection < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :subject_course_id, :name, :name_url, :sorting_order, :active,
-                  :counts_towards_completion, :assumed_knowledge, :cme_count,
-                  :video_count, :quiz_count, :_destroy, :course_modules_attributes,
-                  :constructed_response_count
-
-  # Constants
-
   # relationships
   belongs_to :subject_course
   has_many :course_section_user_logs

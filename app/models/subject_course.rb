@@ -44,17 +44,6 @@ class SubjectCourse < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active,
-                  :cme_count, :description, :short_description,
-                  :default_number_of_possible_exam_answers,
-                  :email_content, :external_url, :external_url_name,
-                  :quiz_count, :video_count, :exam_body_id, :survey_url,
-                  :group_id, :quiz_pass_rate,
-                  :background_image, :preview, :computer_based, :highlight_colour,
-                  :category_label, :additional_text_label, :course_sections_attributes,
-                  :subject_course_resources_attributes, :constructed_response_count
-
   # Constants
 
   # relationships

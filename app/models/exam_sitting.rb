@@ -15,9 +15,6 @@
 
 class ExamSitting < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :subject_course_id, :date, :exam_body_id, :active, :computer_based
-
   # Constants
   SORT_OPTIONS = %w(active not-active all)
 
@@ -46,7 +43,7 @@ class ExamSitting < ActiveRecord::Base
   scope :all_not_active, -> { where(active: false) }
   scope :all_computer_based, -> { where(computer_based: true) }
   scope :all_standard, -> { where(computer_based: false) }
-  scope :sort_by, -> { where(computer_based: false) }
+  # scope :sort_by, -> { where(computer_based: false) }
 
   # class methods
 

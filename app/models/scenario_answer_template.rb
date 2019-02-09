@@ -15,11 +15,6 @@
 
 class ScenarioAnswerTemplate < ActiveRecord::Base
 
-
-  # attr-accessible
-  attr_accessible :scenario_question_id, :sorting_order, :editor_type, :text_editor_content,
-                  :spreadsheet_editor_content
-
   # Constants
   FORMAT_TYPES = %w(text_editor spreadsheet_editor)
 

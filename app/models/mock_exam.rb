@@ -25,9 +25,6 @@ class MockExam < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :name, :sorting_order, :file, :cover_image, :subject_course_id
-
   # Constants
 
   # relationships

@@ -19,9 +19,6 @@
 
 class StudentAccess < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :subscription_id, :account_type
-
   # Constants
   ACCOUNT_TYPES = %w(Trial Subscription Complimentary)
 

@@ -21,11 +21,6 @@
 
 class Enrollment < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id,
-                  :active, :exam_body_id, :exam_date, :updated_at, :expired,
-                  :exam_sitting_id, :computer_based_exam, :percentage_complete
-
   # Constants
 
   # relationships

@@ -13,11 +13,6 @@
 #
 
 class ContentPageSection < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :content_page_id, :text_content, :panel_colour,
-                  :subject_course_id, :sorting_order
-
   # Constants
 
   # relationships
