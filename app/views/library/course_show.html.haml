@@ -7,7 +7,7 @@
           =@course.parent.name
 
       -if @new_enrollment
-        %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm'}
+        %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm pull-right'}
           Enroll
         =render partial: 'course_enrollment_modal'
 

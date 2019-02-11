@@ -1,4 +1,39 @@
-.l-section-small.is-bg-asphalt
+.bg-img.bg-group-show{style: "background-image: url(#{@group.background_image.url});"}
+  .container
+    %article.hero.pb-6
+      %h1.h1-mega.text-white
+        =@group.name
+      %h5.text-torquoise
+        =@group.description.to_s.html_safe
+
+#library.bg-asphalt
+  .container.py-6
+    .row.row-lg
+      -if @courses
+        -@courses.each do |course|
+          .col-lg-4.col-sm-6
+            =link_to library_special_link(course), class: 'card card-library card-sm mb-5 text-center flex-column', style: 'padding: 0px;' do
+              .card-header{style: "background: #{course.highlight_colour};"}
+                %h5.text-white.text-truncate.mb-0
+                  =course.category_label
+              .card-body
+                %h4.mb-3
+                  =course.name
+
+                %p.mb-2.text-purple3
+                  =course.additional_text_label
+
+              .card-footer
+                %span.with-arrow
+                  Show Course
+
+
+
+
+
+
+
+-#.l-section-small.is-bg-asphalt
   .l-wrap
     .container-fluid
       .row.l-margin-bottom

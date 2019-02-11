@@ -75,6 +75,7 @@ Rails.application.configure do
       path: '/:class/:id/:filename',
       s3_protocol: 'https',
       s3_host_name: 's3-eu-west-1.amazonaws.com',
+      :s3_region => 'eu-west-1',
       s3_credentials: {
           bucket: ENV['LEARNSIGNAL3_BUCKET_NAME'],
           access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],

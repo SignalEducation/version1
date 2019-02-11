@@ -73,6 +73,7 @@ class SubjectCourse < ActiveRecord::Base
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :category_label, presence: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true,
             length: {maximum: 255}
   validates :description, presence: true
