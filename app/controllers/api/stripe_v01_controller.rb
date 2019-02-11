@@ -11,9 +11,9 @@ class Api::StripeV01Controller < Api::BaseController
                                              account_url)
 
     end
-    render head: :no_content
+    head: :no_content
   rescue => e
     Rails.logger.error "ERROR: Api/StripeV01#Create: Error: #{e.inspect}\nRaw event: #{raw_json}"
-    render head: :no_content
+    head: :not_found
   end
 end
