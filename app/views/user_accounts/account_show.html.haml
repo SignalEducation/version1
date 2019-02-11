@@ -69,7 +69,7 @@
               -elsif @user.subscription_user?
                 .tab-pane.tab-subscriptions{id: 'subscriptions', role: 'tabpanel', 'aria-labelledby': 'subscriptions-tab'}
                   .row.row-lg
-                    .col-lg-6
+                    .col-md-12.col-xs-12
                       .mb-5
                         =render partial: 'subscription_info'
 
@@ -79,7 +79,7 @@
                 .row.row-lg
                   .col-md-12.col-xs-12
                     .mb-5
-                    =render partial: 'payment_details'
+                      =render partial: 'payment_details'
 
 
             -if @orders.any?
