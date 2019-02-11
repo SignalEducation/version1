@@ -72,7 +72,7 @@
 
                     .card.card-course
 
-                      %a.btn.btn-collapse.w-100{'data-toggle': "collapse", href: "#collapse_#{course_section.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_section.name_url}_#{counter}"}
+                      %a.btn.btn-collapse.w-100{'data-toggle': "collapse", href: "#collapse_#{course_section.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_section.name_url}_#{counter}",id: course_module.id}
 
                         .course-item.course-item-collapse{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
                           .course-item-icon
@@ -293,6 +293,27 @@
   =render partial: 'trial_restriction_modal'
   =render partial: 'subscription_restriction_modal'
   =render partial: 'related_lesson_restriction_modal'
+
+
+:javascript
+  $(document).ready(function(){
+    let searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has('cm')) {
+      let moduleParam = searchParams.get('cm');
+      let coursePanel = $(".btn.btn-collapse#" + moduleParam + "");
+      coursePanel.click();
+      setTimeout(function() {
+          scrollTop: coursePanel.offset().top;
+      }, 1);
+    } else {
+      // Prevent browser jump to anchor tag
+      if (location.hash) {
+          setTimeout(function() {
+              window.scrollTo(0, 0);
+          }, 1);
+      }
+    }
+  });
 
 
 

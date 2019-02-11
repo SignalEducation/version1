@@ -5,7 +5,7 @@
       .row.l-margin-bottom.hidden-xs.visible-sm.visible-md.visible-lg
         .col-sm-6.col-md-4
           -#TODO add course_section name_url to link so as to open tab
-          =link_to library_special_link(@course_module_element.course_module.course_section.subject_course) do
+          =link_to navigation_special_link(@course_module_element) do
             .btn.btn-secondary
               &#60;
               ="Back To #{@course_module_element.course_module.course_section.subject_course.name}"
@@ -19,7 +19,7 @@
 
       .row.l-margin-bottom.l-margin-top.visible-xs.hidden-sm
         .col-xs-12
-          =link_to library_special_link(@course_module_element.course_module.course_section.subject_course) do
+          =link_to navigation_special_link(@course_module_element) do
             .btn.btn-secondary.full-width
               &#60;
               ="Back To #{@course_module_element.course_module.course_section.subject_course.name}"

@@ -6,13 +6,6 @@ $(document).ready(function(){
 
     });
 
-    // Prevent browser jump to anchor tag
-    if (location.hash) {
-        setTimeout(function() {
-            window.scrollTo(0, 0);
-        }, 1);
-    }
-
     hash = window.location.hash;
     elements = $('a[href="' + hash + '"]');
     if (elements.length === 0) {

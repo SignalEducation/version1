@@ -279,6 +279,18 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
+  # Library Navigation Links
+  def navigation_special_link(the_thing)
+    the_thing = the_thing
+    library_course_url(
+        the_thing.course_module.course_section.subject_course.group.name_url,
+        the_thing.course_module.course_section.subject_course.name_url,
+        anchor: the_thing.course_module.course_section.name_url,
+        cm: the_thing.course_module.id
+    )
+  end
+  helper_method :navigation_special_link
+
 
   def course_special_link(the_thing, scul=nil)
     if the_thing.class == SubjectCourse
