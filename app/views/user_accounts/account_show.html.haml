@@ -1,6 +1,6 @@
 -if flash[:success] || flash[:warning]
   =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt
+.l-section-small.bg-asphalt
   .l-wrap
     .container-fluid
       .col-sm-12
@@ -11,91 +11,101 @@
         %h1.h1.h-separator.h-separator-left.l-margin-bottom
           =t('views.user_accounts.account_show.h1')
 
-      .col-md-12.l-margin-top-big{role: 'tablist'}
-        .signal-tabs
-          %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-            =t('views.user_accounts.personal_info.tab_heading')
+
+    .l-margin-top-big.l-margin-bottom-big
+      %nav.courses-nav
+        %ul.nav.nav-tabs{id: 'accountTab', role: 'tablist'}
+          %li.nav-item
+            %a{href: '#personal-details', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'personal-details'}}
+              =t('views.user_accounts.personal_info.tab_heading')
 
           -if @user.trial_or_sub_user?
-            -if @user.trial_user?
-              %a{href: '#account_info', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                =t('views.user_accounts.account_info.tab_heading')
-            -elsif @user.subscription_user?
-              %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                =t('views.user_accounts.subscription_info.tab_heading')
+            %li.nav-item
+              -if @user.trial_user?
+                %a{href: '#account-info', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'account-info'}}
+                  =t('views.user_accounts.account_info.tab_heading')
+              -elsif @user.subscription_user?
+                %a{href: '#subscriptions', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'subscriptions'}}
+                  =t('views.user_accounts.subscription_info.tab_heading')
 
           -if @user.trial_or_sub_user? && @subscription_payment_cards.any?
-            %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.payment_details.tab_heading')
+            %li.nav-item
+              %a{href: '#payment-details', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'payment-details'}}
+                =t('views.user_accounts.payment_details.tab_heading')
 
           -if @user.trial_or_sub_user? && @orders.any?
-            %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.orders_info.tab_heading')
+            %li.nav-item
+              %a{href: '#orders', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'orders'}}
+                =t('views.user_accounts.orders_info.tab_heading')
 
-          %a{href: '#enrollments', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-            =t('views.user_accounts.enrollments_info.tab_heading')
+          %li.nav-item
+            %a{href: '#enrollments', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'enrollments'}}
+              =t('views.user_accounts.enrollments_info.tab_heading')
 
           -if @user.referral_code
-            %a{href: '#referral', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.referral_info.tab_heading')
+            %li.nav-item
+              %a{href: '#referral', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'referral'}}
+                =t('views.user_accounts.referral_info.tab_heading')
+
+
+      #tab-area
+        .box-item
+          .tab-content#account-tabs
+
+            .tab-pane.tab-personal-details{id: 'personal-details', role: 'tabpanel', 'aria-labelledby': 'personal-details-tab'}
+              .row.row-lg
+                .col-md-12.col-xs-12
+                  .mb-5
+                    =render partial: 'personal_info'
+
+            -if @user.trial_or_sub_user?
+              -if @user.trial_user?
+                .tab-pane.tab-account-info{id: 'account-info', role: 'tabpanel', 'aria-labelledby': 'account-info-tab'}
+                  .row.row-lg
+                    .col-md-12.col-xs-12
+                      .mb-5
+                        =render partial: 'account_info'
+
+              -elsif @user.subscription_user?
+                .tab-pane.tab-subscriptions{id: 'subscriptions', role: 'tabpanel', 'aria-labelledby': 'subscriptions-tab'}
+                  .row.row-lg
+                    .col-lg-6
+                      .mb-5
+                        =render partial: 'subscription_info'
+
+
+            -if @user.subscription_user? && @subscription_payment_cards.any?
+              .tab-pane.tab-payment-details{id: 'payment-details', role: 'tabpanel', 'aria-labelledby': 'payment-details-tab'}
+                .row.row-lg
+                  .col-md-12.col-xs-12
+                    .mb-5
+                    =render partial: 'payment_details'
+
+
+            -if @orders.any?
+              .tab-pane.tab-orders{id: 'orders', role: 'tabpanel', 'aria-labelledby': 'orders-tab'}
+                .row.row-lg
+                  .col-md-12.col-xs-12
+                    .mb-5
+                      =render partial: 'orders_info'
+
+            .tab-pane.tab-enrollments{id: 'enrollments', role: 'tabpanel', 'aria-labelledby': 'enrollments-tab'}
+              .row.row-lg
+                .col-md-12.col-xs-12
+                  .mb-5
+                    =render partial: 'enrollments_info'
+
+            -if @user.referral_code
+              .tab-pane.tab-referral{id: 'referral', role: 'tabpanel', 'aria-labelledby': 'referral-tab'}
+                .row.row-lg
+                  .col-md-12.col-xs-12
+                    .mb-5
+                      =render partial: 'referral_details'
 
 
 
-      .tab-content
-        .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
-          .col-md-12
-            .content-box.content-box-outer.l-margin-bottom-huge
-              .content-box-inner
-                =render partial: 'personal_info'
-
-        -if @user.trial_or_sub_user?
-          -if @user.trial_user?
-            .tab-pane.fade#account_info{role: 'tabpanel'}
-              .col-md-12
-                .content-box.content-box-outer.l-margin-bottom-huge
-                  .content-box-inner
-                    =render partial: 'account_info'
-          -elsif @user.subscription_user?
-            .tab-pane.fade#subscriptions{role: 'tabpanel'}
-              .col-md-12
-                .content-box.content-box-outer.l-margin-bottom-huge
-                  .content-box-inner
-                    =render partial: 'subscription_info'
 
 
-        -if @user.subscription_user? && @subscription_payment_cards.any?
-          .tab-pane.fade#payment-details{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'payment_details'
-
-
-        -if @orders.any?
-          .tab-pane.fade#orders{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'orders_info'
-
-        .tab-pane.fade#enrollments{role: 'tabpanel'}
-          .col-md-12
-            .content-box.content-box-outer.l-margin-bottom-huge
-              .content-box-inner
-                =render partial: 'enrollments_info'
-
-        -if @user.referral_code
-          .tab-pane.fade#referral{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'referral_details'
-
-
-
-
-
-=render partial: 'shared/activate_tab'
 =render partial: 'add_card_modal'
 =render partial: 'student_user_form'
 =render partial: 'change_password'
