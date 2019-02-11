@@ -10,16 +10,16 @@
     .row.row-lg
       -@groups.each do |group|
         .col-lg-4.col-md-6
-          %a.card.card-lg.mb-6.text-center{href: '#'}
+          =link_to library_special_link(group), class: 'card card-library card-lg mb-6 text-center' do
             =image_tag('ico-course.svg', class: 'card-ico-top', alt: 'Course icon')
-            .card-body
+            .card-body.text-wrap-truncate
               %h3.mb-3
                 =group.name
               %p.mb-2.text-purple3
-                =group.description
+                =group.description.truncate(140)
 
             .card-footer.bg-red
-              %span.btn.btn-link.with-arrow
+              %span.with-arrow
                 Browse Courses
 
 
