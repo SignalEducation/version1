@@ -5,6 +5,6 @@ class SubscriptionCancellationWorker
 
   def perform(subscription_id)
     subscription = Subscription.find(subscription_id)
-    subscription.cancel!
+    subscription.cancel! unless subscription.cancelled?
   end
 end
