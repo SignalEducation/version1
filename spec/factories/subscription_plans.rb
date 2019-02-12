@@ -21,10 +21,12 @@
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
+#  organisation_id               :bigint(8)
 #
 
 FactoryBot.define do
   factory :subscription_plan do
+    organisation
     sequence(:name)                 { |n| "Test #{n}" }
     all_you_can_eat                 true
     payment_frequency_in_months     1
@@ -34,7 +36,6 @@ FactoryBot.define do
     available_to                    { 7.days.from_now }
     #stripe_guid                     'plan_ABC123123123'
     trial_period_in_days            7
-    subscription_plan_category_id   nil
     livemode                        false
     available_to_students           true
 
@@ -51,7 +52,5 @@ FactoryBot.define do
         payment_frequency_in_months 12
       end
     end
-
   end
-
 end

@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: ahoy_events
+#
+#  id         :uuid             not null, primary key
+#  visit_id   :uuid
+#  user_id    :integer
+#  name       :string
+#  properties :text
+#  time       :datetime
+#
+
 class Ahoy::Event < ApplicationRecord
   include Ahoy::QueryMethods
 

@@ -21,6 +21,7 @@
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
+#  organisation_id               :bigint(8)
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -36,6 +37,7 @@ class SubscriptionPlan < ActiveRecord::Base
   ]
 
   # relationships
+  belongs_to :organisation
   belongs_to :currency
   has_many :invoice_line_items
   has_many :subscriptions
