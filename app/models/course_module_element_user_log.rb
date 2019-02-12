@@ -33,10 +33,10 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :subject_course_user_log
+  belongs_to :subject_course_user_log, optional: true
   belongs_to :student_exam_track
-  belongs_to :subject_course
-  belongs_to :course_module
+  belongs_to :subject_course, optional: true
+  belongs_to :course_module, optional: true
   belongs_to :course_module_element
   belongs_to :user
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
