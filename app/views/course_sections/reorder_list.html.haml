@@ -1,0 +1,33 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center
+            =@subject_course.name
+          %p
+            ='Reorder Course Sections'
+
+      .row
+        .col-md-12.l-margin-top
+          .corporate-box-item.table-box
+            .table-responsive
+              %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: course_sections_url}}
+                %thead
+                  %tr
+                    %th='Course Section'
+                    %th='Active'
+                    %th
+                %tbody
+                  -@subject_course.course_sections.each do |course_section|
+                    %tr{id: course_section.id, data: {parent: @subject_course.id}}
+                      %td=course_section.name
+                      %td=tick_or_cross(course_section.active)
+                      %td
+                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+      .row.l-margin-top-big
+        .col-md-12
+          =link_to 'Return', subject_course_url(@subject_course), class: 'btn btn-secondary'
+

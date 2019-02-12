@@ -116,6 +116,7 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/course_section/:course_section_id/new_course_module', to: 'course_modules#new', as: :new_course_module
     get 'subject_courses/:id/course_section/:course_section_id/edit_course_module/:course_module_id', to: 'course_modules#edit', as: :edit_course_module
     get 'subject_courses/:id/course_section/:course_section_id/course_module/:course_module_id', to: 'course_modules#show', as: :show_course_module
+    get 'subject_courses/:course_id/reorder_course_sections', to: 'course_sections#reorder_list', as: :reorder_course_sections
 
     resources :course_sections, concerns: :supports_reordering
     resources :course_modules, concerns: :supports_reordering
