@@ -19,6 +19,7 @@ class ExamBody < ActiveRecord::Base
   has_many :enrollments
   has_many :exam_sittings
   has_many :subject_courses
+  has_many :subscription_plans
 
   # validation
   validates :name, presence: true, uniqueness: true
