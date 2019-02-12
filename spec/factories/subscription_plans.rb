@@ -21,7 +21,7 @@
 #  paypal_state                  :string
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
-#  organisation_id               :bigint(8)
+#  exam_body_id                  :bigint(8)
 #
 
 FactoryBot.define do

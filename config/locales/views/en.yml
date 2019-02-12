@@ -1276,7 +1276,7 @@ en:
     subscription_plans:
       form:
         name: Name
-        organisation_id: Organisation
+        exam_body_id: Exam Body
         name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
         available_to_students: Available Standard Students
         all_you_can_eat: All you can eat
