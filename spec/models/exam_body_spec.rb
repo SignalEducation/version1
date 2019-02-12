@@ -39,6 +39,4 @@ describe ExamBody do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-
 end
