@@ -50,7 +50,7 @@ class Subscription < ActiveRecord::Base
   has_many :charges
   has_many :refunds
 
-  delegate :organisation, to: :subscription_plan, allow_nil: false
+  delegate :exam_body, to: :subscription_plan, allow_nil: false
 
   # validation
   validates :user_id, presence: true,
