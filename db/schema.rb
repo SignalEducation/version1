@@ -267,8 +267,8 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.integer "subject_course_user_log_id"
     t.boolean "is_constructed_response", default: false
     t.boolean "preview_mode", default: false
-    t.integer  "course_section_id"
-    t.integer  "course_section_user_log_id"
+    t.integer "course_section_id"
+    t.integer "course_section_user_log_id"
     t.index ["course_module_element_id"], name: "cme_user_logs_cme_id"
     t.index ["course_module_id"], name: "index_course_module_element_user_logs_on_course_module_id"
     t.index ["user_id"], name: "index_course_module_element_user_logs_on_user_id"
@@ -304,8 +304,8 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.float "duration", default: 0.0
     t.string "temporary_label"
     t.boolean "is_constructed_response", default: false, null: false
-    t.boolean  "available_on_trial",               default: false
-    t.integer  "related_course_module_element_id"
+    t.boolean "available_on_trial", default: false
+    t.integer "related_course_module_element_id"
     t.index ["course_module_id"], name: "index_course_module_elements_on_course_module_id"
     t.index ["name_url"], name: "index_course_module_elements_on_name_url"
   end
@@ -332,8 +332,8 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.boolean "tuition", default: false
     t.boolean "test", default: false
     t.boolean "revision", default: false
-    t.integer  "course_section_id"
-    t.integer  "constructed_response_count", default: 0
+    t.integer "course_section_id"
+    t.integer "constructed_response_count", default: 0
     t.index ["name_url"], name: "index_course_modules_on_name_url"
     t.index ["sorting_order"], name: "index_course_modules_on_sorting_order"
   end
@@ -347,8 +347,8 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.integer "count_of_cmes_completed"
     t.integer "count_of_quizzes_taken"
     t.integer "count_of_videos_taken"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "subject_course_id"
     t.integer "count_of_constructed_responses_taken"
     t.index ["course_section_id"], name: "index_course_section_user_logs_on_course_section_id"
@@ -361,14 +361,14 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.string "name"
     t.string "name_url"
     t.integer "sorting_order"
-    t.boolean "active",                     default: false
-    t.boolean "counts_towards_completion",  default: false
-    t.boolean "assumed_knowledge",          default: false
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.integer "cme_count",                  default: 0
-    t.integer "video_count",                default: 0
-    t.integer "quiz_count",                 default: 0
+    t.boolean "active", default: false
+    t.boolean "counts_towards_completion", default: false
+    t.boolean "assumed_knowledge", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "cme_count", default: 0
+    t.integer "video_count", default: 0
+    t.integer "quiz_count", default: 0
     t.datetime "destroyed_at"
     t.integer "constructed_response_count", default: 0
     t.index ["name"], name: "index_course_sections_on_name"
@@ -428,11 +428,11 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
   end
 
   create_table "exam_body_user_details", id: :serial, force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "exam_body_id"
-    t.string   "student_number"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.integer "user_id"
+    t.integer "exam_body_id"
+    t.string "student_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["exam_body_id"], name: "index_exam_body_user_details_on_exam_body_id"
     t.index ["user_id"], name: "index_exam_body_user_details_on_user_id"
   end
@@ -951,6 +951,8 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.integer "count_of_videos_taken"
     t.integer "subject_course_user_log_id"
     t.integer "count_of_constructed_responses_taken"
+    t.integer "course_section_id"
+    t.integer "course_section_user_log_id"
     t.index ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id"
     t.index ["user_id"], name: "index_student_exam_tracks_on_user_id"
   end
@@ -968,7 +970,7 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.string "external_url"
     t.boolean "active", default: false
     t.integer "sorting_order"
-    t.boolean  "available_on_trial",       default: false
+    t.boolean "available_on_trial", default: false
     t.index ["name"], name: "index_subject_course_resources_on_name"
     t.index ["subject_course_id"], name: "index_subject_course_resources_on_subject_course_id"
   end
@@ -1028,7 +1030,7 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.string "highlight_colour", default: "#ef475d"
     t.string "category_label"
     t.string "additional_text_label"
-    t.integer  "constructed_response_count",              default: 0
+    t.integer "constructed_response_count", default: 0
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 

@@ -1,28 +1,29 @@
-class CreateCourseSectionRecordsAndAssignCourseModules < ActiveRecord::Migration
+class CreateCourseSectionRecordsAndAssignCourseModules < ActiveRecord::Migration[4.2]
   def change
-    SubjectCourse.find_each do |subject_course|
-      tuition_section = CourseSection.create(subject_course_id: subject_course.id, name: 'Tuition',
-                           name_url: 'tuition', sorting_order: 1, active: true, counts_towards_completion: true)
-      additional_section = CourseSection.create(subject_course_id: subject_course.id, name: 'Additional Content',
-                           name_url: 'additional-content', sorting_order: 2, active: true, counts_towards_completion: true)
-      question_bank_section = CourseSection.create(subject_course_id: subject_course.id, name: 'Question Bank',
-                           name_url: 'question-bank', sorting_order: 3, active: true, counts_towards_completion: true)
-      other_section = CourseSection.create(subject_course_id: subject_course.id, name: 'Other',
-                           name_url: 'other', sorting_order: 4, active: false, counts_towards_completion: false)
-
+    SubjectCourse.all.each do |subject_course|
       subject_course.course_modules.each do |course_module|
         if course_module.tuition
-          section_id =  tuition_section.id
+          section_name = 'Tuition'
+          section_name_url = 'tuition'
         elsif course_module.revision
-          section_id =  question_bank_section.id
+          section_name = 'Additional Content'
+          section_name_url = 'additional-content'
         elsif course_module.test
-          section_id =  additional_section.id
+          section_name = 'Question Bank'
+          section_name_url = 'question-bank'
         else
-          section_id =  other_section.id
+          section_name = 'Extra'
+          section_name_url = 'extra'
         end
-        course_module.update_column(:course_section_id, section_id)
+
+        if course_module.subject_course
+          section = CourseSection.where(subject_course_id: course_module.subject_course_id,name: section_name).first_or_create!(
+              subject_course_id: course_module.subject_course_id, name: section_name, name_url: section_name_url,
+              active: true, counts_towards_completion: true)
+
+          course_module.update_column(:course_section_id, section.id)
+        end
       end
     end
-
   end
 end
