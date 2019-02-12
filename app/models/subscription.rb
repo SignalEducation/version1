@@ -40,15 +40,17 @@ class Subscription < ActiveRecord::Base
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
-  has_many :invoices
-  has_many :invoice_line_items
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
   has_one :student_access
+
+  has_many :invoices
+  has_many :invoice_line_items
   has_many :subscription_transactions
   has_many :charges
   has_many :refunds
-  has_one :referred_signup
+
+  delegate :organisation, to: :subscription_plan, allow_nil: false
 
   # validation
   validates :user_id, presence: true,

@@ -26,6 +26,7 @@
 
 FactoryBot.define do
   factory :subscription_plan do
+    organisation
     sequence(:name)                 { |n| "Test #{n}" }
     all_you_can_eat                 { true }
     payment_frequency_in_months     { 1 }
@@ -34,10 +35,9 @@ FactoryBot.define do
     available_from                  { 14.days.ago }
     available_to                    { 7.days.from_now }
     #stripe_guid                     'plan_ABC123123123'
-    trial_period_in_days            { 7 }
-    subscription_plan_category_id   { nil }
-    livemode                        { false }
-    available_to_students           { true }
+    trial_period_in_days            7
+    livemode                        false
+    available_to_students           true
 
 
     factory :student_subscription_plan do
@@ -52,7 +52,5 @@ FactoryBot.define do
         payment_frequency_in_months { 12 }
       end
     end
-
   end
-
 end

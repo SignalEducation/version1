@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_07_141503) do
+ActiveRecord::Schema.define(version: 2019_02_12_180541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -652,6 +652,12 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
+  create_table "organisations", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "paypal_webhooks", id: :serial, force: :cascade do |t|
     t.string "guid"
     t.string "event_type"
@@ -1045,10 +1051,12 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.string "paypal_state"
     t.integer "monthly_percentage_off"
     t.float "previous_plan_price"
+    t.bigint "organisation_id"
     t.index ["available_from"], name: "index_subscription_plans_on_available_from"
     t.index ["available_to"], name: "index_subscription_plans_on_available_to"
     t.index ["available_to_students"], name: "index_subscription_plans_on_available_to_students"
     t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
+    t.index ["organisation_id"], name: "index_subscription_plans_on_organisation_id"
     t.index ["payment_frequency_in_months"], name: "index_subscription_plans_on_payment_frequency_in_months"
   end
 
@@ -1275,4 +1283,5 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.integer "subject_course_id"
   end
 
+  add_foreign_key "subscription_plans", "organisations"
 end
