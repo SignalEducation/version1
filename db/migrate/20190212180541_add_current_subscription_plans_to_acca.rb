@@ -7,7 +7,8 @@ class AddCurrentSubscriptionPlansToAcca < ActiveRecord::Migration[5.2]
 
   def up
     acca = Organisation.create(name: "ACCA")
-    aat = Organisation.create(name: "aat")
+    Organisation.create(name: "AAT")
+    Organisation.create(name: "CPD")
 
     SubscriptionPlan.find_each do |plan|
       plan.organisation_id = acca.id
