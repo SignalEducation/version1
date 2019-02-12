@@ -111,7 +111,7 @@ class SubscriptionPlansController < ApplicationController
       :available_to_students, :all_you_can_eat, :payment_frequency_in_months,
       :currency_id, :price, :available_from, :available_to, :stripe_guid,
       :trial_period_in_days, :name, :subscription_plan_category_id,
-      :monthly_percentage_off, :previous_plan_price, :organisation_id
+      :monthly_percentage_off, :previous_plan_price, :exam_body_id
     )
   end
 
@@ -119,7 +119,7 @@ class SubscriptionPlansController < ApplicationController
     params.require(:subscription_plan).permit(
       :available_to_students, :available_from, :available_to, :name,
       :subscription_plan_category_id, :all_you_can_eat, :monthly_percentage_off,
-      :previous_plan_price, :organisation_id
+      :previous_plan_price, :exam_body_id
     )
   end
 end

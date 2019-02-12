@@ -37,7 +37,7 @@ class SubscriptionPlan < ActiveRecord::Base
   ]
 
   # relationships
-  belongs_to :organisation
+  belongs_to :exam_body
   belongs_to :currency
   has_many :invoice_line_items
   has_many :subscriptions
