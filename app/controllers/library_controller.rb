@@ -53,11 +53,6 @@ class LibraryController < ApplicationController
         @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
         @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
         @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
-        if @subject_course_user_log.latest_course_module_element_id
-          @next_element = @subject_course_user_log.latest_course_module_element.next_element
-        else
-          @next_element = @subject_course_user_log.subject_course.first_active_cme
-        end
 
         @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
         get_enrollment_form_variables(@course, @subject_course_user_log) if (@enrollment && @enrollment.expired) || !@enrollment
