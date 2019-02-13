@@ -24,16 +24,6 @@ require 'rails_helper'
 
 describe WhitePaper do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at file_updated_at cover_image_file_size cover_image_file_name cover_image_updated_at file_file_size file_content_type cover_image_content_type file_file_name)
-  WhitePaper.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   subject { FactoryBot.build(:white_paper) }
 
   # relationships

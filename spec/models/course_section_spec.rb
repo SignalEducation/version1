@@ -23,34 +23,45 @@ require 'rails_helper'
 
 describe CourseSection do
 
-  # Constants
-  #it { expect(CourseSection.const_defined?(:CONSTANT_NAME)).to eq(true) }
 
-  # relationships
-  it { should belong_to(:subject_course) }
+  describe 'relationships' do
+    it { should belong_to(:subject_course) }
+    it { should have_many(:course_modules) }
+    it { should have_many(:course_section_user_logs) }
+    it { should have_many(:student_exam_tracks) }
+    it { should have_many(:course_module_element_user_logs) }
+  end
 
-  # validation
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  describe 'validations' do
+    it { should validate_presence_of(:subject_course_id) }
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:name_url) }
+    it { should validate_uniqueness_of(:name_url).scoped_to(:subject_course) }
+    it { should validate_presence_of(:sorting_order) }
+  end
 
-  it { should validate_presence_of(:name) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  it { should validate_presence_of(:name_url) }
+  describe 'scopes' do
+    it { expect(CourseSection).to respond_to(:all_in_order) }
+    it { expect(CourseSection).to respond_to(:all_active) }
+    it { expect(CourseSection).to respond_to(:all_for_completion) }
+  end
 
-  it { should validate_presence_of(:sorting_order) }
+  describe 'instance methods' do
+    it { should respond_to(:parent) }
+    it { should respond_to(:children) }
+    it { should respond_to(:active_children) }
+    it { should respond_to(:first_active_course_module) }
+    it { should respond_to(:first_active_cme) }
+    it { should respond_to(:children_available_count) }
+    it { should respond_to(:all_content_restricted?) }
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:destroyable_children) }
+    it { should respond_to(:recalculate_fields) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-
-  # scopes
-  it { expect(CourseSection).to respond_to(:all_in_order) }
-
-  # class methods
-  #it { expect(CourseSection).to respond_to(:method_name) }
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
 
 end
