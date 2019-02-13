@@ -228,12 +228,13 @@ h1, .h1 {
   color: #434a6e;
 }
 h2, .h2 {
-  font-weight: normal;
-  color: $colour-7;
+  font-weight: 500;
+  color: #434a6e;
   line-height: 1.2;
-  font-size: 2.6rem;
+  font-size: 1.7rem;
   @include breakpoint(md-min) {
-    font-size: 3.0rem;  }
+    font-size: 1.875rem;
+  }
   &.upcase {
     text-transform: uppercase;
   }
@@ -960,6 +961,17 @@ a.card {
     }
   }
   &.card-dashboard {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding: $gutter;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+    }
+  }
+  &.card-payments {
     text-align: left;
     margin-top: $gutter;
     & .card-inner {
