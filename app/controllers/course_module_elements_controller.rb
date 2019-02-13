@@ -69,7 +69,7 @@ class CourseModuleElementsController < ApplicationController
     @related_cmes = cm.course_module_elements.all_active
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: cm.id, course_section_id: cm.course_section_id, active: true)
+        course_module_id: cm.id, active: true)
 
     if params[:type] == 'video'
 

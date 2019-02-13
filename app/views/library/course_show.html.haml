@@ -6,7 +6,7 @@
         =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm with-arrow-sm mb-3 mb-sm-0' do
           =@course.parent.name
 
-      -if @new_enrollment
+      -if @new_enrollment && (@computer_exam_sitting || @exam_sittings)
         %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm pull-right'}
           Enroll
         =render partial: 'course_enrollment_modal'
@@ -45,10 +45,10 @@
         %ul.nav.nav-tabs{id: 'coursesTab', role: 'tablist'}
           -@course.course_sections.all_active.all_in_order.each do |course_section|
             %li.nav-item
-              %a{class: 'nav-link', id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
+              %a{class: "#{current_user && current_user.account_type == 'Trial' && course_section.all_content_restricted? ? 'nav-link locked' : 'nav-link'}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                 =course_section.name
-                - if current_user && current_user.account_type == 'Trial' &&  course_section.all_content_restricted?
-                  =image_tag('grey_lock_icon.png')
+
+
 
           %li.nav-item
             %a{href: "#exam-prep", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "exam-prep", selected: 'false'}}

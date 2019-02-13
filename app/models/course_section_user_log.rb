@@ -29,8 +29,6 @@ class CourseSectionUserLog < ActiveRecord::Base
   belongs_to :subject_course
   belongs_to :subject_course_user_log
   belongs_to :course_section
-  belongs_to :latest_course_module_element, class_name: 'StudentExamTrack',
-             foreign_key: :latest_course_module_element_id
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
 

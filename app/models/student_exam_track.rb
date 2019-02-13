@@ -36,8 +36,6 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :course_section
   belongs_to :course_section_user_log
   belongs_to :course_module
-  belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :latest_course_module_element_id
   has_many :course_module_element_user_logs
 
   # validation
@@ -136,7 +134,6 @@ class StudentExamTrack < ActiveRecord::Base
   def create_course_section_user_log
     csul = CourseSectionUserLog.create!(user_id: self.user_id, course_section_id: self.course_section_id,
                                         subject_course_id: self.course_module.subject_course_id,
-                                        course_section_user_log_id: self.try(:course_section_user_log_id),
                                         subject_course_user_log_id: self.try(:subject_course_user_log_id))
     self.course_section_user_log_id = csul.id
     self.subject_course_user_log_id = csul.subject_course_user_log_id
