@@ -16,19 +16,6 @@
 require 'rails_helper'
 
 describe ExamSitting do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  ExamSitting.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
-
   # relationships
   it { should belong_to(:exam_body) }
   it { should belong_to(:subject_course) }
