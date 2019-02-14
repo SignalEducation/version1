@@ -53,8 +53,9 @@ FactoryBot.define do
     email_content { "MyString" }
     default_number_of_possible_exam_answers { 4 }
     quiz_pass_rate { 10 }
-    group_id { 1 }
+    group
     survey_url { 'SurveyURL' }
+    exam_body
 
     factory :active_subject_course do
       active                       { true }
@@ -69,5 +70,4 @@ FactoryBot.define do
       preview                       { false }
     end
   end
-
 end
