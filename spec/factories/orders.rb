@@ -24,15 +24,15 @@
 
 FactoryBot.define do
   factory :order do
-    product_id 1
-    subject_course_id 1
-    user_id 1
-    stripe_guid "MyString"
-    stripe_customer_id "MyString"
-    live_mode false
-    stripe_status "MyString"
-    coupon_code "MyString"
-    terms_and_conditions true
+    product_id { 1 }
+    subject_course_id { 1 }
+    user_id { 1 }
+    stripe_guid { "MyString" }
+    stripe_customer_id { "MyString" }
+    live_mode { false }
+    stripe_status { "MyString" }
+    coupon_code { "MyString" }
+    terms_and_conditions { true }
     sequence(:reference_guid)      { |n| "Order_#{ApplicationController.generate_random_number(10)}#{n}" }
   end
 

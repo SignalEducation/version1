@@ -34,26 +34,26 @@
 
 FactoryBot.define do
   factory :subscription_payment_card do
-    user_id               1
-    stripe_card_guid      'card_FACTORY-abc123'
-    status                'card-live'
-    brand                 'visa'
-    last_4                '4242'
-    expiry_month          1
+    user_id               { 1 }
+    stripe_card_guid      { 'card_FACTORY-abc123' }
+    status                { 'card-live' }
+    brand                 { 'visa' }
+    last_4                { '4242' }
+    expiry_month          { 1 }
     expiry_year           { Time.now.year + 1 }
-    address_line1         '123 Fake Street'
-    account_country       'Ireland'
-    account_country_id    1
-    stripe_object_name    'card'
-    funding               'credit'
-    cardholder_name       'Joe Cardholder'
-    fingerprint           'ABC123'
-    cvc_checked           true
-    address_line1_check   false
-    address_zip_check     false
-    dynamic_last4         false
-    customer_guid         'cus_ABC123'
-    is_default_card       true
+    address_line1         { '123 Fake Street' }
+    account_country       { 'Ireland' }
+    account_country_id    { 1 }
+    stripe_object_name    { 'card' }
+    funding               { 'credit' }
+    cardholder_name       { 'Joe Cardholder' }
+    fingerprint           { 'ABC123' }
+    cvc_checked           { true }
+    address_line1_check   { false }
+    address_zip_check     { false }
+    dynamic_last4         { false }
+    customer_guid         { 'cus_ABC123' }
+    is_default_card       { true }
   end
 
 end

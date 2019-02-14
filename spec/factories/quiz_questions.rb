@@ -16,9 +16,9 @@
 
 FactoryBot.define do
   factory :quiz_question do
-    course_module_element_quiz_id 1
-    course_module_element_id 1
-    difficulty_level 'easy'
+    course_module_element_quiz_id { 1 }
+    course_module_element_id { 1 }
+    difficulty_level { 'easy' }
   end
 
 end

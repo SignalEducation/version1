@@ -13,14 +13,14 @@
 
 FactoryBot.define do
   factory :quiz_answer do
-    quiz_question_id 1
-    correct false
-    degree_of_wrongness 'incorrect'
+    quiz_question_id { 1 }
+    correct { false }
+    degree_of_wrongness { 'incorrect' }
 
 
     factory :correct_quiz_answer do
-      correct true
-      degree_of_wrongness 'correct'
+      correct { true }
+      degree_of_wrongness { 'correct' }
     end
 
   end

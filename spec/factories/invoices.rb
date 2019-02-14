@@ -37,15 +37,15 @@
 
 FactoryBot.define do
   factory :invoice do
-    user_id 1
-    subscription_transaction_id 1
-    subscription_id 1
-    number_of_users 1
-    currency_id 1
-    sub_total 9.99
-    total 9.99
-    total_tax 9.99
-    vat_rate_id 1
+    user_id { 1 }
+    subscription_transaction_id { 1 }
+    subscription_id { 1 }
+    number_of_users { 1 }
+    currency_id { 1 }
+    sub_total { 9.99 }
+    total { 9.99 }
+    total_tax { 9.99 }
+    vat_rate_id { 1 }
   end
 
 end

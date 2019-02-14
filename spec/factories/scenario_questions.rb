@@ -13,8 +13,8 @@
 
 FactoryBot.define do
   factory :scenario_question do
-    scenario_id 1
-    sorting_order 1
-    text_content 'MyString'
+    scenario_id { 1 }
+    sorting_order { 1 }
+    text_content { 'MyString' }
   end
 end

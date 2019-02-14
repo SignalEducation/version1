@@ -15,10 +15,10 @@
 
 FactoryBot.define do
   factory :scenario_answer_template do
-    scenario_question_id 1
-    sorting_order 1
-    editor_type 'text_editor'
-    text_editor_content 'MyString'
-    spreadsheet_editor_content 'MyString'
+    scenario_question_id { 1 }
+    sorting_order { 1 }
+    editor_type { 'text_editor' }
+    text_editor_content { 'MyString' }
+    spreadsheet_editor_content { 'MyString' }
   end
 end

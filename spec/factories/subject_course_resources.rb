@@ -19,9 +19,9 @@
 
 FactoryBot.define do
   factory :subject_course_resource do
-    name "MyString"
-    subject_course_id 1
-    description "MyText"
+    name { "MyString" }
+    subject_course_id { 1 }
+    description { "MyText" }
   end
 
 end

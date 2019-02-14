@@ -22,12 +22,12 @@ FactoryBot.define do
     sequence(:name)       { |n| "Content page - #{n}" }
     sequence(:public_url)       { |n| "content-page-#{n}" }
     sequence(:seo_title)       { |n| "Content page - #{n}" }
-    seo_description 'MyText'
-    text_content 'MyText'
-    h1_text 'MyString'
-    h1_subtext 'MyString'
-    nav_type 'MyString'
-    footer_link false
-    active true
+    seo_description { 'MyText' }
+    text_content { 'MyText' }
+    h1_text { 'MyString' }
+    h1_subtext { 'MyString' }
+    nav_type { 'MyString' }
+    footer_link { false }
+    active { true }
   end
 end

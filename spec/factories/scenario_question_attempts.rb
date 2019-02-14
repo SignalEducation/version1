@@ -17,12 +17,12 @@
 
 FactoryBot.define do
   factory :scenario_question_attempt do
-    constructed_response_attempt_id 1
-    user_id 1
-    scenario_question_id 1
-    status "Unseen"
-    flagged_for_review false
-    original_scenario_question_text "MyText"
-    user_edited_scenario_question_text "MyText"
+    constructed_response_attempt_id { 1 }
+    user_id { 1 }
+    scenario_question_id { 1 }
+    status { "Unseen" }
+    flagged_for_review { false }
+    original_scenario_question_text { "MyText" }
+    user_edited_scenario_question_text { "MyText" }
   end
 end

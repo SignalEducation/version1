@@ -24,7 +24,7 @@ FactoryBot.define do
   factory :white_paper do
     sequence(:name) { |n| "Title#{n}" }
     sequence(:name_url) { |n| "title_#{n}" }
-    description "MyText"
+    description { "MyText" }
   end
 
 end
