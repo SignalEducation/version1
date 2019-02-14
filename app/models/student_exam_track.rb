@@ -33,7 +33,7 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :subject_course_user_log
   belongs_to :course_module
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :latest_course_module_element_id
+             foreign_key: :latest_course_module_element_id, optional: true
   has_many :course_module_element_user_logs
 
   # validation
