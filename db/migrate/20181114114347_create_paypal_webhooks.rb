@@ -1,4 +1,4 @@
-class CreatePaypalWebhooks < ActiveRecord::Migration
+class CreatePaypalWebhooks < ActiveRecord::Migration[4.2]
   def change
     create_table :paypal_webhooks do |t|
       t.string :guid

@@ -1,4 +1,4 @@
-class CreateExamBodies < ActiveRecord::Migration
+class CreateExamBodies < ActiveRecord::Migration[4.2]
   def change
     create_table :exam_bodies do |t|
       t.string :name, index: true

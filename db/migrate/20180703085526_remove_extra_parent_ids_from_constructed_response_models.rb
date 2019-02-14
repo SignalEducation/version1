@@ -1,4 +1,4 @@
-class RemoveExtraParentIdsFromConstructedResponseModels < ActiveRecord::Migration
+class RemoveExtraParentIdsFromConstructedResponseModels < ActiveRecord::Migration[4.2]
   def change
     remove_column :scenario_answer_templates, :course_module_element_id, :integer, index: true
     remove_column :scenario_answer_templates, :constructed_response_id, :integer, index: true

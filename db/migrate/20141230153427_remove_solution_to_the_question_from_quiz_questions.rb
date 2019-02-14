@@ -1,4 +1,4 @@
-class RemoveSolutionToTheQuestionFromQuizQuestions < ActiveRecord::Migration
+class RemoveSolutionToTheQuestionFromQuizQuestions < ActiveRecord::Migration[4.2]
   def up
     print 'Migrating data: '
     QuizQuestion.unscoped.where(solution_to_the_question: '').update_all(solution_to_the_question: 'Solution TBC')

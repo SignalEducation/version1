@@ -1,4 +1,4 @@
-class CreateInstitutionUsers < ActiveRecord::Migration
+class CreateInstitutionUsers < ActiveRecord::Migration[4.2]
   def change
     create_table :institution_users do |t|
       t.integer :institution_id, index: true

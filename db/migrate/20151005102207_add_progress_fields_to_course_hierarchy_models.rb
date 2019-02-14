@@ -1,4 +1,4 @@
-class AddProgressFieldsToCourseHierarchyModels < ActiveRecord::Migration
+class AddProgressFieldsToCourseHierarchyModels < ActiveRecord::Migration[4.2]
   def change
     add_column :subject_courses, :total_video_duration, :float, default: 0
     add_column :course_modules, :video_duration, :float, default: 0

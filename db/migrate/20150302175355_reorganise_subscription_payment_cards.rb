@@ -1,4 +1,4 @@
-class ReorganiseSubscriptionPaymentCards < ActiveRecord::Migration
+class ReorganiseSubscriptionPaymentCards < ActiveRecord::Migration[4.2]
   def change
     add_column :subscription_payment_cards, :address_line2, :string
     add_column :subscription_payment_cards, :address_city, :string

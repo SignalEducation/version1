@@ -1,4 +1,4 @@
-class AddBackgroundImagePaperclipFiledsToGroupModel < ActiveRecord::Migration
+class AddBackgroundImagePaperclipFiledsToGroupModel < ActiveRecord::Migration[4.2]
   def up
     add_attachment :groups, :background_image
   end

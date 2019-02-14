@@ -1,4 +1,4 @@
-class CreateVideoResources < ActiveRecord::Migration
+class CreateVideoResources < ActiveRecord::Migration[4.2]
   def change
     create_table :video_resources do |t|
       t.integer :course_module_element_id, index: true
