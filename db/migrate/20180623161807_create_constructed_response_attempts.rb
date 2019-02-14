@@ -1,4 +1,4 @@
-class CreateConstructedResponseAttempts < ActiveRecord::Migration
+class CreateConstructedResponseAttempts < ActiveRecord::Migration[4.2]
   def change
     create_table :constructed_response_attempts do |t|
       t.integer :constructed_response_id, index: true

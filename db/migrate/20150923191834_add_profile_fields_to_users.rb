@@ -1,4 +1,4 @@
-class AddProfileFieldsToUsers < ActiveRecord::Migration
+class AddProfileFieldsToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :first_description, :text
     add_column :users, :second_description, :text

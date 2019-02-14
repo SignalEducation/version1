@@ -1,4 +1,4 @@
-class UpdateStateForExistingSubscriptions < ActiveRecord::Migration
+class UpdateStateForExistingSubscriptions < ActiveRecord::Migration[4.2]
   def change
     Subscription.find_each do |sub|
       case sub.stripe_status

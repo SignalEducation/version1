@@ -1,4 +1,4 @@
-class CreateImportTrackers < ActiveRecord::Migration
+class CreateImportTrackers < ActiveRecord::Migration[4.2]
   def change
     create_table :import_trackers do |t|
       t.string :old_model_name, index: true

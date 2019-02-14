@@ -1,4 +1,4 @@
-class RemoveCorporateTables < ActiveRecord::Migration
+class RemoveCorporateTables < ActiveRecord::Migration[4.2]
   def change
     drop_table :corporate_customers
     drop_table :corporate_groups

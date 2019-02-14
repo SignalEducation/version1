@@ -1,4 +1,4 @@
-class RemoveOldQuizBestScoreFields < ActiveRecord::Migration
+class RemoveOldQuizBestScoreFields < ActiveRecord::Migration[4.2]
   def change
     remove_column :course_module_element_quizzes, :best_possible_score_first_attempt, :integer
     remove_column :course_module_element_quizzes, :best_possible_score_retry, :integer

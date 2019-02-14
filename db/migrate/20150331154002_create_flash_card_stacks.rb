@@ -1,4 +1,4 @@
-class CreateFlashCardStacks < ActiveRecord::Migration
+class CreateFlashCardStacks < ActiveRecord::Migration[4.2]
   def change
     create_table :flash_card_stacks do |t|
       t.integer :course_module_element_flash_card_pack_id

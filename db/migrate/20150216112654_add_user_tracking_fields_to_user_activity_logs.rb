@@ -1,4 +1,4 @@
-class AddUserTrackingFieldsToUserActivityLogs < ActiveRecord::Migration
+class AddUserTrackingFieldsToUserActivityLogs < ActiveRecord::Migration[4.2]
   def change
     add_column :user_activity_logs, :first_session_landing_page, :string, index: true
     add_column :user_activity_logs, :latest_session_landing_page, :string, index: true

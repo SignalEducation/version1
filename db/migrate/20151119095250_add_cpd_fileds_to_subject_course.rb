@@ -1,4 +1,4 @@
-class AddCpdFiledsToSubjectCourse < ActiveRecord::Migration
+class AddCpdFiledsToSubjectCourse < ActiveRecord::Migration[4.2]
   def change
     add_column :subject_courses, :is_cpd, :boolean, index: true, default: false
     add_column :subject_courses, :cpd_hours, :float

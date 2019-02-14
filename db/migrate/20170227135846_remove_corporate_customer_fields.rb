@@ -1,4 +1,4 @@
-class RemoveCorporateCustomerFields < ActiveRecord::Migration
+class RemoveCorporateCustomerFields < ActiveRecord::Migration[4.2]
   def change
     remove_column :subject_courses, :corporate_customer_id, :integer
     remove_column :subject_courses, :restricted, :boolean

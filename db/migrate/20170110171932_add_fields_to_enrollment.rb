@@ -1,4 +1,4 @@
-class AddFieldsToEnrollment < ActiveRecord::Migration
+class AddFieldsToEnrollment < ActiveRecord::Migration[4.2]
   def change
     add_column :enrollments, :student_number, :string, index: :true
     add_column :enrollments, :exam_body_id, :integer, index: :true

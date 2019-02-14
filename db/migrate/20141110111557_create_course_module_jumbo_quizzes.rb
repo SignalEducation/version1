@@ -1,4 +1,4 @@
-class CreateCourseModuleJumboQuizzes < ActiveRecord::Migration
+class CreateCourseModuleJumboQuizzes < ActiveRecord::Migration[4.2]
   def change
     create_table :course_module_jumbo_quizzes do |t|
       t.integer :course_module_id, index: true
