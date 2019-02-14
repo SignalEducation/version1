@@ -23,7 +23,7 @@ class QuizQuestion < ActiveRecord::Base
 
   # relationships
   belongs_to :subject_course
-  belongs_to :course_module_element
+  belongs_to :course_module_element, optional: true
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy

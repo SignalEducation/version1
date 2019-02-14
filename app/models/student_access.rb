@@ -24,7 +24,7 @@ class StudentAccess < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :subscription
+  belongs_to :subscription, optional: true
 
   # validation
   validates :user_id, presence: true,

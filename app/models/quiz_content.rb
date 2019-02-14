@@ -25,9 +25,9 @@ class QuizContent < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :quiz_answer
-  belongs_to :quiz_question
-  belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id
+  belongs_to :quiz_answer, optional: true
+  belongs_to :quiz_question, optional: true
+  belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id, optional: true
   has_attached_file :image, default_url: '/assets/images/missing.png'
 
   # validation
