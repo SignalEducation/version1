@@ -21,14 +21,14 @@
                   .stats-box-inner
                     .h3
                       =humanize_datetime(@user.created_at)
-                    .h6
+                    .p
                       Account Created
               .col-md-4.col-sm-6.col-xs-12
                 .stats-box
                   .stats-box-inner
                     .h3
                       =@user_sessions_count
-                    .h6
+                    .p
                       Sessions
               .col-md-4.col-sm-6.col-xs-12
                 .stats-box
@@ -38,7 +38,7 @@
                         =humanize_datetime(@user.last_login_at)
                       -else
                         ='-'
-                    .h6
+                    .p
                       Last Active
 
 
@@ -48,7 +48,7 @@
                   .stats-box-inner
                     .h3
                       =@user.user_account_status
-                    .h6
+                    .p
                       ='Access Level'
 
 
@@ -61,7 +61,7 @@
                         =@user.student_number
                       -else
                         ='-'
-                    .h6
+                    .p
                       Student Number
 
               .col-md-4.col-sm-6.col-xs-12
@@ -70,7 +70,7 @@
                     .stats-box-inner
                       .h3
                         =@user.stripe_account_balance / 100
-                      .h6
+                      .p
                         Stripe Account Balance
 
 
@@ -99,13 +99,13 @@
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_status')
-                  .h6
+                  .p
                     =@subscription.state.camelcase
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_created')
-                  .h6
+                  .p
                     -if @subscription.created_at
                       =humanize_datetime(@subscription.created_at)
 
@@ -113,7 +113,7 @@
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.subscription_plan')
-                  .h6
+                  .p
                     -if @subscription.subscription_plan
                       =@subscription.subscription_plan.name
 
@@ -122,13 +122,13 @@
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.billing_interval')
-                  .h6
+                  .p
                     =t("views.general.payment_frequency_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.last_billing_date')
-                  .h6
+                  .p
                     -if @invoices.any? && @subscription.invoices.any? && @subscription.invoices.last && @subscription.invoices.last.created_at
                       =humanize_datetime(@subscription.invoices.last.created_at)
                     -else
@@ -137,20 +137,20 @@
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.next_billing_date')
-                  .h6
+                  .p
                     =@subscription.next_renewal_date
 
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.stripe_sub_guid')
-                  .h6
+                  .p
                     =@subscription.stripe_guid
 
                 .col-sm-4.col-xs-6.l-margin-top
                   .h3
                     =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
-                  .h6
+                  .p
                     =@subscription.state.capitalize
 
 
@@ -158,20 +158,20 @@
                   -if @default_card
                     .h3
                       =t('views.users.user_subscription_status.subscription_info.valid_payment_card')
-                    .h6
+                    .p
                       =@default_card.status ? 'True' : 'False'
                 .col-sm-6
                   -if @subscription.canceled_pending_status?
                     .h3
                       =t('views.users.user_subscription_status.subscription_info.subscription_ending')
-                    .h6
+                    .p
 
                       -if @subscription.next_renewal_date
                         =@subscription.next_renewal_date.to_s
                   -elsif @subscription.canceled_status?
                     .h3
                       =t('views.users.user_subscription_status.subscription_info.subscription_ended')
-                    .h6
+                    .p
                       -if @subscription.next_renewal_date
                         =@subscription.next_renewal_date.to_s
 

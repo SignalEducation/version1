@@ -42,6 +42,7 @@ class Enrollment < ActiveRecord::Base
   # callbacks
   before_destroy :check_dependencies
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
+  before_create :set_percentage_complete, if: :subject_course_user_log_id
   after_create :create_expiration_worker, :deactivate_siblings
   after_update :create_expiration_worker, if: :exam_date_changed?
 
@@ -204,6 +205,10 @@ class Enrollment < ActiveRecord::Base
                                                            session_guid: self.user.try(:session_guid),
                                                            subject_course_id: self.subject_course_id)
     self.subject_course_user_log_id = subject_course_user_log.id
+  end
+
+  def set_percentage_complete
+    self.percentage_complete = subject_course_user_log.percentage_complete
   end
 
   def create_expiration_worker

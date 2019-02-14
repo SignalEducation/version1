@@ -118,7 +118,8 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   after_create :create_referral_code_record
-  after_update :update_stripe_customer, :update_student_access
+  after_update :update_stripe_customer
+  after_save :update_student_access, if: :saved_change_to_user_group_id?
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -730,9 +731,7 @@ class User < ActiveRecord::Base
   end
 
   def update_student_access
-    if self.user_group_id_changed?
-      self.student_access.check_student_access
-    end
+    self.student_access.check_student_access
   end
 
   def update_stripe_customer
