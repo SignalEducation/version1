@@ -31,44 +31,40 @@ class LibraryController < ApplicationController
     @form_type = "Course Tutor Question. Course: #{@course.name}"
     @course_tutor_details = @course.course_tutor_details.all_in_order
 
-    if current_user
-      # exam_body_user_details modal form variable and any session errors
-      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(
-          current_user.id).last
-      unless @exam_body_user_details
-        @exam_body_user_details = current_user.exam_body_user_details.build(
-            exam_body_id: @course.exam_body_id
-        )
-      end
-      if session[:user_exam_body_errors]
-        current_user.errors.add(:base, 'Details entered are not valid!')
-        session[:user_exam_body_errors] = nil
-      end
+    if @course && !@course.preview
+      if current_user
+        # exam_body_user_details modal form variable and any session errors
+        @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(
+            current_user.id).last
+        unless @exam_body_user_details
+          @exam_body_user_details = current_user.exam_body_user_details.build(
+              exam_body_id: @course.exam_body_id
+          )
+        end
+        if session[:user_exam_body_errors]
+          current_user.errors.add(:base, 'Details entered are not valid!')
+          session[:user_exam_body_errors] = nil
+        end
 
-      if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
-        # Find the latest SCUL record for this user/course combination
-        @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
-        @cmeuls = @subject_course_user_log.course_module_element_user_logs.all.map(&:course_module_element_id)
-        @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-        @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-        @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-        @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+        if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
+          # Find the latest SCUL record for this user/course combination
+          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+          @cmeuls = @subject_course_user_log.course_module_element_user_logs.all.map(&:course_module_element_id)
+          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+          @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+          @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
 
-        @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
-        get_enrollment_form_variables(@course, @subject_course_user_log) if (@enrollment && @enrollment.expired) || !@enrollment
+          @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
+          get_enrollment_form_variables(@course, @subject_course_user_log) if (@enrollment && @enrollment.expired) || !@enrollment
 
-      else
-        get_enrollment_form_variables(@course, nil)
+        else
+          get_enrollment_form_variables(@course, nil)
+        end
       end
+    else
+      render 'course_preview'
     end
-  end
-
-  def course_preview
-    tag_manager_data_layer(@course.name)
-    seo_title_maker(@course.name, @course.description, nil)
-    @form_type = "Course Tutor Question. Course: #{@course.name}"
-    @course_tutor_details = @course.course_tutor_details.all_in_order
-
   end
 
   def tutor_contact_form
