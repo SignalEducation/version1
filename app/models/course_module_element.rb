@@ -219,6 +219,7 @@ class CourseModuleElement < ActiveRecord::Base
   def available_to_user(user, scul)
     result = {view: false, reason: nil}
 
+
     case user.account_type
 
     when 'Trial'

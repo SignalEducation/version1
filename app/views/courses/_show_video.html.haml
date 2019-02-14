@@ -8,13 +8,13 @@
   -#Nav buttons below video
   .l-margin-bottom.l-margin-top.hidden-xs
     .pull-right
-      =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-red text-bold' do
+      =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-primary text-bold' do
         =t('views.course_module_elements.show.next_step')
         .glyphicon.glyphicon-arrow-right
 
   .l-margin-bottom-huge.l-margin-top.hidden-lg.hidden-md.hidden-sm
     .col-sm-12
-      =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-red full-width' do
+      =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-primary full-width' do
         =t('views.course_module_elements.show.next_step')
         .glyphicon.glyphicon-arrow-right
 

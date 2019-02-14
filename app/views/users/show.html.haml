@@ -79,7 +79,7 @@
               .l-margin-top-small
                 =link_to 'Edit User', edit_user_url(@user), class: 'btn btn-primary full-width', style: 'margin-bottom: 10px;'
                 -if !@user.email_verified && @user.email_verification_code
-                  =link_to 'Resend Verification Email', resend_verification_mail_url(@user.email_verification_code), method: :post, class: 'btn btn-purple full-width', style: 'margin-bottom: 10px;'
+                  =link_to 'Resend Verification Email', resend_verification_mail_url(@user.email_verification_code), method: :post, class: 'btn btn-secondary full-width', style: 'margin-bottom: 10px;'
                 -if @user.visits.any?
                   =link_to 'User Visits', user_visits_url(@user), class: 'btn btn-secondary full-width', style: 'margin-bottom: 10px;'
                 -if @user.destroyable?
