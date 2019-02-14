@@ -22,8 +22,7 @@ class QuizQuestion < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :subject_course
-  belongs_to :course_module_element
+  belongs_to :course_module_element, optional: true
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts
   has_many :quiz_answers, dependent: :destroy
@@ -41,7 +40,6 @@ class QuizQuestion < ActiveRecord::Base
 
   # callbacks
   before_validation :set_course_module_element
-  before_save :set_subject_course_id
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
@@ -79,10 +77,6 @@ class QuizQuestion < ActiveRecord::Base
   def set_course_module_element
     self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id)
     true
-  end
-
-  def set_subject_course_id
-    self.subject_course_id = self.course_module_element_quiz.course_module_element.parent.subject_course_id
   end
 
 end

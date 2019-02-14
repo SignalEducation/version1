@@ -35,7 +35,7 @@ class CourseModuleElement < ActiveRecord::Base
   # relationships
   belongs_to :course_module
   belongs_to :related_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :related_course_module_element_id
+             foreign_key: :related_course_module_element_id, optional: true
   has_one :course_module_element_quiz
   has_one :course_module_element_video
   has_one :constructed_response
