@@ -28,7 +28,7 @@ class QuizContent < ActiveRecord::Base
   belongs_to :quiz_answer, optional: true
   belongs_to :quiz_question, optional: true
   belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id, optional: true
-  has_attached_file :image, default_url: '/assets/images/missing.png'
+  has_attached_file :image, default_url: 'images/MissingImage.jpg'
 
   # validation
   validate  :one_parent_only, on: :update

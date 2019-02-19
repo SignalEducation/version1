@@ -26,8 +26,8 @@ class WhitePaper < ActiveRecord::Base
   # relationships
   belongs_to :subject_course
   has_many :white_paper_requests
-  has_attached_file :file, default_url: '/assets/images/missing.png'
-  has_attached_file :cover_image, default_url: '/assets/images/missing.png'
+  has_attached_file :file, default_url: 'images/MissingImage.jpg'
+  has_attached_file :cover_image, default_url: 'images/MissingImage.jpg'
 
   # validation
   validates :name, presence: true, uniqueness: true
