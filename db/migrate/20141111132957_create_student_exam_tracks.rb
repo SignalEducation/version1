@@ -1,4 +1,4 @@
-class CreateStudentExamTracks < ActiveRecord::Migration
+class CreateStudentExamTracks < ActiveRecord::Migration[4.2]
   def change
     create_table :student_exam_tracks do |t|
       t.integer :user_id, index: true

@@ -1,4 +1,4 @@
-class RemoveTimeLimitSecondsFromCourseModuleElementQuizzes < ActiveRecord::Migration
+class RemoveTimeLimitSecondsFromCourseModuleElementQuizzes < ActiveRecord::Migration[4.2]
   def up
     remove_column :course_module_element_quizzes, :time_limit_seconds
   end

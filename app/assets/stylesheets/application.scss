@@ -12,12 +12,14 @@
 @import "remodal-default-theme";
 @import "remodal";
 @import "jquery-tosrus";
+@import "mixins/master";
+@import "components/master";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 1. Colours & Fonts
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-$sans-font: 'Rubik', HelveticaNeue;
+$sans-font: 'Rubik', HelveticaNeue, sans-serif;
 $gutter: 20px;
 $white: #fff;
 $purple1: #3D3D5B;
@@ -31,7 +33,7 @@ $colour-3: #EFF3F6;
 $colour-4: #F8FAFF;
 $colour-5: #C0CFD5;
 $colour-6: #edeff0;
-$colour-7: #3E3F5B;
+$colour-7: $purple1;
 $colour-8: #4E3F5B;
 $colour-9: rgb(83, 84, 112);
 $colour-10: #9E9FAD;
@@ -288,7 +290,6 @@ hr {
 // 3. Form Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 .form-group {
   margin: 0 0 20px 0;
 }
@@ -424,6 +425,10 @@ label, .label {
   letter-spacing: .2rem;
   text-transform: uppercase;
   border: 0;
+
+  &.reduced-padding {
+    padding: 0 $gutter/2;
+  }
 
   &:link, &:visited {
     text-decoration: none;
@@ -1024,7 +1029,7 @@ a.card {
   display: block;
   background: $white;
   position: relative;
-  margin: $gutter*.5 0 $gutter 0;
+  margin: $gutter*.5 $gutter*.5 $gutter $gutter*.5;
   text-align: left;
   @include border-radius(5px);
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
@@ -2111,7 +2116,7 @@ a.list-group-item {
 
 
 .StripeElement {
-  background-color: white;
+  background-color: #F4F6FA;
   padding: 8px 12px;
   border-radius: 4px;
   border: 1px solid transparent;
@@ -2309,7 +2314,37 @@ spinner {
   @include border-radius(100%);
 }
 
+//
+// Radios
+// --------------------------------------------------
 
+
+input[type="checkbox"],
+input[type="radio"] {
+  &.styled:checked + label:after {
+    font-family: $font-family-icon;
+    content: $check-icon;
+  }
+  .styled:checked + label {
+    &::before {
+      color: #fff;
+    }
+    &::after {
+      color: #fff;
+    }
+  }
+}
+
+#info-text{
+  margin-left: 2px;
+  span {
+    font-weight: bold;
+  }
+  span:nth-child(2) {
+    text-decoration: line-through;
+    font-weight: normal;
+  }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 15. Site-Wide Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2351,6 +2386,12 @@ spinner {
     background: $colour-8 asset-url('bg-library.jpg') no-repeat;
     background-size: cover;
   }
+}
+
+.hero {
+  padding-top: 5.5rem;
+  padding-bottom: 0;
+  text-align: center;
 }
 
 
@@ -2877,6 +2918,10 @@ spinner {
   width: 500px !important;
 }
 
+.block-label {
+  display: block;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 23. CSS Partials that depend on existing classes in this file so must be imported last
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2885,3 +2930,5 @@ spinner {
 @import "nav_and_footer.scss";
 @import "calculator.scss";
 @import "extras.scss";
+
+@import "components/master";

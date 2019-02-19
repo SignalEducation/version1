@@ -1,4 +1,4 @@
-class AddImageToGroups < ActiveRecord::Migration
+class AddImageToGroups < ActiveRecord::Migration[4.2]
   def up
     add_attachment :groups, :image
   end

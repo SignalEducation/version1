@@ -1,4 +1,4 @@
-class CreateReferredSignups < ActiveRecord::Migration
+class CreateReferredSignups < ActiveRecord::Migration[4.2]
   def change
     create_table :referred_signups do |t|
       t.integer :referral_code_id, index: true

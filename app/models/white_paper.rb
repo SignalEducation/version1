@@ -21,10 +21,6 @@
 #
 
 class WhitePaper < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :name, :description, :file, :cover_image, :sorting_order, :name_url, :subject_course_id
-
   # Constants
 
   # relationships

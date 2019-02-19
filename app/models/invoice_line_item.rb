@@ -20,11 +20,6 @@ class InvoiceLineItem < ActiveRecord::Base
 
   serialize :original_stripe_data, Hash
 
-  # attr-accessible
-  attr_accessible :invoice_id, :amount, :currency_id, :prorated, :period_start_at,
-                  :period_end_at, :subscription_id, :subscription_plan_id,
-                  :original_stripe_data
-
   # Constants
 
   # relationships
@@ -34,13 +29,10 @@ class InvoiceLineItem < ActiveRecord::Base
   belongs_to :subscription_plan
 
   # validation
-  validates :invoice_id, presence: true
-  validates :amount, presence: true
-  validates :currency_id, presence: true
-  validates :period_start_at, presence: true
-  validates :period_end_at, presence: true
-  validates :subscription_id, presence: true
-  validates :subscription_plan_id, presence: true
+  validates :invoice_id, :amount, :currency_id, :subscription_id, 
+            :subscription_plan_id, presence: true
+  # validates :period_start_at, presence: true
+  # validates :period_end_at, presence: true
 
   # callbacks
   before_destroy :check_dependencies
@@ -51,19 +43,29 @@ class InvoiceLineItem < ActiveRecord::Base
   # class methods
   def self.build_from_stripe_data(invoice_id, stripe_hash, subscription_id)
     li = InvoiceLineItem.new(
-            invoice_id: invoice_id,
-            amount: stripe_hash[:amount] / 100.0,
-            currency_id: Currency.find_by_iso_code(stripe_hash[:currency].upcase).id,
-            prorated: stripe_hash[:proration],
-            period_start_at: Time.at(stripe_hash[:period][:start]),
-            period_end_at: Time.at(stripe_hash[:period][:end]),
-            subscription_id: subscription_id,
-            subscription_plan_id: SubscriptionPlan.find_by_stripe_guid(stripe_hash[:plan][:id]).id,
-            original_stripe_data: stripe_hash.to_hash
+      invoice_id: invoice_id,
+      amount: stripe_hash[:amount] / 100.0,
+      currency_id: Currency.find_by_iso_code(stripe_hash[:currency].upcase).id,
+      prorated: stripe_hash[:proration],
+      period_start_at: Time.at(stripe_hash[:period][:start]),
+      period_end_at: Time.at(stripe_hash[:period][:end]),
+      subscription_id: subscription_id,
+      subscription_plan_id: SubscriptionPlan.find_by_stripe_guid(stripe_hash[:plan][:id]).id,
+      original_stripe_data: stripe_hash.to_hash
     )
     unless li.save
       Rails.logger.error "ERROR: InvoiceLineItems#build_from_stripe_data failed to create. Errors: #{li.errors.inspect}. Original Data: #{stripe_hash}."
     end
+  end
+
+  def self.build_from_paypal_data(invoice)
+    return false if invoice.invoice_line_items.any?
+    invoice.invoice_line_items.create!(
+      amount: invoice.total,
+      currency_id: invoice.currency_id,
+      subscription_id: invoice.subscription_id,
+      subscription_plan_id: invoice.subscription.subscription_plan_id
+    )
   end
 
   # instance methods

@@ -40,7 +40,7 @@
                         %td
                           =humanize_datetime(subscription.created_at)
                         %td
-                          =subscription.current_status.camelcase
+                          =subscription.state.camelcase
                         %td
                           =link_to subscription_management_url(subscription) do
                             .btn.btn-purple.btn-small.pull-right

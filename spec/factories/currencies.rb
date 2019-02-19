@@ -62,5 +62,4 @@ FactoryBot.define do
       trailing_symbol         'c'
     end
   end
-
 end

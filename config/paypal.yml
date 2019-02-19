@@ -1,0 +1,22 @@
+development: &default
+
+  # Credentials for REST APIs
+  client_id: <%= ENV['PAYPAL_CLIENT_ID'] %>
+  client_secret: <%= ENV['PAYPAL_CLIENT_SECRET'] %>
+
+  # Mode can be 'live' or 'sandbox'
+  mode: sandbox
+  sandbox_email_address: philip-facilitator@learnsignal.com
+
+staging:
+  <<: *default
+
+production:
+  <<: *default
+  mode: live
+
+test: &default
+
+  # Credentials for REST APIs
+  client_id: RANDOM_CLIENT_ID
+  client_secret: RANDOM_CLIENT_SECRET

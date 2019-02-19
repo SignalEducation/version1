@@ -19,18 +19,12 @@
 
 class StudentAccess < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :trial_started_date, :trial_ending_at_date,
-                  :trial_ended_date, :trial_seconds_limit, :trial_days_limit,
-                  :content_seconds_consumed, :subscription_id, :account_type,
-                  :content_access
-
   # Constants
   ACCOUNT_TYPES = %w(Trial Subscription Complimentary)
 
   # relationships
   belongs_to :user
-  belongs_to :subscription
+  belongs_to :subscription, optional: true
 
   # validation
   validates :user_id, presence: true,
@@ -116,9 +110,9 @@ class StudentAccess < ActiveRecord::Base
     # Called from the subscription after_save update_student_access
     subscription = Subscription.find(subscription_id)
     trial_ended_date = self.trial_ended_date ? self.trial_ended_date : Proc.new{Time.now.to_datetime}.call
-    if %w(unpaid suspended canceled).include?(subscription.current_status)
+    if subscription.cancelled?
       access = false
-    elsif %w(active past_due canceled-pending).include?(subscription.current_status)
+    elsif subscription.active? || subscription.errored?
       access = true
     end
     self.update_columns(subscription_id: subscription_id, account_type: 'Subscription',
@@ -128,9 +122,9 @@ class StudentAccess < ActiveRecord::Base
 
   def check_subscription_access_is_valid
     if self.subscription && self.user.subscription_user?
-      if %w(unpaid suspended canceled).include?(self.subscription.current_status)
+      if subscription.cancelled?
         self.update_column(:content_access, false)
-      elsif %w(active past_due canceled-pending).include?(self.subscription.current_status)
+      elsif subscription.active? || subscription.errored?
         self.update_column(:content_access, true)
       end
     end

@@ -13,11 +13,7 @@
 #
 
 class SubscriptionPlanCategory < ActiveRecord::Base
-
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :name, :available_from, :available_to, :trial_period_in_days
 
   # Constants
 

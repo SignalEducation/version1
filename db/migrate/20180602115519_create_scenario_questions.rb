@@ -1,4 +1,4 @@
-class CreateScenarioQuestions < ActiveRecord::Migration
+class CreateScenarioQuestions < ActiveRecord::Migration[4.2]
   def change
     create_table :scenario_questions do |t|
       t.integer :course_module_element_id, index: true

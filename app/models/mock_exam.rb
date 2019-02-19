@@ -25,9 +25,6 @@ class MockExam < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :name, :sorting_order, :file, :cover_image, :subject_course_id
-
   # Constants
 
   # relationships
@@ -38,8 +35,6 @@ class MockExam < ActiveRecord::Base
   has_attached_file :file, default_url: 'images/MissingImage.jpg'
 
   # validation
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
   validates :name, presence: true
   validates_attachment_content_type :file, :content_type => ['application/pdf']
 

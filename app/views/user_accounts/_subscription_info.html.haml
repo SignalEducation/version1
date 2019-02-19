@@ -132,18 +132,22 @@
 
 
   .col-sm-6.col-md-4
-    -if @current_subscription.active_status?
-      -if @user.default_card
+    -if @current_subscription.active?
+      -if !@current_subscription.paypal_token.present? && @user.default_card
         =link_to account_change_plan_url do
           .btn.btn-purple.full-width.l-margin-bottom
             =t('views.users.show.change_subscription_plan')
 
-      -#=link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
-        .btn.btn-red.full-width.l-margin-bottom
-          =t('views.users.show.cancel_your_subscription_plan')
+      %a{data: {remodal: {target: 'confirm-pause-modal'}}, class: 'btn btn-orange full-width l-margin-bottom confirm-pause-modal'}
+        =t('views.users.show.pause_your_subscription_plan')
+
       %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
+    -elsif @current_subscription.paused?
+      =link_to subscriptions_suspension_path(id: @current_subscription.id), method: :delete do
+        .btn.btn-orange.full-width.l-margin-bottom
+          =t('views.users.show.confirm_subscription_reactivate')
 
     -elsif @current_subscription.canceled_pending_status?
 
@@ -159,13 +163,8 @@
 
 
     -elsif @current_subscription.past_due_status?
-      -#=link_to @current_subscription, method: :delete, data: {confirm: t('views.users.show.confirm_immediate_deletion') + "#{humanize_stripe_date(@current_subscription.next_renewal_date)}"} do
-        .btn.btn-red.full-width.l-margin-bottom
-          =t('views.users.show.cancel_your_subscription_plan')
       %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-red full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
-
-    -elsif @current_subscription.unpaid_status?
 
 
   -if @current_subscription && @invoices
@@ -176,5 +175,5 @@
         -@invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
         =render partial: 'invoices_index'
 
-
 =render partial: 'confirm_cancellation_modal'
+=render partial: 'confirm_pause_modal'

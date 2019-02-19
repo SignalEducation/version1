@@ -176,7 +176,7 @@ en:
         product_id: Product
         order: Order
         user_id: User
-        current_status: Status
+        stripe_status: Status
 
 
       show:
@@ -186,7 +186,7 @@ en:
         user_id: User
         stripe_guid: Stripe Id
         stripe_customer_id: Stripe Customer Id
-        current_status: Order Status
+        stripe_status: Order Status
 
       new:
         h1: New Order
@@ -827,6 +827,7 @@ en:
         seo_description: SEO Description or Meta description
         seo_description_placeholder: SEO Description Placeholder
         subscription_plan_category_id: Subscription Plan Category
+        monthly_percentage_off: Optional percentage saving
         group_id: Related Group
         subject_course_id: Related Course
         public_url: Public URL
@@ -1010,6 +1011,7 @@ en:
         active: Active
         currency: Currency
         mock_exam_id: Mock Exam
+        product_type: Product Type
         subject_course: Course
         type: Type
         currency: Currency
@@ -1289,6 +1291,8 @@ en:
         trial_period_in_days: Trial
         trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
+        monthly_percentage_off: Optional monthly percentage saving
+        previous_plan_price: Optional previous plan price
         active: Active
 
       edit:
@@ -1453,16 +1457,19 @@ en:
         change_your_password:
           link: Change password
           h4: Change your password
-        cancel_your_subscription_plan: Cancel Recurring Payments
+        pause_your_subscription_plan: Pause Recurring Payments
+        cancel_your_subscription_plan: Cancel Subscription
+        confirm_subscription_pause: PAUSE MEMBERSHIP
         confirm_subscription_cancellation: Cancel My Subscription
-        keep_subscription: Keep my subscription
+        confirm_subscription_reactivate: Reactivate My Subscription
+        keep_subscription: KEEP MEMBERSHIP
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
         card_no: "Card No.:"
         confirm_deletion: "If you cancel your subscription, you may continue to use LearnSignal until your current billing period expires. After that, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
         confirm_immediate_deletion: "Cancel Your Membership? Cancellation will be effective at the end of your current billing period on "
-        confirm_cancellation_modal: "Cancellation will be effective at the end of your current billing period on "
+        confirm_cancellation_modal: "Cancellation will be effective at the end of your current billing period"
         no_upgrade_options_available: "You are on the best Subscription Plan we offer."
         reactivate_subscription:
           h3: Reactivate Your Account

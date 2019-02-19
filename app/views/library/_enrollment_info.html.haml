@@ -16,10 +16,13 @@
             .progress
               .progress-bar.cyanbar{'role'=>'progressbar', 'aria-valuenow'=> "#{complete_percent}", 'aria-minvalue'=>'0', 'aria-maxvalue'=>'100', 'style'=>"width: #{complete_percent}% ;" }
 
-        .col-sm-4.col-xs-12
+        -# Commented this out because next_element is causing issues with finding a CM/CME since they've been deactivated
+        -# Will be replaced soon
+
+        -#.col-sm-4.col-xs-12
           .text-center.resume-course
             -if current_user && current_user.permission_to_see_content
-              -if @subject_course_user_log.student_exam_tracks.any?
+              -if @subject_course_user_log.student_exam_tracks.any? && @next_element
                 =link_to 'Resume', course_special_link(@next_element), class: 'btn btn-wide btn-cyan'
               -else
                 =link_to 'Resume', course_special_link(@course.first_active_cme), class: 'btn full-width btn-cyan resume'

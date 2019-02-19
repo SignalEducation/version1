@@ -1,4 +1,4 @@
-class ReorganiseInvoices < ActiveRecord::Migration
+class ReorganiseInvoices < ActiveRecord::Migration[4.2]
   def change
     add_column :invoices, :issued_at, :datetime, index: true
     remove_column :invoices, :unit_price_ex_vat, :decimal

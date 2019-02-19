@@ -1,0 +1,33 @@
+-subscription_plans.each do |plan|
+  .form-group
+    .custom-control.custom-radio
+      %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
+      %label.custom-control-label{:for => plan.interval_name.downcase}
+        %span.custom-label-info
+          %span.h3.m-0
+            %span
+              =plan.interval_name
+          - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
+            %span.discount
+              %span.text-with-bg.bg-torquoise4
+                ="#{plan.monthly_percentage_off}%"
+              off monthly price
+        %span.custom-label-amount
+          %span.text-purple5.text-xl
+            =plan.currency.format_number(plan.price)
+          %span.p
+            ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+        %span.custom-check
+          / custom checkbox
+
+#info-text
+  - if @yearly_subscription_plan && @yearly_subscription_plan.previous_plan_price.present? && @yearly_subscription_plan.previous_plan_price > 0
+    %p.mb-2
+      %span
+        Note:
+      ='Currently we are offering a discount of 25% off the Annual Plan. Original Price '
+      %span
+        €334.99
+
+  %p.mb-2
+    Sort your ACCA Tuition for 2019.  Save money, pass quicker and embrace your future

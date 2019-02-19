@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
 
-  skip_after_filter :intercom_rails_auto_include, only: :show_constructed_response
+  skip_after_action :intercom_rails_auto_include, only: :show_constructed_response
   before_action :logged_in_required
   before_action :check_permission, only: [:show, :show_constructed_response]
 

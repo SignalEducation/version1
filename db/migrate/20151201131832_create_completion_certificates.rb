@@ -1,4 +1,4 @@
-class CreateCompletionCertificates < ActiveRecord::Migration
+class CreateCompletionCertificates < ActiveRecord::Migration[4.2]
   def change
     create_table :completion_certificates do |t|
       t.integer :user_id, index: true

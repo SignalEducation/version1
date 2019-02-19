@@ -11,11 +11,7 @@
 #
 
 class VatRate < ActiveRecord::Base
-
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :vat_code_id, :percentage_rate, :effective_from
 
   # Constants
 

@@ -1,4 +1,4 @@
-class CountFiledsToStudentExamTrackAndSubjectCourseUserLog < ActiveRecord::Migration
+class CountFiledsToStudentExamTrackAndSubjectCourseUserLog < ActiveRecord::Migration[4.2]
   def change
     add_column :student_exam_tracks, :count_of_quizzes_taken, :integer
     add_column :student_exam_tracks, :count_of_videos_taken, :integer

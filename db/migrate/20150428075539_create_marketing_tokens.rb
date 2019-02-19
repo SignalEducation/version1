@@ -1,4 +1,4 @@
-class CreateMarketingTokens < ActiveRecord::Migration
+class CreateMarketingTokens < ActiveRecord::Migration[4.2]
   def up
     create_table :marketing_tokens do |t|
       t.string :code
@@ -10,16 +10,6 @@ class CreateMarketingTokens < ActiveRecord::Migration
       t.timestamps
     end
 
-    unless Rails.env.test?
-      MarketingToken.new(code: "seo", marketing_category_id: MarketingCategory.first.id).tap do |seo|
-        seo.is_seo = true
-        seo.save
-      end
-      MarketingToken.create(code: "direct", marketing_category_id: MarketingCategory.first.id).tap do |direct|
-        direct.is_direct = true
-        direct.save
-      end
-    end
   end
 
   def down

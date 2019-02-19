@@ -80,11 +80,11 @@ module ApplicationHelper
     date.utc.strftime('%d %b')
   end
 
-  def humanize_stripe_date(date)  # Used in the library UI
+  def humanize_stripe_date(date = 1.month.from_now)  # Used in the library UI
     date.strftime('%d %b %y')
   end
 
-  def humanize_stripe_date_full(date)  # Used in the library UI
+  def humanize_stripe_date_full(date = 1.month.from_now)  # Used in the library UI
     date.strftime('%d %B %Y')
   end
 

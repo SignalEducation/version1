@@ -17,11 +17,6 @@
 #
 
 class BlogPost < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :home_page_id, :sorting_order, :title, :description, :url,
-                  :_destroy, :image
-
   # Constants
 
   # relationships

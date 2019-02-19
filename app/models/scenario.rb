@@ -12,11 +12,6 @@
 #
 
 class Scenario < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :constructed_response_id, :sorting_order, :text_content,
-                  :scenario_questions_attributes
-
   # Constants
 
   # relationships

@@ -20,10 +20,6 @@ class QuizAttempt < ActiveRecord::Base
 
   serialize :answer_array #, Array - seems to break in Rails 4.2.1
 
-  # attr-accessible
-  attr_accessible :user_id, :quiz_question_id, :quiz_answer_id, :correct,
-                  :course_module_element_user_log_id, :answer_array
-
   # Constants
 
   # relationships

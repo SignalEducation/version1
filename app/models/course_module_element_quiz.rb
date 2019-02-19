@@ -16,15 +16,11 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :course_module_element_id, :number_of_questions,
-                  :quiz_questions_attributes, :question_selection_strategy
-
   # Constants
   STRATEGIES = %w(random ordered)
 
   # relationships
-  belongs_to :course_module_element
+  belongs_to :course_module_element, optional: true
   has_many :quiz_questions
 
   accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }

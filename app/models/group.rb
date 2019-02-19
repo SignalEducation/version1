@@ -26,10 +26,6 @@ class Group < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :description,
-                  :image, :background_image
-
   # Constants
 
   # relationships

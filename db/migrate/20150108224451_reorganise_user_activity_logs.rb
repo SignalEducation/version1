@@ -1,4 +1,4 @@
-class ReorganiseUserActivityLogs < ActiveRecord::Migration
+class ReorganiseUserActivityLogs < ActiveRecord::Migration[4.2]
   def change
     add_column :user_activity_logs, :browser, :string, index: true
     add_column :user_activity_logs, :operating_system, :string, index: true

@@ -1,4 +1,4 @@
-class AddNumberOfQuestionsToQuestionBanks < ActiveRecord::Migration
+class AddNumberOfQuestionsToQuestionBanks < ActiveRecord::Migration[4.2]
   def change
     add_column :question_banks, :number_of_questions, :integer
 

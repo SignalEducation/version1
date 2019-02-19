@@ -1,4 +1,4 @@
-class CreateExternalBanners < ActiveRecord::Migration
+class CreateExternalBanners < ActiveRecord::Migration[4.2]
   def change
     create_table :external_banners do |t|
       t.string :name, index: true

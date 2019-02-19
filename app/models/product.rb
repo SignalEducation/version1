@@ -15,16 +15,14 @@
 #  stripe_sku_guid   :string
 #  subject_course_id :integer
 #  sorting_order     :integer
+#  product_type      :integer          default(0)
 #
 
 class Product < ActiveRecord::Base
 
   include ActionView::Helpers::NumberHelper
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :name, :active, :mock_exam_id, :currency_id, :price, :stripe_sku_guid,
-                  :live_mode, :stripe_guid, :sorting_order
+  enum product_type: { mock_exam: 0, correction_pack: 1 }
 
   # Constants
 

@@ -17,6 +17,10 @@
 #  name                          :string
 #  subscription_plan_category_id :integer
 #  livemode                      :boolean          default(FALSE)
+#  paypal_guid                   :string
+#  paypal_state                  :string
+#  monthly_percentage_off        :integer
+#  previous_plan_price           :float
 #
 
 class SubscriptionPlansController < ApplicationController
@@ -104,11 +108,11 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def create_params
-    params.require(:subscription_plan).permit(:available_to_students, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name, :subscription_plan_category_id)
+    params.require(:subscription_plan).permit(:available_to_students, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name, :subscription_plan_category_id, :monthly_percentage_off, :previous_plan_price)
   end
 
   def update_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat)
+    params.require(:subscription_plan).permit(:available_to_students, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat, :monthly_percentage_off, :previous_plan_price)
   end
 
 end

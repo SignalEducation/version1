@@ -1,4 +1,4 @@
-class AddBooleansToCourseModules < ActiveRecord::Migration
+class AddBooleansToCourseModules < ActiveRecord::Migration[4.2]
   def change
     add_column :course_modules, :tuition, :boolean, default: false, index: true
     add_column :course_modules, :test, :boolean, default: false, index: true

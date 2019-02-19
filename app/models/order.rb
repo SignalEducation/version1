@@ -9,7 +9,7 @@
 #  stripe_guid               :string
 #  stripe_customer_id        :string
 #  live_mode                 :boolean          default(FALSE)
-#  current_status            :string
+#  stripe_status             :string
 #  coupon_code               :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
@@ -17,15 +17,16 @@
 #  mock_exam_id              :integer
 #  terms_and_conditions      :boolean          default(FALSE)
 #  reference_guid            :string
+#  paypal_guid               :string
+#  paypal_status             :string
+#  state                     :string
 #
 
 class Order < ActiveRecord::Base
 
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
-
-  # attr-accessible
-  attr_accessible :product_id, :subject_course_id, :user_id, :stripe_guid, :stripe_customer_id, :live_mode, :current_status, :stripe_order_payment_data, :stripe_token, :stripe_order_payment_data, :mock_exam_id, :terms_and_conditions, :reference_guid
+  attr_accessor :use_paypal, :paypal_approval_url
 
   # Constants
   ORDER_STATUS = %w(created paid canceled)
@@ -38,18 +39,13 @@ class Order < ActiveRecord::Base
   has_one :order_transaction
 
   # validation
-  validates :product_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :stripe_guid, presence: true
-  validates :reference_guid, presence: true,
-            uniqueness: true
+  validates :product, :user, presence: true
+  validates :reference_guid, uniqueness: true, allow_blank: true
   validates :terms_and_conditions, presence: true
-  validates :stripe_customer_id, presence: true
-  validates :current_status, presence: true
+  validates :stripe_status, :stripe_guid, :stripe_customer_id, presence: true, if: :stripe?
 
   # callbacks
+  before_create :assign_random_guid
   before_destroy :check_dependencies
   after_create :create_order_transaction
 
@@ -59,11 +55,34 @@ class Order < ActiveRecord::Base
   scope :all_for_product, lambda { |product_id| where(product_id: product_id) }
   scope :all_for_user, lambda { |user_id| where(user_id: user_id) }
 
-  # class methods
+  # INSTANCE METHODS ===========================================================
 
-  # instance methods
+  # STATE MACHINE ==============================================================
+
+  state_machine initial: :pending do
+    event :complete do
+      transition [:pending, :errored] => :completed
+    end
+
+    event :record_error do
+      transition pending: :errored
+    end
+
+    after_transition all => :completed do |order, _transition|
+      order.execute_order_completion
+    end
+  end
+
+  # CLASS METHODS ==============================================================
+
+  # INSTANCE METHODS ===========================================================
+
   def destroyable?
     false
+  end
+
+  def execute_order_completion
+    MandrillWorker.perform_async(self.user_id, 'send_mock_exam_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
   end
 
   def mock_exam
@@ -82,6 +101,10 @@ class Order < ActiveRecord::Base
 
   protected
 
+  def assign_random_guid
+    self.reference_guid = "Order_#{ApplicationController.generate_random_number(10)}"
+  end
+
   def check_dependencies
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
@@ -91,5 +114,9 @@ class Order < ActiveRecord::Base
 
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
+  end
+
+  def stripe?
+    stripe_token.present? || stripe_guid.present?
   end
 end

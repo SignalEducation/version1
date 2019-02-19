@@ -23,14 +23,7 @@
 
 #This should have been called CourseModuleUserLog
 class StudentExamTrack < ActiveRecord::Base
-
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :user_id, :latest_course_module_element_id,
-                  :session_guid, :course_module_id, :percentage_complete,
-                  :count_of_cmes_completed, :subject_course_id,
-                  :subject_course_user_log_id
 
   # Constants
 
@@ -40,7 +33,7 @@ class StudentExamTrack < ActiveRecord::Base
   belongs_to :subject_course_user_log
   belongs_to :course_module
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :latest_course_module_element_id
+             foreign_key: :latest_course_module_element_id, optional: true
   has_many :course_module_element_user_logs
 
   # validation

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   namespace :api do
     post 'stripe_v01', to: 'stripe_v01#create'
     post 'stripe_v02', to: 'stripe_v02#create'
+    post 'paypal_webhooks', to: 'paypal_webhooks#create'
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -29,7 +30,6 @@ Rails.application.routes.draw do
 
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
-
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
@@ -152,7 +152,11 @@ Rails.application.routes.draw do
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
     resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
-    resources :orders, except: [:new]
+    resources :orders, except: [:new] do
+      member do
+        get 'execute'
+      end
+    end
     get 'order/new/:product_id', to: 'orders#new', as: :new_order
     get 'order/order_complete/:reference_guid', to: 'orders#order_complete', as: :order_complete
     resources :products, concerns: :supports_reordering
@@ -178,7 +182,17 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
-    resources :subscriptions, only: [:update, :destroy]
+    resources :subscriptions, only: [:new, :create, :update, :destroy] do
+      member do
+        get 'execute'
+        get 'unapproved'
+      end
+    end
+    namespace :subscriptions do
+      resources :suspensions, only: [:create, :destroy]
+      resources :cancellations, only: :create
+    end
+
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
     resources :subscription_plans
     resources :subscription_plan_categories
@@ -214,7 +228,7 @@ Rails.application.routes.draw do
 
     resources :white_papers, concerns: :supports_reordering
     get 'mock_exams', to: 'footer_pages#media_library', as: :media_library
-    get 'media_library', to: 'footer_pages#media_library'
+    get 'prep_products', to: 'footer_pages#media_library', as: :prep_products
     get 'white_paper/:white_paper_name_url', to: 'footer_pages#white_paper_request', as: :public_white_paper
     resources :white_paper_requests
     post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper

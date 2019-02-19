@@ -14,9 +14,6 @@
 
 class WhitePaperRequest < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :email, :number, :company_name, :white_paper_id
-
   # Constants
 
   # relationships

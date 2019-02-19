@@ -17,7 +17,7 @@
 //= require jquery-ui
 //= require jquery.remotipart
 //= require jquery-sortable
-//= require Chart
+//= require Chart.min
 //= require bootstrap-sprockets
 //= require zeroclipboard
 //= require moment
