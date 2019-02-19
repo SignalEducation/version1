@@ -21,7 +21,7 @@ class BlogPost < ActiveRecord::Base
 
   # relationships
   belongs_to :home_page
-  has_attached_file :image, default_url: 'images/MissingImage.jpg'
+  has_attached_file :image, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :home_page_id, presence: true,

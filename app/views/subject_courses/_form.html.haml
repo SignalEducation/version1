@@ -81,7 +81,7 @@
           .col-sm-6
             .image-label
               Background Image
-            -if @subject_course.background_image.url
+            -if @subject_course.background_image.present?
               =image_tag @subject_course.background_image.url, class: 'md-image'
             %br/
             =f.file_field :background_image

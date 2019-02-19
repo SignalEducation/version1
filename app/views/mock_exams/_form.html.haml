@@ -11,7 +11,7 @@
         =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
     .col-md-6
-      -if f.object.file_file_name
+      -if f.object.present?
         =f.label :file, t('views.mock_exams.form.file'), class: 'control-label'
         .form-control-static
           =link_to f.object.file_file_name, f.object.file.url, target: '_blank'

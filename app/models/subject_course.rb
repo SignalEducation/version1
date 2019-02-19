@@ -62,7 +62,7 @@ class SubjectCourse < ActiveRecord::Base
   has_many :white_papers
   has_many :mock_exams
   has_many :exam_sittings
-  has_attached_file :background_image, default_url: 'images/MissingImage.jpg'
+  has_attached_file :background_image, default_url: 'images/missing_image.jpg'
 
 
   # validation

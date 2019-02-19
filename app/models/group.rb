@@ -31,8 +31,8 @@ class Group < ActiveRecord::Base
   # relationships
   has_many :subject_courses
   has_many :home_pages
-  has_attached_file :image, default_url: 'images/MissingImage.jpg'
-  has_attached_file :background_image, default_url: 'images/MissingImage.jpg'
+  has_attached_file :image, default_url: 'images/missing_image.jpg'
+  has_attached_file :background_image, default_url: 'images/missing_image.jpg'
 
 
   # validation
