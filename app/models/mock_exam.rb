@@ -32,7 +32,7 @@ class MockExam < ActiveRecord::Base
   has_many :products
   has_many :orders
 
-  has_attached_file :file, default_url: 'images/MissingImage.jpg'
+  has_attached_file :file, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :name, presence: true
