@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = %w(created user_group name email)
 
   # relationships
-  belongs_to :country
+  belongs_to :country, optional: true
   has_many :course_module_element_user_logs
   has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
            class_name: 'CourseModuleElementUserLog'
