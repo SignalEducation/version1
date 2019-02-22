@@ -34,7 +34,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # relationships
   belongs_to :subject_course_user_log, optional: true
-  belongs_to :student_exam_track
+  belongs_to :student_exam_track, optional: true
   belongs_to :subject_course, optional: true
   belongs_to :course_module, optional: true
   belongs_to :course_module_element
