@@ -787,7 +787,7 @@ class User < ActiveRecord::Base
 
   def update_stripe_customer
     unless Rails.env.test?
-      if self.stripe_account_balance_changed? || self.email_changed?
+      if self.saved_change_to_stripe_account_balance? || self.saved_change_to_email?
         Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
         stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
         stripe_customer.email = self.email
