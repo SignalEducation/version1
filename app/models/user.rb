@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = %w(created user_group name email)
 
   # relationships
-  belongs_to :country
+  belongs_to :country, optional: true
   has_many :course_module_element_user_logs
   has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
            class_name: 'CourseModuleElementUserLog'
@@ -787,7 +787,7 @@ class User < ActiveRecord::Base
 
   def update_stripe_customer
     unless Rails.env.test?
-      if self.stripe_account_balance_changed? || self.email_changed?
+      if self.saved_change_to_stripe_account_balance? || self.saved_change_to_email?
         Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
         stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
         stripe_customer.email = self.email
