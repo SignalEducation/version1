@@ -29,7 +29,7 @@ FactoryBot.define do
     sequence(:name_url)         { |n| "course-module-element-#{n}" }
     description                 { 'Lorem ipsum' }
     estimated_time_in_seconds   { 1 }
-    course_module_id            { 1 }
+    course_module
     sorting_order               { 1 }
     active                      { true }
     seo_description             { 'Lorem Ipsum' }
