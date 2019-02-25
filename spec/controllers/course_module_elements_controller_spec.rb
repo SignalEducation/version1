@@ -29,9 +29,9 @@ require 'support/vimeo_web_mock_helpers'
 
 describe CourseModuleElementsController, type: :controller do
 
-  let!(:group_1) { FactoryBot.create(:group) }
-  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course, group_id: 1, exam_body_id: 1) }
-  let!(:subject_course_2)  { FactoryBot.create(:active_subject_course, group_id: 1, computer_based: true, exam_body_id: 1) }
+  # let!(:group_1) { FactoryBot.create(:group) }
+  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course) }
+  let!(:subject_course_2)  { FactoryBot.create(:active_subject_course, group: subject_course_1.group, computer_based: true, exam_body: subject_course_1.exam_body) }
   include_context 'course_content'
   let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
   let(:content_management_user) { FactoryBot.create(:content_management_user,

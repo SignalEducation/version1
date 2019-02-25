@@ -16,5 +16,4 @@ FactoryBot.define do
     sequence(:name)           { |n| "ACCA #{n}" }
     url { 'accaglobal.com/ie/en.html' }
   end
-
 end
