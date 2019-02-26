@@ -47,10 +47,11 @@ describe SubjectCoursesController, type: :controller do
   let!(:content_management_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_management_user.id) }
   let!(:group_1) { FactoryBot.create(:group) }
   let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group_1.id) }
+                                               group: group_1) }
   let!(:subject_course_2)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group_1.id,
+                                               group: group_1,
                                                computer_based: true) }
+  let(:exam_body) { create(:exam_body) }
 
   let!(:subject_course_5) { FactoryBot.create(:inactive_subject_course) }
   let!(:valid_params) { FactoryBot.attributes_for(:subject_course) }
@@ -104,7 +105,7 @@ describe SubjectCoursesController, type: :controller do
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, params: { subject_course: valid_params }
+        post :create, params: { subject_course: valid_params.merge(group_id: group_1.id, exam_body_id: exam_body.id) }
         expect_create_success_with_model('subject_course', subject_courses_url)
       end
 
