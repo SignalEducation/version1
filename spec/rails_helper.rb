@@ -109,8 +109,6 @@ RSpec.configure do |config|
   config.formatter = :documentation
 end
 
-# FactoryBot.register_strategy(:attributes_with_foreign_keys_for, FactoryBot::Syntax::Methods)
-
 # see https://github.com/rspec/rspec-rails/issues/255
 # and https://github.com/dp90219/jianshu-patients/commit/4148918912f11bf7c2bc1f858f07ba1e20e3b247
 
