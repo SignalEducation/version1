@@ -4,6 +4,11 @@ require 'support/stripe_web_mock_helpers'
 
 describe Api::StripeV02Controller, type: :controller do
 
+  before :each do
+    allow_any_instance_of(StripeService).to receive(:create_plan)
+    allow_any_instance_of(PaypalService).to receive(:create_plan)
+  end
+
   let!(:gbp) { create(:gbp) }
   let!(:uk) { create(:uk, currency_id: gbp.id) }
   let!(:uk_vat_code) { create(:vat_code, country_id: uk.id) }
