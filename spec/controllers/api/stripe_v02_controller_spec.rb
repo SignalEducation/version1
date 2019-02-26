@@ -35,7 +35,7 @@ describe Api::StripeV02Controller, type: :controller do
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
   let!(:invoice) { create(:invoice, user: valid_subscription_student,
-                                     subscription: valid_subscription, total: 99 ,
+                                     subscription: valid_subscription, total: 99,
                                      currency_id: gbp, stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo') }
   let!(:charge) { create(:charge, user: valid_subscription_student,
                                     subscription: valid_subscription, invoice: invoice,
