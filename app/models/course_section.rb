@@ -30,12 +30,10 @@ class CourseSection < ActiveRecord::Base
   has_many :course_modules
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
-  has_many :course_module_elements
   accepts_nested_attributes_for :course_modules
 
   # validation
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :subject_course_id, presence: true
   validates :name, presence: true
   validates :name_url, presence: true, uniqueness: { scope: :subject_course,
                                  message: "must be unique within a course" }

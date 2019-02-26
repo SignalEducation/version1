@@ -36,7 +36,7 @@
                     =render partial: 'multi_plans', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
 
               .col-lg-6
-                %fieldset.card
+                %fieldset.card.card-payments
                   %p.h2.mb-1 Choose a way to pay
                   %p.mb-4 Choose your preferred method of payment
                   .form-group.form-group-expandable
@@ -61,6 +61,8 @@
                         %span.custom-check
                           / custom checkbox
                     =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
+
+
 
         .bg-white
           .container

@@ -228,12 +228,13 @@ h1, .h1 {
   color: #434a6e;
 }
 h2, .h2 {
-  font-weight: normal;
-  color: $colour-7;
+  font-weight: 500;
+  color: #434a6e;
   line-height: 1.2;
-  font-size: 2.6rem;
+  font-size: 1.7rem;
   @include breakpoint(md-min) {
-    font-size: 3.0rem;  }
+    font-size: 1.875rem;
+  }
   &.upcase {
     text-transform: uppercase;
   }
@@ -970,6 +971,17 @@ a.card {
 
     }
   }
+  &.card-payments {
+    text-align: left;
+    margin-top: $gutter;
+    & .card-inner {
+      padding: $gutter;
+      position: relative;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+    }
+  }
 }
 .card-title {
   //white-space: nowrap;
@@ -1651,7 +1663,7 @@ a.box-item {
 }
 .panel > .list-group .list-group-item {
   //border-color: $colour-3;
-  background-color: darken($white, 5);
+  //background-color: darken($white, 5);
   border-top-width: 2px;
 }
 .list-group-item:first-child {
@@ -2390,7 +2402,7 @@ input[type="radio"] {
 
 #enrollment_form .check { display: block; cursor: pointer; overflow: hidden; margin: 0 0 3em 0; }
 #enrollment_form .check input { position: absolute; opacity: 0; left: -30px; top: -30px; }
-#enrollment_form .check input + span { display: inline-block; background: #fff; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
+#enrollment_form .check input + span { display: inline-block; background: #F4F6FA; line-height: 1.666em; width: 1.666em; border-radius: 3px; text-align: center; color: #EF5153; margin-right: 0.3em; }
 #enrollment_form .check input + span .fa { opacity: 0; }
 #enrollment_form .check input:checked + span .fa { opacity: 1; }
 

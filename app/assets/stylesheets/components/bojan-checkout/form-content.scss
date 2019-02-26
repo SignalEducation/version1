@@ -1,91 +1,108 @@
-.card {
-  .btn {
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    border: 2px solid transparent;
-    padding: .525rem .75rem;
-    font-size: 1.3rem;
-    line-height: 1.5;
-    border-radius: 4px;
-    -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    -o-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
-    &:focus, &:hover {
-      text-decoration: none;
-    }
-    &.disabled, &:disabled {
-      opacity: .65
-    }
-    &.focus, &:focus {
-      outline: 0;
-      -webkit-box-shadow: 0 0 0 .2rem rgba(127,133,153,.25);
-      box-shadow: 0 0 0 .2rem rgba(127,133,153,.25)
-    }
-    &:not(:disabled):not(.disabled) {
-      cursor: pointer
-    }
-    &.btn-link {
-      font-weight: 400;
-      color: #3D3D5B !important;
-      background-color: transparent;
-      padding: 0;
-      padding-right: 28px;
-    }
-    &.btn-link:hover {
-      color: #5a6071;
-      // text-decoration: underline;
-      background-color: transparent;
-      border-color: transparent
-    }
-    &.btn-link.focus,
-    &.btn-link:focus {
-      // text-decoration: underline;
-      border-color: transparent;
-      -webkit-box-shadow: none;
-      box-shadow: none
-    }
-    &.btn-link.disabled,
-    &.btn-link:disabled {
-      color: #6c757d;
-      pointer-events: none
-    }
-    &.with-arrow {
-      position: relative;
+#upgrade-subscription {
+  .card {
+    position: relative;
+    padding: 1rem;
+    border: 0 none;
+    -webkit-box-shadow: 0 0 19px #d5dbe5;
+    box-shadow: 0 0 19px #d5dbe5;
+    -webkit-transition: all .15s ease-in 0s;
+    -o-transition: all .15s ease-in 0s;
+    transition: all .15s ease-in 0s;
+
+    .btn {
+      display: inline-block;
       font-weight: 500;
-      &::after {
-        position: absolute;
-        right: 0;
-        top: -8px;
-        content: '\e5c8';
-        font-family: 'Material Icons';
-        font-size: 24px;
-        -webkit-transition: all .2s ease-in 0s;
-        -o-transition: all .2s ease-in 0s;
-        transition: all .2s ease-in 0s;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      border: 2px solid transparent;
+      padding: .525rem .75rem;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-radius: 4px;
+      -webkit-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+      transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+      -o-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+      &:focus, &:hover {
+        text-decoration: none;
+      }
+      &.disabled, &:disabled {
+        opacity: .65
+      }
+      &.focus, &:focus {
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 .2rem rgba(127,133,153,.25);
+        box-shadow: 0 0 0 .2rem rgba(127,133,153,.25)
+      }
+      &:not(:disabled):not(.disabled) {
+        cursor: pointer
+      }
+      &.btn-link {
+        font-weight: 400;
+        color: #3D3D5B !important;
+        background-color: transparent;
+        padding: 0;
+        padding-right: 28px;
+      }
+      &.btn-link:hover {
+        color: #5a6071;
+        // text-decoration: underline;
+        background-color: transparent;
+        border-color: transparent
+      }
+      &.btn-link.focus,
+      &.btn-link:focus {
+        // text-decoration: underline;
+        border-color: transparent;
+        -webkit-box-shadow: none;
+        box-shadow: none
+      }
+      &.btn-link.disabled,
+      &.btn-link:disabled {
+        color: #6c757d;
+        pointer-events: none
+      }
+      &.with-arrow {
+        position: relative;
+        font-weight: 500;
+        &::after {
+          position: absolute;
+          right: 0;
+          top: -8px;
+          content: '\e5c8';
+          font-family: 'Material Icons';
+          font-size: 24px;
+          -webkit-transition: all .2s ease-in 0s;
+          -o-transition: all .2s ease-in 0s;
+          transition: all .2s ease-in 0s;
+        }
       }
     }
-  }
-  &.card-link{
-    &:hover {
-      text-decoration: none;
-      .btn-link {
-        color: #05a4af !important;
-        &::after {
+    &.card-link{
+      &:hover {
+        text-decoration: none;
+        .btn-link {
           color: #05a4af !important;
-          right: -.3rem;
+          &::after {
+            color: #05a4af !important;
+            right: -.3rem;
+          }
         }
       }
     }
   }
+  @media (min-width:576px) {
+    .card {
+      padding: 1.75rem 1.9rem 2rem 1.9rem
+    }
+  }
+
 }
 
 #upgrade-subscription, #product_purchase {
@@ -95,7 +112,8 @@
     color: #424366;
   }
   .h2 {
-    font-weight: 700;
+    font-weight: 500;
+    font-size: 1.875rem;
   }
   h4 {
     font-weight: 500;
@@ -118,7 +136,7 @@
     font-family: 'Rubik',sans-serif;
     &:not(:disabled):not(.disabled) {
       margin-left: 2px;
-      padding: 0;
+      padding: .525rem .75rem;
       cursor: pointer;
     }
     &.btn-text{

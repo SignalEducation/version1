@@ -135,10 +135,10 @@
           .btn.btn-secondary.full-width.l-margin-bottom
             =t('views.users.show.change_subscription_plan')
 
-      %a{data: {remodal: {target: 'confirm-pause-modal'}}, class: 'btn btn-orange full-width l-margin-bottom confirm-pause-modal'}
+      %a{data: {target: '#confirm-pause-modal', toggle: 'modal'}, href: '#', class: 'btn btn-orange full-width l-margin-bottom confirm-pause-modal'}
         =t('views.users.show.pause_your_subscription_plan')
 
-      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
+      %a{data: {target: '#confirm-cancellation-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
     -elsif @current_subscription.paused?
@@ -160,7 +160,7 @@
 
 
     -elsif @current_subscription.past_due_status?
-      %a{data: {remodal: {target: 'confirm-cancellation-modal'}}, class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
+      %a{data: {target: '#confirm-cancellation-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
 
 

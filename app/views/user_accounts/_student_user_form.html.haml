@@ -1,59 +1,57 @@
-.remodal{"data-remodal-id" => "personal-details-modal"}
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
-        %h2
+.modal.fade{id: 'personal-details-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'personalDetailsModal', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3{id: 'personalDetailsModal'}
           =t('views.user_accounts.student_user_form.heading')
+
+
+      .modal-body
         =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
 
-  .row.l-margin-top
-    .col-sm-12.l-margin-top.text-left
-      #student_details_modal
-        =form_for(@user, url: update_personal_details_url, html: {class: 'form-horizontal', role: 'form', id: 'personal-details-form'}, name: 'personal_details_form') do |f|
-          .col-md-12
-            .col-md-6
-              =f.label :first_name, t('views.user_accounts.student_user_form.first_name'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.text_field :first_name, class: 'form-control', style: 'border-radius: 6px;'
-              %br/
-              =f.label :last_name, t('views.user_accounts.student_user_form.last_name'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.text_field :last_name, class: 'form-control', style: 'border-radius: 6px;'
-              %br/
-
-            .col-md-6
-              =f.label :email, t('views.user_accounts.student_user_form.email'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.text_field :email, class: 'form-control', style: 'border-radius: 6px;'
-              %br/
-              =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth'), class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.date_field :date_of_birth, class: 'form-control', style: 'border-radius: 6px;'
-              %br/
-
-          .col-md-12
-            =f.fields_for :exam_body_user_details do |detail|
-              =detail.hidden_field :exam_body_id
+        #student_details_modal
+          =form_for(@user, url: update_personal_details_url, html: {class: 'form py-2', role: 'form', id: 'personal-details-form'}, name: 'personal_details_form') do |f|
+            .row
               .col-md-6
-                =detail.label :student_number, "#{detail.object.exam_body.name} Student Number", class: 'control-label'
+                =f.label :first_name, t('views.user_accounts.student_user_form.first_name'), class: 'control-label'
                 .input-group.input-group-lg.full-width
-                  =detail.text_field :student_number, class: 'form-control', style: 'border-radius: 6px;'
+                  =f.text_field :first_name, class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                =f.label :last_name, t('views.user_accounts.student_user_form.last_name'), class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.text_field :last_name, class: 'form-control', style: 'border-radius: 6px;'
                 %br/
 
+              .col-md-6
+                =f.label :email, t('views.user_accounts.student_user_form.email'), class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.text_field :email, class: 'form-control', style: 'border-radius: 6px;'
+                %br/
+                =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth'), class: 'control-label'
+                .input-group.input-group-lg.full-width
+                  =f.date_field :date_of_birth, class: 'form-control', style: 'border-radius: 6px;'
+                %br/
 
-          .col-sm-12.l-margin-top
-            .col-md-12
-              =f.submit t('views.general.actual_submit'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+              =f.fields_for :exam_body_user_details do |detail|
+                =detail.hidden_field :exam_body_id
+                .col-md-6
+                  =detail.label :student_number, "#{detail.object.exam_body.name} Student Number", class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =detail.text_field :student_number, class: 'form-control', style: 'border-radius: 6px;'
+
+            .row.l-margin-top
+              .col-md-12
+                =f.submit t('views.general.actual_submit'), class: 'btn btn-primary l-margin-right-big l-padding-side-3x'
 
 
 
 
 :javascript
-
-  $(document).on('confirmation', '.remodal', function () {
-    document.forms['personal_details_form'].submit();
-  });
 
 
   $(document).ready(function() {

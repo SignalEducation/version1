@@ -27,8 +27,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
   # relationships
   belongs_to :user
   belongs_to :subject_course
-  belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :latest_course_module_element_id
   has_many :enrollments
   has_many :course_section_user_logs
   has_many :student_exam_tracks

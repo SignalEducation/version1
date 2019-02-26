@@ -40,5 +40,5 @@
   -unless current_user.canceled_member?
     #add-card.col-md-12.l-margin-top-big
 
-      %a{data: {remodal: {target: 'add-card-modal'}}, class: 'btn btn-primary add-card'}
+      %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary add-card'}
         =t('views.users.show.new_card')

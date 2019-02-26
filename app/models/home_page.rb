@@ -35,9 +35,9 @@ class HomePage < ActiveRecord::Base
   BACKGROUND_IMAGES = %w(watch_person highlighter_person lamp_person glasses_person meeting_persons)
 
   # relationships
-  belongs_to :subscription_plan_category
-  belongs_to :group
-  belongs_to :subject_course
+  belongs_to :subscription_plan_category, optional: true
+  belongs_to :group, optional: true
+  belongs_to :subject_course, optional: true
   has_many :blog_posts
   has_many :external_banners
 

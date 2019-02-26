@@ -152,7 +152,6 @@ Rails.application.routes.draw do
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
-    get 'library/:group_name_url/preview/:subject_course_name_url', to: 'library#course_preview', as: :library_preview
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements

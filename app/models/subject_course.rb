@@ -50,7 +50,6 @@ class SubjectCourse < ActiveRecord::Base
   belongs_to :exam_body
   belongs_to :group
   has_many :course_tutor_details
-  has_many :quiz_questions
   has_many :home_pages
   has_many :subject_course_resources
   has_many :orders

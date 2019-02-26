@@ -43,7 +43,7 @@ class Subscription < ActiveRecord::Base
   has_many :invoices
   has_many :invoice_line_items
   belongs_to :subscription_plan
-  belongs_to :coupon
+  belongs_to :coupon, optional: true
   has_one :student_access
   has_many :subscription_transactions
   has_many :charges

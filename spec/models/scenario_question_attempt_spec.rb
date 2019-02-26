@@ -19,16 +19,6 @@ require 'rails_helper'
 
 describe ScenarioQuestionAttempt do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  ScenarioQuestionAttempt.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   # Constants
 
   # relationships

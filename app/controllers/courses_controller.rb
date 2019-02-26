@@ -345,6 +345,7 @@ class CoursesController < ApplicationController
     @course_section = @course.course_sections.find_by(name_url: params[:course_section_name_url]) if @course
     @course_module = @course_section.course_modules.find_by(name_url: params[:course_module_name_url]) if @course_section
     @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url]) if @course_module
+    @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
 
     unless @course && @course.active && @course_section && @course_section.active && @course_module &&
         @course_module.active && @course_module_element && @course_module_element.active &&
