@@ -25,6 +25,9 @@ FactoryBot.define do
     currency_id                   { 1 }
     subscription_payment_card_id  { 1 }
     original_data                 { {some: 'value', data: 'present'} }
+    transaction_type              { 'payment' }
+    amount                        { 19.95 }
+
     factory :payment_transaction do
       transaction_type            { 'payment' }
       amount                      { 19.95 }

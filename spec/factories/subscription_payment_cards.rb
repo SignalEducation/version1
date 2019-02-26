@@ -55,5 +55,4 @@ FactoryBot.define do
     customer_guid         { 'cus_ABC123' }
     is_default_card       { true }
   end
-
 end

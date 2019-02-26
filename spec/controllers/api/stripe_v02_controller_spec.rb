@@ -7,44 +7,51 @@ describe Api::StripeV02Controller, type: :controller do
   before :each do
     allow_any_instance_of(StripeService).to receive(:create_plan)
     allow_any_instance_of(PaypalService).to receive(:create_plan)
+    allow_any_instance_of(StripeApiEvent).to receive(:get_data_from_stripe).and_return(true)
   end
 
-  let!(:gbp) { create(:gbp) }
-  let!(:uk) { create(:uk, currency_id: gbp.id) }
-  let!(:uk_vat_code) { create(:vat_code, country_id: uk.id) }
+  let!(:gbp) { create(:currency) }
+  let!(:uk) { create(:uk, currency: gbp) }
+  let!(:uk_vat_code) { create(:vat_code, country: uk) }
   let!(:subscription_plan_gbp_m) { create(:student_subscription_plan_m,
-                                                     currency_id: gbp.id, price: 7.50, stripe_guid: 'stripe_plan_guid_m') }
+                                                     currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m') }
   let!(:subscription_plan_gbp_q) { create(:student_subscription_plan_q,
-                                                     currency_id: gbp.id, price: 22.50, stripe_guid: 'stripe_plan_guid_q') }
+                                                     currency: gbp, price: 22.50, stripe_guid: 'stripe_plan_guid_q') }
   let!(:subscription_plan_gbp_y) { create(:student_subscription_plan_y,
-                                                     currency_id: gbp.id, price: 87.99, stripe_guid: 'stripe_plan_guid_y') }
+                                                     currency: gbp, price: 87.99, stripe_guid: 'stripe_plan_guid_y') }
   let!(:student_user_group ) { create(:student_user_group ) }
   let!(:valid_trial_student) { create(:valid_free_trial_student,
-                                                 user_group_id: student_user_group.id) }
+                                                 user_group: student_user_group) }
   let!(:valid_trial_student_access) { create(:valid_free_trial_student_access,
-                                                        user_id: valid_trial_student.id) }
+                                                        user: valid_trial_student) }
   let!(:valid_subscription_student) { create(:valid_subscription_student,
-                                                        user_group_id: student_user_group.id) }
+                                                        user_group: student_user_group) }
   let!(:valid_subscription_student_access) { create(:trial_student_access,
-                                                               user_id: valid_subscription_student.id) }
+                                                               user: valid_subscription_student) }
 
-  let!(:valid_subscription) { create(:valid_subscription, user_id: valid_subscription_student.id,
-                                                subscription_plan_id: subscription_plan_gbp_m.id,
+  let!(:valid_subscription) { create(:valid_subscription, user: valid_subscription_student,
+                                                subscription_plan: subscription_plan_gbp_m,
                                                 stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
-  let!(:default_card) { create(:subscription_payment_card, user_id: valid_subscription_student.id,
+  let!(:default_card) { create(:subscription_payment_card, user: valid_subscription_student,
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
-  let!(:invoice) { create(:invoice, user: valid_subscription_student,
-                                     subscription: valid_subscription, total: 99,
-                                     currency_id: gbp, stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo') }
+  let!(:invoice) {
+    create(
+      :invoice,
+      user: valid_subscription_student,
+      subscription: valid_subscription,
+      total: 99,
+      currency: gbp,
+      stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo'
+    )
+  }
+
   let!(:charge) { create(:charge, user: valid_subscription_student,
                                     subscription: valid_subscription, invoice: invoice,
                                     subscription_payment_card: default_card, currency: gbp,
                                     stripe_guid: 'ch_21334nj453h', amount: 100, status: 'succeeded') }
 
   let!(:coupon) { create(:coupon, name: '25.5% off', code: '25_5OFF', duration: 'repeating') }
-
-
 
   describe "POST 'create'" do
     describe 'preliminary functionality: ' do
@@ -55,7 +62,7 @@ describe Api::StripeV02Controller, type: :controller do
 
       it 'logs an error if invalid JSON is received' do
         expect(Rails.logger).to receive(:error)
-        post :create, event: {id: '123'}
+        post :create, params: { event: {id: '123'} }
         expect(response.status).to eq(404)
       end
     end
@@ -71,7 +78,7 @@ describe Api::StripeV02Controller, type: :controller do
           url = 'https://api.stripe.com/v1/events/evt_00000000000001'
           stub_event_get_request(url, post_request_body)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -126,7 +133,7 @@ describe Api::StripeV02Controller, type: :controller do
 
           # Add Mandrill Post Stub
           expect(valid_subscription.stripe_status).to eq('active')
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -182,7 +189,7 @@ describe Api::StripeV02Controller, type: :controller do
 
           stub_subscription_get_request(subscription_url, subscription)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -227,7 +234,7 @@ describe Api::StripeV02Controller, type: :controller do
 
           stub_subscription_get_request(subscription_url, subscription)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -267,7 +274,7 @@ describe Api::StripeV02Controller, type: :controller do
           stub_subscription_get_request(subscription_url, subscription)
 
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -315,7 +322,7 @@ describe Api::StripeV02Controller, type: :controller do
 
           stub_subscription_get_request(subscription_url, subscription)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -339,7 +346,7 @@ describe Api::StripeV02Controller, type: :controller do
         event_url = 'https://api.stripe.com/v1/events/evt_00000000000004'
         stub_event_get_request(event_url, post_request_body)
 
-        post :create, post_request_body.to_json
+        post :create, params: post_request_body.to_json
 
         expect(StripeApiEvent.count).to eq(1)
         expect(Charge.count).to eq(2)
@@ -360,7 +367,7 @@ describe Api::StripeV02Controller, type: :controller do
         event_url = 'https://api.stripe.com/v1/events/evt_00000000000005'
         stub_event_get_request(event_url, post_request_body)
 
-        post :create, post_request_body.to_json
+        post :create, params: post_request_body.to_json
 
         expect(StripeApiEvent.count).to eq(1)
         expect(Charge.count).to eq(2)
@@ -371,7 +378,6 @@ describe Api::StripeV02Controller, type: :controller do
         valid_subscription.reload
         expect(valid_subscription.stripe_status).to eq('active')
         expect(a_request(:get, event_url).with(body: nil)).to have_been_made.once
-
       end
 
       it 'charge.refunded event' do
@@ -380,7 +386,7 @@ describe Api::StripeV02Controller, type: :controller do
         event_url = 'https://api.stripe.com/v1/events/evt_00000000000006'
         stub_event_get_request(event_url, post_request_body)
 
-        post :create, post_request_body.to_json
+        post :create, params: post_request_body.to_json
 
         expect(StripeApiEvent.count).to eq(1)
         expect(Charge.count).to eq(1)
@@ -404,7 +410,7 @@ describe Api::StripeV02Controller, type: :controller do
         response_body = {"id": coupon.code, "object": "coupon", "amount_off": nil, "created": 1540202756, "currency": nil, "duration": "repeating", "duration_in_months": 3, "livemode": false, "max_redemptions": nil, "metadata": {}, "name": "25.5% off", "percent_off": 25.5, "redeem_by": nil, "times_redeemed": 0, "valid": false}
         stub_coupon_get_request(url, response_body)
 
-        post :create, post_request_body.to_json
+        post :create, params: post_request_body.to_json
 
         expect(StripeApiEvent.count).to eq(1)
         expect(Coupon.count).to eq(1)
@@ -431,7 +437,7 @@ describe Api::StripeV02Controller, type: :controller do
           url = 'https://api.stripe.com/v1/events/evt_00000000000008'
           stub_event_get_request(url, post_request_body)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -450,7 +456,7 @@ describe Api::StripeV02Controller, type: :controller do
           url = 'https://api.stripe.com/v1/events/evt_00000000000009'
           stub_event_get_request(url, post_request_body)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -462,14 +468,12 @@ describe Api::StripeV02Controller, type: :controller do
         end
 
         it 'should not process invoice.created event if subscription plan from invoice line item with given GUID does not exist' do
-
           post_request_body = {"id": "evt_00000000000010", "object": "event", "api_version": "2017-05-25", "created": 1326853478, "data": {"object": {"id": "in_1APVed2eZvKYlo2CP6dsoJTo", "object": "invoice", "amount_due": 599, "application_fee": nil, "attempt_count": 1, "attempted": true, "charge": "ch_1APVed2eZvKYlo2C1QNH6jru", "closed": true, "currency": "gbp", "customer": "cu_0000000", "date": 1496232623, "description": nil, "discount": nil, "ending_balance": 0, "forgiven": false, "lines": {"data": [{"id": valid_subscription.stripe_guid, "object": "line_item", "amount": 599, "currency": "gbp", "description": nil, "discountable": true, "livemode": true, "metadata": {}, "period": {"start": 1498824623, "end": 1501503023}, "plan": {"id": "plan_0000000", "object": "plan", "amount": 999, "created": 1496222010, "currency": "gbp", "interval": "month", "interval_count": 1, "livemode": false, "metadata": {}, "name": "sub_000000000", "statement_descriptor": nil, "trial_period_days": nil}, "proration": false, "quantity": 1, "subscription": nil, "subscription_item": "si_1APVed2eZvKYlo2C387JnMRE", "type": "subscription"}], "total_count": 1, "object": "list", "url": "/v1/invoices/in_1APVed2eZvKYlo2CP6dsoJTo/lines"}, "livemode": false, "metadata": {}, "next_payment_attempt": nil, "paid": true, "period_end": 1496232623, "period_start": 1496232623, "receipt_number": nil, "starting_balance": 0, "statement_descriptor": nil, "subscription": "sub_000000000", "subtotal": 599, "tax": nil, "tax_percent": nil, "total": 599, "webhooks_delivered_at": 1496232630}}, "livemode": false, "pending_webhooks": 1, "request": "req_Al1inviVvNH7df", "type": "invoice.created"}
-
 
           url = 'https://api.stripe.com/v1/events/evt_00000000000010'
           stub_event_get_request(url, post_request_body)
 
-          post :create, post_request_body.to_json
+          post :create, params: post_request_body.to_json
 
           expect(StripeApiEvent.count).to eq(1)
           sae = StripeApiEvent.last
@@ -477,13 +481,8 @@ describe Api::StripeV02Controller, type: :controller do
           expect(sae.error).to eq(true)
           expect(sae.error_message).to eq("Error creating invoice")
           expect(a_request(:get, url).with(body: nil)).to have_been_made.once
-
         end
-
       end
-
     end
-
   end
-
 end

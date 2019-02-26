@@ -11,8 +11,7 @@ def stub_customer_get_request(url, response_body)
               'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
               'Content-Type'=>'application/x-www-form-urlencoded',
               'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+              'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 
@@ -29,12 +28,12 @@ def stub_customer_create_request(url, request)
       with(
           body: request_body,
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: return_body, headers: {})
 end
@@ -51,13 +50,12 @@ def stub_coupon_create_request(url, request, return_body)
       with(
           body: request_body,
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: return_body, headers: {})
 
@@ -72,13 +70,12 @@ def stub_coupon_get_request(url, response_body)
   stub_request(:get, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -91,13 +88,12 @@ def stub_coupon_delete_request(url, response_body)
   stub_request(:delete, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -112,13 +108,12 @@ def stub_refund_create_request(url, request_body, response_body)
       with(
           body: request_body,
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -135,13 +130,12 @@ def stub_subscription_post_request(url, request_body, response_body)
       with(
           body: request_body,
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -155,13 +149,12 @@ def stub_subscription_get_request(url, response_body)
   stub_request(:get, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -175,13 +168,12 @@ def stub_subscription_delete_request(url, response_body)
   stub_request(:delete, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -195,13 +187,12 @@ def stub_event_get_request(url, response_body)
   stub_request(:get, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0',
           }).
       to_return(status: status, body: response_body, headers: {})
 
@@ -215,13 +206,12 @@ def stub_invoice_get_request(url, response_body)
   stub_request(:get, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0',
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -234,13 +224,12 @@ def stub_coupon_get_request(url, response_body)
   stub_request(:get, uri).
       with(
           headers: {
-              'Accept'=>'*/*',
-              'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
-              'Content-Type'=>'application/x-www-form-urlencoded',
-              'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+            'Accept'=>'*/*',
+            'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+            'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
+            'Content-Type'=>'application/x-www-form-urlencoded',
+            'Stripe-Version'=>'2017-06-05',
+            'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0',
           }).
       to_return(status: status, body: response_body, headers: {})
 end
@@ -259,8 +248,7 @@ def stub_post_cards_request(url, request_body, response_body)
               'Authorization'=>'Bearer sk_test_wEVy0Tzgi3HEzoeJk4t340vI',
               'Content-Type'=>'application/x-www-form-urlencoded',
               'Stripe-Version'=>'2017-06-05',
-              'User-Agent'=>'Stripe/v1 RubyBindings/2.8.0',
-              'X-Stripe-Client-User-Agent'=>'{"bindings_version":"2.8.0","lang":"ruby","lang_version":"2.2.9 p480 (2017-12-15)","platform":"x86_64-darwin17","engine":"ruby","publisher":"stripe","uname":"Darwin Jamess-MacBook-Pro.local 17.7.0 Darwin Kernel Version 17.7.0: Thu Jun 21 22:53:14 PDT 2018; root:xnu-4570.71.2~1/RELEASE_X86_64 x86_64","hostname":"Jamess-MacBook-Pro.local"}'
+              'User-Agent'=>'Stripe/v1 RubyBindings/4.5.0'
           }).
       to_return(status: status, body: response_body, headers: {})
 end

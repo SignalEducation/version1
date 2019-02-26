@@ -47,5 +47,4 @@ FactoryBot.define do
     total_tax { 9.99 }
     vat_rate
   end
-
 end
