@@ -49,10 +49,10 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_line_items
   has_many :charges
   has_many :refunds
-  belongs_to :subscription_transaction
+  belongs_to :subscription_transaction, optional: true
   belongs_to :subscription
   belongs_to :user
-  belongs_to :vat_rate
+  belongs_to :vat_rate, optional: true
 
   # validation
   validates :user_id, :subscription_id, :number_of_users, :currency_id, :total, presence: true
