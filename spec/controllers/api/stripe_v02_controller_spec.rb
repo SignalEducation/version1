@@ -4,40 +4,40 @@ require 'support/stripe_web_mock_helpers'
 
 describe Api::StripeV02Controller, type: :controller do
 
-  let!(:gbp) { FactoryBot.create(:gbp) }
-  let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
-  let!(:uk_vat_code) { FactoryBot.create(:vat_code, country_id: uk.id) }
-  let!(:subscription_plan_gbp_m) { FactoryBot.create(:student_subscription_plan_m,
+  let!(:gbp) { create(:gbp) }
+  let!(:uk) { create(:uk, currency_id: gbp.id) }
+  let!(:uk_vat_code) { create(:vat_code, country_id: uk.id) }
+  let!(:subscription_plan_gbp_m) { create(:student_subscription_plan_m,
                                                      currency_id: gbp.id, price: 7.50, stripe_guid: 'stripe_plan_guid_m') }
-  let!(:subscription_plan_gbp_q) { FactoryBot.create(:student_subscription_plan_q,
+  let!(:subscription_plan_gbp_q) { create(:student_subscription_plan_q,
                                                      currency_id: gbp.id, price: 22.50, stripe_guid: 'stripe_plan_guid_q') }
-  let!(:subscription_plan_gbp_y) { FactoryBot.create(:student_subscription_plan_y,
+  let!(:subscription_plan_gbp_y) { create(:student_subscription_plan_y,
                                                      currency_id: gbp.id, price: 87.99, stripe_guid: 'stripe_plan_guid_y') }
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:valid_trial_student) { FactoryBot.create(:valid_free_trial_student,
+  let!(:student_user_group ) { create(:student_user_group ) }
+  let!(:valid_trial_student) { create(:valid_free_trial_student,
                                                  user_group_id: student_user_group.id) }
-  let!(:valid_trial_student_access) { FactoryBot.create(:valid_free_trial_student_access,
+  let!(:valid_trial_student_access) { create(:valid_free_trial_student_access,
                                                         user_id: valid_trial_student.id) }
-  let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student,
+  let!(:valid_subscription_student) { create(:valid_subscription_student,
                                                         user_group_id: student_user_group.id) }
-  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access,
+  let!(:valid_subscription_student_access) { create(:trial_student_access,
                                                                user_id: valid_subscription_student.id) }
 
-  let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
+  let!(:valid_subscription) { create(:valid_subscription, user_id: valid_subscription_student.id,
                                                 subscription_plan_id: subscription_plan_gbp_m.id,
                                                 stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
-  let!(:default_card) { FactoryBot.create(:subscription_payment_card, user_id: valid_subscription_student.id,
+  let!(:default_card) { create(:subscription_payment_card, user_id: valid_subscription_student.id,
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
-  let!(:invoice) { FactoryBot.create(:invoice, user_id: valid_subscription_student.id,
+  let!(:invoice) { create(:invoice, user_id: valid_subscription_student.id,
                                      subscription_id: valid_subscription.id, total: 99 ,
                                      currency_id: gbp.id, stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo') }
-  let!(:charge) { FactoryBot.create(:charge, user_id: valid_subscription_student.id,
+  let!(:charge) { create(:charge, user_id: valid_subscription_student.id,
                                      subscription_id: valid_subscription.id, invoice_id: invoice.id,
                                     subscription_payment_card_id: default_card.id, currency_id: gbp.id,
                                     stripe_guid: 'ch_21334nj453h', amount: 100, status: 'succeeded') }
 
-  let!(:coupon) { FactoryBot.create(:coupon, name: '25.5% off', code: '25_5OFF', duration: 'repeating') }
+  let!(:coupon) { create(:coupon, name: '25.5% off', code: '25_5OFF', duration: 'repeating') }
 
 
 
