@@ -34,7 +34,7 @@
 
 FactoryBot.define do
   factory :subscription_payment_card do
-    user_id               { 1 }
+    user
     stripe_card_guid      { 'card_FACTORY-abc123' }
     status                { 'card-live' }
     brand                 { 'visa' }
@@ -43,7 +43,7 @@ FactoryBot.define do
     expiry_year           { Time.now.year + 1 }
     address_line1         { '123 Fake Street' }
     account_country       { 'Ireland' }
-    account_country_id    { 1 }
+    association :account_address_country, factory: :country
     stripe_object_name    { 'card' }
     funding               { 'credit' }
     cardholder_name       { 'Joe Cardholder' }

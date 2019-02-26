@@ -34,12 +34,12 @@ describe Api::StripeV02Controller, type: :controller do
   let!(:default_card) { create(:subscription_payment_card, user_id: valid_subscription_student.id,
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
-  let!(:invoice) { create(:invoice, user_id: valid_subscription_student.id,
-                                     subscription_id: valid_subscription.id, total: 99 ,
-                                     currency_id: gbp.id, stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo') }
-  let!(:charge) { create(:charge, user_id: valid_subscription_student.id,
-                                     subscription_id: valid_subscription.id, invoice_id: invoice.id,
-                                    subscription_payment_card_id: default_card.id, currency_id: gbp.id,
+  let!(:invoice) { create(:invoice, user: valid_subscription_student,
+                                     subscription: valid_subscription, total: 99 ,
+                                     currency_id: gbp, stripe_guid: 'in_1APVed2eZvKYlo2CP6dsoJTo') }
+  let!(:charge) { create(:charge, user: valid_subscription_student,
+                                    subscription: valid_subscription, invoice: invoice,
+                                    subscription_payment_card: default_card, currency: gbp,
                                     stripe_guid: 'ch_21334nj453h', amount: 100, status: 'succeeded') }
 
   let!(:coupon) { create(:coupon, name: '25.5% off', code: '25_5OFF', duration: 'repeating') }
