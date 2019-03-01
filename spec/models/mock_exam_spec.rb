@@ -28,8 +28,9 @@ describe MockExam do
   it { should have_many(:orders) }
 
   # validation
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  it 'is invalid without a subject_course' do
+    expect(build_stubbed(:mock_exam, subject_course: nil)).not_to be_valid
+  end
 
   it { should validate_presence_of(:name) }
 

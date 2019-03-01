@@ -21,7 +21,7 @@
 
 FactoryBot.define do
   factory :mock_exam do
-    subject_course_id { 1 }
+    subject_course
     name { "MyString" }
     sorting_order { 1 }
   end
