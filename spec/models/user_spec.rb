@@ -205,7 +205,7 @@ describe User do
   it { should respond_to(:enrollment_for_course?) }
   it { should respond_to(:enrolled_in_course?) }
 
-  it { should respond_to(:referred_user) }
+  it { should respond_to(:referred_user?) }
   it { should respond_to(:valid_order_ids) }
   it { should respond_to(:valid_orders?) }
   it { should respond_to(:purchased_products) }

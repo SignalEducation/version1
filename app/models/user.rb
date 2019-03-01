@@ -98,7 +98,7 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :student_access
 
   # validation
-  validates :email, presence: true, uniqueness: true, length: {within: 5..50}
+  validates :email, presence: true, length: {within: 5..50}, uniqueness: { case_sensitive: false }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
