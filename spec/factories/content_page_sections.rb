@@ -14,7 +14,7 @@
 
 FactoryBot.define do
   factory :content_page_section do
-    content_page_id { 1 }
+    content_page
     text_content { 'MyText' }
     panel_colour { '#fffeee' }
   end

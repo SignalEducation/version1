@@ -20,8 +20,9 @@ describe ContentPageSection do
   it { should belong_to(:content_page) }
 
   # validation
-  it { should validate_presence_of(:content_page_id) }
-  it { should validate_numericality_of(:content_page_id) }
+  it 'is invalid without a product' do
+    expect(build_stubbed(:content_page_section, content_page: nil)).not_to be_valid
+  end
 
   it { should validate_presence_of(:text_content) }
 
