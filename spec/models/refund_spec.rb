@@ -53,22 +53,27 @@ describe Refund do
 
     it { should validate_presence_of(:stripe_guid) }
 
-    it { should validate_presence_of(:charge_id) }
-    it { should validate_numericality_of(:charge_id) }
+    it 'is invalid without a charge' do
+      expect(build_stubbed(:refund, charge: nil)).not_to be_valid
+    end
 
     it { should validate_presence_of(:stripe_charge_guid) }
 
-    it { should validate_presence_of(:invoice_id) }
-    it { should validate_numericality_of(:invoice_id) }
+    it 'is invalid without an invoice' do
+      expect(build_stubbed(:refund, invoice: nil)).not_to be_valid
+    end
 
-    it { should validate_presence_of(:subscription_id) }
-    it { should validate_numericality_of(:subscription_id) }
+    it 'is invalid without a subscription' do
+      expect(build_stubbed(:refund, subscription: nil)).not_to be_valid
+    end
 
-    it { should validate_presence_of(:user_id) }
-    it { should validate_numericality_of(:user_id) }
+    it 'is invalid without a manager' do
+      expect(build_stubbed(:refund, manager: nil)).not_to be_valid
+    end
 
-    it { should validate_presence_of(:manager_id) }
-    it { should validate_numericality_of(:manager_id) }
+    it 'is invalid without a user' do
+      expect(build_stubbed(:refund, user: nil)).not_to be_valid
+    end
 
     it { should validate_presence_of(:amount) }
 
