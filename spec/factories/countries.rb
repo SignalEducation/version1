@@ -21,8 +21,7 @@ FactoryBot.define do
     country_tld               { '.com' }
     sequence(:sorting_order)  {|n| n * 10 }
     continent                 { 'Europe' }
-
-    association(:currency)
+    currency
 
     factory :eu_country do
       in_the_eu { true }
@@ -31,21 +30,21 @@ FactoryBot.define do
         name { 'Ireland' }
         iso_code { 'IE' }
         country_tld { '.ie' }
-        currency_id { 1 }
+        association :currency, factory: :euro
       end
 
       factory :uk do
         name { 'United Kingdom' }
         iso_code { 'GB' }
         country_tld { '.uk' }
-        currency_id { 2 }
+        association :currency, factory: :gbp
       end
 
       factory :fr do
         name { 'France' }
         iso_code { 'FR' }
         country_tld { '.fr' }
-        currency_id { 1 }
+        association :currency, factory: :euro
       end
     end
 
@@ -56,7 +55,7 @@ FactoryBot.define do
       factory :usa do
         name { 'United States' }
         iso_code { 'US' }
-        currency_id { 3 }
+        association :currency, factory: :usd
         continent { 'North America' }
       end
     end

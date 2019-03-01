@@ -19,11 +19,11 @@
 
 FactoryBot.define do
   factory :subscription_transaction do
-    user_id                       { 1 }
-    subscription_id               { 1 }
+    user
+    subscription
     stripe_transaction_guid       { 'tran_ABC123123123' }
-    currency_id                   { 1 }
-    subscription_payment_card_id  { 1 }
+    currency
+    subscription_payment_card
     original_data                 { {some: 'value', data: 'present'} }
     transaction_type              { 'payment' }
     amount                        { 19.95 }
@@ -45,7 +45,5 @@ FactoryBot.define do
       amount                      { 19.95 }
       alarm                       { true }
     end
-
   end
-
 end

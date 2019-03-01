@@ -18,14 +18,13 @@
 
 FactoryBot.define do
   factory :invoice_line_item do
-    invoice_id { 1 }
-amount { "9.99" }
-currency_id { 1 }
-prorated { false }
-period_start_at { "2015-02-23 15:37:14" }
-period_end_at { "2015-02-23 15:37:14" }
-subscription_id { 1 }
-subscription_plan_id { 1 }
+    invoice
+    amount { "9.99" }
+    currency
+    prorated { false }
+    period_start_at { "2015-02-23 15:37:14" }
+    period_end_at { "2015-02-23 15:37:14" }
+    subscription
+    subscription_plan
   end
-
 end
