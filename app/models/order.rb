@@ -26,7 +26,7 @@ class Order < ActiveRecord::Base
 
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
-  attr_accessor :use_paypal, :paypal_approval_url
+  attr_accessor :use_paypal, :paypal_approval_url, :stripe_token
 
   # Constants
   ORDER_STATUS = %w(created paid canceled)
@@ -34,12 +34,11 @@ class Order < ActiveRecord::Base
   # relationships
   belongs_to :product
   belongs_to :subject_course
-  belongs_to :mock_exam
+  belongs_to :mock_exam, optional: true
   belongs_to :user
   has_one :order_transaction
 
   # validation
-  validates :product, :user, presence: true
   validates :reference_guid, uniqueness: true, allow_blank: true
   validates :terms_and_conditions, presence: true
   validates :stripe_status, :stripe_guid, :stripe_customer_id, presence: true, if: :stripe?
@@ -87,16 +86,6 @@ class Order < ActiveRecord::Base
 
   def mock_exam
     self.product.mock_exam
-  end
-
-  ## setter method ##
-  def stripe_token=(t)
-    @stripe_token = t
-  end
-
-  ## getter method ##
-  def stripe_token
-    @stripe_token
   end
 
   protected
