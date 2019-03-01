@@ -18,8 +18,13 @@ require 'rails_helper'
 describe CurrenciesController, type: :controller do
 
   let(:system_requirements_user_group) { create(:system_requirements_user_group) }
-  let(:system_requirements_user) { create(:system_requirements_user,
-                                                     user_group: system_requirements_user_group) }
+  let(:system_requirements_user) { 
+    create(
+      :system_requirements_user,
+      user_group: system_requirements_user_group,
+      country: nil
+    )
+  }
   let(:system_requirements_student_access) { create(:complimentary_student_access,
                                                                 user: system_requirements_user) }
 
