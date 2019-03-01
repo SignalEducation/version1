@@ -60,8 +60,6 @@ describe Invoice do
 
   it { should validate_presence_of(:total) }
 
-  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
-
   it { should validate_length_of(:stripe_guid).is_at_most(255) }
   it { should validate_length_of(:stripe_customer_guid).is_at_most(255) }
   it { should validate_length_of(:object_type).is_at_most(255) }
@@ -83,5 +81,4 @@ describe Invoice do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:status) }
   it { should respond_to(:update_from_stripe) }
-
 end
