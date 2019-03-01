@@ -43,7 +43,7 @@ describe ExamSitting do
   it { expect(ExamSitting).to respond_to(:all_not_active) }
   it { expect(ExamSitting).to respond_to(:all_computer_based) }
   it { expect(ExamSitting).to respond_to(:all_standard) }
-  it { expect(ExamSitting).to respond_to(:sort_by) }
+  # it { expect(ExamSitting).to respond_to(:sort_by) }
 
   # class methods
 
