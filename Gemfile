@@ -33,6 +33,7 @@ gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'prawn' # PDF creator
+gem 'prawn-table', '~> 0.2.2'
 gem 'paperclip', '~> 6.1.0' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'
