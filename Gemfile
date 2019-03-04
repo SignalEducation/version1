@@ -99,7 +99,8 @@ end
 group :test do
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
-  gem "rspec_junit_formatter"
+  gem 'rspec_junit_formatter'
+  gem 'rails-controller-testing'
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
@@ -112,6 +113,7 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
+  gem 'rubocop-rspec'
 end
 
 group :staging, :production do

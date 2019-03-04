@@ -30,63 +30,85 @@ require 'rails_helper'
 require 'support/stripe_web_mock_helpers'
 
 describe SubscriptionsController, type: :controller do
+  before :each do
+    allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+  end
 
-  let!(:gbp) { FactoryBot.create(:gbp) }
-  let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
-  let!(:uk_vat_code) { FactoryBot.create(:vat_code, country_id: uk.id) }
-  let!(:subscription_plan_gbp_m) { FactoryBot.create(:student_subscription_plan_m,
-                                                     currency_id: gbp.id, price: 7.50, stripe_guid: 'stripe_plan_guid_m') }
-  let!(:subscription_plan_gbp_q) { FactoryBot.create(:student_subscription_plan_q,
-                                                     currency_id: gbp.id, price: 22.50, stripe_guid: 'stripe_plan_guid_q') }
-  let!(:subscription_plan_gbp_y) { FactoryBot.create(:student_subscription_plan_y,
-                                                     currency_id: gbp.id, price: 87.99, stripe_guid: 'stripe_plan_guid_y') }
+  let!(:gbp) { create(:gbp) }
+  let!(:uk) { create(:uk, currency: gbp) }
+  let!(:uk_vat_code) { create(:vat_code, country: uk) }
+  let!(:subscription_plan_gbp_m) { 
+    create(
+      :student_subscription_plan_m,
+      currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
+      payment_frequency_in_months: 3
+    )
+  }
+  let!(:subscription_plan_gbp_q) { 
+    create(
+      :student_subscription_plan_q,
+      currency: gbp, price: 22.50, stripe_guid: 'stripe_plan_guid_q',
+      payment_frequency_in_months: 3
+    )
+  }
+  let!(:subscription_plan_gbp_y) { 
+    create(
+      :student_subscription_plan_y,
+      currency: gbp, price: 87.99, stripe_guid: 'stripe_plan_guid_y',
+      payment_frequency_in_months: 3
+    )
+  }
 
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:valid_trial_student) { FactoryBot.create(:valid_free_trial_student,
-                                                 user_group_id: student_user_group.id) }
-  let!(:valid_trial_student_access) { FactoryBot.create(:valid_free_trial_student_access,
-                                                        user_id: valid_trial_student.id) }
-  let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student,
-                                                        user_group_id: student_user_group.id) }
-  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access,
-                                                               user_id: valid_subscription_student.id) }
+  let!(:student_user_group ) { create(:student_user_group ) }
+  let!(:valid_trial_student) { create(:valid_free_trial_student,
+                                                 user_group: student_user_group) }
+  let!(:valid_trial_student_access) { create(:valid_free_trial_student_access,
+                                                        user: valid_trial_student) }
+  let!(:valid_subscription_student) { create(:valid_subscription_student,
+                                                        user_group: student_user_group) }
+  let!(:valid_subscription_student_access) { create(:trial_student_access,
+                                                               user: valid_subscription_student) }
 
-  let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
-                                                subscription_plan_id: subscription_plan_gbp_m.id,
+  let!(:valid_subscription) { create(:valid_subscription, user: valid_subscription_student,
+                                                subscription_plan: subscription_plan_gbp_m,
                                                 stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
-  let!(:default_card) { FactoryBot.create(:subscription_payment_card, user_id: valid_subscription_student.id,
+  let!(:default_card) { create(:subscription_payment_card, user: valid_subscription_student,
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
 
-  let!(:canceled_pending_student) { FactoryBot.create(:valid_subscription_student,
-                                                        user_group_id: student_user_group.id) }
-  let!(:canceled_pending_student_access) { FactoryBot.create(:valid_subscription_student_access,
-                                                               user_id: canceled_pending_student.id) }
+  let!(:canceled_pending_student) { create(:valid_subscription_student,
+                                                        user_group: student_user_group) }
+  let!(:canceled_pending_student_access) { create(:valid_subscription_student_access,
+                                                               user: canceled_pending_student) }
 
-  let!(:canceled_pending_subscription) { FactoryBot.create(:canceled_pending_subscription, user_id: canceled_pending_student.id,
-                                                           subscription_plan_id: subscription_plan_gbp_m.id,
+  let!(:canceled_pending_subscription) { create(:canceled_pending_subscription, user: canceled_pending_student,
+                                                           subscription_plan: subscription_plan_gbp_m,
                                                            stripe_customer_id: canceled_pending_student.stripe_customer_id ) }
 
-  let!(:coupon_2) { FactoryBot.create(:coupon, name: 'Coupon ABC', code: 'coupon_code_abc',
-                                      amount_off: 10, percent_off: nil, currency_id: gbp.id,
+  let!(:coupon_2) { create(:coupon, name: 'Coupon ABC', code: 'coupon_code_abc',
+                                      amount_off: 10, percent_off: nil, currency: gbp,
                                       duration: 'once', max_redemptions: 10, redeem_by: '2019-02-02 16:14:46') }
 
-  let!(:upgrade_params) { FactoryBot.attributes_for(:subscription, subscription_plan_id: subscription_plan_gbp_m.id,
-                                                    user_id: valid_trial_student.id,
+  let!(:upgrade_params) {
+    attributes_for(
+      :subscription,
+      stripe_token: 'stripe_token_123',
+      terms_and_conditions: 'true'
+    )
+  }
+
+  let!(:change_plan_params) { attributes_for(:subscription, subscription_plan: subscription_plan_gbp_q,
+                                                    user: valid_subscription_student,
                                                     stripe_token: 'stripe_token_123',
                                                     terms_and_conditions: 'true') }
-  let!(:change_plan_params) { FactoryBot.attributes_for(:subscription, subscription_plan_id: subscription_plan_gbp_q.id,
-                                                    user_id: valid_subscription_student.id,
-                                                    stripe_token: 'stripe_token_123',
-                                                    terms_and_conditions: 'true') }
-  let!(:invalid_upgrade_params_1) { FactoryBot.attributes_for(:subscription, subscription_plan_id: subscription_plan_gbp_m.id,
+  let!(:invalid_upgrade_params_1) { attributes_for(:subscription, subscription_plan: subscription_plan_gbp_m,
                                                     stripe_token: 'stripe_token_123',
                                                     terms_and_conditions: 'false') }
-  let!(:invalid_upgrade_params_2) { FactoryBot.attributes_for(:subscription, subscription_plan_id: subscription_plan_gbp_m.id,
+  let!(:invalid_upgrade_params_2) { attributes_for(:subscription, subscription_plan: subscription_plan_gbp_m,
                                                     stripe_token: nil,
                                                     terms_and_conditions: 'true') }
 
-  let!(:valid_params) { FactoryBot.attributes_for(:subscription) }
+  let!(:valid_params) { attributes_for(:subscription) }
 
   context 'Logged in as a valid_trial_student: ' do
 
@@ -119,7 +141,7 @@ describe SubscriptionsController, type: :controller do
         stub_customer_get_request(get_url, get_response_body)
 
         post_url = 'https://api.stripe.com/v1/subscriptions'
-        post_request_body = {"customer"=>valid_trial_student.stripe_customer_id, "plan"=>"stripe_plan_guid_m", "source"=>"stripe_token_123", "trial_end"=>"now"}
+        post_request_body = {"customer"=>valid_trial_student.stripe_customer_id, "items": [{"plan"=>"stripe_plan_guid_m", "quantity"=>"1"}], "source"=>"stripe_token_123", "trial_end"=>"now"}
 
         post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
                               "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
@@ -129,7 +151,7 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        post :create, subscription: upgrade_params, user_id: valid_trial_student.id
+        post :create, params: { subscription: upgrade_params.merge(subscription_plan_id: subscription_plan_gbp_m.id, user_id: valid_trial_student.id) }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -140,7 +162,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. T&Cs false' do
-        post :create, subscription: invalid_upgrade_params_1, user_id: valid_trial_student.id
+        post :create, params: { subscription: invalid_upgrade_params_1, user_id: valid_trial_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry Something went wrong! You must agree to our Terms & Conditions.')
         expect(response.status).to eq(302)
@@ -149,7 +171,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. With Bad params' do
-        post :create, subscription: invalid_upgrade_params_2, user_id: valid_trial_student.id
+        post :create, params: { subscription: invalid_upgrade_params_2, user_id: valid_trial_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! The data entered is not valid. Please contact us for assistance.')
         expect(response.status).to eq(302)
@@ -170,7 +192,7 @@ describe SubscriptionsController, type: :controller do
         stub_customer_get_request(get_url, get_response_body)
 
         post_url = 'https://api.stripe.com/v1/subscriptions'
-        post_request_body = {"coupon"=>coupon_2.code, "customer"=>valid_trial_student.stripe_customer_id,  "plan"=>"stripe_plan_guid_m",
+        post_request_body = {"coupon"=>coupon_2.code, "customer"=>valid_trial_student.stripe_customer_id, items: [{"plan"=>"stripe_plan_guid_m", quantity: 1}],
                              "source"=>"stripe_token_123", "trial_end"=>"now"}
 
         post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
@@ -183,7 +205,7 @@ describe SubscriptionsController, type: :controller do
 
 
 
-        post :create, subscription: upgrade_params, user_id: valid_trial_student.id, hidden_coupon_code: coupon_2.code
+        post :create, params: { subscription: upgrade_params, user_id: valid_trial_student.id, hidden_coupon_code: coupon_2.code }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -207,7 +229,7 @@ describe SubscriptionsController, type: :controller do
         stub_customer_get_request(get_url, get_response_body)
 
         request.env['HTTP_REFERER'] = 'http://test.host/en/new_subscription?coupon=true'
-        post :create, subscription: upgrade_params, user_id: valid_trial_student.id, hidden_coupon_code: 'bad_coupon_001'
+        post :create, params: { subscription: upgrade_params, user_id: valid_trial_student.id, hidden_coupon_code: 'bad_coupon_001' }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! That is not a valid coupon code.')
         expect(response.status).to eq(302)
@@ -288,7 +310,7 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        put :un_cancel_subscription, id: canceled_pending_subscription.id
+        put :un_cancel_subscription, params: { id: canceled_pending_subscription.id }
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.un_cancel.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -300,7 +322,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should redirect to account page as subscription is not canceled-pending' do
-        put :un_cancel_subscription, id: valid_subscription.id
+        put :un_cancel_subscription, params: { id: valid_subscription.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
         expect(response.status).to eq(302)
@@ -359,7 +381,7 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        put :update, id: valid_subscription.id, subscription: change_plan_params
+        put :update, params: { id: valid_subscription.id, subscription: change_plan_params }
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.update.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -372,7 +394,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should redirect to account page as no default card' do
-        put :update, id: canceled_pending_subscription.id, subscription: change_plan_params
+        put :update, params: { id: canceled_pending_subscription.id, subscription: change_plan_params }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.subscriptions.update.flash.invalid_card'))
         expect(response.status).to eq(302)
@@ -426,18 +448,14 @@ describe SubscriptionsController, type: :controller do
 
         stub_subscription_delete_request(url, subscription)
 
-        delete :destroy, id: valid_subscription.id
+        delete :destroy, params: { id: valid_subscription.id }
         valid_subscription.reload
         expect(valid_subscription.stripe_status).to eq('canceled-pending')
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
         expect(response).to redirect_to account_url(anchor: 'subscriptions')
-
       end
     end
-
   end
-
-
 end

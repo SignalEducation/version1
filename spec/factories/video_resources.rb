@@ -15,9 +15,9 @@
 
 FactoryBot.define do
   factory :video_resource do
-    question "MyText"
-    answer "MyText"
-    notes "MyText"
+    question { "MyText" }
+    answer { "MyText" }
+    notes { "MyText" }
   end
 
 end

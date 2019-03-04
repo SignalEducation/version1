@@ -13,20 +13,6 @@
 require 'rails_helper'
 
 describe VatRate do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  VatRate.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
-  #it { expect(VatRate.const_defined?(:CONSTANT_NAME)).to eq(true) }
-
   # relationships
   it { should have_many(:invoices) }
   it { should belong_to(:vat_code) }

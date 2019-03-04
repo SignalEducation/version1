@@ -14,8 +14,8 @@
 
 FactoryBot.define do
   factory :course_module_element_video do
-    course_module_element_id 1
-    duration 10
+    course_module_element_id { 1 }
+    duration { 10 }
     sequence(:vimeo_guid)             { |n| "vimeo-#{n}" }
   end
 

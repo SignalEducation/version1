@@ -14,8 +14,8 @@
 
 FactoryBot.define do
   factory :paypal_webhook do
-    guid "MyString"
-    payload "MyText"
-    processed_at "2018-11-14 11:43:47"
+    guid { "MyString" }
+    payload { "MyText" }
+    processed_at { "2018-11-14 11:43:47" }
   end
 end

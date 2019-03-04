@@ -19,7 +19,6 @@ require 'support/stripe_web_mock_helpers'
 
 describe StripeApiEvent do
 
-
   describe 'constants' do
     it { expect(StripeApiEvent.const_defined?(:KNOWN_API_VERSIONS)).to eq(true) }
     it { expect(StripeApiEvent.const_defined?(:KNOWN_PAYLOAD_TYPES)).to eq(true) }
@@ -39,7 +38,6 @@ describe StripeApiEvent do
     it { should validate_presence_of(:payload) }
   end
 
-
   describe 'callbacks' do
     it { should callback(:set_default_values).before(:validation).on(:create) }
     it { should callback(:get_data_from_stripe).before(:validation).on(:create) }
@@ -51,11 +49,9 @@ describe StripeApiEvent do
     it { expect(StripeApiEvent).to respond_to(:all_in_order) }
   end
 
-
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
     it { should respond_to(:disseminate_payload) }
     it { should respond_to(:get_data_from_stripe) }
   end
-
 end

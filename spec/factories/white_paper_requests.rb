@@ -14,11 +14,11 @@
 
 FactoryBot.define do
   factory :white_paper_request do
-    name "MyString"
-    email "MyString"
-    number "MyString"
-    company_name "MyString"
-    white_paper_id 1
+    name { "MyString" }
+    email { "MyString" }
+    number { "MyString" }
+    company_name { "MyString" }
+    white_paper_id { 1 }
   end
 
 end

@@ -25,19 +25,6 @@
 require 'rails_helper'
 
 describe Order do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at coupon_code)
-  Order.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
-
   # relationships
   it { should belong_to(:product) }
   it { should belong_to(:subject_course) }
@@ -46,19 +33,45 @@ describe Order do
   it { should have_one(:order_transaction) }
 
   # validation
-  it { should validate_presence_of(:product_id) }
-  it { should validate_numericality_of(:product_id) }
+  it 'is invalid without a product' do
+    expect(build_stubbed(:order, product: nil)).not_to be_valid
+  end
 
-  it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
+  it 'is invalid without a user' do
+    expect(build_stubbed(:order, user: nil)).not_to be_valid
+  end
 
-  it { should validate_presence_of(:stripe_guid) }
+  describe 'for Stripe orders' do
+    describe 'when a valid stripe order' do
+      it 'validates the stripe_guid' do
+        expect(build_stubbed(:order, stripe_token: 'token', stripe_guid: nil)).not_to be_valid
+      end
+
+      it 'validates the stripe_customer_id' do
+        expect(build_stubbed(:order, stripe_token: 'token', stripe_customer_id: nil)).not_to be_valid
+      end
+
+      it 'validates the stripe_status' do
+        expect(build_stubbed(:order, stripe_token: 'token', stripe_status: nil)).not_to be_valid
+      end
+    end
+
+    describe 'when not a stripe order' do
+      it 'does not validate the stripe_guid' do
+        expect(build_stubbed(:order, stripe_guid: nil)).to be_valid
+      end
+
+      it 'does not validate the stripe_customer_id' do
+        expect(build_stubbed(:order, stripe_customer_id: nil)).to be_valid
+      end
+
+      it 'does not validate the stripe_status' do
+        expect(build_stubbed(:order, stripe_status: nil)).to be_valid
+      end
+    end
+  end
 
   it { should validate_presence_of(:terms_and_conditions) }
-
-  it { should validate_presence_of(:stripe_customer_id) }
-
-  it { should validate_presence_of(:stripe_status) }
 
   it { should_not validate_presence_of(:coupon_code) }
 

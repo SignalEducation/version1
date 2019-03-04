@@ -24,17 +24,6 @@
 require 'rails_helper'
 
 describe Group do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at destroyed_at image_content_type image_file_size image_updated_at image_file_name background_image_content_type background_image_file_size background_image_updated_at background_image_file_name)
-  Group.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   subject { FactoryBot.build(:group) }
 
   # Constants

@@ -22,12 +22,12 @@
 
 FactoryBot.define do
   factory :subject_course_user_log do
-    user_id 1
-    session_guid "MyString"
-    subject_course_id 1
-    percentage_complete 1
-    latest_course_module_element_id 1
-    completed false
+    user_id { 1 }
+    session_guid { "MyString" }
+    subject_course_id { 1 }
+    percentage_complete { 1 }
+    latest_course_module_element_id { 1 }
+    completed { false }
   end
 
 end
