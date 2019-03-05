@@ -119,33 +119,34 @@ class StudentExamTrack < ActiveRecord::Base
 
   def recalculate_completeness
     #This is the only way an SET can be created; and can only be called externally from CMEUL callback
-    self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
-    self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
-    video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
-    unique_video_ids = video_ids.uniq
-    quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
-    unique_quiz_ids = quiz_ids.uniq
+    # self.count_of_questions_taken = completed_cme_user_logs.sum(:count_of_questions_taken)
+    # self.count_of_questions_correct = completed_cme_user_logs.sum(:count_of_questions_correct)
+    # video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id)
+    # unique_video_ids = video_ids.uniq
+    # quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id)
+    # unique_quiz_ids = quiz_ids.uniq
 
-    constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id)
-    unique_constructed_response_ids = constructed_response_ids.uniq
+    # constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id)
+    # unique_constructed_response_ids = constructed_response_ids.uniq
 
-    self.count_of_videos_taken = unique_video_ids.count
-    self.count_of_quizzes_taken = unique_quiz_ids.count
+    # self.count_of_videos_taken = unique_video_ids.count
+    # self.count_of_quizzes_taken = unique_quiz_ids.count
 
-    self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
+    # self.count_of_constructed_responses_taken = unique_constructed_response_ids.count
 
-    self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count + unique_constructed_response_ids.count)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
+    # self.count_of_cmes_completed = (unique_video_ids.count + unique_quiz_ids.count + unique_constructed_response_ids.count)
+    # self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100.0
 
-    begin
-      self.save!
+    # begin
+    #   self.save!
 
-    rescue Exception => e
-      puts "SQL error in #{ __method__ }"
-      ActiveRecord::Base.connection.execute 'ROLLBACK'
+    # rescue Exception => e
+    #   puts "SQL error in #{ __method__ }"
+    #   ActiveRecord::Base.connection.execute 'ROLLBACK'
 
-      raise e
-    end
+    #   raise e
+    # end
+    # self
     self
   end
 
