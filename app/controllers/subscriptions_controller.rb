@@ -72,7 +72,7 @@ class SubscriptionsController < ApplicationController
     subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
     @subscription = subscription_object.create_and_return_subscription(params)
     
-    if @subscription.save
+    if @subscription && @subscription.save
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral
