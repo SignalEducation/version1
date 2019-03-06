@@ -8,9 +8,12 @@ class CoursesController < ApplicationController
   def show
     if @course_module && @course_module.active_children
       @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
-      #@course_module_element ||= @course_module.active_children.all_in_order.first
+      unless @course_module_element
+        flash[:warning] = t('controllers.courses.show.warning')
+        Rails.logger.warn "WARN: CoursesController#show failed to find the cme. Params: #{request.filtered_parameters}."
+        redirect_to library_special_link(@course) and return
+      end
 
-      #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
 
       if @course_module_element.is_quiz
