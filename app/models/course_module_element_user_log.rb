@@ -214,9 +214,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # Before Create
   def set_latest_attempt
     unless self.preview_mode
+      CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only.update_all(latest_attempt: false)
       self.latest_attempt = true
-      # others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
-      # others.update_all(latest_attempt: false)
       true
     end
   end
