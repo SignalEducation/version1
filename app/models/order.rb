@@ -33,7 +33,7 @@ class Order < ActiveRecord::Base
 
   # relationships
   belongs_to :product
-  belongs_to :subject_course
+  belongs_to :subject_course, optional: true
   belongs_to :mock_exam, optional: true
   belongs_to :user
   has_one :order_transaction
