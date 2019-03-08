@@ -40,6 +40,14 @@ class SubscriptionPlansController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = country.currency_id
+
+    if current_user
+      @existing_subscription = current_user.current_subscription
+      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
+        @currency_id = @existing_subscription.subscription_plan.currency_id
+      end
+    end
+
     @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
 
     seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
