@@ -800,6 +800,7 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         course_count: No. of Courses
+        exam_body: Exam body
 
       index:
         h1: Groups
