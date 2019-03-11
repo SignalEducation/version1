@@ -613,7 +613,7 @@ class User < ActiveRecord::Base
   end
 
   def set_analytics(ga_ref)
-    update(:analytics_guid, ga_ref) if ga_ref
+    update(analytics_guid: ga_ref) if ga_ref
   end
 
   # Checks for our referral cookie in the users browser and creates a 
@@ -817,9 +817,9 @@ class User < ActiveRecord::Base
   end
 
   def set_additional_user_attributes
-    communication_approval_datetime = Time.zone.now if communication_approval
-    account_activation_code = SecureRandom.hex(10)
-    email_verification_code = SecureRandom.hex(10)
+    self.communication_approval_datetime = Time.zone.now if communication_approval
+    self.account_activation_code = SecureRandom.hex(10)
+    self.email_verification_code = SecureRandom.hex(10)
   end
 
   def update_student_access

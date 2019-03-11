@@ -5,6 +5,6 @@ class StripeCustomerCreationWorker
 
   def perform(user_id)
     user = User.find(user_id)
-    StripeService.new.create_customer!(user: user)
+    StripeService.new.create_customer!(user)
   end
 end

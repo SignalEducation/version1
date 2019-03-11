@@ -128,22 +128,16 @@ class StudentSignUpsController < ApplicationController
       student_allowed_params.merge(
         user_group: UserGroup.student_group,
         country: IpAddress.get_country(request.remote_ip),
-        password_confirmation: @user.password
+        password_confirmation: params[:user][:password]
       )
     )
     @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])
 
     if @user.valid? && @user.save
-      handle_post_user_creation
+      handle_post_user_creation(@user)
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
     elsif request && request.referrer
-      session[:sign_up_errors] = @user.errors unless @user.errors.empty?
-      session[:valid_params] = [
-        @user.first_name,
-        @user.last_name,
-        @user.email,
-        @user.terms_and_conditions
-      ] unless @user.errors.empty?
+      set_session_errors(@user)
       redirect_to request.referrer
     else
       redirect_to root_url
@@ -187,6 +181,7 @@ class StudentSignUpsController < ApplicationController
       @user.last_name = session[:valid_params][1]
       @user.email = session[:valid_params][2]
       @user.terms_and_conditions = session[:valid_params][3]
+      @user.preferred_exam_body_id = session[:valid_params][4]
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
     end
@@ -210,15 +205,24 @@ class StudentSignUpsController < ApplicationController
     @footer = true
   end
 
-  def handle_post_user_creation
-    @user.set_analytics(cookies[:_ga])
-    @user.create_stripe_customer
-    @user.send_activation_email(
-      user_verification_url(
-        email_verification_code: @user.email_verification_code
-      )
+  def handle_post_user_creation(user)
+    user.set_analytics(cookies[:_ga])
+    user.create_stripe_customer
+    user.send_activation_email(
+      user_verification_url(email_verification_code: user.email_verification_code)
     )
-    @user.validate_referral(cookies.encrypted[:referral_data])
+    user.validate_referral(cookies.encrypted[:referral_data])
     cookies.delete(:referral_data)
+  end
+
+  def set_session_errors(user)
+    session[:sign_up_errors] = user.errors unless user.errors.empty?
+    session[:valid_params] = [
+      user.first_name,
+      user.last_name,
+      user.email,
+      user.terms_and_conditions,
+      user.preferred_exam_body_id
+    ] unless user.errors.empty?
   end
 end
