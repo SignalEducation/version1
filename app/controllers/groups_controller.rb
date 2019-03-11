@@ -22,7 +22,6 @@
 #
 
 class GroupsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(content_management_access))
@@ -95,5 +94,4 @@ class GroupsController < ApplicationController
       :background_image, :exam_body_id
     )
   end
-
 end
