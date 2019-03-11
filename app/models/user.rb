@@ -66,15 +66,23 @@ class User < ActiveRecord::Base
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
-  
+
   belongs_to :country, optional: true
   belongs_to :preferred_exam_body, optional: true
+  belongs_to :subscription_plan_category, optional: true
+  belongs_to :user_group
+
+  has_one :referral_code
+  has_one :student_access
+  has_one :referred_signup
 
   has_many :course_module_element_user_logs
-  has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
-           class_name: 'CourseModuleElementUserLog'
-  has_many :incomplete_course_module_element_user_logs, -> {where(element_completed: false)},
-           class_name: 'CourseModuleElementUserLog'
+  has_many :completed_course_module_element_user_logs, -> {
+    where(element_completed: true)
+  }, class_name: 'CourseModuleElementUserLog'
+  has_many :incomplete_course_module_element_user_logs, -> {
+    where(element_completed: false)
+  }, class_name: 'CourseModuleElementUserLog'
   has_many :course_tutor_details
   has_many :enrollments
   has_many :invoices
@@ -85,17 +93,12 @@ class User < ActiveRecord::Base
   has_many :subscription_transactions
   has_many :student_exam_tracks
   has_many :subject_course_user_logs
-  belongs_to :user_group
   has_many :visits
   has_many :charges
   has_many :refunds
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
-  has_one :referral_code
-  has_one :student_access
-  has_one :referred_signup
-  belongs_to :subscription_plan_category, optional: true
-  has_attached_file :profile_image,
-                    default_url: 'images/missing_image.jpg'
+
+  has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
   accepts_nested_attributes_for :student_access
 
@@ -106,14 +109,13 @@ class User < ActiveRecord::Base
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
-  validates :user_group_id, presence: true
-  #validate :date_of_birth_is_possible?
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
+  before_create :set_additional_user_attributes
   after_create :create_referral_code_record
   after_update :update_stripe_customer, :update_student_access
 
@@ -266,7 +268,92 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.parse_csv(csv_content)
+    csv_data = []
+    duplicate_emails = []
+    has_errors = false
+    if csv_content.respond_to?(:each_line)
+      csv_content.each_line do |line|
+        line.strip.split(',').tap do |fields|
+          error_msgs = []
+          existing_user = User.where(email: fields[0]).first
 
+          if fields.length == 3
+
+            error_msgs << I18n.t('models.users.existing_emails') if existing_user
+
+            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
+
+            error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
+
+            error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
+            error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
+
+            error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
+            error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
+
+            error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
+            error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
+
+            duplicate_emails << fields[0]
+          else
+            error_msgs << I18n.t('models.users.invalid_field_count')
+          end
+          has_errors = true unless error_msgs.empty?
+          csv_data << { values: fields, error_messages: error_msgs }
+        end
+      end
+    else
+      has_errors = true
+    end
+    has_errors = true if csv_data.empty?
+    return csv_data, has_errors
+  end
+
+  def self.bulk_create(csv_data, user_group_id, root_url)
+    existing_users = []
+    new_users = []
+    if csv_data.is_a?(Hash)
+      self.transaction do
+        csv_data.each do |k,v|
+          user = User.where(email: v['email']).first
+          if user
+            raise ActiveRecord::Rollback
+          else
+            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], user_group_id, root_url)
+            new_users << v['email']
+          end
+        end
+      end
+    end
+    return new_users, existing_users
+  end
+
+  def self.create_csv_user(email, first_name, last_name, user_group_id, root_url)
+    country = Country.find(78) || Country.find(name: 'United Kingdom').last
+    password = SecureRandom.hex(5)
+    verification_code = ApplicationController::generate_random_code(20)
+    time_now = Proc.new{Time.now}.call
+    user_group = UserGroup.find(user_group_id)
+
+    user = User.new(email: email, first_name: first_name, last_name: last_name)
+
+    user.assign_attributes(password: password, password_confirmation: password,
+                           country_id: country.id, password_change_required: true,
+                           locale: 'en', account_activated_at: time_now, account_activation_code: nil,
+                           active: true, email_verified: false, email_verified_at: nil,
+                           email_verification_code: verification_code, free_trial: true,
+                           user_group_id: user_group.id)
+
+    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
+                              trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
+
+    if user.valid? && user.save
+      stripe_customer = Stripe::Customer.create(email: user.email)
+      user.update_column(:stripe_customer_id, stripe_customer.id)
+      MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+    end
+  end
 
   ### instance methods
 
@@ -323,11 +410,15 @@ class User < ActiveRecord::Base
     self.user_group.user_group_management_access
   end
 
-
-
-
-
   ## StudentAccess methods
+
+  def make_student_access
+    build_student_access(
+      trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, 
+      trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
+      account_type: 'Trial'
+    )
+  end
 
   # Trial Access
 
@@ -491,18 +582,49 @@ class User < ActiveRecord::Base
 
 
   def change_the_password(options)
-    # options = {current_password: '123123123', password: 'new123',
-    #            password_confirmation: 'new123'}
     if options[:password] == options[:password_confirmation] &&
             options[:password].to_s != '' &&
             self.valid_password?(options[:current_password].to_s) &&
             options[:current_password].to_s != ''
-      self.update_attributes(
-              password: options[:password],
-              password_confirmation: options[:password_confirmation]
+      update(
+        password: options[:password],
+        password_confirmation: options[:password_confirmation]
       )
     else
       false
+    end
+  end
+
+  def pre_creation_setup(cookie)
+    make_student_access
+    set_subscription_plan_category(cookie)
+  end
+
+  def send_activation_email(url)
+    MandrillWorker.perform_async(
+      id, 
+      'send_verification_email',
+      url
+    ) unless Rails.env.test?
+  end
+
+  def create_stripe_customer
+    StripeCustomerCreationWorker.perform_async(id)
+  end
+
+  def set_analytics(ga_ref)
+    update(:analytics_guid, ga_ref) if ga_ref
+  end
+
+  # Checks for our referral cookie in the users browser and creates a 
+  # ReferredSignUp associated with this user
+  def validate_referral(cookie)
+    code, referrer_url = cookie.split(';') if cookie
+    if code && (referral_code = ReferralCode.find_by_code(code))
+      create_referred_signup(
+        referral_code_id: referral_code.id,
+        referrer_url: referrer_url
+      )
     end
   end
 
@@ -558,8 +680,6 @@ class User < ActiveRecord::Base
   def subject_course_user_log_course_ids
     self.subject_course_user_logs.map(&:subject_course_id)
   end
-
-
 
   def enrolled_courses
     course_names = []
@@ -625,7 +745,6 @@ class User < ActiveRecord::Base
     self.next_enrollment.days_until_exam
   end
 
-
   def completed_course_module_element(cme_id)
     cmeuls = self.completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
     cmeuls.any?
@@ -634,96 +753,6 @@ class User < ActiveRecord::Base
   def started_course_module_element(cme_id)
     cmeuls = self.incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
     cmeuls.any?
-  end
-
-  def self.parse_csv(csv_content)
-    csv_data = []
-    duplicate_emails = []
-    has_errors = false
-    if csv_content.respond_to?(:each_line)
-      csv_content.each_line do |line|
-        line.strip.split(',').tap do |fields|
-          error_msgs = []
-          existing_user = User.where(email: fields[0]).first
-
-          if fields.length == 3
-
-            error_msgs << I18n.t('models.users.existing_emails') if existing_user
-
-            error_msgs << I18n.t('models.users.duplicated_emails') if duplicate_emails.include?(fields[0])
-
-            error_msgs << I18n.t('models.users.email_must_have_at_symbol') unless fields[0].include?('@')
-
-            error_msgs << I18n.t('models.users.email_must_have_dot') unless fields[0].include?('.')
-            error_msgs << I18n.t('models.users.email_too_short') unless fields[0].length >= 5
-
-            error_msgs << I18n.t('models.users.first_name_too_short') unless fields[1].length >= 2
-            error_msgs << I18n.t('models.users.first_name_too_long') unless fields[1].length <= 20
-
-            error_msgs << I18n.t('models.users.last_name_too_short') unless fields[2].length <= 30
-            error_msgs << I18n.t('models.users.last_name_too_long') unless fields[2].length >= 2
-
-            duplicate_emails << fields[0]
-          else
-            error_msgs << I18n.t('models.users.invalid_field_count')
-          end
-          has_errors = true unless error_msgs.empty?
-          csv_data << { values: fields, error_messages: error_msgs }
-        end
-      end
-    else
-      has_errors = true
-    end
-    has_errors = true if csv_data.empty?
-    return csv_data, has_errors
-  end
-
-  def self.bulk_create(csv_data, user_group_id, root_url)
-    existing_users = []
-    new_users = []
-    if csv_data.is_a?(Hash)
-      self.transaction do
-        csv_data.each do |k,v|
-          user = User.where(email: v['email']).first
-          if user
-            raise ActiveRecord::Rollback
-          else
-            CsvImportUserCreationWorker.perform_async(v['email'], v['first_name'], v['last_name'], user_group_id, root_url)
-            new_users << v['email']
-          end
-        end
-      end
-    end
-    return new_users, existing_users
-  end
-
-  def self.create_csv_user(email, first_name, last_name, user_group_id, root_url)
-    country = Country.find(78) || Country.find(name: 'United Kingdom').last
-    password = SecureRandom.hex(5)
-    verification_code = ApplicationController::generate_random_code(20)
-    time_now = Proc.new{Time.now}.call
-    user_group = UserGroup.find(user_group_id)
-
-    user = User.new(email: email, first_name: first_name, last_name: last_name)
-
-    user.assign_attributes(password: password, password_confirmation: password,
-                           country_id: country.id, password_change_required: true,
-                           locale: 'en', account_activated_at: time_now, account_activation_code: nil,
-                           active: true, email_verified: false, email_verified_at: nil,
-                           email_verification_code: verification_code, free_trial: true,
-                           user_group_id: user_group.id)
-
-    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                              trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
-
-    if user.valid? && user.save
-      stripe_customer = Stripe::Customer.create(email: user.email)
-      user.update_column(:stripe_customer_id, stripe_customer.id)
-      MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
-    else
-
-    end
-
   end
 
   def update_from_stripe
@@ -738,7 +767,6 @@ class User < ActiveRecord::Base
       end
     end
   end
-
 
   def create_subscription_from_stripe(stripe_subscription_object, stripe_customer_object)
     subscription_plan = SubscriptionPlan.where(stripe_guid: stripe_subscription_object.plan.id).first
@@ -766,11 +794,18 @@ class User < ActiveRecord::Base
                                               account_type: 'Subscription')
       end
     end
-
+  end
+  
+  # Checks for SubscriptionPlanCategory cookie to see if the user should get 
+  # specific subscription plans instead of the general plans
+  def set_subscription_plan_category(cookie)
+    if cookie.present?
+      subscription_plan_category = SubscriptionPlanCategory.where(guid: cookie).first
+      student_access.trial_days_limit = subscription_plan_category.trial_period_in_days
+    end
   end
 
-
-  protected
+  private
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
@@ -779,6 +814,12 @@ class User < ActiveRecord::Base
 
   def create_referral_code_record
     self.create_referral_code
+  end
+
+  def set_additional_user_attributes
+    communication_approval_datetime = Time.zone.now if communication_approval
+    account_activation_code = SecureRandom.hex(10)
+    email_verification_code = SecureRandom.hex(10)
   end
 
   def update_student_access
@@ -799,6 +840,4 @@ class User < ActiveRecord::Base
       end
     end
   end
-
-
 end

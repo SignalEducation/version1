@@ -2,9 +2,9 @@ class StripeService
 
   # CUSTOMERS ==================================================================
 
-  def create_customer(user)
+  def create_customer!(user)
     customer = Stripe::Customer.create(email: user.email)
-    user.update(stripe_customer_id: customer.id)
+    user.update!(stripe_customer_id: customer.id)
     customer
   end
 
