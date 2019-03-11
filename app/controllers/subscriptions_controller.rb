@@ -41,7 +41,12 @@ class SubscriptionsController < ApplicationController
       currency = current_user.get_currency(country)
       cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
 
-      @subscription_plans = SubscriptionPlan.get_relevant(current_user, currency, cookie)
+      @subscription_plans = SubscriptionPlan.get_relevant(
+                                                            current_user,
+                                                            currency,
+                                                            cookie,
+                                                            params[:exam_body_id]
+                                                          )
       @yearly_subscription_plan = @subscription_plans.yearly.first
       if params[:prioritise_plan_frequency].present?
         @subscription = Subscription.new(

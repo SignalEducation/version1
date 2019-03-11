@@ -83,13 +83,15 @@ class SubscriptionPlan < ActiveRecord::Base
     end
   end
 
-  def self.get_relevant(user, currency, cookie)
+  def self.get_relevant(user, currency, cookie, exam_body_id)
     plans = self.for_students
                 .in_currency(currency.id)
                 .generally_available_or_for_category_guid(cookie)
                 .all_active
                 .all_in_order
-    if body = user.preferred_exam_body
+    if exam_body_id && (body = ExamBody.find(exam_body_id))
+      plans.where(exam_body_id: body.id)
+    elsif body = user.preferred_exam_body
       plans.where(exam_body_id: body.id)
     else
       plans
