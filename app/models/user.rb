@@ -53,6 +53,7 @@
 #  unsubscribed_from_emails        :boolean          default(FALSE)
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
+#  preferred_exam_body_id          :bigint(8)
 #
 
 class User < ActiveRecord::Base
@@ -65,9 +66,10 @@ class User < ActiveRecord::Base
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
-
-  # relationships
+  
   belongs_to :country, optional: true
+  belongs_to :preferred_exam_body, optional: true
+
   has_many :course_module_element_user_logs
   has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
            class_name: 'CourseModuleElementUserLog'

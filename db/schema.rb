@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_12_191300) do
+ActiveRecord::Schema.define(version: 2019_03_11_172347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1180,11 +1180,13 @@ ActiveRecord::Schema.define(version: 2019_02_12_191300) do
     t.boolean "unsubscribed_from_emails", default: false
     t.boolean "communication_approval", default: false
     t.datetime "communication_approval_datetime"
+    t.bigint "preferred_exam_body_id"
     t.index ["account_activation_code"], name: "index_users_on_account_activation_code"
     t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token"
     t.index ["persistence_token"], name: "index_users_on_persistence_token"
+    t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"
     t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id"
     t.index ["subscription_plan_category_id"], name: "index_users_on_subscription_plan_category_id"
     t.index ["user_group_id"], name: "index_users_on_user_group_id"
@@ -1284,4 +1286,5 @@ ActiveRecord::Schema.define(version: 2019_02_12_191300) do
   end
 
   add_foreign_key "subscription_plans", "exam_bodies"
+  add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"
 end

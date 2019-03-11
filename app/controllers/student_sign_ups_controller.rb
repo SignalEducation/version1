@@ -188,11 +188,9 @@ class StudentSignUpsController < ApplicationController
 
   def student_allowed_params
     params.require(:user).permit(
-        :email, :first_name, :last_name,
-        :country_id, :locale,
-        :password, :password_confirmation,
-        :terms_and_conditions,
-        :communication_approval
+      :email, :first_name, :last_name, :preferred_exam_body_id, :country_id, 
+      :locale, :password, :password_confirmation, :terms_and_conditions,
+      :communication_approval
     )
   end
 

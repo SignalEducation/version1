@@ -53,6 +53,7 @@
 #  unsubscribed_from_emails        :boolean          default(FALSE)
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
+#  preferred_exam_body_id          :bigint(8)
 #
 
 FactoryBot.define do
