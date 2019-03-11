@@ -32,6 +32,10 @@
                       =f.email_field :email, class: 'form-control', required: true, id: 'user_email'
                   .col-sm-12
                     .form-group
+                      =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'control-label'
+                      =f.select :preferred_exam_body_id, ExamBody.pluck(:name, :id), prompt: 'Please select', class: 'form-control', required: true, id: 'user_exam_body'
+                  .col-sm-12
+                    .form-group
                       =f.label :password, t('views.users.form.password'), class: 'control-label'
                       =f.password_field :password, required: true, class: 'form-control', id: 'user_password'
                   .col-sm-12

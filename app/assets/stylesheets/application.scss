@@ -292,6 +292,9 @@ hr {
 
 .form-group {
   margin: 0 0 20px 0;
+  select {
+    display: block;
+  }
 }
 label, .label {
   font-weight: bold;
@@ -322,12 +325,12 @@ label, .label {
     background: $colour-14;
     @include box-shadow(2px, 0, 0, rgba(#000, .07));
   }
-}
-.form-control.coupon-error {
-  border:2px solid $red1;
-}
-.form-control.coupon-success {
-  border:2px solid $colour-18;
+  &.coupon-error {
+    border:2px solid $red1;
+  }
+  &.coupon-success {
+    border:2px solid $colour-18;
+  }
 }
 
 .error-coupons{
