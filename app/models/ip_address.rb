@@ -43,9 +43,13 @@ class IpAddress < ActiveRecord::Base
   scope :all_in_order, -> { order(:ip_address) }
 
   # class methods
-  def self.get_country(ip_address)
+  def self.get_country(ip_address, country_required = false)
     country = IpAddress.where(ip_address: ip_address).first_or_create.country
-    country || Country.find_by(name: 'United Kingdom')
+    if !country && country_required
+      Country.find_by(name: 'United Kingdom')
+    else
+      country
+    end
   end
 
   # instance methods

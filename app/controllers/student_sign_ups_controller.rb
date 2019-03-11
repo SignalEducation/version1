@@ -6,7 +6,6 @@ class StudentSignUpsController < ApplicationController
   before_action :layout_variables, only: [:home, :landing]
 
   def home
-
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     if @home_page
       @group = @home_page.group
@@ -127,7 +126,7 @@ class StudentSignUpsController < ApplicationController
     @user = User.new(
       student_allowed_params.merge(
         user_group: UserGroup.student_group,
-        country: IpAddress.get_country(request.remote_ip),
+        country: IpAddress.get_country(request.remote_ip, true),
         password_confirmation: params[:user][:password]
       )
     )

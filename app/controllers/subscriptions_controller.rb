@@ -27,7 +27,6 @@
 #
 
 class SubscriptionsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(student_user))
@@ -38,27 +37,24 @@ class SubscriptionsController < ApplicationController
 
   def new
     if current_user.trial_or_sub_user?
+      country = IpAddress.get_country(request.remote_ip) || current_user.country
+      currency = current_user.get_currency(country)
+      cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
 
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : current_user.country
-
-      # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
-      @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan
-        @currency_id = @existing_subscription.subscription_plan.currency_id
-      else
-        @currency_id = @country.currency_id
-      end
-
-      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
-      @yearly_subscription_plan = @subscription_plans.where(payment_frequency_in_months: 12).first
+      @subscription_plans = SubscriptionPlan.get_relevant(current_user, currency, cookie)
+      @yearly_subscription_plan = @subscription_plans.yearly.first
       if params[:prioritise_plan_frequency].present?
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id)
+        @subscription = Subscription.new(
+          user_id: current_user.id,
+          subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
+        )
       else
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3)&.first&.id)
+        @subscription = Subscription.new(
+          user_id: current_user.id,
+          subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3)&.first&.id
+        )
       end
-
-      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, @country.name) unless Rails.env.test?
+      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     else
       redirect_to root_url
     end

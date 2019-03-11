@@ -580,7 +580,6 @@ class User < ActiveRecord::Base
     end
   end
 
-
   def change_the_password(options)
     if options[:password] == options[:password_confirmation] &&
             options[:password].to_s != '' &&
@@ -671,6 +670,12 @@ class User < ActiveRecord::Base
 
   def full_name
     self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
+  end
+
+  def get_currency(country)
+    if existing_sub = current_user.current_subscription
+      existing_sub.subscription_plan&.currency || country.currency
+    end
   end
 
   def this_hour

@@ -71,6 +71,7 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :for_non_standard_students, -> { where(available_to_students: false) }
   scope :generally_available, -> { where(subscription_plan_category_id: nil) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
+  scope :yearly, -> { where(payment_frequency_in_months: 12) }
 
   # class methods
   def self.generally_available_or_for_category_guid(the_guid)
@@ -79,6 +80,19 @@ class SubscriptionPlan < ActiveRecord::Base
       where(subscription_plan_category_id: plan_category.id)
     else
       generally_available
+    end
+  end
+
+  def self.get_relevant(user, currency, cookie)
+    plans = self.for_students
+                .in_currency(currency.id)
+                .generally_available_or_for_category_guid(cookie)
+                .all_active
+                .all_in_order
+    if body = user.preferred_exam_body
+      plans.where(exam_body_id: body.id)
+    else
+      plans
     end
   end
 
