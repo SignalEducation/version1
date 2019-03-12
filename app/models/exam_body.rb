@@ -12,32 +12,29 @@
 #
 
 class ExamBody < ActiveRecord::Base
-
-  # Constants
-
-  # relationships
   has_many :enrollments
   has_many :exam_sittings
   has_many :subject_courses
+  has_many :subscription_plans
 
-  # validation
   validates :name, presence: true, uniqueness: true
   validates :url, presence: true
 
-  # callbacks
   before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:name) }
-
-  # class methods
 
   # instance methods
   def destroyable?
     self.exam_sittings.empty? && self.enrollments.empty? && self.subject_courses.empty?
   end
 
-  protected
+  def to_s
+    name
+  end
+
+  private
 
   def check_dependencies
     unless self.destroyable?
@@ -45,5 +42,4 @@ class ExamBody < ActiveRecord::Base
       false
     end
   end
-
 end

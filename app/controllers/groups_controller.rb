@@ -22,7 +22,6 @@
 #
 
 class GroupsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(content_management_access))
@@ -52,7 +51,7 @@ class GroupsController < ApplicationController
       flash[:success] = I18n.t('controllers.groups.create.flash.success')
       redirect_to groups_url
     else
-      render action: :new
+      render :new
     end
   end
 
@@ -61,7 +60,7 @@ class GroupsController < ApplicationController
       flash[:success] = I18n.t('controllers.groups.update.flash.success')
       redirect_to groups_url
     else
-      render action: :edit
+      render :edit
     end
   end
 
@@ -90,7 +89,9 @@ class GroupsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:group).permit(:name, :name_url, :active, :sorting_order, :description, :image, :background_image)
+    params.require(:group).permit(
+      :name, :name_url, :active, :sorting_order, :description, :image, 
+      :background_image, :exam_body_id
+    )
   end
-
 end

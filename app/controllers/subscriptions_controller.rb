@@ -27,7 +27,6 @@
 #
 
 class SubscriptionsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(student_user))
@@ -36,29 +35,29 @@ class SubscriptionsController < ApplicationController
   before_action :check_subscriptions, only: [:new, :create]
   before_action :set_flash, only: :new
 
+  def show
+    @subscription = Subscription.find(params[:id])
+    redirect_to dashboard_path unless @subscription.user_id == current_user.id
+  end
+
   def new
-    if current_user.trial_or_sub_user?
-
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : current_user.country
-
-      # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
-      @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan
-        @currency_id = @existing_subscription.subscription_plan.currency_id
-      else
-        @currency_id = @country.currency_id
-      end
-
-      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
-      @yearly_subscription_plan = @subscription_plans.where(payment_frequency_in_months: 12).first
+    if !current_user.preferred_exam_body.present?
+      redirect_to edit_preferred_exam_body_path
+    elsif current_user.trial_or_sub_user?
+      @plans, country = get_relevant_subscription_plans
+      @yearly_plan = @plans.yearly.first
       if params[:prioritise_plan_frequency].present?
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id)
+        @subscription = Subscription.new(
+          user_id: current_user.id,
+          subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
+        )
       else
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3)&.first&.id)
+        @subscription = Subscription.new(
+          user_id: current_user.id,
+          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 3)&.first&.id
+        )
       end
-
-      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, @country.name) unless Rails.env.test?
+      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     else
       redirect_to root_url
     end
@@ -179,7 +178,20 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  protected
+  private
+
+  def get_relevant_subscription_plans
+    country = IpAddress.get_country(request.remote_ip) || current_user.country
+    currency = current_user.get_currency(country)
+    cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
+    plans = SubscriptionPlan.get_relevant(
+                                            current_user,
+                                            currency,
+                                            cookie,
+                                            params[:exam_body_id]
+                                          )
+    return plans, country
+  end
 
   def set_flash
     if params[:flash].present?
@@ -200,11 +212,11 @@ class SubscriptionsController < ApplicationController
   end
 
   def check_subscriptions
-    if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
-      redirect_to account_url(anchor: :subscriptions)
-    elsif current_user && !current_user.trial_or_sub_user?
-      redirect_to root_url
-    end
+    # if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
+    #   redirect_to account_url(anchor: :subscriptions)
+    # elsif current_user && !current_user.trial_or_sub_user?
+    #   redirect_to root_url
+    # end
   end
 
 end

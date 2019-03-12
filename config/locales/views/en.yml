@@ -800,6 +800,7 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         course_count: No. of Courses
+        exam_body: Exam body
 
       index:
         h1: Groups
@@ -1276,6 +1277,7 @@ en:
     subscription_plans:
       form:
         name: Name
+        exam_body_id: Exam Body
         name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
         available_to_students: Available Standard Students
         all_you_can_eat: All you can eat
@@ -1368,6 +1370,7 @@ en:
       form:
         email: Email
         email_confirmation: Email Confirmation
+        exam_body: Study Preference
         your_email: Your email address
         email_placeholder: user@example.com
         phone_number: Phone Number

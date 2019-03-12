@@ -45,11 +45,12 @@ class UserGroup < ActiveRecord::Base
 
   # class methods
 
+  def self.student_group
+    self.where(student_user: true, trial_or_sub_required: true).first
+  end
+
   # instance methods
   def destroyable?
     self.users.empty?
   end
-
-  protected
-
 end

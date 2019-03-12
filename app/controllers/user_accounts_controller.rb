@@ -12,8 +12,7 @@ class UserAccountsController < ApplicationController
     #@enrollments = @user.enrollments.all_in_account_order.sort_by { |enrollment| enrollment.active ? 0 : 1 }
     if current_user.student_access
       @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-      @current_subscription = @user.current_subscription
-      @invoices = @user.invoices
+      @subscriptions = @user.subscriptions.order(:active, created_at: :desc)
     end
 
     #Restoring errors that could arise for user updating personal details in modal

@@ -2,7 +2,7 @@
   #cancellation_initiation
     .row
       .col-md-12
-        =render partial: 'layouts/error_messages', locals: {thing: @current_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+        =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
         .col-xs-11
           %h2
             ='Are you sure you want to cancel?'
@@ -41,7 +41,7 @@
           At LearnSignal we’re keen to keep improving our service.
         %p.h6.l-margin-bottom
           Why do you want to cancel?
-        =form_for @current_subscription, url: subscriptions_cancellations_path(id: @current_subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
+        =form_for @subscription, url: subscriptions_cancellations_path(id: @subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
           .form-group.cancellation-reason
             =f.label :cancellation_reason, 'Please tick the box which is most applicable to you', class: 'block-label h4'
             #cancellation-reason-error
@@ -63,5 +63,5 @@
                 =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-red full-width l-margin-bottom'
               .col-sm-12
                 %p
-                  = account_cancellation_message(@current_subscription)
+                  = account_cancellation_message(@subscription)
 

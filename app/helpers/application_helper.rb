@@ -77,15 +77,15 @@ module ApplicationHelper
   end
 
   def humanize_date_and_month(date)  # Used in the library UI
-    date.utc.strftime('%d %b')
+    date.nil? ? '-' : date.utc.strftime('%d %b')
   end
 
   def humanize_stripe_date(date = 1.month.from_now)  # Used in the library UI
-    date.strftime('%d %b %y')
+    date.nil? ? '-' : date.strftime('%d %b %y')
   end
 
   def humanize_stripe_date_full(date = 1.month.from_now)  # Used in the library UI
-    date.strftime('%d %B %Y')
+    date.nil? ? '-' : date.strftime('%d %B %Y')
   end
 
   def exam_sitting_date(date)  # Used in the library UI

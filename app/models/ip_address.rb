@@ -43,8 +43,13 @@ class IpAddress < ActiveRecord::Base
   scope :all_in_order, -> { order(:ip_address) }
 
   # class methods
-  def self.get_country(ip_address)
-    IpAddress.where(ip_address: ip_address).first_or_create.country
+  def self.get_country(ip_address, country_required = false)
+    country = IpAddress.where(ip_address: ip_address).first_or_create.country
+    if !country && country_required
+      Country.find_by(name: 'United Kingdom')
+    else
+      country
+    end
   end
 
   # instance methods
@@ -52,7 +57,7 @@ class IpAddress < ActiveRecord::Base
     true
   end
 
-  protected
+  private
 
   def check_dependencies
     unless self.destroyable?
@@ -68,5 +73,4 @@ class IpAddress < ActiveRecord::Base
     end
     self.alert_level = 0
   end
-
 end

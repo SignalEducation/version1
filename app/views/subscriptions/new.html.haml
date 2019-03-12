@@ -18,7 +18,8 @@
                   =render partial: 'layouts/flash_messages'
             .hero
               %h5.text-red Upgrade your account
-              %h1.h1-mega Get your tuition sorted for 2019
+              %h1.h1-mega
+                = "Get your #{@plans.first.exam_body} tuition sorted for 2019"
               %p.text-lg.mb-0
                 ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
                 %span{style: 'font-weight: bold;'}
@@ -31,9 +32,9 @@
                 %fieldset
                   %legend.sr-only Select a Plan
                   - if @subscription.subscription_plan.payment_frequency_in_months == 12
-                    =render partial: 'single_plan_checkout', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
+                    =render partial: 'single_plan_checkout', locals: {subscription: @subscription, plans: @plans}
                   - else
-                    =render partial: 'multi_plans', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
+                    =render partial: 'multi_plans', locals: {subscription: @subscription, plans: @plans}
 
               .col-lg-6
                 %fieldset.card
@@ -63,6 +64,20 @@
                     =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
         .bg-white
+          .container
+            .py-6
+              %h2
+                = "You are currently viewing plans for #{@plans.first.exam_body}"
+              %p Switch to
+                
+              .row
+                .col-md-5
+                  -ExamBody.all.each do |body|
+                    .with-icon-switch
+                      %p
+                        =link_to body, new_subscription_path(exam_body_id: body.id)
+
+        .bg-asphalt
           .container
             .py-6
               %h2.mb-5 Included in Your LearnSignal Membership
