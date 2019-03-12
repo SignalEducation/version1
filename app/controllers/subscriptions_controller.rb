@@ -37,6 +37,7 @@ class SubscriptionsController < ApplicationController
 
   def show
     @subscription = Subscription.find(params[:id])
+    redirect_to dashboard_path unless @subscription.user_id == current_user.id
   end
 
   def new
