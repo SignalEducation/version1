@@ -1,4 +1,4 @@
--subscription_plans.each do |plan|
+-plans.each do |plan|
   .form-group
     .custom-control.custom-radio
       %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
@@ -21,7 +21,7 @@
           / custom checkbox
 
 #info-text
-  - if @yearly_subscription_plan && @yearly_subscription_plan.previous_plan_price.present? && @yearly_subscription_plan.previous_plan_price > 0
+  - if @yearly_plan && @yearly_plan.previous_plan_price.present? && @yearly_plan.previous_plan_price > 0
     %p.mb-2
       %span
         Note:

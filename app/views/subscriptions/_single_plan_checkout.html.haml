@@ -20,7 +20,7 @@
         / custom checkbox
 
 #all-plans
-  -(subscription_plans.where(id: (subscription_plans.ids - [subscription.subscription_plan.id]))).each do |plan|
+  -(plans.where(id: (plans.ids - [subscription.subscription_plan.id]))).each do |plan|
     .form-group
       .custom-control.custom-radio
         %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
@@ -43,13 +43,13 @@
             / custom checkbox
 
 #info-text
-  - if @yearly_subscription_plan && @yearly_subscription_plan.previous_plan_price.present? && @yearly_subscription_plan.previous_plan_price > 0
+  - if @yearly_plan && @yearly_plan.previous_plan_price.present? && @yearly_plan.previous_plan_price > 0
     %p.mb-2.price
       %span
         25%
       =' off original plan price'
       %span
-        =@yearly_subscription_plan.currency.format_number(@yearly_subscription_plan.previous_plan_price)
+        =@yearly_plan.currency.format_number(@yearly_plan.previous_plan_price)
 
   %p.mb-2
     Sort your ACCA Tuition for 2019.  Save money, pass quicker and embrace your future

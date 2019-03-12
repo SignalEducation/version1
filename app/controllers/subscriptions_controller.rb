@@ -41,22 +41,22 @@ class SubscriptionsController < ApplicationController
       currency = current_user.get_currency(country)
       cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
 
-      @subscription_plans = SubscriptionPlan.get_relevant(
-                                                            current_user,
-                                                            currency,
-                                                            cookie,
-                                                            params[:exam_body_id]
-                                                          )
-      @yearly_subscription_plan = @subscription_plans.yearly.first
+      @plans = SubscriptionPlan.get_relevant(
+                                              current_user,
+                                              currency,
+                                              cookie,
+                                              params[:exam_body_id]
+                                            )
+      @yearly_plan = @plans.yearly.first
       if params[:prioritise_plan_frequency].present?
         @subscription = Subscription.new(
           user_id: current_user.id,
-          subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
+          subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
         )
       else
         @subscription = Subscription.new(
           user_id: current_user.id,
-          subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3)&.first&.id
+          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 3)&.first&.id
         )
       end
       IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
