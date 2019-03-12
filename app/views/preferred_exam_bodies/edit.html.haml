@@ -1,0 +1,53 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container
+      .row
+        .col-lg-10.col-lg-offset-1
+          %h1.title1
+            Choose your preferred exam body
+          %h2.subtitle1
+            Please choose your current exam body so we can provide a 
+            subscription tailored for your current study requirements
+
+      .row.l-margin-top.l-margin-bottom
+        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
+          #sign_up.l-margin-top
+            =form_for @user, url: preferred_exam_body_path do |f|
+              =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+              =f.hidden_field :locale, value: (params[:locale] || 'en')
+              .row
+                .col-sm-12
+                  .form-group
+                    =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'control-label'
+                    =f.collection_select :preferred_exam_body_id, ExamBody.all, :id, :name, prompt: 'Please select', class: 'form-control', required: true, id: 'user_exam_body'
+
+                  .col-sm-12.l-margin-top
+                    =f.submit 'FIND A PLAN', class: 'btn btn-red btn-wide btn-lg-text', id: 'examBodySubmit'
+                    .sk-circle
+                      .sk-circle1.sk-child
+                      .sk-circle2.sk-child
+                      .sk-circle3.sk-child
+                      .sk-circle4.sk-child
+                      .sk-circle5.sk-child
+                      .sk-circle6.sk-child
+                      .sk-circle7.sk-child
+                      .sk-circle8.sk-child
+                      .sk-circle9.sk-child
+                      .sk-circle10.sk-child
+                      .sk-circle11.sk-child
+                      .sk-circle12.sk-child
+
+
+
+
+:javascript
+
+  $(document).on('ready', function() {
+    $(".sk-circle").hide();
+
+    $("#examBodySubmit").click(function(event) {
+      $("#examBodySubmit").hide();
+      $(".sk-circle").show();
+    });
+  });
+
