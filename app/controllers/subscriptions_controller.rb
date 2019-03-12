@@ -212,11 +212,11 @@ class SubscriptionsController < ApplicationController
   end
 
   def check_subscriptions
-    if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
-      redirect_to account_url(anchor: :subscriptions)
-    elsif current_user && !current_user.trial_or_sub_user?
-      redirect_to root_url
-    end
+    # if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
+    #   redirect_to account_url(anchor: :subscriptions)
+    # elsif current_user && !current_user.trial_or_sub_user?
+    #   redirect_to root_url
+    # end
   end
 
 end
