@@ -36,7 +36,9 @@ class SubscriptionsController < ApplicationController
   before_action :set_flash, only: :new
 
   def new
-    if current_user.trial_or_sub_user?
+    if !current_user.preferred_exam_body.present?
+      redirect_to edit_preferred_exam_body_path
+    elsif current_user.trial_or_sub_user?
       country = IpAddress.get_country(request.remote_ip) || current_user.country
       currency = current_user.get_currency(country)
       cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
