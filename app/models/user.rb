@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = %w(created user_group name email)
 
   belongs_to :country, optional: true
-  belongs_to :preferred_exam_body, optional: true
+  belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
 
@@ -673,8 +673,10 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if existing_sub = current_user.current_subscription
+    if existing_sub = current_subscription
       existing_sub.subscription_plan&.currency || country.currency
+    else
+      country.currency
     end
   end
 
