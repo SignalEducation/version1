@@ -22,7 +22,7 @@
           =t('views.users.show.keep_subscription')
 
       .col-sm-6
-        =link_to subscriptions_suspensions_path(id: @current_subscription.id), method: :post do
+        =link_to subscriptions_suspensions_path(id: @subscription.id), method: :post do
           .btn.btn-orange.full-width.l-margin-bottom
             =t('views.users.show.confirm_subscription_pause')
 
