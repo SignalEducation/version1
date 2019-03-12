@@ -631,6 +631,27 @@ h3 {
   background-color: #def9fa;
   border-radius: 50%
 }
+.with-icon-switch {
+  position: relative;
+  margin-bottom: 1em;
+  padding-left: 2.25em
+}
+.with-icon-switch::before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 1.5625em;
+  height: 1.5625em;
+  content: 'arrow_right_alt';
+  font-family: 'Material Icons';
+  font-size: 17px;
+  line-height: 25px;
+  text-align: center;
+  color: #0590a3;
+  background-color: #def9fa;
+  border-radius: 50%
+}
 .hero {
   padding-top: 3.5em;
   padding-bottom: 0;

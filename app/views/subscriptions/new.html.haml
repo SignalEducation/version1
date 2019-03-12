@@ -66,6 +66,20 @@
         .bg-white
           .container
             .py-6
+              %h2
+                = "You are currently viewing plans for #{@plans.first.exam_body}"
+              %p Switch to
+                
+              .row
+                .col-md-5
+                  -ExamBody.all.each do |body|
+                    .with-icon-switch
+                      %p
+                        =link_to body, new_subscription_path(exam_body_id: body.id)
+
+        .bg-asphalt
+          .container
+            .py-6
               %h2.mb-5 Included in Your LearnSignal Membership
               .row
                 .col-md-5
