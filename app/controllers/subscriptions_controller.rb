@@ -39,16 +39,7 @@ class SubscriptionsController < ApplicationController
     if !current_user.preferred_exam_body.present?
       redirect_to edit_preferred_exam_body_path
     elsif current_user.trial_or_sub_user?
-      country = IpAddress.get_country(request.remote_ip) || current_user.country
-      currency = current_user.get_currency(country)
-      cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
-
-      @plans = SubscriptionPlan.get_relevant(
-                                              current_user,
-                                              currency,
-                                              cookie,
-                                              params[:exam_body_id]
-                                            )
+      @plans, country = get_relevant_subscription_plans
       @yearly_plan = @plans.yearly.first
       if params[:prioritise_plan_frequency].present?
         @subscription = Subscription.new(
@@ -182,7 +173,20 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  protected
+  private
+
+  def get_relevant_subscription_plans
+    country = IpAddress.get_country(request.remote_ip) || current_user.country
+    currency = current_user.get_currency(country)
+    cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
+    plans = SubscriptionPlan.get_relevant(
+                                            current_user,
+                                            currency,
+                                            cookie,
+                                            params[:exam_body_id]
+                                          )
+    return plans, country
+  end
 
   def set_flash
     if params[:flash].present?
