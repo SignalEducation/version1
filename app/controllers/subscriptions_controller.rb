@@ -35,6 +35,10 @@ class SubscriptionsController < ApplicationController
   before_action :check_subscriptions, only: [:new, :create]
   before_action :set_flash, only: :new
 
+  def show
+    @subscription = Subscription.find(params[:id])
+  end
+
   def new
     if !current_user.preferred_exam_body.present?
       redirect_to edit_preferred_exam_body_path

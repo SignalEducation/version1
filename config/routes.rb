@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
+    resources :subscriptions, only: :show
     resource :preferred_exam_body, only: [:edit, :update]
 
     #User Account Verification
