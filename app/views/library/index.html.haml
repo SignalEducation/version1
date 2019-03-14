@@ -7,39 +7,17 @@
       %section.pb-md-6
         %h2.sr-only List of courses
         .row.row-lg
-          -#@groups.each do |group|
-          .col-lg-4
-            %article.card.card-primary.card-turquoise
-              =image_tag('courses-AAT.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
-              .card-body.text-center
-                %h2.h1.card-title ACCA Revision
-                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                .mt-auto
-                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
-          .col-lg-4
-            %article.card.card-primary.card-pink
-              =image_tag('courses-ACCA.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
-              .card-body.text-center
-                %h2.h1.card-title AAT Revision
-                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                .mt-auto
-                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
-          .col-lg-4
-            %article.card.card-primary.card-yellow
-              =image_tag('courses-CPD.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
-              .card-body.text-center
-                %h2.h1.card-title CPD Revision
-                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                .mt-auto
-                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
-          .col-lg-4
-            %article.card.card-primary.card-purple
-              =image_tag('courses-CFA.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
-              .card-body.text-center
-                %h2.h1.card-title CFA Revision
-                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                .mt-auto
-                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
+          -@groups.each do |group|
+            .col-lg-4
+              %article.card.card-primary.card-turquoise
+                =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard')
+                .card-body.text-center
+                  %h2.h1.card-title
+                    =group.name
+                  %p
+                    =group.description
+                  .mt-auto
+                    =link_to 'Browse Courses', library_special_link(group), class: 'btn btn-secondary btn-sm'
 
 
 -#.l-section-small.is-bg-asphalt

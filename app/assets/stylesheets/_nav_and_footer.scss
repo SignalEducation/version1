@@ -420,6 +420,12 @@
 .navbar-dark {
   background-color: #000032
 }
+.navbar-dark .navbar-nav .nav-link {
+  color: #00b67b;
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+  color: #fff;
+}
 .navbar-dark .navbar-nav .nav-item.dropdown .dropdown-menu {
   background-color: #000032
 }
