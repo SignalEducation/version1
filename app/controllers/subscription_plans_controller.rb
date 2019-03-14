@@ -42,7 +42,6 @@ class SubscriptionPlansController < ApplicationController
     @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
 
     seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
-
   end
 
   def show
@@ -74,7 +73,6 @@ class SubscriptionPlansController < ApplicationController
     end
   end
 
-
   def destroy
     if @subscription_plan.destroy
       flash[:success] = I18n.t('controllers.subscription_plans.destroy.flash.success')
@@ -93,7 +91,7 @@ class SubscriptionPlansController < ApplicationController
     @subscription = Subscription.where(id: params[:id]).first
   end
 
-  protected
+  private
 
   def get_variables
     if params[:id].to_i > 0
