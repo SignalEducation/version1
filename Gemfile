@@ -16,8 +16,7 @@ gem 'blazer'
 gem 'scrypt' # S-Crypt for Authlogic
 # gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk-s3', '~> 1'
-gem 'bootstrap-sass', '~> 3.4.0' # loads Twitter Bootstrap UI framework
-gem 'bootstrap-datepicker-rails' # enables datepicker objects in the browser
+gem 'bootstrap', '~> 4.3.1'
 gem 'browser' # user-agent detection
 gem 'chart-js-rails', '~> 0.1.6' #Graphs
 gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)

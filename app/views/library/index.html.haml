@@ -1,30 +1,45 @@
-.bg-asphalt
-  .container
-    %article.hero.pb-5
-      %h1.h1-mega
-        Learn anytime, anywhere
-      %p.px-2.p-50
-        Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
-
-  #library.container.py-5
-    .row.row-lg
-      -@groups.each do |group|
-        .col-lg-4.col-md-6
-          =link_to library_special_link(group), class: 'card card-library card-lg mb-6 text-center' do
-            =image_tag('ico-course.svg', class: 'card-ico-top', alt: 'Course icon')
-            .card-body.text-wrap-truncate
-              %h3.mb-3
-                =group.name
-              %p.mb-2.text-purple3
-                =group.description.truncate(140)
-
-            .card-footer.bg-red
-              %span.with-arrow
-                Browse Courses
-
-
-
-
+%main
+  %article.library.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h1-hero.mb-3 Learn anytime, anywhere
+        %p.p-hero.px-lg-8 Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
+      %section.pb-md-6
+        %h2.sr-only List of courses
+        .row.row-lg
+          -#@groups.each do |group|
+          .col-lg-4
+            %article.card.card-primary.card-turquoise
+              =image_tag('courses-AAT.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
+              .card-body.text-center
+                %h2.h1.card-title ACCA Revision
+                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                .mt-auto
+                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
+          .col-lg-4
+            %article.card.card-primary.card-pink
+              =image_tag('courses-ACCA.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
+              .card-body.text-center
+                %h2.h1.card-title AAT Revision
+                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                .mt-auto
+                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
+          .col-lg-4
+            %article.card.card-primary.card-yellow
+              =image_tag('courses-CPD.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
+              .card-body.text-center
+                %h2.h1.card-title CPD Revision
+                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                .mt-auto
+                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
+          .col-lg-4
+            %article.card.card-primary.card-purple
+              =image_tag('courses-CFA.jpg', class: 'card-img-top', alt: 'People in front of the blackboard')
+              .card-body.text-center
+                %h2.h1.card-title CFA Revision
+                %p Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                .mt-auto
+                  %a.btn.btn-secondary.btn-sm{:href => "#"} Browse Courses
 
 
 -#.l-section-small.is-bg-asphalt
@@ -38,7 +53,7 @@
             Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
 
       .row.l-margin-top-huge.l-margin-bottom-huge
-        -@groups.each_with_index do |group|
+        -@groups.each do |group|
           .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
 
             =link_to library_special_link(group), class: 'box box-course' do

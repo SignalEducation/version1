@@ -11,13 +11,14 @@
 // about supported directives.
 //
 // //// Removed Turbolinks from just after jquery-sortable
-//= require jquery
+//= require jquery3
 //= require ahoy
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery.remotipart
 //= require jquery-sortable
 //= require Chart.min
+//= require popper
 //= require bootstrap-sprockets
 //= require zeroclipboard
 //= require moment

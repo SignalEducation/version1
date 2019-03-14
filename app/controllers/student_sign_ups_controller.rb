@@ -6,7 +6,7 @@ class StudentSignUpsController < ApplicationController
   before_action :layout_variables, only: [:home, :landing]
 
   def home
-
+    @footer = false
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     if @home_page
       @group = @home_page.group
