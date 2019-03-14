@@ -1,4 +1,50 @@
-.bg-img.bg-group-show{style: "background-image: url(#{@group.background_image.url});"}
+%main
+  %article.library-group-show.bg-white.py-5.py-lg-6
+    .container
+      %header.hero-section.hero-section-revisions{style: "background-image: url(#{@group.background_image.url});"}
+        %h1.h1-hero.mb-3.text-white
+          =@group.name
+        %p.p-hero.px-lg-8.text-white
+          =@group.description.to_s
+
+      %section.py-5.py-md-6
+        %h2.sr-only List of Courses
+        .row.row-lg
+          -if @courses
+            -@courses.each do |course|
+              .col-lg-6.col-xl-4
+                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-turquoise' do
+                  .card-header.d-flex.justify-content-center.align-items-center
+                    %i.budicon-office-bag-c{"aria-label" => "Strategic Professional", :role => "img"}
+
+                  .card-body.d-flex.flex-column.justify-content-center
+                    %small.card-category.mb-2
+                      =course.category_label
+                    %h5.card-title.mb-1
+                      %span.mr-1
+                        =course.name
+
+
+
+    .container-bg.bg-gray5
+      .container-sm
+        %section
+          %h2.sr-only Contact Help section
+          %article.text-center.py-6.py-lg-7
+            %header
+              %h2.h1.mb-4.px-4 We're here to guide you through.
+              %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
+            .py-4.d-flex.justify-content-center
+              =image_tag('contact-person-1.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+              =image_tag('contact-person-2.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+              =image_tag('contact-person-3.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+
+            .py-3
+              %button.btn.btn-primary.btn-lg Chat with our experts
+
+
+
+-#.bg-img.bg-group-show{style: "background-image: url(#{@group.background_image.url});"}
   .container
     %article.hero.pb-6
       %h1.h1-mega.text-white
@@ -6,7 +52,7 @@
       %h5.text-torquoise
         =@group.description.to_s.html_safe
 
-#library.bg-asphalt
+-#library.bg-asphalt
   .container.py-6
     .row.row-lg
       -if @courses

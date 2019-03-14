@@ -32,7 +32,7 @@ class Group < ActiveRecord::Base
   has_many :subject_courses
   has_many :home_pages
   has_attached_file :image, default_url: 'courses-AAT.jpg'
-  has_attached_file :background_image
+  has_attached_file :background_image, default_url: 'bg_library_group.jpg'
 
 
   # validation

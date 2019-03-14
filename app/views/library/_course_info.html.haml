@@ -1,24 +1,20 @@
-.row.row-lg
-  .col-lg-8
-    .pt-2.pb-3
-      %h4.mb-3
-        About this course
-      %p.mb-4
-        =@course.description.to_s.html_safe
+.col-xl-8
+  .pb-5
+    %h4.text-gray2 About this course
+    %p.mb-4
+      =@course.description.to_s.html_safe
+.col-xl-4
+  -if @course.course_tutor_details.any?
+    %aside.pb-5.pb-xl-3
+      %h4.text-gray2 Course Tutors
+      -@course_tutor_details.each do |course_tutor|
+        %div
+          =link_to profile_url(course_tutor.user), class: 'profile-item link-alt d-inline-flex align-items-center mb-3' do
+            .mr-3
+              =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail img-thumbnail-xs', alt: 'Tutor Profile Image'
+            %div
+              %p.profile-name.font-weight-medium.mb-0
+                =course_tutor.user.full_name.to_s
+              %small.text-gray2
+                =course_tutor.title
 
-  .col-lg-4
-    -if @course.course_tutor_details.any?
-      .pb-5.pb-xl-3
-        .tutor-header.mb-3
-          Course Tutors
-        -@course_tutor_details.each do |course_tutor|
-          .col-sm-12.l-margin-bottom{style: 'padding: 0;'}
-            =link_to profile_url(course_tutor.user), class: 'profile-item d-flex align-items-center mb-3' do
-              .col-sm-6.img-thumbnail-wrap.mr-3
-                =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail', alt: 'Tutor Profile Image'
-
-              .col-sm-6.l-margin-top-small
-                %p.profile-name.mb-1
-                  =course_tutor.user.full_name.to_s
-                %p.profile-title.mb-0.text-purple3
-                  =course_tutor.title

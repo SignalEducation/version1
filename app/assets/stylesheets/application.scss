@@ -4607,7 +4607,7 @@ a.card:hover .card-title .card-explanation {
 }
 .hero-section.hero-section-revisions {
   background-color: #000032;
-  background-image: url(../img/bg_library_group.jpg);
+  background-image: asset-url('bg_library_group.jpg');
   background-position: center
 }
 @media (min-width:768px) {
