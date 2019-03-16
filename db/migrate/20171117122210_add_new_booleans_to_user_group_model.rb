@@ -1,4 +1,4 @@
-class AddNewBooleansToUserGroupModel < ActiveRecord::Migration
+class AddNewBooleansToUserGroupModel < ActiveRecord::Migration[4.2]
   def change
     add_column :user_groups, :system_requirements_access, :boolean, default: false, index: true
     add_column :user_groups, :content_management_access, :boolean, default: false, index: true

@@ -44,7 +44,7 @@ class SubscriptionsController < ApplicationController
 
       # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
       @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan
+      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
         @currency_id = @existing_subscription.subscription_plan.currency_id
       else
         @currency_id = @country.currency_id
@@ -55,7 +55,7 @@ class SubscriptionsController < ApplicationController
       if params[:prioritise_plan_frequency].present?
         @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id)
       else
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3).first.id)
+        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3)&.first&.id)
       end
 
       IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, @country.name) unless Rails.env.test?
@@ -72,7 +72,7 @@ class SubscriptionsController < ApplicationController
     subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
     @subscription = subscription_object.create_and_return_subscription(params)
     
-    if @subscription.save
+    if @subscription && @subscription.save
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral

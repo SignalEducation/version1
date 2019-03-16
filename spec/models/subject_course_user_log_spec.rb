@@ -23,19 +23,6 @@
 require 'rails_helper'
 
 describe SubjectCourseUserLog do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at count_of_questions_taken count_of_questions_correct count_of_cmes_completed count_of_quizzes_taken count_of_videos_taken latest_course_module_element_id percentage_complete completed count_of_constructed_responses_taken)
-  SubjectCourseUserLog.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
-
   # relationships
   it { should belong_to(:user) }
   it { should belong_to(:subject_course) }

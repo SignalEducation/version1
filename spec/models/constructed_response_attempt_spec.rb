@@ -22,17 +22,6 @@
 require 'rails_helper'
 
 describe ConstructedResponseAttempt do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at flagged_for_review)
-  ConstructedResponseAttempt.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   subject { FactoryBot.build(:constructed_response_attempt) }
 
   # Constants

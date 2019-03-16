@@ -22,16 +22,13 @@
 
 class SubjectCourseUserLog < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :session_guid, :subject_course_id, :completed_at
-
   # Constants
 
   # relationships
   belongs_to :user
   belongs_to :subject_course
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :latest_course_module_element_id
+             foreign_key: :latest_course_module_element_id, optional: true
   has_many :enrollments
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
@@ -93,17 +90,17 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   def recalculate_completeness
     # Temp fix replaced SET scope with_active_cmes with with_valid_course_module scope
-    self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
-    self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)
-    self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
-    self.count_of_constructed_responses_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed = self.student_exam_tracks.with_valid_course_module.sum(:count_of_cmes_completed)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    unless self.percentage_complete.nil?
-      self.completed = true if (self.percentage_complete > 99)
-    end
-    self.save
+    # self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
+    # self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)
+    # self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
+    # self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
+    # self.count_of_constructed_responses_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_constructed_responses_taken)
+    # self.count_of_cmes_completed = self.student_exam_tracks.with_valid_course_module.sum(:count_of_cmes_completed)
+    # self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
+    # unless self.percentage_complete.nil?
+    #   self.completed = true if (self.percentage_complete > 99)
+    # end
+    # self.save
   end
 
   def student_exam_track_course_module_ids

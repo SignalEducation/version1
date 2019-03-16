@@ -14,10 +14,6 @@
 #
 
 class OrderTransaction < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :order_id, :user_id, :stripe_charge_id, :stripe_charge_id, :product_id, :stripe_order_id, :live_mode
-
   # Constants
 
   # relationships

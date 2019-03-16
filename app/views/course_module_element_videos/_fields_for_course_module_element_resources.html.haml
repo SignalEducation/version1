@@ -5,7 +5,7 @@
 
 =f.fields_for :course_module_element_resources do |cme_resource|
   .file-upload-box
-    -if cme_resource.object.upload_file_name
+    -if cme_resource.object.present?
       %h4
         Edit Upload
     -else
@@ -20,7 +20,7 @@
     .col-md-6
       =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
 
-      -if cme_resource.object.upload_file_name
+      -if cme_resource.object.present?
         .form-control-static
           =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
           =number_to_human_size(cme_resource.object.upload_file_size)

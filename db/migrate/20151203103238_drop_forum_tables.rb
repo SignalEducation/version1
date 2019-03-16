@@ -1,4 +1,4 @@
-class DropForumTables < ActiveRecord::Migration
+class DropForumTables < ActiveRecord::Migration[4.2]
   def change
     drop_table :forum_topic_users
     drop_table :forum_topics

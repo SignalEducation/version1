@@ -30,25 +30,13 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :course_module_element_id, :user_id, :session_guid,
-                  :element_completed, :time_taken_in_seconds,
-                  :quiz_score_actual, :quiz_score_potential,
-                  :is_video, :is_quiz, :course_module_id,
-                  :quiz_attempts_attributes, :seconds_watched,
-                  :count_of_questions_taken, :count_of_questions_correct,
-                  :subject_course_id, :student_exam_track_id,
-                  :subject_course_user_log_id, :is_constructed_response,
-                  :constructed_response_attempt_attributes,
-                  :scenario_question_attempts_attributes, :preview_mode
-
   # Constants
 
   # relationships
-  belongs_to :subject_course_user_log
-  belongs_to :student_exam_track
-  belongs_to :subject_course
-  belongs_to :course_module
+  belongs_to :subject_course_user_log, optional: true
+  belongs_to :student_exam_track, optional: true
+  belongs_to :subject_course, optional: true
+  belongs_to :course_module, optional: true
   belongs_to :course_module_element
   belongs_to :user
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
@@ -65,8 +53,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
             numericality: {only_integer: true, greater_than: 0}
   validates :subject_course_user_log_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :quiz_score_actual, presence: true, if: 'is_quiz == true', on: :update
-  validates :quiz_score_potential, presence: true, if: 'is_quiz == true', on: :update
+  validates :quiz_score_actual, presence: true, if: Proc.new { |log| log.is_quiz == true }, on: :update
+  validates :quiz_score_potential, presence: true, if: Proc.new { |log| log.is_quiz == true }, on: :update
 
   # callbacks
   before_create :set_latest_attempt, :set_booleans
@@ -226,9 +214,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # Before Create
   def set_latest_attempt
     unless self.preview_mode
+      CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only.update_all(latest_attempt: false)
       self.latest_attempt = true
-      others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
-      others.update_all(latest_attempt: false)
       true
     end
   end

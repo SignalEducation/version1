@@ -1,4 +1,4 @@
-class CreateSubscriptionPaymentCards < ActiveRecord::Migration
+class CreateSubscriptionPaymentCards < ActiveRecord::Migration[4.2]
   def change
     create_table :subscription_payment_cards do |t|
       t.integer :user_id, index: true

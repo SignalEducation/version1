@@ -1,4 +1,4 @@
-class AddContentAttributesToHomePage < ActiveRecord::Migration
+class AddContentAttributesToHomePage < ActiveRecord::Migration[4.2]
   def change
     add_column :home_pages, :header_heading, :string
     add_column :home_pages, :header_paragraph, :text

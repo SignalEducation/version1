@@ -1,4 +1,4 @@
-class CreateStripeApiEvents < ActiveRecord::Migration
+class CreateStripeApiEvents < ActiveRecord::Migration[4.2]
   def change
     create_table :stripe_api_events do |t|
       t.string :guid, index: true

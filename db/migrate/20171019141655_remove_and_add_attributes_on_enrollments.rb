@@ -1,4 +1,4 @@
-class RemoveAndAddAttributesOnEnrollments < ActiveRecord::Migration
+class RemoveAndAddAttributesOnEnrollments < ActiveRecord::Migration[4.2]
   def change
     remove_column :enrollments, :student_number, :string
     remove_column :enrollments, :registered, :boolean, default: false

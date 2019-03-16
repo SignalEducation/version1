@@ -15,12 +15,6 @@
 require 'rails_helper'
 
 describe PaypalWebhook do
-
-  # Constants
-  #it { expect(PaypalWebhook.const_defined?(:CONSTANT_NAME)).to eq(true) }
-
-  # relationships
-
   # validation
   it { should validate_presence_of(:guid) }
 

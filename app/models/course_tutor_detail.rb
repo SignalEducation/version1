@@ -13,9 +13,6 @@
 
 class CourseTutorDetail < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :subject_course_id, :user_id, :sorting_order, :title
-
   # Constants
 
   # relationships

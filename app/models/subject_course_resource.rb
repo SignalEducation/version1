@@ -18,16 +18,11 @@
 #
 
 class SubjectCourseResource < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url,
-                  :active, :sorting_order
-
   # Constants
 
   # relationships
   belongs_to :subject_course
-  has_attached_file :file_upload, default_url: '/assets/images/missing_corporate_logo.png'
+  has_attached_file :file_upload, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :name, presence: true

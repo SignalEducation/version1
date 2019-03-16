@@ -1,4 +1,4 @@
-class CreateHomePages < ActiveRecord::Migration
+class CreateHomePages < ActiveRecord::Migration[4.2]
   def up
     create_table :home_pages do |t|
       t.string :seo_title

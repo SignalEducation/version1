@@ -31,14 +31,6 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription
 
-  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
-                  :paypal_approval_url, :user_id, :subscription_plan_id,
-                  :stripe_status, :stripe_customer_id, :stripe_token,
-                  :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data, :coupon_id,
-                  :complimentary, :paypal_status, :state, :cancellation_reason, 
-                  :cancellation_note, :cancelling_subscription
-
   # delegate :currency, to: :subscription_plan
 
   # Constants
@@ -51,7 +43,7 @@ class Subscription < ActiveRecord::Base
   has_many :invoices
   has_many :invoice_line_items
   belongs_to :subscription_plan
-  belongs_to :coupon
+  belongs_to :coupon, optional: true
   has_one :student_access
   has_many :subscription_transactions
   has_many :charges

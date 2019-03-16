@@ -1,4 +1,4 @@
-class CreateMockExams < ActiveRecord::Migration
+class CreateMockExams < ActiveRecord::Migration[4.2]
   def change
     create_table :mock_exams do |t|
       t.integer :subject_course_id, index: true

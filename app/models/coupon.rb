@@ -22,10 +22,6 @@
 
 class Coupon < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :code, :currency_id, :livemode, :active, :amount_off, :duration, :duration_in_months,
-                  :max_redemptions, :percent_off, :redeem_by, :times_redeemed, :stripe_coupon_data
-
   # Constants
   DURATIONS = %w(forever once repeating)
 

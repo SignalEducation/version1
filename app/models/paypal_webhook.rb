@@ -14,8 +14,6 @@
 
 class PaypalWebhook < ActiveRecord::Base
   serialize :payload, Hash
-  # attr-accessible
-  attr_accessible :guid, :event_type, :payload, :processed_at, :valid
 
   # Constants
 

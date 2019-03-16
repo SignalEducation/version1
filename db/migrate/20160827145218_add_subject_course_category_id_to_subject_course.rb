@@ -1,4 +1,4 @@
-class AddSubjectCourseCategoryIdToSubjectCourse < ActiveRecord::Migration
+class AddSubjectCourseCategoryIdToSubjectCourse < ActiveRecord::Migration[4.2]
 
   def up
     add_column :subject_courses, :subject_course_category_id, :integer, index: true

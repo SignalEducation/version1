@@ -1,4 +1,4 @@
-class DropCourseHierarchyTables < ActiveRecord::Migration
+class DropCourseHierarchyTables < ActiveRecord::Migration[4.2]
   def change
     drop_table :subject_areas
     drop_table :qualifications

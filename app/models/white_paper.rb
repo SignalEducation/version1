@@ -21,17 +21,13 @@
 #
 
 class WhitePaper < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :name, :description, :file, :cover_image, :sorting_order, :name_url, :subject_course_id
-
   # Constants
 
   # relationships
   belongs_to :subject_course
   has_many :white_paper_requests
-  has_attached_file :file, default_url: '/assets/images/missing.png'
-  has_attached_file :cover_image, default_url: '/assets/images/missing.png'
+  has_attached_file :file, default_url: 'images/missing_image.jpg'
+  has_attached_file :cover_image, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :name, presence: true, uniqueness: true

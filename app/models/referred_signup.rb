@@ -15,9 +15,6 @@
 
 class ReferredSignup < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :referral_code_id, :user_id, :referrer_url, :payed_at, :subscription_id
-
   # Constants
 
   # relationships

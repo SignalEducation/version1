@@ -1,4 +1,4 @@
-class CreateCourseModules < ActiveRecord::Migration
+class CreateCourseModules < ActiveRecord::Migration[4.2]
   def change
     create_table :course_modules do |t|
       t.integer :institution_id, index: true

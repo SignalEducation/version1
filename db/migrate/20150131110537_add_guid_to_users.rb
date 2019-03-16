@@ -1,4 +1,4 @@
-class AddGuidToUsers < ActiveRecord::Migration
+class AddGuidToUsers < ActiveRecord::Migration[4.2]
   def up
     add_column :users, :guid, :string
     User.all.each do |u|

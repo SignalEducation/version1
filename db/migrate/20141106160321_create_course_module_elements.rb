@@ -1,4 +1,4 @@
-class CreateCourseModuleElements < ActiveRecord::Migration
+class CreateCourseModuleElements < ActiveRecord::Migration[4.2]
   def change
     create_table :course_module_elements do |t|
       t.string :name

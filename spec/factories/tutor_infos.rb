@@ -14,10 +14,10 @@
 
 FactoryBot.define do
   factory :tutor_info do
-    user_id "MyString"
-    sorting_order 1
-    title "MyString"
-    description "MyText"
-    name_url "MyString"
+    user_id { "MyString" }
+    sorting_order { 1 }
+    title { "MyString" }
+    description { "MyText" }
+    name_url { "MyString" }
   end
 end

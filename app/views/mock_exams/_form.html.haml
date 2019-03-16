@@ -11,7 +11,7 @@
         =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
 
     .col-md-6
-      -if f.object.file_file_name
+      -if f.object.present?
         =f.label :file, t('views.mock_exams.form.file'), class: 'control-label'
         .form-control-static
           =link_to f.object.file_file_name, f.object.file.url, target: '_blank'
@@ -22,18 +22,6 @@
         =f.label :file, t('views.mock_exams.form.file'), class: 'control-label'
       .input-group.input-group-lg.full-width
         =f.file_field :file, class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      -if f.object.cover_image_file_name
-        =f.label :file, t('views.mock_exams.form.cover_image'), class: 'control-label'
-        .form-control-static
-          =link_to f.object.cover_image_file_name, f.object.cover_image.url, target: '_blank'
-          =number_to_human_size(f.object.cover_image_file_size)
-          %br/
-          =f.label :cover_image, t('views.white_papers.form.cover_image_replacement'), class: 'control-label'
-      -else
-        =f.label :cover_image, t('views.mock_exams.form.cover_image'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.file_field :cover_image, class: 'form-control', style: 'border-radius: 6px;'
 
 
   .row.l-margin-top

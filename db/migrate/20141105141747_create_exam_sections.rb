@@ -1,4 +1,4 @@
-class CreateExamSections < ActiveRecord::Migration
+class CreateExamSections < ActiveRecord::Migration[4.2]
   def change
     create_table :exam_sections do |t|
       t.string :name

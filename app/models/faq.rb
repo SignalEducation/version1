@@ -17,10 +17,6 @@
 
 class Faq < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :faq_section_id, :question_text,
-                  :answer_text, :pre_answer_text
-
   # Constants
 
   # relationships

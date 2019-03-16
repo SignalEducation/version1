@@ -1,4 +1,4 @@
-class RemoveWrongAnswerFieldsFromQuizAnswerModel < ActiveRecord::Migration
+class RemoveWrongAnswerFieldsFromQuizAnswerModel < ActiveRecord::Migration[4.2]
   def change
     remove_column :quiz_answers, :wrong_answer_explanation_text, :text
     remove_column :quiz_answers, :wrong_answer_video_id, :integer

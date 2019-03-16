@@ -31,21 +31,13 @@ class HomePage < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
-                  :public_url, :subject_course_id, :custom_file_name,
-                  :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes,
-                  :header_heading, :header_paragraph, :header_button_text, :background_image,
-                  :header_button_link, :header_button_subtext, :footer_link, :mailchimp_list_guid,
-                  :mailchimp_section_heading, :mailchimp_section_subheading, :mailchimp_subscribe_section
-
   # Constants
   BACKGROUND_IMAGES = %w(watch_person highlighter_person lamp_person glasses_person meeting_persons)
 
   # relationships
-  belongs_to :subscription_plan_category
-  belongs_to :group
-  belongs_to :subject_course
+  belongs_to :subscription_plan_category, optional: true
+  belongs_to :group, optional: true
+  belongs_to :subject_course, optional: true
   has_many :blog_posts
   has_many :external_banners
 

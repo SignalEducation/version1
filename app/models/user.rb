@@ -56,35 +56,18 @@
 #
 
 class User < ActiveRecord::Base
-
   include LearnSignalModelExtras
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
 
-  # attr-accessible
-  attr_accessible :email, :first_name, :last_name, :active,
-                  :country_id, :user_group_id, :password_reset_requested_at,
-                  :password_reset_token, :password_reset_at,
-                  :stripe_customer_id, :password, :password_confirmation,
-                  :current_password, :locale, :subscriptions_attributes,
-                  :password_change_required, :address,
-                  :profile_image, :email_verification_code, :email_verified_at,
-                  :email_verified, :account_activated_at,
-                  :account_activation_code, :session_key,
-                  :stripe_account_balance, :free_trial,
-                  :terms_and_conditions, :date_of_birth, :description,
-                  :student_number, :student_access_attributes,
-                  :unsubscribed_from_emails, :communication_approval_datetime,
-                  :communication_approval
-
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
 
   # relationships
-  belongs_to :country
+  belongs_to :country, optional: true
   has_many :course_module_element_user_logs
   has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
            class_name: 'CourseModuleElementUserLog'
@@ -108,19 +91,19 @@ class User < ActiveRecord::Base
   has_one :referral_code
   has_one :student_access
   has_one :referred_signup
-  belongs_to :subscription_plan_category
+  belongs_to :subscription_plan_category, optional: true
   has_attached_file :profile_image,
-                    default_url: '/assets/images/missing_corporate_logo.png'
+                    default_url: 'images/missing_image.jpg'
 
   accepts_nested_attributes_for :student_access
 
   # validation
-  validates :email, presence: true, uniqueness: true, length: {within: 5..50}
+  validates :email, presence: true, length: {within: 5..50}, uniqueness: { case_sensitive: false }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates_confirmation_of :password, on: :create
-  validates_confirmation_of :password, if: '!password.blank?'
+  validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :user_group_id, presence: true
   #validate :date_of_birth_is_possible?
   validates :locale, inclusion: {in: LOCALES}
@@ -804,7 +787,7 @@ class User < ActiveRecord::Base
 
   def update_stripe_customer
     unless Rails.env.test?
-      if self.stripe_account_balance_changed? || self.email_changed?
+      if self.saved_change_to_stripe_account_balance? || self.saved_change_to_email?
         Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
         stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
         stripe_customer.email = self.email

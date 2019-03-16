@@ -1,4 +1,4 @@
-class AddFileUploadToSubjectCourseResource < ActiveRecord::Migration
+class AddFileUploadToSubjectCourseResource < ActiveRecord::Migration[4.2]
   def up
     add_attachment :subject_course_resources, :file_upload
   end

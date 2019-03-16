@@ -1,4 +1,4 @@
-class CreateGroupsSubjectCourses < ActiveRecord::Migration
+class CreateGroupsSubjectCourses < ActiveRecord::Migration[4.2]
   def change
     create_table :groups_subject_courses, id: false do |t|
       t.references :group, null: false, index: true

@@ -13,9 +13,9 @@
 
 FactoryBot.define do
   factory :course_module_element_quiz do
-    course_module_element_id 1
-    number_of_questions 1
-    question_selection_strategy 'random'
+    course_module_element_id { 1 }
+    number_of_questions { 1 }
+    question_selection_strategy { 'random' }
   end
 
 end

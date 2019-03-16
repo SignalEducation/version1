@@ -18,7 +18,7 @@
             =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
 
         .col-md-6
-          -if f.object.file_file_name
+          -if f.object.present?
             =f.label :file, t('views.white_papers.form.file_title'), class: 'control-label'
             .form-control-static
               =link_to f.object.file_file_name, f.object.file.url, target: '_blank'
@@ -30,7 +30,7 @@
           .input-group.input-group-lg.full-width
             =f.file_field :file, class: 'form-control', style: 'border-radius: 6px;'
           %br/
-          -if f.object.cover_image_file_name
+          -if f.object.present?
             =f.label :file, t('views.white_papers.form.cover_image_title'), class: 'control-label'
             .form-control-static
               =link_to f.object.cover_image_file_name, f.object.cover_image.url, target: '_blank'
