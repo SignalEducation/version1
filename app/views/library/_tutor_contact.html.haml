@@ -1,13 +1,12 @@
 .modal.fade{id: 'ask-a-tutor-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'askTutorQuestion', 'aria-hidden': 'true'}
   .modal-dialog{role: 'document'}
     .modal-content
-      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-        %span
-          Close
-        %i.material-icons.ml-1{'aria-hidden': 'true'}
-          close
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
+
       .modal-header
-        %h3{id: 'askTutorQuestion'}
+        %h3.mb-3{id: 'askTutorQuestion'}
           Ask The Tutor A Question
 
 
@@ -31,8 +30,8 @@
                 .form-group
                   =label_tag :question, 'Question'
                   =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
-            .pt-1
-              =submit_tag 'Send The Question', class: 'btn btn-primary'
+            .pt-2
+              =submit_tag 'Send The Question', class: 'btn btn-primary btn-sm'
 
         -else
           %p.font-weight-medium.mb-4.text-purple
@@ -43,5 +42,4 @@
           .modal-footer
             =link_to 'Sign In', sign_in_url, class: 'btn btn-primary', title: 'Sign In'
             =link_to 'Sign Up Now', new_student_url, class: 'btn btn-primary', title: 'Sign Up'
-
 

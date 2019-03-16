@@ -18,894 +18,172 @@
           %h1.h1-hero
             =@course.name
 
-      %section
-        .row.row-lg
-          -#if @subject_course_user_log
-            -total_lessons = @subject_course_user_log.subject_course.cme_count
-            -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
-            -complete_percent = @subject_course_user_log.try(:percentage_complete)
+      %section.course-progress
+        -if @subject_course_user_log
+          -total_lessons = @subject_course_user_log.subject_course.cme_count
+          -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
+          -complete_percent = @subject_course_user_log.try(:percentage_complete)
 
-            #course-graph-section
-              .row.row-lg
-                .col-lg-8
-                  .pb-5
-                    .progress-section
-                      .small.mb-3
-                        %span.current-step-indicator=completed_lessons
-                        out of
-                        %span.total-steps-indicator=total_lessons
-                        steps completed
-                      .progress
-                        .progress-bar{role: 'progressbar', style: "width: 25%", 'aria-valuenow': "25", 'aria-valuemin': "0", 'aria-valuemax': "100"}
+          %h4.sr-only Course Progress
+          .pt-3.pb-4.pb-sm-6
+            %small.text-gray2.mb-3
+              %span.current-step-indicator=completed_lessons
+              out of
+              %span.total-steps-indicator=total_lessons
+              steps completed
+            .progress
+              .progress-bar.progress-step-1{role: "progressbar", 'aria-valuenow': completed_lessons,  'aria-valuemin': "0", 'aria-valuemax': total_lessons}
 
-          -#else
+
+
+        -else
           =render partial: 'course_info'
 
 
-
-          -#%nav.courses-nav
-            %ul.nav.nav-tabs{id: 'coursesTab', role: 'tablist'}
-              -@course.course_sections.all_active.all_in_order.each do |course_section|
-                %li.nav-item
-                  %a{class: "#{current_user && current_user.account_type == 'Trial' && course_section.all_content_restricted? ? 'nav-link locked' : 'nav-link'}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
-                    =course_section.name
-
-
-
-              %li.nav-item
-                %a{href: "#exam-prep", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "exam-prep", selected: 'false'}}
-                  ='Exam Prep'
-
-              -#%li.nav-item
-                %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
-                  Locked
+      %nav.courses-nav
+        %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
+          - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
+            %li.nav-item
+              -# TODO add active to first li
+              %a{class: "#{current_user && current_user.account_type == 'Trial' && course_section.all_content_restricted? ? 'nav-link locked' : 'nav-link'} #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
+                =course_section.name
 
 
-          %nav.course-nav
-            %ul#coursesTabs.nav.nav-tabs{:role => "tablist"}
-              %li.nav-item
-                %a#tuition-tab.nav-link{"aria-controls" => "tuition", "aria-selected" => "true", "data-toggle" => "tab", :href => "#tuition", :role => "tab"}
-                  Tuition
-              %li.nav-item
-                %a#question-bank-tab.nav-link{"aria-controls" => "question-bank", "aria-selected" => "false", "data-toggle" => "tab", :href => "#question-bank", :role => "tab"}
-                  Question Bank
-              %li.nav-item
-                %a#exam-prep-tab.nav-link.active{"aria-controls" => "exam-prep", "aria-selected" => "false", "data-toggle" => "tab", :href => "#exam-prep", :role => "tab"}
-                  Exam Prep
-              %li.nav-item
-                %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
-                  Locked
+          %li.nav-item
+            %a{href: "#exam-prep", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "exam-prep", selected: 'false'}}
+              ='Exam Prep'
+
+          -#%li.nav-item
+            %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
+              Locked
+
 
 .bg-gray5
   .container.py-5.py-sm-6
     #coursesTabsContent.tab-content
-      #tuition.tab-pane.tab-tuition{"aria-labelledby" => "tuition-tab", :role => "tabpanel"}
-        .row.row-lg
-          .col-xl-8
-            .mb-5.mb-xl-0
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "trial-acces-modal-test", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#trial-acces-modal-test", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Open to test Trial Access Restricted Modal
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #trial-acces-modal-test.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{"data-target" => "#trial-access-restricted", "data-toggle" => "modal", :href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.failed
-                            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Trial Access Restricted Modal Test
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{"data-target" => "#trial-access-restricted", "data-toggle" => "modal", :href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Trial Access Restricted Modal Test
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{"data-target" => "#trial-access-restricted", "data-toggle" => "modal", :href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Trial Access Restricted Modal Test
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-coming-soon", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-coming-soon", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span.text-bg.bg-yellow-light Coming Soon
-                #governance-risk-coming-soon.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-yellow-light Coming Soon
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-yellow-light Coming Soon
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-yellow-light Coming Soon
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-completed", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-completed", :role => "button"}
-                  .lesson-item.w-100.completed
-                    %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-completed.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 18 steps
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 18 steps
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 18 steps
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-locked", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-locked", :role => "button"}
-                  .lesson-item.w-100.locked
-                    %i.material-icons.icon-bg-round{"aria-label" => "locked", :role => "img"}
-                      lock_outline
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-locked.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m43s
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-new", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-new", :role => "button"}
-                  .lesson-item.w-100.available
-                    %i.material-icons.icon-bg-round{"aria-label" => "available", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-new.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m 43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.failed
-                            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                              playlist_add_check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m 43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              grid_on
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m 43s
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-incomplete", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-incomplete", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Lorem ipsum dolor
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span.text-bg.bg-pink-light New
-                #governance-risk-18-steps-incomplete.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-pink-light New
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-pink-light New
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-pink-light New
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-18incomplete", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-18incomplete", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-18incomplete.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.failed
-                            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-          .col-xl-4.mb-5
-            #ask-a-tutor-modal-fed32r.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "askTutorQuestion-fed32r", :role => "dialog", :tabindex => "-1"}
-              .modal-dialog{:role => "document"}
-                .modal-content
-                  %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
-                    %span.sr-only Close Modal
-                    %i.material-icons{"aria-hidden" => "true"} close
-                  .modal-header
-                    %h3#askTutorQuestion-fed32r.mb-3 Ask The Tutor A Question
-                  .modal-body
-                    %form.py-2
-                      .row
-                        .col-sm-6
-                          .form-group
-                            %label{:for => "name-fed32r"} Name
-                            %input#name-fed32r.form-control{:placeholder => "Full Name", :type => "text"}/
-                        .col-sm-6
-                          .form-group
-                            %label{:for => "email-fed32r"} Email
-                            %input#email-fed32r.form-control{:placeholder => "Email Address", :type => "email"}/
-                        .col-12
-                          .form-group
-                            %label{:for => "question-fed32r"} Question
-                            %textarea#question-fed32r.form-control{:placeholder => "Question", :rows => "3"}
-                      .pt-2
-                        %button.btn.btn-primary.btn-sm{:type => "submit"} Send the question
-            %aside
-              %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal-fed32r", "data-toggle" => "modal", :href => "#"}
-                Ask the Tutor
-              %h3.mb-4.text-gray2 Course Resources
-              %ul.list-default
-                %li
-                  %a.list-default-link{:href => "#"} SBR – ACCA Syllabus
-                %li
-                  %a.list-default-link{:href => "#"} SBR – Useful Formulas
-                %li
-                  %a.list-default-link{:href => "#"} Lorem ipsum dolor sit ipsum dolor sit amet dolor sit
-      #question-bank.tab-pane.tab-question-bank{"aria-labelledby" => "question-bank-tab", :role => "tabpanel"}
-        .row.row-lg
-          .col-xl-8
-            .mb-5.mb-xl-0
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "trial-acces-modal-test", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#trial-acces-modal-test", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Open to test Trial Access Restricted ModalModalModalModalModal
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #trial-acces-modal-test.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{"data-target" => "#trial-access-restricted", "data-toggle" => "modal", :href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.failed
-                            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Trial Access Restricted Modal Test
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{"data-target" => "#trial-access-restricted", "data-toggle" => "modal", :href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Trial Access Restricted Modal Test
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{"data-target" => "#trial-access-restricted", "data-toggle" => "modal", :href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Trial Access Restricted Modal Test
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-coming-soon", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-coming-soon", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span.text-bg.bg-yellow-light Coming Soon
-                #governance-risk-coming-soon.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-yellow-light Coming Soon
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-yellow-light Coming Soon
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-yellow-light Coming Soon
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-completed", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-completed", :role => "button"}
-                  .lesson-item.w-100.completed
-                    %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-completed.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 18 steps
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 18 steps
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics, lorem ipsum dolor sit amet, lorem sit amet dolor sit amet
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 18 steps
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-locked", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-locked", :role => "button"}
-                  .lesson-item.w-100.locked
-                    %i.material-icons.icon-bg-round{"aria-label" => "locked", :role => "img"}
-                      lock_outline
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-locked.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              lock_outline
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m43s
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-new", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-new", :role => "button"}
-                  .lesson-item.w-100.available
-                    %i.material-icons.icon-bg-round{"aria-label" => "available", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-new.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.completed
-                            %i.material-icons.icon-bg-round{"aria-label" => "completed", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m 43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.failed
-                            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                              playlist_add_check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m 43s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              grid_on
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 14m 43s
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-incomplete", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-incomplete", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Lorem ipsum dolor
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span.text-bg.bg-pink-light New
-                #governance-risk-18-steps-incomplete.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-pink-light New
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-pink-light New
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              check
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Governance, Risk and Ethics 2
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span.text-bg.bg-pink-light New
-              .card.card-collapse.mb-4
-                %a.btn.btn-text.btn-collapse.w-100.text-left{"aria-controls" => "governance-risk-18-steps-18incomplete", "aria-expanded" => "false", "data-toggle" => "collapse", :href => "#governance-risk-18-steps-18incomplete", :role => "button"}
-                  .lesson-item.w-100
-                    %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                      check
-                    .lesson-item-content.pl-3
-                      .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
-                        %p.lesson-item-text.text-truncate.w-100 Governance, Risk and Ethics 2
-                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                          %span 18 steps
-                #governance-risk-18-steps-18incomplete.collapse
-                  .card-body
-                    %ul.list-unstyled
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100.failed
-                            %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-                      %li.py-2.border-top
-                        %a.btn.btn-text.py-3.w-100.text-left{:href => "#"}
-                          .lesson-item.lesson-item-inner.w-100
-                            %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                              ondemand_video
-                            .lesson-item-content.pl-3
-                              .d-flex.flex-column.flex-sm-row.align-items-start
-                                %p.lesson-item-text Professional Behaviour and Compliance with Accounting Standards
-                                %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                  %span 13m 13s
-          .col-xl-4.mb-5
-            #ask-a-tutor-modal-sfsfdsf.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "askTutorQuestion-sfsfdsf", :role => "dialog", :tabindex => "-1"}
-              .modal-dialog{:role => "document"}
-                .modal-content
-                  %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
-                    %span.sr-only Close Modal
-                    %i.material-icons{"aria-hidden" => "true"} close
-                  .modal-header
-                    %h3#askTutorQuestion-sfsfdsf.mb-3 Ask The Tutor A Question
-                  .modal-body
-                    %form.py-2
-                      .row
-                        .col-sm-6
-                          .form-group
-                            %label{:for => "name-sfsfdsf"} Name
-                            %input#name-sfsfdsf.form-control{:placeholder => "Full Name", :type => "text"}/
-                        .col-sm-6
-                          .form-group
-                            %label{:for => "email-sfsfdsf"} Email
-                            %input#email-sfsfdsf.form-control{:placeholder => "Email Address", :type => "email"}/
-                        .col-12
-                          .form-group
-                            %label{:for => "question-sfsfdsf"} Question
-                            %textarea#question-sfsfdsf.form-control{:placeholder => "Question", :rows => "3"}
-                      .pt-2
-                        %button.btn.btn-primary.btn-sm{:type => "submit"} Send the question
-            %aside
-              %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal-sfsfdsf", "data-toggle" => "modal", :href => "#"}
-                Ask the Tutor
-              %h3.mb-4.text-gray2 Course Resources
-              %ul.list-default
-                %li
-                  %a.list-default-link{:href => "#"} SBR – ACCA Syllabus
-                %li
-                  %a.list-default-link{:href => "#"} SBR – Useful Formulas
-                %li
-                  %a.list-default-link{:href => "#"} Lorem ipsum dolor sit ipsum dolor sit amet dolor sit
-      #exam-prep.tab-pane.show.active.tab-exam-prep{"aria-labelledby" => "exam-prep-tab", :role => "tabpanel"}
-        .row.row-lg
-          .col-xl-6
-            %section.mb-5
-              %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
-              %a.card.card-horizontal.card-horizontal-sm.flex-row{:href => "#"}
-                .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                  %i.budicon-files-block{"aria-label" => "", :role => "img"}
-                .card-body.d-flex.align-items-center.pl-1
-                  %h5.m-0.text-truncate.text-gray2 Management Accounting
-              %a.card.card-horizontal.card-horizontal-sm.flex-row{:href => "#"}
-                .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                  %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                .card-body.d-flex.align-items-center.pl-1
-                  %h5.m-0.text-truncate.text-gray2 Lorem ipsum dolor sic amet lorem ipsum dolor sit amet lorem ipsum dolor sit
-          .col-xl-6
-            %section.mb-5
-              %h3.text-gray1.mb-4.mb-sm-5 Course Resources
-              %a.card.card-horizontal.card-horizontal-sm.flex-row{:href => "#"}
-                .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                  %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                .card-body.d-flex.align-items-center.pl-1
-                  %h5.m-0.text-truncate.text-gray2 Study Schedule
-              %a.card.card-horizontal.card-horizontal-sm.flex-row{:href => "#"}
-                .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                  %i.budicon-files-block{"aria-label" => "", :role => "img"}
-                .card-body.d-flex.align-items-center.pl-1
-                  %h5.m-0.text-truncate.text-gray2 Course Resources 001
-              %a.card.card-horizontal.card-horizontal-sm.flex-row{:href => "#"}
-                .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                  %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                .card-body.d-flex.align-items-center.pl-1
-                  %h5.m-0.text-truncate.text-gray2 Downloadables
-      #locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}
-        %h4.sr-only This is placeholder Locked content
 
--#.bg-asphalt
-  #tab-area
-    .container.py-5
-
-      .tab-content#course-tabs
-
-        - @course.course_sections.all_active.all_in_order.each do |course_section|
-          .tab-pane.fade{id: course_section.name_url, role: 'tabpanel', 'aria-labelledby': "#{course_section.name_url}-tab"}
-            .ow-lg
-              .col-lg-8{style: 'padding-left: 0;'}
-                .mb-5.mb-xl-0
-
-
-                  - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
-
-                    .card.card-course
-
-                      %a.btn.btn-collapse.w-100{'data-toggle': "collapse", href: "#collapse_#{course_section.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_section.name_url}_#{counter}",id: course_module.id}
-
-                        .course-item.course-item-collapse{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
-                          .course-item-icon
-                            %span.icon-custom
-                              %i.material-icons{aria: {hidden: "true"}}
-                                - if current_user && current_user.account_type == 'Trial' && course_module.all_content_restricted?
-                                  lock_outline
-                                - else
-                                  check
-
-                          .course-item-title.text-truncate
-                            %span.pr-sm-4
+      - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
+        .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
+          .row.row-lg
+            .col-xl-8
+              .mb-5.mb-xl-0
+                - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
+                  .card.card-collapse.mb-4
+                    - # TODO add hover text colour change
+                    %a.btn.btn-text.btn-collapse.w-100.text-left{'data-toggle': "collapse", href: "#collapse_#{course_module.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_module.name_url}_#{counter}",id: course_module.id}
+                      .lesson-item.w-100{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
+                        %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
+                          - if current_user && current_user.account_type == 'Trial' && course_module.all_content_restricted?
+                            lock_outline
+                          - else
+                            check
+                        .lesson-item-content.pl-3
+                          .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
+                            %p.lesson-item-text.text-truncate.w-100
                               =course_module.name
+                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                              - if course_module.children.any?
+                                %span
+                                  -if course_module.cme_count.to_i > 1
+                                    =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                  -else
+                                    =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
+                              -else
+                                %span
+                                  Coming Soon
 
-                          .course-item-tag{style: 'margin-right: 30px;'}
-                            - if course_module.children.any?
-                              %span.course-tag.small
-                                -if course_module.cme_count.to_i > 1
-                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                -else
-                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
-                            -else
-                              %span.course-tag.small.text-with-bg
-                                Coming Soon
-
-
-                      .collapse.card-course-inner{id: "collapse_#{course_section.name_url}_#{counter}"}
-                        %ul.mb-3
+                    .collapse{id: "collapse_#{course_module.name_url}_#{counter}"}
+                      .card-body
+                        %ul.list-unstyled
                           -course_module.children.all_in_order.all_active.each do |cme|
 
-                            %li
+                            %li.py-2.border-top
+
                               - if current_user #Logged In User
                                 - permission = cme.available_to_user(current_user, @subject_course_user_log)
                                 - if permission[:view]
 
-                                  =link_to course_special_link(cme, @subject_course_user_log), class: 'course-item-link' do
-                                    .course-item.course-item-static{class: @cmeuls && @cmeuls.include?(cme.id) ? (@completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
-                                      .course-item-icon
-                                        %span.icon-custom
-                                          %i.material-icons{'aria-hidden': 'true'}
-                                            -if cme.is_video?
-                                              ondemand_video
-                                            -elsif cme.is_quiz?
-                                              playlist_add_check
-                                            -elsif cme.is_constructed_response?
-                                              grid_on
-                                            -else
-                                              checked
-
-
-                                      .course-item-title
-                                        %span.pr-sm-4
-                                          =cme.name
-
-                                      .course-item-tag
-                                        -if cme.temporary_label && !cme.temporary_label.empty?
-                                          %span.course-tag.small.text-with-bg
-                                          =cme.temporary_label
+                                  =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                    .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls.include?(cme.id) ? (@completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                      %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                        -if cme.is_video?
+                                          ondemand_video
+                                        -elsif cme.is_quiz?
+                                          playlist_add_check
+                                        -elsif cme.is_constructed_response?
+                                          grid_on
                                         -else
-                                          %span.course-tag.small
-                                            -if cme.is_video
-                                              -if cme.try(:course_module_element_video).try(:duration)
-                                                =humanize_time(cme.course_module_element_video.duration)
-                                              -elsif cme.try(:estimated_time_in_seconds)
-                                                =humanize_time(cme.try(:estimated_time_in_seconds))
-                                            -elsif cme.is_quiz
-                                              -if cme.number_of_questions.to_i > 1
-                                                =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                                              -else
-                                                =cme.number_of_questions.to_s + ' ' +  'Question'
+                                          checked
+
+
+                                      .lesson-item-content.pl-3
+                                        .d-flex.flex-column.flex-sm-row.align-items-start
+                                          %p.lesson-item-text
+                                            =cme.name
+                                          %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                            -if cme.temporary_label && !cme.temporary_label.empty?
+                                              %span=cme.temporary_label
+                                            -else
+                                              %span
+                                                -if cme.is_video
+                                                  -if cme.try(:course_module_element_video).try(:duration)
+                                                    =humanize_time(cme.course_module_element_video.duration)
+                                                  -elsif cme.try(:estimated_time_in_seconds)
+                                                    =humanize_time(cme.try(:estimated_time_in_seconds))
+                                                -elsif cme.is_quiz
+                                                  -if cme.number_of_questions.to_i > 1
+                                                    =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                  -else
+                                                    =cme.number_of_questions.to_s + ' ' +  'Question'
 
 
                                 - else
-                                  %li
-                                    %a.course-item-link{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
-                                      .course-item.course-item-static{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
-                                        .course-item-icon
-                                          %span.icon-custom
-                                            %i.material-icons{'aria-hidden': 'true'}
-                                              lock_outline
-                                        .course-item-title
-                                          %span.pr-sm-4
+                                  %a.btn.btn-text.py-3.w-100.text-left{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
+                                    .lesson-item.lesson-item-inner.w-100{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
+                                      %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                        lock_outline
+                                      .lesson-item-content.pl-3
+                                        .d-flex.flex-column.flex-sm-row.align-items-start
+                                          %p.lesson-item-text
                                             =cme.name
-                                        .course-item-tag
+                                          %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                            -if cme.temporary_label && !cme.temporary_label.empty?
+                                              %span=cme.temporary_label
+                                            -else
+                                              %span
+                                                -if cme.is_video
+                                                  -if cme.try(:course_module_element_video).try(:duration)
+                                                    =humanize_time(cme.course_module_element_video.duration)
+                                                  -elsif cme.try(:estimated_time_in_seconds)
+                                                    =humanize_time(cme.try(:estimated_time_in_seconds))
+                                                -elsif cme.is_quiz
+                                                  -if cme.number_of_questions.to_i > 1
+                                                    =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                  -else
+                                                    =cme.number_of_questions.to_s + ' ' +  'Question'
+
+                              - else #Anonymous User
+                                %a.btn.btn-text.py-3.w-100.text-left{data: {target: '#account-required', toggle: 'modal', href: '#'}}
+                                  .lesson-item.lesson-item-inner.w-100
+                                    %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                      -if cme.is_video?
+                                        ondemand_video
+                                      -elsif cme.is_quiz?
+                                        playlist_add_check
+                                      -elsif cme.is_constructed_response?
+                                        grid_on
+                                      -else
+                                        checked
+
+                                    .lesson-item-content.pl-3
+                                      .d-flex.flex-column.flex-sm-row.align-items-start
+                                        %p.lesson-item-text
+                                          =cme.name
+                                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                           -if cme.temporary_label && !cme.temporary_label.empty?
-                                            %span.course-tag.small.text-with-bg
-                                              =cme.temporary_label
+                                            %span=cme.temporary_label
                                           -else
-                                            %span.course-tag.small
+                                            %span
                                               -if cme.is_video
                                                 -if cme.try(:course_module_element_video).try(:duration)
                                                   =humanize_time(cme.course_module_element_video.duration)
@@ -917,115 +195,78 @@
                                                 -else
                                                   =cme.number_of_questions.to_s + ' ' +  'Question'
 
-                              - else #Anonymous User
-                                %a.course-item-link{data: {target: '#account-required', toggle: 'modal', href: '#'}}
-                                  .course-item.course-item-static
-                                    .course-item-icon
-                                      %span.icon-custom
-                                        %i.material-icons{'aria-hidden': 'true'}
-                                          -if cme.is_video?
-                                            ondemand_video
-                                          -elsif cme.is_quiz?
-                                            playlist_add_check
-                                          -elsif cme.is_constructed_response?
-                                            grid_on
-                                          -else
-                                            checked
-
-                                    .course-item-title
-                                      %span.pr-sm-4
-                                        =cme.name
-
-                                    .course-item-tag
-                                      -if cme.temporary_label && !cme.temporary_label.empty?
-                                        %span.course-tag.small.text-with-bg
-                                        =cme.temporary_label
-                                      -else
-                                        %span.course-tag.small
-                                          -if cme.is_video
-                                            -if cme.try(:course_module_element_video).try(:duration)
-                                              =humanize_time(cme.course_module_element_video.duration)
-                                            -elsif cme.try(:estimated_time_in_seconds)
-                                              =humanize_time(cme.try(:estimated_time_in_seconds))
-                                          -elsif cme.is_quiz
-                                            -if cme.number_of_questions.to_i > 1
-                                              =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                                            -else
-                                              =cme.number_of_questions.to_s + ' ' +  'Question'
-
-              .col-lg-4.mb-5
-                %div.tutor-contact
-                  %a.tutor-contact-link.d-inline-flex.align-items-center.mb-4.w-100.link-purple-turquoise{href: "#", 'data-toggle': 'modal', 'data-target': '#ask-a-tutor-modal'}
-                    .icon-custom.icon-custom-lg.mr-3
-                      %i.material-icons{'aria-hidden': "true"}
-                        question_answer
-                    %span.p.mb-0.font-weight-medium
-                      Ask the Tutor
 
 
-
-          .tab-pane.tab-courses.tab-exam-prep{id: 'exam-prep', role: 'tabpanel', 'aria-labelledby': 'exam-prep-tab'}
-            .row.row-lg
-              .col-lg-6
-                .mb-5
-                  %h3='Exam Preparation Products'
-
-                  - @correction_pack_products.each do |product|
-                    =link_to new_order_url(product), class: 'card card-link card-link-alt mb-4' do
-                      .col-xs-2
-                        .card-link-alt-img.mr-3.mr-sm-4
-                          =image_tag('ico-questions-2.svg', alt: "#{product.mock_exam.try(:name)} Product")
-                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                        %h4.text-ellipsis.mb-0.pr-sm-4
-                          =product.mock_exam.try(:name)
-
-                  - @mock_exam_products.each do |product|
-                    =link_to new_order_url(product), class: 'card card-link card-link-alt mb-4' do
-                      .col-xs-2
-                        .card-link-alt-img.mr-3.mr-sm-4
-                          =image_tag('ico-exam.svg', alt: "#{product.mock_exam.try(:name)} Product")
-                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                        %h4.text-ellipsis.mb-0.pr-sm-4
-                          =product.mock_exam.try(:name)
+            .col-xl-4.mb-5
+              %aside
+                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#"}
+                  Ask the Tutor
+                -#
+                  %h3.mb-4.text-gray2 Course Resources
+                  %ul.list-default
+                    %li
+                      %a.list-default-link{:href => "#"} SBR – ACCA Syllabus
+                    %li
+                      %a.list-default-link{:href => "#"} SBR – Useful Formulas
+                    %li
+                      %a.list-default-link{:href => "#"} Lorem ipsum dolor sit ipsum dolor sit amet dolor sit
 
 
-              .col-lg-6
-                .mb-5
-                  %h3='Course Resources'
+      .tab-pane.tab-exam-prep{id: 'exam-prep', role: 'tabpanel', 'aria-labelledby': 'exam-prep-tab'}
+        .row.row-lg
+          .col-xl-6
+            %section.mb-5
+              %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
 
-                  - @subject_course_resources.each do |resource|
+              - @correction_pack_products.each do |product|
+                =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                  .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                    %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                  .card-body.d-flex.align-items-center.pl-1
+                    %h5.m-0.text-truncate.text-gray2 Management Accounting
 
-                    - if current_user
-                      - permission = resource.available_to_user(current_user)
-                      - if  permission[:view]
-                        =link_to course_resource_special_link(resource), class: 'card card-link card-link-alt mb-4', target: '_blank' do
-                          .col-xs-2
-                            .icon-custom.icon-custom-xl.mr-3.mr-sm-4
-                              %i.material-icons{'aria-hidden': 'true'}
-                                file_download
-                          .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                            %h4.text-ellipsis.mb-0.pr-sm-4
-                              =resource.name
-                      - else
-                        %a.card.card-link.card-link-alt.mb-4.locked{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
-                          .col-xs-2
-                            .icon-custom.icon-custom-xl.mr-3.mr-sm-4
-                              %i.material-icons{'aria-hidden': 'true'}
-                                lock_outline
-                          .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                            %h4.text-ellipsis.mb-0.pr-sm-4
-                              =resource.name
+              - @mock_exam_products.each do |product|
+                =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                  .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                    %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                  .card-body.d-flex.align-items-center.pl-1
+                    %h5.m-0.text-truncate.text-gray2
+                      =product.mock_exam.try(:name)
 
-                    - else
-                      %a.card.card-link.card-link-alt.mb-4.locked{data: {target: '#account-required', toggle: 'modal', href: '#'}}
-                        .col-xs-2
-                          .icon-custom.icon-custom-xl.mr-3.mr-sm-4
-                            %i.material-icons{'aria-hidden': 'true'}
-                              lock_outline
-                        .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                          %h4.text-ellipsis.mb-0.pr-sm-4
-                            =resource.name
+          .col-xl-6
+            %section.mb-5
+              %h3.text-gray1.mb-4.mb-sm-5 Course Resources
+              - @subject_course_resources.each do |resource|
 
+                - if current_user
+                  - permission = resource.available_to_user(current_user)
+                  - if  permission[:view]
+                    =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                      .card-body.d-flex.align-items-center.pl-1
+                        %h5.m-0.text-truncate.text-gray2
+                          =resource.name
+
+                  - else
+                    %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
+                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                      .card-body.d-flex.align-items-center.pl-1
+                        %h5.m-0.text-truncate.text-gray2
+                          =resource.name
+
+                - else
+                  %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: '#account-required', toggle: 'modal', href: '#'}}
+                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                      %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                    .card-body.d-flex.align-items-center.pl-1
+                      %h5.m-0.text-truncate.text-gray2
+                        =resource.name
+
+
+      -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}
+        %h4.sr-only This is placeholder Locked content
 
 
 
@@ -1042,21 +283,6 @@
 :javascript
 
   $(document).ready(function(){
-
-    $('.courses-nav .nav-tabs .nav-link').on('click', function(){
-      $(this).addClass('active show');
-      $(this).parent().siblings().children().removeClass('active show');
-
-    });
-
-    hash = window.location.hash;
-    elements = $('a[href="' + hash + '"]');
-    if (elements.length === 0) {
-      let selectedTab = $(".courses-nav a:first");
-      selectedTab.click();
-    } else {
-      elements.click();
-    }
 
     let searchParams = new URLSearchParams(window.location.search);
     if (searchParams.has('cm')) {
