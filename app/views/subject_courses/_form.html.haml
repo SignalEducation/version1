@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    =form_for(@subject_course, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form'}) do |f|
+    =form_for(@subject_course, html: {class: 'form-horizontal', role: 'form'}) do |f|
       .box-item.form-box
         .row.l-margin-bottom
           =render partial: '/layouts/error_messages', locals: {thing: @subject_course, message: nil}
@@ -88,9 +88,11 @@
               =f.file_field :background_image
 
               %br/
+              %br/
               =f.label :highlight_colour, t('views.subject_courses.form.highlight_colour'), class: 'control-label'
               .input-group.input-group-lg.full-width
-                =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =#f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+                =f.select :highlight_colour, %w[#fd5c63 #30aabc #f0ca28 #775ead #00b67b], {}, {class: 'form-control', style: 'border-radius: 6px;'}
 
 
           .col-md-12.l-margin-top
