@@ -9,8 +9,8 @@
         .row.row-lg
           -@groups.each do |group|
             .col-lg-4
-              %article.card.card-primary.card-turquoise
-                =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard')
+              %article.card.card-primary.card-pink
+                =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
                 .card-body.text-center
                   %h2.h1.card-title
                     =group.name

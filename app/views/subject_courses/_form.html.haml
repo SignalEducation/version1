@@ -82,8 +82,8 @@
             .col-sm-6
               .image-label
                 Background Image
-              -if @subject_course.background_image.url
-                =image_tag @subject_course.background_image.url, class: 'md-image'
+              -#if @subject_course.background_image.url
+                =image_tag @subject_course.background_image.try(:url), class: 'md-image'
               %br/
               =f.file_field :background_image
 
@@ -92,7 +92,7 @@
               =f.label :highlight_colour, t('views.subject_courses.form.highlight_colour'), class: 'control-label'
               .input-group.input-group-lg.full-width
                 =#f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-                =f.select :highlight_colour, %w[#fd5c63 #30aabc #f0ca28 #775ead #00b67b], {}, {class: 'form-control', style: 'border-radius: 6px;'}
+                =f.select :highlight_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28], %w[Purple #775ead], %w[Green #00b67b]]), class: 'form-control', style: 'border-radius: 6px;'
 
 
           .col-md-12.l-margin-top

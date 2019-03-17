@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_07_141503) do
+ActiveRecord::Schema.define(version: 2019_03_17_104058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -519,6 +519,7 @@ ActiveRecord::Schema.define(version: 2019_02_07_141503) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
+    t.string "background_colour"
     t.index ["name"], name: "index_groups_on_name"
   end
 

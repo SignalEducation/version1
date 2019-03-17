@@ -19,6 +19,7 @@
 #  background_image_content_type :string
 #  background_image_file_size    :integer
 #  background_image_updated_at   :datetime
+#  background_colour             :string
 #
 
 require 'rails_helper'

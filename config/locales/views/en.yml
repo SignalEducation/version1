@@ -830,6 +830,7 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         course_count: No. of Courses
+        background_colour: Background Colour
 
       index:
         h1: Groups
