@@ -4,7 +4,7 @@
   padding: 30px;
   border-radius: 0;
   background: #fff;
-  color: #424465;
+  color: #657786;
   @include clearfix();
 
   .welcome-text {
@@ -37,16 +37,8 @@
 }
 .start-screen-box-nav {
   padding: 5px 20px;
-  background-color: #2c9676;
+  background-color: #00b67b;
   color: #fff;
-  &.start-screen-box-nav-header {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-  }
-  &.start-screen-box-nav-footer {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-  }
 }
 
 .cr-resources {
