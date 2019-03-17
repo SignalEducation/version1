@@ -5337,6 +5337,8 @@ a.box-item {
     width: 22px;
   }
 
+}.box-item.question-box.quiz-results {
+   margin: $gutter/2 0 $gutter 0;
 }
 .box-item.form-box {
   padding: $gutter*2 $gutter;
@@ -5460,7 +5462,7 @@ a.list-group-item {
 }
 .answer {
   padding: 15px;
-  border-radius: 7px;
+  border-radius: 0;
   cursor: pointer;
 }
 .quiz-answer {

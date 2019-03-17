@@ -1,10 +1,9 @@
-.col-xs-4.text-left
-  =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-primary full-width' do
-    =t('views.course_module_elements.show.retake_quiz')
-.col-xs-4.text-center
-.col-xs-4.text-right
-  =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-secondary-reverse full-width' do
-    -if @course_module_element_user_log && @course_module_element_user_log.element_completed
-      =t('views.course_module_elements.show.next_step')
-    -else
-      =t('views.course_module_elements.show.skip_step')
+.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+  .mw-0
+    =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-secondary btn-sm mb-3 mb-sm-0' do
+      =t('views.course_module_elements.show.retake_quiz')
+
+  .mw-0
+    =link_to course_special_link(cme.next_element, @subject_course_user_log) do
+      .btn.btn-primary.btn-sm.btn-sm-arrow-right
+        =t('views.course_module_elements.show.next_step')
