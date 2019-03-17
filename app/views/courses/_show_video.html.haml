@@ -1,39 +1,36 @@
-.col-md-8.col-sm-12
-  %h2
-    =cme.name.html_safe
-  -if cme.course_module_element_video.vimeo_guid
-    #vimeo-player-window.vimeo-player-window
+.row.row-lg
+  .col-xl-8
+    -if cme.course_module_element_video.vimeo_guid
+      #vimeo-player-window.vimeo-player-window
 
 
-  -#Nav buttons below video
-  .l-margin-bottom.l-margin-top.hidden-xs
-    .pull-right
-      =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-primary text-bold' do
-        =t('views.course_module_elements.show.next_step')
-        .glyphicon.glyphicon-arrow-right
+    .pt-5.pb-5
+      %h2.h4 Description
+      %p.mb-4
+        =@course_module_element.description.html_safe
 
-  .l-margin-bottom-huge.l-margin-top.hidden-lg.hidden-md.hidden-sm
-    .col-sm-12
-      =link_to course_special_link(cme.next_element, @subject_course_user_log), class: 'btn btn-primary full-width' do
-        =t('views.course_module_elements.show.next_step')
-        .glyphicon.glyphicon-arrow-right
 
-.col-md-4.col-sm-12
-  -if @course_module_element.course_module_element_resources.count > 0
-    .col-md-12.l-margin-top-big
-      %h4.l-margin-bottom
+
+  .col-xl-4
+    -if @course_module_element.course_module_element_resources.any?
+      %h4.text-gray1.mb-2.mb-sm-3.mt-sm-4.mt-md-0
         ='Additional Resources'
-      -@course_module_element.course_module_element_resources.each do |r|
-        -if r.web_url && r.web_url.length > 0
-          =link_to r.web_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-            =r.name
+      -@course_module_element.course_module_element_resources.each do |resource|
+
+        -if resource.web_url && resource.web_url.length > 0
+          =link_to resource.web_url, class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+            .card-header.bg-white.d-flex.align-items-center.justify-content-center
+              %i.budicon-internal-link{"aria-label" => "", :role => "img"}
+            .card-body.d-flex.align-items-center.pl-1
+              %h5.m-0.text-truncate.text-gray2
+                =resource.name
         -else
-          =link_to r.upload.url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-            .col-xs-10
-              =r.name
-            .col-xs-2
-              %i.material-icons{'aria-hidden': 'true'}
-                file_download
+          =link_to resource.upload.url, class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+            .card-header.bg-white.d-flex.align-items-center.justify-content-center
+              %i.budicon-files-download{"aria-label" => "", :role => "img"}
+            .card-body.d-flex.align-items-center.pl-1
+              %h5.m-0.text-truncate.text-gray2
+                =resource.name
 
 
 
