@@ -41,6 +41,7 @@
       %meta{name: 'description', content: @seo_description}
     -if @seo_no_index
       %meta{name: 'robots', content: 'noindex'}
+    =render 'application/favicon'
 
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
