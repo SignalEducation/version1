@@ -88,6 +88,12 @@
     border-radius: 0
   }
 }
+.navbar-light .navbar-nav .nav-link {
+  color: #00b67b;
+}
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #000032;
+}
 .navbar-nav .nav-item.dropdown .dropdown-menu .dropdown-item {
   text-transform: none
 }

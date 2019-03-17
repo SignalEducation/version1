@@ -1,224 +1,132 @@
-=render partial: 'layouts/external_banner'
-#wrapper
-  -#loading
-  %header#header
-    =render 'layouts/landing_navbar'
+%header.header
+  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
+    .container.animate.fade-in-up
+      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+        %span.navbar-toggler-bar.frst
+        %span.navbar-toggler-bar.scnd
 
-  %section#free.diag-r-down
-    .tmain
-      .tbase
-        .container
-          .row
-            .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
-              %h1.title1
-                Passing your ACCA is worth it
+      =link_to home_url, class: 'navbar-brand logo' do
+        =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
 
-              =render partial: 'sign_up_form'
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          %li.nav-item
+            =link_to library_url, class: 'nav-link' do
+              %span Courses
+          %li.nav-item
+            =link_to pricing_url, class: 'nav-link' do
+              %span Pricing
+          %li.nav-item
+            =link_to new_student_url, class: 'nav-link' do
+              %span Registration
+          %li.nav-item
+            =link_to sign_in_url, class: 'nav-link navbar-login' do
+              %span Login
 
-            .col-lg-2.col-md-1
-              .approved
-                =image_tag('acca_approved.png')
+%main
+  .container.home-hero-container
+    %article.home-hero
+      .row.no-gutters
+        .col-xl-4
+          %header.home-hero-header.pb-2
+            %h1.h1-hero
+              the smarter
+              %br>/
+              way to study
+              %span.text-mint .
+            %p.p-hero Designed by experts and delivered online so that you can study on a schedule that suits your needs.
+        .col-xl-8
+          %aside.home-hero-aside.py-2.py-sm-0
+            .home-hero-img-wrap
+              .circle-top-wrap
+                %svg{:fill => "none", :viewbox => "0 0 237 237", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path.turquoise-oval{:d => "M118.5 237C183.946 237 237 183.946 237 118.5C237 53.0543 183.946 0 118.5 0C53.0543 0 0 53.0543 0 118.5C0 183.946 53.0543 237 118.5 237Z", :fill => "#30AABC", :opacity => "0.1"}
+              =image_tag('laptop-with-lms-2.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
+              .circle-bottom-wrap
+                %svg{:fill => "none", :viewbox => "0 0 312 312", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path.yellow-oval{:d => "M156 312C242.156 312 312 242.156 312 156C312 69.8436 242.156 1.52588e-05 156 1.52588e-05C69.8436 1.52588e-05 0 69.8436 0 156C0 242.156 69.8436 312 156 312Z", :fill => "#F0CA28", :opacity => "0.1"}
+      .home-hero-cta-section.pt-4.pt-sm-5.py-xl-0
+        .pb-3
+          =link_to new_student_url, class: 'btn btn-primary btn-lg' do
+            Try for
+            %span.text-uppercase free
+            today!
 
+        %small No credit card required. Set-up takes one minute
 
-  -if @group
-    %section#explore
-      .container
-        %h2.title1
-          Explore our ACCA courses
-        %h2.subtitle
-          Taking your accounting skills to the next level.
-        .row
-          -@group.active_children.all_in_order.each do |course|
-            .col-md-4.col-sm-6
-              =link_to library_special_link(course) do
-                .course
-                  .tmain
-                    .tbase
-                      =course.name
-                  .bg{style: "background: url(#{course.background_image.url});"}
+  .container
+    %article.py-5
+      %header.text-center.pb-sm-4.pb-md-5
+        %h2 Explore our courses
+        %p Studying for your exams has never been easier
+      .row.row-lg
+        -@groups.each do |group|
+          .col-lg
+            %article.card.card-primary.card-pink
+              =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
+              .card-body.text-center
+                %h2.h1.card-title
+                  =group.name
+                %p
+                  =group.description
+                .mt-auto
+                  =link_to 'Browse Courses', library_special_link(group), class: 'btn btn-secondary btn-sm'
 
-
-        .lsbtn-base
-          =link_to 'Get started', new_student_url, class: 'lsbtn'
-
-
-
-
-  %section#what.diag-l-up
+  .container-bg.bg-navy
     .container
-      %h2.title1
-        What you get from us
-      %ul
-        %li
-          .item
-            .img
-              =image_tag('what1.png')
-            .desc Access anytime, anywhere.
-        %li
-          .item
-            .img
-              =image_tag('what2.png')
-            .desc Topic-by-topic, bite-size lectures.
-        %li
-          .item
-            .img
-              =image_tag('what3.png')
-            .desc Notes, MCQs and corrected mock exams.
-        %li
-          .item
-            .img
-              =image_tag('what4.png')
-            .desc Tutor support
-      .lsbtn-base
-        =link_to 'Try us out for free', new_student_url, class: 'lsbtn'
-      .obs-nocc No credit card details needed!
+      %article.text-gray3.text-center.py-6.py-sm-7
+        %header.pb-3
+          %h1.text-white.px-5.px-sm-6 Designed with you at the core
+          %p.p-hero Studying for your exams has never been easier
+        .px-4.px-lg-8
+          .row.row-lg
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Access anytime, anywhere
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-card-slides{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Topic-by-topic, bite-size lectures
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-doc-marker{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Notes, MCQs and correct mock exams
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-happy-chat{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Tutor support at every step of the way
+  .container
+    %article.py-3.py-6.text-center.text-lg-left
+      %header.sr-only
+        %h2 Testimonial
+      .row.row-lg
+        .col-lg-5
+          =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+        .col-lg-7
+          .d-flex.h-100.align-items-center
+            %blockquote.mb-0.ml-lg-6.mr-lg-6
+              %p.text-gray2
+                "The good thing about Learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+              %footer
+                %cite.font-weight-semi-bold.text-gray2
+                  Rebecca Nagujja, Ireland
+  .container-bg.bg-gray5
+    .container-sm
+      %article.text-center.py-6.py-lg-7
+        %header
+          %h2.h1.mb-4.px-4 We're here to guide you through.
+          %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
+        .py-4.d-flex.justify-content-center
+          =image_tag('contact-person-1.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+          =image_tag('contact-person-2.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+          =image_tag('contact-person-3.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+        .py-3
+          %button.btn.btn-primary.btn-lg Chat with our experts
 
 
-
-  %section#reviews
-    =render partial: 'layouts/image_slider'
-
-
-  %section#homeblog
-    .container
-      %h2.title1 Get free advice and tips
-      -if @home_page && @home_page.blog_posts
-        .posts
-          .row
-            -@home_page.blog_posts.each do |blog_post|
-              .col-md-4.col-sm-6
-                .post
-                  .photo
-                    =link_to blog_post.url, target: '_blank' do
-                      =image_tag(blog_post.image.url)
-
-                  .cat
-                    =link_to blog_post.url, target: '_blank' do
-                      .hu
-                        Blog
-                  .title
-                    =link_to blog_post.url, target: '_blank' do
-                      .hu
-                        =blog_post.title
-                  .excerpt
-                    =link_to blog_post.url, target: '_blank' do
-                      .hu
-                        =blog_post.description
-
-
-  -#%section#subscribe.diag-l-up.bg-gradient1
-    .container
-      %h2.title1
-        -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_heading && !@home_page.mailchimp_section_heading.empty?)
-          =@home_page.mailchimp_section_heading
-        -else
-          ='Get fortnightly ACCA insider knowledge'
-
-      %h2.subtitle
-        -if (@home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?) && (@home_page.mailchimp_section_subheading && !@home_page.mailchimp_section_subheading.empty?)
-          =@home_page.mailchimp_section_subheading
-        -else
-          ='Direct to your inbox.'
-      #response
-        =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-          -if @home_page.mailchimp_subscribe_section && @home_page.mailchimp_list_guid
-            =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
-          .row
-            .col-md-4.col-md-offset-1.col-sm-6
-              .form-group
-                =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
-            .col-md-4.col-sm-6
-              .form-group
-                =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
-            .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
-              .form-group
-                %button.lsbtn.s{:type => "submit"} Subscribe
-
-
-
-  %section#whenever.bg-gradient1
-    .container
-      .devices
-        =image_tag('devices.png')
-      %h2.title1 Study whenever and wherever you want
-      %h2.subtitle With 24/7, 365 learning on any device, the days of inflexible classroom study are over.
-      .lsbtn-base
-        =link_to 'Get free course access', new_student_url, class: 'lsbtn'
-      .obs-nocc No credit card details needed!
-
-
-  %section#plans
-    .container
-      %h2.title1 A small investment into your bigger future
-      %h2.subtitle2
-        Choose the plan that suits your needs
-      %ul.plans.clearfix
-        -@subscription_plans.each do |plan|
-          %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
-            .base
-              .topbox
-                -if plan.payment_frequency_in_months == 3
-                  %span Our most popular payment plan
-              .box
-                .name
-                  =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                %ul.details.fa-ul
-                  %li
-                    %i.fa-li.fa.fa-check
-                    Get unlimited access
-                  %li
-                    %i.fa-li.fa.fa-check
-                    Cancel anytime
-                  -#%li
-                    %i.fa-li.fa.fa-check
-                    =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                  -#%li
-                    %i.fa-li.fa.fa-check
-                    -# TODO Add plans free mock exams count here
-                    =#'corrected mock exams'
-
-                .price
-                  =plan.currency.format_number(plan.price)
-
-                -#unless plan.payment_frequency_in_months == 1
-                  -# TODO change this display actual discount and saving values
-                  .promo
-                    .line1
-                      18% OFF
-                    .line2
-                      Save €25
-
-              .lsbtn-base
-                =link_to new_student_url, class: 'lsbtn' do
-                  Get Started For Free
-
-
-
-
-  %section#cancel.bg-gradient1
-    .container
-      %h2.title1
-        %span
-          And don’t forget,
-          %strong
-            you can cancel anytime.
-      %h2.title1
-        %span
-          No lengthy commitments or obligations.
-          %br/
-
-  %section#through
-    .container
-      .row
-        .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
-          %h2.title1 We’re here to guide you through.
-          %h3.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
-          .lsbtn-base
-            %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
-              ='Chat with our experts'
-
-
-
-=render partial: 'footer_pages/contact_us_form_modal'
--#:javascript
-  var player = new Vimeo.Player('vimeo-player', {id: '224044673'});
+=render partial: 'layouts/footer'
