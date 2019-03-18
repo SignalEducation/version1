@@ -1434,6 +1434,13 @@ textarea.form-control {
   border-radius: 0
 }
 
+.btn-xs {
+  padding: .2rem 1rem!important;
+  font-size: .875rem!important;
+  line-height: 1.5!important;
+  border-radius: 0!important;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4996,6 +5003,10 @@ a.card:hover .card-title .card-explanation {
     padding: 0;
   }
 }
+.management-console-section {
+  padding: 2rem;
+  text-align: center;
+}
 .form-box {
   display: block;
   background: $white;
@@ -5367,9 +5378,7 @@ a.box-item {
   padding: $gutter;
   color: $colour-7;
   border-radius: 0;
-  @include clearfix();
-  @include box-shadow(0, 0, 3px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
+  border: 1px solid #e1e8ed;
 }
 .box-topic-item {
   padding-right: $gutter*2;
@@ -5993,16 +6002,15 @@ input[type="radio"] {
   display: block;
   background: $white;
   position: relative;
-  @include border-radius(5px);
-  @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
-  @include transition(box-shadow .1s ease);
+  border-radius: 0;
+  border: 1px solid #e1e8ed;
 }
 
 .admin-nav-block {
   list-style: none;
   padding: 0;
-  color: $colour-7;
-  font-size: 1.6rem;
+  color: $gray2;
+  font-size: 1.2rem;
   & li {
     position: relative;
     display: inline-block;
@@ -6013,10 +6021,9 @@ input[type="radio"] {
   & a {
     color: $colour-7;
     text-decoration: none;
-    @include opacity(0.8);
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     &:hover {
-      @include opacity(2);
+      color: $mint;
     }
   }
 }
@@ -6090,7 +6097,8 @@ input[type="radio"] {
   height: 100%;
   margin-left: -250px;
   overflow-y: auto;
-  background: $colour-7;
+  background: $navy;
+  color: #fff;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -6100,6 +6108,7 @@ input[type="radio"] {
 .main-content {
   //position: absolute;
   overflow: auto;
+  background: $gray5;
 }
 
 .sidebar-nav {
@@ -6124,11 +6133,11 @@ input[type="radio"] {
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: rgba(255,255,255,0.8);
+  color: #fff;
   padding-top: 5px;
   padding-bottom: 5px;
   &:hover, &:focus {
-    background: $colour-8;
+    color: $mint;
 
   }
 }
@@ -6204,6 +6213,28 @@ input[type="radio"] {
     margin-right: 0;
   }
 }
+
+
+
+.search-container button {
+  background: #fff;
+  border: 1px solid $mint;
+}
+.search-container button [class*=budicon] {
+  background: #fff;
+  font-size: 2.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background: $mint;
+  [class*=budicon] {
+    background: $mint;
+    color: #fff;
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 22. Kendo UI Classes
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
