@@ -435,7 +435,7 @@ code {
   background-color: #f5f8fa;
   background-clip: padding-box;
   border: 1px solid #e1e8ed;
-  border-radius: 2px;
+  border-radius: 0;
   -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
   -o-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
@@ -4641,6 +4641,15 @@ a.card:hover .card-title .card-explanation {
     padding: 5rem 0
   }
 }
+.hero-section.hero-section-external {
+  padding: 2rem 0;
+}
+@media (min-width:768px) {
+  .hero-section.hero-section-external {
+    padding: 4rem 0
+  }
+}
+
 .lesson-item {
   display: -webkit-box;
   display: -webkit-flex;
@@ -4954,6 +4963,37 @@ a.card:hover .card-title .card-explanation {
   }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+.login-section {
+  padding: 0 1rem;
+}
+@media (min-width:768px) {
+  .login-section {
+    padding: 0 6rem;
+  }
+}
+.forgot-password-section {
+  padding: 0 1rem;
+}
+@media (min-width:768px) {
+  .forgot-password-section {
+    padding: 0 6rem;
+  }
+}
+.form-box {
+  display: block;
+  background: $white;
+  position: relative;
+  padding: $gutter*2 $gutter;
+  color: $colour-7;
+  border-radius: 0;
+  border: 1px solid #e1e8ed;
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //

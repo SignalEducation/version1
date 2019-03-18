@@ -1707,12 +1707,12 @@ en:
 
       edit:
         h1: Reset your password
-        paragraph_1: "Enter a new password for your account:"
+        paragraph_1: Enter a new password for your account
 
       set_password:
         h1: Enter password
         h2: Complete Account Setup
-        paragraph_1: "The following information required to complete your account setup"
+        paragraph_1: The following information is required to complete your account setup
 
 
 
