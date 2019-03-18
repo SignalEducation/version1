@@ -5218,7 +5218,7 @@ a.product-box {
 }
 .dashboard-tab-content {
   //width: 60%;
-  margin: 0;
+  margin: $gutter 0 0;
 
 }
 @media (max-width: 768px) {
