@@ -15,8 +15,9 @@
               -@questions.each do |question|
                 .col-xs-12.col-sm-6.col-md-4
                   =link_to new_order_url(question), class: 'card card-link text-center mb-5' do
-                    %h4.text-ellipsis.mb-4
-                      =question.mock_exam.try(:name)
+                    .py-4
+                      %h4.text-ellipsis.mb-4
+                        =question.mock_exam.try(:name)
                       .pt-2
                         %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                       .pt-5

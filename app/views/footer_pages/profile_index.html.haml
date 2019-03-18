@@ -1,20 +1,18 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt.is-bg-white-to-asphalt
-  .l-wrap
-    .container-fluid
-      .row
-        .col-md-6.col-md-offset-3
-          %h1.h1.h-separator.h-separator-center.text-center
-            Our Lecturers
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      -@tutors.each do |tutor|
-        .col-sm-6.col-md-3.col-lg-3
-          =link_to profile_url(tutor), class: 'tutor-box' do
-            .tutor-box-inner
-              = image_tag tutor.profile_image.url, class: 'profile-pic profile-pic-big'
-              %h3.h4.tutor-box-title
-                =tutor.full_name
+%main
+  %article.bg-gray5
+    .container.mb-7
+      %header.hero-section.hero-section-external
+        %h1.h1-mega
+          Our Lecturers
+
+      %section.pb-md-6.pb-5
+        .row
+          -@tutors.each do |tutor|
+            .col-sm-6.col-md-4.col-lg-3
+              =link_to profile_url(tutor), class: 'card text-center mb-4' do
+                .py-4
+                  = image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
+
+                %p.h4.text-ellipsis.mb-4
+                  =tutor.full_name
 
