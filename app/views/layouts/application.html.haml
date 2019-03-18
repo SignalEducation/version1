@@ -49,7 +49,7 @@
       =render partial: 'layouts/survicate_pixel'
 
   -#%body.page-light
-  %body{class: controller_name == 'student_sign_ups' ? 'page-light' : ''}
+  %body{class: (controller_name == 'student_sign_ups' && action_name == 'home') ? 'page-light' : ''}
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}

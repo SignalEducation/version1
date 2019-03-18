@@ -1,37 +1,40 @@
-=render partial: 'layouts/external_banner'
-=render partial: 'layouts/navbar'
-.bg-asphalt.fixed-header
-  .container
-    %article.hero.mb-5
-      %h1.h1-mega Exam Preparation Products
-      %h5.text-red Passing is worth it
-
-  -if @questions.any?
+%main
+  %article.bg-gray5
     .container
-      .pb-2
-        %h2 Correction Packs
-        .row.row-lg
-          -@questions.each do |question|
-            .col-xs-12.col-sm-6.col-md-4
-              =link_to new_order_url(question), class: 'card card-link text-center mb-5' do
-                %h4.text-ellipsis.mb-4 
-                  =question.mock_exam.try(:name)
-                .mb-4
-                  =image_tag 'ico-questions-2.svg', alt: 'Question'
-                %div
-                  %span.btn.btn-link.with-arrow Buy Now
+      %header.hero-section.hero-section-external
+        %h1.h1-mega Exam Preparation Products
+        %h5 Passing is worth it
 
-  -if @products.any?
-    .container
-      .pb-4
-        %h2 Mock Exams
-        .row.row-lg
-          -@products.each do |product|
-            .col-xs-12.col-sm-6.col-md-4
-              =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
-                %h4.text-ellipsis.mb-4 
-                  =product.mock_exam.try(:name)
-                .mb-4
-                  =image_tag 'ico-exam.svg', alt: 'Exam'
-                %div
-                  %span.btn.btn-link.with-arrow Buy Now
+      %section.pb-md-6.pb-5
+
+        -if @questions.any?
+          .container
+            .pb-3
+              %h2 Correction Packs
+            .row.row-lg
+              -@questions.each do |question|
+                .col-xs-12.col-sm-6.col-md-4
+                  =link_to new_order_url(question), class: 'card card-link text-center mb-5' do
+                    %h4.text-ellipsis.mb-4
+                      =question.mock_exam.try(:name)
+                      .pt-2
+                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                      .pt-5
+                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+
+
+        -if @products.any?
+          .container
+            .pb-4
+              %h2 Mock Exams
+            .row.row-lg
+              -@products.each do |product|
+                .col-xs-12.col-sm-6.col-md-4
+                  =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
+                    .py-4
+                      %h4.text-ellipsis.mb-4
+                        =product.mock_exam.try(:name)
+                      .pt-2
+                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                      .pt-5
+                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
