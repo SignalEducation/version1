@@ -1970,7 +1970,13 @@ textarea.form-control {
 }
 
 
-
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 0;
+}
 .alert-primary {
   color: #005f40;
   background-color: #ccf0e5;
@@ -2025,6 +2031,13 @@ textarea.form-control {
 }
 .alert-warning .alert-link {
   color: #51440e
+}
+.alert-error {
+  color: #fff;
+  background-color: #dc3545;
+}
+.alert-error .alert-link {
+  color: #fff
 }
 
 
@@ -4874,28 +4887,6 @@ a.card:hover .card-title .card-explanation {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-.alert.success {
-  background: $colour-17;
-  margin-bottom: 0;
-}
-.alert.error {
-  background: $colour-31;
-  color: $white;
-  border-radius: 0;
-  margin-bottom: 0;
-}
-.alert.warning {
-  background: #FFD466;
-  color: $text-color;
-  border-radius: 0;
-  margin-bottom: 0;
-}
-.alert.alert-info {
-  background: $colour-13;
-  margin-bottom: 0;
-}
-
-
 
 .notice.external-banner {
   border-radius: 0;
@@ -5698,7 +5689,7 @@ a.list-group-item {
   position: relative;
   margin: $gutter*.5 0 $gutter 0;
   text-align: left;
-  @include border-radius(5px);
+  border-radius: 0;
   @include box-shadow(0, 0, 2px, darken($colour-3, 20%));
   @include transition(box-shadow .1s ease);
   &:hover, &:active {
