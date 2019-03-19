@@ -3,67 +3,73 @@
     .row
       .col-sm-12
         =render partial: '/layouts/error_messages', locals: {thing: @subject_course_resource, message: nil}
-        .col-sm-6
-          =f.label :name, t('views.subject_course_resources.form.name'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :name, placeholder: t('views.subject_course_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-          %br/
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.subject_course_resources.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.subject_course_resources.form.name_placeholder'), class: 'form-control', autofocus: true
 
-        .col-sm-6
-          =f.label :description, t('views.subject_course_resources.form.description'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_area :description, placeholder: t('views.subject_course_resources.form.description_placeholder'), rows: 4, class: 'form-control', style: 'border-radius: 6px;'
+          .col-sm-6
+            .form-group
+              =f.label :description, t('views.subject_course_resources.form.description')
+              .input-group.input-group-lg
+                =f.text_area :description, placeholder: t('views.subject_course_resources.form.description_placeholder'), rows: 4, class: 'form-control'
 
+          -if controller_name == 'subject_course_resources'
+            .col-sm-6
+              .form-group
+                =f.label :subject_course_id, t('views.subject_course_resources.form.subject_course_id')
+                .input-group.input-group-lg
+                  =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+      .col-sm-12
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :file_upload, t('views.course_module_element_resources.form.upload')
+              -if f.object.file_upload_file_name
+                .form-control-static
+                  =link_to f.object.file_upload_file_name, f.object.file_upload.url, target: '_blank'
+                  =number_to_human_size(f.object.file_upload_file_size)
+                  %br/
+                  %br/
+                =f.label :file_upload, t('views.course_module_element_resources.form.replace')
+                .input-group.input-group-lg
+                  =f.file_field :file_upload
+                  %p{style: 'margin: 10px 0;'}
+              -else
+                .input-group.input-group-lg
+                  =f.file_field :file_upload, class: 'form-control'
+
+          .col-sm-6
+            .form-group
+              =f.label :external_url, t('views.subject_course_resources.form.external_url')
+              .input-group.input-group-lg
+                =f.text_field :external_url, placeholder: t('views.subject_course_resources.form.external_url_placeholder'), class: 'form-control'
+
+
+        .col-md-12.pt-4
+          .row
+            .col-sm-6
+              .form-group
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    ='Active'
+
+            .col-sm-6
+              .form-group
+                .checkbox
+                  %label
+                    =f.check_box :available_on_trial
+                    ='Available on Trial'
+
+    .row.pt-4
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
         -if controller_name == 'subject_course_resources'
-          .col-sm-6
-            =f.label :subject_course_id, t('views.subject_course_resources.form.subject_course_id'), class: 'control-label'
-            .input-group.input-group-lg.full-width
-              =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
-            %br/
-
-
-      .col-sm-12.l-margin-top
-        .col-sm-6
-          =f.label :file_upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
-          -if f.object.file_upload_file_name
-            .form-control-static
-              =link_to f.object.file_upload_file_name, f.object.file_upload.url, target: '_blank'
-              =number_to_human_size(f.object.file_upload_file_size)
-              %br/
-              %br/
-            =f.label :file_upload, t('views.course_module_element_resources.form.replace')
-            .input-group.input-group-lg.form-control
-              =f.file_field :file_upload, style: 'border-radius: 6px;'
-              %p{style: 'margin: 10px 0;'}
-          -else
-            .input-group.input-group-lg
-              =f.file_field :file_upload, class: 'form-control', style: 'border-radius: 6px;'
-
-        .col-sm-6
-          =f.label :external_url, t('views.subject_course_resources.form.external_url'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :external_url, placeholder: t('views.subject_course_resources.form.external_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-
-
-        .col-md-12.l-margin-top-huge
-          .col-sm-6
-            .form-group
-              .checkbox
-                %label
-                  =f.check_box :active
-                  ='Active'
-
-          .col-sm-6
-            .form-group
-              .checkbox
-                %label
-                  =f.check_box :available_on_trial
-                  ='Available on Trial'
-
-  .row
-    .col-md-12.l-margin-top-huge
-      =f.submit t('views.general.save'), class: 'btn btn-primary'
-      -if controller_name == 'subject_course_resources'
-        =link_to t('views.general.cancel'), subject_course_resources_path, class: 'btn btn-secondary'
-      -else
-        =link_to t('views.general.cancel'), course_resources_url(@subject_course_resource.subject_course), class: 'btn btn-secondary'
+          =link_to t('views.general.cancel'), subject_course_resources_path, class: 'btn btn-secondary'
+        -else
+          =link_to t('views.general.cancel'), course_resources_url(@subject_course_resource.subject_course), class: 'btn btn-secondary'

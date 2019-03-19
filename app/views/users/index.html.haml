@@ -10,7 +10,7 @@
         .box-item.table-box
           .row
             .col-sm
-              =link_to '#', {data: {remodal: {target: 'csv-upload-modal'}}} do
+              =link_to '#', {"data-target" => "#csv-upload-modal", "data-toggle" => "modal", :href => "#"} do
                 .btn.btn-primary.btn-sm
                   Bulk Invite New Users
             .col-sm

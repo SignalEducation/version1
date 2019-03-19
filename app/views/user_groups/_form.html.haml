@@ -5,11 +5,13 @@
       .col-sm
         .form-group
           =f.label :name, t('views.user_groups.form.name')
-          =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', autofocus: true
+          .input-group.input-group-lg
+            =f.text_field :name, placeholder: t('views.user_groups.form.name_placeholder'), class: 'form-control', autofocus: true
 
         .form-group
           =f.label :description, t('views.user_groups.form.description')
-          =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control'
+          .input-group.input-group-lg
+            =f.text_area :description, placeholder: t('views.user_groups.form.description_placeholder'), rows: 4, class: 'form-control'
 
       .col-sm
         .h4.pt-4.pb-4

@@ -23,6 +23,5 @@
 //= require zeroclipboard
 //= require moment
 //= require bootstrap-datetimepicker
-//= require summernote
-//= require remodal
+//= require summernote/summernote-bs4.min
 //= require_tree .

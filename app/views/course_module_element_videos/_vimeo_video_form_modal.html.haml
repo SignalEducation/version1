@@ -1,24 +1,22 @@
-.remodal{"data-remodal-id" => "vimeo-upload-modal"}
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
-        %h2
+.modal.fade{id: 'vimeo-upload-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'vimeoUploadModal', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
+
+      .modal-header
+        %h3.mb-3{id: 'vimeoUploadModal'}
           ='Upload Video File'
-        %hr/
-  .row.l-margin-top
-    .col-sm-12.l-margin-top
-      %form{enctype: 'multipart/form-data', :action => @ticket_url, :method => "post"}
-        .col-md-12.text-left
-          =label_tag :file_data, 'Video File'
-          =file_field_tag :file_data
-          %br/
-        .col-sm-12.l-margin-top-big
-          =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
 
-:javascript
-  $(document).on('confirmation', '.remodal', function () {
-    document.forms['vimeo_upload_form'].submit();
-  });
 
+      .modal-body
+
+        %form{enctype: 'multipart/form-data', :action => @ticket_url, :method => "post"}
+          .row
+            .col-sm-12
+              =label_tag :file_data, 'Video File'
+              =file_field_tag :file_data
+
+              =submit_tag 'Submit', class: 'btn btn-primary'
 

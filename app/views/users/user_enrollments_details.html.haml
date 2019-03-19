@@ -1,52 +1,50 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap-large
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =@user.full_name
-          %p.h5.text-center
-            =@user.email
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'user_tabs'
+.container
+  %header.management-console-section
+    %h1
+      =@user.full_name
+    %p.p-hero.px-lg-8
+      =@user.email
 
+  %section.pb-7
+    =render partial: 'user_tabs'
 
-      .row
-        .col-md-12.l-margin-top
-          .box-item.l-margin-bottom-huge
-            .table-responsive
-              .row
-                .col-sm-12
+    .row.pt-4
+      .col-md-12
+        .box-item
+          .col-sm-12
+            %h2
+              Enrolments
 
-                  %table.table{style: 'font-size: 18px;'}
-
-                    %thead
+          .table-responsive
+            .row
+              .col-sm-12
+                %table.table
+                  %thead
+                    %tr
+                      %th
+                        Course
+                      %th
+                        Exam Sitting
+                      %th
+                        Active
+                      %th
+                        Expired
+                      %th
+                      %th
+                  %tbody
+                    -@enrollments.each do |enrollment|
                       %tr
-                        %th
-                          Course
-                        %th
-                          Exam Sitting
-                        %th
-                          Active
-                        %th
-                          Expired
-                        %th
-                        %th
-                    %tbody
-                      -@enrollments.each do |enrollment|
-                        %tr
-                          %td
-                            -if enrollment.subject_course
-                              =enrollment.subject_course.name
-                          %td
-                            -if enrollment.exam_date
-                              =exam_sitting_date(enrollment.exam_date)
-                          %td
-                            =tick_or_cross(enrollment.active)
-                          %td
-                            =tick_or_cross(enrollment.expired)
-                          %td
-                            =link_to enrollment_management_url(enrollment) do
-                              .btn.btn-secondary.btn-small.pull-right
-                                =t('views.general.view')
+                        %td
+                          -if enrollment.subject_course
+                            =enrollment.subject_course.name
+                        %td
+                          -if enrollment.exam_date
+                            =exam_sitting_date(enrollment.exam_date)
+                        %td
+                          =tick_or_cross(enrollment.active)
+                        %td
+                          =tick_or_cross(enrollment.expired)
+                        %td
+                          =link_to enrollment_management_url(enrollment) do
+                            .btn.btn-secondary.btn-xs
+                              =t('views.general.view')

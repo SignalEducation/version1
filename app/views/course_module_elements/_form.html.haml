@@ -10,64 +10,68 @@
         =f.hidden_field :is_constructed_response
 
 
-        .col-md-6
-          -# Extra CourseModuleElement Fields unique for Videos or Quizzes
-          -if @course_module_element.course_module_element_video
-            =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
-          -elsif @course_module_element.course_module_element_quiz
-            =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
-          -elsif @course_module_element.constructed_response
-            =render partial: 'constructed_responses/basic_fields_for', locals: {f: f}
+        .row
+          .col-sm-6
+            -# Extra CourseModuleElement Fields unique for Videos or Quizzes
+            -if @course_module_element.course_module_element_video
+              =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
+            -elsif @course_module_element.course_module_element_quiz
+              =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+            -elsif @course_module_element.constructed_response
+              =render partial: 'constructed_responses/basic_fields_for', locals: {f: f}
 
 
-          -# Dropdown list of other CourseModules in the SubjectCourse
-          =f.label :course_module_id, t('views.course_module_elements.form.course_module_id'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          %br/
-          -# Dropdown list of other CMEs in current course module
-          =f.label :related_course_module_element_id, t('views.course_module_elements.form.related_course_module_element_id'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.collection_select :related_course_module_element_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-          %br/
-
-
-
-        .col-md-6
-          =f.label :name, t('views.course_module_elements.form.name'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
-          %br/
-          =f.label :name_url, t('views.course_module_elements.form.name_url'), class: 'control-label'
-          -#TODO onscreen validation stops the form submission but summernote blocks why
-          .input-group.input-group-lg.full-width
-            =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-          %br/
-          =f.label :temporary_label, t('views.course_module_elements.form.temporary_label'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_field :temporary_label, placeholder: t('views.course_module_elements.form.temporary_label_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-          %br/
-          %br/
-          .col-md-6
+            -# Dropdown list of other CourseModules in the SubjectCourse
             .form-group
-              .col-sm-8.col-sm-offset-1
-                .checkbox
-                  %label
-                    =f.check_box :active, default: true
-                    =t('views.course_modules.form.active')
-
-          .col-md-6
+              =f.label :course_module_id, t('views.course_module_elements.form.course_module_id')
+              .input-group.input-group-lg
+                =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
             .form-group
-              .col-sm-8.col-sm-offset-1
-                .checkbox
-                  %label
-                    =f.check_box :available_on_trial
-                    Available on Trial
+              -# Dropdown list of other CMEs in current course module
+              =f.label :related_course_module_element_id, t('views.course_module_elements.form.related_course_module_element_id')
+              .input-group.input-group-lg.full-width
+                =f.collection_select :related_course_module_element_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
 
-          -if @course_module_element.is_quiz? && !@course_module_element.new_record?
-            %br/
-            %br/
-            =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_module_element), class: 'btn btn-red'
+
+
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.course_module_elements.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url'
+
+            .form-group
+              =f.label :name_url, t('views.course_module_elements.form.name_url')
+              -#TODO onscreen validation stops the form submission but summernote blocks why
+              .input-group.input-group-lg
+                =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control'
+
+            .form-group
+              =f.label :temporary_label, t('views.course_module_elements.form.temporary_label')
+              .input-group.input-group-lg
+                =f.text_field :temporary_label, placeholder: t('views.course_module_elements.form.temporary_label_placeholder'), class: 'form-control'
+
+
+            .col-md-6
+              .form-group
+                .col-sm-8.col-sm-offset-1
+                  .checkbox
+                    %label
+                      =f.check_box :active, default: true
+                      =t('views.course_modules.form.active')
+
+            .col-md-6
+              .form-group
+                .col-sm-8.col-sm-offset-1
+                  .checkbox
+                    %label
+                      =f.check_box :available_on_trial
+                      Available on Trial
+
+            -if @course_module_element.is_quiz? && !@course_module_element.new_record?
+              %br/
+              %br/
+              =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_module_element), class: 'btn btn-secondary'
 
 
 
@@ -86,7 +90,7 @@
           .input-group.input-group-lg.full-width
             =f.text_area :description, required: true, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
 
-    .box-item
+    -#.box-item
       .row
         .col-sm-12
           =render partial: 'course_module_element_videos/fields_for_video_resources', locals: {f: f}

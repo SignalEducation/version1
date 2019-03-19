@@ -1,45 +1,40 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap-large
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center
-            =t('views.groups.index.h1')
+.container
+  %header.management-console-section
+    %h1
+      =t('views.groups.index.h1')
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'management_consoles/course_content_nav'
+  %section.pb-7
+    =render partial: 'management_consoles/course_content_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm-12
+              =link_to 'New Group', new_group_url, class: 'btn btn-primary btn-sm'
 
-      .row
-        .col-sm-12
-          .box-item.table-box
-            .row.l-margin-bottom
-              .col-sm-12.l-margin-bottom
-                =link_to 'New Group', new_group_url, class: 'btn btn-primary btn-small'
+          .table-responsive.pt-4
+            %table.table.sorted_table{data: {destination: groups_url}}
+              %thead
+                %tr
+                  %th=t('views.groups.form.name')
+                  %th=t('views.groups.form.active')
+                  %th=t('views.groups.form.course_count')
+                  %th
+                  %th
+                  %th
+                  %th
+              %tbody
+                -@groups.all_in_order.each do |group|
+                  %tr{id: group.id}
+                    %td=group.name
+                    %td=tick_or_cross(group.active)
+                    %td=group.subject_courses.count
+                    %td=link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-primary btn-xs'
+                    %td=link_to t('views.general.show'), group, class: 'btn btn-secondary btn-xs'
+                    %td
+                      -if group.destroyable?
+                        =link_to t('views.general.delete'), group, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-secondary-reverse btn-xs'
 
-            .table-responsive
-              %table.table.sorted_table{data: {destination: groups_url}}
-                %thead
-                  %tr
-                    %th=t('views.groups.form.name')
-                    %th=t('views.groups.form.active')
-                    %th=t('views.groups.form.course_count')
-                    %th
-                    %th
-                    %th
-                    %th
-                %tbody
-                  -@groups.all_in_order.each do |group|
-                    %tr{id: group.id}
-                      %td=group.name
-                      %td=tick_or_cross(group.active)
-                      %td=group.subject_courses.count
-                      %td=link_to t('views.general.edit'), edit_group_url(group), class: 'btn btn-primary btn-small'
-                      %td=link_to t('views.general.show'), group, class: 'btn btn-secondary btn-small'
-                      %td
-                        -if group.destroyable?
-                          =link_to t('views.general.delete'), group, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-secondary-reverse btn-small'
-
-                      %td
-                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 

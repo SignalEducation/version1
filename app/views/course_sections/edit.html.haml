@@ -1,8 +1,7 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap-large
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.course_sections.edit.h1')
-      =render partial: 'form'
+.container
+  %header.management-console-section
+    %h1
+      =t('views.course_sections.edit.h1')
+
+  %section.pb-7
+    =render partial: 'form'

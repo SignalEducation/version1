@@ -1,18 +1,17 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =@subject_course.name
-          %p.h5
-            ="Select the trial content available"
+.container
+  %header.management-console-section
+    %h1
+      =@subject_course.name
+    %p.p-hero.px-lg-8
+      ="Select the trial content available"
 
-      .row.l-margin-top.l-margin-bottom
-        =form_for(@subject_course, url: subject_course_update_trial_content_url) do |f|
-
+  %section.pb-7
+    =form_for(@subject_course, url: subject_course_update_trial_content_url) do |f|
+      =render partial: '/layouts/error_messages', locals: {thing: @subject_course, message: nil}
+      .row
+        .col-sm-12
           =f.fields_for :course_sections, f.object.course_sections.all_in_order do |cs|
-            .col-md-12.l-margin-top
+            .box-item
               %h3=cs.object.try(:name)
               =cs.fields_for :course_modules, cs.object.course_modules.all_in_order do |cm|
                 .table-box
@@ -38,9 +37,8 @@
                             %td=cme.object.type_name
                             %td=cme.object.estimated_time_in_seconds
                             %td=cme.check_box :available_on_trial
-              %hr/
 
-          .col-md-12.l-margin-top
+          .box-item
             .table-box
               .table-responsive
                 %h3{style: 'color: #54a4ee;'}
@@ -60,6 +58,7 @@
                           =resource.check_box :available_on_trial
 
 
-          .col-md-12.l-margin-top
+        .row
+          .col-sm-12
             =f.submit t('views.general.save'), class: 'btn btn-primary'
             =link_to 'Cancel', subject_course_url(@subject_course), class: 'btn btn-secondary'

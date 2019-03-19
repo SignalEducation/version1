@@ -75,7 +75,7 @@ class CourseTutorDetailsController < ApplicationController
     if params[:subject_course_id].to_i > 0
       @subject_course = SubjectCourse.where(id: params[:subject_course_id]).first
     end
-
+    @layout = 'management'
     @tutor_users = User.all_tutors.all_in_order
   end
 
