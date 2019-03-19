@@ -4,22 +4,11 @@ require 'prawn'
 require 'mandrill'
 require 'csv'
 
-class ApplicationController < ActionController::Base
-
-  before_action :authenticate_if_staging
-  before_action :setup_mcapi
-
-  def authenticate_if_staging
-    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
-      authenticate_or_request_with_http_basic 'Staging' do |name, password|
-        name == 'signal' && password == '27(South!)'
-      end
-    end
-  end
-
-  # Prevent CSRF attacks by raising an exception.
+class ApplicationController < ActionController::Base# Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  before_action :authenticate_if_staging
+  before_action :setup_mcapi
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
@@ -136,6 +125,14 @@ class ApplicationController < ActionController::Base
     result
   end
   helper_method :paywall_checkpoint
+
+  def authenticate_if_staging
+    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
+      authenticate_or_request_with_http_basic 'Staging' do |name, password|
+        name == 'signal' && password == '27(South!)'
+      end
+    end
+  end
 
   #### Locale
 
@@ -341,6 +338,4 @@ class ApplicationController < ActionController::Base
   def setup_mcapi
     @mc = Mailchimp::API.new(ENV['LEARNSIGNAL_MAILCHIMP_API_KEY'])
   end
-
-
 end
