@@ -42,6 +42,7 @@
                       %td
                         =number_in_local_currency(order.product.price, order.product.currency_id)
                       %td
-                        =link_to order.product.mock_exam.file.url, target: '_blank' do
-                          .btn.btn-purple.btn-small.pull-right
-                            View
+                        -if order.product && order.product.mock_exam
+                          =link_to order.product.mock_exam.file.url, target: '_blank' do
+                            .btn.btn-purple.btn-small.pull-right
+                              View

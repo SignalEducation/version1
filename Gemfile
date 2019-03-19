@@ -46,7 +46,6 @@ gem 'redis-rails' #use redis from AWS Elasticache service
 # gem 'redis', '~> 4.0'
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'remodal-rails'
-gem 'rollbar'
 gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long

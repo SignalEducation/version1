@@ -1,16 +1,14 @@
 class CoursesController < ApplicationController
 
   skip_after_action :intercom_rails_auto_include, only: :show_constructed_response
-  skip_before_action :verify_authenticity_token, only: [:create_video_user_log]
+  skip_before_action :verify_authenticity_token, only: [:create_video_user_log, :video_watched_data]
   before_action :logged_in_required
   before_action :check_permission, only: [:show, :show_constructed_response]
 
   def show
     if @course_module && @course_module.active_children
       @course_module_element = @course_module.children.find_by(name_url: params[:course_module_element_name_url])
-      #@course_module_element ||= @course_module.active_children.all_in_order.first
 
-      #CME name is not in the seo title because it is html_safe
       seo_title_maker("#{@course_module.name} - #{@course.name}", @course_module_element.try(:description), @course_module_element.try(:seo_no_index))
 
       if @course_module_element.is_quiz
