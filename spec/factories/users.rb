@@ -53,21 +53,22 @@
 #  unsubscribed_from_emails        :boolean          default(FALSE)
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
+#  preferred_exam_body_id          :bigint(8)
 #
 
 FactoryBot.define do
   factory :user do
     sequence(:email)      { |n| "john.smith-#{n}@example.com" }
-    first_name            'John'
-    last_name             'Smith'
+    first_name            { 'John' }
+    last_name             { 'Smith' }
     association           :country
-    password              '123123123'
-    password_confirmation '123123123'
-    active                                    true
-    terms_and_conditions                      true
-    locale                                    'en'
-    date_of_birth                              '2001-10-03'
-    student_number                             '123456789'
+    password              { '123123123' }
+    password_confirmation { '123123123' }
+    active                                    { true }
+    terms_and_conditions                      { true }
+    locale                                    { 'en' }
+    date_of_birth                              { '2001-10-03' }
+    student_number                             { '123456789' }
     association :user_group
     after :create do |user|
       create :student_access, user: user
@@ -75,174 +76,174 @@ FactoryBot.define do
 
     factory :free_trial_student do
       sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
-      active                            true
+      active                            { true }
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
-      email_verified                  true
-      email_verification_code         nil
-      email_verified_at               Time.now
+      email_verified                  { true }
+      email_verification_code         { nil }
+      email_verified_at               { Time.now }
 
       factory :valid_free_trial_student do
         sequence(:email)                  { |n| "valid.trial.student-#{n}@example.com" }
-        free_trial                        true
+        free_trial                        { true }
       end
       factory :invalid_free_trial_student do
         sequence(:email)                  { |n| "invalid.trial.student-#{n}@example.com" }
-        free_trial                        false
+        free_trial                        { false }
       end
     end
 
     factory :subscription_student do
       sequence(:email)                  { |n| "subscription.student-#{n}@example.com" }
-      active                            true
+      active                            { true }
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
-      email_verified                  true
-      email_verification_code         nil
-      email_verified_at               Time.now
+      email_verified                  { true }
+      email_verification_code         { nil }
+      email_verified_at               { Time.now }
 
       factory :valid_subscription_student do
         sequence(:email)                  { |n| "valid.subscription.student-#{n}@example.com" }
-        free_trial                        false
+        free_trial                        { false }
       end
       factory :invalid_subscription_student do
         sequence(:email)                  { |n| "invalid.subscription.student-#{n}@example.com" }
-        free_trial                        false
+        free_trial                        { false }
       end
     end
 
     factory :student_user do
       sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
-      active                            true
-      free_trial                        true
+      active                            { true }
+      free_trial                        { true }
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
-      account_activation_code           'abc123'
-      email_verified                  true
-      email_verification_code         nil
-      email_verified_at               Time.now
+      account_activation_code           { 'abc123' }
+      email_verified                  { true }
+      email_verification_code         { nil }
+      email_verified_at               { Time.now }
 
 
       factory :inactive_student_user do
         sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
-        active                          false
-        account_activation_code         'abcde12345'
-        account_activated_at            nil
+        active                          { false }
+        account_activation_code         { 'abcde12345' }
+        account_activated_at            { nil }
       end
 
       factory :active_student_user do
         sequence(:email)                { |n| "active-student-#{n}@example.com" }
-        active                          true
-        account_activation_code         SecureRandom.hex(10)
-        account_activated_at            Time.now
-        email_verified                  true
-        email_verification_code         nil
-        email_verified_at               Time.now
+        active                          { true }
+        account_activation_code         { SecureRandom.hex(10) }
+        account_activated_at            { Time.now }
+        email_verified                  { true }
+        email_verification_code         { nil }
+        email_verified_at               { Time.now }
       end
 
       factory :unverified_user do
         sequence(:email)                { |n| "unverified-student-user-#{n}@example.com" }
-        active                          true
-        account_activation_code         nil
-        account_activated_at            nil
-        email_verified                  false
-        email_verification_code         SecureRandom.hex(10)
-        email_verified_at               nil
+        active                          { true }
+        account_activation_code         { nil }
+        account_activated_at            { nil }
+        email_verified                  { false }
+        email_verification_code         { SecureRandom.hex(10) }
+        email_verified_at               { nil }
       end
 
       factory :verified_user do
         sequence(:email)                { |n| "active-student-#{n}@example.com" }
-        active                          true
-        account_activation_code         'abcde12345'
-        account_activated_at            Time.now
-        email_verified                  true
-        email_verification_code         nil
-        email_verified_at               Time.now
+        active                          { true }
+        account_activation_code         { 'abcde12345' }
+        account_activated_at            { Time.now }
+        email_verified                  { true }
+        email_verification_code         { nil }
+        email_verified_at               { Time.now }
       end
 
       factory :user_with_reset_requested do
         sequence(:email)                { |n| "reset.me-#{n}@example.com" }
-        active                          false
-        password_reset_token            'A1234567890123456789'
+        active                          { false }
+        password_reset_token            { 'A1234567890123456789' }
         password_reset_requested_at     { Time.now - 1.day }
       end
     end
 
     factory :comp_user do
       sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
-      active                            true
-      email_verified                  true
-      email_verification_code         nil
-      email_verified_at               Time.now
-      stripe_customer_id                nil
+      active                            { true }
+      email_verified                  { true }
+      email_verification_code         { nil }
+      email_verified_at               { Time.now }
+      stripe_customer_id                { nil }
     end
 
     factory :unverified_comp_user do
       sequence(:email)                { |n| "unverified-comp-user-#{n}@example.com" }
-      active                          true
-      account_activation_code         nil
-      account_activated_at            Time.now
-      email_verified                  false
-      email_verification_code         SecureRandom.hex(10)
-      email_verified_at               nil
-      password_change_required        true
+      active                          { true }
+      account_activation_code         { nil }
+      account_activated_at            { Time.now }
+      email_verified                  { false }
+      email_verification_code         { SecureRandom.hex(10) }
+      email_verified_at               { nil }
+      password_change_required        { true }
     end
 
     factory :tutor_user do
       sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :system_requirements_user do
       sequence(:email)                  { |n| "system.requirements.manager-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :content_management_user do
       sequence(:email)                  { |n| "content.management.user-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :stripe_management_user do
       sequence(:email)                  { |n| "stripe.manager-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :user_management_user do
       sequence(:email)                  { |n| "user.manager-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :developers_user do
       sequence(:email)                  { |n| "developer.user-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :marketing_manager_user do
       sequence(:email)                  { |n| "marketing.manager-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :user_group_manager_user do
       sequence(:email)                  { |n| "user.group.manager-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :admin_user do
       sequence(:email)                  { |n| "admin.user-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
 
     factory :blocked_user do
       sequence(:email)                  { |n| "blocked.user-#{n}@example.com" }
-      active                            true
-      stripe_customer_id                nil
+      active                            { true }
+      stripe_customer_id                { nil }
     end
   end
 end

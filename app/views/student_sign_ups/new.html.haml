@@ -17,6 +17,7 @@
               =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
               =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
               .row
+
                 .col-sm-6
                   .form-group
                     =f.label :first_name, t('views.users.form.first_name')
@@ -30,6 +31,11 @@
                   .form-group
                     =f.label :email, t('views.users.form.email'), class: 'control-label'
                     =f.email_field :email, class: 'form-control', id: 'user_email'
+
+                .col-sm-12
+                  .form-group
+                    =f.label :preferred_exam_body_id, t('views.users.form.exam_body')
+                    =f.collection_select :preferred_exam_body_id, ExamBody.all_in_order, :id, :name, prompt: 'Please select', class: 'form-control', id: 'user_exam_body'
 
                 .col-sm-12
                   .form-group
@@ -75,7 +81,6 @@
 
 
 
-
 :javascript
 
   $('input[type="checkbox"]').on('change', function() {
@@ -86,7 +91,6 @@
     }
   });
 
-
   $('input[type="checkbox"]').on('change', function() {
     if($('#communication_approval').prop('checked') == true) {
       $("#hidden_communication_approval").val('true');
@@ -94,7 +98,6 @@
       $("#hidden_communication_approval").val('false');
     }
   });
-
 
   $(document).on('ready', function() {
     $(".sk-circle").hide();
@@ -105,6 +108,5 @@
         $(".sk-circle").show();
       }
     });
-
   });
 

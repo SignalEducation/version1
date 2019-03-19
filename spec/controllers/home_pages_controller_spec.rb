@@ -63,44 +63,44 @@ describe HomePagesController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with landing_page_1' do
-        get :edit, id: landing_page_1.id
+        get :edit, params: { id: landing_page_1.id }
         expect_edit_success_with_model('home_page', landing_page_1.id)
       end
 
       # optional
       it 'should respond OK with landing_page_2' do
-        get :edit, id: landing_page_2.id
+        get :edit, params: { id: landing_page_2.id }
         expect_edit_success_with_model('home_page', landing_page_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, home_page: valid_params
+        post :create, params: { home_page: valid_params }
         expect_create_success_with_model('home_page', home_pages_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, home_page: {valid_params.keys.first => ''}
+        post :create, params: { home_page: {valid_params.keys.first => ''} }
         expect_create_error_with_model('home_page')
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for landing_page_1' do
-        put :update, id: landing_page_1.id, home_page: valid_params
+        put :update, params: { id: landing_page_1.id, home_page: valid_params }
         expect_update_success_with_model('home_page', home_pages_url)
       end
 
       # optional
       it 'should respond OK to valid params for landing_page_2' do
-        put :update, id: landing_page_2.id, home_page: valid_params
+        put :update, params: { id: landing_page_2.id, home_page: valid_params }
         expect_update_success_with_model('home_page', home_pages_url)
         expect(assigns(:home_page).id).to eq(landing_page_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: landing_page_1.id, home_page: {valid_params.keys.first => ''}
+        put :update, params: { id: landing_page_1.id, home_page: {valid_params.keys.first => ''} }
         expect_update_error_with_model('home_page')
         expect(assigns(:home_page).id).to eq(landing_page_1.id)
       end
@@ -108,7 +108,7 @@ describe HomePagesController, type: :controller do
 
     describe "PUT 'destroy'" do
       it 'should respond OK with delete' do
-        put :destroy, id: landing_page_1.id
+        put :destroy, params: { id: landing_page_1.id }
         expect_delete_success_with_model('home_page', home_pages_url)
       end
     end

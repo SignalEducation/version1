@@ -17,8 +17,6 @@ require 'rails_helper'
 
 describe ExamSitting do
 
-  # Constants
-
   # relationships
   it { should belong_to(:exam_body) }
   it { should belong_to(:subject_course) }
@@ -46,7 +44,7 @@ describe ExamSitting do
   it { expect(ExamSitting).to respond_to(:all_not_active) }
   it { expect(ExamSitting).to respond_to(:all_computer_based) }
   it { expect(ExamSitting).to respond_to(:all_standard) }
-  it { expect(ExamSitting).to respond_to(:sort_by) }
+  # it { expect(ExamSitting).to respond_to(:sort_by) }
 
   # class methods
 

@@ -15,10 +15,6 @@
 require 'rails_helper'
 
 describe WhitePaperRequest do
-
-  # Constants
-  #it { expect(WhitePaperRequest.const_defined?(:CONSTANT_NAME)).to eq(true) }
-
   # relationships
   it { should belong_to(:white_paper) }
 

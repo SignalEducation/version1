@@ -18,14 +18,9 @@
             %p.h4
               Your billing will be paused, then when you resume your subscription, you’ll secure your current low price when you return to study for your next exam.
 
-        .row.l-margin-top
-          .col-sm-6
-            .btn.btn-secondary.full-width.modal-close{'data-dismiss': 'modal'}
-              =t('views.users.show.keep_subscription')
-
-          .col-sm-6
-            =link_to subscriptions_suspensions_path(id: @current_subscription.id), method: :post do
-              .btn.btn-orange.full-width.l-margin-bottom
-                =t('views.users.show.confirm_subscription_pause')
+      .col-sm-6
+        =link_to subscriptions_suspensions_path(id: @subscription.id), method: :post do
+          .btn.btn-orange.full-width.l-margin-bottom
+            =t('views.users.show.confirm_subscription_pause')
 
 

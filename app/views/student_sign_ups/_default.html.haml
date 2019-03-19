@@ -63,24 +63,25 @@
           .posts.first
             .row
               -@home_page.blog_posts.each do |blog_post|
-                .col-md-4.col-sm-6
-                  .post
-                    .photo
-                      =link_to blog_post.url, target: '_blank' do
-                        =image_tag(blog_post.image.url)
+                -if blog_post.image.present?
+                  .col-md-4.col-sm-6
+                    .post
+                      .photo
+                        =link_to blog_post.url, target: '_blank' do
+                          =image_tag(blog_post.image.url)
 
-                    .cat
-                      =link_to blog_post.url, target: '_blank' do
-                        .hu
-                          Blog
-                    .title
-                      =link_to blog_post.url, target: '_blank' do
-                        .hu
-                          =blog_post.title
-                    .excerpt
-                      =link_to blog_post.url, target: '_blank' do
-                        .hu
-                          =blog_post.description
+                      .cat
+                        =link_to blog_post.url, target: '_blank' do
+                          .hu
+                            Blog
+                      .title
+                        =link_to blog_post.url, target: '_blank' do
+                          .hu
+                            =blog_post.title
+                      .excerpt
+                        =link_to blog_post.url, target: '_blank' do
+                          .hu
+                            =blog_post.description
 
 
 

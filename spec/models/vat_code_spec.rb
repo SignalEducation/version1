@@ -14,7 +14,6 @@
 require 'rails_helper'
 
 describe VatCode do
-  # Constants
 
   # relationships
   it { should belong_to(:country) }

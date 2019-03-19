@@ -124,48 +124,20 @@ class StudentSignUpsController < ApplicationController
     @navbar = false
     @footer = false
 
-    @user = User.new(student_allowed_params)
-    student_user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
-    @user.user_group_id = student_user_group.try(:id)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    time_now = Proc.new{Time.now}.call
-    @user.communication_approval_datetime = time_now if @user.communication_approval
-    @user.account_activation_code = SecureRandom.hex(10)
-    @user.email_verification_code = SecureRandom.hex(10)
-    @user.password_confirmation = @user.password
-
-    @user.build_student_access(account_type: 'Trial')
-
-    # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
-    if cookies.encrypted[:latest_subscription_plan_category_guid]
-      subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
-      @user.subscription_plan_category_id = subscription_plan_category.try(:id)
-    end
+    @user = User.new(
+      student_allowed_params.merge(
+        user_group: UserGroup.student_group,
+        country: IpAddress.get_country(request.remote_ip, true),
+        password_confirmation: params[:user][:password]
+      )
+    )
+    @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])
 
     if @user.valid? && @user.save
-      # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(email: @user.email)
-      @user.update_column(:stripe_customer_id, stripe_customer.id)
-      @user.update_column(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
-
-      # Send User Activation email through Mandrill
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
-
-      # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
-      if cookies.encrypted[:referral_data]
-        code, referrer_url = cookies.encrypted[:referral_data].split(';')
-        if code
-          referral_code = ReferralCode.find_by_code(code)
-          @user.create_referred_signup(referral_code_id: referral_code.id, referrer_url: referrer_url) if referral_code
-          cookies.delete(:referral_data)
-        end
-      end
+      handle_post_user_creation(@user)
       redirect_to personal_sign_up_complete_url(@user.account_activation_code)
     elsif request && request.referrer
-      session[:sign_up_errors] = @user.errors unless @user.errors.empty?
-      session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.terms_and_conditions] unless @user.errors.empty?
+      set_session_errors(@user)
       redirect_to request.referrer
     else
       redirect_to root_url
@@ -181,15 +153,13 @@ class StudentSignUpsController < ApplicationController
     redirect_to sign_in_url unless @user
   end
 
-  protected
+  private
 
   def student_allowed_params
     params.require(:user).permit(
-        :email, :first_name, :last_name,
-        :country_id, :locale,
-        :password, :password_confirmation,
-        :terms_and_conditions,
-        :communication_approval
+      :email, :first_name, :last_name, :preferred_exam_body_id, :country_id, 
+      :locale, :password, :password_confirmation, :terms_and_conditions,
+      :communication_approval
     )
   end
 
@@ -211,6 +181,7 @@ class StudentSignUpsController < ApplicationController
       @user.last_name = session[:valid_params][1]
       @user.email = session[:valid_params][2]
       @user.terms_and_conditions = session[:valid_params][3]
+      @user.preferred_exam_body_id = session[:valid_params][4]
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
     end
@@ -234,4 +205,24 @@ class StudentSignUpsController < ApplicationController
     @footer = true
   end
 
+  def handle_post_user_creation(user)
+    user.set_analytics(cookies[:_ga])
+    user.create_stripe_customer
+    user.send_activation_email(
+      user_verification_url(email_verification_code: user.email_verification_code)
+    )
+    user.validate_referral(cookies.encrypted[:referral_data])
+    cookies.delete(:referral_data)
+  end
+
+  def set_session_errors(user)
+    session[:sign_up_errors] = user.errors unless user.errors.empty?
+    session[:valid_params] = [
+      user.first_name,
+      user.last_name,
+      user.email,
+      user.terms_and_conditions,
+      user.preferred_exam_body_id
+    ] unless user.errors.empty?
+  end
 end

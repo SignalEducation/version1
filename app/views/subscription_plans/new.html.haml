@@ -16,6 +16,10 @@
               .input-group.input-group-lg.full-width
                 =f.text_field :name, placeholder: t('views.subscription_plans.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
               %br/
+              =f.label :exam_body_id, t('views.subscription_plans.form.exam_body_id'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.collection_select :exam_body_id, ExamBody.all, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}
+              %br/
               =f.label :currency_id, t('views.subscription_plans.form.currency_id'), class: 'control-label'
               .input-group.input-group-lg.full-width
                 =f.collection_select :currency_id, @currencies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;'}

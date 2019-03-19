@@ -38,6 +38,7 @@ def expect_index_success_with_model(model_name, record_count, assign_name = nil)
   expect(response.status).to eq(200)
   expect(response).to render_template(:index)
   expect(assigns(assign_name.to_sym).first.class.name).to eq(model_name.classify)
+  # binding.pry
   expect(assigns(assign_name.to_sym).count).to eq(record_count)
 end
 
@@ -73,7 +74,7 @@ def expect_create_success_with_model(model_name, destination, special_flash=nil,
   assign_name = model_name if assign_name.nil?
   expect(flash[:error]).to be_nil
   expect(flash[:success]).to eq(special_flash || I18n.t("controllers.#{assign_name.pluralize}.create.flash.success"))
-  expect(response.status).to eq(302)
+  expect([200, 302]).to include(response.status)
   expect(response).to redirect_to(destination)
   expect(assigns(assign_name.to_sym).class.name).to eq(model_name.classify)
 end

@@ -24,7 +24,6 @@
 #
 
 class SubscriptionPlansController < ApplicationController
-
   before_action :logged_in_required, except: [:public_index]
   before_action except: [:public_index] do
     ensure_user_has_access_rights(%w(stripe_management_access))
@@ -40,10 +39,17 @@ class SubscriptionPlansController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = country.currency_id
+
+    if current_user
+      @existing_subscription = current_user.current_subscription
+      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
+        @currency_id = @existing_subscription.subscription_plan.currency_id
+      end
+    end
+
     @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
 
     seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
-
   end
 
   def show
@@ -75,7 +81,6 @@ class SubscriptionPlansController < ApplicationController
     end
   end
 
-
   def destroy
     if @subscription_plan.destroy
       flash[:success] = I18n.t('controllers.subscription_plans.destroy.flash.success')
@@ -94,7 +99,7 @@ class SubscriptionPlansController < ApplicationController
     @subscription = Subscription.where(id: params[:id]).first
   end
 
-  protected
+  private
 
   def get_variables
     if params[:id].to_i > 0
@@ -108,11 +113,19 @@ class SubscriptionPlansController < ApplicationController
   end
 
   def create_params
-    params.require(:subscription_plan).permit(:available_to_students, :all_you_can_eat, :payment_frequency_in_months, :currency_id, :price, :available_from, :available_to, :stripe_guid, :trial_period_in_days, :name, :subscription_plan_category_id, :monthly_percentage_off, :previous_plan_price)
+    params.require(:subscription_plan).permit(
+      :available_to_students, :all_you_can_eat, :payment_frequency_in_months,
+      :currency_id, :price, :available_from, :available_to, :stripe_guid,
+      :trial_period_in_days, :name, :subscription_plan_category_id,
+      :monthly_percentage_off, :previous_plan_price, :exam_body_id
+    )
   end
 
   def update_params
-    params.require(:subscription_plan).permit(:available_to_students, :available_from, :available_to, :name, :subscription_plan_category_id, :all_you_can_eat, :monthly_percentage_off, :previous_plan_price)
+    params.require(:subscription_plan).permit(
+      :available_to_students, :available_from, :available_to, :name,
+      :subscription_plan_category_id, :all_you_can_eat, :monthly_percentage_off,
+      :previous_plan_price, :exam_body_id
+    )
   end
-
 end

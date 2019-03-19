@@ -23,8 +23,6 @@
 require 'rails_helper'
 
 describe Coupon do
-
-
   subject { FactoryBot.build(:coupon) }
 
   describe 'constants' do

@@ -32,6 +32,7 @@ gem 'jquery-ui-rails' # include jQuery UI for Rails
 gem 'le' # logEntries.com
 gem 'mathjax-rails' # maths functions in the UI
 gem 'prawn' # PDF creator
+gem 'prawn-table', '~> 0.2.2'
 gem 'paperclip', '~> 6.1.0' # for uploading files (works with RemotiPart)
 gem 'mailchimp-api', '~> 2.0.4'
 gem 'momentjs-rails', '>= 2.9.0'
@@ -44,7 +45,6 @@ gem 'redis-rails' #use redis from AWS Elasticache service
 # gem 'redis', '~> 4.0'
 gem 'remotipart' # enables file upload in forms that work using AJAX
 gem 'remodal-rails'
-gem 'rollbar'
 gem 'rails_real_favicon'
 gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
@@ -99,7 +99,8 @@ end
 group :test do
   gem 'database_cleaner' # tidies up the test database
   gem 'guard-rspec' # Guard watches for any changed file and reruns that files tests
-  gem "rspec_junit_formatter"
+  gem 'rspec_junit_formatter'
+  gem 'rails-controller-testing'
   gem 'shoulda-matchers' # adds more RSpec test types
   gem 'shoulda-callback-matchers' # adds more RSpec test types
   gem 'simplecov', require: false
@@ -112,6 +113,7 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of chromedriver to run system tests with Chrome
   gem 'chromedriver-helper'
+  gem 'rubocop-rspec'
 end
 
 group :staging, :production do

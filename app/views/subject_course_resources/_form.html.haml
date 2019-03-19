@@ -29,7 +29,7 @@
           .col-sm-6
             .form-group
               =f.label :file_upload, t('views.course_module_element_resources.form.upload')
-              -if f.object.file_upload_file_name
+              -if f.object.present?
                 .form-control-static
                   =link_to f.object.file_upload_file_name, f.object.file_upload.url, target: '_blank'
                   =number_to_human_size(f.object.file_upload_file_size)

@@ -22,6 +22,7 @@ class QuizQuestion < ActiveRecord::Base
   # Constants
 
   # relationships
+  belongs_to :subject_course, optional: true
   belongs_to :course_module_element, optional: true
   belongs_to :course_module_element_quiz
   has_many :quiz_attempts

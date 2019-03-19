@@ -14,9 +14,6 @@ require 'rails_helper'
 
 describe VatRate do
 
-  # Constants
-  #it { expect(VatRate.const_defined?(:CONSTANT_NAME)).to eq(true) }
-
   # relationships
   it { should have_many(:invoices) }
   it { should belong_to(:vat_code) }

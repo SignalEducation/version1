@@ -22,8 +22,6 @@ require 'rails_helper'
 
 describe SubjectCourseResource do
 
-  # Constants
-
   # relationships
   it { should belong_to(:subject_course) }
 

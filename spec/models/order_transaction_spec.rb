@@ -17,8 +17,6 @@ require 'rails_helper'
 
 describe OrderTransaction do
 
-  # Constants
-
   # relationships
   it { should belong_to(:order) }
   it { should belong_to(:user) }

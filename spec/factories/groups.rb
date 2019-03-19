@@ -20,15 +20,16 @@
 #  background_image_file_size    :integer
 #  background_image_updated_at   :datetime
 #  background_colour             :string
+#  exam_body_id                  :bigint(8)
 #
 
 FactoryBot.define do
   factory :group do
     sequence(:name)           { |n| "Group #{n}" }
     sequence(:name_url)           { |n| "group-#{n}" }
-    description 'Basic Description of the Course'
-    active true
-    sorting_order 1
+    description { 'Basic Description of the Course' }
+    active { true }
+    sorting_order { 1 }
   end
 
 end

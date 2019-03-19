@@ -48,12 +48,11 @@ describe SubjectCoursesController, type: :controller do
   let!(:content_management_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_management_user.id) }
   let!(:group_1) { FactoryBot.create(:group) }
   let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group_1.id,
-                                               exam_body_id: 1) }
+                                               group: group_1) }
   let!(:subject_course_2)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group_1.id,
-                                               computer_based: true,
-                                               exam_body_id: 1) }
+                                               group: group_1,
+                                               computer_based: true) }
+  let(:exam_body) { create(:exam_body) }
 
   let!(:subject_course_5) { FactoryBot.create(:inactive_subject_course) }
   let!(:valid_params) { FactoryBot.attributes_for(:subject_course) }
@@ -74,13 +73,13 @@ describe SubjectCoursesController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should see subject_course_1' do
-        get :show, id: subject_course_1.id
+        get :show, params: { id: subject_course_1.id }
         expect_show_success_with_model('subject_course', subject_course_1.id)
       end
 
       # optional - some other object
       it 'should see subject_course_2' do
-        get :show, id: subject_course_2.id
+        get :show, params: { id: subject_course_2.id }
         expect_show_success_with_model('subject_course', subject_course_2.id)
       end
     end
@@ -94,44 +93,44 @@ describe SubjectCoursesController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subject_course_1' do
-        get :edit, id: subject_course_1.id
+        get :edit, params: { id: subject_course_1.id }
         expect_edit_success_with_model('subject_course', subject_course_1.id)
       end
 
       # optional
       it 'should respond OK with subject_course_2' do
-        get :edit, id: subject_course_2.id
+        get :edit, params: { id: subject_course_2.id }
         expect_edit_success_with_model('subject_course', subject_course_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, subject_course: valid_params
+        post :create, params: { subject_course: valid_params.merge(group_id: group_1.id, exam_body_id: exam_body.id) }
         expect_create_success_with_model('subject_course', subject_courses_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, subject_course: {valid_params.keys.first => ''}
+        post :create, params: { subject_course: {valid_params.keys.first => ''} }
         expect_create_error_with_model('subject_course')
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for subject_course_1' do
-        put :update, id: subject_course_1.id, subject_course: valid_params
+        put :update, params: { id: subject_course_1.id, subject_course: valid_params }
         expect_update_success_with_model('subject_course', subject_courses_url)
       end
 
       # optional
       it 'should respond OK to valid params for subject_course_2' do
-        put :update, id: subject_course_2.id, subject_course: valid_params
+        put :update, params: { id: subject_course_2.id, subject_course: valid_params }
         expect_update_success_with_model('subject_course', subject_courses_url)
         expect(assigns(:subject_course).id).to eq(subject_course_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: subject_course_1.id, subject_course: {valid_params.keys.first => ''}
+        put :update, params: { id: subject_course_1.id, subject_course: {valid_params.keys.first => ''} }
         expect_update_error_with_model('subject_course')
         expect(assigns(:subject_course).id).to eq(subject_course_1.id)
       end
@@ -139,23 +138,21 @@ describe SubjectCoursesController, type: :controller do
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :reorder, array_of_ids: [subject_course_2.id, subject_course_1.id]
+        post :reorder, params: { array_of_ids: [subject_course_2.id, subject_course_1.id] }
         expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be OK even though dependencies exist' do
-        delete :destroy, id: subject_course_1.id
+        delete :destroy, params: { id: subject_course_1.id }
         expect_archive_success_with_model('subject_course', subject_course_1.id, subject_courses_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: subject_course_5.id
+        delete :destroy, params: { id: subject_course_5.id }
         expect_delete_success_with_model('subject_course', subject_courses_url)
       end
     end
-
   end
-
 end

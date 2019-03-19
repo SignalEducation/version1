@@ -12,6 +12,6 @@
 
 FactoryBot.define do
   factory :constructed_response do
-    course_module_element_id 1
+    course_module_element_id { 1 }
   end
 end

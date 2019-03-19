@@ -1,3 +1,13 @@
+-#@subscriptions.each do |subscription|
+  .sub-item
+    .row
+      .col-md-9
+        %h3= "#{subscription.exam_body} - #{subscription.subscription_plan.interval_name} (#{subscription.user_readable_status})"
+      .col-md-3
+        .action-links
+          =link_to 'View', subscription_path(subscription), class: 'btn btn-cyan'
+
+
 .row
   .col-sm-6.col-md-8
     .col-sm-12
@@ -174,3 +184,4 @@
 
 =render partial: 'confirm_cancellation_modal'
 =render partial: 'confirm_pause_modal'
+

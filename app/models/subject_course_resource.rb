@@ -24,7 +24,7 @@ class SubjectCourseResource < ActiveRecord::Base
 
   # relationships
   belongs_to :subject_course
-  has_attached_file :file_upload, default_url: '/assets/images/missing_corporate_logo.png'
+  has_attached_file :file_upload, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :name, presence: true

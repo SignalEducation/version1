@@ -1,6 +1,7 @@
 class CoursesController < ApplicationController
 
   skip_after_action :intercom_rails_auto_include, only: :show_constructed_response
+  skip_before_action :verify_authenticity_token, only: [:create_video_user_log, :video_watched_data]
   before_action :logged_in_required
   before_action :check_permission, only: [:show, :show_constructed_response]
 

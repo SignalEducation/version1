@@ -34,18 +34,18 @@ FactoryBot.define do
     association               :course_section
     sequence(:name)           { |n| "Course Module #{n}" }
     sequence(:name_url)       { |n| "course-module-#{n}" }
-    description               'Lorem ipsum'
+    description               { 'Lorem ipsum' }
     sequence(:sorting_order)  { |n| n * 100 }
-    estimated_time_in_seconds 0
-    seo_description           'Lorem Ipsum'
-    seo_no_index              false
+    estimated_time_in_seconds { 0 }
+    seo_description           { 'Lorem Ipsum' }
+    seo_no_index              { false }
 
     factory :active_course_module do
-      active true
+      active { true }
     end
 
     factory :inactive_course_module do
-      active false
+      active { false }
     end
 
     factory :course_module_with_video do

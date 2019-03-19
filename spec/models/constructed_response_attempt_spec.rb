@@ -22,7 +22,6 @@
 require 'rails_helper'
 
 describe ConstructedResponseAttempt do
-
   subject { FactoryBot.build(:constructed_response_attempt) }
 
   describe 'constants' do

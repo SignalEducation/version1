@@ -44,7 +44,7 @@
                   -@enrollments.each do |enrollment|
                     %tr
                       %td
-                        =enrollment.user.full_name
+                        =enrollment.user.try(:full_name)
                       %td
                         =enrollment.try(:exam_sitting).try(:name)
                       %td

@@ -55,7 +55,7 @@ class OrdersController < ApplicationController
     @order = current_user.orders.build(allowed_params)
     order_object = PurchaseService.new(@order)
     @order = order_object.create_purchase
-    if @order.save
+    if @order && @order.save
       if order_object.stripe? && @order.complete
         flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
         redirect_to order_complete_url(@order.reference_guid)
@@ -66,6 +66,7 @@ class OrdersController < ApplicationController
         redirect_to new_order_url(product_id: @order.product_id)
       end
     else
+      flash[:error] = 'Something went wrong. Please try again. Or contact us for assistance'
       redirect_to new_order_url(product_id: @order.product_id)
     end
     @navbar = false

@@ -57,32 +57,31 @@ Rails.application.configure do
   # email delivery through Mandrill
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address:              ENV['LEARNSIGNAL_V2_SERVER_EMAIL_SMTP'],
-      port:                 587,
-      domain:               ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'],
-      user_name:            ENV['LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS'],
-      password:             ENV['LEARNSIGNAL_V3_SERVER_EMAIL_PASSWORD'],
-      authentication:       :plain,
-      enable_starttls_auto: true
+    address:              ENV['LEARNSIGNAL_V2_SERVER_EMAIL_SMTP'],
+    port:                 587,
+    domain:               ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'],
+    user_name:            ENV['LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS'],
+    password:             ENV['LEARNSIGNAL_V3_SERVER_EMAIL_PASSWORD'],
+    authentication:       :plain,
+    enable_starttls_auto: true
   }
   config.action_mailer.default_url_options = { host: ENV['LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN'] }
 
   # see the HerokuDevCenter Article
   # https://devcenter.heroku.com/articles/paperclip-s3
   config.paperclip_defaults = {
-      storage: :s3,
-      url: ':s3_domain_url',
-      path: '/:class/:id/:filename',
-      s3_protocol: 'https',
-      s3_host_name: 's3-eu-west-1.amazonaws.com',
-      :s3_region => 'eu-west-1',
-      s3_credentials: {
-          bucket: ENV['LEARNSIGNAL3_BUCKET_NAME'],
-          access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
-          secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY']
-      }
+    storage: :s3,
+    url: ':s3_domain_url',
+    path: '/:class/:id/:filename',
+    s3_protocol: 'https',
+    s3_host_name: 's3-eu-west-1.amazonaws.com',
+    s3_credentials: {
+      bucket: ENV['LEARNSIGNAL3_BUCKET_NAME'],
+      access_key_id: ENV['LEARNSIGNAL3_S3_ACCESS_KEY_ID'],
+      secret_access_key: ENV['LEARNSIGNAL3_S3_SECRET_ACCESS_KEY'],
+      s3_region: 'eu-west-1'
+    }
   }
-
   #Enable bullet in your application
   Bullet.enable = true
   Bullet.console = true

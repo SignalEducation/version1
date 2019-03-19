@@ -9,10 +9,14 @@ class UserAccountsController < ApplicationController
     @referral_code = @user.referral_code
     @enrollments = current_user.active_enrollments_in_sitting_order
 
-    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-    @current_subscription = @user.current_subscription
-    @invoices = @user.invoices
-    @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)
+    if current_user.student_access
+      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+      @subscriptions = @user.subscriptions.order(:active, created_at: :desc)
+
+      @invoices = @user.invoices
+      @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)
+
+    end
 
     ExamBody.where.not(id: @exam_body_user_details.map(&:exam_body_id)).all.each do |exam_body|
       @user.exam_body_user_details.build(exam_body_id: exam_body.id)

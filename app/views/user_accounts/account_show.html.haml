@@ -48,7 +48,7 @@
                 =t('views.user_accounts.referral_info.tab_heading')
 
 
-      #tab-area
+      -#tab-area
         .box-item
           .tab-content#account-tabs
 
@@ -58,13 +58,20 @@
                   .mb-5
                     =render partial: 'personal_info'
 
-            -if @user.trial_or_sub_user?
-              -if @user.trial_user?
-                .tab-pane.tab-account-info{id: 'account-info', role: 'tabpanel', 'aria-labelledby': 'account-info-tab'}
-                  .row.row-lg
-                    .col-md-12.col-xs-12
-                      .mb-5
-                        =render partial: 'account_info'
+      .tab-content
+        .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
+          .col-md-12
+            .content-box.content-box-outer.l-margin-bottom-huge
+              .content-box-inner
+                =render partial: 'personal_info'
+
+              -if @user.trial_or_sub_user?
+                -if @user.trial_user?
+                  .tab-pane.tab-account-info{id: 'account-info', role: 'tabpanel', 'aria-labelledby': 'account-info-tab'}
+                    .row.row-lg
+                      .col-md-12.col-xs-12
+                        .mb-5
+                          =render partial: 'account_info'
 
               -elsif @user.subscription_user?
                 .tab-pane.tab-subscriptions{id: 'subscriptions', role: 'tabpanel', 'aria-labelledby': 'subscriptions-tab'}

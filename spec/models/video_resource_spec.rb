@@ -16,9 +16,6 @@
 require 'rails_helper'
 
 describe VideoResource do
-
-  # Constants
-
   # relationships
   it { should belong_to :course_module_element }
 

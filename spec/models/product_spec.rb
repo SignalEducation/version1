@@ -22,8 +22,6 @@ require 'rails_helper'
 
 describe Product do
 
-  # Constants
-
   # relationships
   it { should belong_to(:currency) }
   it { should belong_to(:mock_exam) }

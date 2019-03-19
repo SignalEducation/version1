@@ -15,7 +15,6 @@
 require 'rails_helper'
 
 describe IpAddress do
-
   subject { FactoryBot.build(:ip_address) }
 
   # Constants

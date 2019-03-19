@@ -36,12 +36,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # relationships
   belongs_to :user
-  belongs_to :subject_course
-  belongs_to :subject_course_user_log
-  belongs_to :course_section
-  belongs_to :course_section_user_log
-  belongs_to :course_module
-  belongs_to :student_exam_track
+  belongs_to :subject_course, optional: true
+  belongs_to :subject_course_user_log, optional: true
+  belongs_to :course_section, optional: true
+  belongs_to :course_section_user_log, optional: true
+  belongs_to :course_module, optional: true
+  belongs_to :student_exam_track, optional: true
   belongs_to :course_module_element
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   has_one   :constructed_response_attempt
@@ -175,9 +175,8 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # Before Create
   def set_latest_attempt
     unless self.preview_mode
+      CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only.update_all(latest_attempt: false)
       self.latest_attempt = true
-      others = CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only
-      others.update_all(latest_attempt: false)
       true
     end
   end

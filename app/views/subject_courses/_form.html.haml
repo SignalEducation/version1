@@ -82,7 +82,8 @@
           .form-group
             .image-label
               Background Image
-            -#if @subject_course.background_image.url
+
+            -if @subject_course.background_image.present?
               =image_tag @subject_course.background_image.try(:url), class: 'md-image'
             .input-group.input-group-lg
               =f.file_field :background_image, class: 'form-control'

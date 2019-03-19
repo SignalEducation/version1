@@ -23,6 +23,7 @@
                 %thead
                   %tr
                     %th=t('views.subscription_plans.form.name')
+                    %th Exam Body
                     %th=t('views.subscription_plans.form.currency_id')
                     %th=t('views.subscription_plans.form.price')
                     %th=t('views.subscription_plans.form.active')
@@ -33,6 +34,7 @@
                   -@subscription_plans.each do |plan|
                     %tr
                       %td=plan.name
+                      %td=plan.exam_body
                       %td=plan.currency.iso_code
                       %td=plan.price
                       %td=tick_or_cross(plan.active?)

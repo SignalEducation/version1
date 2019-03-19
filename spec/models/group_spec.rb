@@ -20,12 +20,12 @@
 #  background_image_file_size    :integer
 #  background_image_updated_at   :datetime
 #  background_colour             :string
+#  exam_body_id                  :bigint(8)
 #
 
 require 'rails_helper'
 
 describe Group do
-
   subject { FactoryBot.build(:group) }
 
   # Constants

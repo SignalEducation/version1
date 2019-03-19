@@ -14,11 +14,11 @@
 
 FactoryBot.define do
   factory :ip_address do
-    ip_address "MyString"
-latitude 1.5
-longitude 1.5
-country_id 1
-alert_level 1
+    ip_address { "MyString" }
+latitude { 1.5 }
+longitude { 1.5 }
+country_id { 1 }
+alert_level { 1 }
   end
 
 end

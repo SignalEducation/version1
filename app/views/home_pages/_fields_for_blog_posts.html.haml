@@ -34,11 +34,9 @@
         %br
 
         =blog_post.label :upload, t('views.blog_posts.form.image'), class: 'control-label'
-        -if blog_post.object.image_file_name
+        -if blog_post.object.image.present?
           .form-control-static
-            =link_to blog_post.object.image_file_name, blog_post.object.image.url, target: '_blank'
-            =number_to_human_size(blog_post.object.image_file_size)
-            %br/
+            =image_tag blog_post.object.image.url, class: 'md-image'
             %br/
 
           .input-group.input-group-lg

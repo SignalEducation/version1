@@ -32,13 +32,11 @@ class MockExam < ActiveRecord::Base
   has_many :products
   has_many :orders
 
-  has_attached_file :file, default_url: '/assets/images/404_V1.png'
-  has_attached_file :cover_image, default_url: '/assets/images/404_V1.png'
+  has_attached_file :file, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :name, presence: true
   validates_attachment_content_type :file, :content_type => ['application/pdf']
-  validates_attachment_content_type :cover_image, content_type: %w('image/jpg image/jpeg image/png')
 
   # callbacks
   before_destroy :check_dependencies

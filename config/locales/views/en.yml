@@ -131,7 +131,6 @@ en:
       all_you_can_eat_yes: "Unlimited Access"
       all_courses: "Unlimited Courses"
       cancel_anytime: "Cancel Anytime"
-      submit: Sign Up Now
       actual_submit: Submit
       user_name: "Hi, "
       upload_csv: Upload CSV File
@@ -455,7 +454,6 @@ en:
         name_url_placeholder: auto-populated-for-you
         temporary_label: Label
         temporary_label_placeholder: Temp Label
-        active: Active
         delete: Delete File
         description: Description
         description_placeholder: Description (This is optional)
@@ -536,7 +534,6 @@ en:
         time_allowed_placeholder: Time in Seconds
         new_scenario: New Scenario
         scenario_number: "Scenario #"
-        scenario_number: "Scenario #"
         type: Answer Template Type
 
         scenarios:
@@ -602,10 +599,6 @@ en:
       new:
         h1: New Course Tutor Details
 
-    subject_course_user_log:
-      show:
-        course: Course
-        completed_at: Completed At
 
     currencies:
       form:
@@ -668,9 +661,6 @@ en:
         csv_upload_modal:
           h1: Upload CSV File
           file: Upload CSV File
-
-        preview_csv:
-          h1: Upload Preview
 
         preview_csv:
           h1: Upload Preview
@@ -831,6 +821,7 @@ en:
         sorting_order_placeholder: 100
         course_count: No. of Courses
         background_colour: Background Colour
+        exam_body: Exam body
 
       index:
         h1: Groups
@@ -919,7 +910,6 @@ en:
         line_total_vat_amount: Total VAT
         line_total_inc_vat: Total
         status: 'Status'
-        vat_rate_id: "VAT rated"
         issued_at: "Issued at"
         date: Date
         subject_course: Course
@@ -1045,7 +1035,6 @@ en:
         product_type: Product Type
         subject_course: Course
         type: Type
-        currency: Currency
 
       index:
         h1: Products
@@ -1308,6 +1297,7 @@ en:
     subscription_plans:
       form:
         name: Name
+        exam_body_id: Exam Body
         name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
         available_to_students: Available Standard Students
         all_you_can_eat: All you can eat
@@ -1400,6 +1390,7 @@ en:
       form:
         email: Email
         email_confirmation: Email Confirmation
+        exam_body: Study Preference
         your_email: Your email address
         email_placeholder: user@example.com
         phone_number: Phone Number
