@@ -25,6 +25,8 @@ class PaypalWebhookService
     payload = JSON.parse(event.to_json)
     @webhook.update_columns(payload: payload)
     trigger_payment_actions
+  rescue PayPal::SDK::Core::Exceptions::ResourceNotFound
+    Rails.logger.info "Webhook information no longer available for PaypalWebhook #{@webhook.id}"
   end
 
   private
