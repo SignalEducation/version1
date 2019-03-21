@@ -17,12 +17,11 @@ class PaypalWebhookService
   end
 
   def record_webhook
-    @webhook = PaypalWebhook.new(
+    @webhook = PaypalWebhook.find_or_create_by(
       guid: @paypal_body['id'], 
       event_type: @paypal_body['event_type'], 
       payload: @paypal_body
     )
-    @webhook.save
   end
 
   def valid?

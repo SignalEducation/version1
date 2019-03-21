@@ -31,7 +31,7 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription
 
-  # delegate :currency, to: :subscription_plan
+  delegate :currency, to: :subscription_plan
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
