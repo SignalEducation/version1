@@ -2,7 +2,7 @@ class Api::PaypalWebhooksController < Api::BaseController
   protect_from_forgery except: :create
 
   def create
-    @webhook = PaypalWebhookService.new(request, params)
+    @webhook = PaypalWebhookService.new(request, params.to_unsafe_h)
     if @webhook.record_webhook
       @webhook.process
       render body: nil, status: 204
