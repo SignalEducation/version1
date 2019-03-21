@@ -1,6 +1,6 @@
 namespace :paypal do
   desc 'sorting out the dodgy paypal webhook payloads'
-  task :webhook_clean do
+  task :webhook_clean => :environment do
     puts 'Running command to clean up webhook records...'
     PaypalWebhook.find_each do |wh|
       puts '================'
