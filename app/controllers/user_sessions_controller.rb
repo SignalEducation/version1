@@ -1,5 +1,4 @@
 class UserSessionsController < ApplicationController
-
   before_action :logged_out_required, only: [:new, :create]
   before_action :logged_in_required,  only: :destroy
   before_action :set_variables
@@ -69,5 +68,4 @@ class UserSessionsController < ApplicationController
     @seo_title = 'LearnSignal | Sign In'
     @seo_description = "Sign In here to access LearnSignal's online courses"
   end
-
 end
