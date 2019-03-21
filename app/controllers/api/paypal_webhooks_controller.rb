@@ -2,12 +2,12 @@ class Api::PaypalWebhooksController < Api::BaseController
   protect_from_forgery except: :create
 
   def create
-    @webhook = PaypalWebhookService.new(request, params.to_unsafe_h)
-    if @webhook.record_webhook
-      @webhook.process
+    @hook_service = PaypalWebhookService.new
+    if @hook_service.record_webhook
+      @hook_service.process_webhook
       render body: nil, status: 204
     else
-      Rails.logger.error "ERROR: Api/Paypal#Create: Unable to save PayPal webhook: #{@webhook.webhook.errors.full_messages.join(' | ')}"
+      Rails.logger.error "ERROR: Api/Paypal#Create: Unable to save PayPal webhook: #{@hook_service.webhook.errors.full_messages.join(' | ')}"
       render body: nil, status: 404
     end
   rescue => e
