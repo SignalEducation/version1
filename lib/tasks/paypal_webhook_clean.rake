@@ -9,7 +9,6 @@ namespace :paypal do
       puts 'all okay'
     rescue ActiveRecord::SerializationTypeMismatch => e
       puts "error with Webhook #{wh.id}"
-      wh.update_columns(payload: {})
       wh.reprocess
     end
   end

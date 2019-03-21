@@ -21,8 +21,9 @@ class PaypalWebhookService
   def reprocess_webhook(webhook)
     @webhook = webhook
     event = PayPal::SDK::REST::WebhookEvent.get(@webhook.guid)
+    @webhook.update_columns(payload: {})
     payload = JSON.parse(event.to_json)
-    @webhook.update(payload: payload)
+    @webhook.update_columns(payload: payload)
     trigger_payment_actions
   end
 
