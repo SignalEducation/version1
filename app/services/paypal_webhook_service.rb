@@ -4,6 +4,8 @@ class PaypalWebhookService
   include PayPal::SDK::REST
   include PayPal::SDK::Core::Logging
 
+  attr_reader :webhook
+
   def initialize(request, paypal_body)
     @request = request
     @paypal_body = paypal_body
