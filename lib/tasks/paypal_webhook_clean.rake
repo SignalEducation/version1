@@ -5,6 +5,7 @@ namespace :paypal do
     PaypalWebhook.find_each do |wh|
       puts '================'
       puts wh.id.to_s
+      puts wh.payload
       puts 'all okay'
     rescue ActiveRecord::SerializationTypeMismatch => e
       puts "error with Webhook #{wh.id}"
