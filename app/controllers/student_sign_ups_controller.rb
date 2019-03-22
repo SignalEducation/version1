@@ -8,13 +8,8 @@ class StudentSignUpsController < ApplicationController
   def home
     @footer = false
     @home_page = HomePage.where(home: true).where(public_url: '/').first
-    if @home_page
-      @group = @home_page.group
-      @banner = @home_page.external_banners.first
-      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-    else
-      @group = Group.all_active.all_in_order.first
-    end
+    #@banner = @home_page.external_banners.first
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
 
@@ -127,8 +122,7 @@ class StudentSignUpsController < ApplicationController
     @user = User.new(
       student_allowed_params.merge(
         user_group: UserGroup.student_group,
-        country: IpAddress.get_country(request.remote_ip, true),
-        password_confirmation: params[:user][:password]
+        country: IpAddress.get_country(request.remote_ip, true)
       )
     )
     @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])

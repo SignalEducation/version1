@@ -6,7 +6,7 @@ class LibraryController < ApplicationController
 
   def index
     @groups = Group.all_active.all_in_order
-    if current_user.preferred_exam_body_id
+    if current_user && current_user.preferred_exam_body_id
       @groups = @groups.where(exam_body_id: current_user.preferred_exam_body_id)
     end
     redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1

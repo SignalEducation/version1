@@ -390,6 +390,10 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def stripe?
+    stripe_guid.present?
+  end
+
   protected
 
   def create_subscription_payment_card

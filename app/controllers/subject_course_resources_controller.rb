@@ -83,6 +83,7 @@ class SubjectCourseResourcesController < ApplicationController
       @subject_course_resource = SubjectCourseResource.where(id: params[:id]).first
     end
     @subject_courses = SubjectCourse.all_active.all_in_order
+    @layout = 'management'
   end
 
   def allowed_params

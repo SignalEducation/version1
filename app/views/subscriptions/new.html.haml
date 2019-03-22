@@ -1,103 +1,105 @@
-.upgrade
-  #wrapper
-    #upgrade-subscription
-      =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
-        =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
-        =f.hidden_field :user_id, value: current_user.id
-        =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
-        =f.hidden_field :stripe_token
-        =f.hidden_field :use_paypal, value: false
-        -if params[:coupon]
-          =hidden_field_tag :hidden_coupon_code
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.hero-section-external
+        %h1.h1-hero.mb-2
+          = "Get your #{@plans.first.exam_body} tuition sorted for 2019"
+        %h2.h5
+          ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
+          %span{style: 'font-weight: bold;'}
+            ="with 3 months free on our annual subscription."
 
-        .bg-asphalt
-          .container
-            -if flash[:success] || flash[:error] || flash[:warning]
-              .row.subscription-flash
-                .col-xs-12
-                  =render partial: 'layouts/flash_messages'
-            .hero
-              %h5.text-red Upgrade your account
-              %h1.h1-mega
-                = "Get your #{@plans.first.exam_body} tuition sorted for 2019"
-              %p.text-lg.mb-0
-                ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
-                %span{style: 'font-weight: bold;'}
-                  ="with 3 months free on our annual subscription."
+      %section.pb-md-6.pb-5#wrapper
+        #upgrade-subscription
+          =form_for @subscription, url: create_subscription_url(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
+            =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+            =f.hidden_field :user_id, value: current_user.id
+            =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
+            =f.hidden_field :stripe_token
+            =f.hidden_field :use_paypal, value: false
+            -if params[:coupon]
+              =hidden_field_tag :hidden_coupon_code
 
-
-          .container.payment
-            .row
-              .col-lg-6.mb-5.mb-xl-0.mt-2
-                %fieldset
-                  %legend.sr-only Select a Plan
-                  - if @subscription.subscription_plan.payment_frequency_in_months == 12
-                    =render partial: 'single_plan_checkout', locals: {subscription: @subscription, plans: @plans}
-                  - else
-                    =render partial: 'multi_plans', locals: {subscription: @subscription, plans: @plans}
-
-              .col-lg-6
-                %fieldset.card.card-payments
-                  %p.h2.mb-1 Choose a way to pay
-                  %p.mb-4 Choose your preferred method of payment
-                  .form-group.form-group-expandable
-                    .custom-control.custom-radio
-                      %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
-                      %label.custom-control-label{:for => "pay-with-card"}
-                        %span.custom-label-info
-                          %span.h3.m-0
-                            =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
-                            %span Credit / Debit Card
-                        %span.custom-check
-                          / custom checkbox
-                    =render partial: 'subscription_payment_cards/form', locals: {f: f}
-                  .form-group.form-group-expandable
-                    .custom-control.custom-radio
-                      %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
-                      %label.custom-control-label{:for => "pay-with-paypal"}
-                        %span.custom-label-info
-                          %span.h3.m-0
-                            =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
-                            %span PayPal
-                        %span.custom-check
-                          / custom checkbox
-                    =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
+            .bg-asphalt
+              .container
+                -if flash[:success] || flash[:error] || flash[:warning]
+                  .row.subscription-flash
+                    .col-xs-12
+                      =render partial: 'layouts/flash_messages'
 
 
+              .container.payment
+                .row
+                  .col-lg-6.mb-5.mb-xl-0.mt-2
+                    %fieldset
+                      %legend.sr-only Select a Plan
+                      - if @subscription.subscription_plan.payment_frequency_in_months == 12
+                        =render partial: 'single_plan_checkout', locals: {subscription: @subscription, plans: @plans}
+                      - else
+                        =render partial: 'multi_plans', locals: {subscription: @subscription, plans: @plans}
 
-        .bg-white
-          .container
-            .py-6
-              %h2
-                = "You are currently viewing plans for #{@plans.first.exam_body}"
-              %p Switch to
-                
-              .row
-                .col-md-5
-                  -ExamBody.all.each do |body|
-                    .with-icon-switch
-                      %p
-                        =link_to body, new_subscription_path(exam_body_id: body.id)
+                  .col-lg-6
+                    %fieldset.card.card-payments
+                      %p.h2.mb-1 Choose a way to pay
+                      %p.mb-4 Choose your preferred method of payment
+                      .form-group.form-group-expandable
+                        .custom-control.custom-radio
+                          %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                          %label.custom-control-label{:for => "pay-with-card"}
+                            %span.custom-label-info
+                              %span.h3.m-0
+                                =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                                %span Credit / Debit Card
+                            %span.custom-check
+                              / custom checkbox
+                        =render partial: 'subscription_payment_cards/form', locals: {f: f}
+                      .form-group.form-group-expandable
+                        .custom-control.custom-radio
+                          %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                          %label.custom-control-label{:for => "pay-with-paypal"}
+                            %span.custom-label-info
+                              %span.h3.m-0
+                                =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                                %span PayPal
+                            %span.custom-check
+                              / custom checkbox
+                        =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
-        .bg-asphalt
-          .container
-            .py-6
-              %h2.mb-5 Included in Your LearnSignal Membership
-              .row
-                .col-md-5
-                  .with-icon-checked
-                    %p Topic&ndash;by&ndash;topic, online 15&ndash;minute lectures
-                  .with-icon-checked
-                    %p Notes &amp; MCQs
-                  .with-icon-checked
-                    %p Practice CBE's
-                .col-md-5
-                  .with-icon-checked
-                    %p 24&#47;7 hour Support
-                  .with-icon-checked
-                    %p Exam Bootcamp
-                  .with-icon-checked
-                    %p Webinar Week
+
+
+            .bg-white
+              .container
+                .py-6
+                  %h2
+                    = "You are currently viewing plans for #{@plans.first.exam_body}"
+                  %p Switch to
+
+                  .row
+                    .col-md-5
+                      -ExamBody.all.each do |body|
+                        .with-icon-switch
+                          %p
+                            =link_to body, new_subscription_path(exam_body_id: body.id)
+
+            .bg-asphalt
+              .container
+                .py-6
+                  %h2.mb-5 Included in Your LearnSignal Membership
+                  .row
+                    .col-md-5
+                      .with-icon-checked
+                        %p Topic&ndash;by&ndash;topic, online 15&ndash;minute lectures
+                      .with-icon-checked
+                        %p Notes &amp; MCQs
+                      .with-icon-checked
+                        %p Practice CBE's
+                    .col-md-5
+                      .with-icon-checked
+                        %p 24&#47;7 hour Support
+                      .with-icon-checked
+                        %p Exam Bootcamp
+                      .with-icon-checked
+                        %p Webinar Week
 
 
 :javascript

@@ -1,41 +1,38 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap-large
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.orders.index.h1')
+.container
+  %header.management-console-section
+    %h1
+      =t('views.orders.index.h1')
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'management_consoles/subscriptions_nav'
+  %section.pb-7
+    =render partial: 'management_consoles/subscriptions_nav'
 
-      .row
-        .col-sm-12
-          .box-item.table-box
-            .row.l-margin-bottom
 
-            .table-responsive
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
 
-              %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: white_papers_url}}
-                %thead
-                  %tr
-                    %th=t('views.orders.index.product_id')
-                    %th=t('views.orders.index.user_id')
-                    %th=t('views.orders.index.stripe_status')
-                    %th
-                %tbody
-                  -@orders.each do |order|
-                    %tr{id: order.id}
-                      %td=order.product.try(:name)
-                      %td
-                        -if order.user_id
-                          =order.user.full_name
-                      %td=order.stripe_status
-                      %td
-                        =link_to 'Order', order, class: 'btn btn-secondary btn-small'
-                        =link_to 'Product', order.product, class: 'btn btn-secondary-reverse btn-small'
-                        -if order.user_id
-                          =link_to t('views.orders.index.user_id'), user_url(order.user_id), class: 'btn btn-primary btn-small'
+          .table-responsive
 
-              =will_paginate @orders, renderer: BootstrapPagination::Rails
+            %table.table.sorted_table{data: {destination: white_papers_url}}
+              %thead
+                %tr
+                  %th=t('views.orders.index.product_id')
+                  %th=t('views.orders.index.user_id')
+                  %th=t('views.orders.index.stripe_status')
+                  %th
+              %tbody
+                -@orders.each do |order|
+                  %tr{id: order.id}
+                    %td=order.product.try(:name)
+                    %td
+                      -if order.user_id
+                        =order.user.full_name
+                    %td=order.stripe_status
+                    %td
+                      =link_to 'Order', order, class: 'btn btn-secondary btn-xs'
+                      =link_to 'Product', order.product, class: 'btn btn-secondary-reverse btn-xs'
+                      -if order.user_id
+                        =link_to t('views.orders.index.user_id'), user_url(order.user_id), class: 'btn btn-primary btn-xs'
+
+            =will_paginate @orders, renderer: BootstrapPagination::Rails

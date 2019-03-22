@@ -1,70 +1,53 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap-large
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            ='Enrolments'
+.container
+  %header.management-console-section
+    %h1
+      ='Enrolments'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'enrollment_management/enrollment_management_navbar'
+  %section.pb-7
+    =render partial: 'enrollment_management/enrollment_management_navbar'
 
-      .row
-        .col-sm-12
-          .box-item.table-box
-            .row.l-margin-bottom
-              .col-sm-6
-                .col-sm-10
-                  =form_tag(enrollments_management_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
-                    .form-group.input-group.input-group-lg
-                      =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-                      .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                        %span.glyphicon.glyphicon-search
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              .form-group
 
-
-              .col-sm-6
                 =form_tag(enrollments_management_url, method: :get, role: 'form', class: 'form-horizontal') do
-                  .col-sm-10.col-sm-offset-2
-                    .input-group.input-group-lg.full-width
-                      =collection_select(:exam_sitting, :id, ExamSitting.all_active.all_in_order, :id, :name, {include_blank: 'Exam Sitting Filter'}, {class: 'form-control', onchange: 'this.form.submit(); return false;'})
+                  .input-group.input-group-lg
+                    =collection_select(:exam_sitting, :id, ExamSitting.all_active.all_in_order, :id, :name, {include_blank: 'Exam Sitting Filter'}, {class: 'form-control custom-select', onchange: 'this.form.submit(); return false;'})
+
+            .col-sm
+              .search-container
+                =form_tag(enrollments_management_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline') do
+                  =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
 
 
-            .table-responsive
 
-              %table.table.sorted_table
-                %thead
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th User
+                  %th Sitting
+                  %th Expired
+                  %th
+                  %th
+              %tbody
+                -@enrollments.each do |enrollment|
                   %tr
-                    %th User
-                    %th Sitting
-                    %th Expired
-                    %th
-                    %th
-                %tbody
-                  -@enrollments.each do |enrollment|
-                    %tr
-                      %td
-                        =enrollment.user.try(:full_name)
-                      %td
-                        =enrollment.try(:exam_sitting).try(:name)
-                      %td
-                        =tick_or_cross(enrollment.expired)
-                      %td
-                        =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-small btn-secondary'
-                      %td
-                        =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-primary btn-small'
-              =will_paginate @enrollments, renderer: BootstrapPagination::Rails
+                    %td
+                      =enrollment.user.try(:full_name)
+                    %td
+                      =enrollment.try(:exam_sitting).try(:name)
+                    %td
+                      =tick_or_cross(enrollment.expired)
+                    %td
+                      =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-xs btn-secondary'
+                    %td
+                      =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-primary btn-xs'
+            =will_paginate @enrollments, renderer: BootstrapPagination::Rails
 
 
-
-
-
-
-
-:javascript
-  $(document).ready(function() {
-    $("#search").on('blur', function() {
-      $(this).parents('form').submit();
-    });
-
-  });

@@ -8,40 +8,43 @@
   %section.pb-7
     =render partial: 'user_tabs'
     .row
-      .col-md-12
+      .col-sm-12
         .box-item.table-box
-          .col-sm-12
-            %h2
-              Subscriptions
-            .table-responsive
-              %table.table
-                %thead
-                  %tr
-                    %th
-                      Sub ID
-                    %th
-                      Sub Plan
-                    %th
-                      Created At
-                    %th
-                      Status
-                    %th
+          %h3.h-dark
+            Subscriptions
+          .table-responsive
+            %table.table
+              %thead
+                %tr
+                  %th
+                    Sub ID
+                  %th
+                    Sub Plan
+                  %th
+                    Created At
+                  %th
+                    Status
+                  %th
+                    Provider
+                  %th
 
-                %tbody
-                  -@subscriptions.each do |subscription|
-                    %tr
-                      %td
-                        =subscription.id
-                      %td
-                        =subscription.subscription_plan.name
-                      %td
-                        =humanize_datetime(subscription.created_at)
-                      %td
-                        =subscription.state.camelcase
-                      %td
-                        =link_to subscription_management_url(subscription) do
-                          .btn.btn-secondary.btn-small.pull-right
-                            View
+              %tbody
+                -@subscriptions.each do |subscription|
+                  %tr
+                    %td
+                      =subscription.id
+                    %td
+                      =subscription.subscription_plan.name
+                    %td
+                      =humanize_datetime(subscription.created_at)
+                    %td
+                      =subscription.state.camelcase
+                    %td
+                      =subscription.stripe? ? 'Stripe' : 'PayPal'
+                    %td
+                      =link_to subscription_management_url(subscription) do
+                        .btn.btn-secondary.btn-xs
+                          View
 
 
     .row

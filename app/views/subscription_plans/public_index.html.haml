@@ -1,50 +1,37 @@
-.l-section-small.is-bg-asphalt
-  %section#plans{style: 'padding-top: 20px;'}
+%main
+  %article.bg-gray5
     .container
-      %h1.h1-mega.mb-4.mb-sm-3.text-center
-        ='Passing your ACCA is worth it'
-      %h2.subtitle1
-        Pick which plan suits you best
+      %header.hero-section.hero-section-external
+        %h1.h1-mega
+          ='Passing your ACCA is worth it'
+        %h2.h5
+          Pick which plan suits you best
 
-      %ul.plans.clearfix
-        -@subscription_plans.each do |plan|
-          %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
-            .base
-              .topbox
-                -if plan.payment_frequency_in_months == 3
-                  %span Our most popular payment plan
-              .box
-                .name
-                  =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                %ul.details.fa-ul
-                  %li
-                    %i.fa-li.fa.fa-check
+      %section.pb-md-6.pb-5
+        .row.row-lg
+          -@subscription_plans.each do |plan|
+            .col-lg-4
+              %article.card.card-primary.card-pink
+                .card-body.text-center
+                  %h2.h1.card-title
+                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                  %p
                     Get unlimited access
-                  %li
-                    %i.fa-li.fa.fa-check
+                  %p
                     Cancel anytime
-                  -#%li
-                    %i.fa-li.fa.fa-check
-                    =t("views.general.subscription_ideal_line.a#{plan.payment_frequency_in_months}")
-                  -#%li
-                    %i.fa-li.fa.fa-check
-                    -# TODO Add plans free mock exams count here
-                    =#'corrected mock exams'
+                  %p
+                    =plan.currency.format_number(plan.price)
 
-                .price
-                  =plan.currency.format_number(plan.price)
 
-              -if current_user && current_user.trial_or_sub_user?
-                .lsbtn-base
-                  =link_to new_subscription_url do
-                    .lsbtn
-                      %i.fa.fa-check
-                      Choose this plan
+                  -if current_user && current_user.trial_or_sub_user?
+                    .mt-auto
+                      =link_to new_subscription_url, class: 'btn btn-secondary btn-sm' do
+                        Choose this plan
 
-              -else
-                .lsbtn-base
-                  =link_to new_student_url do
-                    .lsbtn
-                      Get Started For Free
+                  -else
+                    .mt-auto
+                      =link_to new_student_url, class: 'btn btn-secondary btn-sm' do
+                        Get Started For Free
 
 

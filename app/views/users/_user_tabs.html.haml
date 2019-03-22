@@ -4,9 +4,6 @@
       =link_to 'Account', user_url(@user)
     %li
       =link_to 'Personal', user_personal_url(@user)
-    -if @user.tutor_user?
-      %li
-        =link_to 'Courses', user_courses_url(@user)
     %li
       =link_to 'Subscriptions', user_subscription_url(@user)
     %li

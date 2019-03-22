@@ -1,30 +1,30 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap-large
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            General Reports
+.container
+  %header.management-console-section
+    %h1
+      General Reports
 
-  .row.l-margin-top.l-margin-bottom-huge
-    .col-md-10.col-md-offset-1.l-margin-top-big.l-margin-bottom
-      .col-md-6
-        = link_to 'Total Users', export_users_path(format: :xls), class: 'btn btn-primary full-width'
-      .col-md-6
-        = link_to 'Courses List', export_courses_path(format: :xls), class: 'btn btn-secondary full-width'
+  %section.pb-7
+    .col-sm.pt-4
+      .row
+        .col-sm-6
+          = link_to 'Total Users', export_users_path(format: :xls), class: 'btn btn-primary'
+        .col-sm-6
+          = link_to 'Courses List', export_courses_path(format: :xls), class: 'btn btn-secondary'
 
-    .col-md-10.col-md-offset-1.l-margin-top.l-margin-bottom
-      .col-md-6
-        =link_to 'Monthly Users', export_users_monthly_path(format: :xls), class: 'btn btn-primary full-width'
+    .col-sm.pt-4
+      .row
+        .col-sm-6
+          =link_to 'Monthly Users', export_users_monthly_path(format: :xls), class: 'btn btn-primary '
 
-      .col-md-6
-        =link_to 'Users with Enrolments', export_users_with_enrollments_path(format: :xls), class: 'btn btn-secondary full-width'
+        .col-sm-6
+          =link_to 'Users with Enrolments', export_users_with_enrollments_path(format: :xls), class: 'btn btn-secondary'
 
-    .col-md-10.col-md-offset-1.l-margin-top.l-margin-bottom
-      .col-md-6
-        =link_to 'Users with UTM data', export_visits_path(format: :xls), class: 'btn btn-secondary-reverse full-width'
-      .col-md-6
-        -#=link_to 'Enrolments', export_enrollments_path(format: :xls), class: 'btn btn-cyan btn-wide'
+    .col-sm.pt-4
+      .row
+        .col-sm-6
+          =link_to 'Users with UTM data', export_visits_path(format: :xls), class: 'btn btn-secondary'
+        .col-sm-6
+          -#=link_to 'Enrolments', export_enrollments_path(format: :xls), class: 'btn btn-cyan btn-wide'
 
 
 

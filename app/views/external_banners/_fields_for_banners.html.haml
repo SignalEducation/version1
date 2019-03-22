@@ -1,35 +1,37 @@
-=f.fields_for :external_banners do |banner|
+.col-sm-12
   .box-item.form-box
-    =banner.hidden_field :sorting_order
-    -if banner.object.new_record?
-      %h4
-        Add Banner - Optional!
+    =f.fields_for :external_banners do |banner|
+      =banner.hidden_field :sorting_order
+      -if banner.object.new_record?
+        %h4
+          Add Banner - Optional!
 
-    .col-sm-12
-      .col-md-6
-        =banner.label :name, t('views.external_banners.form.name'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =banner.text_field :name, placeholder: t('views.external_banners.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+      .row
+        .col-sm-6
+          .form-group
+            =banner.label :name, t('views.external_banners.form.name')
+            .input-group.input-group-lg
+              =banner.text_field :name, placeholder: t('views.external_banners.form.name_placeholder'), class: 'form-control'
 
-      .col-md-6
-        =banner.label :background_colour, t('views.external_banners.form.background_colour'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =banner.color_field :background_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        .col-sm-6
+          .form-group
+            =banner.label :background_colour, t('views.external_banners.form.background_colour')
+            .input-group.input-group-lg
+              =banner.color_field :background_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control'
 
 
 
-    .col-md-12.l-margin-top-big
-      =banner.label :text_content, t('views.external_banners.form.text_content'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =banner.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'banner_editor'
+      .col-sm-12.pt-4
+        =banner.label :text_content, t('views.external_banners.form.text_content')
+        .input-group.input-group-lg
+          =banner.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', id: 'banner_editor'
 
-      -if !banner.object.new_record? && banner.object.destroyable?
-        %br/
-        %br/
-        .checkbox.l-margin-top
-          %label
-            =banner.check_box :_destroy
-            Remove Banner
+        -if !banner.object.new_record? && banner.object.destroyable?
+          %br/
+          .checkbox
+            %label
+              =banner.check_box :_destroy
+              Remove Banner
 
 
 
