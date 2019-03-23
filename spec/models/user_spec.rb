@@ -197,7 +197,6 @@ describe User do
   it { should respond_to(:current_subscription) }
   it { should respond_to(:default_card) }
   it { should respond_to(:user_subscription_status) }
-  it { should respond_to(:user_account_status) }
 
   it { should respond_to(:enrolled_course?) }
   it { should respond_to(:enrolled_in_course?) }

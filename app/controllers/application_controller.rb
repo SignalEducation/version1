@@ -242,7 +242,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
 
   # Library Navigation Links
   def library_special_link(the_thing)
-    if the_thing.class == Group
+    if the_thing.class == (Group || ExamBody)
       the_thing = the_thing
       library_group_url(
                   the_thing.name_url

@@ -264,7 +264,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_visits(options = {})
-    attributes = %w{email id user_account_status visit_campaigns visit_sources visit_landing_pages}
+    attributes = %w{email id visit_campaigns visit_sources visit_landing_pages}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -474,26 +474,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def user_account_status
-    if self.trial_or_sub_user?
-      if self.not_started_trial_user?
-        'Unverified'
-      elsif self.trial_user?
-        'Trial'
-      elsif self.current_subscription
-        self.user_subscription_status
-      else
-        'Unknown'
-      end
-    else
-      if self.user_group_id
-        self.user_group.name
-      else
-        'Unknown'
-      end
-    end
-  end
-
   def enrolled_course?(course_id)
     #Returns true if an active enrollment exists for this user/course
 
@@ -554,9 +534,9 @@ class User < ActiveRecord::Base
     set_subscription_plan_category(cookie)
   end
 
-  def send_activation_email(url)
+  def send_verification_email(url)
     MandrillWorker.perform_async(
-      id, 
+      id,
       'send_verification_email',
       url
     ) unless Rails.env.test?
@@ -570,7 +550,7 @@ class User < ActiveRecord::Base
     update(analytics_guid: ga_ref) if ga_ref
   end
 
-  # Checks for our referral cookie in the users browser and creates a 
+  # Checks for our referral cookie in the users browser and creates a
   # ReferredSignUp associated with this user
   def validate_referral(cookie)
     code, referrer_url = cookie.split(';') if cookie
@@ -592,12 +572,6 @@ class User < ActiveRecord::Base
     self.email_verified = true
     self.email_verified_at = Proc.new{Time.now}.call
     self.email_verification_code = nil
-  end
-
-  def de_activate_user
-    self.active = false
-    self.account_activated_at = nil
-    self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
   def generate_email_verification_code

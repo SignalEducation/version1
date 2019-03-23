@@ -5,11 +5,11 @@
         =t('views.user_accounts.account_info.member_since')
       %p
         =humanize_datetime_full(@user.created_at)
-    .col-xs-6.l-margin-bottom
+    -#.col-xs-6.l-margin-bottom
       .h3
         =t('views.user_accounts.account_info.account_type')
       %p
-        ='Valid ' + @user.user_account_status
+
 
 
   .col-xs-12.col-sm-4

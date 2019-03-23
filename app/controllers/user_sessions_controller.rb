@@ -3,7 +3,6 @@ class UserSessionsController < ApplicationController
   before_action :logged_out_required, only: [:new, :create]
   before_action :logged_in_required,  only: :destroy
   before_action :set_variables
-  before_action :check_email_verification, only: [:create]
   before_action :check_user_group, only: [:create]
 
   def new
@@ -38,19 +37,6 @@ class UserSessionsController < ApplicationController
 
   def user_session_params
     params.require(:user_session).permit(:email, :password)
-  end
-
-  def check_email_verification
-    user = User.find_by_email(params[:user_session][:email])
-    if user && user.student_user? && !user.email_verified
-      flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for assistance.'
-      MandrillWorker.perform_async(user.id, 'send_verification_email', user_verification_url(email_verification_code: user.email_verification_code)) if user.email_verification_code
-      redirect_to sign_in_url
-    elsif user && user.email_verified && user.password_change_required
-      flash[:warning] = 'Sorry, that email is not verified. Please follow the instructions in the verification email we sent. Or contact us for help.'
-      MandrillWorker.perform_async(user.id, 'send_set_password_email', set_password_url(user.password_reset_token))
-      redirect_to sign_in_url
-    end
   end
 
   def check_user_group

@@ -16,7 +16,6 @@ class IntercomCreateUserWorker
                             created_at: user.created_at,
                             custom_attributes: {guid: user.guid,
                                           user_group: user.user_group,
-                                          account_status: user.user_account_status,
                                           email_verified: user.email_verified,
                                           ga_id: user.analytics_guid,
                                           student_number: user.student_number,
