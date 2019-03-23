@@ -18,29 +18,27 @@
               .input-group.input-group-lg
                 =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control'
             .form-group
-              =f.label :header_heading, t('views.home_pages.form.header_heading')
+              =f.label :logo_image, t('views.home_pages.form.logo_image')
               .input-group.input-group-lg
-                =f.text_field :header_heading, placeholder: t('views.home_pages.form.header_heading_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :header_paragraph, t('views.home_pages.form.header_paragraph')
-              .input-group.input-group-lg
-                =f.text_area :header_paragraph, placeholder: t('views.home_pages.form.header_paragraph_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :header_button_text, t('views.home_pages.form.header_button_text')
-              .input-group.input-group-lg
-                =f.text_field :header_button_text, placeholder: t('views.home_pages.form.header_button_text_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :header_button_link, t('views.home_pages.form.header_button_link')
-              .input-group.input-group-lg
-                =f.text_field :header_button_link, placeholder: t('views.home_pages.form.header_button_link_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :header_button_subtext, t('views.home_pages.form.header_button_subtext')
-              .input-group.input-group-lg
-                =f.text_field :header_button_subtext, placeholder: t('views.home_pages.form.header_button_subtext_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :background_image, t('views.home_pages.form.background_image')
-              .input-group.input-group-lg
-                =f.select :background_image, HomePage::BACKGROUND_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+                =f.select :logo_image, HomePage::LOGO_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            .form-group.pt-5
+              .row
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :form_section
+                      =t('views.home_pages.form.form_section')
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :pricing_section
+                      =t('views.home_pages.form.pricing_section')
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :footer_link
+                      ='Footer Link'
+
 
           .col-sm-6
             .form-group
@@ -56,45 +54,21 @@
               =f.label :group_id, t('views.home_pages.form.group_id')
               .input-group.input-group-lg
                 =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
-            .form-group
+            -#.form-group
               =f.label :subject_course_id, t('views.home_pages.form.subject_course_id')
               .input-group.input-group-lg
                 =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
+            .form-group
+              =f.label :subscription_plan_category_id, t('views.home_pages.form.subscription_plan_category_id')
+              .input-group.input-group-lg
+                =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
 
-            .form-group.pt-5
-              .col-sm-6
-                .checkbox
-                  %label
-                    =f.check_box :footer_link
-                    ='Footer Link'
-
-
-
-              .col-sm-6
-                .checkbox
-                  %label
-                    =f.check_box :mailchimp_subscribe_section
-                    =t('views.home_pages.form.mailchimp_subscribe_section')
 
             .form-group
               =f.label :mailchimp_list_guid, t('views.home_pages.form.mailchimp_list_guid')
               .input-group.input-group-lg
                 =f.text_field :mailchimp_list_guid, placeholder: t('views.home_pages.form.mailchimp_list_guid_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :mailchimp_section_heading, t('views.home_pages.form.mailchimp_section_heading')
-              .input-group.input-group-lg
-                =f.text_field :mailchimp_section_heading, placeholder: t('views.home_pages.form.mailchimp_section_heading_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :mailchimp_section_subheading, t('views.home_pages.form.mailchimp_section_subheading')
-              .input-group.input-group-lg
-                =f.text_field :mailchimp_section_subheading, placeholder: t('views.home_pages.form.mailchimp_section_subheading_placeholder'), class: 'form-control'
 
-
-  .row.pt-2
-    =render partial: 'fields_for_blog_posts', locals: {f: f}
-
-  .row.pt-2
-    =render partial: 'external_banners/fields_for_banners', locals: {f: f}
 
 
   .row.pt-4

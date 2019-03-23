@@ -10,23 +10,18 @@
             =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', autofocus: true
 
 
-        .form-group
-          =f.label :trial_period_in_days, t('views.subscription_plan_categories.form.trial_period_in_days')
-          .input-group.input-group-lg
-            =f.number_field :trial_period_in_days, placeholder: t('views.subscription_plan_categories.form.trial_period_in_days_placeholder'), class: 'form-control'
-
 
       .col-sm-6
         .form-group
           =f.label :available_from, t('views.subscription_plan_categories.form.available_from')
           .input-group.input-group-lg
-            =f.text_field :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+            =f.datetime_select :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
 
 
         .form-group
           =f.label :available_to, t('views.subscription_plan_categories.form.available_to')
           .input-group.input-group-lg
-            =f.text_field :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+            =f.datetime_select :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
 
     .row.pt-4
       .col-sm-12

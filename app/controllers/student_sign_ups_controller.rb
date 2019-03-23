@@ -25,8 +25,6 @@ class StudentSignUpsController < ApplicationController
     if @home_page
       @public_url = params[:public_url]
       @group = @home_page.group
-      @subject_course = @home_page.subject_course
-      @banner = @home_page.external_banners.first
 
       if current_user
         ip_country = IpAddress.get_country(request.remote_ip)
@@ -36,7 +34,13 @@ class StudentSignUpsController < ApplicationController
         create_user_object
       end
 
-      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+      if @home_page.subscription_plan_category
+        @subscription_plans = @home_page.subscription_plan_category.subscription_plans.in_currency(@currency_id).all_active.all_in_order
+      else
+        @subscription_plans = SubscriptionPlan.where(
+            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+        ).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+      end
 
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
@@ -48,6 +52,7 @@ class StudentSignUpsController < ApplicationController
       redirect_to root_url
     end
 
+    @footer = false
     @form_type = 'Landing Page Contact'
   end
 

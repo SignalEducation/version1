@@ -17,21 +17,16 @@
                     =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
 
                   %p
-                    Get unlimited access
-                  %p
                     Cancel anytime
-                  %p
+                  %p.h5
+                    =plan.monthly_percentage_off
+                    ='% Discount'
+                  %p.h3
                     =plan.currency.format_number(plan.price)
 
 
-                  -if current_user && current_user.trial_or_sub_user?
-                    .mt-auto
-                      =link_to new_subscription_url, class: 'btn btn-secondary btn-sm' do
-                        Choose this plan
-
-                  -else
-                    .mt-auto
-                      =link_to new_student_url, class: 'btn btn-secondary btn-sm' do
-                        Get Started For Free
+                  .mt-auto
+                    =link_to new_subscription_url, class: 'btn btn-secondary btn-sm' do
+                      Choose this plan
 
 

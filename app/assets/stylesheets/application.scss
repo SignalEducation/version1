@@ -4990,6 +4990,16 @@ a.card:hover .card-title .card-explanation {
     padding: 0 6rem;
   }
 }
+.landing-sign-up-section {
+  margin: 0;
+  padding: 0;
+}
+@media (min-width:768px) {
+  .landing-sign-up-section {
+    margin: 20px 40px;
+    padding: 1rem 1.4rem;
+  }
+}
 .forgot-password-section {
   padding: 0 1rem;
 }
