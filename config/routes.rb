@@ -211,6 +211,7 @@ Rails.application.routes.draw do
 
     resources :subject_course_resources, concerns: :supports_reordering
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
+    get 'pricing/:group_name_url', to: 'subscription_plans#exam_body_public_index', as: :exam_body_pricing
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
     get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs

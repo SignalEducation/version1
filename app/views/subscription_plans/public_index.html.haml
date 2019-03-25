@@ -9,24 +9,31 @@
 
       %section.pb-md-6.pb-5
         .row.row-lg
-          -@subscription_plans.each do |plan|
-            .col-lg-4
-              %article.card.card-primary.card-pink
-                .card-body.text-center
-                  %h2.h1.card-title
-                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+          -@exam_bodies.each do |exam_body|
+            .col-sm-12
+              -if @subscription_plans.for_exam_body(exam_body.id).any?
+                %h2
+                  =exam_body.name
 
-                  %p
-                    Cancel anytime
-                  %p.h5
-                    =plan.monthly_percentage_off
-                    ='% Discount'
-                  %p.h3
-                    =plan.currency.format_number(plan.price)
+              .row
+                -@subscription_plans.for_exam_body(exam_body.id).each do |plan|
+                  .col-sm-4
+                    %article.card.card-primary.card-pink
+                      .card-body.text-center
+                        %h2.h1.card-title
+                          =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                        %p
+                          Cancel anytime
+                        %p.h5
+                          =plan.monthly_percentage_off
+                          ='% Discount'
+                        %p.h3
+                          =plan.currency.format_number(plan.price)
 
 
-                  .mt-auto
-                    =link_to new_subscription_url, class: 'btn btn-secondary btn-sm' do
-                      Choose this plan
+                        .mt-auto
+                          =link_to new_subscription_url, class: 'btn btn-secondary btn-sm' do
+                            Choose this plan
 
 

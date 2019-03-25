@@ -24,11 +24,11 @@
 #
 
 class SubscriptionPlansController < ApplicationController
-  before_action :logged_in_required, except: [:public_index]
-  before_action except: [:public_index] do
+  before_action :logged_in_required, except: [:public_index, :exam_body_public_index]
+  before_action except: [:public_index, :exam_body_public_index] do
     ensure_user_has_access_rights(%w(stripe_management_access))
   end
-  before_action :get_variables, except: [:public_index]
+  before_action :get_variables, except: [:public_index, :exam_body_public_index]
 
   def index
     @subscription_plans = SubscriptionPlan.for_students.all_in_order
@@ -40,6 +40,8 @@ class SubscriptionPlansController < ApplicationController
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = country.currency_id
 
+    @exam_bodies = ExamBody.all_in_order
+
     if current_user
       @existing_subscription = current_user.current_subscription
       if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
@@ -50,6 +52,25 @@ class SubscriptionPlansController < ApplicationController
     @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
 
     seo_title_maker('Pricing', 'Join LearnSignal today. Sign up in seconds.', nil)
+  end
+
+  def exam_body_public_index
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @currency_id = country.currency_id
+    @group = Group.where(name_url: params[:group_name_url]).first
+
+
+    if current_user
+      @existing_subscription = current_user.current_subscription
+      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
+        @currency_id = @existing_subscription.subscription_plan.currency_id
+      end
+    end
+
+    @subscription_plans = SubscriptionPlan.includes(:currency).for_students.for_exam_body(@group.exam_body_id).in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
+
+    seo_title_maker("#{@group.name} - Pricing", 'Join LearnSignal today. Sign up in seconds.', nil)
   end
 
   def show
