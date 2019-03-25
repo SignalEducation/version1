@@ -374,16 +374,12 @@ class User < ActiveRecord::Base
     !self.user_group.student_user
   end
 
-  def trial_or_sub_user?
+  def standard_student_user?
     self.student_user? && self.user_group.trial_or_sub_required
   end
 
   def complimentary_user?
     self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
-  end
-
-  def tutor_user?
-    self.user_group.tutor
   end
 
   def blocked_user?
@@ -463,13 +459,20 @@ class User < ActiveRecord::Base
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
   end
 
-  def user_subscription_status
-    current_subscription = self.current_subscription
-    if current_subscription
-      current_subscription.user_readable_status
-    else
-      'Invalid Subscription'
-    end
+  def subscriptions_for_exam_body(exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id)
+  end
+
+  def active_subscriptions_for_exam_body(exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).all_active
+  end
+
+  def active_subscription_for_exam_body?(exam_body_id)
+    active_subscriptions_for_exam_body(exam_body_id).any?
+  end
+
+  def valid_subscription_for_exam_body?(exam_body_id)
+    active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
   end
 
   def enrolled_course?(course_id)

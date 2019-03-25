@@ -332,20 +332,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   def course_resource_special_link(the_thing)
     if the_thing.class == SubjectCourseResource
 
-      if current_user
-        permission = the_thing.available_to_user(current_user)
-        if permission[:view]
-          the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
-        else
-          library_course_url(
-              the_thing.subject_course.group.name_url,
-              the_thing.subject_course.name_url,
-              anchor: permission[:reason]
-          )
-        end
-      else
-        new_student_url
-      end
+      the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
 
     else
       library_special_link(the_thing)
@@ -353,7 +340,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   end
   helper_method :course_resource_special_link
 
-  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid)
+  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid=nil)
     if current_user
       new_subscription_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
     else

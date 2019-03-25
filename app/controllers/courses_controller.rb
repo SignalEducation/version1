@@ -343,6 +343,7 @@ class CoursesController < ApplicationController
 
   def check_permission
     @course = SubjectCourse.find_by(name_url: params[:subject_course_name_url])
+    @group = @course.group
     @course_section = @course.course_sections.find_by(name_url: params[:course_section_name_url]) if @course
     @course_module = @course_section.course_modules.find_by(name_url: params[:course_module_name_url]) if @course_section
     @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url]) if @course_module

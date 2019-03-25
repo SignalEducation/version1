@@ -43,7 +43,7 @@ class SubscriptionsController < ApplicationController
   def new
     if !current_user.preferred_exam_body.present? && !params[:exam_body_id]
       redirect_to edit_preferred_exam_body_path
-    elsif current_user.trial_or_sub_user?
+    elsif current_user.standard_student_user?
       @plans, country = get_relevant_subscription_plans
       @yearly_plan = @plans.yearly.first
       if params[:prioritise_plan_frequency].present?
@@ -59,7 +59,7 @@ class SubscriptionsController < ApplicationController
       else
         @subscription = Subscription.new(
           user_id: current_user.id,
-          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 3)&.first&.id
+          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
         )
       end
       #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
@@ -176,7 +176,7 @@ class SubscriptionsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
 
-    if current_user.trial_or_sub_user?
+    if current_user.standard_student_user?
       redirect_to account_url(anchor: 'subscriptions')
     else
       redirect_to user_subscription_status_url(@subscription.user)

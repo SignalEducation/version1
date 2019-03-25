@@ -17,5 +17,5 @@
           Upgrade to a subscription to get full access
 
       .modal-footer
-        =link_to 'Upgrade', new_subscription_url, class: 'btn btn-primary', title: 'Subscription Upgrade'
+        =link_to 'Upgrade', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Subscription Upgrade'
 

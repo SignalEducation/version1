@@ -19,7 +19,7 @@
             %a{href: '#personal-details', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'personal-details'}}
               =t('views.user_accounts.personal_info.tab_heading')
 
-          -if @user.trial_or_sub_user?
+          -if @user.standard_student_user?
             %li.nav-item
               -if @user.trial_user?
                 %a{href: '#account-info', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'account-info'}}
@@ -28,12 +28,12 @@
                 %a{href: '#subscriptions', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'subscriptions'}}
                   =t('views.user_accounts.subscription_info.tab_heading')
 
-          -if @user.trial_or_sub_user? && @subscription_payment_cards.any?
+          -if @user.standard_student_user? && @subscription_payment_cards.any?
             %li.nav-item
               %a{href: '#payment-details', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'payment-details'}}
                 =t('views.user_accounts.payment_details.tab_heading')
 
-          -if @user.trial_or_sub_user? && @orders.any?
+          -if @user.standard_student_user? && @orders.any?
             %li.nav-item
               %a{href: '#orders', role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: 'orders'}}
                 =t('views.user_accounts.orders_info.tab_heading')
@@ -65,7 +65,7 @@
               .content-box-inner
                 =render partial: 'personal_info'
 
-              -if @user.trial_or_sub_user?
+              -if @user.standard_student_user?
                 -if @user.trial_user?
                   .tab-pane.tab-account-info{id: 'account-info', role: 'tabpanel', 'aria-labelledby': 'account-info-tab'}
                     .row.row-lg

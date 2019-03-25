@@ -41,5 +41,5 @@
 
           .modal-footer
             =link_to 'Sign In', sign_in_url, class: 'btn btn-primary', title: 'Sign In'
-            =link_to 'Sign Up Now', new_student_url, class: 'btn btn-primary', title: 'Sign Up'
+            =link_to 'Sign Up Now', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Sign Up'
 

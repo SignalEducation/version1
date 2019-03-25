@@ -196,11 +196,11 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
-  def available_for_subscription(user, scul=nil)
+  def available_for_subscription(user, exam_body_id, scul=nil)
     if self.related_course_module_element_id && self.previous_cme_restriction(scul)
       {view: false, reason: 'related-lesson-restriction'}
     else
-      if user.valid_subscription?
+      if user.valid_subscription_for_exam_body?(exam_body_id)
         {view: true, reason: nil}
       else
         self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
@@ -216,20 +216,12 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
-  def available_to_user(user, scul)
+  def available_to_user(user, exam_body_id, scul=nil)
     result = {view: false, reason: nil}
-
-
-    case user.account_type
-
-    when 'Trial'
-      result = available_for_trial(scul)
-    when 'Subscription'
-      result = available_for_subscription(user, scul)
-    when 'Complimentary'
-      result = available_for_complimentary(scul)
+    if user.standard_student_user?
+      result = available_for_subscription(user, exam_body_id, scul)
     else
-      result[:reason] = 'account-issue'
+      result = available_for_complimentary(scul)
     end
 
     result

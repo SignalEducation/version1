@@ -43,9 +43,9 @@ class SubjectCourseResource < ActiveRecord::Base
   # class methods
 
   # instance methods
-  def available_for_subscription(user)
+  def available_for_subscription(user, exam_body_id)
 
-    if user.valid_subscription?
+    if user.valid_subscription_for_exam_body?(exam_body_id)
       {view: true, reason: nil}
     else
       self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
@@ -54,19 +54,13 @@ class SubjectCourseResource < ActiveRecord::Base
   end
 
 
-  def available_to_user(user)
+  def available_to_user(user, exam_body_id)
     result = {view: false, reason: nil}
 
-    case user.account_type
-
-    when 'Trial'
-      result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'trial-restriction'}
-    when 'Subscription'
-      result = available_for_subscription(user)
-    when 'Complimentary'
-      result = {view: true, reason: nil}
+    if user.standard_student_user?
+      result = available_for_subscription(user, exam_body_id)
     else
-      result[:reason] = 'account-issue'
+      result = {view: true, reason: nil}
     end
 
     result

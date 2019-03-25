@@ -80,6 +80,7 @@ class LibraryController < ApplicationController
 
   def check_course_available
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    @group = @course.group
     if @course && !@course.active
       redirect_to library_url
     elsif @course && @course.active && @course.preview

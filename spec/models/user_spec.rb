@@ -175,7 +175,7 @@ describe User do
 
   it { should respond_to(:student_user?) }
   it { should respond_to(:non_student_user?) }
-  it { should respond_to(:trial_or_sub_user?) }
+  it { should respond_to(:standard_student_user?) }
   it { should respond_to(:complimentary_user?) }
   it { should respond_to(:tutor_user?) }
   it { should respond_to(:blocked_user?) }
