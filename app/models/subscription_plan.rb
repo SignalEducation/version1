@@ -22,6 +22,7 @@
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
 #  exam_body_id                  :bigint(8)
+#  guid                          :string
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -30,7 +31,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
-  PAYPAL_STATES = [
+  PAYPAL_STATES = %w[
     'CREATED',
     'ACTIVE',
     'INACTIVE'
@@ -45,6 +46,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # validation
   validates :name, presence: true, length: { maximum: 255 }
+  validates :guid, presence: true, length: { maximum: 255 }, uniqueness: true
   validates :payment_frequency_in_months, inclusion: { in: PAYMENT_FREQUENCIES }
   validates :paypal_state, inclusion: { in: PAYPAL_STATES }, allow_nil: true
   validates :currency, presence: true
@@ -58,6 +60,7 @@ class SubscriptionPlan < ActiveRecord::Base
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
 
   # callbacks
+  before_validation :generate_guid
   after_create :create_remote_plans
   after_update :update_remote_plans, if: :name_changed?
   after_destroy :delete_remote_plans
@@ -71,6 +74,7 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :for_non_standard_students, -> { where(available_to_students: false) }
   scope :generally_available, -> { where(subscription_plan_category_id: nil) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
+  scope :for_exam_body, lambda { |body_id| where(exam_body_id: body_id) }
   scope :yearly, -> { where(payment_frequency_in_months: 12) }
 
   # class methods
@@ -146,6 +150,10 @@ class SubscriptionPlan < ActiveRecord::Base
     if self.id.nil? && self.available_to && self.available_to.to_date <= Time.now.gmtime.to_date
       errors.add(:available_to, I18n.t('models.subscription_plans.must_be_in_the_future'))
     end
+  end
+
+  def generate_guid
+    self.guid = ApplicationController.generate_random_code(10)
   end
 
   def create_remote_plans

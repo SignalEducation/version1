@@ -45,6 +45,8 @@
         .col-xl-8
           %aside.home-hero-aside.py-2.py-sm-0.ml-5.mr-5
             -if @home_page.form_section && !current_user
+              %h2.h5.text-center
+                Explore our innovative learning platform and discover how LearnSignal helps you pass your exams faster
               =render partial: 'sign_up_form'
             -else
               .home-hero-img-wrap
@@ -145,7 +147,7 @@
                       =plan.currency.format_number(plan.price)
 
                     .mt-auto
-                      =link_to new_subscription_url, class: 'btn btn-secondary btn-sm' do
+                      =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
                         Choose this plan
 
 

@@ -2,7 +2,7 @@ class StudentSignUpsController < ApplicationController
 
   before_action :check_logged_in_status, except: [:landing, :subscribe]
   before_action :get_variables
-  before_action :create_user_object, only: [:home, :new]
+  before_action :create_user_object, only: [:home, :new, :sign_in_or_register]
   before_action :layout_variables, only: [:home, :landing]
 
   def home
@@ -35,7 +35,7 @@ class StudentSignUpsController < ApplicationController
       end
 
       if @home_page.subscription_plan_category
-        @subscription_plans = @home_page.subscription_plan_category.subscription_plans.in_currency(@currency_id).all_active.all_in_order
+        @subscription_plans = @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
       else
         @subscription_plans = SubscriptionPlan.where(
             subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
@@ -54,6 +54,49 @@ class StudentSignUpsController < ApplicationController
 
     @footer = false
     @form_type = 'Landing Page Contact'
+  end
+
+  def sign_in_or_register
+    @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
+    @exam_body = ExamBody.where(id: params[:exam_body_id]).last
+    @user_session = UserSession.new
+    flash[:plan_guid] = @plan.guid
+    flash[:exam_body] = @exam_body.id
+  end
+
+  def new
+    @navbar = true
+  end
+
+  def create
+    @navbar = false
+    @footer = false
+
+    @user = User.new(
+      student_allowed_params.merge(
+        user_group: UserGroup.student_group,
+        country: IpAddress.get_country(request.remote_ip, true)
+      )
+    )
+    @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])
+
+    if @user.valid? && @user.save
+      handle_post_user_creation(@user)
+      UserSession.create(@user)
+      set_current_visit
+
+      if flash[:plan_guid]
+        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      else
+        redirect_to library_special_link(@user.preferred_exam_body)
+      end
+
+    elsif request && request.referrer
+      set_session_errors(@user)
+      redirect_to request.referrer
+    else
+      redirect_to root_url
+    end
   end
 
   def subscribe
@@ -115,36 +158,6 @@ class StudentSignUpsController < ApplicationController
 
     end
   end
-
-  def new
-    @navbar = true
-  end
-
-  def create
-    @navbar = false
-    @footer = false
-
-    @user = User.new(
-      student_allowed_params.merge(
-        user_group: UserGroup.student_group,
-        country: IpAddress.get_country(request.remote_ip, true)
-      )
-    )
-    @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])
-
-    if @user.valid? && @user.save
-      handle_post_user_creation(@user)
-      UserSession.create(@user)
-      set_current_visit
-      redirect_to library_special_link(@user.preferred_exam_body)
-    elsif request && request.referrer
-      set_session_errors(@user)
-      redirect_to request.referrer
-    else
-      redirect_to root_url
-    end
-  end
-
 
   private
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_23_113400) do
+ActiveRecord::Schema.define(version: 2019_03_24_094828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1104,6 +1104,7 @@ ActiveRecord::Schema.define(version: 2019_03_23_113400) do
     t.integer "monthly_percentage_off"
     t.float "previous_plan_price"
     t.bigint "exam_body_id"
+    t.string "guid"
     t.index ["available_from"], name: "index_subscription_plans_on_available_from"
     t.index ["available_to"], name: "index_subscription_plans_on_available_to"
     t.index ["available_to_students"], name: "index_subscription_plans_on_available_to_students"

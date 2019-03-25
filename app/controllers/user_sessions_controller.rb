@@ -18,7 +18,9 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit
       flash[:error] = nil
-      if session[:return_to]
+      if flash[:plan_guid]
+        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      elsif session[:return_to]
         redirect_back_or_default(student_dashboard_url)
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }

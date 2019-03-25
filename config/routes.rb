@@ -84,9 +84,7 @@ Rails.application.routes.draw do
     post 'manager_resend/:id', to: 'user_passwords#manager_resend_email', as: :manager_resend
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
-    get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
-    get 'new_subscription_africa', to: 'student_sign_ups#home'
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show'
     get 'courses/:subject_course_name_url/:course_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
@@ -191,6 +189,8 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/resources', to: 'subject_courses#subject_course_resources', as: :course_resources
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
+
+    get 'sign_in_or_register', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
     resources :subscriptions, only: [:new, :create, :update, :destroy] do
       member do

@@ -1694,7 +1694,13 @@ textarea.form-control {
   border-bottom: 3px solid transparent
 }
 .nav-tabs .nav-item {
-  margin-bottom: -3px
+  margin-bottom: -3px;
+
+  &.nav-item-wide {
+    width: 100%;
+    text-align: center;
+  }
+
 }
 .nav-tabs .nav-link {
   border: 3px solid transparent;
@@ -3609,6 +3615,17 @@ cite {
     padding-right: calc(2.6rem - .4rem)
   }
 }
+#session-tabs .nav-tabs {
+  display: flex;
+}
+#session-tabs .nav-tabs .nav-item {
+  margin-bottom: 0;
+  margin-right: 0;
+  background-color: $gray4;
+  & .active {
+    background-color: #fff;
+  }
+}
 .nav-link {
   -webkit-transition: all .15s ease-in-out 0s;
   -o-transition: all .15s ease-in-out 0s;
@@ -4677,6 +4694,14 @@ a.card:hover .card-title .card-explanation {
     padding: 4rem 0
   }
 }
+.hero-section.sign-in-register {
+  padding: 1rem 0;
+}
+@media (min-width:768px) {
+  .hero-section.sign-in-register {
+    padding: 2rem 0;
+  }
+}
 
 .lesson-item {
   display: -webkit-box;
@@ -5028,7 +5053,9 @@ a.card:hover .card-title .card-explanation {
   color: $colour-7;
   border-radius: 0;
   border: 1px solid #e1e8ed;
-
+  &.sign-in-register {
+    padding: 0;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

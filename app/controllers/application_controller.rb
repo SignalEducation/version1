@@ -353,6 +353,15 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   end
   helper_method :course_resource_special_link
 
+  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid)
+    if current_user
+      new_subscription_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    else
+      sign_in_or_register_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    end
+  end
+  helper_method :subscription_checkout_special_link
+
   def seo_title_maker(seo_title, seo_description, seo_no_index)
     @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
     @seo_description = seo_description.to_s.truncate(156)

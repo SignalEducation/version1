@@ -41,7 +41,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
-    if !current_user.preferred_exam_body.present?
+    if !current_user.preferred_exam_body.present? && !params[:exam_body_id]
       redirect_to edit_preferred_exam_body_path
     elsif current_user.trial_or_sub_user?
       @plans, country = get_relevant_subscription_plans
@@ -51,13 +51,18 @@ class SubscriptionsController < ApplicationController
           user_id: current_user.id,
           subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
         )
+      elsif params[:plan_guid].present?
+        @subscription = Subscription.new(
+          user_id: current_user.id,
+          subscription_plan_id: @plans.where(guid: params[:plan_guid].to_s).first.id || @plans.where(payment_frequency_in_months: 12).first.id
+        )
       else
         @subscription = Subscription.new(
           user_id: current_user.id,
           subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 3)&.first&.id
         )
       end
-      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
+      #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     else
       redirect_to root_url
     end

@@ -8,8 +8,8 @@
       .box-item.form-box
         =f.hidden_field :all_you_can_eat, value: true
         =f.hidden_field :available_to_students, value: true
+        =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan, message: nil}
         .row
-          =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan, message: nil}
           .col-sm-6
             .form-group
               =f.label :name, t('views.subscription_plans.form.name')

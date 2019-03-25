@@ -3,7 +3,7 @@
     .container
       %header.hero-section.hero-section-external
         %h1.h1-hero.mb-2
-          = "Get your #{@plans.first.exam_body} tuition sorted for 2019"
+          = "Get your #{@plans.first.exam_body.name} tuition sorted for 2019"
         %h2.h5
           ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
           %span{style: 'font-weight: bold;'}
@@ -33,7 +33,7 @@
                   .col-lg-6.mb-5.mb-xl-0.mt-2
                     %fieldset
                       %legend.sr-only Select a Plan
-                      - if @subscription.subscription_plan.payment_frequency_in_months == 12
+                      - if params[:prioritise_plan_frequency].present? || params[:plan_guid].present?
                         =render partial: 'single_plan_checkout', locals: {subscription: @subscription, plans: @plans}
                       - else
                         =render partial: 'multi_plans', locals: {subscription: @subscription, plans: @plans}
@@ -66,20 +66,6 @@
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
 
-
-            .bg-white
-              .container
-                .py-6
-                  %h2
-                    = "You are currently viewing plans for #{@plans.first.exam_body}"
-                  %p Switch to
-
-                  .row
-                    .col-md-5
-                      -ExamBody.all.each do |body|
-                        .with-icon-switch
-                          %p
-                            =link_to body, new_subscription_path(exam_body_id: body.id)
 
             .bg-asphalt
               .container

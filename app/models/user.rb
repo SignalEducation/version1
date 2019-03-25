@@ -422,8 +422,6 @@ class User < ActiveRecord::Base
 
   def make_student_access
     build_student_access(
-      trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, 
-      trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
       account_type: 'Trial'
     )
   end
