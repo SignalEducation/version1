@@ -112,7 +112,8 @@ class PaypalService
     agreement = Agreement.find(subscription.paypal_subscription_guid)
     state_descriptor = AgreementStateDescriptor.new(note: 'Pausing the subscription')
     if agreement.suspend(state_descriptor)
-      subscription.update!(paypal_status: agreement.state)
+      updated_agreement = Agreement.find(subscription.paypal_subscription_guid)
+      subscription.update!(paypal_status: updated_agreement.state)
       subscription.pause
     else
       Rails.logger.error "DEBUG: Subscription#pause Failure to suspend BillingAgreement for Subscription: ##{subscription.id} - Error: #{agreement.inspect}"
