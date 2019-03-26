@@ -1,61 +1,38 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row
-        .col-sm-3
-          %h1.h1.h-separator.h-separator-left.l-margin-bottom
-            =t('views.dashboard.student.h1')
+%main
+  %article.dashboard.bg-gray5
+    .container
+      %header
+        %h1.h1-hero.pt-5
+          =t('views.dashboard.student.h1')
 
-        .col-sm-9
-          .welcome{style: 'background: #D0F6BD; border-radius: 8px; '}
-            %h3.h3{style: 'padding: 12px 20px;'}
-              -if current_user.enrollments.any? && current_user.next_enrollment && current_user.next_exam_date
-                ="Welcome back #{current_user.first_name}! Your next exam is in #{current_user.next_exam_date} days."
-              -else
-                -if current_user.login_count > 2
-                  ="Welcome back #{current_user.first_name}!"
-                -else
-                  ="Welcome #{current_user.first_name}!"
-                ='Get started with a new enrolment'
 
-      .row.tabs
-        .col-sm-3
-          .dashboard-tabs
-            %ul
-              %li
-                %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
-                  Active Enrolments
-              -if @expired_enrollments
+      %section.pb-md-6
+
+        .row.tabs
+          .col-sm-12.col-md-3
+            .dashboard-tabs
+              %ul
                 %li
-                  %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
-                    Expired Enrolments
+                  %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
+                    Active Enrolments
+                -if @expired_enrollments
+                  %li
+                    %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
+                      Expired Enrolments
 
-          -if current_user.trial_user?
-            .video.l-margin-top-huge.hidden-xs
-              %h4
-                Welcome to LearnSignal
-              .play
-                #vimeo-player.vimeo-player
+          .col-sm-12.col-md-9
+            .dashboard-tab-content
+              .tab.dashboard-tab#enrollments
+                =render partial: 'enrollments'
 
-        .col-sm-9
-          .dashboard-tab-content
-            .tab.dashboard-tab#enrollments
-              =render partial: 'enrollments'
-
-            -if @expired_enrollments
-              .tab.dashboard-tab#activity
-                =render partial: 'activity'
-
+              -if @expired_enrollments
+                .tab.dashboard-tab#activity
+                  =render partial: 'activity'
 
 
 
 :javascript
-
   $(document).ready(function(){
-
     // Tabs
     $('.tabs').tabs();
-
   });
-
-  var player = new Vimeo.Player('vimeo-player', {id: '288321878'});

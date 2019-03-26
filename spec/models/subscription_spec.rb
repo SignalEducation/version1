@@ -29,6 +29,7 @@
 require 'rails_helper'
 
 describe Subscription do
+
   describe 'valid factory' do
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)

@@ -20,55 +20,44 @@
 require 'rails_helper'
 
 describe StudentAccess do
-  # Constants
-  it { expect(StudentAccess.const_defined?(:ACCOUNT_TYPES)).to eq(true) }
 
-  # relationships
-  it { should belong_to(:user) }
-  it { should belong_to(:subscription) }
+  describe 'constants' do
+    it { expect(StudentAccess.const_defined?(:ACCOUNT_TYPES)).to eq(true) }
+  end
 
-  # validation
-  it { should validate_presence_of(:user_id).on(:update) }
-  it { should validate_numericality_of(:user_id).on(:update) }
+  describe 'relationships' do
+    it { should belong_to(:user) }
+    it { should belong_to(:subscription) }
+  end
 
-  it { should validate_presence_of(:trial_seconds_limit) }
+  describe 'validations' do
+    it { should validate_presence_of(:user_id).on(:update) }
+    it { should validate_presence_of(:account_type) }
+    it { should validate_inclusion_of(:account_type).in_array(StudentAccess::ACCOUNT_TYPES) }
 
-  it { should validate_presence_of(:trial_days_limit) }
+  end
 
-  it { should validate_presence_of(:account_type) }
-  it { should validate_inclusion_of(:account_type).in_array(StudentAccess::ACCOUNT_TYPES) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+    it { should callback(:create_or_update_intercom_user).after(:update) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
+  describe 'scopes' do
+    it { expect(StudentAccess).to respond_to(:all_in_order) }
+    it { expect(StudentAccess).to respond_to(:all_trial) }
+    it { expect(StudentAccess).to respond_to(:all_sub) }
+    it { expect(StudentAccess).to respond_to(:all_comp) }
+  end
 
-  # scopes
-  it { expect(StudentAccess).to respond_to(:all_in_order) }
-  it { expect(StudentAccess).to respond_to(:all_trial) }
-  it { expect(StudentAccess).to respond_to(:all_sub) }
-  it { expect(StudentAccess).to respond_to(:all_comp) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-
-  it { should respond_to(:trial_access?) }
-
-  it { should respond_to(:subscription_access?) }
-
-  it { should respond_to(:complimentary_access?) }
-
-  it { should respond_to(:start_trial_access) }
-
-  it { should respond_to(:check_trial_access_is_valid) }
-
-  it { should respond_to(:convert_to_subscription_access) }
-
-  it { should respond_to(:check_subscription_access_is_valid) }
-
-  it { should respond_to(:convert_to_complimentary_access) }
-
-  it { should respond_to(:check_student_access) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:trial_access?) }
+    it { should respond_to(:subscription_access?) }
+    it { should respond_to(:complimentary_access?) }
+    it { should respond_to(:convert_to_trial_access) }
+    it { should respond_to(:convert_to_subscription_access) }
+    it { should respond_to(:convert_to_complimentary_access) }
+    it { should respond_to(:check_student_access) }
+  end
 
 end

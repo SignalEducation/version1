@@ -22,6 +22,7 @@
 require 'rails_helper'
 
 describe ExternalBanner do
+
   subject { FactoryBot.build(:external_banner) }
 
   # Constants

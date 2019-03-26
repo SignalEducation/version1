@@ -19,6 +19,7 @@
 require 'rails_helper'
 
 describe InvoiceLineItem do
+
   # relationships
   it { should belong_to(:invoice) }
   it { should belong_to(:currency) }

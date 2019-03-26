@@ -1,0 +1,32 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.hero-section-external
+        %h1.h1-mega
+          ="Passing your #{@group.name} exams is worth it"
+        %h2.h5
+          Pick which plan suits you best
+
+      %section.pb-md-6.pb-5
+        .row.row-lg
+          -@subscription_plans.each do |plan|
+            .col-lg-4
+              %article.card.card-primary.card-pink
+                .card-body.text-center
+                  %h2.h1.card-title
+                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                  %p
+                    Cancel anytime
+                  %p.h5
+                    =plan.monthly_percentage_off
+                    ='% Discount'
+                  %p.h3
+                    =plan.currency.format_number(plan.price)
+
+
+                  .mt-auto
+                    =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
+                      Choose this plan
+
+

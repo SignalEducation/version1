@@ -18,6 +18,7 @@
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'|| controller_name == 'content_activations'
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common.min.css', rel: 'stylesheet'}
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default-v2.min.css', rel: 'stylesheet'}
+      %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css', rel: 'stylesheet'}
 
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'dashboard' || controller_name == 'user_verifications' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups'
       %script{src: 'https://player.vimeo.com/api/player.js'}
@@ -40,16 +41,14 @@
       %meta{name: 'description', content: @seo_description}
     -if @seo_no_index
       %meta{name: 'robots', content: 'noindex'}
+    =render 'application/favicon'
 
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
-      %script{type: 'text/javascript', src: 'https://cdn.optimizely.com/js/5168310932.js'}
-      =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/cookie_banner'
-      =render partial: 'layouts/survicate_pixel'
-      =render partial: 'layouts/quora_js_pixel'
 
-  %body
+  -#%body.page-light
+  %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
@@ -60,7 +59,6 @@
 
     -if Rails.env.production?
       =render partial: 'layouts/google_tag_manager'
-      =render partial: 'layouts/linkedin_pixel'
 
     -if @layout == 'standard'
       -if @navbar
@@ -86,7 +84,7 @@
 
     -elsif @layout == 'management'
       #console-wrapper
-        .hidden-xs
+        .d-none.d-sm-block
           =render partial: 'layouts/management_side_navbar'
 
         .main-content

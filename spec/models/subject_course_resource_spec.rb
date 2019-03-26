@@ -15,11 +15,13 @@
 #  external_url             :string
 #  active                   :boolean          default(FALSE)
 #  sorting_order            :integer
+#  available_on_trial       :boolean          default(FALSE)
 #
 
 require 'rails_helper'
 
 describe SubjectCourseResource do
+
   # relationships
   it { should belong_to(:subject_course) }
 

@@ -1,112 +1,42 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Management Console
+.container
+  %header.management-console-section
+    %h1
+      Management Console
 
-      .row.l-margin-top.l-margin-bottom
-        .col-sm-12
-          .box-item
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@users_count
-                  .h6
-                    Users
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@subscriptions
-                  .h6
-                    Subscriptions
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@valid_trial_users
-                  .h6
-                    Valid Trials
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@invalid_trial_users
-                  .h6
-                    Expired Trials
+  %section.pb-3
+    .box-item
+      %canvas#myChart{:height => "200", :width => "400"}
 
 
+:javascript
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@total_enrollments
-                  .h6
-                    Enrolments - Total
+  var ctx = document.getElementById('myChart').getContext('2d');
 
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_enrollments
-                  .h6
-                    Enrolments - Active
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: MONTHS,
+          datasets: [{
+              label: 'First dataset',
+              borderColor: '#00b67b',
+              data: [12, 366, 5, 7, 344, 443, 222, 123, 74, 93, 135, 135]
+          },
+          {
+              label: 'Second dataset',
+              borderColor: '#000032',
+              data: [22, 44, 2, 66, 111, 55, 222, 123, 200, 234, 51, 44]
+          },
 
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@expired_enrollments
-                  .h6
-                    Enrolments - Expired
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_groups
-                  .h6
-                    Groups
-
-
-
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_courses
-                  .h6
-                    Courses
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_course_modules
-                  .h6
-                    Course Modules
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_videos
-                  .h6
-                    Videos
-
-            .col-md-4.col-sm-6.col-xs-12
-              .stats-box
-                .stats-box-inner
-                  .h3
-                    =@active_quizzes
-                  .h6
-                    Quizzes
-
+          ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });

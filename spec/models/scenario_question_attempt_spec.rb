@@ -18,6 +18,7 @@
 require 'rails_helper'
 
 describe ScenarioQuestionAttempt do
+
   # relationships
   it { should belong_to(:scenario_question) }
   it { should belong_to(:user) }

@@ -20,28 +20,28 @@ require 'rails_helper'
 
 describe BlogPost do
 
-  # relationships
-  it { should belong_to(:home_page) }
+  describe 'relationships' do
+    it { should belong_to(:home_page) }
+  end
 
-  # validation
-  it { should validate_presence_of(:home_page_id).on(:update) }
-  it { should validate_numericality_of(:home_page_id).on(:update) }
+  describe 'validations' do
+    it { should validate_presence_of(:home_page_id).on(:update) }
+    it { should validate_numericality_of(:home_page_id).on(:update) }
+    it { should validate_presence_of(:title) }
+    it { should validate_presence_of(:description) }
+    it { should validate_presence_of(:url) }
+  end
 
-  it { should validate_presence_of(:title) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  it { should validate_presence_of(:description) }
+  describe 'scopes' do
+    it { expect(BlogPost).to respond_to(:all_in_order) }
+  end
 
-  it { should validate_presence_of(:url) }
-
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-
-  # scopes
-  it { expect(BlogPost).to respond_to(:all_in_order) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+  end
 
 end

@@ -1,45 +1,46 @@
-.row
-  .col-sm-8
+.box-item
+  .row
+    .col-sm-8
+      .col-xs-6
+        .h3
+          =t('views.user_accounts.personal_info.first_name')
+        %p
+          =@user.first_name
 
-    .col-sm-6
-      .h3
-        =t('views.user_accounts.personal_info.first_name')
-      .h6
-        =@user.first_name
+      .col-xs-6
+        .h3
+          =t('views.user_accounts.personal_info.last_name')
+        %p
+          =@user.last_name
 
-    .col-sm-6
-      .h3
-        =t('views.user_accounts.personal_info.last_name')
-      .h6
-        =@user.last_name
+      .col-xs-6.l-margin-top
+        .h3
+          =t('views.user_accounts.personal_info.email')
+        %p
+          =@user.email
 
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.email')
-      .h6
-        =@user.email
+      .col-xs-6.l-margin-top
+        .h3
+          =t('views.user_accounts.personal_info.date_of_birth')
+        %p
+          =@user.date_of_birth || '--------'
 
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.date_of_birth')
-      .h6
-        =@user.date_of_birth || '--------'
-
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.student_number')
-      .h6
-        =@user.student_number || '--------'
-
-    .col-sm-6.l-margin-top
-
+      - @exam_body_user_details.each do |exam_body_user_details|
+        .col-xs-6.l-margin-top
+          .h3
+            ="#{exam_body_user_details.exam_body.name} Student Number"
+          %p
+            =exam_body_user_details.student_number
 
 
-  .col-sm-4
-    #modal-links
-      %a{data: {remodal: {target: 'personal-details-modal'}}, class: 'btn btn-red full-width l-margin-bottom edit-details'}
-        =t('views.user_accounts.student_user_form.button_label')
 
-      %a{data: {remodal: {target: 'change-password-modal'}}, class: 'btn btn-cyan full-width l-margin-bottom change-pw-link'}
-        =t('views.user_accounts.change_password.button_label')
+
+
+    .col-sm-4
+      #modal-links
+        %a{data: {target: '#personal-details-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom edit-details'}
+          =t('views.user_accounts.student_user_form.button_label')
+
+        %a{data: {target: '#change-password-modal', toggle: 'modal'}, href: '#', class: 'btn btn-secondary full-width l-margin-bottom change-pw-link'}
+          =t('views.user_accounts.change_password.button_label')
 

@@ -1,48 +1,51 @@
-.remodal{"data-remodal-id" => "user-exam-body-modal"}
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12.l-margin-bottom
-        %h3
+.modal.fade{id: 'exam-body-details-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'accountRequired', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3{id: 'examBodyDetailsRequired'}
           -if @course.exam_body && @course.exam_body.modal_heading
             =@course.exam_body.modal_heading
           -else
             ="#{@course.exam_body.name} Details Required"
-        %p
-        -if @course.exam_body && @course.exam_body.modal_text
-          =@course.exam_body.modal_text
-        -else
-          ="The #{@course.exam_body.name} require these details."
 
-      =render partial: '/layouts/error_messages', locals: {thing: @user, message: nil}
-
-      =form_for(@user, url: update_exam_body_user_details_url, html: {class: 'form-horizontal', role: 'form', name: 'user_modal_form'}) do |f|
-        .row.l-margin-top.text-left
-          .col-sm-12
-            .col-sm-6
-              =f.label :student_number, "#{@course.exam_body.name} Student Number", class: 'control-label'
-              .input-group.input-group-lg.full-width
-                =f.text_field :student_number, placeholder: t('views.users.form.student_number_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-
+      .modal-body
+        =render partial: '/layouts/error_messages', locals: {thing: current_user, message: nil}
+        =form_for(current_user, url: update_exam_body_user_details_url, html: {class: 'form py-2', role: 'form', name: 'user_modal_form'}) do |f|
+          .row
+            =f.fields_for :exam_body_user_details, @exam_body_user_details do |detail|
+              =detail.hidden_field :exam_body_id
+              .col-sm-6
+                .form-group
+                  =detail.label :student_number, "#{detail.object.exam_body.name} Student Number", class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =detail.text_field :student_number, class: 'form-control', style: 'border-radius: 6px;'
             .col-sm-6
               =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
               .input-group.input-group-lg.full-width
-                =f.date_field :date_of_birth, placeholder: t('views.users.form.date_of_birth_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
+                =f.text_field :date_of_birth, placeholder: 'Select Date ...', class: 'form-control', style: 'border-radius: 6px;', id: 'dob_datepicker'
 
 
 
-
-        %br/
-        .col-sm-12#actions_btns
-          .col-sm-4.col-sm-offset-8
+          .pt-1
             #submit
-              =submit_tag 'Submit', class: 'btn btn-cyan'
+              =submit_tag 'Submit', class: 'btn btn-primary'
 
 
 
 :javascript
 
-  $(document).on('confirmation', '.remodal', function () {
-    document.forms['user_modal_form'].submit();
+  // Date Picker
+  $(function () {
+    $('#dob_datepicker').datetimepicker({
+      viewMode: 'years',
+      useCurrent: false,
+      format: 'DD/MM/YYYY',
+      minDate: moment().subtract(100, 'years'),
+      maxDate: moment()
+    });
   });
-

@@ -13,6 +13,7 @@
 require 'rails_helper'
 
 describe VatRate do
+
   # relationships
   it { should have_many(:invoices) }
   it { should belong_to(:vat_code) }

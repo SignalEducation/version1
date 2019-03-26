@@ -14,6 +14,7 @@
 require 'rails_helper'
 
 describe QuizAnswer do
+
   # Constants
   it { expect(QuizAnswer.const_defined?(:WRONGNESS)).to eq(true) }
 

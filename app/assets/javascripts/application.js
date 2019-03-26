@@ -18,10 +18,10 @@
 //= require jquery.remotipart
 //= require jquery-sortable
 //= require Chart.min
+//= require popper
 //= require bootstrap-sprockets
 //= require zeroclipboard
 //= require moment
 //= require bootstrap-datetimepicker
-//= require summernote
-//= require remodal
+//= require summernote/summernote-bs4.min
 //= require_tree .

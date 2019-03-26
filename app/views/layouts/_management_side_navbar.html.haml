@@ -2,7 +2,7 @@
   .sidebar-brand
     .brand-logo
       =link_to root_url do
-        =image_tag('ls-logo-white.svg', class: 'logo')
+        =image_tag('learnsignal-Logo-white.svg', class: 'logo')
 
 
   %ul.sidebar-nav
@@ -35,8 +35,6 @@
     -if current_user.marketing_resources_access?
       %li
         =link_to 'External Content', public_resources_url
-      %li
-        =link_to 'Referrals', referral_codes_url
 
     -if current_user.developer_access?
       %li

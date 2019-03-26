@@ -14,6 +14,7 @@
 require 'rails_helper'
 
 describe Scenario do
+
   # relationships
   it { should belong_to(:constructed_response) }
   it { should have_many(:scenario_questions) }

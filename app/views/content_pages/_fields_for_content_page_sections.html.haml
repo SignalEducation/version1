@@ -1,21 +1,20 @@
-.col-md-12
-  =f.fields_for :content_page_sections do |section|
+=f.fields_for :content_page_sections do |section|
+  .box-item.form-box
     =section.hidden_field :subject_course_id
     =section.hidden_field :sorting_order
-    .question-box-item.l-margin-top
-      .col-sm-12
-        =section.label :text_content, 'Text', class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =section.text_area :text_content, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control section_editor', style: 'border-radius: 6px;', as: :summernote
-        %br
-          =section.label :panel_colour, 'Panel Colour', class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =section.color_field :panel_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+    .col-sm-12
+      .form-group
+        =section.label :text_content, 'Text'
+        .input-group.input-group-lg
+          =section.text_area :text_content, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control section_editor', as: :summernote
+      .form-group
+        =section.label :panel_colour, 'Panel Colour'
+        .input-group.input-group-lg
+          =section.color_field :panel_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control'
 
-        -if section.object.destroyable?
-          %br/
-          %br/
-          .checkbox.l-margin-top
+      -if section.object.destroyable?
+        .form-group.pt-4
+          .checkbox
             %label
               =section.check_box :_destroy
               Remove Section

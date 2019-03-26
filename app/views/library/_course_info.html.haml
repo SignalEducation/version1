@@ -1,25 +1,21 @@
-.row.l-margin-top
-  .col-md-6
-    %p.h4.l-margin-top
-      ='About this Course'
-    %p
-      =@course.description.to_s.html_safe
-    -if @course.external_url_name && @course.external_url && !@course.external_url_name.empty?
-      %p
-        =link_to @course.external_url, target: '_blank' do
-          =@course.external_url_name
-
-  -if @course.course_tutor_details.any?
-    .col-md-6
-      %p.h4.l-margin-bottom.l-margin-top
-        =t('views.general.course_tutors')
-      .col-sm-12
+.row
+  .col-xl-8
+    .pb-5
+      %h4.text-gray2 About this course
+      %p.mb-4
+        =@course.description.to_s.html_safe
+  .col-xl-4
+    -if @course.course_tutor_details.any?
+      %aside.pb-5.pb-xl-3
+        %h4.text-gray2 Course Tutors
         -@course_tutor_details.each do |course_tutor|
-          .col-xs-6.l-margin-bottom
-            .tutor-header.text-center
-              =link_to profile_url(course_tutor.user) do
-                =image_tag course_tutor.user.profile_image.url, class: 'profile-pic profile-pic-small'
-              .h6
-                =course_tutor.user.full_name
-              .h5
-                =course_tutor.title
+          %div
+            =link_to profile_url(course_tutor.user), class: 'profile-item link-alt d-inline-flex align-items-center mb-3' do
+              .mr-3
+                =image_tag course_tutor.user.profile_image.url, class: 'img-thumbnail img-thumbnail-xs', alt: 'Tutor Profile Image'
+              %div
+                %p.profile-name.font-weight-medium.mb-0
+                  =course_tutor.user.full_name.to_s
+                %small.text-gray2
+                  =course_tutor.title
+

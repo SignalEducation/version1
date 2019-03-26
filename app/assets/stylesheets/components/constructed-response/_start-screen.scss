@@ -1,0 +1,51 @@
+.start-screen-box {
+  display: block;
+  position: relative;
+  padding: 30px;
+  border-radius: 0;
+  background: #fff;
+  color: #657786;
+  @include clearfix();
+
+  .welcome-text {
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 27px;
+    margin-bottom: 20px;
+  }
+  .before-text {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+    margin-bottom: 20px;
+  }
+
+  ul {
+    margin: 0 20px;
+  }
+
+  ul, li {
+    display: list-item;
+    list-style: disc;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 300;
+    font-style: normal;
+    padding: 0;
+  }
+
+}
+.start-screen-box-nav {
+  padding: 8px 20px;
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.cr-resources {
+  font-weight: 400;
+  font-size: 18px;
+  font-style: normal;
+  line-height: 24px;
+  padding: 2px;
+}
+

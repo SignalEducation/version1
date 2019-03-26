@@ -20,6 +20,7 @@
 require 'rails_helper'
 
 describe QuizContent do
+
   # relationships
   it { should belong_to(:quiz_answer) }
   it { should belong_to(:quiz_question) }

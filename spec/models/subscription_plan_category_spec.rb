@@ -15,6 +15,7 @@
 require 'rails_helper'
 
 describe SubscriptionPlanCategory do
+
   subject { FactoryBot.build(:subscription_plan_category) }
 
   # Constants

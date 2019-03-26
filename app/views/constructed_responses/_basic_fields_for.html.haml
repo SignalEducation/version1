@@ -4,9 +4,10 @@
     =constructed_response.text_field :time_allowed, placeholder: t('views.constructed_responses.form.time_allowed_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
 
 
-  =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+  .form-group
+    =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds')
+    .input-group.input-group-lg
+      =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
     %p{style: 'margin-bottom: 1px;'}
       =t('views.course_module_elements.form.estimated_time_in_seconds_tag')
     %p
@@ -14,5 +15,5 @@
 
   %br/
   -unless constructed_response.object.new_record?
-    .l-margin-bottom
+    .pt-4
       =link_to 'Additional Resources', course_module_element_course_module_element_resources_url(f.object.id), class: 'btn btn-red'

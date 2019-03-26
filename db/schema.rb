@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_11_222238) do
+ActiveRecord::Schema.define(version: 2019_03_24_094828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -267,6 +267,8 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.integer "subject_course_user_log_id"
     t.boolean "is_constructed_response", default: false
     t.boolean "preview_mode", default: false
+    t.integer "course_section_id"
+    t.integer "course_section_user_log_id"
     t.index ["course_module_element_id"], name: "cme_user_logs_cme_id"
     t.index ["course_module_id"], name: "index_course_module_element_user_logs_on_course_module_id"
     t.index ["user_id"], name: "index_course_module_element_user_logs_on_user_id"
@@ -302,6 +304,8 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.float "duration", default: 0.0
     t.string "temporary_label"
     t.boolean "is_constructed_response", default: false, null: false
+    t.boolean "available_on_trial", default: false
+    t.integer "related_course_module_element_id"
     t.index ["course_module_id"], name: "index_course_module_elements_on_course_module_id"
     t.index ["name_url"], name: "index_course_module_elements_on_name_url"
   end
@@ -328,8 +332,47 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.boolean "tuition", default: false
     t.boolean "test", default: false
     t.boolean "revision", default: false
+    t.integer "course_section_id"
+    t.integer "constructed_response_count", default: 0
     t.index ["name_url"], name: "index_course_modules_on_name_url"
     t.index ["sorting_order"], name: "index_course_modules_on_sorting_order"
+  end
+
+  create_table "course_section_user_logs", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "course_section_id"
+    t.integer "subject_course_user_log_id"
+    t.integer "latest_course_module_element_id"
+    t.float "percentage_complete"
+    t.integer "count_of_cmes_completed"
+    t.integer "count_of_quizzes_taken"
+    t.integer "count_of_videos_taken"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "subject_course_id"
+    t.integer "count_of_constructed_responses_taken"
+    t.index ["course_section_id"], name: "index_course_section_user_logs_on_course_section_id"
+    t.index ["subject_course_user_log_id"], name: "index_course_section_user_logs_on_subject_course_user_log_id"
+    t.index ["user_id"], name: "index_course_section_user_logs_on_user_id"
+  end
+
+  create_table "course_sections", id: :serial, force: :cascade do |t|
+    t.integer "subject_course_id"
+    t.string "name"
+    t.string "name_url"
+    t.integer "sorting_order"
+    t.boolean "active", default: false
+    t.boolean "counts_towards_completion", default: false
+    t.boolean "assumed_knowledge", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "cme_count", default: 0
+    t.integer "video_count", default: 0
+    t.integer "quiz_count", default: 0
+    t.datetime "destroyed_at"
+    t.integer "constructed_response_count", default: 0
+    t.index ["name"], name: "index_course_sections_on_name"
+    t.index ["subject_course_id"], name: "index_course_sections_on_subject_course_id"
   end
 
   create_table "course_tutor_details", id: :serial, force: :cascade do |t|
@@ -382,6 +425,16 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.string "modal_heading"
     t.text "modal_text"
     t.index ["name"], name: "index_exam_bodies_on_name"
+  end
+
+  create_table "exam_body_user_details", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "exam_body_id"
+    t.string "student_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_body_id"], name: "index_exam_body_user_details_on_exam_body_id"
+    t.index ["user_id"], name: "index_exam_body_user_details_on_user_id"
   end
 
   create_table "exam_sittings", id: :serial, force: :cascade do |t|
@@ -466,6 +519,7 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
+    t.string "background_colour"
     t.bigint "exam_body_id"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
@@ -490,17 +544,11 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.integer "group_id"
     t.string "name"
     t.boolean "home", default: false
-    t.string "header_heading"
-    t.text "header_paragraph"
-    t.string "header_button_text"
-    t.string "background_image"
-    t.string "header_button_link"
-    t.string "header_button_subtext"
+    t.string "logo_image"
     t.boolean "footer_link", default: false
     t.string "mailchimp_list_guid"
-    t.string "mailchimp_section_heading"
-    t.string "mailchimp_section_subheading"
-    t.boolean "mailchimp_subscribe_section", default: false
+    t.boolean "form_section", default: false, null: false
+    t.boolean "pricing_section", default: false, null: false
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
@@ -893,7 +941,6 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
   create_table "student_exam_tracks", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "latest_course_module_element_id"
-    t.integer "exam_schedule_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "session_guid"
@@ -907,7 +954,8 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.integer "count_of_videos_taken"
     t.integer "subject_course_user_log_id"
     t.integer "count_of_constructed_responses_taken"
-    t.index ["exam_schedule_id"], name: "index_student_exam_tracks_on_exam_schedule_id"
+    t.integer "course_section_id"
+    t.integer "course_section_user_log_id"
     t.index ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id"
     t.index ["user_id"], name: "index_student_exam_tracks_on_user_id"
   end
@@ -925,6 +973,7 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.string "external_url"
     t.boolean "active", default: false
     t.integer "sorting_order"
+    t.boolean "available_on_trial", default: false
     t.index ["name"], name: "index_subject_course_resources_on_name"
     t.index ["subject_course_id"], name: "index_subject_course_resources_on_subject_course_id"
   end
@@ -984,6 +1033,7 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.string "highlight_colour", default: "#ef475d"
     t.string "category_label"
     t.string "additional_text_label"
+    t.integer "constructed_response_count", default: 0
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 
@@ -1054,6 +1104,7 @@ ActiveRecord::Schema.define(version: 2019_03_11_222238) do
     t.integer "monthly_percentage_off"
     t.float "previous_plan_price"
     t.bigint "exam_body_id"
+    t.string "guid"
     t.index ["available_from"], name: "index_subscription_plans_on_available_from"
     t.index ["available_to"], name: "index_subscription_plans_on_available_to"
     t.index ["available_to_students"], name: "index_subscription_plans_on_available_to_students"

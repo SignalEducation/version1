@@ -1,0 +1,31 @@
+.container
+  %header.management-console-section
+    %h1
+      =@subject_course.name
+    %p.p-hero.px-lg-8
+      ='Reorder Course Sections'
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .table-responsive
+            %table.table.sorted_table{style: 'font-size: 18px;', data: {destination: course_sections_url}}
+              %thead
+                %tr
+                  %th='Course Section'
+                  %th='Active'
+                  %th
+              %tbody
+                -@subject_course.course_sections.each do |course_section|
+                  %tr{id: course_section.id, data: {parent: @subject_course.id}}
+                    %td=course_section.name
+                    %td=tick_or_cross(course_section.active)
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+    .row.pt-4
+      .col-md-12
+        =link_to 'Return', subject_course_url(@subject_course), class: 'btn btn-secondary'
+

@@ -1,0 +1,59 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.sign-in-register
+        %h1.h2
+          = "Get your #{@plan ? @plan.exam_body.name : 'Exam'} tuition sorted for 2019"
+
+      %section.pb-md-6.pb-5
+
+        .row
+          -if @plan
+            .col-sm-4.mb-5.mb-xl-0
+              %fieldset
+                .form-group
+                  .custom-control.custom-radio
+                    %input.custom-control-input.custom-control-input-card.style-checkbox{:id => @plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => @plan.price, :frequency => @plan.payment_frequency_in_months}, :value => @plan.id, :checked => true}
+                    %label.custom-control-label{:for => @plan.interval_name.downcase}
+                      %span.custom-label-info
+                        %span.h3.m-0
+                          %span
+                            =@plan.interval_name
+                        - if @plan.monthly_percentage_off.present? && @plan.monthly_percentage_off > 0
+                          %span.discount
+                            %span.text-with-bg.bg-torquoise4
+                              ="#{@plan.monthly_percentage_off}%"
+                            off monthly price
+                      %span.custom-label-amount
+                        %span.text-purple5.text-xl
+                          =@plan.currency.format_number(@plan.price)
+                        %span.p
+                          ="Billed every #{@plan.payment_frequency_in_months > 1 ? pluralize(@plan.payment_frequency_in_months, 'month') : 'month'}"
+                      %span.custom-check
+                        / custom checkbox
+
+
+          .col-sm
+            .form-box.sign-in-register
+              #session-tabs
+                %nav
+                  %ul.nav.nav-tabs.nav-justified{id: 'sessionTabs', role: 'tablist'}
+                    %li.nav-item
+                      %a{href: "#registration-tab", role: 'tab', class: 'nav-link active', data: {toggle: 'tab'}, aria: {controls: "registration", selected: 'true'}}
+                        ='Register'
+                    %li.nav-item
+                      %a{href: "#sign-in-tab", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "sign-in", selected: 'false'}}
+                        ='Sign In'
+
+
+              #sessionTabsContent.tab-content
+                .tab-pane.registration-tab.active.show{id: 'registration-tab', role: 'tabpanel', 'aria-labelledby': 'registration-tab'}
+                  .row.row-lg
+                    .col-sm-12
+                      =render partial: 'sign_up_form'
+
+                .tab-pane.sign-in-tab{id: 'sign-in-tab', role: 'tabpanel', 'aria-labelledby': 'sign-in-tab'}
+                  .row.row-lg
+                    .col-sm-12
+                      =render partial: 'sign_in_form'
+

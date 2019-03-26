@@ -10,10 +10,6 @@ class FooterPagesController < ApplicationController
     seo_title_maker('ACCA at LearnSignal', '', nil)
   end
 
-  def welcome_video
-    seo_title_maker('LearnSignal Welcome Intro Video', '', nil)
-  end
-
   def contact
     @form_type = 'Contact Us'
     seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
@@ -156,8 +152,8 @@ class FooterPagesController < ApplicationController
   protected
 
   def get_variables
-    @navbar = false
-    @top_margin = false
+    @navbar = 'standard'
+    @top_margin = true
     @footer = true
   end
 

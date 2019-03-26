@@ -4,27 +4,28 @@
 
   -if @course_module_element.new_record?
     -if params[:video_uri]
-      .l-margin-top.l-margin-bottom-big
-        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-green'}
+      .pt-2
+        %a.btn.btn-green{"data-target" => "#vimeo-upload-modal", "data-toggle" => "modal", :href => "#"}
           ='Upload Successful'
     -else
-      .l-margin-top.l-margin-bottom-big
-        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-orange'}
+      .pt-2
+        %a.btn.btn-orange{"data-target" => "#vimeo-upload-modal", "data-toggle" => "modal", :href => "#"}
           ='Upload Video File'
 
   -else
     -if params[:video_uri]
-      .l-margin-top.l-margin-bottom-big
-        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-green'}
+      .pt-2
+        %a.btn.btn-green{"data-target" => "#vimeo-upload-modal", "data-toggle" => "modal", :href => "#"}
           ='Upload Successful'
     -else
-      .l-margin-top.l-margin-bottom-big
-        %a{data: {remodal: {target: 'vimeo-upload-modal'}}, class: 'btn btn-orange'}
+      .pt-2
+        %a.btn.btn-orange{"data-target" => "#vimeo-upload-modal", "data-toggle" => "modal", :href => "#"}
           ='Replace Video File'
 
 
-  =cme_video.label :duration, t('views.course_module_element_videos.form.duration'), class: 'control-label'
-  .input-group.input-group-lg.full-width
-    =cme_video.text_field :duration, placeholder: t('views.course_module_element_videos.form.duration_placeholder'), class: 'form-control', style: 'border-radius: 6px;', required: true
-  %br/
+  .form-group.pt-3
+    =cme_video.label :duration, t('views.course_module_element_videos.form.duration')
+    .input-group.input-group-lg.full-width
+      =cme_video.text_field :duration, placeholder: t('views.course_module_element_videos.form.duration_placeholder'), class: 'form-control'
+
 

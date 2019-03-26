@@ -1,55 +1,48 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            Users
+.container
+  %header.management-console-section
+    %h1
+      Users
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'management_consoles/user_management_nav'
+  %section.pb-3
+    =render partial: 'management_consoles/user_management_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              =link_to '#', {"data-target" => "#csv-upload-modal", "data-toggle" => "modal", :href => "#"} do
+                .btn.btn-primary.btn-sm
+                  Bulk Invite New Users
+            .col-sm
+              =link_to 'Invite New user', new_user_url, class: 'btn btn-primary btn-sm'
+            .col-sm
+              .search-container
+                =form_tag(search_users_url, role: 'form', class: 'form-inline') do
+                  =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
 
-      .row.l-margin-top.l-margin-bottom
-        .col-sm-8.l-margin-top
-          %a{data: {remodal: {target: 'csv-upload-modal'}}, class: 'btn btn-purple'}
-            Bulk Invite Users
 
-          =link_to t('views.general.add_user'), new_user_url, class: 'btn btn-red l-padding-side-3x text-bold', title: t('views.general.new_tooltip')
-
-
-        .col-sm-4.l-margin-top
-          =form_tag(search_users_url, role: 'form', class: 'form-inline input-group-lg') do
-            .form-group.input-group.input-group-lg
-              =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
-              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                %span.glyphicon.glyphicon-search
-
-        .col-md-12.l-margin-top-big
-          .corporate-box-item.table-box
-            .table-responsive
-              %table.table{style: 'font-size: 18px;'}
-                %thead
+          .table-responsive.pt-5
+            %table.table{style: 'font-size: 18px;'}
+              %thead
+                %tr
+                  %th=t('views.users.form.full_name')
+                  %th=t('views.users.form.email')
+                  %th
+                  %th
+              %tbody
+                -@users.each do |user|
                   %tr
-                    %th=t('views.users.form.full_name')
-                    %th=t('views.users.form.email')
-                    %th=t('views.users.form.email_verified')
-                    %th=t('views.users.form.subscription_status')
-                    %th
-                    %th
-                %tbody
-                  -@users.each do |user|
-                    %tr
-                      %td=user.full_name
-                      %td=user.email
-                      %td=tick_or_cross(user.email_verified)
-                      %td=user.user_account_status
-                      %td
-                        =link_to t('views.general.view'), user_url(user), class: 'btn btn-purple btn-small'
-                      %td
-                        =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-cyan btn-small'
+                    %td=user.full_name
+                    %td=user.email
+                    %td
+                      =link_to t('views.general.view'), user_url(user), class: 'btn btn-secondary btn-xs'
+                    %td
+                      =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-primary btn-xs'
 
-              .col-sm-10.user-pagination
-                =will_paginate @users, renderer: BootstrapPagination::Rails
+            .col-sm-10.user-pagination
+              =will_paginate @users, renderer: BootstrapPagination::Rails
+
 
 =render partial: 'users/csv_import_modal'

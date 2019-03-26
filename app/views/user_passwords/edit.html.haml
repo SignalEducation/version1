@@ -1,23 +1,26 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.user_passwords.edit.h1')
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          .col-md-8.col-md-offset-2.l-margin-top-small
-            %p
-              =t('views.user_passwords.edit.paragraph_1')
-          =form_tag(user_password_url(id: @user.password_reset_token), {method: :put, class: 'form-horizontal', role: 'form'}) do
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              =label_tag :password, t('views.users.form.password'), class: 'control-label'
-              %br/
-              =password_field_tag :password, nil, placeholder: t('views.users.form.password_placeholder'), class: 'form-control'
-            .col-md-8.col-md-offset-2.l-margin-top-small
-              =label_tag :password_confirmation, t('views.users.form.password_confirmation'), class: 'control-label'
-              %br/
-              =password_field_tag :password_confirmation, nil,  placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control'
-              %br/
-            .col-md-8.col-md-offset-2.l-margin-top-big
-              =submit_tag t('views.general.save'), class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.hero-section-external
+        %h1.h1-hero.mb-3
+          =t('views.user_passwords.edit.h1')
+        %p.p-hero.px-lg-8
+          =t('views.user_passwords.edit.paragraph_1')
+
+      %section.pb-md-6.pb-5
+        .forgot-password-section
+          .form-box
+            =form_tag(user_password_url(id: @user.password_reset_token), {method: :put, class: 'py-3 mr-5 ml-5', role: 'form'}) do
+              .row
+                .col-sm-12
+                  .form-group
+                    =label_tag :password, t('views.users.form.password'), class: 'control-label'
+                    =password_field_tag :password, nil, placeholder: t('views.users.form.password_placeholder'), class: 'form-control'
+                .col-sm-12
+                  .form-group
+                    =label_tag :password_confirmation, t('views.users.form.password_confirmation'), class: 'control-label'
+                    =password_field_tag :password_confirmation, nil,  placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control'
+
+
+              .pt-3
+                =submit_tag t('views.general.save'), class: 'btn btn-primary btn-sm'

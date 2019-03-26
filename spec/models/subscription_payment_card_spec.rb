@@ -35,6 +35,7 @@
 require 'rails_helper'
 
 describe SubscriptionPaymentCard do
+
   # Constants
   it { expect(SubscriptionPaymentCard.const_defined?(:STATUSES)).to eq(true) }
 

@@ -19,7 +19,6 @@
 :javascript
 
   function onChange() {
-    console.log('Change event!');
     var data = spreadsheet_question_#{scenario_question.options[:child_index]}_answer_template_#{spreadsheet_scenario_answer_template.options[:child_index]}.toJSON();
     var json = JSON.stringify(data, null, 2);
     $("#course_module_element_constructed_response_attributes_scenario_attributes_scenario_questions_attributes_#{scenario_question.options[:child_index]}_scenario_answer_templates_attributes_#{spreadsheet_scenario_answer_template.options[:child_index]}_spreadsheet_editor_content").val(json);

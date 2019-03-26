@@ -22,6 +22,7 @@
 #  monthly_percentage_off        :integer
 #  previous_plan_price           :float
 #  exam_body_id                  :bigint(8)
+#  guid                          :string
 #
 
 require 'rails_helper'

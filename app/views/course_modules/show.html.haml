@@ -1,0 +1,57 @@
+.container
+  %header.management-console-section
+    %h1
+      =@subject_course.name
+    %p.p-hero.px-lg-8
+      =@course_module.course_section.name
+
+  %section.pb-7
+    .row
+      .col-sm-12
+        .ol.sortable-area
+          .li
+            .box-item.table-box
+              .table-responsive
+                %p.h5
+                  =@course_module.name
+
+                %table.table.sorted_table{data: {destination: course_module_elements_url}, id: @course_module.id}
+                  %thead
+                    %tr
+                      %th Name
+                      %th Active
+                      %th Trial
+                      %th
+                      %th
+                      %th
+                  %tbody
+                    -@course_module.course_module_elements.all_in_order.each do |cme|
+                      %tr{id: cme.id, data: {parent: @course_module.id, destination: course_module_elements_url}}
+                        %td
+                          =cme.name.to_s
+                        %td
+                          =tick_or_cross(cme.active)
+                        %td
+                          =tick_or_cross(cme.available_on_trial)
+                        %td
+                          =cme.type_name
+                        %td
+                          =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-xs btn-primary'
+                          =link_to t('views.course_module_elements.show.preview'), course_url(cme.course_module.subject_course.name_url, cme.course_module.name_url, cme.name_url, ), class: 'btn btn-xs btn-orange', target: '_blank'
+                          -unless cme.active
+                            =link_to 'Activate', new_content_activation_url(type: cme.class, id: cme.id), class: 'btn btn-green btn-xs'
+                          -if cme.destroyable?
+                            =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                        %td
+                          %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+
+
+              .row.pt-4
+                .col-sm-6
+                  =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: @course_module.id), class: 'btn btn-primary'
+                  =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: @course_module.id), class: 'btn btn-primary'
+                  =link_to t('views.course_module_elements.form.new_constructed_response'), new_course_module_element_url(type: 'constructed_response', cm_id: @course_module.id), class: 'btn btn-primary'
+                .col-sm-6
+                  =link_to t('views.course_modules.edit.h1'), edit_course_module_url(@subject_course.id, @course_module.course_section.id, @course_module.id), class: 'btn btn-secondary'
+                  =link_to I18n.t('views.course_modules.index.delete'), @course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse'
+

@@ -13,27 +13,32 @@
 require 'rails_helper'
 
 describe ConstructedResponse do
-  # relationships
-  it { should belong_to(:course_module_element) }
 
-  it { should have_one(:scenario) }
+  describe 'relationships' do
+    it { should belong_to(:course_module_element) }
+    it { should have_one(:scenario) }
+  end
 
-  # validation
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
-  it { should validate_numericality_of(:course_module_element_id).on(:update) }
+  describe 'validations' do
+    it { should validate_presence_of(:course_module_element_id).on(:update) }
+    it { should validate_numericality_of(:course_module_element_id).on(:update) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  # scopes
-  it { expect(ConstructedResponse).to respond_to(:all_in_order) }
+  describe 'scopes' do
+    it { expect(ConstructedResponse).to respond_to(:all_in_order) }
+  end
 
-  # class methods
-  it { expect(ConstructedResponse).to respond_to(:constructed_response_nested_scenario_text_is_blank?) }
+  describe 'class methods' do
+    it { expect(ConstructedResponse).to respond_to(:constructed_response_nested_scenario_text_is_blank?) }
+  end
 
-  # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:add_an_empty_scenario) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:add_an_empty_scenario) }
+  end
 
 end

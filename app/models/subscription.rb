@@ -36,7 +36,7 @@ class Subscription < ActiveRecord::Base
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
   PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
-  STRIPE_VALID_STATES = %w(active past_due canceled-pending)
+  VALID_STATES = %w(active past_due canceled-pending)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
@@ -68,7 +68,6 @@ class Subscription < ActiveRecord::Base
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_coupon_count
-  after_save :update_student_access, if: :active
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -76,7 +75,8 @@ class Subscription < ActiveRecord::Base
   scope :in_reverse_created_order, -> { order(:created_at).reverse_order }
   scope :all_of_status, lambda { |the_status| where(stripe_status: the_status) }
   scope :all_active, -> { where(active: true) }
-  scope :all_valid, -> { where(stripe_status: STRIPE_VALID_STATES) }
+  scope :all_valid, -> { where(state: VALID_STATES) }
+  scope :not_pending, -> { where.not(state: 'pending') }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   # STATE MACHINE ==============================================================
@@ -118,8 +118,9 @@ class Subscription < ActiveRecord::Base
       end
     end
 
+    #TODO - can the if condition be removed? can the transition include all states transitioning to active?
     after_transition pending: :active do |subscription, _transition|
-      if !(subscription.user.student_access.subscription_access? && subscription.user.student_access.content_access)
+      if !subscription.user.student_access.subscription_access?
         subscription.user.student_access.convert_to_subscription_access(subscription.id)
       end
     end
@@ -200,7 +201,6 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'canceled'
         self.update_attribute(:stripe_status, 'canceled')
         self.cancel
-        self.user.student_access.update_attributes(content_access: false)
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
@@ -224,10 +224,6 @@ class Subscription < ActiveRecord::Base
     # Make sure there is a default credit card in place
     unless self.user.subscription_payment_cards.all_default_cards.length > 0
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.no_default_payment_card'))
-    end
-    # Ensure this sub is the users current_sub associated the student_access
-    unless self.id == self.user.current_subscription.id
-      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_current_subscription'))
     end
     # Ensure this sub is canceled
     unless self.stripe_status == 'canceled'
@@ -258,7 +254,7 @@ class Subscription < ActiveRecord::Base
             active: true
         )
         self.start
-        self.user.student_access.update_attributes(content_access: true)
+        self.user.student_access.convert_to_subscription_access(self.id)
       end
 
     end
@@ -390,6 +386,10 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def stripe?
+    stripe_guid.present?
+  end
+
   protected
 
   def create_subscription_payment_card
@@ -402,14 +402,6 @@ class Subscription < ActiveRecord::Base
     if self.coupon_id
       self.coupon.update_redeems
     end
-  end
-
-  def convert_student_access
-    user.student_access.convert_to_subscription_access(id)
-  end
-
-  def update_student_access
-    user.student_access.check_student_access
   end
 
   def prefix

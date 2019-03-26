@@ -1,0 +1,21 @@
+.modal.fade{id: 'invalid-subscription', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'invalidSubscription', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3.text-red{id: 'invalidSubscription'}
+          Valid Subscription Required
+
+      .modal-body
+        %p.font-weight-medium.mb-4.text-purple
+          Sorry! A valid subscription is required to access that content
+        %p.mb-4.text-purple
+          Upgrade to a subscription to get full access
+
+      .modal-footer
+        =link_to 'Upgrade', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Subscription Upgrade'
+

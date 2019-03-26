@@ -237,7 +237,7 @@ class StripeService
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
     elsif !%w(active past_due).include?(subscription.stripe_status)
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-    elsif !user.trial_or_sub_user?
+    elsif !user.standard_student_user?
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
     elsif !(user.subscription_payment_cards.all_default_cards.length > 0)
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))

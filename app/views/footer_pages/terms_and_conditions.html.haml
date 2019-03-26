@@ -1,21 +1,13 @@
-=render partial: 'layouts/external_banner'
-.hero-library
-  .l-wrap-small
-    =render partial: 'layouts/transparent_navbar'
-    .l-section-footer-pages
-      .container-fluid
-        .row
-          .col-md-6.col-md-offset-3
-            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
-              Terms & Conditions
-            %p.h5.h-white.text-center.l-margin-bottom-big
-              Our rules for using Learn Signal
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
-.l-asphalt
-  .l-section
-    .l-wrap-small
-      .container-fluid
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.hero-section-external
+        %h1.h1-mega
+          Terms & Conditions
+        %h2.h5
+          Our rules for using LearnSignal
+
+      %section.pb-md-6.pb-5
         .row
           .col-sm-12
             .panel-body.no-top-padding

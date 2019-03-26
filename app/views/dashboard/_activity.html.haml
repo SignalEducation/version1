@@ -1,21 +1,12 @@
 -@expired_enrollments.each do |enrollment|
   -if enrollment.subject_course && enrollment.subject_course.active
-    .card.card-dashboard
-      .card-dashboard-outer-cover{style: 'height: 175px;'}
-        .card-inner
-          .col-sm-8.col-xs-12
-            %h3.h3{style: 'color: #3E3F5B'}
-              =enrollment.subject_course.name
-            .card-info.hidden-xs
-              %p.p{style: 'color: #EF5153;'}
-                ='Enrolment Expired - '
-                -if enrollment.exam_sitting_id && enrollment.exam_sitting.date
-                  =exam_sitting_date(enrollment.enrollment_date)
+    .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+      .card-body.d-flex.flex-column.justify-content-center
+        %small.card-category.mb-2{style: "color: #{enrollment.subject_course.highlight_colour};"}
+          ="#{enrollment.days_until_exam} days until exam"
 
-          .col-sm-4.col-xs-12.text-center.resume-course.hidden-xs
-
-            .col-sm-12.col-xs-6
-              .card-info.hidden-xs
-                .h3
-                  =enrollment.display_percentage_complete
-                  Complete
+        %h5.card-title.mb-1
+          %span.mr-1
+            =enrollment.subject_course.name
+      .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+        =link_to 'Start Course Again', library_special_link(enrollment.subject_course), class: 'btn btn-secondary'

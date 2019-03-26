@@ -84,12 +84,11 @@ Rails.application.routes.draw do
     post 'manager_resend/:id', to: 'user_passwords#manager_resend_email', as: :manager_resend
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
-    get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
-    get 'new_subscription_africa', to: 'student_sign_ups#home'
 
-    get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
-    get 'courses_constructed_response/:subject_course_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
+    get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show'
+    get 'courses/:subject_course_name_url/:course_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+    get 'courses_constructed_response/:subject_course_name_url/:course_section_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
@@ -114,8 +113,13 @@ Rails.application.routes.draw do
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
-    get 'course_modules/:subject_course_name_url', to: 'course_modules#show',
-        as: :course_modules_for_subject_course
+    get 'subject_courses/:id/new_course_section', to: 'course_sections#new', as: :new_course_section
+    get 'subject_courses/:id/course_section/:course_section_id/new_course_module', to: 'course_modules#new', as: :new_course_module
+    get 'subject_courses/:id/course_section/:course_section_id/edit_course_module/:course_module_id', to: 'course_modules#edit', as: :edit_course_module
+    get 'subject_courses/:id/course_section/:course_section_id/course_module/:course_module_id', to: 'course_modules#show', as: :show_course_module
+    get 'subject_courses/:course_id/reorder_course_sections', to: 'course_sections#reorder_list', as: :reorder_course_sections
+
+    resources :course_sections, concerns: :supports_reordering
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering do
       resources :course_module_element_resources, except: [:show], concerns: :supports_reordering
@@ -149,7 +153,6 @@ Rails.application.routes.draw do
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
-    get 'library/:group_name_url/preview/:subject_course_name_url', to: 'library#course_preview', as: :library_preview
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
@@ -181,9 +184,13 @@ Rails.application.routes.draw do
     end
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
+    get 'subject_courses/:id/trial_content', to: 'subject_courses#trial_content', as: :subject_course_trial_content
+    patch 'subject_courses/:id/trial_content', to: 'subject_courses#update_trial_content', as: :subject_course_update_trial_content
     get 'subject_courses/:id/resources', to: 'subject_courses#subject_course_resources', as: :course_resources
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
+
+    get 'sign_in_or_register', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
     resources :subscriptions, only: [:new, :create, :update, :destroy] do
       member do
@@ -204,6 +211,7 @@ Rails.application.routes.draw do
 
     resources :subject_course_resources, concerns: :supports_reordering
     get 'pricing', to: 'subscription_plans#public_index', as: :pricing
+    get 'pricing/:group_name_url', to: 'subscription_plans#exam_body_public_index', as: :exam_body_pricing
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
     get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs
@@ -211,7 +219,6 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'profile/:id', to: 'footer_pages#profile', as: :profile
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
-    get 'welcome_video', to: 'footer_pages#welcome_video', as: :welcome_video
 
     resources :users, only: [:new, :create]
     post 'search_users', to: 'users#index', as: :search_users

@@ -15,6 +15,7 @@
 require 'rails_helper'
 
 describe FaqSection do
+
   subject { FactoryBot.build(:faq_section) }
 
   # Constants

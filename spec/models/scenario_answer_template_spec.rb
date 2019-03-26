@@ -16,6 +16,7 @@
 require 'rails_helper'
 
 describe ScenarioAnswerTemplate do
+
   # Constants
   it { expect(ScenarioAnswerTemplate.const_defined?(:FORMAT_TYPES)).to eq(true) }
 

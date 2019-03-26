@@ -2,25 +2,27 @@
 #
 # Table name: course_module_elements
 #
-#  id                        :integer          not null, primary key
-#  name                      :string
-#  name_url                  :string
-#  description               :text
-#  estimated_time_in_seconds :integer
-#  course_module_id          :integer
-#  sorting_order             :integer
-#  created_at                :datetime
-#  updated_at                :datetime
-#  is_video                  :boolean          default(FALSE), not null
-#  is_quiz                   :boolean          default(FALSE), not null
-#  active                    :boolean          default(TRUE), not null
-#  seo_description           :string
-#  seo_no_index              :boolean          default(FALSE)
-#  destroyed_at              :datetime
-#  number_of_questions       :integer          default(0)
-#  duration                  :float            default(0.0)
-#  temporary_label           :string
-#  is_constructed_response   :boolean          default(FALSE), not null
+#  id                               :integer          not null, primary key
+#  name                             :string
+#  name_url                         :string
+#  description                      :text
+#  estimated_time_in_seconds        :integer
+#  course_module_id                 :integer
+#  sorting_order                    :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  is_video                         :boolean          default(FALSE), not null
+#  is_quiz                          :boolean          default(FALSE), not null
+#  active                           :boolean          default(TRUE), not null
+#  seo_description                  :string
+#  seo_no_index                     :boolean          default(FALSE)
+#  destroyed_at                     :datetime
+#  number_of_questions              :integer          default(0)
+#  duration                         :float            default(0.0)
+#  temporary_label                  :string
+#  is_constructed_response          :boolean          default(FALSE), not null
+#  available_on_trial               :boolean          default(FALSE)
+#  related_course_module_element_id :integer
 #
 
 class CourseModuleElementsController < ApplicationController
@@ -62,11 +64,13 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def new
-    @course_module_element = CourseModuleElement.new(
-        sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i, active: true)
     cm = CourseModule.find params[:cm_id].to_i
     @course_modules = cm.parent.active_children
+    @related_cmes = cm.course_module_elements.all_active
+    @course_module_element = CourseModuleElement.new(
+        sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
+        course_module_id: cm.id, active: true)
+
     if params[:type] == 'video'
 
       @course_module_element.is_video = true
@@ -135,7 +139,7 @@ class CourseModuleElementsController < ApplicationController
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
         redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
-        redirect_to course_module_special_link(@course_module_element.course_module)
+        redirect_to show_course_module_url(@course_module_element.course_module.subject_course_id, @course_module_element.course_module.id, @course_module_element.course_module.id)
       end
     else
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
@@ -270,7 +274,7 @@ class CourseModuleElementsController < ApplicationController
 
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
-      @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
+      @related_cmes = @course_module_element.course_module.course_module_elements.all_in_order.where.not(id: @course_module_element.id)
     else
       @related_cmes = CourseModuleElement.none
     end
@@ -292,6 +296,8 @@ class CourseModuleElementsController < ApplicationController
         :seo_no_index,
         :number_of_questions,
         :temporary_label,
+        :available_on_trial,
+        :related_course_module_element_id,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,
