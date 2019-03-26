@@ -1,4 +1,4 @@
-class CreateExamBodyUserDetails < ActiveRecord::Migration
+class CreateExamBodyUserDetails < ActiveRecord::Migration[4.2]
   def change
     create_table :exam_body_user_details do |t|
       t.integer :user_id, index: true

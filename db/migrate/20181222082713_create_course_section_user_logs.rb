@@ -1,4 +1,4 @@
-class CreateCourseSectionUserLogs < ActiveRecord::Migration
+class CreateCourseSectionUserLogs < ActiveRecord::Migration[4.2]
   def change
     create_table :course_section_user_logs do |t|
       t.integer :user_id, index: true

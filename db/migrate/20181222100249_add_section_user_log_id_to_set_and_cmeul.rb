@@ -1,4 +1,4 @@
-class AddSectionUserLogIdToSetAndCmeul < ActiveRecord::Migration
+class AddSectionUserLogIdToSetAndCmeul < ActiveRecord::Migration[4.2]
   def change
     add_column :student_exam_tracks, :course_section_id, :integer
     add_column :student_exam_tracks, :course_section_user_log_id, :integer

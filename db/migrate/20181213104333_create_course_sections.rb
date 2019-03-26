@@ -1,4 +1,4 @@
-class CreateCourseSections < ActiveRecord::Migration
+class CreateCourseSections < ActiveRecord::Migration[4.2]
   def change
     create_table :course_sections do |t|
       t.integer :subject_course_id, index: true
