@@ -22,7 +22,7 @@
 class CourseSection < ActiveRecord::Base
 
   include LearnSignalModelExtras
-  include Archivable
+  #include Archivable
 
   # relationships
   belongs_to :subject_course
