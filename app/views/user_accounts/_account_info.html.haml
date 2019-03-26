@@ -13,6 +13,6 @@
 
 
   .col-xs-12.col-sm-4
-    -if @user.trial_user?
+    -#if @user.standard_student_user?
       =link_to 'Upgrade to full membership', new_subscription_url, class: 'btn btn-primary full-width'
 

@@ -1,14 +1,15 @@
--#@subscriptions.each do |subscription|
-  .sub-item
-    .row
-      .col-md-9
-        %h3= "#{subscription.exam_body} - #{subscription.subscription_plan.interval_name} (#{subscription.user_readable_status})"
-      .col-md-3
-        .action-links
-          =link_to 'View', subscription_path(subscription), class: 'btn btn-cyan'
+.box-item
+  -@subscriptions.each do |subscription|
+    .sub-item
+      .row
+        .col-md-9
+          %h3= "#{subscription.exam_body} - #{subscription.subscription_plan.interval_name} (#{subscription.user_readable_status})"
+        .col-md-3
+          .action-links
+            =link_to 'View', subscription_path(subscription), class: 'btn btn-cyan'
 
 
-.row
+-#.row
   .col-sm-6.col-md-8
     .col-sm-12
       .col-md-6.col-sm-12
@@ -182,6 +183,6 @@
         -@invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
         =render partial: 'invoices_index'
 
-=render partial: 'confirm_cancellation_modal'
-=render partial: 'confirm_pause_modal'
+=#render partial: 'confirm_cancellation_modal'
+=#render partial: 'confirm_pause_modal'
 

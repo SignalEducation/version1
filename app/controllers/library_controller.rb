@@ -6,9 +6,6 @@ class LibraryController < ApplicationController
 
   def index
     @groups = Group.all_active.all_in_order
-    if current_user && current_user.preferred_exam_body_id
-      @groups = @groups.where(exam_body_id: current_user.preferred_exam_body_id)
-    end
     redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1
     seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
   end

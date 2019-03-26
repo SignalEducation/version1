@@ -39,13 +39,11 @@ class SubscriptionPlansController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = country.currency_id
-
     @exam_bodies = ExamBody.all_in_order
 
     if current_user
-      @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
-        @currency_id = @existing_subscription.subscription_plan.currency_id
+      if existing_sub = current_user.subscriptions.not_pending.all_active.first
+        @currency_id = existing_sub.subscription_plan.currency_id
       end
     end
 
@@ -60,11 +58,9 @@ class SubscriptionPlansController < ApplicationController
     @currency_id = country.currency_id
     @group = Group.where(name_url: params[:group_name_url]).first
 
-
     if current_user
-      @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
-        @currency_id = @existing_subscription.subscription_plan.currency_id
+      if existing_sub = current_user.subscriptions.not_pending.all_active.first
+        @currency_id = existing_sub.subscription_plan.currency_id
       end
     end
 

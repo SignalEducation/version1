@@ -60,8 +60,8 @@ class StudentSignUpsController < ApplicationController
     @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
     @exam_body = ExamBody.where(id: params[:exam_body_id]).last
     @user_session = UserSession.new
-    flash[:plan_guid] = @plan.guid
-    flash[:exam_body] = @exam_body.id
+    flash[:plan_guid] = @plan.guid if @plan
+    flash[:exam_body] = @exam_body.id if @exam_body
   end
 
   def new
@@ -78,7 +78,7 @@ class StudentSignUpsController < ApplicationController
         country: IpAddress.get_country(request.remote_ip, true)
       )
     )
-    @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])
+    @user.pre_creation_setup
 
     if @user.valid? && @user.save
       handle_post_user_creation(@user)

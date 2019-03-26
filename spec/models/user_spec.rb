@@ -187,16 +187,7 @@ describe User do
   it { should respond_to(:marketing_resources_access?) }
   it { should respond_to(:user_group_management_access?) }
 
-  it { should respond_to(:trial_user?) }
-  it { should respond_to(:not_started_trial_user?) }
-  it { should respond_to(:subscription_user?) }
-  it { should respond_to(:valid_subscription?) }
-  it { should respond_to(:canceled_pending?) }
-  it { should respond_to(:canceled_member?) }
-
-  it { should respond_to(:current_subscription) }
   it { should respond_to(:default_card) }
-  it { should respond_to(:user_subscription_status) }
 
   it { should respond_to(:enrolled_course?) }
   it { should respond_to(:enrolled_in_course?) }

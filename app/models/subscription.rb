@@ -76,6 +76,7 @@ class Subscription < ActiveRecord::Base
   scope :all_of_status, lambda { |the_status| where(stripe_status: the_status) }
   scope :all_active, -> { where(active: true) }
   scope :all_valid, -> { where(state: VALID_STATES) }
+  scope :not_pending, -> { where.not(state: 'pending') }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
   # STATE MACHINE ==============================================================
@@ -200,7 +201,6 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'canceled'
         self.update_attribute(:stripe_status, 'canceled')
         self.cancel
-        self.user.student_access.convert_to_trial_access
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
@@ -224,10 +224,6 @@ class Subscription < ActiveRecord::Base
     # Make sure there is a default credit card in place
     unless self.user.subscription_payment_cards.all_default_cards.length > 0
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.no_default_payment_card'))
-    end
-    # Ensure this sub is the users current_sub associated the student_access
-    unless self.id == self.user.current_subscription.id
-      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_current_subscription'))
     end
     # Ensure this sub is canceled
     unless self.stripe_status == 'canceled'

@@ -123,7 +123,6 @@ class User < ActiveRecord::Base
   before_create :set_additional_user_attributes
   after_create :create_referral_code_record
   after_update :update_stripe_customer
-  after_save :update_student_access, if: :saved_change_to_user_group_id?
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -171,7 +170,6 @@ class User < ActiveRecord::Base
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.check_student_access #Updates to complimentary if the user_group is complimentary
       return user
     end
   end
@@ -351,7 +349,6 @@ class User < ActiveRecord::Base
                            email_verification_code: verification_code, free_trial: true,
                            user_group_id: user_group.id)
 
-    user.build_student_access(account_type: 'Trial')
 
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
@@ -422,38 +419,6 @@ class User < ActiveRecord::Base
     )
   end
 
-  # Trial Access
-
-  def trial_user?
-    self.trial_or_sub_user? && self.student_access.trial_access? ||
-      (self.student_access.subscription_id? && self.student_access.subscription.pending?)
-  end
-
-  def not_started_trial_user?
-    self.trial_user? && !self.email_verified
-  end
-
-  # Subscription Access
-
-  def subscription_user?
-    self.trial_or_sub_user? && self.student_access.subscription_access? && self.student_access.subscription
-  end
-
-  def valid_subscription?
-    self.trial_or_sub_user? && self.current_subscription && self.current_subscription.valid_subscription?
-  end
-
-  def canceled_pending?
-    self.subscription_user? && self.current_subscription && self.current_subscription.stripe_status == 'canceled-pending'
-  end
-
-  def canceled_member?
-    self.subscription_user? && self.current_subscription && self.current_subscription.cancelled?
-  end
-
-  def current_subscription
-    student_access.subscription
-  end
 
   def default_card
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
@@ -530,9 +495,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def pre_creation_setup(cookie)
+  def pre_creation_setup
     make_student_access
-    set_subscription_plan_category(cookie)
   end
 
   def send_verification_email(url)
@@ -603,7 +567,7 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if existing_sub = current_subscription
+    if existing_sub = user.subscriptions.not_pending.all_active.first
       existing_sub.subscription_plan&.currency || country.currency
     else
       country.currency
@@ -694,53 +658,6 @@ class User < ActiveRecord::Base
     cmeuls.any?
   end
 
-  def update_from_stripe
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscriptions = stripe_customer.subscriptions[:data]
-    if stripe_subscriptions && stripe_subscriptions.count == 1
-      stripe_subscription = stripe_customer.subscriptions[:data].first
-      if self.current_subscription && stripe_subscription.id == self.current_subscription.stripe_guid
-        self.current_subscription.update_from_stripe
-      else
-        create_subscription_from_stripe(stripe_subscription, stripe_customer)
-      end
-    end
-  end
-
-  def create_subscription_from_stripe(stripe_subscription_object, stripe_customer_object)
-    subscription_plan = SubscriptionPlan.where(stripe_guid: stripe_subscription_object.plan.id).first
-    if subscription_plan
-      subscription = Subscription.new(
-          user_id: self.id,
-          subscription_plan_id: subscription_plan.id,
-          complimentary: false,
-          active: true,
-          livemode: stripe_subscription_object.plan.livemode,
-          stripe_status: stripe_subscription_object.status,
-      )
-      subscription.stripe_guid = stripe_subscription_object.id
-      subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)
-      subscription.stripe_customer_id = stripe_customer_object.id
-      subscription.terms_and_conditions = true
-      subscription.stripe_customer_data = stripe_customer_object.to_hash.deep_dup
-      subscription_saved = subscription.save(validate: false)
-      #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
-
-      if subscription_saved
-        self.student_access.convert_to_subscription_access(subscription_saved.id)
-      end
-    end
-  end
-  
-  # Checks for SubscriptionPlanCategory cookie to see if the user should get 
-  # specific subscription plans instead of the general plans
-  def set_subscription_plan_category(cookie)
-    if cookie.present?
-      subscription_plan_category = SubscriptionPlanCategory.where(guid: cookie).first
-      student_access.trial_days_limit = subscription_plan_category.trial_period_in_days
-    end
-  end
-
   private
 
   def add_guid
@@ -758,19 +675,13 @@ class User < ActiveRecord::Base
     self.email_verification_code = SecureRandom.hex(10)
   end
 
-  def update_student_access
-    self.student_access.check_student_access
-  end
-
   def update_stripe_customer
     unless Rails.env.test?
-      if self.saved_change_to_stripe_account_balance? || self.saved_change_to_email?
+      if self.saved_change_to_email?
         Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
         stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
         stripe_customer.email = self.email
-        stripe_customer.account_balance = self.stripe_account_balance
         stripe_customer.save
-        self.update_column(:stripe_account_balance, stripe_customer.account_balance)
       end
     end
   end

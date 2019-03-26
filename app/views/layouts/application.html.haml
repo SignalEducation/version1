@@ -46,7 +46,6 @@
     =render partial: 'layouts/favicon'
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
-      =render partial: 'layouts/survicate_pixel'
 
   -#%body.page-light
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}

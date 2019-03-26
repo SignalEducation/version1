@@ -1,36 +1,38 @@
-.row
-  .col-sm-12
-    .table-responsive
-      %table.table
-        %thead
-          %tr
-            %th
-              Course
-            %th
-              Exam Sitting
-            %th
-              Status
-            %th
-              Progress
-            %th
-        %tbody
-          -@enrollments.each do |enrollment|
+.box-item
+
+  .row
+    .col-sm-12
+      .table-responsive
+        %table.table
+          %thead
             %tr
-              %td
-                -if enrollment.subject_course
-                  =enrollment.subject_course.name
-              %td
-                -if enrollment.exam_sitting_id
-                  -if enrollment.computer_based_exam && enrollment.subject_course.computer_based
-                    =exam_sitting_date(enrollment.exam_date)
-                  -else
-                    =exam_sitting_date(enrollment.exam_sitting.date) if enrollment.exam_sitting.date
-              %td
-                =enrollment.status
-              %td
-                =enrollment.percentage_complete.to_s + '%'
-              %td
-                -unless enrollment.expired
-                  =link_to edit_enrollment_url(enrollment) do
-                    .btn.btn-secondary.btn-small.pull-right
-                      Edit
+              %th
+                Course
+              %th
+                Exam Sitting
+              %th
+                Status
+              %th
+                Progress
+              %th
+          %tbody
+            -@enrollments.each do |enrollment|
+              %tr
+                %td
+                  -if enrollment.subject_course
+                    =enrollment.subject_course.name
+                %td
+                  -if enrollment.exam_sitting_id
+                    -if enrollment.computer_based_exam && enrollment.subject_course.computer_based
+                      =exam_sitting_date(enrollment.exam_date)
+                    -else
+                      =exam_sitting_date(enrollment.exam_sitting.date) if enrollment.exam_sitting.date
+                %td
+                  =enrollment.status
+                %td
+                  =enrollment.percentage_complete.to_s + '%'
+                %td
+                  -unless enrollment.expired
+                    =link_to edit_enrollment_url(enrollment) do
+                      .btn.btn-secondary.btn-small.pull-right
+                        Edit

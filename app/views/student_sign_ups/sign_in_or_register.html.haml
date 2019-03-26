@@ -8,8 +8,8 @@
       %section.pb-md-6.pb-5
 
         .row
-          .col-sm-4.mb-5.mb-xl-0
-            -if @plan
+          -if @plan
+            .col-sm-4.mb-5.mb-xl-0
               %fieldset
                 .form-group
                   .custom-control.custom-radio
@@ -33,7 +33,7 @@
                         / custom checkbox
 
 
-          .col-sm-8
+          .col-sm
             .form-box.sign-in-register
               #session-tabs
                 %nav

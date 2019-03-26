@@ -33,7 +33,7 @@ class StudentAccess < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  after_update :create_or_update_intercom_user
+  #after_update :create_or_update_intercom_user
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }

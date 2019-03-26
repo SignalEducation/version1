@@ -117,18 +117,13 @@ class SubscriptionsController < ApplicationController
   end
 
   def personal_upgrade_complete
-    @subscription = current_user.current_subscription
+    @subscription = current_user.subscriptions.last
   end
 
   def change_plan
-    if current_user && current_user.trial_user?
-      redirect_to new_subscription_url
-    elsif current_user && current_user.subscription_user? && current_user.current_subscription && !current_user.current_subscription.active_status?
-      redirect_to account_url(anchor: :subscriptions)
-    else
-      @current_subscription = current_user.current_subscription
-      @subscription_plans = @current_subscription.upgrade_options
-    end
+    # TODO change plan must know what plan
+    #@current_subscription = current_user.current_subscription
+    @subscription_plans = @current_subscription.upgrade_options
   end
 
   def un_cancel_subscription
