@@ -1,27 +1,26 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
+%main
+  %article.bg-gray5
     .container
-      .row
-        .col-lg-10.col-lg-offset-1
-          %h1.title1.l-margin-top
-            =t('views.user_passwords.new.h1')
-
-      .row.l-margin-top
-        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-          .forgot-password-modal.l-margin-top
-            =form_tag(user_passwords_url, {class: 'form', role: 'form'}) do
-              .col-sm-12
-                %p.text-center
-                  =t('views.user_passwords.new.paragraph_1')
-                %p.text-center
-                  =t('views.user_passwords.new.paragraph_2')
-
-                =label_tag :email, t('views.user_passwords.new.email')
-                %br/
-                %div#validation-div
-                  =email_field_tag :email_address, nil, placeholder: t('views.user_passwords.new.email_placeholder'), class: 'form-control', id: '#email-field', required: true
-              .col-sm-12.l-margin-top-big
-                =submit_tag t('views.user_passwords.new.submit'), class: 'btn btn-red full-width', id: 'btn-send-password'
+      %header.hero-section.hero-section-external
+        %h1.h1-hero.mb-3
+          =t('views.user_passwords.new.h1')
+        %p.p-hero.px-lg-8
+          =t('views.user_passwords.new.paragraph_1')
+        %p.p-hero.px-lg-8
+          =t('views.user_passwords.new.paragraph_2')
 
 
+      %section.pb-md-6.pb-5
+        .forgot-password-section
+          .form-box
+            =form_tag(user_passwords_url, {class: 'py-3 mr-5 ml-5', role: 'form'}) do
+              .row
+                .col-sm-12
+                  .form-group
+                    =label_tag :email, t('views.user_passwords.new.email')
+                    =email_field_tag :email_address, nil, placeholder: t('views.user_passwords.new.email_placeholder'), class: 'form-control', id: '#email-field'
+
+
+              .pt-3
+                =submit_tag t('views.user_passwords.new.submit'), class: 'btn btn-primary btn-sm'
 

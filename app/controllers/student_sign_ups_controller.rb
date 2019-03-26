@@ -2,18 +2,14 @@ class StudentSignUpsController < ApplicationController
 
   before_action :check_logged_in_status, except: [:landing, :subscribe]
   before_action :get_variables
-  before_action :create_user_object, only: [:home, :new]
+  before_action :create_user_object, only: [:home, :new, :sign_in_or_register]
   before_action :layout_variables, only: [:home, :landing]
 
   def home
+    @footer = false
     @home_page = HomePage.where(home: true).where(public_url: '/').first
-    if @home_page
-      @group = @home_page.group
-      @banner = @home_page.external_banners.first
-      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-    else
-      @group = Group.all_active.all_in_order.first
-    end
+    #@banner = @home_page.external_banners.first
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
 
@@ -29,8 +25,6 @@ class StudentSignUpsController < ApplicationController
     if @home_page
       @public_url = params[:public_url]
       @group = @home_page.group
-      @subject_course = @home_page.subject_course
-      @banner = @home_page.external_banners.first
 
       if current_user
         ip_country = IpAddress.get_country(request.remote_ip)
@@ -40,7 +34,13 @@ class StudentSignUpsController < ApplicationController
         create_user_object
       end
 
-      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+      if @home_page.subscription_plan_category
+        @subscription_plans = @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
+      else
+        @subscription_plans = SubscriptionPlan.where(
+            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+        ).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+      end
 
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
@@ -52,7 +52,51 @@ class StudentSignUpsController < ApplicationController
       redirect_to root_url
     end
 
+    @footer = false
     @form_type = 'Landing Page Contact'
+  end
+
+  def sign_in_or_register
+    @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
+    @exam_body = ExamBody.where(id: params[:exam_body_id]).last
+    @user_session = UserSession.new
+    flash[:plan_guid] = @plan.guid if @plan
+    flash[:exam_body] = @exam_body.id if @exam_body
+  end
+
+  def new
+    @navbar = true
+  end
+
+  def create
+    @navbar = false
+    @footer = false
+
+    @user = User.new(
+      student_allowed_params.merge(
+        user_group: UserGroup.student_group,
+        country: IpAddress.get_country(request.remote_ip, true)
+      )
+    )
+    @user.pre_creation_setup
+
+    if @user.valid? && @user.save
+      handle_post_user_creation(@user)
+      UserSession.create(@user)
+      set_current_visit
+
+      if flash[:plan_guid]
+        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      else
+        redirect_to library_special_link(@user.preferred_exam_body)
+      end
+
+    elsif request && request.referrer
+      set_session_errors(@user)
+      redirect_to request.referrer
+    else
+      redirect_to root_url
+    end
   end
 
   def subscribe
@@ -115,43 +159,6 @@ class StudentSignUpsController < ApplicationController
     end
   end
 
-  def new
-    @navbar = true
-  end
-
-  def create
-    @navbar = false
-    @footer = false
-
-    @user = User.new(
-      student_allowed_params.merge(
-        user_group: UserGroup.student_group,
-        country: IpAddress.get_country(request.remote_ip, true),
-        password_confirmation: params[:user][:password]
-      )
-    )
-    @user.pre_creation_setup(cookies.encrypted[:latest_subscription_plan_category_guid])
-
-    if @user.valid? && @user.save
-      handle_post_user_creation(@user)
-      redirect_to personal_sign_up_complete_url(@user.account_activation_code)
-    elsif request && request.referrer
-      set_session_errors(@user)
-      redirect_to request.referrer
-    else
-      redirect_to root_url
-    end
-  end
-
-  def show
-    #This is the post sign-up landing page - personal_sign_up_complete
-    #If no user is found redirect - because analytics counts loading of
-    # this page as new sign ups so we only want it to load once for each sign up
-    @user = User.get_and_activate(params[:account_activation_code])
-    @banner = nil
-    redirect_to sign_in_url unless @user
-  end
-
   private
 
   def student_allowed_params
@@ -206,8 +213,9 @@ class StudentSignUpsController < ApplicationController
 
   def handle_post_user_creation(user)
     user.set_analytics(cookies[:_ga])
+    user.activate_user
     user.create_stripe_customer
-    user.send_activation_email(
+    user.send_verification_email(
       user_verification_url(email_verification_code: user.email_verification_code)
     )
     user.validate_referral(cookies.encrypted[:referral_data])

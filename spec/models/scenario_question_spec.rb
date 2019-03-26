@@ -14,6 +14,7 @@
 require 'rails_helper'
 
 describe ScenarioQuestion do
+
   # relationships
   it { should belong_to(:scenario) }
   it { should have_many(:scenario_answer_templates) }

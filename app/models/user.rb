@@ -63,6 +63,8 @@ class User < ActiveRecord::Base
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
 
+  delegate :account_type, :to => :student_access
+
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
@@ -84,6 +86,7 @@ class User < ActiveRecord::Base
     where(element_completed: false)
   }, class_name: 'CourseModuleElementUserLog'
   has_many :course_tutor_details
+  has_many :exam_body_user_details
   has_many :enrollments
   has_many :invoices
   has_many :quiz_attempts
@@ -92,6 +95,7 @@ class User < ActiveRecord::Base
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
+  has_many :course_section_user_logs
   has_many :subject_course_user_logs
   has_many :visits
   has_many :charges
@@ -101,6 +105,7 @@ class User < ActiveRecord::Base
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
   accepts_nested_attributes_for :student_access
+  accepts_nested_attributes_for :exam_body_user_details, :reject_if => lambda { |c| c[:student_number].blank? }
 
   # validation
   validates :email, presence: true, length: {within: 5..50}, uniqueness: { case_sensitive: false }
@@ -117,11 +122,11 @@ class User < ActiveRecord::Base
   before_create :add_guid
   before_create :set_additional_user_attributes
   after_create :create_referral_code_record
-  after_update :update_stripe_customer, :update_student_access
+  after_update :update_stripe_customer
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
-  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
+  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR stripe_customer_id ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
   scope :sort_by_email, -> { order(:email) }
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_most_recent, -> { order(created_at: :desc) }
@@ -165,7 +170,6 @@ class User < ActiveRecord::Base
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.start_trial_access
       return user
     end
   end
@@ -258,7 +262,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_visits(options = {})
-    attributes = %w{email id user_account_status visit_campaigns visit_sources visit_landing_pages}
+    attributes = %w{email id visit_campaigns visit_sources visit_landing_pages}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -345,14 +349,15 @@ class User < ActiveRecord::Base
                            email_verification_code: verification_code, free_trial: true,
                            user_group_id: user_group.id)
 
-    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                              trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
 
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
       user.update_column(:stripe_customer_id, stripe_customer.id)
       MandrillWorker.perform_async(user.id, 'csv_webinar_invite', "#{root_url}/user_verification/#{user.email_verification_code}")
+    else
+
     end
+
   end
 
   ### instance methods
@@ -366,16 +371,12 @@ class User < ActiveRecord::Base
     !self.user_group.student_user
   end
 
-  def trial_or_sub_user?
-    self.student_user? && self.user_group.trial_or_sub_required && self.student_access
+  def standard_student_user?
+    self.student_user? && self.user_group.trial_or_sub_required
   end
 
   def complimentary_user?
     self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
-  end
-
-  def tutor_user?
-    self.user_group.tutor
   end
 
   def blocked_user?
@@ -414,132 +415,32 @@ class User < ActiveRecord::Base
 
   def make_student_access
     build_student_access(
-      trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, 
-      trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
       account_type: 'Trial'
     )
   end
 
-  # Trial Access
-
-  def trial_user?
-    self.trial_or_sub_user? &&
-      (self.student_access.trial_access? && !self.student_access.subscription_id) ||
-      (self.student_access.subscription_id? && self.student_access.subscription.pending?)
-  end
-
-  def valid_trial_user?
-    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date
-  end
-
-  def not_started_trial_user?
-    self.trial_user? && !self.student_access.trial_started_date
-  end
-
-  def expired_trial_user?
-    self.trial_user? && self.student_access && self.student_access.trial_ended_date && !self.student_access.content_access
-  end
-
-  # Trial Limits
-  def trial_limits_valid?
-    self.trial_days_valid? && self.trial_seconds_valid?
-  end
-
-  def trial_days_valid?
-    time_now =Proc.new{Time.now.to_datetime}.call
-    self.student_access.trial_ending_at_date && !self.student_access.trial_ended_date && time_now <= student_access.trial_ending_at_date
-  end
-
-  def trial_seconds_valid?
-    self.student_access.content_seconds_consumed <= self.student_access.trial_seconds_limit
-  end
-
-  def trial_days_left
-    time_now = Proc.new{Time.now.to_date}.call
-    ((self.student_access.trial_started_date + self.student_access.trial_days_limit.days).to_date - time_now).to_i
-  end
-
-  def trial_seconds_left
-    self.student_access.trial_seconds_limit - self.student_access.content_seconds_consumed
-  end
-
-  def trial_minutes_left
-    self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
-  end
-
-  # Subscription Access
-
-  def subscription_user?
-    self.trial_or_sub_user? && self.student_access.subscription_access? && self.student_access.subscription
-  end
-
-  def valid_subscription?
-    self.trial_or_sub_user? && self.current_subscription && self.current_subscription.valid_subscription?
-  end
-
-  def canceled_pending?
-    self.subscription_user? && self.current_subscription && self.current_subscription.stripe_status == 'canceled-pending'
-  end
-
-  def canceled_member?
-    self.subscription_user? && self.current_subscription && self.current_subscription.cancelled?
-  end
-
-  def current_subscription
-    student_access.subscription
-  end
 
   def default_card
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
   end
 
-  def user_subscription_status
-    current_subscription = self.current_subscription
-    if current_subscription
-      current_subscription.user_readable_status
-    else
-      'Invalid Subscription'
-    end
+  def subscriptions_for_exam_body(exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id)
   end
 
-  def user_account_status
-    if self.trial_or_sub_user?
-      if self.not_started_trial_user?
-        'Trial Not Started'
-      elsif self.valid_trial_user?
-        'Valid Trial'
-      elsif self.expired_trial_user?
-        'Expired Trial'
-      elsif self.current_subscription
-        self.user_subscription_status
-      else
-        'Unknown Student'
-      end
-    else
-      if self.user_group_id
-        self.user_group.name
-      else
-        'Unknown'
-      end
-    end
+  def active_subscriptions_for_exam_body(exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).all_active
   end
 
-
-  def permission_to_see_content
-    # After successful update of all users to have a
-    # StudentAccess record change this to be only one line
-    # self.student_access.content_access
-
-    if self.student_user?
-      self.student_access.content_access
-    elsif self.non_student_user?
-      self.student_access.content_access
-    else
-      false
-    end
+  def active_subscription_for_exam_body?(exam_body_id)
+    active_subscriptions_for_exam_body(exam_body_id).any?
   end
 
-  def enrollment_for_course?(course_id)
+  def valid_subscription_for_exam_body?(exam_body_id)
+    active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
+  end
+
+  def enrolled_course?(course_id)
     #Returns true if an active enrollment exists for this user/course
 
     self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
@@ -594,14 +495,13 @@ class User < ActiveRecord::Base
     end
   end
 
-  def pre_creation_setup(cookie)
+  def pre_creation_setup
     make_student_access
-    set_subscription_plan_category(cookie)
   end
 
-  def send_activation_email(url)
+  def send_verification_email(url)
     MandrillWorker.perform_async(
-      id, 
+      id,
       'send_verification_email',
       url
     ) unless Rails.env.test?
@@ -615,7 +515,7 @@ class User < ActiveRecord::Base
     update(analytics_guid: ga_ref) if ga_ref
   end
 
-  # Checks for our referral cookie in the users browser and creates a 
+  # Checks for our referral cookie in the users browser and creates a
   # ReferredSignUp associated with this user
   def validate_referral(cookie)
     code, referrer_url = cookie.split(';') if cookie
@@ -637,12 +537,6 @@ class User < ActiveRecord::Base
     self.email_verified = true
     self.email_verified_at = Proc.new{Time.now}.call
     self.email_verification_code = nil
-  end
-
-  def de_activate_user
-    self.active = false
-    self.account_activated_at = nil
-    self.account_activation_code = ApplicationController::generate_random_code(20)
   end
 
   def generate_email_verification_code
@@ -673,7 +567,7 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if existing_sub = current_subscription
+    if existing_sub = subscriptions.not_pending.all_active.first
       existing_sub.subscription_plan&.currency || country.currency
     else
       country.currency
@@ -732,12 +626,14 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
+  #TODO - valid enrollments ??
   def valid_enrollments_in_sitting_order
-    self.enrollments.all_valid.by_sitting_date
+    self.enrollments.all_active.by_sitting_date
   end
 
+  #TODO - invalid enrollments ??
   def expired_enrollments_in_sitting_order
-    self.enrollments.all_active.all_expired.by_sitting_date
+    self.enrollments.all_active.by_sitting_date
   end
 
   def active_enrollments_in_sitting_order
@@ -762,56 +658,6 @@ class User < ActiveRecord::Base
     cmeuls.any?
   end
 
-  def update_from_stripe
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscriptions = stripe_customer.subscriptions[:data]
-    if stripe_subscriptions && stripe_subscriptions.count == 1
-      stripe_subscription = stripe_customer.subscriptions[:data].first
-      if self.current_subscription && stripe_subscription.id == self.current_subscription.stripe_guid
-        self.current_subscription.update_from_stripe
-      else
-        create_subscription_from_stripe(stripe_subscription, stripe_customer)
-      end
-    end
-  end
-
-  def create_subscription_from_stripe(stripe_subscription_object, stripe_customer_object)
-    subscription_plan = SubscriptionPlan.where(stripe_guid: stripe_subscription_object.plan.id).first
-    if subscription_plan
-      subscription = Subscription.new(
-          user_id: self.id,
-          subscription_plan_id: subscription_plan.id,
-          complimentary: false,
-          active: true,
-          livemode: stripe_subscription_object.plan.livemode,
-          stripe_status: stripe_subscription_object.status,
-      )
-      subscription.stripe_guid = stripe_subscription_object.id
-      subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)
-      subscription.stripe_customer_id = stripe_customer_object.id
-      subscription.terms_and_conditions = true
-      subscription.stripe_customer_data = stripe_customer_object.to_hash.deep_dup
-      subscription_saved = subscription.save(validate: false)
-      #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
-
-      if subscription_saved
-        time_now = Proc.new{Time.now.to_datetime}.call
-        self.student_access.update_attributes(trial_ended_date: time_now, content_access: true,
-                                              subscription_id: subscription_saved.id,
-                                              account_type: 'Subscription')
-      end
-    end
-  end
-  
-  # Checks for SubscriptionPlanCategory cookie to see if the user should get 
-  # specific subscription plans instead of the general plans
-  def set_subscription_plan_category(cookie)
-    if cookie.present?
-      subscription_plan_category = SubscriptionPlanCategory.where(guid: cookie).first
-      student_access.trial_days_limit = subscription_plan_category.trial_period_in_days
-    end
-  end
-
   private
 
   def add_guid
@@ -829,21 +675,13 @@ class User < ActiveRecord::Base
     self.email_verification_code = SecureRandom.hex(10)
   end
 
-  def update_student_access
-    if self.user_group_id_changed?
-      self.student_access.check_student_access
-    end
-  end
-
   def update_stripe_customer
     unless Rails.env.test?
-      if self.saved_change_to_stripe_account_balance? || self.saved_change_to_email?
+      if self.saved_change_to_email?
         Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
         stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
         stripe_customer.email = self.email
-        stripe_customer.account_balance = self.stripe_account_balance
         stripe_customer.save
-        self.update_column(:stripe_account_balance, stripe_customer.account_balance)
       end
     end
   end

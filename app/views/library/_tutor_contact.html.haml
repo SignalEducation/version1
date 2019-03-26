@@ -1,0 +1,45 @@
+.modal.fade{id: 'ask-a-tutor-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'askTutorQuestion', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
+
+      .modal-header
+        %h3.mb-3{id: 'askTutorQuestion'}
+          Ask The Tutor A Question
+
+
+      .modal-body
+
+        -if current_user
+          =form_tag(tutor_contact_form_url, {class: 'form py-2', role: 'form', name: 'tutor_contact_form_form'}) do
+            =hidden_field_tag :type, @form_type
+            .row
+              .col-sm-6
+                .form-group
+                  =label_tag :full_name, 'Name'
+                  =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name', required: true
+
+              .col-sm-6
+                .form-group
+                  =label_tag :email, 'Email'
+                  =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address', required: true
+
+              .col-sm-12
+                .form-group
+                  =label_tag :question, 'Question'
+                  =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
+            .pt-2
+              =submit_tag 'Send The Question', class: 'btn btn-primary btn-sm'
+
+        -else
+          %p.font-weight-medium.mb-4.text-purple
+            Sorry! A valid account is required to ask a question
+          %p.mb-4.text-purple
+            Please Sign Up or Sign In
+
+          .modal-footer
+            =link_to 'Sign In', sign_in_url, class: 'btn btn-primary', title: 'Sign In'
+            =link_to 'Sign Up Now', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Sign Up'
+

@@ -23,6 +23,7 @@
 require 'rails_helper'
 
 describe WhitePaper do
+
   subject { FactoryBot.build(:white_paper) }
 
   # relationships

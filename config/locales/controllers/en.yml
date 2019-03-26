@@ -105,6 +105,20 @@ en:
           success: Course Module has been deleted
           error: Course Module was not deleted
 
+    course_sections:
+      show:
+        cant_find: Sorry, that could not be found
+      create:
+        flash:
+          success: Course Section has been created successfully
+      update:
+        flash:
+          success: Course Section details have been updated successfully
+      destroy:
+        flash:
+          success: Course Section has been deleted
+          error: Course Section was not deleted
+
     course_module_elements:
       create:
         flash:

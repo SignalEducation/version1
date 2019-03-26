@@ -30,23 +30,22 @@ class SubjectCourseUserLog < ActiveRecord::Base
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id, optional: true
   has_many :enrollments
+  has_many :course_section_user_logs
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
 
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :session_guid, allow_nil: true, length: { maximum: 255 }
+  validates :user_id, presence: true
+  validates :subject_course_id, presence: true
+  validates :percentage_complete, presence: true
 
   # callbacks
   before_destroy :check_dependencies
   after_save :update_enrollment
 
   # scopes
-  scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
+  scope :all_in_order, -> { order(:user_id, :created_at) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
@@ -57,11 +56,15 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    self.student_exam_tracks.empty?
+    self.course_section_user_logs.empty? && self.student_exam_tracks.empty?
   end
 
   def elements_total
     self.subject_course.try(:cme_count) || 0
+  end
+
+  def elements_total_for_completion
+    self.subject_course.course_sections.all_for_completion.sum(:cme_count)
   end
 
   def active_enrollment
@@ -89,6 +92,16 @@ class SubjectCourseUserLog < ActiveRecord::Base
   end
 
   def recalculate_completeness
+    self.count_of_videos_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
+    self.count_of_constructed_responses_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed = self.course_section_user_logs.with_valid_course_section.sum(:count_of_cmes_completed)
+
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total_for_completion.to_f) * 100 if self.elements_total_for_completion > 0
+
+    self.completed = true if (self.percentage_complete > 99) unless self.percentage_complete.nil?
+    self.save!
+
     # Temp fix replaced SET scope with_active_cmes with with_valid_course_module scope
     # self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
     # self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)

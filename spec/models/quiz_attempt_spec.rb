@@ -17,6 +17,7 @@
 require 'rails_helper'
 
 describe QuizAttempt do
+
   # relationships
   it { should belong_to(:course_module_element_user_log) }
   it { should belong_to(:quiz_answer) }

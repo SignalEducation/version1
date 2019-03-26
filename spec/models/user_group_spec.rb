@@ -24,6 +24,7 @@
 require 'rails_helper'
 
 describe UserGroup do
+
   subject { FactoryBot.build(:user_group) }
 
   # Constants

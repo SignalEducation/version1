@@ -1,15 +1,14 @@
 -if thing.errors.any?
   -field_list = thing.errors.map {|x,y| x}.uniq
-  .col-sm-12
-    -field_list.uniq.each do |field|
-      .notice.error
-        .fa.fa-info-circle.icon
-        =field.to_s.humanize.gsub('Base','')
-        -if thing.errors[field].length > 1
-          =#t('views.layouts.error_messages.is_invalid')
-          =thing.errors[field].uniq.first
-        -else
-          =thing.errors[field].first
+  -field_list.uniq.each do |field|
+    .notice.error
+      .fa.fa-info-circle.icon
+      =field.to_s.humanize.gsub('Base','')
+      -if thing.errors[field].length > 1
+        =#t('views.layouts.error_messages.is_invalid')
+        =thing.errors[field].uniq.first
+      -else
+        =thing.errors[field].first
 
   %script
 

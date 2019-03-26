@@ -19,6 +19,7 @@
 #  background_image_content_type :string
 #  background_image_file_size    :integer
 #  background_image_updated_at   :datetime
+#  background_colour             :string
 #  exam_body_id                  :bigint(8)
 #
 
@@ -32,8 +33,8 @@ class Group < ActiveRecord::Base
   # relationships
   has_many :subject_courses
   has_many :home_pages
-  has_attached_file :image, default_url: 'images/missing_image.jpg'
-  has_attached_file :background_image, default_url: 'images/missing_image.jpg'
+  has_attached_file :image, default_url: 'courses-AAT.jpg'
+  has_attached_file :background_image, default_url: 'bg_library_group.jpg'
 
 
   # validation

@@ -16,6 +16,7 @@
 require 'rails_helper'
 
 describe ExamSitting do
+
   # relationships
   it { should belong_to(:exam_body) }
   it { should belong_to(:subject_course) }

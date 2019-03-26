@@ -20,13 +20,6 @@ textarea {
   padding: 5px 8px;
   transition: background-color 0.2s ease 0s;
 
-  @include breakpoint(xs-min) {
-    width: 360px;
-  }
-
-  @include breakpoint(sm-min) {
-    width: 600px;
-  }
 
   &:focus {
     background: none repeat scroll 0 0 #FFFFFF;
@@ -46,13 +39,6 @@ textarea {
     border-radius: 6px;
     width: 300px;
 
-    @include breakpoint(xs-min) {
-      width: 360px;
-    }
-
-    @include breakpoint(sm-min) {
-      width: 600px;
-    }
 
     &.error {
       border: 1px solid red;

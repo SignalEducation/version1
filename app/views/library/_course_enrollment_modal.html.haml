@@ -1,59 +1,56 @@
-.remodal{"data-remodal-id" => "enrollment-modal"}
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12.l-margin-bottom
-        %h3
-          ="Welcome to the #{@course.try(:name)}."
-        %h3
-          ='To continue your studies please Enrol.'
-
-      #enrollment_form
-        =form_for(@new_enrollment, html: {class: 'form-horizontal', role: 'form', name: 'enrollment_modal_form'}) do |f|
-          =f.hidden_field :subject_course_id, value: @course.id
-          =f.hidden_field :subject_course_user_log_id, value: nil, id: 'hidden_scul_id'
-
-          -if @course.computer_based && @computer_exam_sitting
-            =f.hidden_field :exam_sitting_id, value: @computer_exam_sitting.id
-            .row.l-margin-top.text-left
-              .col-sm-6#custom_exam_date
-                =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
-                .input-group.input-group-lg.full-width
-                  =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
-
-          -else
-            .row.l-margin-top.text-left
-              .col-sm-12
-                .col-sm-6
-                  =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
-                  .input-group.input-group-lg.full-width
-                    =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
+.modal.fade{id: 'enrollment-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'enrollmentModal', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %span
+          Close
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3{id: 'enrollmentModalForm'}
+          ="Enrol in #{@course.try(:name)}"
 
 
+      .modal-body
+        #enrollment_form
+          =form_for(@new_enrollment, html: {class: 'form py-2', role: 'form', name: 'enrollment_modal_form'}) do |f|
+            =f.hidden_field :subject_course_id, value: @course.id
+            =f.hidden_field :exam_body_id, value: @course.exam_body_id
+            =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id), id: 'scul_id'
+
+            .row
+              .col-sm-6
+                .form-group
+                  -if @course.computer_based && @computer_exam_sitting
+                    =f.hidden_field :exam_sitting_id, value: @computer_exam_sitting.id
+                    #custom_exam_date
+                      =f.label :exam_date, t('views.enrollments.form.select_exam_date'), class: 'control-label'
+                      .input-group.input-group-lg.full-width
+                        =f.text_field :exam_date, placeholder: 'Select Date ...', autocomplete: 'off', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
+                  -else
+                    =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
+                    .input-group.input-group-lg.full-width
+                      =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
+
+              .col-sm-6
+                -if @subject_course_user_log
+                  .form-group
+                    .l-margin-top-big
+                      %label.check
+                        %input{type: "checkbox", id: 'use_new_scul'}
+                          %span
+                            %i.fa.fa-check
+                          ='Reset all course progress'
+
+            .col-sm-12.l-margin-top-big
+              %p.p.text-center
+                ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
 
 
 
-          -if @active_enrollment && @active_enrollment.expired
-            %br/
-            .col-sm-12
-              .col-sm-10
-                .l-margin-top-big
-                  %label.check
-                    %input{type: "checkbox", id: 'use_old_log'}
-                      %span
-                        %i.fa.fa-check
-                      ='Keep progress from previous Enrolment'
-
-          .col-sm-12.l-margin-top
-            %p.p
-              ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
-
-
-          %br/
-          .col-sm-12#actions_btns
-            .col-sm-4.col-sm-offset-8
+            #actions_btns.pt-1.l-margin-top-huge
               #enroll_now
-                =submit_tag 'Enrol Now', class: 'btn btn-cyan', id: 'enroll_submit_button'
+                =submit_tag 'Enrol Now', class: 'btn btn-primary', id: 'enroll_submit_button'
 
 
 -if @course.computer_based && @computer_exam_sitting
@@ -92,23 +89,24 @@
     document.forms['enrollment_modal_form'].submit();
   });
 
-
-
   // Date Picker
   $(function () {
-    $('#exam_date_timepicker').datetimepicker();
-      format: 'DD/MM/YYYY'
+    $('#exam_date_timepicker').datetimepicker({
+      useCurrent: false,
+      minDate: moment(), // Current day
+      maxDate: moment().add(365, 'days'), // 365 days from the current day
+    });
   });
 
--if @active_enrollment && @active_enrollment.expired
+-if @subject_course_user_log
 
   :javascript
-    // Set the hidden field value if checkbox is selected
-    var scul_id = #{@active_enrollment.subject_course_user_log_id}
+    // Set the SCUL hidden id field to nil if checkbox is selected
+    let scul_id = #{@subject_course_user_log.id};
     $('input[type="checkbox"]').on('change', function() {
-      if($('#use_old_log').prop('checked') == true) {
-        $("#hidden_scul_id").val(scul_id);
-      } else if($('#use_old_log').prop('checked') == false) {
-        $("#hidden_scul_id").val('nil');
+      if($('#use_new_scul').prop('checked') == true) {
+        $("#scul_id").val('');
+      } else if($('#use_new_scul').prop('checked') == false) {
+        $("#scul_id").val(scul_id);
       }
     });

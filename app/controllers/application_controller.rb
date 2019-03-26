@@ -113,18 +113,6 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   end
   helper_method :ensure_user_has_access_rights
 
-  def paywall_checkpoint
-    allowed     = {course_content: {view_all: true, reason: nil}}
-    not_allowed     = {course_content: {view_all: false, reason: nil}}
-
-    if current_user && current_user.permission_to_see_content
-      result = allowed
-    else
-      result = not_allowed
-    end
-    result
-  end
-  helper_method :paywall_checkpoint
 
   def authenticate_if_staging
     if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
@@ -218,6 +206,10 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
       subject_course_url(
                 the_thing.subject_course)
 
+    elsif the_thing.class == CourseSection
+      subject_course_url(
+          the_thing.subject_course)
+
     elsif the_thing.class == SubjectCourse
       new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
 
@@ -250,7 +242,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
 
   # Library Navigation Links
   def library_special_link(the_thing)
-    if the_thing.class == Group
+    if the_thing.class == (Group || ExamBody)
       the_thing = the_thing
       library_group_url(
                   the_thing.name_url
@@ -258,17 +250,10 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
       if the_thing.parent
-        if the_thing.preview
-          library_preview_url(
-              the_thing.parent.name_url,
-              the_thing.name_url
-          )
-        else
-          library_course_url(
-              the_thing.parent.name_url,
-              the_thing.name_url
-          )
-        end
+        library_course_url(
+            the_thing.parent.name_url,
+            the_thing.name_url
+        )
       else
         library_url
       end
@@ -284,34 +269,54 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   end
   helper_method :library_special_link
 
+  # Library Navigation Links
+  def navigation_special_link(the_thing)
+    the_thing = the_thing
+    library_course_url(
+        the_thing.course_module.course_section.subject_course.group.name_url,
+        the_thing.course_module.course_section.subject_course.name_url,
+        anchor: the_thing.course_module.course_section.name_url,
+        cm: the_thing.course_module.id
+    )
+  end
+  helper_method :navigation_special_link
 
-  def course_special_link(the_thing, direction='forwards')
-    if the_thing.class == CourseModule
-      library_special_link(
-              the_thing.subject_course
+
+  def course_special_link(the_thing, scul=nil)
+    if the_thing.class == SubjectCourse
+      library_course_url(
+          the_thing.parent.name_url,
+          the_thing.name_url
+      )
+    elsif the_thing.class == CourseSection
+      library_course_url(
+          the_thing.subject_course.group.name_url,
+          the_thing.subject_course.name_url,
+          anchor: the_thing.name_url
+      )
+    elsif the_thing.class == CourseModule
+      library_course_url(
+          the_thing.course_section.subject_course.group.name_url,
+          the_thing.course_section.subject_course.name_url,
+          the_thing.course_section.name_url,
+          anchor: the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        if current_user.permission_to_see_content
-          if current_user.enrolled_in_course?(the_thing.course_module.subject_course.id)
-            course_url(
-                the_thing.course_module.subject_course.name_url,
-                the_thing.course_module.name_url,
-                the_thing.name_url
-            )
-          else
-            library_course_url(
-                the_thing.parent.parent.parent.name_url,
-                the_thing.parent.parent.name_url,
-                anchor: 'enrollment-modal'
-            )
-          end
+        permission = the_thing.available_to_user(current_user, scul)
+        if permission[:view]
+          course_url(
+              the_thing.course_module.course_section.subject_course.name_url,
+              the_thing.course_module.course_section.name_url,
+              the_thing.course_module.name_url,
+              the_thing.name_url
+          )
 
         else
           library_course_url(
-              the_thing.parent.parent.parent.name_url,
-              the_thing.parent.parent.name_url,
-              anchor: 'access-denied-modal'
+              the_thing.course_module.course_section.subject_course.group.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
+              anchor: permission[:reason]
           )
         end
       else
@@ -323,6 +328,26 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
     end
   end
   helper_method :course_special_link
+
+  def course_resource_special_link(the_thing)
+    if the_thing.class == SubjectCourseResource
+
+      the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
+
+    else
+      library_special_link(the_thing)
+    end
+  end
+  helper_method :course_resource_special_link
+
+  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid=nil)
+    if current_user
+      new_subscription_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    else
+      sign_in_or_register_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    end
+  end
+  helper_method :subscription_checkout_special_link
 
   def seo_title_maker(seo_title, seo_description, seo_no_index)
     @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'

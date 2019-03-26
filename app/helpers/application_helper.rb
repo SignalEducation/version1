@@ -72,6 +72,10 @@ module ApplicationHelper
     date.utc.strftime('%d %b %y')
   end
 
+  def humanize_datetime_full(date)  # Used in the Account UI
+    date.utc.strftime('%d %B %Y')
+  end
+
   def timer_datetime(date)  # Used for upgrade page timer
     date.utc.strftime('%Y/%m/%d %H:%M:%S')
   end

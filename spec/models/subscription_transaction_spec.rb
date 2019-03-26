@@ -20,6 +20,7 @@
 require 'rails_helper'
 
 describe SubscriptionTransaction do
+
   # Constants
   it { expect(SubscriptionTransaction.const_defined?(:TRANSACTION_TYPES)).to eq(true) }
 

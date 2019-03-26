@@ -22,8 +22,8 @@
           .pull-right
 
             =link_to subscription_management_pdf_invoice_url(@subscription, invoice.id, format: 'pdf'), target: '_blank' do
-              .btn.btn-red.btn-small
+              .btn.btn-primary.btn-xs
                 PDF
             =link_to subscription_management_invoice_url(@subscription, invoice.id), style: 'padding-left: 5px;' do
-              .btn.btn-purple.btn-small
+              .btn.btn-secondary.btn-xs
                 View

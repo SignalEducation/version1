@@ -1,65 +1,49 @@
-.col-md-8.col-sm-12
-  %h2
-    =cme.name.html_safe
-  -if cme.course_module_element_video.vimeo_guid
-    #vimeo-player-window.vimeo-player-window
+.row.row-lg
+  .col-xl-8
+    -if cme.course_module_element_video.vimeo_guid
+      #vimeo-player-window.vimeo-player-window
 
 
-  -#Nav buttons below video
-  .l-margin-bottom.l-margin-top.hidden-xs
-    .pull-right
-      =link_to course_special_link(cme.next_element), class: 'btn btn-red text-bold' do
-        =t('views.course_module_elements.show.next_step')
-        .glyphicon.glyphicon-arrow-right
+    .pt-5.pb-5
+      %h2.h4 Description
+      %p.mb-4
+        =@course_module_element.description.html_safe
 
-  .l-margin-bottom-huge.l-margin-top.hidden-lg.hidden-md.hidden-sm
-    .col-sm-12
-      =link_to course_special_link(cme.next_element), class: 'btn btn-red full-width' do
-        =t('views.course_module_elements.show.next_step')
-        .glyphicon.glyphicon-arrow-right
 
-.col-md-4.col-sm-12
-  -if @course_module_element.course_module_element_resources.count > 0
-    .col-md-12.l-margin-top-big
-      %h4.l-margin-bottom
+
+  .col-xl-4
+    -if @course_module_element.course_module_element_resources.any?
+      %h4.text-gray1.mb-2.mb-sm-3.mt-sm-4.mt-md-0
         ='Additional Resources'
-      -@course_module_element.course_module_element_resources.each do |r|
-        -if current_user && current_user.permission_to_see_content && !current_user.student_access.trial_access? && current_user.enrolled_in_course?(@course.id)
-          -if r.web_url && r.web_url.length > 0
-            =link_to r.web_url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-              =r.name
-          -else
-            =link_to r.upload.url, class: 'resource-box resource-box-inner full-width', target: '_blank' do
-              .col-xs-10
-                =r.name
-              .col-xs-2
-                .glyphicon.glyphicon-download{style: 'top: 3px;'}
+      -@course_module_element.course_module_element_resources.each do |resource|
 
-        -elsif current_user && current_user.permission_to_see_content && current_user.student_access.trial_access? && current_user.enrolled_in_course?(@course.id)
-          %a{data: {remodal: {target: 'resources-unavailable-modal'}}, class: 'resource-box resource-box-inner full-width'}
-            .col-xs-10
-              =r.name
-            .col-xs-2
-              .glyphicon.glyphicon-download{style: 'top: 3px;'}
-
+        -if resource.web_url && resource.web_url.length > 0
+          =link_to resource.web_url, class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+            .card-header.bg-white.d-flex.align-items-center.justify-content-center
+              %i.budicon-internal-link{"aria-label" => "", :role => "img"}
+            .card-body.d-flex.align-items-center.pl-1
+              %h5.m-0.text-truncate.text-gray2
+                =resource.name
         -else
-          %a{data: {remodal: {target: 'access-denied-modal'}}, class: 'resource-box resource-box-inner full-width'}
-            .col-xs-10
-              =r.name
-            .col-xs-2
-              .glyphicon.glyphicon-download{style: 'top: 3px;'}
+          =link_to resource.upload.url, class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+            .card-header.bg-white.d-flex.align-items-center.justify-content-center
+              %i.budicon-files-download{"aria-label" => "", :role => "img"}
+            .card-body.d-flex.align-items-center.pl-1
+              %h5.m-0.text-truncate.text-gray2
+                =resource.name
 
 
 
 
--if cme.course_module_element_video.vimeo_guid && @subject_course_user_log
+-if cme.course_module_element_video.vimeo_guid
 
   :javascript
-    var video_cme_id = #{@course_module_element.id};
-    var course_log_id = #{@subject_course_user_log.id};
-    var exam_track_id = "#{@student_exam_track.try(:id)}";
-    var logId = '';
-    var options = {
+    let video_cme_id = "#{@course_module_element.id || ''}";
+    let course_log_id = "#{@subject_course_user_log.try(:id) || ''}";
+    let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
+    let exam_track_id = "#{@student_exam_track.try(:id) || ''}";
+    let logId = '';
+    let options = {
       id: "#{cme.course_module_element_video.vimeo_guid}",
       frameborder: 0,
       webkitAllowFullScreen: true,
@@ -67,11 +51,12 @@
       allowFullScreen: true
     };
 
-    var player = new Vimeo.Player('vimeo-player-window', options);
+    let player = new Vimeo.Player('vimeo-player-window', options);
 
-    var timeUpdate = function(data) {
+    let timeUpdate = function(data) {
       if (data.percent >= 0.75) {
         $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
           url: '#{video_watched_data_courses_path}',
           dataType: 'json',
           data: JSON.stringify({'videoLogId': logId}),
@@ -83,12 +68,13 @@
     };
 
     //When the player starts send JSON request to create CMEUL
-    var onPlay = function(data) {
+    let onPlay = function(data) {
       if (logId === '') {
         $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
           url: '#{create_video_user_log_courses_path}',
           dataType: 'json',
-          data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'set_id': exam_track_id }),
+          data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'csul_id': section_log_id, 'set_id': exam_track_id }),
           method: 'POST',
           contentType: "application/json; charset=utf-8",
           success: function(data,status,xhr){
@@ -108,16 +94,3 @@
 
 
 
--elsif cme.course_module_element_video.vimeo_guid && !@subject_course_user_log
-
-  :javascript
-
-    var options = {
-      id: "#{cme.course_module_element_video.vimeo_guid}",
-      frameborder: 0,
-      webkitAllowFullScreen: true,
-      mozallowfullscreen: true,
-      allowFullScreen: true
-    };
-
-    var player = new Vimeo.Player('vimeo-player-window', options);

@@ -23,46 +23,45 @@
 require 'rails_helper'
 
 describe SubjectCourseUserLog do
-  # relationships
-  it { should belong_to(:user) }
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:latest_course_module_element) }
-  it { should have_many(:enrollments) }
-  it { should have_many(:student_exam_tracks) }
-  it { should have_many(:course_module_element_user_logs) }
 
-  # validation
-  it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
+  describe 'relationships' do
+    it { should belong_to(:user) }
+    it { should belong_to(:subject_course) }
+    it { should belong_to(:latest_course_module_element) }
+    it { should have_many(:enrollments) }
+    it { should have_many(:course_section_user_logs) }
+    it { should have_many(:student_exam_tracks) }
+    it { should have_many(:course_module_element_user_logs) }
+  end
 
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  describe 'validations' do
+    it { should validate_presence_of(:user_id) }
+    it { should validate_presence_of(:subject_course_id) }
+    it { should validate_presence_of(:percentage_complete) }
+  end
 
-  it { should_not validate_presence_of(:session_guid) }
-  it { should validate_length_of(:session_guid).is_at_most(255) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+    it { should callback(:update_enrollment).after(:save) }
+  end
 
-  it { should_not validate_presence_of(:latest_course_module_element_id) }
+  describe 'scopes' do
+    it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }
+    it { expect(SubjectCourseUserLog).to respond_to(:all_complete) }
+    it { expect(SubjectCourseUserLog).to respond_to(:all_incomplete) }
+    it { expect(SubjectCourseUserLog).to respond_to(:for_user) }
+    it { expect(SubjectCourseUserLog).to respond_to(:for_subject_course) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:update_enrollment).after(:save) }
-
-  # scopes
-  it { expect(SubjectCourseUserLog).to respond_to(:all_in_order) }
-  it { expect(SubjectCourseUserLog).to respond_to(:all_complete) }
-  it { expect(SubjectCourseUserLog).to respond_to(:all_incomplete) }
-  it { expect(SubjectCourseUserLog).to respond_to(:for_subject_course) }
-
-  # class methods.
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:elements_total) }
-  it { should respond_to(:active_enrollment) }
-  it { should respond_to(:update_enrollment) }
-  it { should respond_to(:last_element) }
-  it { should respond_to(:recalculate_completeness) }
-  it { should respond_to(:student_exam_track_course_module_ids) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:elements_total) }
+    it { should respond_to(:elements_total_for_completion) }
+    it { should respond_to(:active_enrollment) }
+    it { should respond_to(:update_enrollment) }
+    it { should respond_to(:last_element) }
+    it { should respond_to(:recalculate_completeness) }
+    it { should respond_to(:student_exam_track_course_module_ids) }
+  end
 
 end

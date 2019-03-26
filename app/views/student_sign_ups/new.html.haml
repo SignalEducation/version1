@@ -1,79 +1,89 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
+%main
+  %article.bg-gray5
     .container
-      .row
-        .col-lg-10.col-lg-offset-1
-          %h1.title1
-            ='Start your free trial today'
-          %h2.subtitle1
-            ='Explore our innovative learning platform and discover how LearnSignal helps you pass your ACCA faster'
+      %header.hero-section.hero-section-external
+        %h1.h1-hero.mb-2
+          ='Register now'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-lg-6.col-lg-offset-3.col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1
-          #sign_up.l-margin-top
+      %section.pb-md-6.pb-5
+        .sign-up-section
+          #sign-up.form-box
+            %h2.h5.px-lg-8.py-4.text-center
+              Explore our innovative learning platform and discover how LearnSignal helps you pass your exams faster
+
             =form_for @user, url: create_student_url do |f|
               =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
               =f.hidden_field :locale, value: (params[:locale] || 'en')
               =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
               =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
               .row
-                .col-md-12
-                  .col-sm-6
-                    .form-group
-                      =f.label :first_name, t('views.users.form.first_name'), class: 'control-label'
-                      =f.text_field :first_name, autofocus: true, required: true, class: 'form-control', id: 'user_first_name'
-                  .col-sm-6
-                    .form-group
-                      =f.label :last_name, t('views.users.form.last_name'), class: 'control-label'
-                      =f.text_field :last_name, class: 'form-control', id: 'user_last_name'
-                  .col-sm-12
-                    .form-group
-                      =f.label :email, t('views.users.form.email'), class: 'control-label'
-                      =f.email_field :email, class: 'form-control', required: true, id: 'user_email'
-                  .col-sm-12
-                    .form-group
-                      =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'control-label'
-                      =f.collection_select :preferred_exam_body_id, ExamBody.all_in_order, :id, :name, prompt: 'Please select', class: 'form-control', required: true, id: 'user_exam_body'
-                  .col-sm-12
-                    .form-group
-                      =f.label :password, t('views.users.form.password'), class: 'control-label'
-                      =f.password_field :password, required: true, class: 'form-control', id: 'user_password'
-                  .col-sm-12
-                    .form-group.l-margin-top
-                      %label.check.communication_approval
-                        %input{type: 'checkbox', id: 'communication_approval', required: true}
-                          %span
-                            %i.fa.fa-check
-                          ='I agree to receiving communications from LearnSignal (you can unsubscribe at any time)'
 
-                  .col-sm-12
-                    .form-group
-                      %label.check.terms_and_conditions
-                        %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
-                          %span
-                            %i.fa.fa-check
-                          ="I Agree to LearnSignal's"
-                          =link_to 'Terms and Conditions', terms_and_conditions_url
+                .col-sm-6
+                  .form-group
+                    =f.label :first_name, t('views.users.form.first_name')
+                    =f.text_field :first_name, autofocus: true, class: 'form-control', id: 'user_first_name'
+                .col-sm-6
+                  .form-group
+                    =f.label :last_name, t('views.users.form.last_name')
+                    =f.text_field :last_name, class: 'form-control', id: 'user_last_name'
 
-                    %p.h5.text-center
-                      ='No credit card required. Set-up takes one minute.'
+                .col-sm-6
+                  .form-group
+                    =f.label :email, t('views.users.form.email')
+                    =f.email_field :email, class: 'form-control', id: 'user_email'
 
-                  .col-sm-12.l-margin-top
-                    =f.submit 'START FREE TRIAL NOW', class: 'btn btn-red btn-wide btn-lg-text', id: 'signUp'
-                    .sk-circle
-                      .sk-circle1.sk-child
-                      .sk-circle2.sk-child
-                      .sk-circle3.sk-child
-                      .sk-circle4.sk-child
-                      .sk-circle5.sk-child
-                      .sk-circle6.sk-child
-                      .sk-circle7.sk-child
-                      .sk-circle8.sk-child
-                      .sk-circle9.sk-child
-                      .sk-circle10.sk-child
-                      .sk-circle11.sk-child
-                      .sk-circle12.sk-child
+                .col-sm-6
+                  .form-group
+                    =f.label :preferred_exam_body_id, t('views.users.form.exam_body')
+                    .input-group.input-group-lg
+                      =f.collection_select :preferred_exam_body_id, ExamBody.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
 
+                .col-sm-6
+                  .form-group
+                    =f.label :password, t('views.users.form.password')
+                    =f.password_field :password, class: 'form-control', id: 'user_password'
+
+                .col-sm-6
+                  .form-group
+                    =f.label :password_confirmation, t('views.users.form.password_confirmation')
+                    =f.password_field :password_confirmation, class: 'form-control', id: 'user_password_confirmation'
+
+                .col-sm-12
+                  .form-group
+                    %label.check.communication_approval
+                      %input{type: 'checkbox', id: 'communication_approval', required: true}
+                        %span
+                          %i.fa.fa-check
+                        ='I agree to receiving communications from LearnSignal (you can unsubscribe at any time)'
+
+                .col-sm-12
+                  .form-group
+                    %label.check.terms_and_conditions
+                      %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
+                        %span
+                          %i.fa.fa-check
+                        ="I Agree to LearnSignal's"
+                        =link_to 'Terms and Conditions', terms_and_conditions_url
+
+
+              .pt-5.px-lg-8.text-center
+                %p.h5
+                  ='No credit card required. Set-up takes one minute.'
+
+                =f.submit 'Register Now', class: 'btn btn-primary', id: 'signUp'
+                .sk-circle
+                  .sk-circle1.sk-child
+                  .sk-circle2.sk-child
+                  .sk-circle3.sk-child
+                  .sk-circle4.sk-child
+                  .sk-circle5.sk-child
+                  .sk-circle6.sk-child
+                  .sk-circle7.sk-child
+                  .sk-circle8.sk-child
+                  .sk-circle9.sk-child
+                  .sk-circle10.sk-child
+                  .sk-circle11.sk-child
+                  .sk-circle12.sk-child
 
 
 

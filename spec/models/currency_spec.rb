@@ -16,6 +16,7 @@
 require 'rails_helper'
 
 describe Currency do
+
   subject { FactoryBot.build(:currency) }
 
   it 'should have a valid factory' do

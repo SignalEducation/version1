@@ -1,46 +1,47 @@
-%br/
-%br/
-%h3.l-margin-bottom
+%h3.l-margin-top-big
   =t('views.course_module_element_resources.index.h1')
 
+
 =f.fields_for :course_module_element_resources do |cme_resource|
-  .file-upload-box
-    -if cme_resource.object.present?
-      %h4
-        Edit Upload
-    -else
-      %h4
-        New Upload
+  .box-item
+    .row
+      .col-sm-12
 
-    .col-md-6
-      =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        -if cme_resource.object.present?
+          %h4
+            Edit Upload
+        -else
+          %h4
+            New Upload
 
-    .col-md-6
-      =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
+        .col-md-6
+          =cme_resource.label :name, t('views.course_module_element_resources.form.name'), class: 'control-label'
+          .input-group.input-group-lg
+            =cme_resource.text_field :name, placeholder: t('views.course_module_element_resources.form.name_placeholder'), class: 'form-control'
 
-      -if cme_resource.object.present?
-        .form-control-static
-          =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
-          =number_to_human_size(cme_resource.object.upload_file_size)
-          %br/
-          %br/
+        .col-md-6
+          =cme_resource.label :upload, t('views.course_module_element_resources.form.upload'), class: 'control-label'
 
-        Upload a replacement file or delete the file
-        -#=t('views.course_module_element_resources.form.replace')
-        .input-group.input-group-lg.form-control
+          -if cme_resource.object.present?
+            .form-control-static
+              =link_to cme_resource.object.upload_file_name, cme_resource.object.upload.url, target: '_blank'
+              =number_to_human_size(cme_resource.object.upload_file_size)
+              %br/
+              %br/
 
-          =cme_resource.file_field :upload, style: 'border-radius: 6px;'
+            Upload a replacement file or delete the file
+            -#=t('views.course_module_element_resources.form.replace')
+            .input-group.input-group-lg.form-control
 
-        %p{style: 'margin: 10px 0;'}
-          OR
-        .checkbox
-          %label
-            =cme_resource.check_box :_destroy
-            =t('views.course_module_elements.form.delete')
+              =cme_resource.file_field :upload
 
-      -else
-        .input-group.input-group-lg
-          =cme_resource.file_field :upload, class: 'form-control', style: 'border-radius: 6px;'
+            %p{style: 'margin: 10px 0;'}
+              OR
+            .checkbox
+              %label
+                =cme_resource.check_box :_destroy
+                =t('views.course_module_elements.form.delete')
+          -else
+            .input-group.input-group-lg
+              =cme_resource.file_field :upload, class: 'form-control'
 

@@ -1,25 +1,25 @@
 .l-section-small.is-bg-asphalt
-  .l-wrap
+  .l-wrap-large
     .container-fluid
       .row.l-margin-bottom
         .col-md-12.text-center
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             =t('views.referral_codes.index.h1')
 
-      .row.l-margin-top.l-margin-bottom
-        .col-sm-6
-          =form_tag(referral_codes_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
-            .form-group.input-group.input-group-lg
-              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                %span.glyphicon.glyphicon-search
-        .col-sm-6
-          .pull-right
-            = link_to 'Referral Codes CSV', export_referral_codes_path(format: :xls), class: 'btn btn-cyan '
+      .row
+        .col-sm-12
+          .box-item.table-box
+            .row.l-margin-bottom
+              .col-sm-6
+                =form_tag(referral_codes_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
+                  .form-group.input-group.input-group-lg
+                    =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                    .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
+                      %span.glyphicon.glyphicon-search
+              .col-sm-6
+                .pull-right
+                  = link_to 'Referral Codes CSV', export_referral_codes_path(format: :xls), class: 'btn btn-primary btn-small'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .table-box
             .table-responsive
               %table.table.sorted_table
                 %thead
@@ -41,8 +41,8 @@
                       %td=referral_code.try(:trial_referred_signups).try(:count)
                       %td=referral_code.try(:subscription_referred_signups).try(:count)
                       %td=referral_code.try(:referred_signups).try(:count)
-                      %td=link_to t('views.general.view'), referral_code_url(referral_code), class: 'btn btn-small btn-purple'
-                      %td=link_to 'CSV', export_referred_signups_path(format: :xls, id: referral_code.id), class: 'btn btn-small btn-cyan'
+                      %td=link_to t('views.general.view'), referral_code_url(referral_code), class: 'btn btn-small btn-secondary'
+                      %td=link_to 'CSV', export_referred_signups_path(format: :xls, id: referral_code.id), class: 'btn btn-small btn-primary'
 
               =will_paginate @codes, renderer: BootstrapPagination::Rails
 

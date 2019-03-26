@@ -17,6 +17,7 @@
 require 'rails_helper'
 
 describe QuizQuestion do
+
   # relationships
   it { should belong_to(:subject_course) }
   it { should belong_to(:course_module_element) }

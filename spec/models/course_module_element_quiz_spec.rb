@@ -14,39 +14,39 @@
 require 'rails_helper'
 
 describe CourseModuleElementQuiz do
-  # Constants
-  it { expect(CourseModuleElementQuiz.const_defined?(:STRATEGIES)).to eq(true) }
 
-  # relationships
-  it { should belong_to(:course_module_element) }
-  it { should have_many(:quiz_questions) }
+  describe 'constants' do
+    it { expect(CourseModuleElementQuiz.const_defined?(:STRATEGIES)).to eq(true) }
+  end
 
-  # validation
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
+  describe 'relationships' do
+    it { should belong_to(:course_module_element) }
+    it { should have_many(:quiz_questions) }
+  end
 
-  it { should validate_presence_of(:number_of_questions).on(:update) }
+  describe 'validations' do
+    it { should validate_presence_of(:course_module_element_id).on(:update) }
+    it { should validate_presence_of(:number_of_questions).on(:update) }
+    it { should validate_inclusion_of(:question_selection_strategy).in_array(CourseModuleElementQuiz::STRATEGIES) }
+    it { should validate_length_of(:question_selection_strategy).is_at_most(255) }
+  end
 
-  it { should validate_inclusion_of(:question_selection_strategy).in_array(CourseModuleElementQuiz::STRATEGIES) }
-  it { should validate_length_of(:question_selection_strategy).is_at_most(255) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
+  describe 'scopes' do
+    it { expect(CourseModuleElementQuiz).to respond_to(:all_in_order) }
+    it { expect(CourseModuleElementQuiz).to respond_to(:all_destroyed) }
+  end
 
-  # scopes
-  it { expect(CourseModuleElementQuiz).to respond_to(:all_in_order) }
-  it { expect(CourseModuleElementQuiz).to respond_to(:all_destroyed) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:enough_questions?) }
-  it { should respond_to(:add_an_empty_question) }
-
-  it { should respond_to(:all_ids_random) }
-  it { should respond_to(:all_ids_ordered) }
-
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:destroyable_children) }
-
+  describe 'instance methods' do
+    it { should respond_to(:enough_questions?) }
+    it { should respond_to(:add_an_empty_question) }
+    it { should respond_to(:all_ids_random) }
+    it { should respond_to(:all_ids_ordered) }
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:destroyable_children) }
+  end
 
 end

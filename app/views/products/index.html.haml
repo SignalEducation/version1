@@ -1,64 +1,55 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.products.index.h1')
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'management_consoles/subscriptions_nav'
+.container
+  %header.management-console-section
+    %h1
+      =t('views.products.index.h1')
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-7.col-sm-4.l-margin-top
-          =link_to 'New Product', new_product_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+  %section.pb-7
+    =render partial: 'management_consoles/subscriptions_nav'
 
-          =link_to 'Mock Exams', mock_exams_url, class: 'btn btn-cyan', title: t('views.general.new_tooltip')
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              =link_to 'New Product', new_product_url, class: 'btn btn-primary btn-xs', title: t('views.general.new_tooltip')
+              =link_to 'Mock Exams', mock_exams_url, class: 'btn btn-secondary btn-xs', title: t('views.general.new_tooltip')
+
+            .col-sm
+              .search-container
+                =form_tag(products_url, method: :get, role: 'form', class: 'form-inline') do
+                  =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
 
 
-        .col-md-offset-2.col-md-3.l-margin-top
-          =form_tag(products_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline input-group-lg') do
-            .form-group.input-group.input-group-lg
-              =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-              .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-                %span.glyphicon.glyphicon-search
-
-        .col-md-12.l-margin-top-big
-          .table-box
-            .table-responsive
-              Please sort in blocks of the 3 currencies for each product
-              %table.table.sorted_table{data: {destination: products_url}, style: 'font-size: 18px;'}
-                %thead
-                  %tr
-                    %th=t('views.products.form.name')
-                    %th=t('views.products.form.active')
-                    %th=t('views.products.form.price')
-                    %th
-                    %th
-                %tbody
-                  -@products.all_in_order.each do |product|
-                    %tr{id: product.id}
-                      %td
-                        =product.name
-                        .small{style: 'font-size: 12px; color: #54a4ee;'}
-                          -if product.mock_exam
-                            =product.mock_exam.name
-                      %td=tick_or_cross(product.active)
-                      %td=number_in_local_currency(product.price, product.currency_id)
-                      %td
-                        =link_to 'Edit', edit_product_url(product), class: 'btn btn-cyan btn-small'
+          .table-responsive.pt-4
+            Please sort in blocks of the 3 currencies for each product
+            %table.table.sorted_table{data: {destination: products_url}}
+              %thead
+                %tr
+                  %th=t('views.products.form.name')
+                  %th=t('views.products.form.active')
+                  %th=t('views.products.form.price')
+                  %th
+                  %th
+              %tbody
+                -@products.all_in_order.each do |product|
+                  %tr{id: product.id}
+                    %td
+                      =product.name
+                      .small{style: 'font-size: 12px; color: #54a4ee;'}
                         -if product.mock_exam
-                          =link_to 'Mock', edit_mock_exam_url(product.mock_exam), class: 'btn btn-purple btn-small'
-                        -if product.destroyable?
-                          =link_to t('views.general.delete'), product, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
-                      %td
-                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+                          =product.mock_exam.name
+                    %td=tick_or_cross(product.active)
+                    %td=number_in_local_currency(product.price, product.currency_id)
+                    %td
+                      =link_to 'Edit', edit_product_url(product), class: 'btn btn-primary btn-xs'
+                      -if product.mock_exam
+                        =link_to 'Mock', edit_mock_exam_url(product.mock_exam), class: 'btn btn-secondary btn-xs'
+                      -if product.destroyable?
+                        =link_to t('views.general.delete'), product, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 
-:javascript
-  $(document).ready(function() {
-    $("#search").on('blur', function() {
-      $(this).parents('form').submit();
-    });
 
-  });

@@ -41,7 +41,6 @@ class QuizQuestion < ActiveRecord::Base
 
   # callbacks
   before_validation :set_course_module_element
-  before_save :set_subject_course_id
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order) }
@@ -67,7 +66,11 @@ class QuizQuestion < ActiveRecord::Base
   protected
 
   def at_least_one_answer_is_correct
-    if quiz_answers.any? && !quiz_answers.where(degree_of_wrongness: 'correct').any?
+    counter = 0
+    quiz_answers.each do |attrs|
+      counter += 1 if attrs[:degree_of_wrongness] == 'correct'
+    end
+    if counter == 0
       errors.add(:base, 'At least one answer must be marked as correct')
     end
   end
@@ -75,10 +78,6 @@ class QuizQuestion < ActiveRecord::Base
   def set_course_module_element
     self.course_module_element_id = self.course_module_element_quiz.try(:course_module_element_id)
     true
-  end
-
-  def set_subject_course_id
-    self.subject_course_id = self.course_module_element_quiz.course_module_element.parent.subject_course_id
   end
 
 end

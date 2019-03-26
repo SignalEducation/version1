@@ -1,16 +1,16 @@
 #flash_message{style: "#{@banner ? 'padding-top: 22px;' : 'padding-top: 0;'}"}
   -if flash[:notice]
-    .alert.alert-info
+    .alert.alert-primary
       =flash[:notice]
   -elsif flash[:success]
-    .alert.success
+    .alert.alert-success
       =flash[:success]
   -elsif flash[:alert]
-    .alert.warning
+    .alert.alert-warning
       =flash[:alert]
   -elsif flash[:warning]
-    .alert.warning
+    .alert.alert-warning
       =flash[:warning]
   -elsif flash[:error]
-    .alert.error
+    .alert.alert-error
       =flash[:error]

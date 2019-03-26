@@ -1,8 +1,188 @@
--@subscriptions.each do |subscription|
-  .sub-item
-    .row
-      .col-md-9
-        %h3= "#{subscription.exam_body} - #{subscription.subscription_plan.interval_name} (#{subscription.user_readable_status})"
-      .col-md-3
-        .action-links
-          =link_to 'View', subscription_path(subscription), class: 'btn btn-cyan'
+.box-item
+  -@subscriptions.each do |subscription|
+    .sub-item
+      .row
+        .col-md-9
+          %h3= "#{subscription.exam_body} - #{subscription.subscription_plan.interval_name} (#{subscription.user_readable_status})"
+        .col-md-3
+          .action-links
+            =link_to 'View', subscription_path(subscription), class: 'btn btn-cyan'
+
+
+-#.row
+  .col-sm-6.col-md-8
+    .col-sm-12
+      .col-md-6.col-sm-12
+        .h3
+          =t('views.user_accounts.subscription_info.subscription_status')
+        %p
+          =@current_subscription.state
+
+      .col-md-6.col-sm-12
+        .h3
+          =t('views.user_accounts.account_info.member_since')
+        %p
+          =humanize_datetime_full(@user.created_at)
+
+
+    -if @current_subscription.active_status?
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.start_of_billing')
+          %p
+            =humanize_datetime(@current_subscription.created_at)
+
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.next_billing_date')
+          %p
+            =humanize_stripe_date(@current_subscription.next_renewal_date)
+
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.next_billing_amount')
+          %p
+            =@current_subscription.billing_amount
+
+        .col-md-6.col-sm-12
+          -if @user.stripe_account_balance && @user.stripe_account_balance > 0
+            .h3
+              =t('views.user_accounts.subscription_info.stripe_account_balance')
+            %p
+              =@current_subscription.subscription_plan.currency.format_number(@user.stripe_account_balance / 100)
+
+
+
+    -elsif @current_subscription.canceled_pending_status?
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.start_of_billing')
+          %p
+            =humanize_datetime(@current_subscription.created_at)
+
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.current_billing_ending')
+          %p
+            -#TODO Ensure that next_renewal_date displays the date the sub will be canceled
+            =humanize_stripe_date(@current_subscription.next_renewal_date)
+
+
+
+
+
+    -elsif @current_subscription.canceled_status?
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.start_of_billing')
+          %p
+            =humanize_datetime(@current_subscription.created_at)
+
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.subscription_ended')
+          %p
+            -#TODO Ensure that next_renewal_date displays the date the sub was canceled
+            =humanize_stripe_date(@current_subscription.next_renewal_date)
+
+
+
+    -elsif @current_subscription.past_due_status?
+      -#TODO Added info about recent charge failure - next attempt to charge - consequences of failure to charge - if card expired suggest adding new card
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.start_of_billing')
+          %p
+            =humanize_datetime(@current_subscription.created_at)
+
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.subscription_ended')
+          %p
+            -#TODO Ensure that next_renewal_date displays the date the sub was canceled
+            =humanize_stripe_date(@current_subscription.next_renewal_date)
+
+
+
+
+    -elsif @current_subscription.unpaid_status?
+      -#TODO Add info that sub was set to unpaid due to repeated failed charges for one billing interval - user must create new subscription
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.start_of_billing')
+          %p
+            =humanize_datetime(@current_subscription.created_at)
+
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.next_billing_date')
+          %p
+            =humanize_stripe_date(@current_subscription.next_renewal_date)
+
+      .col-sm-12.l-margin-top-big
+        .col-md-6.col-sm-12
+          .h3
+            =t('views.user_accounts.subscription_info.next_billing_amount')
+          %p
+            =@current_subscription.billing_amount
+
+        .col-md-6.col-sm-12
+
+
+
+
+
+
+  .col-sm-6.col-md-4
+    -if @current_subscription.active?
+      -if !@current_subscription.paypal_token.present? && @user.default_card
+        =link_to account_change_plan_url do
+          .btn.btn-secondary.full-width.l-margin-bottom
+            =t('views.users.show.change_subscription_plan')
+
+      %a{data: {target: '#confirm-pause-modal', toggle: 'modal'}, href: '#', class: 'btn btn-orange full-width l-margin-bottom confirm-pause-modal'}
+        =t('views.users.show.pause_your_subscription_plan')
+
+      %a{data: {target: '#confirm-cancellation-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
+        =t('views.users.show.cancel_your_subscription_plan')
+
+    -elsif @current_subscription.paused?
+      =link_to subscriptions_suspension_path(id: @current_subscription.id), method: :delete do
+        .btn.btn-orange.full-width.l-margin-bottom
+          =t('views.users.show.confirm_subscription_reactivate')
+
+    -elsif @current_subscription.canceled_pending_status?
+
+      %h3=t('views.users.show.un_cancel_subscription.h3')
+      =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_subscription_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
+
+
+    -elsif @current_subscription.canceled_status?
+
+      %h3=t('views.users.show.reactivate_subscription.h3')
+      =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-primary full-width'
+
+
+
+    -elsif @current_subscription.past_due_status?
+      %a{data: {target: '#confirm-cancellation-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
+        =t('views.users.show.cancel_your_subscription_plan')
+
+
+  -if @current_subscription && @invoices
+    .col-sm-12.col-md-8.l-margin-top
+      %h2.l-margin-bottom-big.l-margin-top-big.text-center
+        =t('views.user_accounts.subscription_info.invoices')
+      .table-responsive
+        -@invoices.paginate(page: 1, per_page: 50).where('sub_total > 0').all_in_order
+        =render partial: 'invoices_index'
+
+=#render partial: 'confirm_cancellation_modal'
+=#render partial: 'confirm_pause_modal'
+

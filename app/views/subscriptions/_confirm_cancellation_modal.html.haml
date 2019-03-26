@@ -6,33 +6,33 @@
         .col-xs-11
           %h2
             ='Are you sure you want to cancel?'
-        .col-xs-1
-          %button.remodal-close{"data-remodal-action" => "close"}
 
-    .row{style: 'text-align: left;'}
-      .col-sm-12.l-margin-top
-        %p.h4
-          Don’t miss out on ACCA gold approved tuition and expert guidance which helps students worldwide pass their ACCA.
-        %p
-          If you cancel, you’ll miss out on unique gold approved learning tools that you can use any time, anywhere. Not to mention the ACCA Study Bootcamp, 24 hour tutor support, full exam schedules, practice questions and webinar week.
+        .modal-body
+          =render partial: 'layouts/error_messages', locals: {thing: @current_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
 
-        .row#cancellation_initial_options
-          .col-md-4
-            %a{data: {remodal: {action: 'close'}}, class: 'btn btn-cyan full-width l-margin-bottom'}
-              =t('views.users.show.keep_subscription')
-          .col-md-4
-            %a{data: {remodal: {target: 'confirm-pause-modal'}}, class: 'btn btn-orange full-width l-margin-bottom'}
-              PAUSE ACCOUNT
-          .col-md-4
-            %a{id: 'continue_cancelling_button', class: 'btn btn-red reduced-padding full-width l-margin-bottom'}
-              CONTINUE CANCELLING
+          .row
+            .col-sm-12.l-margin-top
+              %p.h4
+                Don’t miss out on ACCA gold approved tuition and expert guidance which helps students worldwide pass their ACCA.
+              %p
+                If you cancel, you’ll miss out on unique gold approved learning tools that you can use any time, anywhere. Not to mention the ACCA Study Bootcamp, 24 hour tutor support, full exam schedules, practice questions and webinar week.
 
-  #cancellation_completion
-    .row
-      .col-md-12
-        .col-xs-11
-          %h2
+              .row#cancellation_initial_options
+                .col-md-4
+                  .btn.btn-secondary.full-width.l-margin-bottom.modal-close{'data-dismiss': 'modal'}
+                    =t('views.users.show.keep_subscription')
+                .col-md-4
+                  %a{data: {remodal: {target: 'confirm-pause-modal'}}, class: 'btn btn-orange full-width l-margin-bottom'}
+                    PAUSE ACCOUNT
+                .col-md-4
+                  %a{id: 'continue_cancelling_button', class: 'btn btn-primary reduced-padding full-width l-margin-bottom'}
+                    CONTINUE CANCELLING
+
+      #cancellation_completion
+        .modal-header
+          %h3{id: 'confirmCancellationModal'}
             Complete cancellation
+
         .col-xs-1
           %button.remodal-close{"data-remodal-action" => "close"}
     .row.l-margin-top{style: 'text-align: left;'}

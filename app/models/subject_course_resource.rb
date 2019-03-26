@@ -15,9 +15,11 @@
 #  external_url             :string
 #  active                   :boolean          default(FALSE)
 #  sorting_order            :integer
+#  available_on_trial       :boolean          default(FALSE)
 #
 
 class SubjectCourseResource < ActiveRecord::Base
+
   # Constants
 
   # relationships
@@ -41,6 +43,33 @@ class SubjectCourseResource < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def available_for_subscription(user, exam_body_id)
+
+    if user.valid_subscription_for_exam_body?(exam_body_id)
+      {view: true, reason: nil}
+    else
+      self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+    end
+
+  end
+
+
+  def available_to_user(user, exam_body_id)
+    result = {view: false, reason: nil}
+
+    if user.standard_student_user?
+      result = available_for_subscription(user, exam_body_id)
+    else
+      result = {view: true, reason: nil}
+    end
+
+    result
+
+    # Return true/false and reason
+    # false will display lock icon
+    # reason will populate modal
+  end
+
   def destroyable?
     true
   end

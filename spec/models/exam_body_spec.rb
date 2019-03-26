@@ -14,6 +14,7 @@
 require 'rails_helper'
 
 describe ExamBody do
+
   subject { FactoryBot.build(:exam_body) }
 
   # Constants

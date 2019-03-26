@@ -14,17 +14,11 @@
 #  group_id                      :integer
 #  name                          :string
 #  home                          :boolean          default(FALSE)
-#  header_heading                :string
-#  header_paragraph              :text
-#  header_button_text            :string
-#  background_image              :string
-#  header_button_link            :string
-#  header_button_subtext         :string
+#  logo_image                    :string
 #  footer_link                   :boolean          default(FALSE)
 #  mailchimp_list_guid           :string
-#  mailchimp_section_heading     :string
-#  mailchimp_section_subheading  :string
-#  mailchimp_subscribe_section   :boolean          default(FALSE)
+#  form_section                  :boolean          default(FALSE), not null
+#  pricing_section               :boolean          default(FALSE), not null
 #
 
 FactoryBot.define do

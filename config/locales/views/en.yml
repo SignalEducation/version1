@@ -131,7 +131,6 @@ en:
       all_you_can_eat_yes: "Unlimited Access"
       all_courses: "Unlimited Courses"
       cancel_anytime: "Cancel Anytime"
-      submit: Sign Up Now
       actual_submit: Submit
       user_name: "Hi, "
       upload_csv: Upload CSV File
@@ -375,10 +374,39 @@ en:
         previous_attempts: Previous Attempts
         no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
 
+
+    course_sections:
+      form:
+        course_module_elements: Course Module Elements
+        subject_course_id: Course
+        name: Name
+        name_placeholder: Course Section (tab) Name
+        name_url: Name URL
+        name_url_placeholder: course-section-name
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+        counts_towards_completion: Counts towards Completion
+        assumed_knowledge: Assumed Knowledge
+
+      edit:
+        h1: Edit Course Section
+
+      index:
+        h1: Course Sections
+        delete: Delete Course Section
+
+      new:
+        h1: New Course Section
+
+      show:
+        h1: Course Section
+
     course_modules:
       form:
         course_module_elements: Course Module Elements
         subject_course_id: Course
+        course_section_id: Course Section (tab)
         name: Name
         name_placeholder: Course Module Name
         name_url: Name URL
@@ -426,7 +454,6 @@ en:
         name_url_placeholder: auto-populated-for-you
         temporary_label: Label
         temporary_label_placeholder: Temp Label
-        active: Active
         delete: Delete File
         description: Description
         description_placeholder: Description (This is optional)
@@ -436,6 +463,7 @@ en:
         course_module_id: Course module
         course_module_element_video_id: Course module element video id
         course_module_element_quiz_id: Course module element quiz id
+        related_course_module_element_id: Related Course Module Element
         sorting_order: Sorting order
         forum_topic_id: Forum topic
         created_at: Created at
@@ -506,7 +534,6 @@ en:
         time_allowed_placeholder: Time in Seconds
         new_scenario: New Scenario
         scenario_number: "Scenario #"
-        scenario_number: "Scenario #"
         type: Answer Template Type
 
         scenarios:
@@ -572,10 +599,6 @@ en:
       new:
         h1: New Course Tutor Details
 
-    subject_course_user_log:
-      show:
-        course: Course
-        completed_at: Completed At
 
     currencies:
       form:
@@ -638,9 +661,6 @@ en:
         csv_upload_modal:
           h1: Upload CSV File
           file: Upload CSV File
-
-        preview_csv:
-          h1: Upload Preview
 
         preview_csv:
           h1: Upload Preview
@@ -800,6 +820,7 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         course_count: No. of Courses
+        background_colour: Background Colour
         exam_body: Exam body
 
       index:
@@ -836,24 +857,11 @@ en:
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
         blog_posts: Blog Posts
-        header_heading: Header H1
-        header_heading_placeholder: Header H1 Text
-        header_paragraph: Header Paragraph
-        header_paragraph_placeholder: Header Paragraph Text
-        header_button_text: Header Button Text
-        header_button_text_placeholder: Header Button Text
-        header_button_link: Header Button Link
-        header_button_link_placeholder: Header Button Link
-        header_button_subtext: Header Button Subtext
-        header_button_subtext_placeholder: Header Button Subtext
-        background_image: Background Image
         mailchimp_list_guid: MailChimp List ID
         mailchimp_list_guid_placeholder: MailChimp List ID
-        mailchimp_subscribe_section: MailChimp Section
-        mailchimp_section_heading: MailChimp Section Heading Text
-        mailchimp_section_heading_placeholder: H1 Text
-        mailchimp_section_subheading: MailChimp Section Sub-Heading Text
-        mailchimp_section_subheading_placeholder: H2 Text
+        logo_image: Logo Image
+        form_section: Registration Form
+        pricing_section: Pricing Section
 
       index:
         h1: Landing Pages
@@ -869,8 +877,7 @@ en:
 
       sign_up_form:
         confirm_password: Confirm Password
-        submit: Get free course access
-        sign_up_for_free_trial: Sign up for your 7-day free trial
+        submit: Submit
         no_credit_card_needed: No credit card needed
         error_panel_caption: "prevented your Sign-Up from being completed:"
 
@@ -889,7 +896,6 @@ en:
         line_total_vat_amount: Total VAT
         line_total_inc_vat: Total
         status: 'Status'
-        vat_rate_id: "VAT rated"
         issued_at: "Issued at"
         date: Date
         subject_course: Course
@@ -965,8 +971,8 @@ en:
         question: Question
         quiz: Quiz
         quizzes: MCQs
-        steps: Steps
-        step: Step
+        lessons: Steps
+        lesson: Step
         mcq: MCQ
         mcqs: MCQs
         video: Video
@@ -1015,7 +1021,6 @@ en:
         product_type: Product Type
         subject_course: Course
         type: Type
-        currency: Currency
 
       index:
         h1: Products
@@ -1230,6 +1235,7 @@ en:
         registered: Registered
         exam_date: Select your Exam Date
         computer_based_exam_date: Select Computer Based Exam Date
+        select_exam_date: Select Exam Date
         exam_sitting_id: Select your Exam Sitting
         student_number: Student Number
         student_number_placeholder: Student Number
@@ -1296,6 +1302,7 @@ en:
         monthly_percentage_off: Optional monthly percentage saving
         previous_plan_price: Optional previous plan price
         active: Active
+        guid: Guid - autogenerated
 
       edit:
         h1: Edit Subscription Plan
@@ -1393,7 +1400,7 @@ en:
         new_password: New Password
         new_password_placeholder: New Password
         password_confirmation: Password Confirmation
-        password_confirmation_placeholder: Password Confirmation
+        password_confirmation_placeholder: Confirm Password
         address: Address
         address_placeholder: Billing address
         name_url: Name URL
@@ -1579,6 +1586,12 @@ en:
         remaning_minutes: Remaining Trial Minutes
         upgrade_button: Upgrade Account
 
+      account_info:
+        tab_heading: Account Info
+        member_since: Member Since
+        account_type: Account Type
+        upgrade_button: Upgrade Account
+
 
       subscription_info:
         tab_heading: Subscription Info
@@ -1672,12 +1685,12 @@ en:
 
       edit:
         h1: Reset your password
-        paragraph_1: "Enter a new password for your account:"
+        paragraph_1: Enter a new password for your account
 
       set_password:
         h1: Enter password
         h2: Complete Account Setup
-        paragraph_1: "The following information required to complete your account setup"
+        paragraph_1: The following information is required to complete your account setup
 
 
 

@@ -1,81 +1,71 @@
-.col-md-12
-  %h2
-    =@course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
-  .box-item.question-box.border-same-backcolor#quiz-contents
-    .btn.answer-correct.l-margin-top-big.l-margin-bottom-big.result-summary{style: 'border: 2px solid #4ACF4D;'}
-      &#60; Back to Results
-    #results
-      .row.l-margin-top.l-margin-bottom-big
-        .col-sm-8.col-md-offset-2
-          .col-sm-6.col-xs-12
-            .row
-              .col-sm-6
-                %h3.h4{style: 'font-size: 24px;'}
-                  ="Result: "
-              .col-sm-6
-                -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
-                %h3.h4{style: "font-size: 24px; color: #{result_colour}; text-transform: uppercase;"}
-                  =@pass
-          .col-sm-6.col-xs-12
-            .row
-              .col-sm-6
-                %h3.h4{style: 'font-size: 24px'}
-                  =t('views.courses.show_results.score')
-              .col-sm-6
-                %h3.h4{style: 'font-size: 24px;'}
-                  =@course_module_element_user_log.quiz_attempts.where(correct: true).count
-                  &#47;
-                  =@course_module_element_user_log.quiz_attempts.count
+.row.row-lg
+  .col-xl-12
+    %h1.h3
+      =@course_module_element_user_log.course_module_element.try(:name).try(:html_safe)
 
+    .box-item.question-box.quiz-results#quiz-contents
+      .btn.btn-secondary.answer-correct.mb-4
+        &#60; Back to Results
+      #results
+        %h3.h4
+          ="Result: "
+          -result_colour = @pass == 'Pass' ? '#00cc66' : '#EE5457'
+          %span{style: "color: #{result_colour};"}
+            =@pass
+
+        %h3.h4
+          =t('views.courses.show_results.score')
+          =@course_module_element_user_log.quiz_attempts.where(correct: true).count
+          &#47;
+          =@course_module_element_user_log.quiz_attempts.count
+
+
+
+        -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
+          .answer.mt-2{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
+            %p.text-inline.text-bold Question #{counter + 1}
+            %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
+
+            %p.l-margin-top-small.l-margin-bottom-small
+              -correct_answers = []; your_answer = 0
+              -attempt.answers.each_with_index do |qa, counter2|
+                -correct_answers << counter2 if qa.correct
+                -your_answer = counter2 if qa.id == attempt.quiz_answer_id
+              -if correct_answers.count > 1
+                %p.text-inline
+                  Correct Answers:
+                  &#160;
+                -correct_answers.each_with_index do |correct_answer, counter3|
+                  -if counter3 == (correct_answers.count - 1)
+                    %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
+                  -else
+                    %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s + ' &')
+              -else
+                %p.text-inline
+                  Correct Answer:
+                  &#160;
+                %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answers.first].to_s)
+              %p.text-inline
+                &#160;
+                &bull;
+                &#160;
+                =' Your Answer:'
+                &#160;
+              %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
 
 
 
       -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-        .answer.l-margin-top-small{class: attempt.correct ? 'answer-correct' : 'answer-failed', id: "#{counter}", onclick: 'showSolution.call(this); return false;'}
-          %p.text-inline.text-bold Question #{counter + 1}
-          %i.text-inline{style: 'font-size: 25px; float: right'}=tick_or_cross attempt.try(:correct)
-
-          %p.l-margin-top-small.l-margin-bottom-small
-            -correct_answers = []; your_answer = 0
-            -attempt.answers.each_with_index do |qa, counter2|
-              -correct_answers << counter2 if qa.correct
-              -your_answer = counter2 if qa.id == attempt.quiz_answer_id
-            -if correct_answers.count > 1
-              %p.text-inline
-                Correct Answers:
-                &#160;
-              -correct_answers.each_with_index do |correct_answer, counter3|
-                -if counter3 == (correct_answers.count - 1)
-                  %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s)
-                -else
-                  %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answer].to_s + ' &')
-            -else
-              %p.text-inline
-                Correct Answer:
-                &#160;
-              %p.text-inline.text-bold=(('A'..'Z').to_a[correct_answers.first].to_s)
-            %p.text-inline
-              &#160;
-              &bull;
-              &#160;
-              =' Your Answer:'
-              &#160;
-            %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
+        -if attempt
+          =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
 
 
 
-    -@course_module_element_user_log.quiz_attempts.each_with_index do |attempt, counter|
-      -if attempt
-        =render partial: 'courses/show_solution', locals: {attempt: attempt, counter: counter}
+    -if @course_module_element
+      .cme-nav.box-item.question-box
+        .cme-nav
+          =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
 
-
-
-  -if @course_module_element
-    .cme-nav.box-item.question-box.border-same-backcolor{style: 'padding-right: 40px;'}
-      .cme-nav.hidden-xs
-        =render partial: 'courses/cme_nav', locals: {cme: @course_module_element}
-      .cme-nav.hidden-sm.hidden-md.hidden-lg
-        =render partial: 'courses/small_cme_nav', locals: {cme: @course_module_element}
 
   :javascript
 

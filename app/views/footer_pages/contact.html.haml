@@ -1,33 +1,16 @@
-=render partial: 'layouts/external_banner'
-.hero-library
-  .l-wrap-small
-    =render partial: 'layouts/transparent_navbar'
-    .l-section-footer-pages
-      .container-fluid
-        .row
-          .col-md-6.col-md-offset-3
-            %h1.h1.h-white.h-separator.h-separator-center.text-center
-              Contact Us
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row
-        .col-md-12
-          .col-md-6.l-margin-top
-            %h4
-              Complaints
-            %p
-              LearnSignal is committed to providing a high-quality service.  If anything is wrong, we would like to hear from you.  Any complaints that you have should be made as soon as they occur so that we may correct the problem with minimum interference to your study.
-            %p
-              After you have completed the form below, you should receive immediate confirmation of your submission.  You should expect an individual response within 48 hours.  After this, all communication will be replied to within five days until the issue is resolved.  Should you encounter any problem with this process, you can email unresolved@learnsignal.com.  Please include a copy of any previous correspondence.
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.hero-section-external
+        %h1.h1-mega
+          Contact Us
 
-            .visible-xs.visible-sm.l-margin-bottom-big
-              %a{data: {remodal: {target: 'complaints-modal'}}, class: 'btn btn-cyan btn-wide'}
-                Complaints Process
 
-          .col-md-6.l-margin-top
+      %section.pb-md-6.pb-5
+        .row
+          .col-sm-12.col-md-6
             %h4
               Contact Us
             %p
@@ -35,43 +18,24 @@
 
             %p
               If you couldn’t find the answer to your question in either of these places, we would love to help.  Please click on the button below and one of the members of our support team will be in touch with you shortly.
-            .visible-xs.visible-sm.l-margin-bottom-big
-              %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'btn btn-purple btn-wide'}
+
+            .mt-4
+              %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
                 Contact Us
 
+          .col-sm-12.col-md-6
+            %h4
+              Complaints
+            %p
+              LearnSignal is committed to providing a high-quality service.  If anything is wrong, we would like to hear from you.  Any complaints that you have should be made as soon as they occur so that we may correct the problem with minimum interference to your study.
+            %p
+              After you have completed the form below, you should receive immediate confirmation of your submission.  You should expect an individual response within 48 hours.  After this, all communication will be replied to within five days until the issue is resolved.  Should you encounter any problem with this process, you can email unresolved@learnsignal.com.  Please include a copy of any previous correspondence.
 
-        .col-md-12.hidden-xs.hidden-sm
-          .col-md-6.l-margin-top
-            %a{data: {remodal: {target: 'complaints-modal'}}, class: 'btn btn-cyan btn-wide'}
-              Complaints Process
-
-          .col-md-6.l-margin-top
-            %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'btn btn-purple btn-wide'}
-              Contact Us
+            .mt-4
+              %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#complaints-modal", "data-toggle" => "modal", :href => "#"}
+                Complaints Process
 
 
-
-
-        -#.col-md-12
-          %hr/
-          %h2.h-separator.h-separator-center.text-center
-            LearnSignal Newsletter
-          %h4.text-center.l-margin-top-big.l-margin-bottom
-            Get fortnightly ACCA insider knowledge
-          %br/
-          .col-sm-12.text-center
-            #response
-              =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-                .row
-                  .col-md-4.col-md-offset-1.col-sm-6
-                    .form-group
-                      =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control'})
-                  .col-md-4.col-sm-6
-                    .form-group
-                      =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control'})
-                  .col-md-2.col-md-offset-0.col-sm-4.col-sm-offset-4
-                    .form-group
-                      %button.lsbtn.s{:type => "submit"} Subscribe
 
 =render partial: 'complaints_form_modal'
 =render partial: 'contact_us_form_modal'

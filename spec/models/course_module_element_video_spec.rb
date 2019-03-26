@@ -15,29 +15,30 @@
 require 'rails_helper'
 
 describe CourseModuleElementVideo do
-  # relationships
-  it { should belong_to(:course_module_element) }
 
-  # validation
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
+  describe 'relationships' do
+    it { should belong_to(:course_module_element) }
+  end
 
-  it { should validate_presence_of(:vimeo_guid) }
-  it { should validate_length_of(:vimeo_guid).is_at_most(255) }
+  describe 'validations' do
+    it { should validate_presence_of(:course_module_element_id).on(:update) }
+    it { should validate_presence_of(:vimeo_guid) }
+    it { should validate_length_of(:vimeo_guid).is_at_most(255) }
+    it { should validate_presence_of(:duration) }
+  end
 
-  it { should validate_presence_of(:duration) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
+  describe 'scopes' do
+    it { expect(CourseModuleElementVideo).to respond_to(:all_in_order) }
+    it { expect(CourseModuleElementVideo).to respond_to(:all_destroyed) }
+  end
 
-  # scopes
-  it { expect(CourseModuleElementVideo).to respond_to(:all_in_order) }
-  it { expect(CourseModuleElementVideo).to respond_to(:all_destroyed) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:parent) }
-
-  it { should respond_to(:destroyable?) }
+  describe 'instance methods' do
+    it { should respond_to(:parent) }
+    it { should respond_to(:destroyable?) }
+  end
 
 end

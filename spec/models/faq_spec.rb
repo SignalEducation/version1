@@ -18,6 +18,7 @@
 require 'rails_helper'
 
 describe Faq do
+
   subject { FactoryBot.build(:faq) }
 
   # Constants

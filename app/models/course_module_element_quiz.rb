@@ -23,7 +23,8 @@ class CourseModuleElementQuiz < ActiveRecord::Base
   belongs_to :course_module_element, optional: true
   has_many :quiz_questions
 
-  accepts_nested_attributes_for :quiz_questions, reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }
+  accepts_nested_attributes_for :quiz_questions,
+                                reject_if: lambda {|attributes| quiz_question_fields_blank?(attributes) }
 
   # validation
   validates :course_module_element_id, presence: true, on: :update

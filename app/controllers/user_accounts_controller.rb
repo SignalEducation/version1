@@ -9,10 +9,14 @@ class UserAccountsController < ApplicationController
     @referral_code = @user.referral_code
     @enrollments = current_user.active_enrollments_in_sitting_order
 
-    #@enrollments = @user.enrollments.all_in_account_order.sort_by { |enrollment| enrollment.active ? 0 : 1 }
-    if current_user.student_access
-      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-      @subscriptions = @user.subscriptions.order(:active, created_at: :desc)
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    @subscriptions = @user.subscriptions.order(:active, created_at: :desc)
+
+    @invoices = @user.invoices
+    @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)
+
+    ExamBody.where.not(id: @exam_body_user_details.map(&:exam_body_id)).all.each do |exam_body|
+      @user.exam_body_user_details.build(exam_body_id: exam_body.id)
     end
 
     #Restoring errors that could arise for user updating personal details in modal
@@ -43,7 +47,7 @@ class UserAccountsController < ApplicationController
   def update_exam_body_user_details
     if @user && @user.update_attributes(exam_body_user_allowed_params)
       flash[:success] = I18n.t('controllers.users.update_exam_body_details.flash.success')
-      redirect_to course_special_link(@user.enrollments.last.subject_course)
+      redirect_to request.referrer
     else
       session[:user_exam_body_errors] = @user.errors unless @user.errors.empty?
       redirect_to request.referrer
@@ -91,12 +95,19 @@ class UserAccountsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number,
-    :unsubscribed_from_emails)
+    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth,
+                                 :unsubscribed_from_emails, exam_body_user_details_attributes: [
+                                                                              :id,
+                                                                              :exam_body_id,
+                                                                              :student_number]
+    )
   end
 
   def exam_body_user_allowed_params
-    params.require(:user).permit(:date_of_birth, :student_number)
+    params.require(:user).permit(:date_of_birth, exam_body_user_details_attributes: [
+        :id,
+        :exam_body_id,
+        :student_number])
   end
 
   def get_variables

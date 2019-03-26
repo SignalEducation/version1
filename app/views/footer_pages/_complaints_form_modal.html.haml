@@ -1,33 +1,32 @@
-.remodal{"data-remodal-id" => "complaints-modal"}
-  .row
-    .col-md-12
-      %button.remodal-close{"data-remodal-action" => "close"}
-      .col-md-12
-        %h2
+.modal.fade{id: 'complaints-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'complaintsModal', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
+
+      .modal-header
+        %h3.mb-3{id: 'complaintsModal'}
           Complaints Process
 
-  .row.l-margin-top
-    .col-sm-12.l-margin-top.text-left
-      =form_tag(complaints_intercom_url, {class: 'form', role: 'form', name: 'complaints_intercom_form'}) do
-        .col-md-12
-          .col-md-6
-            =label_tag :full_name, 'Name'
-            =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name', required: true
-            %br/
-          .col-md-6
-            =label_tag :email, 'Email'
-            =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address', required: true
 
-          .col-md-12
-            =label_tag :body, 'Please Describe Your Issue'
-            =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue', required: true
+      .modal-body
+        =form_tag(complaints_intercom_url, {class: 'form py-2', role: 'form', name: 'complaints_intercom_form'}) do
+          .row
+            .col-sm-6
+              .form-group
+                =label_tag :full_name, 'Name'
+                =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name'
 
-        .col-sm-12.l-margin-top
-          .col-sm-12
-            =submit_tag 'Submit', class: 'btn btn-red l-margin-right-big l-padding-side-3x'
+            .col-sm-6
+              .form-group
+                =label_tag :email, 'Email'
+                =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address'
 
-:javascript
+            .col-sm-12
+              .form-group
+                =label_tag :body, 'Please Describe Your Issue'
+                =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue'
 
-  $(document).on('confirmation', '.remodal', function () {
-    document.forms['complaints_intercom_form'].submit();
-  });
+          .pt-2
+            =submit_tag 'Submit', class: 'btn btn-primary btn-sm'

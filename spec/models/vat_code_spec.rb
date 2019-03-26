@@ -14,6 +14,7 @@
 require 'rails_helper'
 
 describe VatCode do
+
   # relationships
   it { should belong_to(:country) }
   it { should have_many(:vat_rates) }

@@ -16,30 +16,31 @@ require 'rails_helper'
 
 describe ContentPageSection do
 
-  # relationships
-  it { should belong_to(:content_page) }
-
-  # validation
-  it 'is invalid without a product' do
-    expect(build_stubbed(:content_page_section, content_page: nil)).not_to be_valid
+  describe 'relationships' do
+    it { should belong_to(:content_page) }
+    it { should belong_to(:subject_course) }
   end
 
-  it { should validate_presence_of(:text_content) }
+  describe 'validations' do
+    it 'is invalid without a product' do
+      expect(build_stubbed(:content_page_section, content_page: nil)).not_to be_valid
+    end
 
-  it { should validate_presence_of(:panel_colour) }
+    it { should validate_presence_of(:text_content) }
+    it { should validate_presence_of(:panel_colour) }
+    it { should validate_presence_of(:sorting_order) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  # scopes
-  it { expect(ContentPageSection).to respond_to(:all_in_order) }
+  describe 'scopes' do
+    it { expect(ContentPageSection).to respond_to(:all_in_order) }
+  end
 
-  # class methods
-  #it { expect(ContentPageSection).to respond_to(:method_name) }
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+  end
 
 end

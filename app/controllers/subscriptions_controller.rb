@@ -41,9 +41,9 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
-    if !current_user.preferred_exam_body.present?
+    if !current_user.preferred_exam_body.present? && !params[:exam_body_id]
       redirect_to edit_preferred_exam_body_path
-    elsif current_user.trial_or_sub_user?
+    elsif current_user.standard_student_user?
       @plans, country = get_relevant_subscription_plans
       @yearly_plan = @plans.yearly.first
       if params[:prioritise_plan_frequency].present?
@@ -51,13 +51,18 @@ class SubscriptionsController < ApplicationController
           user_id: current_user.id,
           subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
         )
+      elsif params[:plan_guid].present?
+        @subscription = Subscription.new(
+          user_id: current_user.id,
+          subscription_plan_id: @plans.where(guid: params[:plan_guid].to_s).first.id || @plans.where(payment_frequency_in_months: 12).first.id
+        )
       else
         @subscription = Subscription.new(
           user_id: current_user.id,
-          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 3)&.first&.id
+          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
         )
       end
-      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
+      #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     else
       redirect_to root_url
     end
@@ -112,18 +117,13 @@ class SubscriptionsController < ApplicationController
   end
 
   def personal_upgrade_complete
-    @subscription = current_user.current_subscription
+    @subscription = current_user.subscriptions.last
   end
 
   def change_plan
-    if current_user && current_user.trial_user?
-      redirect_to new_subscription_url
-    elsif current_user && current_user.subscription_user? && current_user.current_subscription && !current_user.current_subscription.active_status?
-      redirect_to account_url(anchor: :subscriptions)
-    else
-      @current_subscription = current_user.current_subscription
-      @subscription_plans = @current_subscription.upgrade_options
-    end
+    # TODO change plan must know what plan
+    #@current_subscription = current_user.current_subscription
+    @subscription_plans = @current_subscription.upgrade_options
   end
 
   def un_cancel_subscription
@@ -171,7 +171,7 @@ class SubscriptionsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
 
-    if current_user.trial_or_sub_user?
+    if current_user.standard_student_user?
       redirect_to account_url(anchor: 'subscriptions')
     else
       redirect_to user_subscription_status_url(@subscription.user)
