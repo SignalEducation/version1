@@ -41,7 +41,8 @@ class CourseSection < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  before_save :set_count_fields, :sanitize_name_url
+  before_save :sanitize_name_url
+  before_update :set_count_fields
   after_update :update_parent
 
   # scopes
