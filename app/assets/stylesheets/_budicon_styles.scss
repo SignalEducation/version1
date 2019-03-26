@@ -5,8 +5,8 @@
  */
 @font-face {
   font-family: budicon-classic;
-  src: url(icons/budicon_classic.eot?jdete2);
-  src: url(icons/budicon_classic.eot?jdete2#iefix) format("embedded-opentype"),url(icons/budicon_classic.ttf?jdete2) format("truetype"),url(icons/budicon_classic.woff?jdete2) format("woff"),url(icons/budicon_classic.svg?jdete2#budicon-classic) format("svg");
+  src: asset-url('icons/budicon_classic.eot?jdete2');
+  src: asset-url('icons/budicon_classic.eot?jdete2#iefix') format("embedded-opentype"),asset-url('icons/budicon_classic.ttf?jdete2') format("truetype"),asset-url('icons/budicon_classic.woff?jdete2') format("woff"),asset-url('icons/budicon_classic.svg?jdete2#budicon-classic') format("svg");
   font-weight: 400;
   font-style: normal
 }
