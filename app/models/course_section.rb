@@ -37,7 +37,7 @@ class CourseSection < ActiveRecord::Base
   validates :name, presence: true
   validates :name_url, presence: true, uniqueness: { scope: :subject_course,
                                  message: "must be unique within a course" }
-  validates :sorting_order, presence: true
+  #validates :sorting_order, presence: true
 
   # callbacks
   before_destroy :check_dependencies
