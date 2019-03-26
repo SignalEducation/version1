@@ -15,20 +15,11 @@
 class PaypalWebhook < ActiveRecord::Base
   serialize :payload, Hash
 
-  # Constants
-
-  # relationships
-
-  # validation
   validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :event_type, :payload, presence: true
 
-  # callbacks
   before_destroy :check_dependencies
 
-  # class methods
-
-  # instance methods
   def destroyable?
     true
   end
@@ -62,6 +53,10 @@ class PaypalWebhook < ActiveRecord::Base
     else
       update!(verified: false)
     end
+  end
+
+  def reprocess
+    PaypalWebhookReprocessWorker.perform_async(id)    
   end
 
   private
