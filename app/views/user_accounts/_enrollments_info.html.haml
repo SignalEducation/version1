@@ -1,38 +1,13 @@
-.box-item
+%article.card
+  .card-body
+    %h2.mb-4.text-gray2 Enrollments
 
-  .row
-    .col-sm-12
-      .table-responsive
-        %table.table
-          %thead
-            %tr
-              %th
-                Course
-              %th
-                Exam Sitting
-              %th
-                Status
-              %th
-                Progress
-              %th
-          %tbody
-            -@enrollments.each do |enrollment|
-              %tr
-                %td
-                  -if enrollment.subject_course
-                    =enrollment.subject_course.name
-                %td
-                  -if enrollment.exam_sitting_id
-                    -if enrollment.computer_based_exam && enrollment.subject_course.computer_based
-                      =exam_sitting_date(enrollment.exam_date)
-                    -else
-                      =exam_sitting_date(enrollment.exam_sitting.date) if enrollment.exam_sitting.date
-                %td
-                  =enrollment.status
-                %td
-                  =enrollment.percentage_complete.to_s + '%'
-                %td
-                  -unless enrollment.expired
-                    =link_to edit_enrollment_url(enrollment) do
-                      .btn.btn-secondary.btn-small.pull-right
-                        Edit
+    -@enrollments.each do |enrollment|
+      %article.card.mb-4
+        .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
+          %h4.mb-sm-0.mr-4.text-gray2
+            =enrollment.subject_course.name
+          .ml-auto
+            =link_to 'Edit Details', '#', 'data-target' => "#enrollment-edit-modal-#{enrollment.id}", 'data-toggle' => 'modal', class: 'btn btn-secondary btn-sm'
+
+        =render partial: 'edit_enrollment', enrollment: enrollment

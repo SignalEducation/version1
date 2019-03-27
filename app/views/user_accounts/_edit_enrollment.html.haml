@@ -1,0 +1,41 @@
+-#.modal.fade{id: "enrollment-edit-modal-#{enrollment.id}", "aria-hidden" => "true", "aria-labelledby" => "enrollment-edit-modal-#{enrollment.id}", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
+      .modal-header
+        %h3.text-gray2.mb-4{class: "enrollmentEdit-#{enrollment.id}"}
+          =enrollment.subject_course.name
+      .modal-body
+        %form.py-2
+          .py-3
+            %label Edit End Date
+            .form-row
+              .col-sm-5
+                .form-group.mb-3.mb-sm-4.m-sm-form-group
+                  %select.custom-select
+                    %option{:selected => "selected", :value => "january"} January
+                    %option{:value => "february"} February
+                    %option{:value => "november"} November
+                    %option{:value => "december"} December
+              .col-6.col-sm-3
+                .form-group
+                  %select.custom-select
+                    %option{:selected => "selected", :value => "1"} 01
+                    %option{:value => "2"} 02
+                    %option{:value => "29"} 29
+                    %option{:value => "30"} 30
+              .col-6.col-sm-4
+                .form-group
+                  %select.custom-select
+                    %option{:value => "1996"} 1996
+                    %option{:value => "2001"} 2001
+                    %option{:value => "2009"} 2009
+                    %option{:selected => "selected", :value => "2018"} 2018
+          .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+            %div
+              %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
+            %div
+              %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
+

@@ -22,10 +22,10 @@
               %li.nav-item
                 %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
                   Account Info
-              -if @orders.any?
-                %li.nav-item
-                  %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
-                    Orders
+              -#if @orders.any?
+              %li.nav-item
+                %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
+                  Orders
               %li.nav-item
                 %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
                   Enrollments
@@ -42,199 +42,11 @@
             #account-info.tab-pane.tab-account.tab-account-info{"aria-labelledby" => "account-info-tab", :role => "tabpanel"}
               =render partial: 'account_info'
 
+            #orders.tab-pane.tab-account.tab-order{"aria-labelledby" => "orders-tab", :role => "tabpanel"}
+              =render partial: 'orders_info'
 
             #enrollments.tab-pane.tab-account.tab-enrollment{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
-              %article.card
-                .card-body
-                  %h2.mb-4.text-gray2 Enrollments
-                  %article.card.mb-4
-                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
-                      %h4.mb-sm-0.mr-4.text-gray2 Strategic Business Leader (SBL)
-                      .ml-auto
-                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-324234234", "data-toggle" => "modal"} Edit Details
-                    #enrollment-edit-modal-324234234.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-324234234", :role => "dialog", :tabindex => "-1"}
-                      .modal-dialog{:role => "document"}
-                        .modal-content
-                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
-                            %span.sr-only Close Modal
-                            %i.material-icons{"aria-hidden" => "true"} close
-                          .modal-header
-                            %h3#enrollmentEdit-324234234.text-gray2.mb-4 Strategic Business Leader (SBL)
-                          .modal-body
-                            %form.py-2
-                              .py-3
-                                %label Edit End Date
-                                .form-row
-                                  .col-sm-5
-                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "january"} January
-                                        %option{:value => "february"} February
-                                        %option{:value => "november"} November
-                                        %option{:value => "december"} December
-                                  .col-6.col-sm-3
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "1"} 01
-                                        %option{:value => "2"} 02
-                                        %option{:value => "29"} 29
-                                        %option{:value => "30"} 30
-                                  .col-6.col-sm-4
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:value => "1996"} 1996
-                                        %option{:value => "2001"} 2001
-                                        %option{:value => "2009"} 2009
-                                        %option{:selected => "selected", :value => "2018"} 2018
-                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
-                                %div
-                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
-                                %div
-                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
-                  %article.card.mb-4
-                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
-                      %h4.mb-sm-0.mr-4.text-gray2 Advanced Audit and Assurance (AAA)
-                      .ml-auto
-                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-fwe2f3fesf", "data-toggle" => "modal"} Edit Details
-                    #enrollment-edit-modal-fwe2f3fesf.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-fwe2f3fesf", :role => "dialog", :tabindex => "-1"}
-                      .modal-dialog{:role => "document"}
-                        .modal-content
-                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
-                            %span.sr-only Close Modal
-                            %i.material-icons{"aria-hidden" => "true"} close
-                          .modal-header
-                            %h3#enrollmentEdit-fwe2f3fesf.text-gray2.mb-4 Advanced Audit and Assurance (AAA)
-                          .modal-body
-                            %form.py-2
-                              .py-3
-                                %label Edit End Date
-                                .form-row
-                                  .col-sm-5
-                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "january"} January
-                                        %option{:value => "february"} February
-                                        %option{:value => "november"} November
-                                        %option{:value => "december"} December
-                                  .col-6.col-sm-3
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "1"} 01
-                                        %option{:value => "2"} 02
-                                        %option{:value => "29"} 29
-                                        %option{:value => "30"} 30
-                                  .col-6.col-sm-4
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:value => "1996"} 1996
-                                        %option{:value => "2001"} 2001
-                                        %option{:value => "2009"} 2009
-                                        %option{:selected => "selected", :value => "2018"} 2018
-                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
-                                %div
-                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
-                                %div
-                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
-                  %article.card.mb-4
-                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
-                      %h4.mb-sm-0.mr-4.text-gray2 Taxation (TX-UK)
-                      .ml-auto
-                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-32df23fsef", "data-toggle" => "modal"} Edit Details
-                    #enrollment-edit-modal-32df23fsef.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-32df23fsef", :role => "dialog", :tabindex => "-1"}
-                      .modal-dialog{:role => "document"}
-                        .modal-content
-                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
-                            %span.sr-only Close Modal
-                            %i.material-icons{"aria-hidden" => "true"} close
-                          .modal-header
-                            %h3#enrollmentEdit-32df23fsef.text-gray2.mb-4 Taxation (TX-UK)
-                          .modal-body
-                            %form.py-2
-                              .py-3
-                                %label Edit End Date
-                                .form-row
-                                  .col-sm-5
-                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "january"} January
-                                        %option{:value => "february"} February
-                                        %option{:value => "november"} November
-                                        %option{:value => "december"} December
-                                  .col-6.col-sm-3
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "1"} 01
-                                        %option{:value => "2"} 02
-                                        %option{:value => "29"} 29
-                                        %option{:value => "30"} 30
-                                  .col-6.col-sm-4
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:value => "1996"} 1996
-                                        %option{:value => "2001"} 2001
-                                        %option{:value => "2009"} 2009
-                                        %option{:selected => "selected", :value => "2018"} 2018
-                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
-                                %div
-                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
-                                %div
-                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
-                  %article.card.mb-4
-                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
-                      %h4.mb-sm-0.mr-4.text-gray2 Advanced Taxation (ATX-UK)
-                      .ml-auto
-                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-df4f4ff4sf", "data-toggle" => "modal"} Edit Details
-                    #enrollment-edit-modal-df4f4ff4sf.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-df4f4ff4sf", :role => "dialog", :tabindex => "-1"}
-                      .modal-dialog{:role => "document"}
-                        .modal-content
-                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
-                            %span.sr-only Close Modal
-                            %i.material-icons{"aria-hidden" => "true"} close
-                          .modal-header
-                            %h3#enrollmentEdit-df4f4ff4sf.text-gray2.mb-4 Advanced Taxation (ATX-UK)
-                          .modal-body
-                            %form.py-2
-                              .py-3
-                                %label Edit End Date
-                                .form-row
-                                  .col-sm-5
-                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "january"} January
-                                        %option{:value => "february"} February
-                                        %option{:value => "november"} November
-                                        %option{:value => "december"} December
-                                  .col-6.col-sm-3
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:selected => "selected", :value => "1"} 01
-                                        %option{:value => "2"} 02
-                                        %option{:value => "29"} 29
-                                        %option{:value => "30"} 30
-                                  .col-6.col-sm-4
-                                    .form-group
-                                      %select.custom-select
-                                        %option{:value => "1996"} 1996
-                                        %option{:value => "2001"} 2001
-                                        %option{:value => "2009"} 2009
-                                        %option{:selected => "selected", :value => "2018"} 2018
-                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
-                                %div
-                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
-                                %div
-                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
-
-
-            #orders.tab-pane.tab-account.tab-order{"aria-labelledby" => "orders-tab", :role => "tabpanel"}
-              %article.card
-                .card-body
-                  %h2.mb-4.text-gray2 Orders
-                  %article.card.mb-4
-                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
-                      %h4.mb-sm-0.mr-4.text-gray2 Order #1
-                      .ml-auto
-                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-324234234", "data-toggle" => "modal"} Edit Details
-
+              =render partial: 'enrollments_info'
 
             #referral-program.tab-pane.tab-account.tab-referral-program{"aria-labelledby" => "referral-program-tab", :role => "tabpanel"}
               %article.card.mb-4
