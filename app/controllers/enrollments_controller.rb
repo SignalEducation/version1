@@ -56,7 +56,6 @@ class EnrollmentsController < ApplicationController
   def update
     @enrollment = Enrollment.find(params[:id])
 
-
     if @enrollment.update_attributes(allowed_params)
       flash[:success] = t('controllers.enrollments.update.flash.success')
       redirect_to account_url(anchor: :enrollments)

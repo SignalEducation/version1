@@ -12,9 +12,6 @@ sitemap :site do
   end
 
 
-  #Pricing page
-  last_updated_plan = SubscriptionPlan.generally_available.for_students.all_active.all_in_update_order.last
-  url pricing_url, last_mod: last_updated_plan.updated_at, change_freq: 'monthly', priority: 1.0
 
   #Tutor Profile pages
   User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil).each do |tutor|

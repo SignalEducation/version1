@@ -1235,8 +1235,10 @@ en:
         registered: Registered
         exam_date: Select your Exam Date
         computer_based_exam_date: Select Computer Based Exam Date
+        edit_exam_date: Edit Exam Date
         select_exam_date: Select Exam Date
         exam_sitting_id: Select your Exam Sitting
+        edit_exam_sitting: Change Sitting
         student_number: Student Number
         student_number_placeholder: Student Number
         notifications: Receive Notifications
@@ -1633,9 +1635,9 @@ en:
         heading: Change your password
         current_password: Current password
         current_password_placeholder: Current password
-        new_password: New Password
+        new_password: "New Password (6 chars min.)"
         new_password_placeholder: New Password
-        password_confirmation: Password confirmation
+        password_confirmation: Confirm New Password
         password_confirmation_placeholder: Password confirmation
 
 
