@@ -10,4 +10,4 @@
           .ml-auto
             =link_to 'Edit Details', '#', 'data-target' => "#enrollment-edit-modal-#{enrollment.id}", 'data-toggle' => 'modal', class: 'btn btn-secondary btn-sm'
 
-        =render partial: 'edit_enrollment', enrollment: enrollment
+        =render partial: 'edit_enrollment', locals: {enrollment: enrollment}

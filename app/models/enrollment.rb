@@ -157,6 +157,11 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
+  def alternate_exam_sittings
+    ExamSitting.where(active: true, computer_based: false, subject_course_id: subject_course.id,
+                                       exam_body_id: subject_course.exam_body_id).all_in_order
+  end
+
   def sibling_enrollments
     self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
