@@ -10,14 +10,17 @@ class UserAccountsController < ApplicationController
     @enrollments = current_user.active_enrollments_in_sitting_order
 
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-    @subscriptions = @user.subscriptions.order(:active, created_at: :desc)
+    @default_payment_card = @subscription_payment_cards.all_default_cards.first
+    @subscriptions = @user.subscriptions.all_active.order(created_at: :desc)
 
     @invoices = @user.invoices
     @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)
 
-    ExamBody.where.not(id: @exam_body_user_details.map(&:exam_body_id)).all.each do |exam_body|
-      @user.exam_body_user_details.build(exam_body_id: exam_body.id)
-    end
+    #ExamBody.where.not(id: @exam_body_user_details.map(&:exam_body_id)).all.each do |exam_body|
+    #  #TODO - limit this to only exam bodies that have sittings (not CPD)
+      # and where enrolments exist for this user
+    #  @user.exam_body_user_details.build(exam_body_id: exam_body.id)
+    #end
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
@@ -60,7 +63,7 @@ class UserAccountsController < ApplicationController
       redirect_to account_url
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
-      redirect_to account_url(anchor: 'change-password-modal')
+      redirect_to account_url
     end
   end
 

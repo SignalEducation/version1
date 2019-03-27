@@ -582,6 +582,12 @@ textarea.form-control {
   background-color: rgba(40,167,69,.9);
   border-radius: 0
 }
+.custom-date-select select:nth-child(1){
+  margin-right: 10px;
+}
+.custom-date-select select:nth-child(2){
+  margin-right: 10px;
+}
 
 .custom-select.is-valid,
 .form-control.is-valid,
@@ -1735,7 +1741,57 @@ textarea.form-control {
   color: #fff;
   background-color: #00b67b
 }
-
+.nav-tabs.nav-tabs-vertical {
+  border: 1px solid #e1e8ed;
+  background-color: #fff
+}
+.nav-tabs.nav-tabs-vertical .nav-item {
+  display: block;
+  width: 100%
+}
+.nav-tabs.nav-tabs-vertical .nav-item:last-child .nav-link {
+  border-bottom: 0 none
+}
+.nav-tabs.nav-tabs-vertical .nav-link {
+  padding: .825rem 1.3rem;
+  padding-top: 1.025rem;
+  border-bottom: 1px solid #e1e8ed;
+  font-weight: 400
+}
+.nav-tabs.nav-tabs-vertical .nav-link.active {
+  font-weight: 600;
+  border-color: #e1e8ed;
+  position: relative;
+  padding-right: -webkit-calc(24px + .5rem + 1.025rem);
+  padding-right: calc(24px + .5rem + 1.025rem)
+}
+.nav-tabs.nav-tabs-vertical .nav-link.active::after {
+  content: '\e313';
+  width: auto;
+  height: auto;
+  margin-left: .1rem;
+  font-family: 'Material Icons';
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+  vertical-align: middle;
+  border: 0 none
+}
+.nav-tabs.nav-tabs-vertical .nav-link.active::after {
+  position: absolute;
+  right: 1.025rem;
+  margin-top: -.1rem
+}
+.nav-tabs.nav-tabs-vertical .nav-link.active::after {
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg)
+}
+.nav-tabs.nav-tabs-vertical .nav-link.focus,
+.nav-tabs.nav-tabs-vertical .nav-link:focus {
+  border-color: #e1e8ed
+}
 
 
 
@@ -2050,7 +2106,7 @@ textarea.form-control {
 }
 .alert-error {
   color: #fff;
-  background-color: #dc3545;
+  background-color: #fd5c63;
 }
 .alert-error .alert-link {
   color: #fff
@@ -6279,6 +6335,51 @@ input[type="radio"] {
     background: $mint;
     color: #fff;
   }
+}
+
+.badge {
+  display: inline-block;
+  padding: .2rem .4rem;
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0;
+  color: #657786;
+  background-color: #f5f8fa
+}
+@media (min-width:576px) {
+  .badge {
+    padding: .2rem .4rem;
+    padding-top: -webkit-calc(.2rem + .1rem);
+    padding-top: calc(.2rem + .1rem)
+  }
+}
+.badge-primary {
+  background-color: rgba(0,182,123,.1)
+}
+.badge-secondary {
+  background-color: rgba(0,0,0,.1)
+}
+.badge-success {
+  background-color: rgba(0,182,123,.1)
+}
+.badge-info {
+  background-color: rgba(119,94,173,.1)
+}
+.badge-warning {
+  background-color: rgba(240,202,40,.1)
+}
+.badge-danger {
+  background-color: rgba(253,92,99,.1)
+}
+.badge-light {
+  background-color: rgba(245,248,250,.1)
+}
+.badge-dark {
+  background-color: rgba(60,72,88,.1)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

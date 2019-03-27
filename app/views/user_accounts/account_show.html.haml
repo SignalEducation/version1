@@ -1,56 +1,251 @@
-%main
-  %article.bg-white
-    .container
-      %header
-        .pt-7.pb-4
-          %h1.h1-hero
+%article.account.bg-white
+  .container
+    %header
+      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-5.py-md-6
+        .mw-0
+          %h1.mb-0.h1-hero.mr-2 Profile
+        .mw-0
+          %h5.mb-0.text-gray2
             =@user.full_name
 
+  -if flash[:success] || flash[:warning] || flash[:error]
+    =render partial: 'layouts/flash_messages'
+  .bg-gray5.py-5
+    .container
+      .row.row-md
+        .col-lg-2-7
+          %nav.mb-4.account-nav
+            %ul#accountTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
+              %li.nav-item
+                %a#personal-info-tab.nav-link.active{"aria-controls" => "personal-info", "aria-selected" => "true", "data-toggle" => "tab", :href => "#personal-info", :role => "tab"}
+                  Personal Info
+              %li.nav-item
+                %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
+                  Account Info
+              -if @orders.any?
+                %li.nav-item
+                  %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
+                    Orders
+              %li.nav-item
+                %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                  Enrollments
+              %li.nav-item
+                %a#referral-program-tab.nav-link{"aria-controls" => "referral-program", "aria-selected" => "false", "data-toggle" => "tab", :href => "#referral-program", :role => "tab"}
+                  Referral Program
 
-.bg-gray5
-  .container.py-5.py-sm-6
-    -if flash[:success] || flash[:warning] || flash[:error]
-      =render partial: 'layouts/flash_messages'
+        .col-lg-5-7
+          #accountTabsContent.tab-content
 
-    %section.pb-md-6
-      .row
-        .col-sm-12.col-md-3
-          %nav.dashboard-tabs
-            %ul.nav.nav-tabs{id: 'dashboardTabs', role: 'tablist'}
-              %li
-                %a.active{href: '#personal-details', role: 'tab', data: {toggle: 'tab'}, aria: {controls: 'personal-details', selected: 'true'}}
-                  =t('views.user_accounts.personal_info.tab_heading')
-              -if @user.standard_student_user?
-                %li
-                  %a{href: '#subscriptions', role: 'tab', data: {toggle: 'tab'}, aria: {controls: 'subscriptions', selected: 'false'}}
-                    =t('views.user_accounts.subscription_info.tab_heading')
-
-              -if @user.standard_student_user? && @subscription_payment_cards.any?
-                %li
-                  %a{href: '#payment-details', role: 'tab', data: {toggle: 'tab'}, aria: {controls: 'payment-details', selected: 'false'}}
-                    =t('views.user_accounts.payment_details.tab_heading')
-
-              -if @user.standard_student_user? && @orders.any?
-                %li
-                  %a{href: '#orders', role: 'tab', data: {toggle: 'tab'}, aria: {controls: 'orders', selected: 'false'}}
-                    =t('views.user_accounts.orders_info.tab_heading')
-
-              %li
-                %a{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}, aria: {controls: 'enrollments', selected: 'false'}}
-                  =t('views.user_accounts.enrollments_info.tab_heading')
-
-              -if @user.referral_code
-                %li
-                  %a{href: '#referral', role: 'tab', data: {toggle: 'tab'}, aria: {controls: 'referral', selected: 'false'}}
-                    =t('views.user_accounts.referral_info.tab_heading')
-
-
-
-        .col-sm-12.col-md-9
-          .dashboardTabsContent
-            .tab-pane{id: 'personal-details', class: "tab-personal-details active show", "aria-labelledby" => "tab-personal-details", :role => "tabpanel"}
+            #personal-info.tab-pane.show.active.tab-account.tab-personal-info{"aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
               =render partial: 'personal_info'
 
+            #account-info.tab-pane.tab-account.tab-account-info{"aria-labelledby" => "account-info-tab", :role => "tabpanel"}
+              =render partial: 'account_info'
+
+
+            #enrollments.tab-pane.tab-account.tab-enrollment{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+              %article.card
+                .card-body
+                  %h2.mb-4.text-gray2 Enrollments
+                  %article.card.mb-4
+                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
+                      %h4.mb-sm-0.mr-4.text-gray2 Strategic Business Leader (SBL)
+                      .ml-auto
+                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-324234234", "data-toggle" => "modal"} Edit Details
+                    #enrollment-edit-modal-324234234.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-324234234", :role => "dialog", :tabindex => "-1"}
+                      .modal-dialog{:role => "document"}
+                        .modal-content
+                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+                            %span.sr-only Close Modal
+                            %i.material-icons{"aria-hidden" => "true"} close
+                          .modal-header
+                            %h3#enrollmentEdit-324234234.text-gray2.mb-4 Strategic Business Leader (SBL)
+                          .modal-body
+                            %form.py-2
+                              .py-3
+                                %label Edit End Date
+                                .form-row
+                                  .col-sm-5
+                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "january"} January
+                                        %option{:value => "february"} February
+                                        %option{:value => "november"} November
+                                        %option{:value => "december"} December
+                                  .col-6.col-sm-3
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "1"} 01
+                                        %option{:value => "2"} 02
+                                        %option{:value => "29"} 29
+                                        %option{:value => "30"} 30
+                                  .col-6.col-sm-4
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:value => "1996"} 1996
+                                        %option{:value => "2001"} 2001
+                                        %option{:value => "2009"} 2009
+                                        %option{:selected => "selected", :value => "2018"} 2018
+                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+                                %div
+                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
+                                %div
+                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
+                  %article.card.mb-4
+                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
+                      %h4.mb-sm-0.mr-4.text-gray2 Advanced Audit and Assurance (AAA)
+                      .ml-auto
+                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-fwe2f3fesf", "data-toggle" => "modal"} Edit Details
+                    #enrollment-edit-modal-fwe2f3fesf.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-fwe2f3fesf", :role => "dialog", :tabindex => "-1"}
+                      .modal-dialog{:role => "document"}
+                        .modal-content
+                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+                            %span.sr-only Close Modal
+                            %i.material-icons{"aria-hidden" => "true"} close
+                          .modal-header
+                            %h3#enrollmentEdit-fwe2f3fesf.text-gray2.mb-4 Advanced Audit and Assurance (AAA)
+                          .modal-body
+                            %form.py-2
+                              .py-3
+                                %label Edit End Date
+                                .form-row
+                                  .col-sm-5
+                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "january"} January
+                                        %option{:value => "february"} February
+                                        %option{:value => "november"} November
+                                        %option{:value => "december"} December
+                                  .col-6.col-sm-3
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "1"} 01
+                                        %option{:value => "2"} 02
+                                        %option{:value => "29"} 29
+                                        %option{:value => "30"} 30
+                                  .col-6.col-sm-4
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:value => "1996"} 1996
+                                        %option{:value => "2001"} 2001
+                                        %option{:value => "2009"} 2009
+                                        %option{:selected => "selected", :value => "2018"} 2018
+                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+                                %div
+                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
+                                %div
+                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
+                  %article.card.mb-4
+                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
+                      %h4.mb-sm-0.mr-4.text-gray2 Taxation (TX-UK)
+                      .ml-auto
+                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-32df23fsef", "data-toggle" => "modal"} Edit Details
+                    #enrollment-edit-modal-32df23fsef.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-32df23fsef", :role => "dialog", :tabindex => "-1"}
+                      .modal-dialog{:role => "document"}
+                        .modal-content
+                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+                            %span.sr-only Close Modal
+                            %i.material-icons{"aria-hidden" => "true"} close
+                          .modal-header
+                            %h3#enrollmentEdit-32df23fsef.text-gray2.mb-4 Taxation (TX-UK)
+                          .modal-body
+                            %form.py-2
+                              .py-3
+                                %label Edit End Date
+                                .form-row
+                                  .col-sm-5
+                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "january"} January
+                                        %option{:value => "february"} February
+                                        %option{:value => "november"} November
+                                        %option{:value => "december"} December
+                                  .col-6.col-sm-3
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "1"} 01
+                                        %option{:value => "2"} 02
+                                        %option{:value => "29"} 29
+                                        %option{:value => "30"} 30
+                                  .col-6.col-sm-4
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:value => "1996"} 1996
+                                        %option{:value => "2001"} 2001
+                                        %option{:value => "2009"} 2009
+                                        %option{:selected => "selected", :value => "2018"} 2018
+                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+                                %div
+                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
+                                %div
+                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
+                  %article.card.mb-4
+                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
+                      %h4.mb-sm-0.mr-4.text-gray2 Advanced Taxation (ATX-UK)
+                      .ml-auto
+                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-df4f4ff4sf", "data-toggle" => "modal"} Edit Details
+                    #enrollment-edit-modal-df4f4ff4sf.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "enrollmentEdit-df4f4ff4sf", :role => "dialog", :tabindex => "-1"}
+                      .modal-dialog{:role => "document"}
+                        .modal-content
+                          %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+                            %span.sr-only Close Modal
+                            %i.material-icons{"aria-hidden" => "true"} close
+                          .modal-header
+                            %h3#enrollmentEdit-df4f4ff4sf.text-gray2.mb-4 Advanced Taxation (ATX-UK)
+                          .modal-body
+                            %form.py-2
+                              .py-3
+                                %label Edit End Date
+                                .form-row
+                                  .col-sm-5
+                                    .form-group.mb-3.mb-sm-4.m-sm-form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "january"} January
+                                        %option{:value => "february"} February
+                                        %option{:value => "november"} November
+                                        %option{:value => "december"} December
+                                  .col-6.col-sm-3
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:selected => "selected", :value => "1"} 01
+                                        %option{:value => "2"} 02
+                                        %option{:value => "29"} 29
+                                        %option{:value => "30"} 30
+                                  .col-6.col-sm-4
+                                    .form-group
+                                      %select.custom-select
+                                        %option{:value => "1996"} 1996
+                                        %option{:value => "2001"} 2001
+                                        %option{:value => "2009"} 2009
+                                        %option{:selected => "selected", :value => "2018"} 2018
+                              .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
+                                %div
+                                  %button.btn.btn-primary.float-left.mb-2{:type => "submit"} Save Changes
+                                %div
+                                  %button.btn.btn-secondary.float-right.mb-2{:type => "submit"} Cancel
+
+
+            #orders.tab-pane.tab-account.tab-order{"aria-labelledby" => "orders-tab", :role => "tabpanel"}
+              %article.card
+                .card-body
+                  %h2.mb-4.text-gray2 Orders
+                  %article.card.mb-4
+                    .card-body.card-body-sm.d-flex.flex-wrap.flex-sm-nowrap.align-items-center
+                      %h4.mb-sm-0.mr-4.text-gray2 Order #1
+                      .ml-auto
+                        %button.btn.btn-secondary.btn-sm{"data-target" => "#enrollment-edit-modal-324234234", "data-toggle" => "modal"} Edit Details
+
+
+            #referral-program.tab-pane.tab-account.tab-referral-program{"aria-labelledby" => "referral-program-tab", :role => "tabpanel"}
+              %article.card.mb-4
+                .card-body
+                  %h2.text-gray2 Referral Program
+                  %p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                  %p Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+        -#.col-sm-12.col-md-9
+          .dashboardTabsContent
             -if @user.standard_student_user?
               .tab-pane{id: 'subscriptions', class: "tab-subscriptions", "aria-labelledby" => "tab-subscriptions", :role => "tabpanel"}
                 =render partial: 'subscription_info'
@@ -74,5 +269,21 @@
 
 
 =render partial: 'add_card_modal'
-=render partial: 'student_user_form'
-=render partial: 'change_password'
+
+:javascript
+    $(document).ready(function(){
+
+      hash = window.location.hash;
+      elements = $('a[href="' + hash + '"]');
+      if (elements.length === 0) {
+        let selectedTab = $(".account-nav a:first");
+        selectedTab.click();
+      } else {
+        elements.click();
+        setTimeout(function() {
+            window.scrollTo(0, 0);
+        }, 1);
+
+      }
+
+    });

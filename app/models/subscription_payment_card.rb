@@ -240,6 +240,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     false
   end
 
+  def expiry_date
+    expiry_month.to_s + '/' + expiry_year.to_s
+  end
+
   protected
 
   def remove_card_from_stripe

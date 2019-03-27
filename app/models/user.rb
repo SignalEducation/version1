@@ -563,7 +563,7 @@ class User < ActiveRecord::Base
   end
 
   def full_name
-    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
+    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').gsub('O\' ','O\'')
   end
 
   def get_currency(country)

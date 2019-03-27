@@ -386,6 +386,10 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def user_readable_name
+    subscription_plan.exam_body.name + ' ' + subscription_plan.interval_name + ' Subscription'
+  end
+
   def stripe?
     stripe_guid.present?
   end
