@@ -76,7 +76,7 @@ class SubscriptionsController < ApplicationController
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral
-        redirect_to personal_upgrade_complete_url
+        redirect_to personal_upgrade_complete_url, notice: 'Your subscription is confirmed!'
       elsif subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
       end
