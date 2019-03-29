@@ -5,34 +5,25 @@
         %h1.h1-hero.pt-5
           =t('views.dashboard.student.h1')
 
+      %section.pb-md-6.pt-4
+        .row.row-md
+          .col-lg-2-7
+            %nav.mb-4.account-nav
+              %ul#dashboardTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
+                %li.nav-item
+                  %a#enrollments-tab.nav-link.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                    Enrolments
+                %li.nav-item
+                  %a#activity-tab.nav-link{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                    Other Activity
 
-      %section.pb-md-6
+          .col-lg-5-7
+            #accountTabsContent.tab-content
 
-        .row.tabs
-          .col-sm-12.col-md-3
-            .dashboard-tabs
-              %ul
-                %li
-                  %a.active{href: '#enrollments', role: 'tab', data: {toggle: 'tab'}}
-                    Active Enrolments
-                -if @expired_enrollments
-                  %li
-                    %a{href: '#activity', role: 'tab', data: {toggle: 'tab'}}
-                      Expired Enrolments
-
-          .col-sm-12.col-md-9
-            .dashboard-tab-content
-              .tab.dashboard-tab#enrollments
+              #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
                 =render partial: 'enrollments'
 
-              -if @expired_enrollments
-                .tab.dashboard-tab#activity
-                  =render partial: 'activity'
+              #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                =render partial: 'activity'
 
 
-
-:javascript
-  $(document).ready(function(){
-    // Tabs
-    $('.tabs').tabs();
-  });
