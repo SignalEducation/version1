@@ -13,7 +13,7 @@
     %p
       ='(This counts towards the students trial limit)'
 
-  %br/
+
   -unless constructed_response.object.new_record?
-    .pt-4
-      =link_to 'Additional Resources', course_module_element_course_module_element_resources_url(f.object.id), class: 'btn btn-red'
+    .pt-2.pb-2
+      =link_to 'Additional Resources', course_module_element_course_module_element_resources_url(f.object.id), class: 'btn btn-secondary'

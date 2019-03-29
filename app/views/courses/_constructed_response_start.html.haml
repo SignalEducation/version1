@@ -19,15 +19,15 @@
             %li='Keep track of time to get into the exam mindset from your first attempt – roughly 1.8 minutes per mark'
             %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
-          .l-margin-top
-            -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
-              %h6.l-margin-bottom
-                ='Help/Formulae Sheets'
-              -@course_module_element.course_module_element_resources.each do |resource|
-                .col-sm-6{style: 'margin-bottom: 5px;'}
-                  =link_to resource.upload.url, target: '_blank' do
-                    .btn.btn-secondary.btn-cyan.full-width
-                      =resource.name
+
+          -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
+            %h6.pb-3.pt-3
+              ='Help/Formulae Sheets'
+            -@course_module_element.course_module_element_resources.each do |resource|
+              .col-sm-6
+                =link_to resource.upload.url, target: '_blank' do
+                  .btn.btn-secondary
+                    =resource.name
 
         .col-sm.text-center
           =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.course_section.subject_course.name_url,
@@ -54,8 +54,8 @@
 
 
           -if @course_module_element_user_logs && @course_module_element_user_logs.any?
-            .table-responsive.l-margin-top-big
-              %table.table{style: 'font-size: 18px;'}
+            .table-responsive.pt-3
+              %table.table
                 %thead
                   %tr
                     %th='Previous Responses'

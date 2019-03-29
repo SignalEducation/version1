@@ -342,6 +342,18 @@ code {
   word-break: break-word
 }
 
+// Browser text highlight color
+/* Mozilla based browsers */
+::-moz-selection {
+  background-color: #00b67B;
+  color: #fff;
+}
+
+/* Works in Safari */
+::selection {
+  background-color: #00b67B;
+  color: #fff;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3. Container & Table

@@ -125,7 +125,6 @@ class CoursesController < ApplicationController
   def update_constructed_response_user_log
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
 
-    #TODO - this is failing
     respond_to do |format|
       #update_columns ?? to stop callback chain will be called on final submit
       if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
@@ -139,13 +138,14 @@ class CoursesController < ApplicationController
 
   def submit_constructed_response_user_log
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @subject_course_user_log = @course_module_element_user_log.subject_course_user_log
 
     @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
     @constructed_response_attempt.update_attributes(status: 'Completed')
 
     @course_module_element_user_log.update_attributes(element_completed: true)
 
-    redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log)
+    redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log.subject_course.group.exam_body_id, @subject_course_user_log)
   end
 
   private

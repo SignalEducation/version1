@@ -24,7 +24,7 @@ class CourseModuleElementResource < ActiveRecord::Base
 
   # relationships
   belongs_to :course_module_element
-  has_attached_file :upload, default_url: 'images/missing_image.jpg'
+  has_attached_file :upload
 
   # validation
   validates :course_module_element_id, presence: true, on: :update

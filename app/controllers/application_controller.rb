@@ -303,6 +303,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
+
         permission = the_thing.available_to_user(current_user, exam_body_id, scul)
         if permission[:view]
           course_url(
