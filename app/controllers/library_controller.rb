@@ -28,7 +28,7 @@ class LibraryController < ApplicationController
     @form_type = "Course Tutor Question. Course: #{@course.name}"
     @course_tutor_details = @course.course_tutor_details.all_in_order
 
-    if @course && !@course.preview
+    if @course && @exam_body.active && !@course.preview
       if current_user
         if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
           # Find the latest SCUL record for this user/course
