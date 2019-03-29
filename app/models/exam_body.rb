@@ -2,16 +2,17 @@
 #
 # Table name: exam_bodies
 #
-#  id            :integer          not null, primary key
-#  name          :string
-#  url           :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  modal_heading :string
-#  modal_text    :text
+#  id           :integer          not null, primary key
+#  name         :string
+#  url          :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  active       :boolean          default(FALSE), not null
+#  has_sittings :boolean          default(FALSE), not null
 #
 
 class ExamBody < ActiveRecord::Base
+  has_one :group
   has_many :enrollments
   has_many :exam_sittings
   has_many :subject_courses
@@ -25,6 +26,8 @@ class ExamBody < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:name) }
+  scope :all_active, -> { where(active: true) }
+  scope :all_with_sittings, -> { where(has_sittings: true) }
 
   # instance methods
   def destroyable?

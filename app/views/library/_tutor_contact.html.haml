@@ -19,17 +19,17 @@
               .col-sm-6
                 .form-group
                   =label_tag :full_name, 'Name'
-                  =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name', required: true
+                  =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name'
 
               .col-sm-6
                 .form-group
                   =label_tag :email, 'Email'
-                  =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address', required: true
+                  =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address'
 
               .col-sm-12
                 .form-group
                   =label_tag :question, 'Question'
-                  =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question', required: true
+                  =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question'
             .pt-2
               =submit_tag 'Send The Question', class: 'btn btn-primary btn-sm'
 

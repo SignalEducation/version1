@@ -9,6 +9,7 @@ class CoursesController < ApplicationController
     @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
     @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
     @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
+    @group = @course.group
 
     if @course_module_element.is_quiz
       set_up_quiz
@@ -125,7 +126,6 @@ class CoursesController < ApplicationController
   def update_constructed_response_user_log
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:course_module_element_user_log][:id])
 
-    #TODO - this is failing
     respond_to do |format|
       #update_columns ?? to stop callback chain will be called on final submit
       if @course_module_element_user_log.update_attributes(constructed_response_allowed_params)
@@ -139,13 +139,14 @@ class CoursesController < ApplicationController
 
   def submit_constructed_response_user_log
     @course_module_element_user_log = CourseModuleElementUserLog.find(params[:cmeul_id])
+    @subject_course_user_log = @course_module_element_user_log.subject_course_user_log
 
     @constructed_response_attempt = @course_module_element_user_log.constructed_response_attempt
     @constructed_response_attempt.update_attributes(status: 'Completed')
 
     @course_module_element_user_log.update_attributes(element_completed: true)
 
-    redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log)
+    redirect_to course_special_link(@course_module_element_user_log.course_module_element, @subject_course_user_log.subject_course.group.exam_body_id, @subject_course_user_log)
   end
 
   private
@@ -351,7 +352,7 @@ class CoursesController < ApplicationController
 
     unless @course && @course.active && @course_section && @course_section.active && @course_module &&
         @course_module.active && @course_module_element && @course_module_element.active &&
-        current_user && @course_module_element.available_to_user(current_user, @subject_course_user_log)[:view]
+        current_user && @course_module_element.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)[:view]
 
       flash[:warning] = 'Sorry, you are not permitted to access that content. '
       redirect_to library_special_link(@course)

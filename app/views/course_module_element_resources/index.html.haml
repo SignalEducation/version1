@@ -1,37 +1,35 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.course_module_element_resources.index.index_h1')
+.container
+  %header.management-console-section
+    %h1
+      =t('views.course_module_element_resources.index.index_h1')
 
-      .row
-        .col-md-12
-          =link_to 'Return', edit_course_module_element_url(@course_module_element.id), class: 'btn btn-cyan'
-          =link_to t('views.course_module_element_resources.new.new_button'), new_course_module_element_course_module_element_resource_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+  %section.pb-7
+    .row
+      .col-md-12
+        =link_to 'Return', edit_course_module_element_url(@course_module_element.id), class: 'btn btn-primary'
+        =link_to t('views.course_module_element_resources.new.new_button'), new_course_module_element_course_module_element_resource_url, class: 'btn btn-secondary'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top
-          .table-box
-            .table-responsive
-              %table.table.sorted_table{data: {destination: ''}}
-                %thead
-                  %tr
-                    %th=t('views.course_module_element_resources.form.name')
-                    %th=t('views.course_module_element_resources.form.type')
-                    %th
-                    %th
-                %tbody
-                  -@course_module_element_resources.each do |resource|
-                    %tr{id: resource.id}
-                      %td=resource.name
-                      %td=resource.type
-                      %td
-                        =link_to t('views.general.show'), resource.upload.url, target: '_blank', class: 'btn btn-purple btn-small'
-                        =link_to t('views.general.edit'), edit_course_module_element_course_module_element_resource_url(resource.course_module_element_id, resource.id), class: 'btn btn-cyan btn-small'
-                        -if resource.destroyable?
-                          =link_to t('views.general.delete'), course_module_element_course_module_element_resource_path(resource.course_module_element_id, resource.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
-                      %td
-                        %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+    .row.pt-4
+      .col-md-12
+        .box-item
+          .table-responsive
+            %table.table.sorted_table{data: {destination: ''}}
+              %thead
+                %tr
+                  %th=t('views.course_module_element_resources.form.name')
+                  %th=t('views.course_module_element_resources.form.type')
+                  %th
+                  %th
+              %tbody
+                -@course_module_element_resources.each do |resource|
+                  %tr{id: resource.id}
+                    %td=resource.name
+                    %td=resource.type
+                    %td
+                      =link_to t('views.general.show'), resource.upload.url, target: '_blank', class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.edit'), edit_course_module_element_course_module_element_resource_url(resource.course_module_element_id, resource.id), class: 'btn btn-secondary btn-xs'
+                      -if resource.destroyable?
+                        =link_to t('views.general.delete'), course_module_element_course_module_element_resource_path(resource.course_module_element_id, resource.id), method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-danger btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 

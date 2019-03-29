@@ -242,7 +242,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
 
   # Library Navigation Links
   def library_special_link(the_thing)
-    if the_thing.class == (Group || ExamBody)
+    if the_thing.class == (Group)
       the_thing = the_thing
       library_group_url(
                   the_thing.name_url
@@ -282,7 +282,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   helper_method :navigation_special_link
 
 
-  def course_special_link(the_thing, scul=nil)
+  def course_special_link(the_thing, exam_body_id, scul=nil)
     if the_thing.class == SubjectCourse
       library_course_url(
           the_thing.parent.name_url,
@@ -303,7 +303,8 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
       )
     elsif the_thing.class == CourseModuleElement
       if current_user
-        permission = the_thing.available_to_user(current_user, scul)
+
+        permission = the_thing.available_to_user(current_user, exam_body_id, scul)
         if permission[:view]
           course_url(
               the_thing.course_module.course_section.subject_course.name_url,
@@ -350,7 +351,7 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   helper_method :subscription_checkout_special_link
 
   def seo_title_maker(seo_title, seo_description, seo_no_index)
-    @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
+    @seo_title = seo_title.to_s.truncate(65) || 'Professional Finance Courses Online| LearnSignal'
     @seo_description = seo_description.to_s.truncate(156)
     @seo_no_index = seo_no_index
   end

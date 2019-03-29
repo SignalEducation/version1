@@ -17,7 +17,7 @@
                   %th='Active'
                   %th
               %tbody
-                -@subject_course.course_sections.each do |course_section|
+                -@subject_course.course_sections.all_in_order.each do |course_section|
                   %tr{id: course_section.id, data: {parent: @subject_course.id}}
                     %td=course_section.name
                     %td=tick_or_cross(course_section.active)

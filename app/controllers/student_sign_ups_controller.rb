@@ -66,6 +66,10 @@ class StudentSignUpsController < ApplicationController
 
   def new
     @navbar = true
+    seo_title_maker('Free Basic Plan Registration | LearnSignal',
+                    'Register for our basic membership plan to access to your essential course materials and discover the smarter way to study with learnsignal.',
+                    false)
+
   end
 
   def create
@@ -88,7 +92,8 @@ class StudentSignUpsController < ApplicationController
       if flash[:plan_guid]
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
       else
-        redirect_to library_special_link(@user.preferred_exam_body)
+        group = Group.where(exam_body_id: @user.preferred_exam_body_id).all_active.all_in_order.first
+        redirect_to library_special_link(group)
       end
 
     elsif request && request.referrer

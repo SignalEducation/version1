@@ -1,6 +1,4 @@
-.col-md-12
-
-  -#%h2=@course_module_element.try(:name)
+.col-sm-12
   .scenario-box-nav.scenario-box-nav-header
     .cr-navigation
       .cr-navigation-left
@@ -9,7 +7,7 @@
           %li.cr-nav-link#open-calculator-dialog{onclick: 'openCalculatorDialog(); return false;'}
             .k-icon.k-i-calculator
             ='Calculator'
-          %li.cr-nav-link.hidden#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
+          %li.cr-nav-link.d-none#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
             .k-icon.k-i-calculator
             ='Calculator'
 
@@ -18,7 +16,7 @@
           %li.cr-nav-link#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
             .k-icon.k-i-track-changes-enable
             ='Scratch Pad'
-          %li.cr-nav-link.hidden#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
+          %li.cr-nav-link.d-none#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
             .k-icon.k-i-track-changes-enable
             ='Scratch Pad'
 
@@ -35,7 +33,7 @@
 
           &#124;
           %li
-            =link_to course_special_link(@course_module_element, @subject_course_user_log), class: 'cr-nav-link' do
+            =link_to course_special_link(@course_module_element, @group.exam_body_id, @subject_course_user_log), class: 'cr-nav-link' do
               -# Add 'Confirm' Modal
               ='Exit'
 
@@ -91,9 +89,9 @@
                   -elsif sa_attempt.text_editor?
                     =render partial: 'courses/text_editor_template', locals: {scenario_answer_attempt: scenario_answer_attempt, sq_attempt: sq_attempt, sa_attempt: sa_attempt}
 
-            .submission-pane-content.hidden
+            .submission-pane-content.d-none
               .table-responsive.l-margin-top
-                %table.table{style: 'font-size: 18px;'}
+                %table.table
                   %thead
                     %tr
                       %th='Question'
@@ -135,7 +133,7 @@
             %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
               .glyphicon.glyphicon-screenshot
               ='Navigation'
-            %li.cr-nav-link.hidden#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
+            %li.cr-nav-link.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
               .glyphicon.glyphicon-screenshot
               ='Navigation'
             &#124;
@@ -194,7 +192,7 @@
     var outerBox = $("#splitter").parent().parent().parent();
     var outerSplitter = $("#splitter").data("kendoSplitter");
     var browserWindow = $(window);
-    var headerFooterHeight = $(".nav-header").height() + 110;
+    var headerFooterHeight = $(".navbar.fixed-top").height() + 210;
 
     function resizeSplitter() {
         outerBox.height(browserWindow.height() - headerFooterHeight);
@@ -257,8 +255,8 @@
   }
   function updateText(){
     $("#course_module_element_user_log_constructed_response_attempt_attributes_scratch_pad_text").val(scratchPadEditor.value());
-    $("#open-scratch-pad-dialog").removeClass('hidden');
-    $("#close-scratch-pad-dialog").addClass('hidden');
+    $("#open-scratch-pad-dialog").removeClass('d-none');
+    $("#close-scratch-pad-dialog").addClass('d-none');
   }
 
 
@@ -268,51 +266,51 @@
 
   function openNavDialog() {
     navDialog.open();
-    $("#open-navigation-dialog").addClass('hidden');
-    $("#close-navigation-dialog").removeClass('hidden');
+    $("#open-navigation-dialog").addClass('d-none');
+    $("#close-navigation-dialog").removeClass('d-none');
   };
 
   function closeNavDialog() {
     navDialog.close();
-    $("#open-navigation-dialog").removeClass('hidden');
-    $("#close-navigation-dialog").addClass('hidden');
+    $("#open-navigation-dialog").removeClass('d-none');
+    $("#close-navigation-dialog").addClass('d-none');
   };
 
 
   function openScratchPadDialog() {
     scratchPadDialog.open();
-    $("#open-scratch-pad-dialog").addClass('hidden');
-    $("#close-scratch-pad-dialog").removeClass('hidden');
+    $("#open-scratch-pad-dialog").addClass('d-none');
+    $("#close-scratch-pad-dialog").removeClass('d-none');
   };
 
   function closeScratchPadDialog() {
     scratchPadDialog.close();
-    $("#open-scratch-pad-dialog").removeClass('hidden');
-    $("#close-scratch-pad-dialog").addClass('hidden');
+    $("#open-scratch-pad-dialog").removeClass('d-none');
+    $("#close-scratch-pad-dialog").addClass('d-none');
   };
 
   function openCalculatorDialog() {
     calculatorDialog.open();
-    $("#open-calculator-dialog").addClass('hidden');
-    $("#close-calculator-dialog").removeClass('hidden');
+    $("#open-calculator-dialog").addClass('d-none');
+    $("#close-calculator-dialog").removeClass('d-none');
   };
 
   function closeCalculatorDialog() {
     calculatorDialog.close();
-    $("#open-calculator-dialog").removeClass('hidden');
-    $("#close-calculator-dialog").addClass('hidden');
+    $("#open-calculator-dialog").removeClass('d-none');
+    $("#close-calculator-dialog").addClass('d-none');
   };
 
 
 
   function onClose() {
-    $("#open-navigation-dialog").removeClass('hidden');
-    $("#close-navigation-dialog").addClass('hidden');
+    $("#open-navigation-dialog").removeClass('d-none');
+    $("#close-navigation-dialog").addClass('d-none');
   }
 
   function onCalculatorClose() {
-    $("#open-calculator-dialog").removeClass('hidden');
-    $("#close-calculator-dialog").addClass('hidden');
+    $("#open-calculator-dialog").removeClass('d-none');
+    $("#close-calculator-dialog").addClass('d-none');
   }
 
   function flagForReview(question_attempt_id) {
@@ -364,7 +362,7 @@
     $('.answer_spreadsheet').each(function (index, value){
       updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
     });
-    $('.submission-pane-content').addClass('hidden');
+    $('.submission-pane-content').addClass('d-none');
 
     closeNavDialog();
     closeScratchPadDialog();
@@ -380,7 +378,7 @@
     $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
     $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
     $('#review_flag_' + questionsList[currentQuestion]).show();
-    $('.submission-pane-content').addClass('hidden');
+    $('.submission-pane-content').addClass('d-none');
     closeNavDialog();
     closeScratchPadDialog();
     submitForm();
@@ -406,7 +404,7 @@
 
   function loadSubmission() {
     $('.cr-question').hide();
-    $('.submission-pane-content').removeClass('hidden');
+    $('.submission-pane-content').removeClass('d-none');
     closeNavDialog();
     closeScratchPadDialog();
     submitForm();

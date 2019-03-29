@@ -10,7 +10,10 @@
       .col-sm-12
         .box-item.table-box
           .row
-            =link_to 'New Content Page', new_content_page_url, class: 'btn btn-primary btn-xs'
+            .col
+              =link_to 'New Content Page', new_content_page_url, class: 'btn btn-primary btn-xs'
+
+              =link_to 'New Bootcamp Page', new_content_page_url(bootcamp_page: true), class: 'btn btn-secondary btn-xs'
 
           .table-responsive.pt-4
             %table.table.sorted_table
@@ -19,6 +22,7 @@
                   %th=t('views.content_pages.form.name')
                   %th=t('views.content_pages.form.public_url')
                   %th=t('views.content_pages.form.active')
+                  %th
                   %th
                   %th
                   %th

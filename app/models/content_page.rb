@@ -20,14 +20,12 @@
 class ContentPage < ActiveRecord::Base
 
   # Constants
-  NAV_OPTIONS = %w(solid transparent)
 
   # relationships
   has_many :content_page_sections
   has_many :external_banners
 
   accepts_nested_attributes_for :content_page_sections, allow_destroy: true
-  accepts_nested_attributes_for :external_banners, allow_destroy: true, limit: 1
 
   # validation
   validates :name, presence: true, length: {maximum: 255}, uniqueness: true
@@ -36,7 +34,6 @@ class ContentPage < ActiveRecord::Base
   validates :seo_description, presence: true
 
   # callbacks
-  before_validation :remove_empty_banner
   before_destroy :check_dependencies
 
   # scopes
@@ -51,27 +48,7 @@ class ContentPage < ActiveRecord::Base
     true
   end
 
-  def standard_nav?
-    nav_type == 'solid'
-  end
-
-  def transparent_nav?
-    nav_type == 'transparent'
-  end
-
   protected
-
-  def remove_empty_banner
-    #Since the editor will always populate the text_content field
-    #we must clear the entire record when no name attribute is present
-    #to allow content_page records be created without nested banners
-    if self.external_banners.any? && self.external_banners[0].name.blank?
-      self.external_banners[0].destroy
-    end
-    if self.content_page_sections.any? && self.content_page_sections[0].panel_colour == '#000000'
-      self.content_page_sections[0].destroy
-    end
-  end
 
 
   def check_dependencies

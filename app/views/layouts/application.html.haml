@@ -62,10 +62,7 @@
 
     -if @layout == 'standard'
       -if @navbar
-        -if @navbar == 'transparent'
-          =render partial: 'layouts/transparent_navbar'
-        -else
-          =render partial: 'layouts/navbar'
+        =render partial: 'layouts/navbar'
 
       -if @top_margin
         -if @banner && !current_user

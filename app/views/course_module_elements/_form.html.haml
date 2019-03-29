@@ -87,8 +87,8 @@
       .row
         .col-sm-12
           =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
-          .input-group.input-group-lg.full-width
-            =f.text_area :description, required: true, as: :summernote, class: 'form-control', style: 'border-radius: 6px;', id: 'description'
+          .input-group.input-group-lg
+            =f.text_area :description, as: :summernote, class: 'form-control', id: 'description'
 
     -#.box-item
       .row
@@ -134,6 +134,7 @@
 :javascript
 
   $('#description').summernote({
-    disableDragAndDrop: true
+    disableDragAndDrop: true,
+    placeholder: 'write description here...'
   });
 

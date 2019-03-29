@@ -59,7 +59,6 @@ class CourseModuleElement < ActiveRecord::Base
   validates :name, presence: true, length: {maximum: 255}
   validates :name_url, uniqueness: { scope: :course_module,
                                      message: "must be unique within the course module" }
-  validates :description, presence: true, if: :cme_is_video?
   validates :sorting_order, presence: true
 
   # callbacks

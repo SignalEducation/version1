@@ -27,7 +27,7 @@
           .form-group
             =f.label :preferred_exam_body_id, t('views.users.form.exam_body')
             .input-group.input-group-lg
-              =f.collection_select :preferred_exam_body_id, ExamBody.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
+              =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
 
       .col-sm-6
         .form-group

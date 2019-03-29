@@ -8,10 +8,7 @@
           close
       .modal-header
         %h3{id: 'examBodyDetailsRequired'}
-          -if @course.exam_body && @course.exam_body.modal_heading
-            =@course.exam_body.modal_heading
-          -else
-            ="#{@course.exam_body.name} Details Required"
+          ="#{@course.exam_body.name} Details Required"
 
       .modal-body
         =render partial: '/layouts/error_messages', locals: {thing: current_user, message: nil}

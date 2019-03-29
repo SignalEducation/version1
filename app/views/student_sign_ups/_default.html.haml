@@ -175,7 +175,9 @@
           =image_tag('contact-person-2.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
           =image_tag('contact-person-3.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
         .py-3
-          %button.btn.btn-primary.btn-lg Chat with our experts
+          %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
+            Chat with our experts
 
 
 =render partial: 'layouts/footer'
+=render partial: 'footer_pages/contact_us_form_modal'

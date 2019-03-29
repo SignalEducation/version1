@@ -11,8 +11,7 @@
 
 }
 .scenario-box-nav {
-  padding: 5px 20px;
-  background-color: #2c9676;
+  background-color: #343a40;
   color: #fff;
   &.scenario-box-nav-header {
     padding: 5px 20px 1px 20px;
@@ -45,17 +44,17 @@
 }
 
 .cr-navigation {
-  padding: 2px 0;
-
+  padding-top: 5px;
   width: 100%;
   display: inline-block;
   list-style: none;
+  & ul {
+    padding-left: 0;
+  }
   & li {
-    font-weight: 400;
+    font-weight: 500;
     font-size: 18px;
     font-style: normal;
-    line-height: 24px;
-
     position: relative;
     display: inline-block;
   }
@@ -123,6 +122,7 @@
 
 .k-block>.k-header, .k-window-titlebar {
   width: auto !important;
+  background-color: #00b67B !important;
 }
 
 .k-block>.k-action-window>.k-window-content, .k-editor-table-wizard-dialog {
