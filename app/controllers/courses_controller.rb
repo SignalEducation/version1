@@ -351,7 +351,7 @@ class CoursesController < ApplicationController
 
     unless @course && @course.active && @course_section && @course_section.active && @course_module &&
         @course_module.active && @course_module_element && @course_module_element.active &&
-        current_user && @course_module_element.available_to_user(current_user, @subject_course_user_log)[:view]
+        current_user && @course_module_element.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)[:view]
 
       flash[:warning] = 'Sorry, you are not permitted to access that content. '
       redirect_to library_special_link(@course)

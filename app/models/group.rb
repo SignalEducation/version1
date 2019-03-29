@@ -31,6 +31,7 @@ class Group < ActiveRecord::Base
   # Constants
 
   # relationships
+  belongs_to :exam_body
   has_many :subject_courses
   has_many :home_pages
   has_attached_file :image, default_url: 'courses-AAT.jpg'

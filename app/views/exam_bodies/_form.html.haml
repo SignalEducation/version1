@@ -16,14 +16,19 @@
 
         .row.mt-5
           .col-sm-6
-            =f.label :modal_heading, t('views.exam_bodies.form.modal_heading')
-            .input-group.input-group-lg
-              =f.text_field :modal_heading, placeholder: t('views.exam_bodies.form.modal_heading_placeholder'), class: 'form-control'
-
+            .form-group
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    =t('views.exam_bodies.form.active')
           .col-sm-6
-            =f.label :modal_text, t('views.exam_bodies.form.modal_text')
-            .input-group.input-group-lg
-              =f.text_area :modal_text, placeholder: t('views.exam_bodies.form.modal_text_placeholder'), class: 'form-control'
+            .form-group
+              .col-sm-8.col-sm-offset-4
+                .checkbox
+                  %label
+                    =f.check_box :has_sittings
+                    =t('views.exam_bodies.form.has_sittings')
 
     .row.pt-5
       .col-sm-12

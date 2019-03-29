@@ -8,7 +8,7 @@
               =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
                 =@course.parent.name
 
-          -if @new_enrollment && (@computer_exam_sitting || @exam_sittings)
+          -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
             .mw-0
               %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm'}
                 Enroll
@@ -103,7 +103,7 @@
                                 - permission = cme.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)
                                 - if permission[:view]
 
-                                  =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                  =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
                                     .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls.include?(cme.id) ? (@completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                                       %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
                                         -if cme.is_video?
@@ -321,7 +321,7 @@
         $('#enrollment-modal').modal('show');
       });
 
-  -if !@exam_body_user_details.student_number || !current_user.date_of_birth
+  -if @exam_body_user_details && !@exam_body_user_details.student_number || !current_user.date_of_birth
     :javascript
       $(document).ready(function() {
         $('#exam-body-details-required').modal('show');

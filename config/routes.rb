@@ -138,7 +138,8 @@ Rails.application.routes.draw do
     resources :groups, concerns: :supports_reordering
 
     #Sign Up Actions
-    get '/student_new', to: 'student_sign_ups#new', as: :new_student
+    get '/basic_registration', to: 'student_sign_ups#new', as: :new_student
+    get '/student_new', to: 'student_sign_ups#new'
     post '/student_create', to: 'student_sign_ups#create', as: :create_student
 
     post '/subscribe', to: 'library#subscribe'

@@ -1,195 +1,69 @@
-.bg-white
-  .container
-    .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-5.pb-4
+%main
+  %article.courses.bg-white
+    .container
+      %header
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
+          -if @course.parent
+            .mw-0
+              =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+                =@course.parent.name
 
-      -if @course.parent
-        =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm with-arrow-sm mb-3 mb-sm-0' do
-          =@course.parent.name
+          .mw-0
+            %h4.text-warning
+              Course Not Live!
 
-      .preview-notice.pull-right
-        %h4.text-torquoise
-          Course Not Live!
+        .pt-3
+          %h1.h1-hero
+            =@course.name
 
-
-    .courses-header-section
-      %h1.h1-mega.mb-4.mb-sm-3
-        =@course.name
-
-      .course-info
+      %section.course-progress
         =render partial: 'course_info'
 
-
       %nav.courses-nav
-        %ul.nav.nav-tabs{id: 'coursesTab', role: 'tablist'}
-          -@course.course_sections.all_active.all_in_order.each do |course_section|
+        %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
+          - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
             %li.nav-item
-              %a{class: 'nav-link', id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
+              -# TODO add active to first li
+              %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
                 =course_section.name
 
-          %li.nav-item
-            %a{href: "#exam-prep", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "exam-prep", selected: 'false'}}
-              ='Exam Prep'
 
 
+.bg-gray5
+  .container.py-5.py-sm-6
+    #coursesTabsContent.tab-content
 
-.bg-asphalt
-  #tab-area
-    .container.py-5
+      - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
+        .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
+          .row.row-lg
+            .col-xl-8
+              .mb-5.mb-xl-0
+                - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
+                  .card.card-collapse.mb-4
 
-      .tab-content#course-tabs
-        - @course.course_sections.all_active.all_in_order.each do |course_section|
-          .tab-pane.fade{id: course_section.name_url, role: 'tabpanel', 'aria-labelledby': "#{course_section.name_url}-tab"}
-            .ow-lg
-              .col-lg-8{style: 'padding-left: 0;'}
-                .mb-5.mb-xl-0
-
-
-                  - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
-
-                    .card.card-course
-
-                      %a.btn.btn-collapse.w-100{'data-toggle': "collapse", href: "#collapse_#{course_section.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_section.name_url}_#{counter}"}
-
-                        .course-item.course-item-collapse{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
-                          .course-item-icon
-                            %span.icon-custom
-                              %i.material-icons{aria: {hidden: "true"}}
-                                lock_outline
-
-                          .course-item-title.text-truncate
-                            %span.pr-sm-4
+                    %a.btn.btn-text.btn-collapse.w-100.text-left{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
+                      .lesson-item.w-100
+                        %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
+                          lock_outline
+                        .lesson-item-content.pl-3
+                          .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
+                            %p.lesson-item-text.text-truncate.w-100
                               =course_module.name
-
-                          .course-item-tag{style: 'margin-right: 30px;'}
-                            - if course_module.children.any?
-                              %span.course-tag.small
-                                -if course_module.cme_count.to_i > 1
-                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                -else
-                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
-                            -else
-                              %span.course-tag.small.text-with-bg
+                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                              %span
                                 Coming Soon
 
 
-                      .collapse.card-course-inner{id: "collapse_#{course_section.name_url}_#{counter}"}
-                        %ul.mb-3
-                          -course_module.children.all_in_order.all_active.each do |cme|
-                            %li
-                              %a.course-item-link{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
-                                .course-item.course-item-static
-                                  .course-item-icon
-                                    %span.icon-custom
-                                      %i.material-icons{'aria-hidden': 'true'}
-                                        lock_outline
 
-                                  .course-item-title
-                                    %span.pr-sm-4
-                                      =cme.name
+            .col-xl-4.mb-5
+              %aside
+                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#"}
+                  Ask the Tutor
 
-                                  .course-item-tag
-                                    %span.course-tag.small
-                                      -if cme.is_video
-                                        -if cme.try(:course_module_element_video).try(:duration)
-                                          =humanize_time(cme.course_module_element_video.duration)
-                                        -elsif cme.try(:estimated_time_in_seconds)
-                                          =humanize_time(cme.try(:estimated_time_in_seconds))
-                                      -elsif cme.is_quiz
-                                        -if cme.number_of_questions.to_i > 1
-                                          =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                                        -else
-                                          =cme.number_of_questions.to_s + ' ' +  'Question'
-
-
-              .col-lg-4.mb-5
-                %div.tutor-contact
-                  %a.tutor-contact-link.d-inline-flex.align-items-center.mb-4.w-100.link-purple-turquoise{href: "#", 'data-toggle': 'modal', 'data-target': '#course-preview'}
-                    .icon-custom.icon-custom-lg.mr-3
-                      %i.material-icons{'aria-hidden': "true"}
-                        question_answer
-                    %span.p.mb-0.font-weight-medium
-                      Ask the Tutor
-
-
-
-          .tab-pane.tab-courses.tab-exam-prep{id: 'exam-prep', role: 'tabpanel', 'aria-labelledby': 'exam-prep-tab'}
-            .row.row-lg
-              .col-lg-6
-                .mb-5
-                  %h3='Exam Preparation Products'
-
-                  - @correction_pack_products.each do |product|
-                    %a.card.card-link.card-link-alt.mb-4.locked{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
-                      .col-xs-2
-                        .card-link-alt-img.mr-3.mr-sm-4
-                          =image_tag('ico-questions-2.svg', alt: "#{product.mock_exam.try(:name)} Product")
-                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                        %h4.text-ellipsis.mb-0.pr-sm-4
-                          =product.mock_exam.try(:name)
-
-                  - @mock_exam_products.each do |product|
-                    %a.card.card-link.card-link-alt.mb-4.locked{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
-                      .col-xs-2
-                        .card-link-alt-img.mr-3.mr-sm-4
-                          =image_tag('ico-exam.svg', alt: "#{product.mock_exam.try(:name)} Product")
-                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                        %h4.text-ellipsis.mb-0.pr-sm-4
-                          =product.mock_exam.try(:name)
-
-
-              .col-lg-6
-                .mb-5
-                  %h3='Course Resources'
-
-                  - @subject_course_resources.each do |resource|
-
-                    %a.card.card-link.card-link-alt.mb-4.locked{data: {target: '#course-preview', toggle: 'modal', href: '#'}}
-                      .col-xs-2
-                        .icon-custom.icon-custom-xl.mr-3.mr-sm-4
-                          %i.material-icons{'aria-hidden': 'true'}
-                            lock_outline
-                      .col-xs-9{style: 'margin-top: 20px; margin-left: 10px;'}
-                        %h4.text-ellipsis.mb-0.pr-sm-4
-                          =resource.name
 
 
 
 
 -# Modals
 =render partial: 'course_preview_modal'
-
-:javascript
-  $(document).ready(function(){
-
-    $('.courses-nav .nav-tabs .nav-link').on('click', function(){
-      $(this).addClass('active show');
-      $(this).parent().siblings().children().removeClass('active show');
-
-    });
-
-    hash = window.location.hash;
-    elements = $('a[href="' + hash + '"]');
-    if (elements.length === 0) {
-      let selectedTab = $(".courses-nav a:first");
-      selectedTab.click();
-    } else {
-      elements.click();
-    }
-
-    let searchParams = new URLSearchParams(window.location.search);
-    if (searchParams.has('cm')) {
-      let moduleParam = searchParams.get('cm');
-      let coursePanel = $(".btn.btn-collapse#" + moduleParam + "");
-      coursePanel.click();
-      setTimeout(function() {
-          scrollTop: coursePanel.offset().top;
-      }, 1);
-    } else {
-      // Prevent browser jump to anchor tag
-      if (location.hash) {
-          setTimeout(function() {
-              window.scrollTo(0, 0);
-          }, 1);
-      }
-    }
-  });
+=render partial: 'tutor_contact'

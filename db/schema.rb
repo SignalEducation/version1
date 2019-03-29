@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_24_094828) do
+ActiveRecord::Schema.define(version: 2019_03_28_110839) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -422,8 +422,8 @@ ActiveRecord::Schema.define(version: 2019_03_24_094828) do
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "modal_heading"
-    t.text "modal_text"
+    t.boolean "active", default: false, null: false
+    t.boolean "has_sittings", default: false, null: false
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 

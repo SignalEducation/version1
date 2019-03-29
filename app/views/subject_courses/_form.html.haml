@@ -91,14 +91,17 @@
           .form-group
             =f.label :highlight_colour, t('views.subject_courses.form.highlight_colour')
             .input-group.input-group-lg
-              =f.select(:highlight_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28], %w[Purple #775ead], %w[Green #00b67b]]), { include_blank: true }, class: 'form-control custom-select')
+              =f.select :highlight_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28],
+               %w[Purple #775ead], %w[Green #00b67b]],
+                selected: f.object.highlight_colour),
+                 {include_blank: t('views.general.select')}, class: 'form-control custom-select'
 
 
       .row
         .col-sm-12
           =f.label :description, t('views.subject_courses.form.description')
           .input-group.input-group-lg
-            =f.text_area :description, as: :summernote, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;', id: 'editor'
+            =f.text_area :description, as: :summernote, placeholder: t('views.subject_courses.form.description_placeholder'), rows: 5, class: 'form-control', id: 'editor'
 
       .row.pt-4
         .col-md-12

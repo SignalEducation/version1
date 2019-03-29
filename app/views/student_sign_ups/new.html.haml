@@ -3,13 +3,15 @@
     .container
       %header.hero-section.hero-section-external
         %h1.h1-hero.mb-2
-          ='Register now'
+          ='Basic Plan Registration'
+        %p.h5
+          ='No credit card required. Set-up takes one minute.'
 
       %section.pb-md-6.pb-5
         .sign-up-section
           #sign-up.form-box
             %h2.h5.px-lg-8.py-4.text-center
-              Explore our innovative learning platform and discover how LearnSignal helps you pass your exams faster
+              ='Register for free on our basic plan to explore our innovative learning platform and discover the smarter way to study with learnsignal.'
 
             =form_for @user, url: create_student_url do |f|
               =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
@@ -34,9 +36,9 @@
 
                 .col-sm-6
                   .form-group
-                    =f.label :preferred_exam_body_id, t('views.users.form.exam_body')
+                    =f.label :preferred_exam_body_id, t('views.users.form.area_of_study')
                     .input-group.input-group-lg
-                      =f.collection_select :preferred_exam_body_id, ExamBody.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
+                      =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
 
                 .col-sm-6
                   .form-group
@@ -48,27 +50,26 @@
                     =f.label :password_confirmation, t('views.users.form.password_confirmation')
                     =f.password_field :password_confirmation, class: 'form-control', id: 'user_password_confirmation'
 
-                .col-sm-12
-                  .form-group
-                    %label.check.communication_approval
-                      %input{type: 'checkbox', id: 'communication_approval', required: true}
-                        %span
-                          %i.fa.fa-check
-                        ='I agree to receiving communications from LearnSignal (you can unsubscribe at any time)'
-
-                .col-sm-12
+                -#.col-sm-12
                   .form-group
                     %label.check.terms_and_conditions
                       %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
-                        %span
-                          %i.fa.fa-check
                         ="I Agree to LearnSignal's"
                         =link_to 'Terms and Conditions', terms_and_conditions_url
 
+                .col-sm-12.pt-4.pr-3.pl-3
+                  .form-group.pl-4
+                    %label.check.communication_approval
+                      %input{type: 'checkbox', id: 'communication_approval', required: true}
+                        ='I agree to receiving communications from learnsignal.'
+
+                    %p
+                      ="We're committed to your privacy. The information you provide is used to contact you about relevant content,
+                       products, and services. You may unsubscribe from these communications at any time. For more information,
+                        check out our Privacy Policy."
+
 
               .pt-5.px-lg-8.text-center
-                %p.h5
-                  ='No credit card required. Set-up takes one minute.'
 
                 =f.submit 'Register Now', class: 'btn btn-primary', id: 'signUp'
                 .sk-circle

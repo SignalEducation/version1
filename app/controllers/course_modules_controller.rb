@@ -42,8 +42,8 @@ class CourseModulesController < ApplicationController
 
   def new
     @course_sections = @subject_course.course_sections.all_in_order
-    if @subject_course && @subject_course.children.count > 0
-      @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1,
+    if @subject_course && @course_section && @course_section.course_modules.count > 0
+      @course_module = CourseModule.new(sorting_order: @course_section.course_modules.all_in_order.last.sorting_order + 1,
                                         subject_course_id: @subject_course.id,
                                         course_section_id: @course_section.id)
     elsif @subject_course

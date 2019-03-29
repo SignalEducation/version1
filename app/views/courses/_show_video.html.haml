@@ -5,9 +5,10 @@
 
 
     .pt-5.pb-5
-      %h2.h4 Description
-      %p.mb-4
-        =@course_module_element.description.html_safe
+      -unless @course_module_element.description.empty? || @course_module_element.description == '<p><br></p>'
+        %h2.h4 Description
+        %p.mb-4
+          =@course_module_element.description.html_safe
 
 
 
