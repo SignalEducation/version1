@@ -342,18 +342,6 @@ code {
   word-break: break-word
 }
 
-// Browser text highlight color
-/* Mozilla based browsers */
-::-moz-selection {
-  background-color: #00b67B;
-  color: #fff;
-}
-
-/* Works in Safari */
-::selection {
-  background-color: #00b67B;
-  color: #fff;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3. Container & Table
@@ -3071,6 +3059,13 @@ button.bg-black:hover {
   max-width: 1600px;
   margin: 0 auto
 }
+.container-md {
+  display: block;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-right: 15px;
+  padding-left: 15px
+}
 .container-sm {
   display: block;
   max-width: 440px;
@@ -4999,15 +4994,15 @@ a.card:hover .card-title .card-explanation {
   padding: $gutter/2.5;
 }
 
-
 .notice.warning {
-  background: #FFD466;
-  color: $text-color;
-  border-radius: 4px;
-  margin-bottom: $gutter;
-  padding: $gutter/1.5;
-  .icon {
-    margin-right: $gutter/2;
+  background: #f0ca28;
+  color: #fff;
+  border-radius: 0;
+  margin-bottom: $gutter/2;
+  padding: $gutter/2;
+  i {
+    color: #fff;
+    padding-right: 6px;
   }
   a {
     color: $red1;
@@ -5017,51 +5012,20 @@ a.card:hover .card-title .card-explanation {
   }
 }
 .notice.error {
-  background: #FFD466;
-  color: $text-color;
-  border-radius: 4px;
+  background: #dc3545;
+  color: #fff;
+  border-radius: 0;
   margin-bottom: $gutter/2;
-  padding: $gutter/1.5;
-  .icon {
-    margin-right: $gutter/2;
+  padding: $gutter/2;
+  i {
+    color: #fff;
+    padding-right: 6px;
   }
   .p {
     margin: 0;
   }
   a {
     color: $red1;
-  }
-}
-.notice.preview {
-  background: $colour-15;
-  color: $text-color;
-  border-radius: 4px;
-  margin-bottom: $gutter/2;
-  padding: $gutter/1.5;
-  .icon {
-    margin-right: $gutter/2;
-  }
-  .p {
-    margin: 0;
-  }
-  a {
-    color: $red1;
-  }
-}
-.notice.africa {
-  background: $colour-10;
-  color: $text-color;
-  border-radius: 4px;
-  margin-bottom: $gutter/2;
-  padding: $gutter/1.5;
-  .icon {
-    margin-right: $gutter/2;
-  }
-  .p {
-    margin: 0;
-  }
-  a {
-    color: #CA2439;
   }
 }
 

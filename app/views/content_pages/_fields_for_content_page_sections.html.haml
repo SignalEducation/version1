@@ -7,10 +7,6 @@
         =section.label :text_content, 'Text'
         .input-group.input-group-lg
           =section.text_area :text_content, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control section_editor', as: :summernote
-      .form-group
-        =section.label :panel_colour, 'Panel Colour'
-        .input-group.input-group-lg
-          =section.color_field :panel_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control'
 
       -if section.object.destroyable?
         .form-group.pt-4

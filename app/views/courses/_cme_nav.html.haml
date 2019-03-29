@@ -1,9 +1,9 @@
 .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
   .mw-0
-    =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-secondary btn-sm mb-3 mb-sm-0' do
+    =link_to course_special_link(cme, @course.group.exam_body_id, @subject_course_user_log), class: 'btn btn-secondary btn-sm mb-3 mb-sm-0' do
       =t('views.course_module_elements.show.retake_quiz')
 
   .mw-0
-    =link_to course_special_link(cme.next_element, @subject_course_user_log) do
+    =link_to course_special_link(cme.next_element, @course.group.exam_body_id, @subject_course_user_log) do
       .btn.btn-primary.btn-sm.btn-sm-arrow-right
         =t('views.course_module_elements.show.next_step')

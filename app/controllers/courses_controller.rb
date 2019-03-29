@@ -9,6 +9,7 @@ class CoursesController < ApplicationController
     @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).last if current_user.subject_course_user_logs.any?
     @course_section_user_log = @subject_course_user_log.course_section_user_logs.where(course_section_id: @course_section.id).last if @subject_course_user_log
     @student_exam_track = @course_section_user_log.student_exam_tracks.where(course_module_id: @course_module.id).last if @course_section_user_log
+    @group = @course.group
 
     if @course_module_element.is_quiz
       set_up_quiz

@@ -1,4 +1,4 @@
-=form_for(@content_page, html: {class: 'form-horizontal', role: 'form'}) do |f|
+=form_for(@content_page, html: {class: 'form-horizontal', role: 'form', novalidate: true}) do |f|
   .box-item.form-box
     .row
       .col-sm-12
@@ -9,38 +9,39 @@
               =f.label :name, t('views.content_pages.form.name')
               .input-group.input-group-lg
                 =f.text_field :name, placeholder: t('views.content_pages.form.name_placeholder'), class: 'form-control', autofocus: true
+          .col-sm-6
 
             .form-group
               =f.label :public_url, t('views.content_pages.form.public_url')
               .input-group.input-group-lg
                 =f.text_field :public_url, placeholder: t('views.content_pages.form.public_url_placeholder'), class: 'form-control'
+          .col-sm-6
 
             .form-group
               =f.label :h1_text, t('views.content_pages.form.h1_text')
               .input-group.input-group-lg
                 =f.text_field :h1_text, placeholder: t('views.content_pages.form.h1_text_placeholder'), class: 'form-control'
+          .col-sm-6
 
             .form-group
               =f.label :h1_subtext, t('views.content_pages.form.h1_subtext')
               .input-group.input-group-lg
                 =f.text_field :h1_subtext, placeholder: t('views.content_pages.form.h1_subtext_placeholder'), class: 'form-control'
-
           .col-sm-6
-            .form-group
-              =f.label :nav_type, t('views.content_pages.form.nav_type')
-              .input-group.input-group-lg
-                =f.select :nav_type, ContentPage::NAV_OPTIONS, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
 
             .form-group
               =f.label :seo_title, t('views.content_pages.form.seo_title')
               .input-group.input-group-lg
                 =f.text_field :seo_title, placeholder: t('views.content_pages.form.seo_title_placeholder'), class: 'form-control'
+          .col-sm-6
 
             .form-group
               =f.label :seo_description, t('views.content_pages.form.seo_description')
               .input-group.input-group-lg
                 =f.text_area :seo_description, placeholder: t('views.content_pages.form.seo_description_placeholder'), rows: 4, class: 'form-control'
 
+          .col-sm-6
 
             .row.pt-4
               .col-sm
@@ -69,7 +70,6 @@
 
   =render partial: 'fields_for_content_page_sections', locals: {f: f}
 
-  =#render partial: 'external_banners/fields_for_banners', locals: {f: f}
 
 
   .row.pt-4

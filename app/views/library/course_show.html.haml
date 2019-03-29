@@ -286,10 +286,7 @@
 
     hash = window.location.hash;
     elements = $('a[href="' + hash + '"]');
-    if (elements.length === 0) {
-      let selectedTab = $(".courses-nav a:first");
-      selectedTab.click();
-    } else {
+    if (elements.length > 0) {
       elements.click();
     }
 
