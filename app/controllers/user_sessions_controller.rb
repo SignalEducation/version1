@@ -7,6 +7,9 @@ class UserSessionsController < ApplicationController
 
   def new
     @user_session = UserSession.new
+    seo_title_maker('Log in to Start Studying Today | LearnSignal',
+                    "Log in to your ACCA or CPD courses to access topic-by-topic tuition modules, explore online learning resources and kick-start your study today.",
+                    false)
     render 'user_sessions/new'
   end
 
@@ -50,8 +53,6 @@ class UserSessionsController < ApplicationController
   end
 
   def set_variables
-    @seo_title = 'LearnSignal | Sign In'
-    @seo_description = "Sign In here to access LearnSignal's online courses"
   end
 
 end

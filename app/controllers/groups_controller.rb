@@ -92,6 +92,7 @@ class GroupsController < ApplicationController
   def allowed_params
     params.require(:group).permit(:name, :name_url, :active, :sorting_order,
                                   :description, :image, :background_image,
-                                  :background_colour, :exam_body_id)
+                                  :background_colour, :exam_body_id,
+                                  :seo_title, :seo_description)
   end
 end

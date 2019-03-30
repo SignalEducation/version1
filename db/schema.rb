@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_28_110839) do
+ActiveRecord::Schema.define(version: 2019_03_30_112842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -521,6 +521,8 @@ ActiveRecord::Schema.define(version: 2019_03_28_110839) do
     t.datetime "background_image_updated_at"
     t.string "background_colour"
     t.bigint "exam_body_id"
+    t.string "seo_title"
+    t.string "seo_description"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
