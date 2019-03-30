@@ -120,11 +120,11 @@
     .container-bg.bg-gray5
       .container
         %section.pb-md-6.pb-5.pt-md-6.pt-5
-          .pb-3.text-center
-            %h1.h1-mega
-              ="Passing your #{@group.name ? @group.name : 'Exams'} is worth it"
+          .container-md.pb-3.text-center
+            %h2.h1-mega
+              ="#{@group.name} Payment Plans"
             %h2.h5
-              Pick which plan suits you best
+              ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
           .row.row-lg
             -@subscription_plans.each do |plan|
@@ -135,13 +135,24 @@
                       =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
                     %p
                       Cancel anytime
-                    -if plan.monthly_percentage_off
-                      %p.h5
-                        =plan.monthly_percentage_off
-                        ='% Discount'
+
+                    %p="Access to all #{@group.name} courses"
+                    %p="Topic-by-topic video lectures"
+                    %p="24/7 tutor support"
 
                     %p.h3
                       =plan.currency.format_number(plan.price)
+
+
+                    -if plan.monthly_percentage_off
+                      %p.h5
+                        Save over
+                        =plan.monthly_percentage_off
+                        ='%'
+
+                    -if plan.payment_frequency_in_months == 3
+                      %p.h5.text-primary
+                        Our most popular payment plan
 
                     .mt-auto
                       =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do

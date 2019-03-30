@@ -42,7 +42,7 @@ Rails.application.routes.draw do
     post 'resend_verification_mail/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
 
     # User Sessions
-    get 'sign_in', to: 'user_sessions#new', as: :sign_in
+    get 'login', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
 

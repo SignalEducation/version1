@@ -28,6 +28,7 @@
           =f.label :description, t('views.groups.form.description')
           .input-group.input-group-lg
             =f.text_area :description, rows: 5, placeholder: t('views.groups.form.description_placeholder'),class: 'form-control'
+
         .form-group
           =f.label :background_colour, t('views.groups.form.background_colour')
           .input-group.input-group-lg
@@ -35,6 +36,16 @@
              %w[Purple #775ead], %w[Green #00b67b]],
               selected: f.object.background_colour),
                {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+
+        .form-group
+          =f.label :seo_title, t('views.groups.form.seo_title')
+          .input-group.input-group-lg
+            =f.text_field :seo_title, placeholder: t('views.groups.form.seo_title_placeholder'), class: 'form-control'
+
+        .form-group
+          =f.label :seo_description, t('views.groups.form.seo_description')
+          .input-group.input-group-lg
+            =f.text_field :seo_description, placeholder: t('views.groups.form.seo_description_placeholder'), class: 'form-control'
 
 
     .row.pt-6

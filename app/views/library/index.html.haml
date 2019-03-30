@@ -2,13 +2,14 @@
   %article.library.bg-gray5
     .container
       %header.hero-section
-        %h1.h1-hero.mb-3 Learn anytime, anywhere
-        %p.p-hero.px-lg-8 Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
+        %h1.h1-hero.mb-3 Explore our courses
+        %p.p-hero.px-lg-8 Discover our professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.
+
       %section.pb-md-6
         %h2.sr-only List of courses
         .row.row-lg
           -@groups.each do |group|
-            .col-lg-4
+            .col-lg
               %article.card.card-primary.card-pink
                 =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
                 .card-body.text-center
@@ -20,29 +21,53 @@
                     =link_to 'Browse Courses', library_special_link(group), class: 'btn btn-secondary btn-sm'
 
 
--#.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.h1.h-separator.h-separator-center.l-margin-bottom-big
-            Learn anytime, anywhere
-          %p.h5.l-margin-bottom-big
-            Learn anytime, anywhere from our library of business-focused courses taught by expert tutors
 
-      .row.l-margin-top-huge.l-margin-bottom-huge
-        -@groups.each do |group|
-          .col-sm-6.col-md-4.l-margin-bottom-big.l-margin-top
 
-            =link_to library_special_link(group), class: 'box box-course' do
-              .image{style: "background: url(#{group.image.url}) repeat-x 50% 0; background-size: contain;"}
-              .box-inner
-                .l-margin-top-xl
-                  %h2{style: 'margin-bottom: 5px;'}
-                    =group.name
-                  %p.p
-                    =group.description
+  -unless current_user
 
-              .box-label
-                %h6.h-white{style: 'margin-top: 0px; margin-bottom: 0px;'}
-                  Browse Courses
+    .container-bg.bg-navy
+      .container
+        %article.text-gray3.text-center.py-6.py-sm-7
+          %header.pb-3
+            %h1.text-white.px-5.px-sm-6 Designed with you at the core
+            %p.p-hero Studying for your exams has never been easier
+          .px-4.px-lg-8
+            .row.row-lg
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Access anytime, anywhere
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-card-slides{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Topic-by-topic, bite-size lectures
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-doc-marker{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Notes, MCQs and correct mock exams
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-happy-chat{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Tutor support at every step of the way
+
+
+    %article.library.bg-white
+      .container
+        %article.py-3.py-6.text-center.text-lg-left
+          %header.sr-only
+            %h2 Testimonial
+          .row.row-lg
+            .col-lg-5
+              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+            .col-lg-7
+              .d-flex.h-100.align-items-center
+                %blockquote.mb-0.ml-lg-6.mr-lg-6
+                  %p.text-gray2
+                    "The good thing about Learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                  %footer
+                    %cite.font-weight-semi-bold.text-gray2
+                      Rebecca Nagujja, Ireland

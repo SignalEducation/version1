@@ -21,6 +21,8 @@
 #  background_image_updated_at   :datetime
 #  background_colour             :string
 #  exam_body_id                  :bigint(8)
+#  seo_title                     :string
+#  seo_description               :string
 #
 
 require 'rails_helper'

@@ -1,9 +1,10 @@
 %main
   %article.library-group-show.bg-white.py-5.py-lg-6
     .container
-      %header.hero-section.hero-section-revisions{style: "background-image: url(#{@group.background_image.url});"}
+      %header.hero-section.hero-section-revisions{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
         %h1.h1-hero.mb-3.text-white
           =@group.name
+          ='Courses'
         %p.p-hero.px-lg-8.text-white
           =@group.description.to_s
 
@@ -26,89 +27,45 @@
 
 
 
+  -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
     .container-bg.bg-gray5
-      .container-sm
-        %section
-          %h2.sr-only Contact Help section
-          %article.text-center.py-6.py-lg-7
-            %header
-              %h2.h1.mb-4.px-4 We're here to guide you through.
-              %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
-            .py-4.d-flex.justify-content-center
-              =image_tag('contact-person-1.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
-              =image_tag('contact-person-2.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
-              =image_tag('contact-person-3.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+      .container
+        %section.pb-md-6.pb-5.pt-md-6.pt-5
+          .container-md.pb-3.text-center
+            %h2.h1-mega
+              ="#{@group.name} Payment Plans"
+            %h2.h5
+              ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
-            .py-3
-              %button.btn.btn-primary.btn-lg Chat with our experts
+          .row.row-lg
+            -@subscription_plans.each do |plan|
+              .col-lg-4
+                %article.card.card-primary.card-pink
+                  .card-body.text-center
+                    %h2.h1.card-title
+                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+                    %p
+                      Cancel anytime
 
+                    %p="Access to all #{@group.name} courses"
+                    %p="Topic-by-topic video lectures"
+                    %p="24/7 tutor support"
 
-
--#.bg-img.bg-group-show{style: "background-image: url(#{@group.background_image.url});"}
-  .container
-    %article.hero.pb-6
-      %h1.h1-mega.text-white
-        =@group.name
-      %h5.text-torquoise
-        =@group.description.to_s.html_safe
-
--#library.bg-asphalt
-  .container.py-6
-    .row.row-lg
-      -if @courses
-        -@courses.each do |course|
-          .col-lg-4.col-sm-6
-            =link_to library_special_link(course), class: 'card card-library card-sm mb-5 text-center flex-column', style: 'padding: 0px;' do
-              .card-header{style: "background: #{course.highlight_colour};"}
-                %h5.text-white.text-truncate.mb-0
-                  =course.category_label
-              .card-body
-                %h4.mb-3
-                  =course.name
-
-                %p.mb-2.text-purple3
-                  =course.additional_text_label
-
-              .card-footer
-                %span.with-arrow
-                  Show Course
+                    %p.h3
+                      =plan.currency.format_number(plan.price)
 
 
+                    -if plan.monthly_percentage_off
+                      %p.h5
+                        Save over
+                        =plan.monthly_percentage_off
+                        ='%'
 
+                    -if plan.payment_frequency_in_months == 3
+                      %p.h5.text-primary
+                        Our most popular payment plan
 
+                    .mt-auto
+                      =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
+                        Choose this plan
 
-
-
--#.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          .group_show{style: "background: url(#{@group.background_image.url})  50% 0 no-repeat;"}
-            .row
-              .col-md-6.col-md-offset-3.l-margin-top
-                %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe.l-margin-bottom
-                  =@group.name
-                %p.h5.h-white.text-center
-                  =@group.description.to_s.html_safe
-
-
-  .l-wrap.l-margin-top-big
-    .container-fluid
-      .row.l-margin-bottom-huge
-        -if @courses
-          -@courses.each do |course|
-            .col-sm-4
-              =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
-                .card-inner.text-center
-                  %h3.h3.card-title
-                    =course.try(:name)
-                .card-info.text-center
-                  %p.h5{style: 'color: #f092b0; '}
-                    =course.try(:additional_text_label)
-
-                .card-label{style: "background: #{course.highlight_colour};"}
-                  .row
-                    .col-md-12.col-xs-12.text-center
-                      %h4{style: 'color: #fff;'}
-                        =(course.category_label && !course.category_label.blank?) ? course.category_label : 'Enrol Now'

@@ -31,8 +31,8 @@
                   .stats-box
                     .stats-box-inner
                       .h3
-                        -if @user.last_login_at
-                          =humanize_datetime(@user.last_login_at)
+                        -if @user.current_login_at
+                          =humanize_datetime(@user.current_login_at)
                         -else
                           ='-'
                       .p

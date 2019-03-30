@@ -4,6 +4,9 @@
       %header.hero-section.hero-section-external
         %h1.h1-hero.mb-2
           =t('views.user_sessions.new.h1')
+        %h2.h5
+          ="Don't have an account?"
+          =link_to 'Register today.', new_student_url
       %section.pb-md-6.pb-5
         .login-section
           #sign-in.form-box
@@ -13,12 +16,12 @@
                 .col-sm-12
                   .form-group
                     =f.label :email, t('views.user_sessions.form.email')
-                    =f.email_field :email, placeholder: 'Enter your email here', class: 'form-control', autofocus: true
+                    =f.email_field :email, placeholder: 'Enter your email', class: 'form-control', autofocus: true
 
                 .col-sm-12
                   .form-group
                     =f.label :password, t('views.user_sessions.form.password')
-                    =f.password_field :password, placeholder: 'Enter your password here', class: 'form-control'
+                    =f.password_field :password, placeholder: 'Enter your password', class: 'form-control'
 
 
               .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-3

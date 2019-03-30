@@ -70,7 +70,7 @@ en:
       select: Select...
       send: Send
       settings: Settings
-      sign_in: Sign in
+      sign_in: Log in
       enter: Enter
       sign_out: Sign out
       sign_up: Sign up
@@ -820,6 +820,10 @@ en:
         course_count: No. of Courses
         background_colour: Background Colour
         exam_body: Exam body
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
 
       index:
         h1: Groups
@@ -1397,11 +1401,11 @@ en:
         current_password_placeholder: Current password
         create_password: Create a password
         password: Password
-        password_placeholder: Password
+        password_placeholder: Enter your password
         new_password: New Password
         new_password_placeholder: New Password
         password_confirmation: Password Confirmation
-        password_confirmation_placeholder: Confirm Password
+        password_confirmation_placeholder: Confirm your password
         address: Address
         address_placeholder: Billing address
         name_url: Name URL
@@ -1673,11 +1677,10 @@ en:
 
     user_passwords:
       new:
-        h1: Password Reset
-        paragraph_1: Forgot password? No problem!
-        paragraph_2: Enter your email address and we will send you further instructions.
+        h1: Forgot Your Password?
+        paragraph_1: Enter your email address below to reset your password.
         email: Email
-        email_placeholder: Enter Email Address Here
+        email_placeholder: Enter Email Address
         submit: Reset My Password
 
       create:
@@ -1685,8 +1688,8 @@ en:
         paragraph_1: "No problem! check your mailbox for further instructions. If you don't receive an email within a couple of minutes, check your spam folder."
 
       edit:
-        h1: Reset your password
-        paragraph_1: Enter a new password for your account
+        h1: Reset Your Password
+        paragraph_1: Enter a new password for your account.
 
       set_password:
         h1: Enter password
@@ -1697,7 +1700,7 @@ en:
 
     user_sessions:
       new:
-        h1: Sign In
+        h1: Log In
       form:
         error_message: 'prevented you from signing in'
         email: Email

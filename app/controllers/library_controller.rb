@@ -7,15 +7,29 @@ class LibraryController < ApplicationController
   def index
     @groups = Group.all_active.all_in_order
     redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1
-    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
+    group_names = @groups.map(&:name).join(' and ')
+    seo_title_maker("#{group_names} Professional Courses | LearnSignal",
+                    'Discover professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.',
+                    nil)
   end
 
   def group_show
     @group = Group.find_by_name_url(params[:group_name_url])
     if @group
       @courses = @group.active_children.all_in_order
-      seo_title_maker(@group.name, @group.description, nil)
+      seo_title_maker(@group.seo_title, @group.seo_description, nil)
       tag_manager_data_layer(@group.try(:name))
+
+      ip_country = IpAddress.get_country(request.remote_ip)
+      country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
+
+      if country && @currency_id
+        @subscription_plans = SubscriptionPlan.where(
+            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+        ).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+      end
+
     else
       redirect_to root_url
     end
