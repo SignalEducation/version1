@@ -5,7 +5,7 @@
   -if @exam_body
     =f.hidden_field :preferred_exam_body_id, id: 'hidden_preferred_exam_body_id', value: @exam_body.id
 
-  #sign-up.landing-sign-up-section
+  #sign-up.my-3.mx-5.pt-4
     .row
       =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
       .col-sm-6

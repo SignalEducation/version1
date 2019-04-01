@@ -9,31 +9,31 @@
 
         .row
           -if @plan
-            .col-sm-4.mb-5.mb-xl-0
-              %fieldset
-                .form-group
-                  .custom-control.custom-radio
-                    %input.custom-control-input.custom-control-input-card.style-checkbox{:id => @plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => @plan.price, :frequency => @plan.payment_frequency_in_months}, :value => @plan.id, :checked => true}
-                    %label.custom-control-label{:for => @plan.interval_name.downcase}
-                      %span.custom-label-info
-                        %span.h3.m-0
-                          %span
-                            =@plan.interval_name
-                        - if @plan.monthly_percentage_off.present? && @plan.monthly_percentage_off > 0
-                          %span.discount
-                            %span.text-with-bg.bg-torquoise4
-                              ="#{@plan.monthly_percentage_off}%"
-                            off monthly price
-                      %span.custom-label-amount
-                        %span.text-purple5.text-xl
-                          =@plan.currency.format_number(@plan.price)
-                        %span.p
-                          ="Billed every #{@plan.payment_frequency_in_months > 1 ? pluralize(@plan.payment_frequency_in_months, 'month') : 'month'}"
-                      %span.custom-check
-                        / custom checkbox
+            .col-md-4.mb-5.mb-xl-0
+              %article.card.card-primary.card-pink
+                .card-body.text-center
+                  %h2.h1.card-title
+                    =t("views.general.payment_frequency_in_months.a#{@plan.payment_frequency_in_months}")
+                  %p
+                    Cancel anytime
+
+                  %p="Access to all #{@plan.exam_body.name} courses"
+                  %p="Topic-by-topic video lectures"
+                  %p="24/7 tutor support"
+
+                  %p.h3
+                    =@plan.currency.format_number(@plan.price)
 
 
-          .col-sm
+                  -if @plan.monthly_percentage_off
+                    %p.h5
+                      Save over
+                      =@plan.monthly_percentage_off
+                      ='%'
+
+
+
+          .col-md
             .form-box.sign-in-register
               #session-tabs
                 %nav
@@ -43,7 +43,7 @@
                         ='Register'
                     %li.nav-item
                       %a{href: "#sign-in-tab", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "sign-in", selected: 'false'}}
-                        ='Sign In'
+                        ='Log In'
 
 
               #sessionTabsContent.tab-content
