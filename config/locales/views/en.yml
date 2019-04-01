@@ -581,6 +581,8 @@ en:
         duration_placeholder: Duration in Seconds
         video_id: Video ID
         video_id_placeholder: Wistia ID
+        vimeo_guid: Vimeo ID
+        vimeo_guid_placeholder: Vimeo ID (in the URL on Vimeo)
 
     course_tutor_details:
       form:

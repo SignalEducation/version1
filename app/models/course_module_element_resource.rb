@@ -47,7 +47,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   end
 
   def type
-    self.web_url ? 'External LInk' : 'File Upload'
+    self.web_url ? 'External Link' : 'File Upload'
   end
 
   protected
