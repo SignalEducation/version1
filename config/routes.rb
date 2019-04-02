@@ -216,7 +216,7 @@ Rails.application.routes.draw do
     get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
-    get 'profile/:id', to: 'footer_pages#profile', as: :profile
+    get 'profile/:name_url', to: 'footer_pages#profile', as: :profile
     get 'profiles', to: 'footer_pages#profile_index', as: :tutors
 
     resources :users, only: [:new, :create]

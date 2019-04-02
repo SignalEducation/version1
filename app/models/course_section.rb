@@ -107,9 +107,6 @@ class CourseSection < ActiveRecord::Base
   ## Keeping Model Count Attributes Up-to-Date ##
   ### Triggered by Child Model ###
   def recalculate_fields
-    # Temp change here - active_children to valid_children
-    # filter out the test boolean true records so as not to count these in the %_complete
-
     cme_count = self.active_children.sum(:cme_count)
     quiz_count = self.active_children.sum(:quiz_count)
     video_count = self.active_children.sum(:video_count)
@@ -129,6 +126,7 @@ class CourseSection < ActiveRecord::Base
     self.cme_count = self.active_children.sum(:cme_count)
     self.quiz_count = self.active_children.sum(:quiz_count)
     self.video_count = self.active_children.sum(:video_count)
+    self.constructed_response_count = self.active_children.sum(:constructed_response_count)
   end
 
   def update_parent

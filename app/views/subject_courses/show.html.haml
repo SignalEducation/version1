@@ -20,6 +20,16 @@
           =link_to 'Reorder Course Sections', reorder_course_sections_url(@subject_course.id), class: 'btn btn-orange'
           =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-secondary-reverse'
           =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-secondary'
+      .row
+        .col-sm-12
+          Quizzes
+          =@subject_course.quiz_count
+          Videos
+          =@subject_course.video_count
+          CRs
+          =@subject_course.constructed_response_count
+          Total Count
+          =@subject_course.cme_count
 
       .row
         .col-md-12
@@ -29,9 +39,16 @@
                 .box-item.table-box
                   .table-responsive
                     .row
-                      .col-sm-9
+                      .col-sm-6
                         %h2=course_section.name.to_s.truncate(50)
-                      .col-sm-3
+                      .col-sm-4
+                        Quizzes
+                        =course_section.quiz_count
+                        Videos
+                        =course_section.video_count
+                        CRs
+                        =course_section.constructed_response_count
+                      .col-sm-2
                         .pull-right
                           =tick_or_cross(course_section.active)
 

@@ -9,7 +9,7 @@
         .row
           -@tutors.each do |tutor|
             .col-sm-6.col-md-4.col-lg-3
-              =link_to profile_url(tutor), class: 'card text-center mb-4' do
+              =link_to profile_url(tutor.name_url), class: 'card text-center mb-4' do
                 .py-4
                   = image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
 
