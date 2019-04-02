@@ -72,6 +72,7 @@ en:
       settings: Settings
       sign_in: Log in
       enter: Enter
+      log_out: Log out
       sign_out: Sign out
       sign_up: Sign up
       sign_up_now: Sign up Now
@@ -580,6 +581,8 @@ en:
         duration_placeholder: Duration in Seconds
         video_id: Video ID
         video_id_placeholder: Wistia ID
+        vimeo_guid: Vimeo ID
+        vimeo_guid_placeholder: Vimeo ID (in the URL on Vimeo)
 
     course_tutor_details:
       form:
@@ -1641,7 +1644,7 @@ en:
         new_password: "New Password (6 chars min.)"
         new_password_placeholder: New Password
         password_confirmation: Confirm New Password
-        password_confirmation_placeholder: Password confirmation
+        password_confirmation_placeholder: Password Confirmation
 
 
     user_groups:
@@ -1680,7 +1683,7 @@ en:
         h1: Forgot Your Password?
         paragraph_1: Enter your email address below to reset your password.
         email: Email
-        email_placeholder: Enter Email Address
+        email_placeholder: Enter Your Email Address
         submit: Reset My Password
 
       create:

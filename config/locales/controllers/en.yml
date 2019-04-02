@@ -11,17 +11,11 @@ en:
         standard: "%-e %b %Y"
       datepicker_datetime_format: "YYYY-MM-DD"
       datepicker_date_format: "YYYY-MM-DD"
-      difficulty_levels:
-        name:
-          easy: Easy
-          medium: Medium
-          difficult: Difficult
       logged_in_required:
-        flash_error: 'You must be signed in to access that page - please sign in'
+        flash_error: 'You must be logged in to access that page - please log in'
       logged_out_required:
         flash_error: 'You must be logged out to do that'
       you_are_not_permitted_to_do_that: 'You are not permitted to do that'
-      simultaneous_logins_detected: 'Access denied. Simultaneous logins detected.'
 
     duplicate_me_for_controller:
       create:
@@ -47,18 +41,6 @@ en:
           success: Content Page has been deleted
           error: Content Page was not deleted
 
-    corporate_requests:
-      create:
-        flash:
-          success: Corporate Request has been created successfully
-      update:
-        flash:
-          success: Corporate Request details have been updated successfully
-      destroy:
-        flash:
-          success: Corporate Request has been deleted
-          error: Corporate Request was not deleted
-
     countries:
       create:
         flash:
@@ -82,7 +64,6 @@ en:
         flash:
           success: Coupon has been deleted
           error: Coupon was not deleted
-
 
     courses:
       show:
@@ -515,7 +496,6 @@ en:
       create:
         flash:
           success: User has been created successfully
-        flash:
           error: "Sorry the data entered was not valid. Please ensure the email is valid and the password fields match."
       update:
         flash:
@@ -568,7 +548,7 @@ en:
           success: Your password has been successsfully set!
           error: Your password has not been reset. Please start again.
           user_error: An error occurred during this process. Please contact use for assistance.
-          password_and_confirmation_do_not_match: Password and password confirmation do not match. Please try again.
+          password_and_confirmation_do_not_match: Password and Password Confirmation do not match. Please try again.
 
     user_sessions:
       create:

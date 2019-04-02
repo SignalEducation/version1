@@ -6,7 +6,7 @@ class StudentSignUpsController < ApplicationController
   before_action :layout_variables, only: [:home, :landing]
 
   def home
-    @footer = false
+    @footer = 'white'
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     #@banner = @home_page.external_banners.first
     seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
@@ -52,7 +52,7 @@ class StudentSignUpsController < ApplicationController
       redirect_to root_url
     end
 
-    @footer = false
+    @footer = 'white'
     @form_type = 'Landing Page Contact'
   end
 
@@ -67,7 +67,7 @@ class StudentSignUpsController < ApplicationController
   def new
     @navbar = true
     seo_title_maker('Free Basic Plan Registration | LearnSignal',
-                    'Register for our basic membership plan to access to your essential course materials and discover the smarter way to study with learnsignal.',
+                    'Register for our basic membership plan to access your essential course materials and discover the smarter way to study with learnsignal.',
                     false)
 
   end

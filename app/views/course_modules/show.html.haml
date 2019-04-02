@@ -12,8 +12,19 @@
           .li
             .box-item.table-box
               .table-responsive
-                %p.h5
-                  =@course_module.name
+                .row
+                  .col-sm-4
+                    %p.h5
+                      =@course_module.name
+                  .col-sm-4
+                    Quizzes
+                    =@course_module.quiz_count
+                    Videos
+                    =@course_module.video_count
+                    CRs
+                    =@course_module.constructed_response_count
+                    Total Count
+                    =@course_module.cme_count
 
                 %table.table.sorted_table{data: {destination: course_module_elements_url}, id: @course_module.id}
                   %thead

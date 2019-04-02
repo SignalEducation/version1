@@ -60,8 +60,8 @@ class FooterPagesController < ApplicationController
 
 
   def profile
-    #/profile/id
-    @tutor = User.all_tutors.where(id: params[:id]).first
+
+    @tutor = User.all_tutors.where(name_url: params[:name_url]).first
     if @tutor && @tutor.course_tutor_details.any?
       @course_ids = []
       @tutor.course_tutor_details.each do |course_tutor|

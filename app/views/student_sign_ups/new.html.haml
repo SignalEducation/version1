@@ -4,7 +4,7 @@
       %header.hero-section.hero-section-external
         %h1.h1-hero.mb-2
           ='Basic Plan Registration'
-        %p.h5
+        %p
           ='No credit card required. Set-up takes one minute.'
 
       %section.pb-md-6.pb-5
@@ -50,7 +50,7 @@
                     =f.label :password_confirmation, t('views.users.form.password_confirmation')
                     =f.password_field :password_confirmation, class: 'form-control', id: 'user_password_confirmation'
 
-                -#.col-sm-12
+                .col-sm-12
                   .form-group
                     %label.check.terms_and_conditions
                       %input{type: 'checkbox', id: 'terms_and_conditions', required: true}

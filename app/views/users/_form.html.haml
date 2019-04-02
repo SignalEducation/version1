@@ -48,6 +48,10 @@
             %br/
           .input-group.input-group-lg
             =f.file_field :profile_image, class: 'form-control'
+        .col-sm.pt-4
+          =f.label :name_url, t('views.users.form.name_url')
+          .input-group.input-group-lg
+            =f.text_field :name_url, class: 'form-control'
 
 
     .row.pt-4

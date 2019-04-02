@@ -90,7 +90,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def children_available_count
-    self.active_children.all_active.count
+    self.active_children.count
   end
 
   #######################################################################
@@ -206,8 +206,9 @@ class CourseModule < ActiveRecord::Base
   protected
 
   def set_count_fields
-    self.quiz_count = self.active_children.all_active.all_quizzes.count
-    self.video_count = self.active_children.all_active.all_videos.count
+    self.quiz_count = self.active_children.all_quizzes.count
+    self.video_count = self.active_children.all_videos.count
+    self.constructed_response_count = self.active_children.all_constructed_response.count
     self.cme_count = children_available_count
   end
 

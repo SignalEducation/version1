@@ -34,12 +34,9 @@
                   =t('views.general.user_name') + current_user.first_name.to_s
               .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
                 =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
-                =link_to t('views.general.sign_out'), sign_out_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
           -else
-            %li.nav-item
-              =link_to 'http://blog.learnsignal.com/', target: '_blank', class: 'nav-link' do
-                %span Blog
             %li.nav-item
               =link_to library_url, class: 'nav-link' do
                 %span Courses

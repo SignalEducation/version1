@@ -2,7 +2,7 @@
   -field_list = thing.errors.map {|x,y| x}.uniq
   -field_list.uniq.each do |field|
     .notice.error
-      %i.material-icons.budicon-cross-sign{"aria-label" => "", :role => "img"}
+      %i.material-icons.budicon-alert-sign{"aria-label" => "", :role => "img"}
       =field.to_s.humanize.gsub('Base','')
       -if thing.errors[field].length > 1
         =#t('views.layouts.error_messages.is_invalid')

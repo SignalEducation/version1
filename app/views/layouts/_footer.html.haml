@@ -1,9 +1,9 @@
-%footer.footer{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'footer-light' : 'footer-dark'}
+%footer.footer{class: @footer == 'white' ? 'footer-light' : 'footer-dark'}
   .container.position-relative.py-6
     .row
       .col-12.col-md-6.col-lg-4
         =link_to home_url, class: 'mb-4' do
-          =image_tag((controller_name == 'student_sign_ups' && action_name != 'new') ? 'Learnsignal-Logo.svg' : 'learnsignal-Logo-white.svg', class: 'mb-1 logo', alt: 'LearnSignal Logo')
+          =image_tag(@footer == 'white' ? 'Learnsignal-Logo.svg' : 'learnsignal-Logo-white.svg', class: 'mb-1 logo', alt: 'LearnSignal Logo')
 
       .col-6.col-md-3.col-lg-4.mb-4
         .row
