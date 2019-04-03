@@ -49,7 +49,7 @@ class SubscriptionPlansController < ApplicationController
       elsif current_user.orders.any? && current_user.orders.last.product_id
         @currency_id = current_user.orders.last.try(:product_id)
       else
-        @currency_id = @country.currency_id
+        @currency_id = country.currency_id
       end
     end
 
