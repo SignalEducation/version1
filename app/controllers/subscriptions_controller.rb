@@ -47,7 +47,7 @@ class SubscriptionsController < ApplicationController
       if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
         @currency_id = @existing_subscription.subscription_plan.currency_id
       elsif current_user.orders.any? && current_user.orders.last.product_id
-        @currency_id = current_user.orders.last.try(:product_id)
+        @currency_id = current_user.orders.last.product.currency_id
       else
         @currency_id = @country.currency_id
       end
