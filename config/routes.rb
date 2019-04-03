@@ -235,12 +235,8 @@ Rails.application.routes.draw do
     end
     resources :refunds
 
-    resources :white_papers, concerns: :supports_reordering
     get 'mock_exams', to: 'footer_pages#media_library', as: :media_library
     get 'prep_products', to: 'footer_pages#media_library', as: :prep_products
-    get 'white_paper/:white_paper_name_url', to: 'footer_pages#white_paper_request', as: :public_white_paper
-    resources :white_paper_requests
-    post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
     resources :home_pages
 
