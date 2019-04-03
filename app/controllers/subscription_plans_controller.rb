@@ -42,9 +42,14 @@ class SubscriptionPlansController < ApplicationController
     @currency_id = country.currency_id
 
     if current_user
+      # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
       @existing_subscription = current_user.current_subscription
       if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
         @currency_id = @existing_subscription.subscription_plan.currency_id
+      elsif current_user.orders.any? && current_user.orders.last.product_id
+        @currency_id = current_user.orders.last.try(:product_id)
+      else
+        @currency_id = @country.currency_id
       end
     end
 
