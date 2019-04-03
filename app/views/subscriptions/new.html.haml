@@ -30,7 +30,7 @@
               .col-lg-6.mb-5.mb-xl-0.mt-2
                 %fieldset
                   %legend.sr-only Select a Plan
-                  - if @subscription.subscription_plan.payment_frequency_in_months == 12
+                  - if @subscription && @subscription.subscription_plan.payment_frequency_in_months == 12
                     =render partial: 'single_plan_checkout', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
                   - else
                     =render partial: 'multi_plans', locals: {subscription: @subscription, subscription_plans: @subscription_plans}
