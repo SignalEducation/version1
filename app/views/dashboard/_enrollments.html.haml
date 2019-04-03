@@ -32,7 +32,7 @@
   .container-fluid.l-margin-bottom-huge
     .list-wrap
       .row
-        -@default_group.subject_courses.all_in_order.each do |course|
+        -@default_group.subject_courses.all_active.all_in_order.each do |course|
           .col-sm-6
             =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
               .card-inner.text-center
