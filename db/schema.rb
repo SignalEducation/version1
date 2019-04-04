@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_04_175934) do
+ActiveRecord::Schema.define(version: 2019_04_04_182635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -456,7 +456,11 @@ ActiveRecord::Schema.define(version: 2019_04_04_175934) do
     t.string "state"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "corrector_id"
+    t.index ["corrector_id"], name: "index_exercises_on_corrector_id"
     t.index ["product_id"], name: "index_exercises_on_product_id"
+    t.index ["user_id"], name: "index_exercises_on_user_id"
   end
 
   create_table "external_banners", id: :serial, force: :cascade do |t|
@@ -1350,6 +1354,8 @@ ActiveRecord::Schema.define(version: 2019_04_04_175934) do
   end
 
   add_foreign_key "exercises", "products"
+  add_foreign_key "exercises", "users"
+  add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"

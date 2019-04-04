@@ -31,6 +31,7 @@ class Product < ActiveRecord::Base
   belongs_to :currency
   belongs_to :mock_exam
   has_many :orders
+  has_many :exercises
 
   # validation
   validates :name, presence: true

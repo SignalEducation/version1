@@ -2,15 +2,19 @@
 #
 # Table name: exercises
 #
-#  id         :bigint(8)        not null, primary key
-#  product_id :bigint(8)
-#  state      :string
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id           :bigint(8)        not null, primary key
+#  product_id   :bigint(8)
+#  state        :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  user_id      :bigint(8)
+#  corrector_id :bigint(8)
 #
 
 class Exercise < ApplicationRecord
   belongs_to :product
+  belongs_to :user
+  belongs_to :corrector, optional: true
 
   state_machine initial: :pending do
     event :submit do
