@@ -47,7 +47,6 @@ class Order < ActiveRecord::Base
   before_create :assign_random_guid
   before_destroy :check_dependencies
   after_create :create_order_transaction
-  after_create :generate_exercises
 
   # scopes
   scope :all_in_order, -> { order(:product_id) }
@@ -70,6 +69,7 @@ class Order < ActiveRecord::Base
 
     after_transition all => :completed do |order, _transition|
       order.execute_order_completion
+      order.generate_exercises
     end
   end
 
@@ -83,6 +83,17 @@ class Order < ActiveRecord::Base
 
   def execute_order_completion
     MandrillWorker.perform_async(self.user_id, 'send_mock_exam_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
+    generate_exercises
+  end
+
+  def generate_exercises
+    if product.mock_exam?
+      user.exercises.create(product_id: product_id)
+    elsif product.correction_pack?
+      (1..product.correction_pack_count).each do |ex|
+        user.exercises.create(product_id: product_id)
+      end
+    end
   end
 
   def mock_exam
@@ -104,20 +115,6 @@ class Order < ActiveRecord::Base
 
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
-  end
-
-  def generate_exercises
-    if product.mock_exam?
-      user.exercises.create(product_id: product_id)
-    elsif product.correction_pack?
-      (1..product.correction_pack_count).each do |ex|
-        user.exercises.create(product_id: product_id)
-      end
-    end
-  end
-
-  def generate_mock_exercise
-    user.exercises.create(product_id: product_id)
   end
 
   def stripe?
