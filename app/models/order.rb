@@ -47,6 +47,7 @@ class Order < ActiveRecord::Base
   before_create :assign_random_guid
   before_destroy :check_dependencies
   after_create :create_order_transaction
+  after_create :generate_exercises
 
   # scopes
   scope :all_in_order, -> { order(:product_id) }
@@ -103,6 +104,20 @@ class Order < ActiveRecord::Base
 
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
+  end
+
+  def generate_exercises
+    if product.mock_exam?
+      user.exercises.create(product_id: product_id)
+    elsif product.correction_pack?
+      (1..product.correction_pack_count).each do |ex|
+        user.exercises.create(product_id: product_id)
+      end
+    end
+  end
+
+  def generate_mock_exercise
+    user.exercises.create(product_id: product_id)
   end
 
   def stripe?
