@@ -23,7 +23,6 @@
 #
 
 class Order < ActiveRecord::Base
-
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
   attr_accessor :use_paypal, :paypal_approval_url, :stripe_token

@@ -28,6 +28,9 @@ class Exercise < ApplicationRecord
   has_attached_file :correction, default_url: 'images/missing_image.jpg'
   validates_attachment_content_type :submission, :correction, content_type: 'application/pdf'
 
+  after_submission_post_process :submit
+  after_correction_post_process :return
+
   state_machine initial: :pending do
     event :submit do
       transition pending: :submitted

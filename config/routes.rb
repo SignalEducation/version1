@@ -75,6 +75,7 @@ Rails.application.routes.draw do
       get  '/orders', action: :user_purchases_details, as: :orders
       get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses
+      resources :exercises, only: [:index, :show, :edit, :update], shallow: true
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
