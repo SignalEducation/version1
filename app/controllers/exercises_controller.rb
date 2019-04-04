@@ -17,6 +17,7 @@ class ExercisesController < ApplicationController
 
   def update
     if @exercise.update(exercise_params)
+      redirect_to user_exercises_path(current_user), notice: 'Submission successful. You will be notified when corrections become available.'
     else
       render :new
     end
