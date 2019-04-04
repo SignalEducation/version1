@@ -2,20 +2,21 @@
 #
 # Table name: products
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  mock_exam_id      :integer
-#  stripe_guid       :string
-#  live_mode         :boolean          default(FALSE)
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  active            :boolean          default(FALSE)
-#  currency_id       :integer
-#  price             :decimal(, )
-#  stripe_sku_guid   :string
-#  subject_course_id :integer
-#  sorting_order     :integer
-#  product_type      :integer          default("mock_exam")
+#  id                    :integer          not null, primary key
+#  name                  :string
+#  mock_exam_id          :integer
+#  stripe_guid           :string
+#  live_mode             :boolean          default(FALSE)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  active                :boolean          default(FALSE)
+#  currency_id           :integer
+#  price                 :decimal(, )
+#  stripe_sku_guid       :string
+#  subject_course_id     :integer
+#  sorting_order         :integer
+#  product_type          :integer          default("mock_exam")
+#  correction_pack_count :integer
 #
 
 class Product < ActiveRecord::Base
@@ -39,6 +40,11 @@ class Product < ActiveRecord::Base
   validates :price, presence: true
   validates :stripe_guid, presence: true, uniqueness: true, on: :update
   validates :stripe_sku_guid, presence: true, uniqueness: true, on: :update
+  validates :correction_pack_count, 
+              presence: true, 
+              numericality: { 
+                only_integer: true, greater_than: 0 
+              }, if: Proc.new { |prod| prod.correction_pack? }
 
   # callbacks
   after_create :create_on_stripe

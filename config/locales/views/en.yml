@@ -1024,6 +1024,7 @@ en:
         currency: Currency
         mock_exam_id: Mock Exam
         product_type: Product Type
+        correction_pack_count: Number of Corrections
         subject_course: Course
         type: Type
 
