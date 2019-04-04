@@ -1,5 +1,4 @@
 class UserSessionsController < ApplicationController
-
   before_action :logged_out_required, only: [:new, :create]
   before_action :logged_in_required,  only: :destroy
   before_action :set_variables
@@ -54,5 +53,4 @@ class UserSessionsController < ApplicationController
 
   def set_variables
   end
-
 end

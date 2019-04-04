@@ -4,9 +4,10 @@ require 'prawn'
 require 'mandrill'
 require 'csv'
 
-class ApplicationController < ActionController::Base# Prevent CSRF attacks by raising an exception.
+class ApplicationController < ActionController::Base
+  # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
   before_action :authenticate_if_staging
   before_action :setup_mcapi
   before_action :set_locale        # not for Api::
@@ -113,6 +114,14 @@ class ApplicationController < ActionController::Base# Prevent CSRF attacks by ra
   end
   helper_method :ensure_user_has_access_rights
 
+
+  def authenticate_if_staging
+    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
+      authenticate_or_request_with_http_basic 'Staging' do |name, password|
+        name == 'signal' && password == '27(South!)'
+      end
+    end
+  end
 
   def authenticate_if_staging
     if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
