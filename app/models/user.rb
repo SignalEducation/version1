@@ -380,6 +380,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
   end
 
+  def non_verified_user?
+    !self.email_verified && self.email_verification_code
+  end
+
   def blocked_user?
     self.user_group.blocked_user
   end

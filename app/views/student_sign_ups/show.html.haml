@@ -1,0 +1,25 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section.hero-section-external
+        %h1.h1-mega
+          Fantastic! Check your inbox now
+
+      %section.pb-md-6.pb-5
+        .row.justify-content-center
+          .col-xs-12.col-sm-8
+            .box-item.text-center
+              %i{"aria-label" => 'Icon', :role => "img", class: 'budicon-email-alert'}
+
+              %h4.pt-4
+                Verify Your Email Address
+
+
+              %p
+                Click on the email we just sent you to verify your email address.
+
+              -if @user && @user.email_verification_code
+                %p
+                  ="Didn't get the email? Please check your spam folder or "
+                  =link_to 'click here', resend_verification_mail_url(@user.email_verification_code), method: :post
+                  =" to resend it."
