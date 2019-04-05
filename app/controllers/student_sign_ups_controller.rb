@@ -45,7 +45,6 @@ class StudentSignUpsController < ApplicationController
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
       # This is for sticky sub plans
-      cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
 
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
     else

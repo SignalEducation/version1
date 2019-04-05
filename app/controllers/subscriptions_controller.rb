@@ -183,11 +183,9 @@ class SubscriptionsController < ApplicationController
   def get_relevant_subscription_plans
     country = IpAddress.get_country(request.remote_ip) || current_user.country
     currency = current_user.get_currency(country)
-    cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
     plans = SubscriptionPlan.get_relevant(
                                             current_user,
                                             currency,
-                                            cookie,
                                             params[:exam_body_id]
                                           )
     return plans, country
