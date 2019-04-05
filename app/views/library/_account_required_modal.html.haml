@@ -6,17 +6,17 @@
           Close
         %i.material-icons.ml-1{'aria-hidden': 'true'}
           close
-      .modal-header
+      .modal-header.mb-3
         %h3.text-red{id: 'accountRequired'}
           Account Required
 
       .modal-body
         %p.font-weight-medium.mb-4.text-purple
-          Sorry! A valid account is required to access that content
-        %p.mb-4.text-purple
-          Sign Up or Sign In
+          A valid account is required to access that content. Register today for our basic plan. No credit card required.
+        %p.mb-5.text-purple
+          If you already have an account log in now.
 
       .modal-footer
-        =link_to 'Sign In', sign_in_url, class: 'btn btn-primary', title: 'Sign In'
-        =link_to 'Sign Up Now', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Sign Up'
+        =link_to 'Register Now', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Register Now'
+        =link_to 'Log In', sign_in_url, class: 'btn btn-primary', title: 'Log In'
 

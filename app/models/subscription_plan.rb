@@ -78,19 +78,10 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :yearly, -> { where(payment_frequency_in_months: 12) }
 
   # class methods
-  def self.generally_available_or_for_category_guid(the_guid)
-    plan_category = SubscriptionPlanCategory.active_with_guid(the_guid).first
-    if plan_category
-      where(subscription_plan_category_id: plan_category.id)
-    else
-      generally_available
-    end
-  end
-
-  def self.get_relevant(user, currency, cookie, exam_body_id)
+  def self.get_relevant(user, currency, exam_body_id)
     plans = self.for_students
                 .in_currency(currency.id)
-                .generally_available_or_for_category_guid(cookie)
+                .generally_available
                 .all_active
                 .all_in_order
     if exam_body_id && (body = ExamBody.find(exam_body_id))

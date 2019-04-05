@@ -26,11 +26,7 @@
       .row.no-gutters
         .col-xl-4
           %header.home-hero-header.pb-2
-            %h1.h1-hero
-              the smarter
-              %br
-              way to study
-              %span.text-mint .
+            <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
             %p.p-hero Designed by experts and delivered online so that you can study on a schedule that suits your needs.
 
             -if @home_page.logo_image && @home_page.logo_image.present?
@@ -91,8 +87,8 @@
     .container
       %article.text-gray3.text-center.py-6.py-sm-7
         %header.pb-3
-          %h1.text-white.px-5.px-sm-6 Designed with you at the core
-          %p.p-hero Studying for your exams has never been easier
+          %h1.text-white.px-5.px-sm-6 Discover the smarter way to study
+          %p.p-hero Studying has never been easier with our expertly designed online courses.
         .px-4.px-lg-8
           .row.row-lg
             .col-md-3
@@ -104,21 +100,21 @@
               .pb-4.d-flex.flex-md-column.align-items-center
                 .mr-4.mb-md-4.mx-md-0
                   %i.budicon-card-slides{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Topic-by-topic, bite-size lectures
+                %p.m-0.text-left.text-md-center Topic-by-topic online lectures
             .col-md-3
               .pb-4.d-flex.flex-md-column.align-items-center
                 .mr-4.mb-md-4.mx-md-0
                   %i.budicon-doc-marker{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Notes, MCQs and correct mock exams
+                %p.m-0.text-left.text-md-center Expert notes and corrected questions
             .col-md-3
               .pb-4.d-flex.flex-md-column.align-items-center
                 .mr-4.mb-md-4.mx-md-0
                   %i.budicon-happy-chat{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Tutor support at every step of the way
+                %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
 
   -if @home_page.pricing_section && @subscription_plans.any?
     .container-bg.bg-gray5
-      .container
+      .container#plans
         %section.pb-md-6.pb-5.pt-md-6.pt-5
           .container-md.pb-3.text-center
             %h2.h1-mega
@@ -171,7 +167,7 @@
           .d-flex.h-100.align-items-center
             %blockquote.mb-0.ml-lg-6.mr-lg-6
               %p.text-gray2
-                "The good thing about Learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
               %footer
                 %cite.font-weight-semi-bold.text-gray2
                   Rebecca Nagujja, Ireland

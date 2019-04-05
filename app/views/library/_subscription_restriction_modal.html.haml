@@ -6,16 +6,16 @@
           Close
         %i.material-icons.ml-1{'aria-hidden': 'true'}
           close
-      .modal-header
+      .modal-header.mb-3
         %h3.text-red{id: 'invalidSubscription'}
           Valid Subscription Required
 
       .modal-body
         %p.font-weight-medium.mb-4.text-purple
-          Sorry! A valid subscription is required to access that content
+          A valid account is required to access that content. Subscribe to a payment plan to access all course materials. Cancel anytime.
         %p.mb-4.text-purple
-          Upgrade to a subscription to get full access
+          ="Get unlimited access to all #{@group.name} courses."
 
       .modal-footer
-        =link_to 'Upgrade', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Subscription Upgrade'
+        =link_to 'Get Unlimited Access', subscription_checkout_special_link(@group.exam_body_id), class: 'btn btn-primary', title: 'Get Unlimited Access'
 

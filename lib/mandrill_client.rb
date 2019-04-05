@@ -70,15 +70,6 @@ class MandrillClient
     send_template('mock_exam_purchase_170811', msg)
   end
 
-  def send_white_paper_request_email(name, title, url)
-    msg = message_stub.merge({"subject" => "#{title}"})
-    msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
-    msg["global_merge_vars"] << { "name" => "TITLE", "content" => title }
-    msg["global_merge_vars"] << { "name" => "URL", "content" => url }
-    send_template('white-paper-download-20-02-17', msg)
-  end
-
-
   # Enrollments Emails (Unsubscribe possible)
   def send_enrollment_welcome_email(course_name, url)
     msg = message_stub.merge({"subject" => "Welcome to #{course_name}"})

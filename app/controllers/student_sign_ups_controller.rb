@@ -45,7 +45,6 @@ class StudentSignUpsController < ApplicationController
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
       # This is for sticky sub plans
-      cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
 
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
     else
@@ -86,14 +85,13 @@ class StudentSignUpsController < ApplicationController
 
     if @user.valid? && @user.save
       handle_post_user_creation(@user)
-      UserSession.create(@user)
-      set_current_visit
 
       if flash[:plan_guid]
+        UserSession.create(@user)
+        set_current_visit
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
       else
-        group = Group.where(exam_body_id: @user.preferred_exam_body_id).all_active.all_in_order.first
-        redirect_to library_special_link(group)
+        redirect_to personal_sign_up_complete_url(@user.account_activation_code)
       end
 
     elsif request && request.referrer
@@ -102,6 +100,15 @@ class StudentSignUpsController < ApplicationController
     else
       redirect_to root_url
     end
+  end
+
+  def show
+    #This is the post sign-up landing page - personal_sign_up_complete
+    #If no user is found redirect - because analytics counts loading of
+    # this page as new sign ups so we only want it to load once for each sign up
+    @user = User.get_and_activate(params[:account_activation_code])
+    @banner = nil
+    redirect_to sign_in_url unless @user
   end
 
   def subscribe

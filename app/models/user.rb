@@ -380,6 +380,10 @@ class User < ActiveRecord::Base
     self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
   end
 
+  def non_verified_user?
+    !self.email_verified && self.email_verification_code
+  end
+
   def blocked_user?
     self.user_group.blocked_user
   end
@@ -570,6 +574,8 @@ class User < ActiveRecord::Base
   def get_currency(country)
     if existing_sub = subscriptions.not_pending.all_active.first
       existing_sub.subscription_plan&.currency || country.currency
+    elsif existing_order = orders.all.first
+      existing_order.product&.currency || country.currency
     else
       country.currency
     end
