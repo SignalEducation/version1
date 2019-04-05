@@ -158,13 +158,6 @@ class User < ActiveRecord::Base
     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
   end
 
-  def self.get_and_activate(activation_code)
-    user = User.where(active: false).where(account_activation_code: activation_code, account_activated_at: nil).first
-    time_now = Proc.new{Time.now}.call
-    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) if user
-    return user
-  end
-
   def self.get_and_verify(email_verification_code, country_id)
     time_now = Proc.new{Time.now}.call
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first

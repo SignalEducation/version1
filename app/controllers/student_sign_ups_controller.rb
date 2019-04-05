@@ -91,7 +91,7 @@ class StudentSignUpsController < ApplicationController
         set_current_visit
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
       else
-        redirect_to personal_sign_up_complete_url(@user.account_activation_code)
+        redirect_to personal_sign_up_complete_url
       end
 
     elsif request && request.referrer
@@ -103,12 +103,7 @@ class StudentSignUpsController < ApplicationController
   end
 
   def show
-    #This is the post sign-up landing page - personal_sign_up_complete
-    #If no user is found redirect - because analytics counts loading of
-    # this page as new sign ups so we only want it to load once for each sign up
-    @user = User.get_and_activate(params[:account_activation_code])
     @banner = nil
-    redirect_to sign_in_url unless @user
   end
 
   def subscribe
