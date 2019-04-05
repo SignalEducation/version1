@@ -1384,18 +1384,18 @@ en:
       form:
         email: Email
         email_confirmation: Email Confirmation
-        exam_body: Study Preference
+        exam_body: Area of Study
         area_of_study: Area of Study
-        your_email: Your email address
+        your_email: Enter your email
         email_placeholder: user@example.com
         phone_number: Phone Number
         interest: Topic
         phone_number_placeholder: Phone Number
         first_name: First Name
-        your_first_name: Your first name
+        your_first_name: Enter your first name
         first_name_placeholder: John
         last_name: Last Name
-        your_last_name: Your last name
+        your_last_name: Enter your last name
         username: Community Username
         username_placeholder: Username for LearnSignal Community Forum
         last_name_placeholder: Smith
@@ -1639,9 +1639,9 @@ en:
       change_password:
         button_label: Change Password
         heading: Change your password
-        current_password: Current password
+        current_password: Current Password
         current_password_placeholder: Current password
-        new_password: "New Password (6 chars min.)"
+        new_password: "New Password"
         new_password_placeholder: New Password
         password_confirmation: Confirm New Password
         password_confirmation_placeholder: Password Confirmation

@@ -68,7 +68,8 @@ class FooterPagesController < ApplicationController
         @course_ids << course_tutor.subject_course if course_tutor.subject_course
       end
       @courses = SubjectCourse.where(id: @course_ids)
-      seo_title_maker(@tutor.full_name, @tutor.description, nil)
+      seo_title_maker("#{@tutor.full_name} Tutor | LearnSignal", @tutor.description, nil)
+
     else
       redirect_to tutors_url
     end
@@ -79,7 +80,7 @@ class FooterPagesController < ApplicationController
   def profile_index
     #/profiles
     @tutors = User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil)
-    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
+    seo_title_maker('Learn About Our Tutors | LearnSignal', 'Our tutors are dedicated helping students achieve their learning goals. Read profiles of the industry experts that create learnsignal’s online courses.', nil)
     @navbar = true
     @top_margin = true
   end

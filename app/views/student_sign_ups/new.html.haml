@@ -50,23 +50,24 @@
                     =f.label :password_confirmation, t('views.users.form.password_confirmation')
                     =f.password_field :password_confirmation, class: 'form-control', id: 'user_password_confirmation'
 
-                .col-sm-12
+                .col-sm-12.pt-3
                   .form-group
                     %label.check.terms_and_conditions
                       %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
-                        ="I Agree to LearnSignal's"
-                        =link_to 'Terms and Conditions', terms_and_conditions_url
+                        %span
+                          ="I agree to learnsignal's"
+                          =link_to 'terms & conditions', terms_and_conditions_url, target: '_blank'
 
-                .col-sm-12.pt-4.pr-3.pl-3
-                  .form-group.pl-4
+                .col-sm-12
+                  .form-group
                     %label.check.communication_approval
                       %input{type: 'checkbox', id: 'communication_approval', required: true}
-                        ='I agree to receiving communications from learnsignal.'
-
+                        %span
+                          ='I agree to receiving communications from learnsignal.'
                     %p
                       ="We're committed to your privacy. The information you provide is used to contact you about relevant content,
-                       products, and services. You may unsubscribe from these communications at any time. For more information,
-                        check out our"
+                         products, and services. You may unsubscribe from these communications at any time. For more information,
+                          check out our"
                       =link_to 'Privacy Policy.', privacy_policy_url, target: '_blank'
 
 

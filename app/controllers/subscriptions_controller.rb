@@ -63,6 +63,7 @@ class SubscriptionsController < ApplicationController
         )
       end
       #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
+      seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
     else
       redirect_to root_url
     end

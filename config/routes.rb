@@ -192,7 +192,7 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
-    get 'sign_in_or_register', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
+    get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
     resources :subscriptions, only: [:new, :create, :update, :destroy] do
       member do
@@ -217,8 +217,8 @@ Rails.application.routes.draw do
     get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
-    get 'profile/:name_url', to: 'footer_pages#profile', as: :profile
-    get 'profiles', to: 'footer_pages#profile_index', as: :tutors
+    get 'tutor/:name_url', to: 'footer_pages#profile', as: :profile
+    get 'tutors', to: 'footer_pages#profile_index', as: :tutors
 
     resources :users, only: [:new, :create]
     post 'search_users', to: 'users#index', as: :search_users
