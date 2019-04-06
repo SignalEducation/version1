@@ -183,15 +183,6 @@ class CourseModuleElement < ActiveRecord::Base
     end
   end
 
-  def available_for_trial(scul=nil)
-    if self.related_course_module_element_id && self.previous_cme_restriction(scul)
-      {view: false, reason: 'related-lesson-restriction'}
-    else
-      self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'trial-restriction'}
-
-    end
-  end
-
   def available_for_subscription(user, exam_body_id, scul=nil)
     if self.related_course_module_element_id && self.previous_cme_restriction(scul)
       {view: false, reason: 'related-lesson-restriction'}
