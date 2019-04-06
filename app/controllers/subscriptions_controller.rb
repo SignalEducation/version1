@@ -43,7 +43,6 @@ class SubscriptionsController < ApplicationController
       @country = ip_country ? ip_country : current_user.country
 
       @existing_subscription = current_user.current_subscription
-      @existing_subscription = user.current_subscription
       if @existing_subscription && @existing_subscription.subscription_plan
         @currency_id = @existing_subscription.subscription_plan.currency_id
       elsif current_user.orders.any? && current_user.orders.last.product_id
