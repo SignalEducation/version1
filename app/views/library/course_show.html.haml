@@ -290,6 +290,8 @@
     elements = $('a[href="' + hash + '"]');
     if (elements.length > 0) {
       elements.click();
+    } else if (hash) {
+      $(hash).modal('show');
     }
 
     let searchParams = new URLSearchParams(window.location.search);

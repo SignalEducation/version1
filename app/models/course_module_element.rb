@@ -102,9 +102,6 @@ class CourseModuleElement < ActiveRecord::Base
   end
 
   def next_element
-    #TODO - need to factor in whether the next element is available to the student [trial or restricted]
-    # And if the next element is active
-
     if self.active && self.with_active_parents? && self.my_position_among_siblings
       if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
         # Find the next CME in the current CM

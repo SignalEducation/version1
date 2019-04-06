@@ -113,7 +113,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def next_module_id
-    if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+    if self.my_position_among_siblings && self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
       self.array_of_sibling_ids[self.my_position_among_siblings + 1]
     else
       nil
