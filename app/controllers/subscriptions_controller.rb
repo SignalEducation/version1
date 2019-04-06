@@ -37,14 +37,14 @@ class SubscriptionsController < ApplicationController
   before_action :set_flash, only: :new
 
   def new
-    if current_user.trial_or_sub_user?
+    if current_user
 
       ip_country = IpAddress.get_country(request.remote_ip)
       @country = ip_country ? ip_country : current_user.country
 
-      # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
       @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan && !@existing_subscription.state == 'pending'
+      @existing_subscription = user.current_subscription
+      if @existing_subscription && @existing_subscription.subscription_plan
         @currency_id = @existing_subscription.subscription_plan.currency_id
       elsif current_user.orders.any? && current_user.orders.last.product_id
         @currency_id = current_user.orders.last.product.currency_id
