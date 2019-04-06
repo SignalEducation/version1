@@ -10,23 +10,15 @@
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
-#  question_count                          :integer
 #  description                             :text
-#  short_description                       :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
-#  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
-#  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
-#  email_content                           :text
-#  external_url_name                       :string
-#  external_url                            :string
 #  exam_body_id                            :integer
 #  survey_url                              :string
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
-#  total_estimated_time_in_seconds         :integer
 #  background_image_file_name              :string
 #  background_image_content_type           :string
 #  background_image_file_size              :integer
@@ -35,8 +27,10 @@
 #  computer_based                          :boolean          default(FALSE)
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
-#  additional_text_label                   :string
+#  icon_label                              :string
 #  constructed_response_count              :integer          default(0)
+#  completion_cme_count                    :integer
+#  release_date                            :date
 #
 
 require 'rails_helper'

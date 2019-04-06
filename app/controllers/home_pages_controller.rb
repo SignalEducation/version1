@@ -98,7 +98,7 @@ class HomePagesController < ApplicationController
                                       :name, :home, :group_id, :background_image,
                                       :mailchimp_list_guid, :logo_image,
                                       :form_section, :pricing_section,
-                                      :footer_link,
+                                      :footer_link, :seo_no_index,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

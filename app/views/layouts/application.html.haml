@@ -8,7 +8,7 @@
       -if @seo_title
         =@seo_title
       -else
-        Study ACCA Online | LearnSignal
+        The Smarter Way to Study | learnsignal
 
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
@@ -43,7 +43,6 @@
       %meta{name: 'robots', content: 'noindex'}
     =render 'application/favicon'
 
-    =render partial: 'layouts/favicon'
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 

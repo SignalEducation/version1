@@ -30,12 +30,9 @@
             =f.text_area :description, rows: 5, placeholder: t('views.groups.form.description_placeholder'),class: 'form-control'
 
         .form-group
-          =f.label :background_colour, t('views.groups.form.background_colour')
+          =f.label :short_description, t('views.groups.form.short_description')
           .input-group.input-group-lg
-            =f.select :background_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28],
-             %w[Purple #775ead], %w[Green #00b67b]],
-              selected: f.object.background_colour),
-               {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+            =f.text_field :short_description, placeholder: t('views.groups.form.short_description_placeholder'), class: 'form-control'
 
         .form-group
           =f.label :seo_title, t('views.groups.form.seo_title')
@@ -46,6 +43,14 @@
           =f.label :seo_description, t('views.groups.form.seo_description')
           .input-group.input-group-lg
             =f.text_field :seo_description, placeholder: t('views.groups.form.seo_description_placeholder'), class: 'form-control'
+
+        .form-group
+          =f.label :background_colour, t('views.groups.form.background_colour')
+          .input-group.input-group-lg
+            =f.select :background_colour, options_for_select([%w[Red #fd5c63], %w[Blue #30aabc], %w[Yellow #f0ca28],
+             %w[Purple #775ead], %w[Green #00b67b]],
+              selected: f.object.background_colour),
+               {include_blank: t('views.general.select')}, class: 'form-control custom-select'
 
 
     .row.pt-6

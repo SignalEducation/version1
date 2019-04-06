@@ -38,26 +38,34 @@
                     %label
                       =f.check_box :footer_link
                       ='Footer Link'
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :seo_no_index
+                      ='No Index'
 
 
           .col-sm-6
-            .form-group
-              =f.label :public_url, t('views.home_pages.form.public_url')
-              .input-group.input-group-lg
-                =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control'
-            .form-group
-              =f.label :custom_file_name, t('views.home_pages.form.custom_file_name')
-              .input-group.input-group-lg
-                =f.text_field :custom_file_name, placeholder: t('views.home_pages.form.custom_file_name_placeholder'), class: 'form-control'
+            -unless @home_page.home
+              .form-group
+                =f.label :public_url, t('views.home_pages.form.public_url')
+                .input-group.input-group-lg
+                  =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control'
+              .form-group
+                =f.label :custom_file_name, t('views.home_pages.form.custom_file_name')
+                .input-group.input-group-lg
+                  =f.text_field :custom_file_name, placeholder: t('views.home_pages.form.custom_file_name_placeholder'), class: 'form-control'
 
             .form-group
               =f.label :group_id, t('views.home_pages.form.group_id')
               .input-group.input-group-lg
                 =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
+
             -#.form-group
               =f.label :subject_course_id, t('views.home_pages.form.subject_course_id')
               .input-group.input-group-lg
                 =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
+
             .form-group
               =f.label :subscription_plan_category_id, t('views.home_pages.form.subscription_plan_category_id')
               .input-group.input-group-lg

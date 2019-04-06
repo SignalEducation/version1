@@ -93,6 +93,6 @@ class GroupsController < ApplicationController
     params.require(:group).permit(:name, :name_url, :active, :sorting_order,
                                   :description, :image, :background_image,
                                   :background_colour, :exam_body_id,
-                                  :seo_title, :seo_description)
+                                  :seo_title, :seo_description, :short_description)
   end
 end

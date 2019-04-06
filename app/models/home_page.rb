@@ -19,6 +19,7 @@
 #  mailchimp_list_guid           :string
 #  form_section                  :boolean          default(FALSE), not null
 #  pricing_section               :boolean          default(FALSE), not null
+#  seo_no_index                  :boolean          default(FALSE), not null
 #
 
 class HomePage < ActiveRecord::Base
@@ -45,7 +46,7 @@ class HomePage < ActiveRecord::Base
   validates :public_url, presence: true, length: {maximum: 255},
             uniqueness: true
 
-  validate :group_xor_course
+  validate :group_xor_course, unless: :home
 
 
   # callbacks

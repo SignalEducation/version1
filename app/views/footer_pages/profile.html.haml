@@ -24,7 +24,7 @@
                 .col-lg-6.col-xl-4
                   =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
                     .card-header.d-flex.justify-content-center.align-items-center
-                      %i{"aria-label" => "Strategic Professional", :role => "img", class: course.additional_text_label ? course.additional_text_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+                      %i{"aria-label" => "Strategic Professional", :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
 
                     .card-body.d-flex.flex-column.justify-content-center
                       %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
