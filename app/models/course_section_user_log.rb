@@ -36,10 +36,11 @@ class CourseSectionUserLog < ActiveRecord::Base
   validates :user_id, presence: true
   validates :course_section_id, presence: true
   validates :subject_course_user_log_id, presence: true
+  validates :subject_course, presence: true
 
   # callbacks
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
-  after_save :update_subject_course_user_log
+  after_update :update_subject_course_user_log
 
 
   # scopes
@@ -70,7 +71,7 @@ class CourseSectionUserLog < ActiveRecord::Base
     self.percentage_complete && self.percentage_complete > 99
   end
 
-  def recalculate_completeness
+  def recalculate_csul_completeness
     #Called only from the StudentExamTrack after_save
     self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
     self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
@@ -89,9 +90,7 @@ class CourseSectionUserLog < ActiveRecord::Base
 
   # After Save
   def update_subject_course_user_log
-    scul = self.subject_course_user_log
-    scul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
-    scul.recalculate_completeness # Includes a save!
+    subject_course_user_log.recalculate_scul_completeness # Includes a save!
   end
 
   def check_dependencies

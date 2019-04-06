@@ -4563,114 +4563,20 @@ a.card:hover .card-title .card-explanation {
   border: 0 none
 }
 .progress {
+  height: .5rem;
+  overflow: hidden;
+  font-size: .75rem;
   position: relative;
   margin-top: 1rem;
   margin-bottom: 1rem;
-  overflow: unset
+  overflow: unset;
+  border-radius: 0;
 }
 .progress-bar {
-  z-index: 99
+  z-index: 99;
+  background-color: $yellow;
 }
-.progress-step-1 {
-  width: -webkit-calc(100% / 25 * 1);
-  width: calc(100% / 25 * 1)
-}
-.progress-step-2 {
-  width: -webkit-calc(100% / 25 * 2);
-  width: calc(100% / 25 * 2)
-}
-.progress-step-3 {
-  width: -webkit-calc(100% / 25 * 3);
-  width: calc(100% / 25 * 3)
-}
-.progress-step-4 {
-  width: -webkit-calc(100% / 25 * 4);
-  width: calc(100% / 25 * 4)
-}
-.progress-step-5 {
-  width: -webkit-calc(100% / 25 * 5);
-  width: calc(100% / 25 * 5)
-}
-.progress-step-6 {
-  width: -webkit-calc(100% / 25 * 6);
-  width: calc(100% / 25 * 6)
-}
-.progress-step-7 {
-  width: -webkit-calc(100% / 25 * 7);
-  width: calc(100% / 25 * 7)
-}
-.progress-step-8 {
-  width: -webkit-calc(100% / 25 * 8);
-  width: calc(100% / 25 * 8)
-}
-.progress-step-9 {
-  width: -webkit-calc(100% / 25 * 9);
-  width: calc(100% / 25 * 9)
-}
-.progress-step-10 {
-  width: -webkit-calc(100% / 25 * 10);
-  width: calc(100% / 25 * 10)
-}
-.progress-step-11 {
-  width: -webkit-calc(100% / 25 * 11);
-  width: calc(100% / 25 * 11)
-}
-.progress-step-12 {
-  width: -webkit-calc(100% / 25 * 12);
-  width: calc(100% / 25 * 12)
-}
-.progress-step-13 {
-  width: -webkit-calc(100% / 25 * 13);
-  width: calc(100% / 25 * 13)
-}
-.progress-step-14 {
-  width: -webkit-calc(100% / 25 * 14);
-  width: calc(100% / 25 * 14)
-}
-.progress-step-15 {
-  width: -webkit-calc(100% / 25 * 15);
-  width: calc(100% / 25 * 15)
-}
-.progress-step-16 {
-  width: -webkit-calc(100% / 25 * 16);
-  width: calc(100% / 25 * 16)
-}
-.progress-step-17 {
-  width: -webkit-calc(100% / 25 * 17);
-  width: calc(100% / 25 * 17)
-}
-.progress-step-18 {
-  width: -webkit-calc(100% / 25 * 18);
-  width: calc(100% / 25 * 18)
-}
-.progress-step-19 {
-  width: -webkit-calc(100% / 25 * 19);
-  width: calc(100% / 25 * 19)
-}
-.progress-step-20 {
-  width: -webkit-calc(100% / 25 * 20);
-  width: calc(100% / 25 * 20)
-}
-.progress-step-21 {
-  width: -webkit-calc(100% / 25 * 21);
-  width: calc(100% / 25 * 21)
-}
-.progress-step-22 {
-  width: -webkit-calc(100% / 25 * 22);
-  width: calc(100% / 25 * 22)
-}
-.progress-step-23 {
-  width: -webkit-calc(100% / 25 * 23);
-  width: calc(100% / 25 * 23)
-}
-.progress-step-24 {
-  width: -webkit-calc(100% / 25 * 24);
-  width: calc(100% / 25 * 24)
-}
-.progress-step-25 {
-  width: -webkit-calc(100% / 25 * 25);
-  width: calc(100% / 25 * 25)
-}
+
 .modal-dialog {
   margin-top: .75rem
 }
@@ -5551,15 +5457,6 @@ a.list-group-item {
     font-size: 24px;
     color: $text-color;
 
-  }
-}
-.progress {
-  height: $gutter/2;
-  border-radius: $gutter/2;
-  background-color: $colour-3;
-  box-shadow: none;
-  .progress-bar {
-    background-color: $colour-12;
   }
 }
 .result-summary {

@@ -20,7 +20,7 @@
 
       %section.course-progress
         -if @subject_course_user_log
-          -total_lessons = @subject_course_user_log.subject_course.cme_count
+          -total_lessons = @subject_course_user_log.subject_course.completion_cme_count
           -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
           -complete_percent = @subject_course_user_log.try(:percentage_complete)
 
@@ -32,7 +32,8 @@
               %span.total-steps-indicator=total_lessons
               steps completed
             .progress
-              .progress-bar.progress-step-1{role: "progressbar", 'aria-valuenow': completed_lessons,  'aria-valuemin': "0", 'aria-valuemax': total_lessons}
+              .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0",
+               'aria-valuemax': '100', style: "width: #{complete_percent}%"}
 
 
 

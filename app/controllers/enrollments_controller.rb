@@ -33,7 +33,6 @@ class EnrollmentsController < ApplicationController
 
 
     if @enrollment.save
-      #TODO - go to first CME (make next_element_id default to first CME id)
       redirect_to library_special_link(@enrollment.subject_course)
       flash[:success] = t('controllers.enrollments.create.flash.success')
     else

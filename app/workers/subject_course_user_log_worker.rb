@@ -4,13 +4,11 @@ class SubjectCourseUserLogWorker
   sidekiq_options queue: 'medium'
 
   def perform(course_id)
-    sculs = SubjectCourseUserLog.for_subject_course(course_id)
+    sculs = SubjectCourseUserLog.for_subject_course(course_id).all_incomplete
 
     sculs.each do |scul|
-      if scul.active_enrollment
-        scul.student_exam_tracks.each do |set|
-          set.worker_update_completeness
-        end
+      scul.student_exam_tracks.each do |set|
+        set.recalculate_set_completeness
       end
     end
   end

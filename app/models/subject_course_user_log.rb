@@ -59,39 +59,15 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.course_section_user_logs.empty? && self.student_exam_tracks.empty?
   end
 
-  def elements_total
-    self.subject_course.try(:cme_count) || 0
-  end
-
   def elements_total_for_completion
-    self.subject_course.course_sections.all_for_completion.sum(:cme_count)
+    self.subject_course.completion_cme_count
   end
 
   def active_enrollment
     self.enrollments.where(active: true).last
   end
 
-  def update_enrollment
-    if self.active_enrollment && !self.active_enrollment.expired
-      self.active_enrollment.update_attribute(:percentage_complete, self.percentage_complete)
-      self.update_attribute(:completed_at, Proc.new{Time.now}.call) if self.completed && !self.completed_at
-    end
-  end
-
-  def last_element
-    ###
-    ###
-    ###
-    cme = CourseModuleElement.where(id: self.latest_course_module_element_id).first
-    back_up_cme = self.subject_course.first_active_cme
-    if cme
-      return cme
-    else
-      return back_up_cme
-    end
-  end
-
-  def recalculate_completeness
+  def recalculate_scul_completeness
     self.count_of_videos_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_videos_taken)
     self.count_of_quizzes_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
     self.count_of_constructed_responses_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
@@ -101,23 +77,6 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
     self.completed = true if (self.percentage_complete > 99) unless self.percentage_complete.nil?
     self.save!
-
-    # Temp fix replaced SET scope with_active_cmes with with_valid_course_module scope
-    # self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
-    # self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)
-    # self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
-    # self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
-    # self.count_of_constructed_responses_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_constructed_responses_taken)
-    # self.count_of_cmes_completed = self.student_exam_tracks.with_valid_course_module.sum(:count_of_cmes_completed)
-    # self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    # unless self.percentage_complete.nil?
-    #   self.completed = true if (self.percentage_complete > 99)
-    # end
-    # self.save
-  end
-
-  def student_exam_track_course_module_ids
-    self.student_exam_tracks.map(&:course_module_id)
   end
 
 
@@ -127,6 +86,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def update_enrollment
+    if self.active_enrollment && !self.active_enrollment.expired
+      self.active_enrollment.update_attribute(:percentage_complete, self.percentage_complete)
+      self.update_attribute(:completed_at, Proc.new{Time.now}.call) if self.completed && !self.completed_at
     end
   end
 
