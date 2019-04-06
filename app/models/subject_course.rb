@@ -164,31 +164,35 @@ class SubjectCourse < ActiveRecord::Base
 
   ### Triggered by Child Model ###
   def recalculate_fields
+    #Count of all CMEs in the course
+    cme_count = valid_children.sum(:cme_count)
+    #Count CMEs which count towards completion of the Course
+    completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
 
-    cme_count = self.valid_children.all_for_completion.sum(:cme_count)
-    quiz_count = self.valid_children.all_for_completion.sum(:quiz_count)
-    video_count = self.valid_children.all_for_completion.sum(:video_count)
-    cr_count = self.valid_children.all_for_completion.sum(:constructed_response_count)
+    quiz_count = valid_children.sum(:quiz_count)
+    video_count = valid_children.sum(:video_count)
+    cr_count = valid_children.sum(:constructed_response_count)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count,
-                           video_count: video_count, constructed_response_count: cr_count)
+    self.update_attributes(cme_count: cme_count, completion_cme_count: completion_cme_count,
+                           video_count: video_count, quiz_count: quiz_count,
+                           constructed_response_count: cr_count)
   end
 
   ### Callback before_save ###
   def set_count_fields
-    # Temp change here - active_children to valid_children
-    # filter out the test boolean true records so as not to count these in the %_complete
+    #Count of all CMEs in the course
+    self.cme_count = valid_children.sum(:cme_count)
+    #Count CMEs which count towards completion of the Course
+    self.completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
 
-    self.cme_count = self.valid_children.all_for_completion.sum(:cme_count)
-    self.quiz_count = self.valid_children.all_for_completion.sum(:quiz_count)
-    self.video_count = self.valid_children.all_for_completion.sum(:video_count)
-    self.constructed_response_count = self.valid_children.all_for_completion.sum(:constructed_response_count)
+    self.quiz_count = valid_children.sum(:quiz_count)
+    self.video_count = valid_children.sum(:video_count)
+    self.constructed_response_count = valid_children.sum(:constructed_response_count)
   end
 
 
   ########################################################################
 
-  #TODO - only factor-in course_sections with counts_towards_completion true
 
   ## User Course Tracking ##
   def enrolled_user_ids
