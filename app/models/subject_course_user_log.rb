@@ -53,6 +53,20 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
 
   # class methods
+  def self.to_csv(options = {})
+    attributes = %w{id user_id user_email f_name l_name
+                     enrolled enrollment_sitting exam_date
+                     student_number date_of_birth completed percentage_complete
+                     count_of_cmes_completed completion_cme_count}
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |scul|
+        csv << attributes.map{ |attr| scul.send(attr) }
+      end
+    end
+  end
 
   # instance methods
   def destroyable?
@@ -79,6 +93,41 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.save!
   end
 
+  def f_name
+    self.user.first_name
+  end
+
+  def l_name
+    self.user.last_name
+  end
+
+  def user_email
+    self.user.email
+  end
+
+  def date_of_birth
+    self.user.try(:date_of_birth)
+  end
+
+  def enrolled
+    true if self.active_enrollment
+  end
+
+  def exam_date
+    self.active_enrollment.enrollment_date if enrolled
+  end
+
+  def enrollment_sitting
+    self.enrollments.last.try(:exam_date) if enrolled
+  end
+
+  def student_number
+    self.user.exam_body_user_details.for_exam_body(self.subject_course.exam_body_id).first.try(:student_number)
+  end
+
+  def completion_cme_count
+    self.subject_course.completion_cme_count
+  end
 
   protected
 

@@ -29,6 +29,7 @@ class ExamBodyUserDetail < ActiveRecord::Base
   # scopes
   scope :all_in_order, -> { order(:user_id) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
+  scope :for_exam_body, lambda { |exam_body_id| where(exam_body_id: exam_body_id) }
 
   # class methods
 

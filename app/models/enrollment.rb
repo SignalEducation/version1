@@ -78,18 +78,6 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  def self.to_csv(options = {})
-    attributes = %w{id user_id status f_name l_name course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count }
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
-      end
-    end
-  end
-
-
   # instance methods
   def destroyable?
     false # Can never be destroyed because the CSV data files will not be accurate
@@ -106,55 +94,12 @@ class Enrollment < ActiveRecord::Base
       #For Old Enrollments without ExamSittingIds
       self.exam_date
     else
-      self.exam_sitting.date
+      self.exam_sitting.date if self.exam_sitting
     end
-  end
-
-  def course_name
-    self.subject_course.try(:name)
-  end
-
-  def exam_sitting_name
-    self.exam_sitting.try(:name)
-  end
-
-  def user_email
-    self.user.email
   end
 
   def student_number
-    self.user.student_number
-  end
-
-  def f_name
-    self.user.first_name
-  end
-
-  def l_name
-    self.user.last_name
-  end
-
-  def date_of_birth
-    self.user.try(:date_of_birth)
-  end
-
-  def display_percentage_complete
-    self.percentage_complete.to_s << '%'
-  end
-
-  def elements_complete_count
-    course_log = self.subject_course_user_log
-    if course_log
-      percentage = course_log.count_of_cmes_completed
-      percentage
-    end
-  end
-
-  def course_elements_count
-    course_log = self.subject_course_user_log
-    if course_log
-      course_log.elements_total
-    end
+    self.user.exam_body_user_details.for_exam_body(self.subject_course.exam_body_id).first.try(:student_number)
   end
 
   def alternate_exam_sittings

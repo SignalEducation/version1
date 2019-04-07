@@ -44,10 +44,11 @@
                       =link_to t('views.general.edit'), edit_subject_course_url(subject_course), class: 'btn btn-xs btn-primary'
                     %td
                       =link_to t('views.general.show'), subject_course_url(subject_course), class: 'btn btn-xs btn-secondary'
+                    -if subject_course.destroyable?
+                      %td
+                        =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-xs btn-danger'
                     %td
-                      -if subject_course.destroyable?
-                        =link_to t('views.general.delete'), subject_course, method: :delete, data: {confirm: t('views.general.delete_confirmation')}, class: 'btn btn-xs btn-secondary'
-                    %td
+                      =link_to 'CSV', export_course_log_data_path(id: subject_course.id, format: :xls), class: 'btn btn-xs btn-secondary'
                     %td
 
 

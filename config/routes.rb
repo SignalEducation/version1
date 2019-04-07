@@ -110,6 +110,7 @@ Rails.application.routes.draw do
     resources :enrollment_management, only: [:edit, :update, :show]
     resources :enrollment_management, only: [:edit, :update, :show]
     get '/export_enrollment_log_data/:id', to: 'enrollment_management#export_enrollment_log_data', as: :export_enrollment_log_data
+    get '/export_course_log_data/:id', to: 'subject_courses#export_course_user_logs', as: :export_course_log_data
     post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',

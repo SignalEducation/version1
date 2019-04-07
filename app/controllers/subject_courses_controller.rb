@@ -161,6 +161,18 @@ class SubjectCoursesController < ApplicationController
 
   end
 
+  def export_course_user_logs
+    @course = SubjectCourse.find(params[:id])
+    @sculs = @course.subject_course_user_logs
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @sculs.to_csv() }
+      format.xls { send_data @sculs.to_csv(col_sep: "\t", headers: true), filename: "#{@course.name}-user-logs-#{Date.today}.xls" }
+    end
+
+  end
+
   protected
 
   def get_variables
