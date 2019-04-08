@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_08_081540) do
+ActiveRecord::Schema.define(version: 2019_04_08_084858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -466,6 +466,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_081540) do
     t.string "correction_content_type"
     t.bigint "correction_file_size"
     t.datetime "correction_updated_at"
+    t.datetime "submitted_on"
     t.index ["corrector_id"], name: "index_exercises_on_corrector_id"
     t.index ["product_id"], name: "index_exercises_on_product_id"
     t.index ["user_id"], name: "index_exercises_on_user_id"

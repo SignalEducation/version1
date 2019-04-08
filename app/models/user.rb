@@ -398,6 +398,10 @@ class User < ActiveRecord::Base
     self.user_group.content_management_access
   end
 
+  def exercise_corrections_access?
+    self.user_group.exercise_corrections_access
+  end
+
   def stripe_management_access?
     self.user_group.stripe_management_access
   end

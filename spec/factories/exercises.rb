@@ -17,6 +17,7 @@
 #  correction_content_type :string
 #  correction_file_size    :bigint(8)
 #  correction_updated_at   :datetime
+#  submitted_on            :datetime
 #
 
 FactoryBot.define do

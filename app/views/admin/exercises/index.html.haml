@@ -1,46 +1,38 @@
 .container
   %header.management-console-section
     %h1
-      =t('views.exam_sittings.index.h1')
+      =t('views.exercises.index.h1')
 
   %section.pb-7
-    =render partial: 'enrollment_management/enrollment_management_navbar'
-
-
+    .admin-nav
+      %ul.admin-nav-block
+        %li{style: 'margin-left: 4%; margin-right: 4%;'}
+          =link_to 'Submitted Exercises', admin_exercises_path
+        %li{style: 'margin-left: 4%; margin-right: 4%;'}
+          =link_to 'Correcting in Progress', admin_exercises_path(state: :correcting)
+        %li{style: 'margin-left: 4%; margin-right: 4%;'}
+          =link_to 'Returned Exercises', admin_exercises_path(state: :returned)
     .row
       .col-sm-12
         .box-item.table-box
-          .row
-            .col-sm
-              =link_to 'New Exam Sitting', new_exam_sitting_url, class: 'btn btn-primary btn-sm'
-
-            .col-sm
-              =form_tag(exam_sittings_url, method: :get, role: 'form', class: 'form-horizontal') do
-                =select_tag :sort_by, options_for_select(@sort_choices, params[:sort_by].to_s), {class: 'custom-select', onchange: 'this.form.submit(); return false;'}
-
-
           .table-responsive.pt-4
-            =will_paginate @exam_sittings, renderer: BootstrapPagination::Rails
+            =will_paginate @exercises, renderer: BootstrapPagination::Rails
             %table.table
               %thead
                 %tr
-                  %th=t('views.exam_sittings.form.name')
-                  %th=t('views.exam_sittings.form.date')
-                  %th=t('views.exam_sittings.form.active')
-                  %th='Count'
+                  %th=t('views.exercises.index.name')
+                  %th=t('views.exercises.index.email')
+                  %th=t('views.exercises.index.state')
+                  %th=t('views.exercises.index.submitted_on')
                   %th
               %tbody
-                -@exam_sittings.each do |exam_sitting|
+                -@exercises.each do |exercise|
                   %tr
-                    %td=exam_sitting.name
+                    %td=exercise.user.name
+                    %td=exercise.user.email
+                    %td=exercise.user.state
+                    %td=exercise.submitted_on.strftime('%d/%m/%y %H:%m')
                     %td
-                      -if exam_sitting.date
-                        =exam_sitting.date.strftime("%B %Y")
-                    %td=tick_or_cross(exam_sitting.active)
-                    %td=exam_sitting.enrollments.count
-                    %td
-                      =link_to t('views.general.edit'), edit_exam_sitting_url(exam_sitting), class: 'btn btn-primary btn-xs'
-                      =link_to t('views.general.view'), exam_sitting, class: 'btn btn-secondary btn-xs'
-                      -if exam_sitting.destroyable?
-                        =link_to t('views.general.delete'), exam_sitting, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                      =link_to t('views.general.edit'), edit_admin_exercise_path(exercise), class: 'btn btn-primary btn-xs'
+                      =link_to t('views.general.view'), admin_exercise_path(exercise), class: 'btn btn-secondary btn-xs'
 

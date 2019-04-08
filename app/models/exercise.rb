@@ -17,6 +17,7 @@
 #  correction_content_type :string
 #  correction_file_size    :bigint(8)
 #  correction_updated_at   :datetime
+#  submitted_on            :datetime
 #
 
 class Exercise < ApplicationRecord
@@ -30,6 +31,8 @@ class Exercise < ApplicationRecord
 
   after_submission_post_process :submit
   after_correction_post_process :return
+
+  scope :all_in_order, -> { order(created_at: :asc) }
 
   state_machine initial: :pending do
     event :submit do
@@ -45,6 +48,7 @@ class Exercise < ApplicationRecord
     end
 
     after_transition pending: :submitted do |exercise, _transition|
+      exercise.update_columns(submitted_on: Time.zone.now)
       # email the user to confirm
       # email the correctors
     end

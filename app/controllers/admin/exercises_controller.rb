@@ -8,7 +8,7 @@ class Admin::ExercisesController < ApplicationController
   layout 'management'
 
   def index
-    @exercises = Exercise.with_state(params[:state] || :submitted)
+    @exercises = Exercise.with_state(params[:state] || :submitted).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
