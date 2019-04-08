@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_03_140420) do
+ActiveRecord::Schema.define(version: 2019_04_08_084858) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -451,6 +451,27 @@ ActiveRecord::Schema.define(version: 2019_04_03_140420) do
     t.index ["subject_course_id"], name: "index_exam_sittings_on_subject_course_id"
   end
 
+  create_table "exercises", force: :cascade do |t|
+    t.bigint "product_id"
+    t.string "state"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.bigint "corrector_id"
+    t.string "submission_file_name"
+    t.string "submission_content_type"
+    t.bigint "submission_file_size"
+    t.datetime "submission_updated_at"
+    t.string "correction_file_name"
+    t.string "correction_content_type"
+    t.bigint "correction_file_size"
+    t.datetime "correction_updated_at"
+    t.datetime "submitted_on"
+    t.index ["corrector_id"], name: "index_exercises_on_corrector_id"
+    t.index ["product_id"], name: "index_exercises_on_product_id"
+    t.index ["user_id"], name: "index_exercises_on_user_id"
+  end
+
   create_table "external_banners", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "sorting_order"
@@ -519,8 +540,8 @@ ActiveRecord::Schema.define(version: 2019_04_03_140420) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.string "background_colour"
     t.bigint "exam_body_id"
+    t.string "background_colour"
     t.string "seo_title"
     t.string "seo_description"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
@@ -734,6 +755,7 @@ ActiveRecord::Schema.define(version: 2019_04_03_140420) do
     t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
+    t.integer "correction_pack_count"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
@@ -1182,6 +1204,7 @@ ActiveRecord::Schema.define(version: 2019_04_03_140420) do
     t.boolean "trial_or_sub_required", default: false
     t.boolean "blocked_user", default: false
     t.boolean "marketing_resources_access", default: false
+    t.boolean "exercise_corrections_access", default: false
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -1307,6 +1330,9 @@ ActiveRecord::Schema.define(version: 2019_04_03_140420) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  add_foreign_key "exercises", "products"
+  add_foreign_key "exercises", "users"
+  add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"

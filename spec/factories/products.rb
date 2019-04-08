@@ -2,20 +2,21 @@
 #
 # Table name: products
 #
-#  id                :integer          not null, primary key
-#  name              :string
-#  mock_exam_id      :integer
-#  stripe_guid       :string
-#  live_mode         :boolean          default(FALSE)
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  active            :boolean          default(FALSE)
-#  currency_id       :integer
-#  price             :decimal(, )
-#  stripe_sku_guid   :string
-#  subject_course_id :integer
-#  sorting_order     :integer
-#  product_type      :integer          default("mock_exam")
+#  id                    :integer          not null, primary key
+#  name                  :string
+#  mock_exam_id          :integer
+#  stripe_guid           :string
+#  live_mode             :boolean          default(FALSE)
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  active                :boolean          default(FALSE)
+#  currency_id           :integer
+#  price                 :decimal(, )
+#  stripe_sku_guid       :string
+#  subject_course_id     :integer
+#  sorting_order         :integer
+#  product_type          :integer          default("mock_exam")
+#  correction_pack_count :integer
 #
 
 FactoryBot.define do

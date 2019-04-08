@@ -23,7 +23,6 @@
 #
 
 class Order < ActiveRecord::Base
-
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
   attr_accessor :use_paypal, :paypal_approval_url, :stripe_token
@@ -69,6 +68,7 @@ class Order < ActiveRecord::Base
 
     after_transition all => :completed do |order, _transition|
       order.execute_order_completion
+      order.generate_exercises
     end
   end
 
@@ -82,6 +82,16 @@ class Order < ActiveRecord::Base
 
   def execute_order_completion
     MandrillWorker.perform_async(self.user_id, 'send_mock_exam_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
+  end
+
+  def generate_exercises
+    if product.mock_exam?
+      user.exercises.create(product_id: product_id)
+    elsif product.correction_pack?
+      (1..product.correction_pack_count).each do |ex|
+        user.exercises.create(product_id: product_id)
+      end
+    end
   end
 
   def mock_exam
