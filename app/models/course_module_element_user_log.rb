@@ -59,7 +59,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # callbacks
   before_validation :create_student_exam_track, unless: :student_exam_track_id
   before_create :set_latest_attempt, :set_booleans
-  after_create :calculate_score, :create_lesson_intercom_event
+  after_create :calculate_score, if: :is_quiz
   after_save :update_student_exam_track
 
   # scopes
@@ -78,9 +78,6 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   scope :with_elements_active, -> { includes(:course_module_element).where('course_module_elements.active = ?', true).references(:course_module_elements) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
-  scope :one_month_ago, -> { where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month) }
-  scope :two_months_ago, -> { where(created_at: 2.month.ago.beginning_of_month..2.month.ago.end_of_month) }
-  scope :three_months_ago, -> { where(created_at: 3.month.ago.beginning_of_month..3.month.ago.end_of_month) }
 
   # class methods
 
@@ -135,18 +132,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    #self.quiz_attempts.empty?
-    true
-  end
-
-  def recent_attempts
-    CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id, latest_attempt: false).order(created_at: :desc).limit(5)
+    self.quiz_attempts.empty?
   end
 
 
   protected
 
   # Before Validation
+  #This triggers the creation of parent CSUL and its parent SCUL
   def create_student_exam_track
     set = StudentExamTrack.create!(user_id: self.user_id, course_module_id: self.course_module_id,
                                    course_section_id: self.course_section_id,
@@ -183,27 +176,21 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # After Create
   def calculate_score
-    if self.is_quiz
-      course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
-      percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
-      passed = percentage_score >= course_pass_rate ? true : false
-      self.update_columns(count_of_questions_taken: self.quiz_attempts.count, count_of_questions_correct: self.quiz_attempts.all_correct.count, quiz_score_actual: percentage_score, quiz_score_potential: self.quiz_attempts.count, element_completed: passed)
-    end
+    course_pass_rate = self.course_module.subject_course.quiz_pass_rate ? self.course_module.subject_course.quiz_pass_rate : 75
+    percentage_score = ((self.quiz_attempts.all_correct.count.to_f)/(self.quiz_attempts.count.to_f) * 100.0).to_i
+    passed = percentage_score >= course_pass_rate ? true : false
+    self.update_columns(count_of_questions_taken: self.quiz_attempts.count,
+                        count_of_questions_correct: self.quiz_attempts.all_correct.count,
+                        quiz_score_actual: percentage_score,
+                        quiz_score_potential: self.quiz_attempts.count,
+                        element_completed: passed)
   end
 
   # After Save
   def update_student_exam_track
     set = self.student_exam_track
     set.latest_course_module_element_id = self.course_module_element_id if self.element_completed
-    set.recalculate_completeness # Includes a save!
+    set.recalculate_set_completeness # Includes a save!
   end
-
-  # After Save
-  def create_lesson_intercom_event
-    unless self.preview_mode || Rails.env.test?
-      IntercomLessonStartedWorker.perform_async(self.try(:user).try(:id), self.try(:course_module).try(:subject_course).try(:name), self.course_module.try(:name), self.type, self.course_module_element.try(:name), self.course_module_element.try(:course_module_element_video).try(:vimeo_guid), self.try(:count_of_questions_correct))
-    end
-  end
-
 
 end

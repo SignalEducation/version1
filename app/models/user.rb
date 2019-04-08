@@ -124,7 +124,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   before_create :set_additional_user_attributes
-  after_create :create_referral_code_record
+  after_create :create_referral_code_record, :create_or_update_intercom_user
   after_update :update_stripe_customer
 
   # scopes
@@ -139,13 +139,6 @@ class User < ActiveRecord::Base
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :with_course_tutor_details, -> { joins(:course_tutor_details) }
 
-  def date_of_birth_is_possible?
-    return if self.date_of_birth.blank?
-    tens_years_ago = 10.years.ago
-    if self.date_of_birth > tens_years_ago
-      errors.add(:date_of_birth, 'is invalid')
-    end
-  end
 
   ### class methods
   def self.all_students
@@ -158,13 +151,6 @@ class User < ActiveRecord::Base
 
   def self.all_tutors
     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
-  end
-
-  def self.get_and_activate(activation_code)
-    user = User.where(active: false).where(account_activation_code: activation_code, account_activated_at: nil).first
-    time_now = Proc.new{Time.now}.call
-    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) if user
-    return user
   end
 
   def self.get_and_verify(email_verification_code, country_id)
@@ -689,6 +675,10 @@ class User < ActiveRecord::Base
     self.communication_approval_datetime = Time.zone.now if communication_approval
     self.account_activation_code = SecureRandom.hex(10)
     self.email_verification_code = SecureRandom.hex(10)
+  end
+
+  def create_or_update_intercom_user
+    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
   end
 
   def update_stripe_customer

@@ -9,7 +9,7 @@ class StudentSignUpsController < ApplicationController
     @footer = 'white'
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     #@banner = @home_page.external_banners.first
-    seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
 
@@ -46,7 +46,7 @@ class StudentSignUpsController < ApplicationController
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
       # This is for sticky sub plans
 
-      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+      seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
     else
       redirect_to root_url
     end
@@ -91,7 +91,7 @@ class StudentSignUpsController < ApplicationController
         set_current_visit
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
       else
-        redirect_to personal_sign_up_complete_url(@user.account_activation_code)
+        redirect_to personal_sign_up_complete_url
       end
 
     elsif request && request.referrer
@@ -103,12 +103,7 @@ class StudentSignUpsController < ApplicationController
   end
 
   def show
-    #This is the post sign-up landing page - personal_sign_up_complete
-    #If no user is found redirect - because analytics counts loading of
-    # this page as new sign ups so we only want it to load once for each sign up
-    @user = User.get_and_activate(params[:account_activation_code])
     @banner = nil
-    redirect_to sign_in_url unless @user
   end
 
   def subscribe

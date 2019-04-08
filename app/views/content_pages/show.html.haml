@@ -24,7 +24,7 @@
                 =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-horizontal flex-row card-mint' do
 
                   .card-header.d-flex.justify-content-center.align-items-center
-                    %i{"aria-label" => section.subject_course.additional_text_label, :role => "img", class: section.subject_course.additional_text_label ? section.subject_course.additional_text_label : 'budicon-office-bag-c', style: "color: #{section.subject_course.highlight_colour};"}
+                    %i{"aria-label" => section.subject_course.icon_label, :role => "img", class: section.subject_course.icon_label ? section.subject_course.icon_label : 'budicon-office-bag-c', style: "color: #{section.subject_course.highlight_colour};"}
 
                   .card-body.d-flex.flex-column.justify-content-center
                     %p

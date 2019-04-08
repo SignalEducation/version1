@@ -17,9 +17,8 @@ class IntercomCreateUserWorker
                             custom_attributes: {guid: user.guid,
                                           user_group: user.user_group,
                                           email_verified: user.email_verified,
-                                          ga_id: user.analytics_guid,
-                                          student_number: user.student_number,
                                           date_of_birth: user.date_of_birth,
+                                          preferred_exam_body: user.preferred_exam_body.try(:name),
                             })
 
     end

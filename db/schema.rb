@@ -540,10 +540,11 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
+    t.string "short_description"
     t.index ["exam_body_id"], name: "index_groups_on_exam_body_id"
     t.index ["name"], name: "index_groups_on_name"
   end
@@ -572,6 +573,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.string "mailchimp_list_guid"
     t.boolean "form_section", default: false, null: false
     t.boolean "pricing_section", default: false, null: false
+    t.boolean "seo_no_index", default: false, null: false
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
@@ -1031,23 +1033,15 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.integer "cme_count"
     t.integer "video_count"
     t.integer "quiz_count"
-    t.integer "question_count"
     t.text "description"
-    t.string "short_description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "best_possible_first_attempt_score"
     t.integer "default_number_of_possible_exam_answers"
-    t.float "total_video_duration", default: 0.0
     t.datetime "destroyed_at"
-    t.text "email_content"
-    t.string "external_url_name"
-    t.string "external_url"
     t.integer "exam_body_id"
     t.string "survey_url"
     t.integer "group_id"
     t.integer "quiz_pass_rate"
-    t.integer "total_estimated_time_in_seconds"
     t.string "background_image_file_name"
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
@@ -1056,8 +1050,10 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.boolean "computer_based", default: false
     t.string "highlight_colour", default: "#ef475d"
     t.string "category_label"
-    t.string "additional_text_label"
+    t.string "icon_label"
     t.integer "constructed_response_count", default: 0
+    t.integer "completion_cme_count"
+    t.date "release_date"
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 

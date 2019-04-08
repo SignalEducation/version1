@@ -24,10 +24,16 @@
         .col-sm-12
           Quizzes
           =@subject_course.quiz_count
+          &#45;
           Videos
           =@subject_course.video_count
+          &#45;
           CRs
           =@subject_course.constructed_response_count
+          &#45;
+          Completion Count
+          =@subject_course.completion_cme_count
+          &#45;
           Total Count
           =@subject_course.cme_count
 
@@ -44,8 +50,10 @@
                       .col-sm-4
                         Quizzes
                         =course_section.quiz_count
+                        &#45;
                         Videos
                         =course_section.video_count
+                        &#45;
                         CRs
                         =course_section.constructed_response_count
                       .col-sm-2

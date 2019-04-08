@@ -161,6 +161,18 @@ class SubjectCoursesController < ApplicationController
 
   end
 
+  def export_course_user_logs
+    @course = SubjectCourse.find(params[:id])
+    @sculs = @course.subject_course_user_logs
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @sculs.to_csv() }
+      format.xls { send_data @sculs.to_csv(col_sep: "\t", headers: true), filename: "#{@course.name}-user-logs-#{Date.today}.xls" }
+    end
+
+  end
+
   protected
 
   def get_variables
@@ -175,15 +187,13 @@ class SubjectCoursesController < ApplicationController
 
   def allowed_params
     params.require(:subject_course).permit(:name, :name_url, :sorting_order,
-                                           :active, :tutor_id, :description,
-                                           :short_description,
+                                           :active, :description, :release_date,
+                                           :short_description, :exam_body_id,
                                            :default_number_of_possible_exam_answers,
-                                           :email_content, :external_url,
-                                           :external_url_name, :exam_body_id,
                                            :background_image, :survey_url,
                                            :quiz_pass_rate, :group_id, :preview,
                                            :computer_based, :highlight_colour,
-                                           :category_label, :additional_text_label,
+                                           :category_label, :icon_label,
                                            course_sections_attributes: [
                                              course_modules_attributes: [
                                                  course_module_elements_attributes: [

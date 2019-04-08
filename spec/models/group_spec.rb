@@ -23,6 +23,7 @@
 #  exam_body_id                  :bigint(8)
 #  seo_title                     :string
 #  seo_description               :string
+#  short_description             :string
 #
 
 require 'rails_helper'

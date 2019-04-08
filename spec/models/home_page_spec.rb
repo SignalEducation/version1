@@ -19,6 +19,7 @@
 #  mailchimp_list_guid           :string
 #  form_section                  :boolean          default(FALSE), not null
 #  pricing_section               :boolean          default(FALSE), not null
+#  seo_no_index                  :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'

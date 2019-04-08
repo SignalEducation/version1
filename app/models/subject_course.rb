@@ -10,23 +10,15 @@
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
-#  question_count                          :integer
 #  description                             :text
-#  short_description                       :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
-#  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
-#  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
-#  email_content                           :text
-#  external_url_name                       :string
-#  external_url                            :string
 #  exam_body_id                            :integer
 #  survey_url                              :string
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
-#  total_estimated_time_in_seconds         :integer
 #  background_image_file_name              :string
 #  background_image_content_type           :string
 #  background_image_file_size              :integer
@@ -35,8 +27,10 @@
 #  computer_based                          :boolean          default(FALSE)
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
-#  additional_text_label                   :string
+#  icon_label                              :string
 #  constructed_response_count              :integer          default(0)
+#  completion_cme_count                    :integer
+#  release_date                            :date
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -72,13 +66,12 @@ class SubjectCourse < ActiveRecord::Base
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :category_label, presence: true, length: {maximum: 255}
-  validates :name_url, presence: true, uniqueness: true,
-            length: {maximum: 255}
+  validates :icon_label, presence: true, length: {maximum: 255}
+  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
   validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :survey_url, presence: true, length: {maximum: 255}
-  validates :short_description, allow_nil: true, length: {maximum: 255}
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
 
@@ -171,31 +164,35 @@ class SubjectCourse < ActiveRecord::Base
 
   ### Triggered by Child Model ###
   def recalculate_fields
+    #Count of all CMEs in the course
+    cme_count = valid_children.sum(:cme_count)
+    #Count CMEs which count towards completion of the Course
+    completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
 
-    cme_count = self.valid_children.all_for_completion.sum(:cme_count)
-    quiz_count = self.valid_children.all_for_completion.sum(:quiz_count)
-    video_count = self.valid_children.all_for_completion.sum(:video_count)
-    cr_count = self.valid_children.all_for_completion.sum(:constructed_response_count)
+    quiz_count = valid_children.sum(:quiz_count)
+    video_count = valid_children.sum(:video_count)
+    cr_count = valid_children.sum(:constructed_response_count)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count,
-                           video_count: video_count, constructed_response_count: cr_count)
+    self.update_attributes(cme_count: cme_count, completion_cme_count: completion_cme_count,
+                           video_count: video_count, quiz_count: quiz_count,
+                           constructed_response_count: cr_count)
   end
 
   ### Callback before_save ###
   def set_count_fields
-    # Temp change here - active_children to valid_children
-    # filter out the test boolean true records so as not to count these in the %_complete
+    #Count of all CMEs in the course
+    self.cme_count = valid_children.sum(:cme_count)
+    #Count CMEs which count towards completion of the Course
+    self.completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
 
-    self.cme_count = self.valid_children.all_for_completion.sum(:cme_count)
-    self.quiz_count = self.valid_children.all_for_completion.sum(:quiz_count)
-    self.video_count = self.valid_children.all_for_completion.sum(:video_count)
-    self.constructed_response_count = self.valid_children.all_for_completion.sum(:constructed_response_count)
+    self.quiz_count = valid_children.sum(:quiz_count)
+    self.video_count = valid_children.sum(:video_count)
+    self.constructed_response_count = valid_children.sum(:constructed_response_count)
   end
 
 
   ########################################################################
 
-  #TODO - only factor-in course_sections with counts_towards_completion true
 
   ## User Course Tracking ##
   def enrolled_user_ids

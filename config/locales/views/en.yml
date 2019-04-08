@@ -840,6 +840,8 @@ en:
         seo_title_placeholder: SEO Title
         seo_description: SEO Description
         seo_description_placeholder: SEO Description
+        short_description: Short Description
+        short_description_placeholder: Subheading Tagline
 
       index:
         h1: Groups
@@ -1147,40 +1149,23 @@ en:
         preview: Preview Mode
         computer_based: Computer Based
         highlight_colour: Highlight Colour
+        release_date: Release Date
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
         description_placeholder: Course Description
-        short_description: Short Description - without any text formatting
-        short_description_placeholder: Plain Description - without any text formatting or HTML tags
         survey_url: Completion Survey URL
         survey_url_placeholder: Survey Monkey URL
-        external_url_name: Name of External Link
-        external_url_name_placeholder: Name of External Link to appear on Course Page
-        external_url: External Link
-        external_url_placeholder: External Link URL for Course Page
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
         quiz_pass_rate: Quiz Pass Rate
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
-        email_content: Welcome Email Content
-        email_content_placeholder: Content for Enrollment Welcome Email
-        additional_text_label: Additional Text Label
-        additional_text_label_placeholder: Additional Text Label [Previously F4]
+        icon_label: Icon Label
+        icon_label_placeholder: Budicon Text Label
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
-
-        tutor_info:
-          h1: Tutors Info
-          name: Tutor Name
-          name_placeholder: Tutor Name
-          description: Description
-          description_placeholder: Tutor Info
-          title: Tutor Title
-          title_placeholder: Tutor Title
-
 
       index:
         h1: Courses

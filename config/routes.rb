@@ -89,7 +89,7 @@ Rails.application.routes.draw do
     post 'manager_resend/:id', to: 'user_passwords#manager_resend_email', as: :manager_resend
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
-    get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
+    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show'
@@ -115,6 +115,7 @@ Rails.application.routes.draw do
     resources :enrollment_management, only: [:edit, :update, :show]
     resources :enrollment_management, only: [:edit, :update, :show]
     get '/export_enrollment_log_data/:id', to: 'enrollment_management#export_enrollment_log_data', as: :export_enrollment_log_data
+    get '/export_course_log_data/:id', to: 'subject_courses#export_course_user_logs', as: :export_course_log_data
     post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',

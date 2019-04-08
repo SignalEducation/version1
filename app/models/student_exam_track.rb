@@ -50,7 +50,7 @@ class StudentExamTrack < ActiveRecord::Base
 
   # callbacks
   before_validation :create_course_section_user_log, unless: :course_section_user_log_id
-  after_save :update_course_section_user_log
+  after_update :update_course_section_user_log
 
   # scopes
   scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
@@ -98,26 +98,8 @@ class StudentExamTrack < ActiveRecord::Base
     self.subject_course_user_log.active_enrollment
   end
 
-  def worker_update_completeness
-    #Called from the SubjectCourseUserLogWorker resulting from course content changes
-    questions_taken = cme_user_logs.sum(:count_of_questions_taken)
-    questions_correct = cme_user_logs.sum(:count_of_questions_correct)
-
-    unique_video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id).uniq
-    unique_quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id).uniq
-    unique_constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id).uniq
-    videos_taken = unique_video_ids.count
-    quizzes_taken = unique_quiz_ids.count
-    constructed_responses_taken = unique_constructed_response_ids.count
-    cmes_completed = self.unique_logs.count
-    percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    self.update_attributes(count_of_questions_taken: questions_taken, count_of_questions_correct: questions_correct, count_of_videos_taken: videos_taken, count_of_quizzes_taken: quizzes_taken, count_of_constructed_responses_taken: constructed_responses_taken, count_of_cmes_completed: cmes_completed, percentage_complete: percentage_complete)
-  end
-
-  def recalculate_completeness
-    #Called only from the CourseModuleElementUserLog after_save
-    self.count_of_questions_taken = cme_user_logs.sum(:count_of_questions_taken)
-    self.count_of_questions_correct = cme_user_logs.sum(:count_of_questions_correct)
+  def recalculate_set_completeness
+    #Called from the CourseModuleElementUserLog after_save or the SubjectCourseUserLogWorker
     unique_video_ids = completed_cme_user_logs.where(is_video: true).map(&:course_module_element_id).uniq
     unique_quiz_ids = completed_cme_user_logs.where(is_quiz: true).map(&:course_module_element_id).uniq
     unique_constructed_response_ids = completed_cme_user_logs.where(is_constructed_response: true).map(&:course_module_element_id).uniq
@@ -143,9 +125,7 @@ class StudentExamTrack < ActiveRecord::Base
 
   # After Save
   def update_course_section_user_log
-    csul = self.course_section_user_log
-    csul.latest_course_module_element_id = self.latest_course_module_element_id if self.latest_course_module_element_id
-    csul.recalculate_completeness # Includes a save!
+    course_section_user_log.recalculate_csul_completeness # Includes a save!
   end
 
 end

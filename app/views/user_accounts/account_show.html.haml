@@ -33,7 +33,7 @@
               %li.nav-item
                 %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
                   Enrolments
-              %li.nav-item
+              -#%li.nav-item
                 %a#referral-program-tab.nav-link{"aria-controls" => "referral-program", "aria-selected" => "false", "data-toggle" => "tab", :href => "#referral-program", :role => "tab"}
                   Referral Program
 
@@ -52,7 +52,7 @@
             #enrollments.tab-pane.tab-account.tab-enrollment{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
               =render partial: 'enrollments_info'
 
-            #referral-program.tab-pane.tab-account.tab-referral-program{"aria-labelledby" => "referral-program-tab", :role => "tabpanel"}
+            -#referral-program.tab-pane.tab-account.tab-referral-program{"aria-labelledby" => "referral-program-tab", :role => "tabpanel"}
               %article.card.mb-4
                 .card-body
                   %h2.text-gray2 Referral Program

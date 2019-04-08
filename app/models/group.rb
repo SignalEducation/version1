@@ -23,6 +23,7 @@
 #  exam_body_id                  :bigint(8)
 #  seo_title                     :string
 #  seo_description               :string
+#  short_description             :string
 #
 
 class Group < ActiveRecord::Base
@@ -44,6 +45,7 @@ class Group < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
+  validates :short_description, presence: true, length: {maximum: 255}
   validates :seo_title, presence: true, uniqueness: true, length: {maximum: 255}
   validates :seo_description, presence: true, length: {maximum: 255}
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
