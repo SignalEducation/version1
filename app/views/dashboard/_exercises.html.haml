@@ -2,20 +2,33 @@
   -if current_user.exercises.with_state(:pending).any?
     %h2 Pending Exercises
     -current_user.exercises.with_state(:pending).each do |exercise|
-      -if exercise.product.mock_exam?
-        Start your mock exam
-      -else
-        Submit work for correction
+      .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+        .card-body.d-flex.flex-column.justify-content-center
+          %small.card-category.mb-2{style: 'color: #5e90ef'}
+            =exercise.product.name
+
+          %h5.card-title.mb-1
+            %span.mr-1
+              -if exercise.product.mock_exam?
+                Start your mock exam
+              -else
+                Submit work for correction
+        .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+          =link_to 'Begin Exercise', exercise_path(exercise), class: 'btn btn-primary'
 
   -if current_user.exercises.with_states([:submitted, :correcting]).any?
     %h2 Submitted Exercises
     -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
-      =exercise.user.name
+      .card
+        =exercise.user.name
+        view your submission
 
   -if current_user.exercises.with_states(:returned).any?
     %h2 Returned Exercises
     -current_user.exercises.with_states(:returned).each do |exercise|
-      =exercise.user.name
+      .card
+        =exercise.user.name
+        View Corrections
 
 -else
   .row.row-lg
