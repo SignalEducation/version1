@@ -176,6 +176,8 @@ en:
           email: Email
           state: Current State
           submitted_on: Submitted On
+        form:
+          correction: Upload Correction
         show:
         edit:
 
