@@ -58,7 +58,7 @@ class OrdersController < ApplicationController
     if @order && @order.save
       if order_object.stripe? && @order.complete
         flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-        redirect_to order_complete_url(@order.reference_guid)
+        redirect_to user_exercises_path(current_user)
       elsif order_object.paypal?
         redirect_to @order.paypal_approval_url
       else
@@ -80,7 +80,7 @@ class OrdersController < ApplicationController
     when 'paypal'
       PaypalService.new.execute_payment(@order, params[:paymentId], params[:PayerID])
       flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-      redirect_to order_complete_url(@order.reference_guid)
+      redirect_to user_exercises_path(current_user)
     else
       flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
       redirect_to new_order_url(product_id: @order.product_id)
