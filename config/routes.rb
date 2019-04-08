@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     post 'manager_resend/:id', to: 'user_passwords#manager_resend_email', as: :manager_resend
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
+    get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
 
     get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show'
@@ -191,7 +192,7 @@ Rails.application.routes.draw do
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
 
-    get 'sign_in_or_register', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
+    get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
     resources :subscriptions, only: [:new, :create, :update, :destroy] do
       member do
@@ -216,8 +217,8 @@ Rails.application.routes.draw do
     get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
-    get 'profile/:name_url', to: 'footer_pages#profile', as: :profile
-    get 'profiles', to: 'footer_pages#profile_index', as: :tutors
+    get 'tutor/:name_url', to: 'footer_pages#profile', as: :profile
+    get 'tutors', to: 'footer_pages#profile_index', as: :tutors
 
     resources :users, only: [:new, :create]
     post 'search_users', to: 'users#index', as: :search_users
@@ -235,12 +236,8 @@ Rails.application.routes.draw do
     end
     resources :refunds
 
-    resources :white_papers, concerns: :supports_reordering
     get 'mock_exams', to: 'footer_pages#media_library', as: :media_library
     get 'prep_products', to: 'footer_pages#media_library', as: :prep_products
-    get 'white_paper/:white_paper_name_url', to: 'footer_pages#white_paper_request', as: :public_white_paper
-    resources :white_paper_requests
-    post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
     resources :home_pages
 

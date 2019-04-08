@@ -1,0 +1,36 @@
+.l-section-extra-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom-big#thank-you-message
+        .col-md-12
+          .box-item.l-margin-bottom
+            .row
+              .col-sm-12
+                .text-center
+                  %h4.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+                    Congratulations! Your LearnSignal account is now active
+                  %h2.text-center
+                    Choose your course
+
+
+
+      .row
+        .container-fluid.l-margin-bottom-huge
+          .course-list-wrap
+            -if @groups
+              -@groups.each do |group|
+                .row
+                  -group.active_children.all_in_order.reverse.each do |course|
+                    .col-md-4.col-sm-6.col-xs-12
+                      =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
+                        .card-inner.text-center
+                          %h3.h3.card-title
+                            =course.try(:name)
+
+                        .card-label{style: "background: #{course.highlight_colour};"}
+                          .row
+                            .col-md-12.col-xs-12.text-center
+                              %h4{style: 'color: #fff;'}
+                                =course.category_label ? course.category_label : 'Enrol Now'
+
+

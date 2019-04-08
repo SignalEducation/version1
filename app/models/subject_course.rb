@@ -53,7 +53,6 @@ class SubjectCourse < ActiveRecord::Base
   has_many :home_pages
   has_many :subject_course_resources
   has_many :orders
-  has_many :white_papers
   has_many :mock_exams
   has_many :exam_sittings
   has_many :enrollments

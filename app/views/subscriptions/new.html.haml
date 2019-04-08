@@ -3,8 +3,8 @@
     .container
       %header.hero-section.hero-section-external
         %h1.h1-hero.mb-2
-          = "Get your #{@plans.first.exam_body.name} tuition sorted for 2019"
-        %h2.h5
+          = "#{@plans.first.exam_body.name} Tuition Payment"
+        %p
           ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
           %span{style: 'font-weight: bold;'}
             ="with 3 months free on our annual subscription."
@@ -17,8 +17,6 @@
             =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
             =f.hidden_field :stripe_token
             =f.hidden_field :use_paypal, value: false
-            -if params[:coupon]
-              =hidden_field_tag :hidden_coupon_code
 
             .bg-asphalt
               .container
@@ -41,7 +39,7 @@
                   .col-lg-6
                     %fieldset.card.card-payments
                       %p.h2.mb-1 Choose a way to pay
-                      %p.mb-4 Choose your preferred method of payment
+                      %p.mb-4 Select your preferred method of payment
                       .form-group.form-group-expandable
                         .custom-control.custom-radio
                           %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
@@ -66,31 +64,39 @@
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
 
 
+    .container-bg.bg-white
+      .container
+        %article.text-center.py-6.py-sm-7
+          %header.pb-3
+            %h1.px-5.px-sm-6 Discover the smarter way to study
+            %p.p-hero Studying has never been easier with our expertly designed online courses.
+          .px-4.px-lg-8
+            .row.row-lg
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Access anytime, anywhere
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-card-slides{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Topic-by-topic online lectures
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-doc-marker{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Expert notes and corrected questions
+              .col-md-3
+                .pb-4.d-flex.flex-md-column.align-items-center
+                  .mr-4.mb-md-4.mx-md-0
+                    %i.budicon-happy-chat{"aria-hidden" => "true"}
+                  %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
 
-            .bg-asphalt
-              .container
-                .py-6
-                  %h2.mb-5 Included in Your LearnSignal Membership
-                  .row
-                    .col-md-5
-                      .with-icon-checked
-                        %p Topic&ndash;by&ndash;topic, online 15&ndash;minute lectures
-                      .with-icon-checked
-                        %p Notes &amp; MCQs
-                      .with-icon-checked
-                        %p Practice CBE's
-                    .col-md-5
-                      .with-icon-checked
-                        %p 24&#47;7 hour Support
-                      .with-icon-checked
-                        %p Exam Bootcamp
-                      .with-icon-checked
-                        %p Webinar Week
 
 
 :javascript
 
-  var couponCode = $('#coupon_code');
   var plan_id = '1';
 
   function intervalSummary(frequency) {
@@ -108,87 +114,10 @@
 
   function choosePlan(selectedPlan) {
     $('#subscription_subscription_plan_id').val(selectedPlan);
-
     updateCheckoutTotal();
-    if ($('#coupon_code').val()) {
-      validateCoupon();
-    }
   }
 
 
-  // Trigger Ajax call on every input into the coupon field.
-  // Ajax call params are the coupon field value and selected_plan_id
-  // If response contains 'valid:true' add green border to field input
-  // If response contains 'valid:false' add red border to field and show error text
-  //
-  //
-  function validateCoupon() {
-
-      if(!couponCode.value){
-        $.ajax({
-          url: '#{coupon_validation_path}',
-
-          dataType: 'json',
-          data: JSON.stringify({'coupon_code': couponCode.val(), 'plan_id': plan_id }),
-          method: 'POST',
-          contentType: "application/json; charset=utf-8",
-
-          success: function(data,status,xhr){
-            var validCoupon = data.valid;
-            var discountedPrice = data.discounted_price;
-
-            if(validCoupon === false){
-              $('#coupon_code').removeClass("coupon-success");
-              $('#coupon_code').addClass("coupon-error");
-              $('.invalid-code').show();
-              $('.discounted-price').hide();
-              $('#total-value').removeClass('strike');
-
-            } else if(validCoupon === true){
-              $('#coupon_code').removeClass("coupon-error");
-              $('#coupon_code').addClass("coupon-success");
-              $('.invalid-code').hide();
-
-              $('.discounted-price').show();
-              $('#total-value').addClass('strike');
-              $('#discounted-value').text(discountedPrice);
-
-            } else {
-              $('#coupon_code').removeClass("coupon-error");
-              $('#coupon_code').removeClass("coupon-success");
-              $('.invalid-code').hide();
-            }
-
-
-
-          },
-          error: function(xhr,status,error){
-            console.log(xhr);
-            alert(error);
-          }
-
-        });
-
-    } else  {
-      couponCode.removeClass("coupon-error");
-      couponCode.removeClass("coupon-success");
-      couponCode.hide();
-    }
-
-  }
-
-  $('#coupon_code').on('input',function(e) {
-    validateCoupon();
-  });
-
-  // Hide green/red border and coupon error text if input has no value
-  $('#coupon_code').blur(function() {
-    if ($('#coupon_code').val() === '') {
-      $('#coupon_code').removeClass("coupon-error");
-      $('#coupon_code').removeClass("coupon-success");
-      $('.invalid-code').hide();
-    }
-  });
 
   function updateCheckoutTotal() {
     var selectedPlan = $("input[name='plans']:checked");
@@ -303,7 +232,6 @@
       // Insert the token ID into the form so it gets submitted to the server
       var form = document.getElementById('upgrade-form');
       $('#subscription_stripe_token').val(token.id);
-      $('#hidden_coupon_code').val($('#coupon_code').val());
 
       // Submit the form
       form.submit();

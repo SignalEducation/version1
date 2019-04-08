@@ -66,11 +66,7 @@ class QuizQuestion < ActiveRecord::Base
   protected
 
   def at_least_one_answer_is_correct
-    counter = 0
-    quiz_answers.each do |attrs|
-      counter += 1 if attrs[:degree_of_wrongness] == 'correct'
-    end
-    if counter == 0
+    if quiz_answers.any? && !quiz_answers.map(&:degree_of_wrongness).include?('correct')
       errors.add(:base, 'At least one answer must be marked as correct')
     end
   end

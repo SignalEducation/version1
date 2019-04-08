@@ -63,6 +63,7 @@ class SubscriptionsController < ApplicationController
         )
       end
       #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
+      seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
     else
       redirect_to root_url
     end
@@ -80,7 +81,7 @@ class SubscriptionsController < ApplicationController
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral
-        redirect_to personal_upgrade_complete_url
+        redirect_to personal_upgrade_complete_url, notice: 'Your subscription is confirmed!'
       elsif subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
       end
@@ -183,11 +184,9 @@ class SubscriptionsController < ApplicationController
   def get_relevant_subscription_plans
     country = IpAddress.get_country(request.remote_ip) || current_user.country
     currency = current_user.get_currency(country)
-    cookie = cookies.encrypted[:latest_subscription_plan_category_guid]
     plans = SubscriptionPlan.get_relevant(
                                             current_user,
                                             currency,
-                                            cookie,
                                             params[:exam_body_id]
                                           )
     return plans, country
