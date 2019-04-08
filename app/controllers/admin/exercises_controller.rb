@@ -8,7 +8,8 @@ class Admin::ExercisesController < ApplicationController
   layout 'management'
 
   def index
-    @exercises = Exercise.with_state(params[:state] || :submitted).paginate(per_page: 50, page: params[:page]).all_in_order
+    states = params[:state].present? ? [params[:state]] : %w(submitted correcting)
+    @exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
   def show
@@ -19,8 +20,8 @@ class Admin::ExercisesController < ApplicationController
 
   def update
     if @exercise.update(exercise_params)
-      flash[:success] = I18n.t('controllers.exercises.update.flash.success')
-      redirect_to admin_exercises_path
+      @exercise.return if @exercise.correction.present? && @exercise.correcting?
+      redirect_to admin_exercises_path, notice: I18n.t('controllers.exercises.update.flash.success')
     else
       render action: :edit
     end
@@ -33,6 +34,6 @@ class Admin::ExercisesController < ApplicationController
   end
 
   def exercise_params
-    params.require(:exercise).permit(:correction)
+    params.require(:exercise).permit(:correction, :corrector_id)
   end
 end

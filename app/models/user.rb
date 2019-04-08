@@ -430,6 +430,9 @@ class User < ActiveRecord::Base
     )
   end
 
+  def name
+    [first_name, last_name].join(' ')
+  end
 
   def default_card
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id

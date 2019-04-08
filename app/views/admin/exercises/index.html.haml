@@ -1,7 +1,7 @@
 .container
   %header.management-console-section
     %h1
-      =t('views.exercises.index.h1')
+      =t('views.exercises.admin.index.h1')
 
   %section.pb-7
     .admin-nav
@@ -20,19 +20,23 @@
             %table.table
               %thead
                 %tr
-                  %th=t('views.exercises.index.name')
-                  %th=t('views.exercises.index.email')
-                  %th=t('views.exercises.index.state')
-                  %th=t('views.exercises.index.submitted_on')
+                  %th=t('views.exercises.admin.index.name')
+                  %th=t('views.exercises.admin.index.email')
+                  %th=t('views.exercises.admin.index.state')
+                  %th=t('views.exercises.admin.index.submitted_on')
                   %th
               %tbody
                 -@exercises.each do |exercise|
                   %tr
                     %td=exercise.user.name
                     %td=exercise.user.email
-                    %td=exercise.user.state
+                    %td=exercise.state
                     %td=exercise.submitted_on.strftime('%d/%m/%y %H:%m')
                     %td
                       =link_to t('views.general.edit'), edit_admin_exercise_path(exercise), class: 'btn btn-primary btn-xs'
                       =link_to t('views.general.view'), admin_exercise_path(exercise), class: 'btn btn-secondary btn-xs'
+                      -if exercise.corrector_id.present?
+                        %span Claimed
+                      -else
+                        =link_to 'Claim', admin_exercise_path(exercise, exercise: { corrector_id: current_user.id }), method: :patch, class: 'btn btn-secondary btn-xs'
 

@@ -7,4 +7,6 @@
 
       %section.pb-md-6.pt-4
         .row.row-md
-          =@exercise.state
+          .card
+            =@exercise.state
+            =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary', target: '_blank'

@@ -30,8 +30,9 @@ class Exercise < ApplicationRecord
   validates_attachment_content_type :submission,
     :correction, content_type: 'application/pdf'
 
-  after_submission_post_process :submit
-  after_correction_post_process :return
+  # after_submission_post_process :submit
+  # after_correction_post_process :return
+  after_update :check_corrector
 
   # SCOPES =====================================================================
 
@@ -66,5 +67,11 @@ class Exercise < ApplicationRecord
     after_transition correcting: :returned do |exercise, _transition|
       # email the user to say their corrections are available
     end
+  end
+
+  private
+
+  def check_corrector
+    self.correct if corrector_id_previously_changed?
   end
 end
