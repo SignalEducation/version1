@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
   end
 
+  namespace :admin do
+    resources :exercises, only: [:index, :show, :edit, :update]
+  end
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')

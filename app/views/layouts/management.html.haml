@@ -1,0 +1,52 @@
+!!! 5
+%html{lang: 'en'}
+  %head
+    %meta{charset: 'utf-8'}
+    %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
+    %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
+    %title
+        LearnSignal | Managment
+
+    =stylesheet_link_tag 'application', media: 'all'
+    =javascript_include_tag 'application', modernizr: :true
+
+    %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
+
+    %link{href: 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700', rel: 'stylesheet'}
+    %link{href: 'https://fonts.googleapis.com/icon?family=Material+Icons', rel: 'stylesheet'}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    =csrf_meta_tags
+    =render 'application/favicon'
+
+    =render partial: 'layouts/favicon'
+    -if Rails.env.production?
+      =render partial: 'layouts/cookie_banner'
+
+  %body
+    %noscript
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
+    height: 0, width: 0, style: 'display:none;visibility:hidden'}
+
+    -if Rails.env.production?
+      =render partial: 'layouts/google_tag_manager'
+
+    #console-wrapper
+      .d-none.d-sm-block
+        =render partial: 'layouts/management_side_navbar'
+
+      .main-content
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
+
+
+    -#General partials
+    =render partial: 'layouts/misc_javascript'
+    %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}

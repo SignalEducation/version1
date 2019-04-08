@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_04_183715) do
+ActiveRecord::Schema.define(version: 2019_04_08_081540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1203,6 +1203,7 @@ ActiveRecord::Schema.define(version: 2019_04_04_183715) do
     t.boolean "trial_or_sub_required", default: false
     t.boolean "blocked_user", default: false
     t.boolean "marketing_resources_access", default: false
+    t.boolean "exercise_corrections_access", default: false
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
