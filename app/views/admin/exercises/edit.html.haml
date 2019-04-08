@@ -1,0 +1,30 @@
+.container
+  %header.management-console-section
+    %h1
+      Submit Corrections
+
+  %section.pb-3
+    =form_for(@exercise, url: admin_exercise_path(@exercise), method: :patch, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      .box-item.form-box
+        =render partial: '/layouts/error_messages', locals: {thing: @exercise, message: nil}
+        .row
+          .col-sm-12
+            .row
+              .col-sm-6
+                .form-group
+                  -if f.object&.correction&.present?
+                    =f.label :correction, t('views.exercises.admin.form.correction'), class: 'control-label'
+                    .form-control-static
+                      =link_to f.object.correction_file_name, f.object.correction.url, target: '_blank'
+                      =number_to_human_size(f.object.correction_file_size)
+                      %br/
+                      =f.label :correction, t('views.white_papers.form.file_replacement'), class: 'control-label'
+                  -else
+                    =f.label :correction, t('views.mock_exams.form.file'), class: 'control-label'
+                  .input-group.input-group-lg
+                    =f.file_field :correction, class: 'form-control'
+
+        .row
+          .col-sm-12
+            =f.submit t('views.general.save'), class: 'btn btn-primary'
+            =link_to t('views.general.cancel'), admin_exercises_path, class: 'btn btn-secondary'

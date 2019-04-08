@@ -205,6 +205,10 @@ en:
           success: ExamSitting has been deleted
           error: ExamSitting was not deleted
 
+    exercises:
+      update:
+        flash:
+          success: Exercise corrections successfully updated
 
     external_banners:
       create:

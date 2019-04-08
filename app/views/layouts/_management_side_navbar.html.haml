@@ -14,6 +14,10 @@
       %li
         =link_to 'Users', users_url
 
+    -if current_user.exercise_corrections_access?
+      %li
+        =link_to 'Exercises', admin_exercises_path
+
     -if current_user.content_management_access?
       %li
         =link_to 'Course Content', subject_courses_url

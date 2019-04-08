@@ -101,6 +101,8 @@ class User < ActiveRecord::Base
   has_many :charges
   has_many :refunds
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
+  has_many :exercises
+  has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
 
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
@@ -382,6 +384,10 @@ class User < ActiveRecord::Base
     self.user_group.content_management_access
   end
 
+  def exercise_corrections_access?
+    self.user_group.exercise_corrections_access
+  end
+
   def stripe_management_access?
     self.user_group.stripe_management_access
   end
@@ -410,6 +416,9 @@ class User < ActiveRecord::Base
     )
   end
 
+  def name
+    [first_name, last_name].join(' ')
+  end
 
   def default_card
     self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id

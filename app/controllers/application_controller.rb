@@ -102,7 +102,8 @@ class ApplicationController < ActionController::Base
          (the_user_group.marketing_resources_access && permitted_thing == 'marketing_resources_access') ||
          (the_user_group.student_user && the_user_group.trial_or_sub_required && permitted_thing == 'student_user') ||
          (!the_user_group.student_user && permitted_thing == 'non_student_user') ||
-         (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access')
+         (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access') ||
+         (the_user_group.exercise_corrections_access && permitted_thing == 'exercise_corrections_access')
         permission_granted = true
       end
     end

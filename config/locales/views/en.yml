@@ -167,6 +167,19 @@ en:
       new:
         h1: New Category
 
+    exercises:
+      show: 
+      admin:
+        index:
+          h1: Student Exercises
+          name: Name
+          email: Email
+          state: Current State
+          submitted_on: Submitted On
+        form:
+          correction: Upload Correction
+        show:
+        edit:
 
     orders:
       index:
@@ -1026,6 +1039,7 @@ en:
         currency: Currency
         mock_exam_id: Mock Exam
         product_type: Product Type
+        correction_pack_count: Number of Corrections
         subject_course: Course
         type: Type
 

@@ -31,6 +31,11 @@
               .input-group.input-group-lg
                 =f.select :product_type, [['Mock Exam', 'mock_exam'], ['Correction Pack', 'correction_pack']], {}, {class: 'form-control custom-select'}
 
+            .form-group
+              =f.label :correction_pack_count, t('views.products.form.correction_pack_count')
+              .input-group.input-group-lg
+                =f.number_field :correction_pack_count, class: 'form-control'
+
             .col-md-6
               .form-group
                 .col-sm-8.col-sm-offset-4

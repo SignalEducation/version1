@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
   end
 
+  namespace :admin do
+    resources :exercises, only: [:index, :show, :edit, :update]
+  end
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
@@ -75,6 +79,7 @@ Rails.application.routes.draw do
       get  '/orders', action: :user_purchases_details, as: :orders
       get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses
+      resources :exercises, only: [:index, :show, :edit, :update], shallow: true
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
