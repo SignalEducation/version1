@@ -1328,39 +1328,6 @@ ActiveRecord::Schema.define(version: 2019_04_04_183715) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
-  create_table "white_paper_requests", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "number"
-    t.string "company_name"
-    t.integer "white_paper_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company_name"], name: "index_white_paper_requests_on_company_name"
-    t.index ["email"], name: "index_white_paper_requests_on_email"
-    t.index ["name"], name: "index_white_paper_requests_on_name"
-    t.index ["number"], name: "index_white_paper_requests_on_number"
-    t.index ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id"
-  end
-
-  create_table "white_papers", id: :serial, force: :cascade do |t|
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "file_file_name"
-    t.string "file_content_type"
-    t.integer "file_file_size"
-    t.datetime "file_updated_at"
-    t.integer "sorting_order"
-    t.string "cover_image_file_name"
-    t.string "cover_image_content_type"
-    t.integer "cover_image_file_size"
-    t.datetime "cover_image_updated_at"
-    t.string "name_url"
-    t.string "name"
-    t.integer "subject_course_id"
-  end
-
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
