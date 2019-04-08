@@ -1,2 +1,10 @@
-%h1 Exercises#show
-%p Find me in app/views/exercises/show.html.haml
+%main
+  %article.dashboard.bg-gray5
+    .container
+      %header
+        %h1.h1-hero.pt-5
+          =@exercise.product.name
+
+      %section.pb-md-6.pt-4
+        .row.row-md
+          =@exercise.state

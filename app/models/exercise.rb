@@ -25,8 +25,8 @@ class Exercise < ApplicationRecord
   belongs_to :user
   belongs_to :corrector, optional: true
 
-  has_attached_file :submission, default_url: 'images/missing_image.jpg'
-  has_attached_file :correction, default_url: 'images/missing_image.jpg'
+  has_attached_file :submission, default_url: nil
+  has_attached_file :correction, default_url: nil
   validates_attachment_content_type :submission,
     :correction, content_type: 'application/pdf'
 

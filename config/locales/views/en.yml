@@ -168,14 +168,16 @@ en:
         h1: New Category
 
     exercises:
-      index:
-        h1: Student Exercises
-        name: Name
-        email: Email
-        state: Current State
-        submitted_on: Submitted On
-      show:
-      edit:
+      show: 
+      admin:
+        index:
+          h1: Student Exercises
+          name: Name
+          email: Email
+          state: Current State
+          submitted_on: Submitted On
+        show:
+        edit:
 
     orders:
       index:

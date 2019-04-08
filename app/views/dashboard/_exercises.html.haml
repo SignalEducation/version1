@@ -14,7 +14,7 @@
               -else
                 Submit work for correction
         .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-          =link_to 'Begin Exercise', exercise_path(exercise), class: 'btn btn-primary'
+          =link_to 'Begin Exercise', edit_exercise_path(exercise), class: 'btn btn-primary'
 
   -if current_user.exercises.with_states([:submitted, :correcting]).any?
     %h2 Submitted Exercises

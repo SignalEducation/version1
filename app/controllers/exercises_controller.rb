@@ -1,15 +1,9 @@
 class ExercisesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w(student_user))
-  end
   before_action :set_exercise, except: :index
 
   def index
     @exercises = current_user.exercises
-  end
-
-  def show
   end
 
   def edit

@@ -7,18 +7,24 @@
         %p.p-hero.px-lg-8
           Submit a PDF of your exercise or mock exam below for correction.
 
+      -if @exercise.product.mock_exam?
+        %section.pb-md-6.pb-5
+        .forgot-password-section
+          =@exercise.product.mock_exam.name
+          =link_to 'Download Exam Paper', @exercise.product.mock_exam.url, class: 'btn btn-primary'
+
       %section.pb-md-6.pb-5
         .forgot-password-section
           .form-box
-            =form_for @exercise, {class: 'py-3 mr-5 ml-5', role: 'form'} do
+            =form_for @exercise, {class: 'py-3 mr-5 ml-5', role: 'form'} do |f|
               .row
                 .col-sm-12
                   .form-group
-                    -if f.object.present?
+                    -if f.object&.submission&.present?
                       =f.label :submission, t('views.mock_exams.form.file'), class: 'control-label'
                       .form-control-static
                         =link_to f.object.submission_file_name, f.object.submission.url, target: '_blank'
-                        =number_to_human_size(f.object.file_file_size)
+                        =number_to_human_size(f.object.submission_file_size)
                         %br/
                         =f.label :submission, t('views.white_papers.form.file_replacement'), class: 'control-label'
                     -else
