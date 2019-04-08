@@ -33,7 +33,6 @@ class StudentAccess < ActiveRecord::Base
 
   # callbacks
   before_destroy :check_dependencies
-  #after_update :create_or_update_intercom_user
 
   # scopes
   scope :all_in_order, -> { order(:user_id) }
@@ -45,7 +44,7 @@ class StudentAccess < ActiveRecord::Base
 
   # instance methods
   def destroyable?
-    false
+    true
   end
 
   def trial_access?
@@ -60,38 +59,8 @@ class StudentAccess < ActiveRecord::Base
     self.account_type == 'Complimentary'
   end
 
-  def convert_to_trial_access
-    self.update_attributes(account_type: 'Trial', subscription_id: nil)
-  end
-
-  def convert_to_subscription_access(subscription_id)
-    self.update_attributes(subscription_id: subscription_id, account_type: 'Subscription')
-  end
-
-  def convert_to_complimentary_access
-    self.update_attributes(account_type: 'Complimentary', subscription_id: nil)
-  end
-
-  def check_student_access
-    if self.user.complimentary_user? || self.user.non_student_user?
-      self.convert_to_complimentary_access
-    elsif self.user.trial_or_sub_user?
-      if self.subscription_id
-        self.update_attributes(account_type: 'Subscription')
-      else
-        self.convert_to_trial_access
-      end
-    else
-      self.convert_to_trial_access
-    end
-  end
-
 
   protected
-
-  def create_or_update_intercom_user
-    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
-  end
 
   def check_dependencies
     unless self.destroyable?

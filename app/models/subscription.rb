@@ -118,11 +118,8 @@ class Subscription < ActiveRecord::Base
       end
     end
 
-    #TODO - can the if condition be removed? can the transition include all states transitioning to active?
     after_transition pending: :active do |subscription, _transition|
-      if !subscription.user.student_access.subscription_access?
-        subscription.user.student_access.convert_to_subscription_access(subscription.id)
-      end
+
     end
 
     after_transition all => :errored do |subscription, _transition|
@@ -254,7 +251,6 @@ class Subscription < ActiveRecord::Base
             active: true
         )
         self.start
-        self.user.student_access.convert_to_subscription_access(self.id)
       end
 
     end

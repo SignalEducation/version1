@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   before_create :set_additional_user_attributes
-  after_create :create_referral_code_record
+  after_create :create_referral_code_record, :create_or_update_intercom_user
   after_update :update_stripe_customer
 
   # scopes
@@ -666,6 +666,10 @@ class User < ActiveRecord::Base
     self.communication_approval_datetime = Time.zone.now if communication_approval
     self.account_activation_code = SecureRandom.hex(10)
     self.email_verification_code = SecureRandom.hex(10)
+  end
+
+  def create_or_update_intercom_user
+    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
   end
 
   def update_stripe_customer
