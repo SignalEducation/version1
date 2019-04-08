@@ -18,14 +18,19 @@
                   %a#enrollments-tab.nav-link.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
                     Enrolments
                 %li.nav-item
+                  %a#exercises-tab.nav-link{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                    Exercises
+                %li.nav-item
                   %a#activity-tab.nav-link{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
                     Other Activity
 
           .col-lg-5-7
             #accountTabsContent.tab-content
-
               #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
                 =render partial: 'enrollments'
+
+              #exercises.tab-pane.show.active.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
+                =render partial: 'exercises'
 
               #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
                 =render partial: 'activity'

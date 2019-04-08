@@ -27,12 +27,17 @@ class Exercise < ApplicationRecord
 
   has_attached_file :submission, default_url: 'images/missing_image.jpg'
   has_attached_file :correction, default_url: 'images/missing_image.jpg'
-  validates_attachment_content_type :submission, :correction, content_type: 'application/pdf'
+  validates_attachment_content_type :submission,
+    :correction, content_type: 'application/pdf'
 
   after_submission_post_process :submit
   after_correction_post_process :return
 
+  # SCOPES =====================================================================
+
   scope :all_in_order, -> { order(created_at: :asc) }
+
+  # STATE MACHINE ==============================================================
 
   state_machine initial: :pending do
     event :submit do

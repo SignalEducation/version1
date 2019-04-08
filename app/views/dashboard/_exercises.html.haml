@@ -1,0 +1,23 @@
+-if current_user.exercises.any?
+  -if current_user.exercises.with_state(:pending).any?
+    %h2 Pending Exercises
+    -current_user.exercises.with_state(:pending).each do |exercise|
+      -if exercise.product.mock_exam?
+        Start your mock exam
+      -else
+        Submit work for correction
+
+  -if current_user.exercises.with_states([:submitted, :correcting]).any?
+    %h2 Submitted Exercises
+    -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
+      =exercise.user.name
+
+  -if current_user.exercises.with_states(:returned).any?
+    %h2 Returned Exercises
+    -current_user.exercises.with_states(:returned).each do |exercise|
+      =exercise.user.name
+
+-else
+  .row.row-lg
+    .col-sm
+      =render partial: 'purchase_products'
