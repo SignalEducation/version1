@@ -111,6 +111,10 @@ class Enrollment < ActiveRecord::Base
     self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
+  def display_percentage_complete
+    self.percentage_complete.to_s << '%'
+  end
+
   def status
     self.expired ? 'Expired' : 'Active'
   end
