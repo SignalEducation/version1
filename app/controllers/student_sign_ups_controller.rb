@@ -65,8 +65,8 @@ class StudentSignUpsController < ApplicationController
 
   def new
     @navbar = true
-    seo_title_maker('Free Basic Plan Registration | LearnSignal',
-                    'Register for our basic membership plan to access your essential course materials and discover the smarter way to study with learnsignal.',
+    seo_title_maker('Course Membership Registration | LearnSignal',
+                    'Become a learnsignal member and access professional course materials, expert notes and corrected questions anytime, anywhere. Choose your plan today.',
                     false)
 
   end

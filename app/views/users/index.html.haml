@@ -29,6 +29,7 @@
                 %tr
                   %th=t('views.users.form.full_name')
                   %th=t('views.users.form.email')
+                  %th=t('views.users.form.email_verified')
                   %th
                   %th
               %tbody
@@ -36,6 +37,7 @@
                   %tr
                     %td=user.full_name
                     %td=user.email
+                    %td=tick_or_cross(user.email_verified)
                     %td
                       =link_to t('views.general.view'), user_url(user), class: 'btn btn-secondary btn-xs'
                     %td

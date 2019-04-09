@@ -154,7 +154,7 @@ class SubscriptionPlan < ActiveRecord::Base
     elsif sub_heading_text && !sub_heading_text.empty?
       sub_heading_text.to_s
     else
-      'Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever, with 3 months free on our annual subscription.'
+      exam_body.subscription_page_subheading_text
     end
   end
 
