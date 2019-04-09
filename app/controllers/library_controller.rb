@@ -132,6 +132,17 @@ class LibraryController < ApplicationController
     @products = @correction_pack_products + @mock_exam_products
     @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
 
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @currency_id = country.try(:currency_id)
+
+    if country && @currency_id
+      @subscription_plan = SubscriptionPlan.where(
+          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+      ).includes(:currency).for_students.in_currency(@currency_id).all_active.quarterly.first
+    end
+
+
   end
 
   def get_enrollment_form_variables(course, scul=nil)

@@ -76,6 +76,7 @@ class SubscriptionPlan < ActiveRecord::Base
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
   scope :for_exam_body, lambda { |body_id| where(exam_body_id: body_id) }
   scope :yearly, -> { where(payment_frequency_in_months: 12) }
+  scope :quarterly, -> { where(payment_frequency_in_months: 3) }
 
   # class methods
   def self.get_relevant(user, currency, exam_body_id)
