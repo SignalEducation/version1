@@ -678,7 +678,7 @@ class User < ActiveRecord::Base
   end
 
   def create_or_update_intercom_user
-    IntercomCreateUserWorker.perform_async(self.user_id) unless Rails.env.test?
+    IntercomCreateUserWorker.perform_async(self.try(:id)) unless Rails.env.test?
   end
 
   def update_stripe_customer

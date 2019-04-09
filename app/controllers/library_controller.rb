@@ -84,6 +84,7 @@ class LibraryController < ApplicationController
 
   protected
 
+  #TODO - what is this about?
   def check_course_available
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     @group = @course.group
