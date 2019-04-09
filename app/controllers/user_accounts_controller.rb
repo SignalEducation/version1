@@ -21,6 +21,10 @@ class UserAccountsController < ApplicationController
       # and where enrolments exist for this user
     #  @user.exam_body_user_details.build(exam_body_id: exam_body.id)
     #end
+    seo_title_maker('View Your Account Details | LearnSignal',
+                    'Log in to view your learnsignal account details including personal information, account information, orders, enrolments and referral program.',
+                    false)
+
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
