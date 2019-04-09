@@ -6,8 +6,6 @@
   %section.pb-3
     =form_for(@subscription_plan, html: {class: 'form-horizontal', role: 'form'}) do |f|
       .box-item.form-box
-        =f.hidden_field :available_to_students, value: true
-        =f.hidden_field :all_you_can_eat, value: true
         .row
           =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan, message: nil}
 
@@ -16,24 +14,24 @@
               =f.label :name, t('views.subscription_plans.form.name')
               .input-group.input-group-lg
                 =f.text_field :name, placeholder: t('views.subscription_plans.form.name_placeholder'), class: 'form-control', required: true
-          .col-sm-6
+
             .form-group
               =f.label :exam_body_id, t('views.subscription_plans.form.exam_body_id')
               .input-group.input-group-lg
                 =f.collection_select :exam_body_id, ExamBody.all, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
 
 
-          .col-sm-6
+
             .form-group
               =f.label :available_to, t('views.subscription_plans.form.available_to')
               .input-group.input-group-lg
                 =f.text_field :available_to, placeholder: t('views.subscription_plans.form.available_to_placeholder'), class: 'form-control date', data: {'date-format' => 'YYYY-MM-DD'}, id: 'datetimepicker2'
-          .col-sm-6
+
             .form-group
               =f.label :subscription_plan_category_id, t('views.subscription_plans.form.subscription_plan_category_id')
               .input-group.input-group-lg
                 =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :full_name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
-          .col-sm-6
+
             .form-group
               =f.label :guid, t('views.subscription_plans.form.guid')
               .input-group.input-group-lg
@@ -44,11 +42,28 @@
               =f.label :monthly_percentage_off, t('views.subscription_plans.form.monthly_percentage_off')
               .input-group.input-group-lg.full-width
                 =f.number_field :monthly_percentage_off, placeholder: 0, class: 'form-control'
-          .col-sm-6
+
             .form-group
               =f.label :previous_plan_price, t('views.subscription_plans.form.previous_plan_price')
               .input-group.input-group-lg
                 =f.text_field :previous_plan_price, placeholder: 0, class: 'form-control'
+
+            .form-group
+              =f.label :sub_heading_text, t('views.subscription_plans.form.sub_heading_text')
+              .input-group.input-group-lg
+                =f.text_field :sub_heading_text, placeholder: t('views.subscription_plans.form.sub_heading_text_placeholder'), class: 'form-control'
+
+            .form-group
+              =f.label :bullet_points_list, t('views.subscription_plans.form.bullet_points_list')
+              .input-group.input-group-lg
+                =f.text_area :bullet_points_list, placeholder: t('views.subscription_plans.form.bullet_points_list_placeholder'), class: 'form-control'
+
+            .col-sm.pt-5
+              .checkbox
+                %label
+                  =f.check_box :most_popular
+                  =t('views.subscription_plans.form.most_popular')
+
 
         .row.pt-4
           .col-sm-12

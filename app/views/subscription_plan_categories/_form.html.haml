@@ -9,6 +9,12 @@
           .input-group.input-group-lg
             =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', autofocus: true
 
+      .col-sm-6
+        .form-group
+          =f.label :sub_heading_text, t('views.subscription_plan_categories.form.sub_heading_text')
+          .input-group.input-group-lg
+            =f.text_field :sub_heading_text, placeholder: t('views.subscription_plan_categories.form.sub_heading_text_placeholder'), class: 'form-control', autofocus: true
+
 
 
       .col-sm-6

@@ -10,7 +10,7 @@ class StudentSignUpsController < ApplicationController
     @home_page = HomePage.where(home: true).where(public_url: '/').first
     #@banner = @home_page.external_banners.first
     seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
-    @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+    @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
 
     #Added respond block to stop the missing template errors with image, text, json types
@@ -34,12 +34,12 @@ class StudentSignUpsController < ApplicationController
         create_user_object
       end
 
-      if @home_page.subscription_plan_category
+      if @home_page.subscription_plan_category && @home_page.subscription_plan_category.current
         @subscription_plans = @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
       else
         @subscription_plans = SubscriptionPlan.where(
             subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
-        ).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+        ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
       end
 
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]

@@ -21,7 +21,7 @@
               =link_to f.object.file_file_name, f.object.file.url, target: '_blank'
               =number_to_human_size(f.object.file_file_size)
               %br/
-              =f.label :file, t('views.white_papers.form.file_replacement'), class: 'control-label'
+              =f.label :file, t('views.mock_exams.form.file_replacement'), class: 'control-label'
           -else
             =f.label :file, t('views.mock_exams.form.file'), class: 'control-label'
           .input-group.input-group-lg

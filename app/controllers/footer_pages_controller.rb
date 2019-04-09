@@ -53,11 +53,6 @@ class FooterPagesController < ApplicationController
                        .where("product_type = ?", Product.product_types[:correction_pack])
   end
 
-  def white_paper_request
-    @white_paper = WhitePaper.where(name_url: params[:white_paper_name_url]).first
-    @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
-  end
-
 
   def profile
 

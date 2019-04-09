@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_08_084858) do
+ActiveRecord::Schema.define(version: 2019_04_09_131900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -424,6 +424,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.datetime "updated_at", null: false
     t.boolean "active", default: false, null: false
     t.boolean "has_sittings", default: false, null: false
+    t.integer "preferred_payment_frequency"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -1097,7 +1098,7 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.string "guid"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "trial_period_in_days"
+    t.string "sub_heading_text"
     t.index ["available_from"], name: "index_subscription_plan_categories_on_available_from"
     t.index ["available_to"], name: "index_subscription_plan_categories_on_available_to"
     t.index ["guid"], name: "index_subscription_plan_categories_on_guid"
@@ -1105,15 +1106,12 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
   end
 
   create_table "subscription_plans", id: :serial, force: :cascade do |t|
-    t.boolean "available_to_students", default: false, null: false
-    t.boolean "all_you_can_eat", default: true, null: false
     t.integer "payment_frequency_in_months", default: 1
     t.integer "currency_id"
     t.decimal "price"
     t.date "available_from"
     t.date "available_to"
     t.string "stripe_guid"
-    t.integer "trial_period_in_days", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "name"
@@ -1125,9 +1123,11 @@ ActiveRecord::Schema.define(version: 2019_04_08_084858) do
     t.float "previous_plan_price"
     t.bigint "exam_body_id"
     t.string "guid"
+    t.string "bullet_points_list"
+    t.string "sub_heading_text"
+    t.boolean "most_popular", default: false, null: false
     t.index ["available_from"], name: "index_subscription_plans_on_available_from"
     t.index ["available_to"], name: "index_subscription_plans_on_available_to"
-    t.index ["available_to_students"], name: "index_subscription_plans_on_available_to_students"
     t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
     t.index ["exam_body_id"], name: "index_subscription_plans_on_exam_body_id"
     t.index ["payment_frequency_in_months"], name: "index_subscription_plans_on_payment_frequency_in_months"

@@ -27,7 +27,7 @@ class LibraryController < ApplicationController
       if country && @currency_id
         @subscription_plans = SubscriptionPlan.where(
             subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
-        ).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+        ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
       end
 
     else
@@ -138,8 +138,9 @@ class LibraryController < ApplicationController
 
     if country && @currency_id
       @subscription_plan = SubscriptionPlan.where(
-          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
-      ).includes(:currency).for_students.in_currency(@currency_id).all_active.quarterly.first
+          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
+          payment_frequency_in_months: @group.exam_body.try(:preferred_payment_frequency)
+      ).includes(:currency).in_currency(@currency_id).all_active.first
     end
 
 

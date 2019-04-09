@@ -16,19 +16,26 @@
 
         .row.mt-5
           .col-sm-6
-            .form-group
-              .col-sm-8.col-sm-offset-4
-                .checkbox
-                  %label
-                    =f.check_box :active
-                    =t('views.exam_bodies.form.active')
+            =f.label :preferred_payment_frequency, t('views.exam_bodies.form.preferred_payment_frequency')
+            .input-group.input-group-lg
+              =f.select :preferred_payment_frequency, options_for_select([1, 3, 12,], selected: f.object.preferred_payment_frequency),
+               {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+
           .col-sm-6
-            .form-group
-              .col-sm-8.col-sm-offset-4
-                .checkbox
-                  %label
-                    =f.check_box :has_sittings
-                    =t('views.exam_bodies.form.has_sittings')
+            .row.pt-5
+              .col-sm-6
+                .form-group
+                  .checkbox
+                    %label
+                      =f.check_box :active
+                      =t('views.exam_bodies.form.active')
+
+              .col-sm-6
+                .form-group
+                  .checkbox
+                    %label
+                      =f.check_box :has_sittings
+                      =t('views.exam_bodies.form.has_sittings')
 
     .row.pt-5
       .col-sm-12

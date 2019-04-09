@@ -184,11 +184,20 @@ class SubscriptionsController < ApplicationController
   def get_relevant_subscription_plans
     country = IpAddress.get_country(request.remote_ip) || current_user.country
     currency = current_user.get_currency(country)
-    plans = SubscriptionPlan.get_relevant(
-                                            current_user,
-                                            currency,
-                                            params[:exam_body_id]
-                                          )
+    if params[:plan_guid]
+      plans = SubscriptionPlan.get_related_plans(
+          current_user,
+          currency,
+          params[:exam_body_id],
+          params[:plan_guid]
+      )
+    else
+      plans = SubscriptionPlan.get_relevant(
+          current_user,
+          currency,
+          params[:exam_body_id]
+      )
+    end
     return plans, country
   end
 
@@ -199,7 +208,8 @@ class SubscriptionsController < ApplicationController
   end
 
   def subscription_params
-    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code, :use_paypal)
+    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions,
+                                         :hidden_coupon_code, :use_paypal)
   end
 
   def updatable_params

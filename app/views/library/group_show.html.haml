@@ -37,20 +37,25 @@
             %h2.h5
               ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
-          .row.row-lg
+          .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
                 %article.card.card-primary.card-pink
                   .card-body.text-center
                     %h2.h1.card-title
                       =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                    %p
+
+                    -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                      - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                        %p=bullet
+
+                    -else
+                      %p="Access to all #{@group.name} courses"
+                      %p="Topic-by-topic video lectures"
+                      %p="24/7 tutor support"
+
+                    %p{style: 'font-style: italic;'}
                       Cancel anytime
-
-                    %p="Access to all #{@group.name} courses"
-                    %p="Topic-by-topic video lectures"
-                    %p="24/7 tutor support"
-
                     %p.h3
                       =plan.currency.format_number(plan.price)
 
@@ -61,7 +66,7 @@
                         =plan.monthly_percentage_off
                         ='%'
 
-                    -if plan.payment_frequency_in_months == 3
+                    -if plan.most_popular
                       %p.h5.text-primary
                         Our most popular payment plan
 
