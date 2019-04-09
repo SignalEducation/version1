@@ -24,8 +24,7 @@
 
     =csrf_meta_tags
     =render 'application/favicon'
-
-    =render partial: 'layouts/favicon'
+    
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
