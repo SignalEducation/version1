@@ -3,7 +3,10 @@
     .container
       %header.hero-section.hero-section-external
         %h1.h1-hero.mb-2
-          = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Registration"
+          -if @plan
+            = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Registration"
+          -elsif @product
+            = "#{@product.mock_exam.name} Purchase Process"
 
       %section.pb-md-6.pb-5
 
@@ -30,6 +33,22 @@
                       Save over
                       =@plan.monthly_percentage_off
                       ='%'
+
+
+          -elsif @product
+            .col-md-4.mb-5.mb-xl-0
+              %article
+                .card.card-link.text-center.mb-5
+                  .py-4
+                    %h4.text-ellipsis.mb-4
+                      =@product.mock_exam.try(:name)
+                    .pt-2
+                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                    .pt-5
+                      %p.h4.mb-3.text-torquoise
+                        Total:
+                        %span
+                          =number_in_local_currency(@product.price, @product.currency_id)
 
 
 

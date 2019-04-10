@@ -62,10 +62,12 @@ class StudentSignUpsController < ApplicationController
 
   def sign_in_or_register
     @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
+    @product = Product.where(id: params[:product_id]).last
     @exam_body = ExamBody.where(id: params[:exam_body_id]).last
     @user_session = UserSession.new
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
+    flash[:product_id] = @product.id if @product
   end
 
   def new
@@ -95,6 +97,10 @@ class StudentSignUpsController < ApplicationController
         UserSession.create(@user)
         set_current_visit
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      elsif flash[:product_id]
+        UserSession.create(@user)
+        set_current_visit
+        redirect_to new_order_url(product_id: flash[:product_id])
       else
         redirect_to personal_sign_up_complete_url
       end

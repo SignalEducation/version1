@@ -33,7 +33,7 @@
             .row.row-lg
               -@products.each do |product|
                 .col-xs-12.col-sm-6.col-md-4
-                  =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
+                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-link text-center mb-5' do
                     .py-4
                       %h4.text-ellipsis.mb-4
                         =product.mock_exam.try(:name)
@@ -50,7 +50,7 @@
             .row.row-lg
               -@questions.each do |question|
                 .col-xs-12.col-sm-6.col-md-4
-                  =link_to new_order_url(question), class: 'card card-link text-center mb-5' do
+                  =link_to product_checkout_special_link(question.mock_exam.subject_course.group.exam_body.id, question.id), class: 'card card-link text-center mb-5' do
                     .py-4
                       %h4.text-ellipsis.mb-4
                         =question.mock_exam.try(:name)

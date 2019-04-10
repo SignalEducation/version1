@@ -111,7 +111,7 @@ class OrdersController < ApplicationController
   def allowed_params
     params.require(:order).permit(
       :subject_course_id, :product_id, :user_id, :stripe_token,
-      :terms_and_conditions, :use_paypal, :paypal_approval_url
+      :use_paypal, :paypal_approval_url
     )
   end
 
