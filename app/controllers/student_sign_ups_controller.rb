@@ -106,7 +106,7 @@ class StudentSignUpsController < ApplicationController
     @banner = nil
     seo_title_maker('Thank You for Registering | LearnSignal',
                     "Thank you for registering to our basic membership plan you can now explore our course content and discover the smarter way to study with learnsignal.",
-                    @home_page.seo_no_index)
+                    false)
   end
 
   def subscribe
