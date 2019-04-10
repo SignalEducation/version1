@@ -55,7 +55,7 @@
     let player = new Vimeo.Player('vimeo-player-window', options);
 
     let timeUpdate = function(data) {
-      if (data.percent >= 0.75) {
+      if (data.percent >= 0.85) {
         $.ajax({
           headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
           url: '#{video_watched_data_courses_path}',

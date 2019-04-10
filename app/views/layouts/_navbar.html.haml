@@ -10,6 +10,11 @@
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
+          -if action_name == 'group_show' && @subscription_plans
+            %li.nav-item
+              =link_to "#plans", class: 'nav-link' do
+                %span Pricing
+
           -if current_user
             %li.nav-item
               =link_to student_dashboard_url, class: 'nav-link' do

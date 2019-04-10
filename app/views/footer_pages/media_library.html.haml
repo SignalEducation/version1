@@ -1,16 +1,52 @@
 %main
-  %article.bg-gray5
+  %article.bg-white
     .container
-      %header.hero-section.hero-section-external
-        %h1.h1-mega Exam Preparation Products
-        %h5 Passing is worth it
+      %header.text-center
+        .py-4.py-md-5
+          %h1.h1-mega Exam Preparation Products
+          %p Passing is worth it
 
-      %section.pb-md-6.pb-5
 
-        -if @questions.any?
-          .container
-            .pb-3
-              %h2 Correction Packs
+
+      %nav.products-nav.mt-6
+        %ul.nav.nav-tabs{id: 'productsTabs', role: 'tablist'}
+
+          -if @products.any?
+            %li.nav-item
+              %a{href: "#mocks", role: 'tab', class: 'active nav-link', data: {toggle: 'tab'}, aria: {controls: "mocks", selected: 'true'}}
+                ='Mock Exams'
+          -if @questions.any?
+            %li.nav-item
+              %a{href: "#questions", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "questions", selected: 'false'}}
+                ='Correction Packs'
+
+
+
+.bg-gray5
+  .container.py-5.py-sm-6
+    #productsTabsContent.tab-content
+
+      -if @products.any?
+        .tab-pane.tab-mocks.active.show{id: 'mocks', role: 'tabpanel', 'aria-labelledby': 'mocks-tab'}
+          %section.mb-5
+            %h3.text-gray1.mb-4.mb-sm-5 Mock Exams
+            .row.row-lg
+              -@products.each do |product|
+                .col-xs-12.col-sm-6.col-md-4
+                  =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
+                    .py-4
+                      %h4.text-ellipsis.mb-4
+                        =product.mock_exam.try(:name)
+                      .pt-2
+                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                      .pt-5
+                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+
+
+      -if @questions.any?
+        .tab-pane.tab-questions{id: 'questions', role: 'tabpanel', 'aria-labelledby': 'questions-tab'}
+          %section.mb-5
+            %h3.text-gray1.mb-4.mb-sm-5 Correction Packs
             .row.row-lg
               -@questions.each do |question|
                 .col-xs-12.col-sm-6.col-md-4
@@ -24,18 +60,19 @@
                         %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
 
 
-        -if @products.any?
-          .container
-            .pb-4
-              %h2 Mock Exams
-            .row.row-lg
-              -@products.each do |product|
-                .col-xs-12.col-sm-6.col-md-4
-                  =link_to new_order_url(product), class: 'card card-link text-center mb-5' do
-                    .py-4
-                      %h4.text-ellipsis.mb-4
-                        =product.mock_exam.try(:name)
-                      .pt-2
-                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                      .pt-5
-                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+:javascript
+
+  $(document).ready(function(){
+
+    hash = window.location.hash;
+    elements = $('a[href="' + hash + '"]');
+    if (elements.length > 0) {
+      elements.click();
+    }
+    if (location.hash) {
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    }
+
+  });
