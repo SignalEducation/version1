@@ -309,8 +309,7 @@ class Subscription < ActiveRecord::Base
   def reactivation_options
     SubscriptionPlan
       .where(
-        currency_id: self.subscription_plan.currency_id,
-        available_to_students: true
+        currency_id: self.subscription_plan.currency_id
       )
       .where('price > 0.0').generally_available.all_active.all_in_order
   end
@@ -321,7 +320,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def upgrade_options
-    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).for_students.in_currency(subscription_plan.currency_id).all_active.all_in_order
+    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).in_currency(subscription_plan.currency_id).all_active.all_in_order
   end
 
   def update_from_stripe

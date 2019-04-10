@@ -2,14 +2,14 @@
 #
 # Table name: subscription_plan_categories
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  available_from       :datetime
-#  available_to         :datetime
-#  guid                 :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  trial_period_in_days :integer
+#  id               :integer          not null, primary key
+#  name             :string
+#  available_from   :datetime
+#  available_to     :datetime
+#  guid             :string
+#  created_at       :datetime
+#  updated_at       :datetime
+#  sub_heading_text :string
 #
 
 class SubscriptionPlanCategory < ActiveRecord::Base
@@ -25,8 +25,6 @@ class SubscriptionPlanCategory < ActiveRecord::Base
   validates :available_from, presence: true
   validates :available_to, presence: true
   validates :guid, presence: true
-  validates :trial_period_in_days, numericality: {only_integer: true,
-                                                  greater_than: 0}, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name) }

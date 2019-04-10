@@ -26,16 +26,12 @@
               %li.nav-item
                 %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
                   Account Info
-              -#if @orders.any?
               %li.nav-item
                 %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
                   Orders
               %li.nav-item
                 %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
                   Enrolments
-              -#%li.nav-item
-                %a#referral-program-tab.nav-link{"aria-controls" => "referral-program", "aria-selected" => "false", "data-toggle" => "tab", :href => "#referral-program", :role => "tab"}
-                  Referral Program
 
         .col-lg-5-7
           #accountTabsContent.tab-content
@@ -52,12 +48,6 @@
             #enrollments.tab-pane.tab-account.tab-enrollment{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
               =render partial: 'enrollments_info'
 
-            -#referral-program.tab-pane.tab-account.tab-referral-program{"aria-labelledby" => "referral-program-tab", :role => "tabpanel"}
-              %article.card.mb-4
-                .card-body
-                  %h2.text-gray2 Referral Program
-                  %p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                  %p Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
         -#.col-sm-12.col-md-9

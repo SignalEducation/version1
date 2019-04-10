@@ -3,7 +3,7 @@
     .container
       %header.hero-section.hero-section-external
         %h1.h1-mega
-          Fantastic! Check your inbox now
+          Thank you for registering.
 
       %section.pb-md-6.pb-5
         .row.justify-content-center
@@ -14,9 +14,10 @@
               %h4.pt-4
                 Verify Your Email Address
 
-
               %p
                 Click on the email we just sent you to verify your email address.
+              %p
+                Check your inbox now.
 
               -if @user && @user.email_verification_code
                 %p

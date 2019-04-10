@@ -8,7 +8,7 @@
         %p
           =faq_section.description
 
-      -faq_section.faqs.all_in_order.each do |faq|
+      -faq_section.faqs.all_active.all_in_order.each do |faq|
         .col-sm-10.col-sm-offset-1
           %section{id: faq.name_url}
             .faq-box

@@ -31,7 +31,7 @@ class SubscriptionPlansController < ApplicationController
   before_action :get_variables
 
   def index
-    @subscription_plans = SubscriptionPlan.for_students.all_in_order
+    @subscription_plans = SubscriptionPlan.all_in_order
     seo_title_maker('Subscription Plans', '', true)
   end
 
@@ -97,18 +97,19 @@ class SubscriptionPlansController < ApplicationController
 
   def create_params
     params.require(:subscription_plan).permit(
-      :available_to_students, :all_you_can_eat, :payment_frequency_in_months,
-      :currency_id, :price, :available_from, :available_to, :stripe_guid,
-      :trial_period_in_days, :name, :subscription_plan_category_id,
-      :monthly_percentage_off, :previous_plan_price, :exam_body_id
+      :payment_frequency_in_months, :currency_id, :price, :available_from,
+      :name, :subscription_plan_category_id, :available_to, :stripe_guid,
+      :monthly_percentage_off, :previous_plan_price, :exam_body_id,
+      :sub_heading_text, :bullet_points_list
     )
   end
 
   def update_params
     params.require(:subscription_plan).permit(
-      :available_to_students, :available_from, :available_to, :name,
-      :subscription_plan_category_id, :all_you_can_eat, :monthly_percentage_off,
-      :previous_plan_price, :exam_body_id
+      :available_from, :available_to, :name,
+      :subscription_plan_category_id, :monthly_percentage_off,
+      :previous_plan_price, :exam_body_id,
+      :sub_heading_text, :bullet_points_list, :most_popular
     )
   end
 end

@@ -20,8 +20,8 @@
             %td=order.stripe_status.to_s.capitalize
             %td=number_in_local_currency(order.product.price, order.product.currency_id)
             %td
-              %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
-                =invoice.status
+              %span{class: order.state == 'completed' ? 'text-success' : 'text-danger'}
+                =order.state
             %td
               -if order.product && order.product.mock_exam
                 =link_to order.product.mock_exam.file.url, target: '_blank' do

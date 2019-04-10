@@ -3,15 +3,12 @@
 # Table name: subscription_plans
 #
 #  id                            :integer          not null, primary key
-#  available_to_students         :boolean          default(FALSE), not null
-#  all_you_can_eat               :boolean          default(TRUE), not null
 #  payment_frequency_in_months   :integer          default(1)
 #  currency_id                   :integer
 #  price                         :decimal(, )
 #  available_from                :date
 #  available_to                  :date
 #  stripe_guid                   :string
-#  trial_period_in_days          :integer          default(0)
 #  created_at                    :datetime
 #  updated_at                    :datetime
 #  name                          :string
@@ -23,6 +20,9 @@
 #  previous_plan_price           :float
 #  exam_body_id                  :bigint(8)
 #  guid                          :string
+#  bullet_points_list            :string
+#  sub_heading_text              :string
+#  most_popular                  :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
@@ -61,7 +61,6 @@ describe SubscriptionPlan do
     it { should allow_value(Proc.new{Time.now.gmtime.to_date + 1.day}.call).for(:available_to) }
     it { should_not allow_value(Proc.new{Time.now.gmtime.to_date }.call).for(:available_to) }
 
-    it { should validate_presence_of(:trial_period_in_days) }
 
     it { should_not validate_presence_of(:subscription_plan_category_id) }
 
@@ -81,8 +80,6 @@ describe SubscriptionPlan do
     it { expect(SubscriptionPlan).to respond_to(:all_in_display_order) }
     it { expect(SubscriptionPlan).to respond_to(:all_in_update_order) }
     it { expect(SubscriptionPlan).to respond_to(:all_active) }
-    it { expect(SubscriptionPlan).to respond_to(:for_students) }
-    it { expect(SubscriptionPlan).to respond_to(:for_non_standard_students) }
     it { expect(SubscriptionPlan).to respond_to(:generally_available) }
     it { expect(SubscriptionPlan).to respond_to(:in_currency) }
   end

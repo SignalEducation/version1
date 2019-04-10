@@ -20,7 +20,6 @@
                   %th=t('views.subscription_plan_categories.form.available_from')
                   %th=t('views.subscription_plan_categories.form.available_to')
                   %th=t('views.subscription_plan_categories.form.guid')
-                  %th=t('views.subscription_plan_categories.form.trial_period_in_days')
                   %th
               %tbody
                 -@subscription_plan_categories.each do |subscription_plan_category|
@@ -29,7 +28,6 @@
                     %td=subscription_plan_category.available_from.to_s(:standard)
                     %td=subscription_plan_category.available_to.to_s(:standard)
                     %td=subscription_plan_category.guid
-                    %td=subscription_plan_category.trial_period_in_days
                     %td
                       =link_to t('views.general.show'), subscription_plan_category_url(subscription_plan_category), class: 'btn btn-secondary btn-xs'
                       =link_to t('views.general.edit'), edit_subscription_plan_category_url(subscription_plan_category), class: 'btn btn-primary btn-xs'

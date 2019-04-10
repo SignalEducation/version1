@@ -5,9 +5,7 @@
         %h1.h1-hero.mb-2
           = "#{@plans.first.exam_body.name} Tuition Payment"
         %p
-          ='Make the most of 2019 by passing your ACCA. LearnSignal’s Gold Approved tuition is the smartest way to study. The LearnSignal yearly plan is now better value than ever,'
-          %span{style: 'font-weight: bold;'}
-            ="with 3 months free on our annual subscription."
+          =@subscription.subscription_plan.checkout_sub_heading
 
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription

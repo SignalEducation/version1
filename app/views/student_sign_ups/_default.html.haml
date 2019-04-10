@@ -122,19 +122,25 @@
             %p
               ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
-          .row.row-lg
+          .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
                 %article.card.card-primary.card-pink
                   .card-body.text-center
                     %h2.h1.card-title
                       =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                    %p
-                      Cancel anytime
 
-                    %p="Access to all #{@group.name} courses"
-                    %p="Topic-by-topic video lectures"
-                    %p="24/7 tutor support"
+                    -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                      - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                        %p=bullet
+
+                    -else
+                      %p="Access to all #{@group.name} courses"
+                      %p="Topic-by-topic video lectures"
+                      %p="24/7 tutor support"
+
+                    %p{style: 'font-style: italic;'}
+                      Cancel anytime
 
                     %p.h3
                       =plan.currency.format_number(plan.price)
@@ -146,7 +152,7 @@
                         =plan.monthly_percentage_off
                         ='%'
 
-                    -if plan.payment_frequency_in_months == 3
+                    -if plan.most_popular
                       %p.h5.text-primary
                         Our most popular payment plan
 
@@ -178,9 +184,8 @@
           %h2.h1.mb-4.px-4 We're here to guide you through.
           %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
         .py-4.d-flex.justify-content-center
-          =image_tag('contact-person-1.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
-          =image_tag('contact-person-2.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
-          =image_tag('contact-person-3.jpg', class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Cliodhna_CHD_5369.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
+            =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
         .py-3
           %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
             Chat with our experts

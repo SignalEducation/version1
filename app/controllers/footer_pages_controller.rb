@@ -12,7 +12,9 @@ class FooterPagesController < ApplicationController
 
   def contact
     @form_type = 'Contact Us'
-    seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
+    seo_title_maker('Contact Us Today | LearnSignal',
+                    "Contact us if you have any queries about learnsignal's online learning courses. Let us know if you have any specific feedback or complaints regarding our services.",
+                    nil)
   end
 
   def terms_and_conditions
@@ -51,11 +53,6 @@ class FooterPagesController < ApplicationController
                        .all_in_order
                        .where("mock_exam_id IS NOT NULL")
                        .where("product_type = ?", Product.product_types[:correction_pack])
-  end
-
-  def white_paper_request
-    @white_paper = WhitePaper.where(name_url: params[:white_paper_name_url]).first
-    @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
   end
 
 
