@@ -882,8 +882,18 @@ en:
         mailchimp_list_guid: MailChimp List ID
         mailchimp_list_guid_placeholder: MailChimp List ID
         logo_image: Logo Image
-        form_section: Registration Form
+        registration_form: Registration Form
+        login_form: Login Form
         pricing_section: Pricing Section
+        preferred_payment_frequency: Preferred Payment Frequency
+        header_h1: Header H1
+        header_h1_placeholder: Header H1
+        header_paragraph: Header Paragraph
+        header_paragraph_placeholder: Header Paragraph
+        registration_form_heading: Reg Form Heading
+        registration_form_heading_placeholder: Reg Form Heading Text
+        login_form_heading: Login Form Heading
+        login_form_heading_placeholder: Login Form Header text
 
       index:
         h1: Landing Pages

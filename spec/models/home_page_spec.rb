@@ -17,9 +17,15 @@
 #  logo_image                    :string
 #  footer_link                   :boolean          default(FALSE)
 #  mailchimp_list_guid           :string
-#  form_section                  :boolean          default(FALSE), not null
+#  registration_form             :boolean          default(FALSE), not null
 #  pricing_section               :boolean          default(FALSE), not null
 #  seo_no_index                  :boolean          default(FALSE), not null
+#  login_form                    :boolean          default(FALSE), not null
+#  preferred_payment_frequency   :integer
+#  header_h1                     :string
+#  header_paragraph              :string
+#  registration_form_heading     :string
+#  login_form_heading            :string
 #
 
 require 'rails_helper'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_09_163204) do
+ActiveRecord::Schema.define(version: 2019_04_10_151608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -573,9 +573,15 @@ ActiveRecord::Schema.define(version: 2019_04_09_163204) do
     t.string "logo_image"
     t.boolean "footer_link", default: false
     t.string "mailchimp_list_guid"
-    t.boolean "form_section", default: false, null: false
+    t.boolean "registration_form", default: false, null: false
     t.boolean "pricing_section", default: false, null: false
     t.boolean "seo_no_index", default: false, null: false
+    t.boolean "login_form", default: false, null: false
+    t.integer "preferred_payment_frequency"
+    t.string "header_h1"
+    t.string "header_paragraph"
+    t.string "registration_form_heading"
+    t.string "login_form_heading"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end

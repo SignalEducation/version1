@@ -2,10 +2,14 @@
   %article.bg-gray5
     .container
       %header.hero-section.hero-section-external
-        %h1.h1-hero.mb-2
-          = "#{@plans.first.exam_body.name} Tuition Payment"
-        %p
-          =@subscription.subscription_plan.checkout_sub_heading
+        -if @plans && @plans.first
+          %h1.h1-hero.mb-2
+            = "#{@plans.first.exam_body.name} Tuition Payment"
+          %p
+            =@plans.first.checkout_sub_heading
+        -else
+          %h1.h1-hero.mb-2
+            = "Exam Tuition Payment"
 
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription
