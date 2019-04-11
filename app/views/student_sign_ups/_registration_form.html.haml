@@ -93,10 +93,11 @@
 
 :javascript
 
+  $(".sk-circle").hide();
   $("#new_user").submit(function(ev) {
     ev.preventDefault();
-    $(".sk-circle").removeClass('hidden');
-    $("#free .submit").hide();
+    $(".sk-circle").show();
+    $("#signUp").hide();
     this.submit();
   });
 
