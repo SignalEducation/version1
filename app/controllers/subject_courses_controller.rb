@@ -194,6 +194,7 @@ class SubjectCoursesController < ApplicationController
                                            :quiz_pass_rate, :group_id, :preview,
                                            :computer_based, :highlight_colour,
                                            :category_label, :icon_label,
+                                           :seo_title, :seo_description,
                                            course_sections_attributes: [
                                              course_modules_attributes: [
                                                  course_module_elements_attributes: [

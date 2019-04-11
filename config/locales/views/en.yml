@@ -1179,6 +1179,10 @@ en:
         icon_label_placeholder: Budicon Text Label
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
 
       index:
         h1: Courses
