@@ -3,7 +3,7 @@ class InvoicesController < ApplicationController
   before_action :set_invoice, only: :show
 
   def index
-    @invoices = current_user.invoices
+    @invoices = current_user.invoices.order(created_at: :desc)
   end
 
   def show
