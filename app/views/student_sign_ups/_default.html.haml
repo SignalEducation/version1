@@ -121,7 +121,7 @@
           .container-md.pb-3.text-center
             %h2.h1-mega
               ="#{@group.name} Payment Plans"
-            %p
+            %p.p-hero.px-lg-8
               ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
           .row.row-lg.justify-content-center
@@ -137,8 +137,8 @@
                         %p=bullet
 
                     -else
-                      %p="Access to all #{@group.name} courses"
-                      %p="Topic-by-topic video lectures"
+                      %p="Access all #{@group.name} courses"
+                      %p="Topic-by-topic lectures"
                       %p="24/7 tutor support"
 
                     %p{style: 'font-style: italic;'}
