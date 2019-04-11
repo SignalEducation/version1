@@ -39,7 +39,6 @@ class Order < ActiveRecord::Base
 
   # validation
   validates :reference_guid, uniqueness: true, allow_blank: true
-  validates :terms_and_conditions, presence: true
   validates :stripe_status, :stripe_guid, :stripe_customer_id, presence: true, if: :stripe?
 
   # callbacks

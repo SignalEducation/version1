@@ -22,6 +22,8 @@ class UserSessionsController < ApplicationController
       flash[:error] = nil
       if flash[:plan_guid]
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      elsif flash[:product_id]
+        redirect_to new_order_url(product_id: flash[:product_id])
       elsif session[:return_to]
         redirect_back_or_default(student_dashboard_url)
       else

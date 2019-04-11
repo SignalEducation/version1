@@ -50,9 +50,14 @@
                 =course_section.name
 
 
-          %li.nav-item
-            %a{href: "#exam-prep", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "exam-prep", selected: 'false'}}
-              ='Exam Prep'
+          -if @subject_course_resources.any?
+            %li.nav-item
+              %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}}
+                ='Resources'
+          -if @products.any?
+            %li.nav-item
+              %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
+                ='Products'
 
           -#%li.nav-item
             %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
@@ -213,57 +218,64 @@
                       %a.list-default-link{:href => "#"} Lorem ipsum dolor sit ipsum dolor sit amet dolor sit
 
 
-      .tab-pane.tab-exam-prep{id: 'exam-prep', role: 'tabpanel', 'aria-labelledby': 'exam-prep-tab'}
-        .row.row-lg
-          .col-xl-6
-            %section.mb-5
-              %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
 
-              - @correction_pack_products.each do |product|
-                =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
-                  .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                    %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                  .card-body.d-flex.align-items-center.pl-1
-                    %h5.m-0.text-truncate.text-gray2 Management Accounting
-
-              - @mock_exam_products.each do |product|
-                =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
-                  .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                    %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                  .card-body.d-flex.align-items-center.pl-1
-                    %h5.m-0.text-truncate.text-gray2
-                      =product.mock_exam.try(:name)
-
-          .col-xl-6
-            %section.mb-5
-              %h3.text-gray1.mb-4.mb-sm-5 Course Resources
+      -if @subject_course_resources.any?
+        .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
+          %section.mb-5
+            %h3.text-gray1.mb-4.mb-sm-5 Course Resources
+            .row.row-lg
               - @subject_course_resources.each do |resource|
+                .col-sm-6
+                  - if current_user
+                    - permission = resource.available_to_user(current_user, @group.exam_body_id)
+                    - if  permission[:view]
+                      =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+                        .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                          %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                        .card-body.d-flex.align-items-center.pl-1
+                          %h5.m-0.text-truncate.text-gray2
+                            =resource.name
 
-                - if current_user
-                  - permission = resource.available_to_user(current_user, @group.exam_body_id)
-                  - if  permission[:view]
-                    =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
-                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                      .card-body.d-flex.align-items-center.pl-1
-                        %h5.m-0.text-truncate.text-gray2
-                          =resource.name
+                    - else
+                      %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
+                        .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                          %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                        .card-body.d-flex.align-items-center.pl-1
+                          %h5.m-0.text-truncate.text-gray2
+                            =resource.name
 
                   - else
-                    %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
+                    %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: '#account-required', toggle: 'modal', href: '#'}}
                       .card-header.bg-white.d-flex.align-items-center.justify-content-center
                         %i.budicon-files-download{"aria-label" => "", :role => "img"}
                       .card-body.d-flex.align-items-center.pl-1
                         %h5.m-0.text-truncate.text-gray2
                           =resource.name
 
-                - else
-                  %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: '#account-required', toggle: 'modal', href: '#'}}
+
+      -if @products.any?
+        .tab-pane.tab-products{id: 'products', role: 'tabpanel', 'aria-labelledby': 'products-tab'}
+          %section.mb-5
+            %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
+            .row.row-lg
+
+              - @correction_pack_products.each do |product|
+                .col-sm-6
+                  =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
                     .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                      %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                     .card-body.d-flex.align-items-center.pl-1
                       %h5.m-0.text-truncate.text-gray2
-                        =resource.name
+                        =product.mock_exam.try(:name)
+
+              - @mock_exam_products.each do |product|
+                .col-sm-6
+                  =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                    .card-body.d-flex.align-items-center.pl-1
+                      %h5.m-0.text-truncate.text-gray2
+                        =product.mock_exam.try(:name)
 
 
       -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}

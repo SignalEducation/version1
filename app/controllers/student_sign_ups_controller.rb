@@ -2,7 +2,7 @@ class StudentSignUpsController < ApplicationController
 
   before_action :check_logged_in_status, except: [:landing, :subscribe]
   before_action :get_variables
-  before_action :create_user_object, only: [:home, :new, :sign_in_or_register]
+  before_action :create_user_object, only: [:home, :new, :sign_in_or_register, :landing]
   before_action :layout_variables, only: [:home, :landing]
 
   def home
@@ -25,6 +25,7 @@ class StudentSignUpsController < ApplicationController
     if @home_page
       @public_url = params[:public_url]
       @group = @home_page.group
+      @exam_body = @group.exam_body
 
       if current_user
         ip_country = IpAddress.get_country(request.remote_ip)
@@ -32,6 +33,7 @@ class StudentSignUpsController < ApplicationController
         @currency_id = country.currency_id
       else
         create_user_object
+        @user_session = UserSession.new
       end
 
       if @home_page.subscription_plan_category && @home_page.subscription_plan_category.current
@@ -41,6 +43,9 @@ class StudentSignUpsController < ApplicationController
             subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
         ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
       end
+      @preferred_plan = @subscription_plans.where(payment_frequency_in_months: @home_page.preferred_payment_frequency).first
+      flash[:plan_guid] = @preferred_plan.guid if @preferred_plan
+      flash[:exam_body] = @exam_body.id if @exam_body
 
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
@@ -57,10 +62,12 @@ class StudentSignUpsController < ApplicationController
 
   def sign_in_or_register
     @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
+    @product = Product.where(id: params[:product_id]).last
     @exam_body = ExamBody.where(id: params[:exam_body_id]).last
     @user_session = UserSession.new
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
+    flash[:product_id] = @product.id if @product
   end
 
   def new
@@ -90,6 +97,10 @@ class StudentSignUpsController < ApplicationController
         UserSession.create(@user)
         set_current_visit
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      elsif flash[:product_id]
+        UserSession.create(@user)
+        set_current_visit
+        redirect_to new_order_url(product_id: flash[:product_id])
       else
         redirect_to personal_sign_up_complete_url
       end

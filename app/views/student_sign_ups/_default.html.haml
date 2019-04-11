@@ -26,21 +26,29 @@
       .row.no-gutters
         .col-xl-4
           %header.home-hero-header.pb-2
-            <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
-            %p.p-hero Designed by experts and delivered online so that you can study on a schedule that suits your needs.
+            -if @home_page.header_h1
+              %h1.h1-hero
+                =@home_page.header_h1
+            -else
+              <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
+            -if @home_page.header_paragraph
+              %p.p-hero
+                =@home_page.header_paragraph
+            -else
+              %p.p-hero Designed by experts and delivered online so that you can study on a schedule that suits your needs.
 
-            -if @home_page.logo_image && @home_page.logo_image.present?
-              .pt-2.px-lg-2.pb-2.pb-lg-7
-                .home-hero-img-wrap.pl-4
-                  =image_tag(@home_page.logo_image, class: '', alt: 'Logo')
+            -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+              %h4
+                =@preferred_plan.currency.format_number(@preferred_plan.price)
+            -else
+              %h4
+                ='Designed by experts and delivered online so that you can study on a schedule that suits your needs.'
 
 
         .col-xl-8
           %aside.home-hero-aside.py-2.py-sm-0.ml-5.mr-5
-            -if @home_page.form_section && !current_user
-              %h2.h5.text-center
-                Explore our innovative learning platform and discover how LearnSignal helps you pass your exams faster
-              =render partial: 'sign_up_form'
+            -if (@home_page.registration_form || @home_page.login_form) && !current_user
+              =render partial: 'registration_login_form'
             -else
               .home-hero-img-wrap
                 .circle-top-wrap
@@ -51,13 +59,7 @@
                   %svg{:fill => "none", :viewbox => "0 0 312 312", :xmlns => "http://www.w3.org/2000/svg"}
                     %path.yellow-oval{:d => "M156 312C242.156 312 312 242.156 312 156C312 69.8436 242.156 1.52588e-05 156 1.52588e-05C69.8436 1.52588e-05 0 69.8436 0 156C0 242.156 69.8436 312 156 312Z", :fill => "#F0CA28", :opacity => "0.1"}
 
-      -unless @home_page.form_section
-        .home-hero-cta-section.pt-4.pt-sm-5.py-xl-0
-          .pb-3
-            =link_to new_student_url, class: 'btn btn-primary btn-lg' do
-              Register Now
 
-          %small No credit card required. Set-up takes one minute
 
 
 

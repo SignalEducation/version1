@@ -1,0 +1,43 @@
+-if @home_page.registration_form && @home_page.login_form
+  .form-box.sign-in-register
+    #session-tabs
+      %nav
+        %ul.nav.nav-tabs.nav-justified{id: 'sessionTabs', role: 'tablist'}
+          %li.nav-item
+            %a{href: "#registration-tab", role: 'tab', class: 'nav-link active', data: {toggle: 'tab'}, aria: {controls: "registration", selected: 'true'}}
+              ='Register'
+          %li.nav-item
+            %a{href: "#sign-in-tab", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "sign-in", selected: 'false'}}
+              ='Log In'
+
+
+    #sessionTabsContent.tab-content
+      .tab-pane.registration-tab.active.show{id: 'registration-tab', role: 'tabpanel', 'aria-labelledby': 'registration-tab'}
+        .row.row-lg
+          .col-sm-12
+            =render partial: 'registration_form'
+
+      .tab-pane.sign-in-tab{id: 'sign-in-tab', role: 'tabpanel', 'aria-labelledby': 'sign-in-tab'}
+        .row.row-lg
+          .col-sm-12
+            =render partial: 'login_form'
+
+-elsif @home_page.registration_form
+
+  .form-box.sign-in-register
+    .row.row-lg
+      .col-sm-12
+        =render partial: 'registration_form'
+
+
+
+-elsif @home_page.login_form
+
+  .form-box.sign-in-register
+    .row.row-lg
+      .col-sm-12
+        =render partial: 'login_form'
+
+
+
+

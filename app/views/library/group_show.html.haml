@@ -20,7 +20,10 @@
 
                   .card-body.d-flex.flex-column.justify-content-center
                     %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-                      =course.category_label
+                      -if course.preview && course.release_date
+                        Coming Soon
+                      -else
+                        =course.category_label
                     %h5.card-title.mb-1
                       %span.mr-1
                         =course.name
@@ -28,7 +31,7 @@
 
 
   -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
-    .container-bg.bg-gray5
+    .container-bg.bg-gray5#plans
       .container
         %section.pb-md-6.pb-5.pt-md-6.pt-5
           .container-md.pb-3.text-center

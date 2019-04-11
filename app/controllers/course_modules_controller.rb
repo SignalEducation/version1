@@ -88,6 +88,7 @@ class CourseModulesController < ApplicationController
   end
 
   def destroy
+    @course_module = CourseModule.find(params[:id])
     if @course_module.destroy
       flash[:success] = I18n.t('controllers.course_modules.destroy.flash.success')
     else

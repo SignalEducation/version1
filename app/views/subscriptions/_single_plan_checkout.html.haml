@@ -3,14 +3,15 @@
     %input.custom-control-input.custom-control-input-card.style-checkbox{:id => subscription.subscription_plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => subscription.subscription_plan.price, :frequency => subscription.subscription_plan.payment_frequency_in_months}, :value => subscription.subscription_plan.id, :checked => true}
     %label.custom-control-label{:for => subscription.subscription_plan.interval_name.downcase}
       %span.custom-label-info
-        %span.h3.m-0
+        %span.h4.m-0
           %span
             =subscription.subscription_plan.interval_name
         - if subscription.subscription_plan.monthly_percentage_off.present? && subscription.subscription_plan.monthly_percentage_off > 0
           %span.discount
-            %span.text-with-bg.bg-torquoise4
+            Save over
+            %span.text-with-bg.bg-yellow2
               ="#{subscription.subscription_plan.monthly_percentage_off}%"
-            off monthly price
+
       %span.custom-label-amount
         %span.text-purple5.text-xl
           =subscription.subscription_plan.currency.format_number(subscription.subscription_plan.price)
@@ -31,9 +32,10 @@
                 =plan.interval_name
             - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
               %span.discount
-                %span.text-with-bg.bg-torquoise4
+                Save over
+                %span.text-with-bg.bg-yellow2
                   ="#{plan.monthly_percentage_off}%"
-                off monthly price
+
           %span.custom-label-amount
             %span.text-purple5.text-xl
               =plan.currency.format_number(plan.price)
@@ -52,9 +54,10 @@
         =@yearly_plan.currency.format_number(@yearly_plan.previous_plan_price)
 
   %p.mb-2
-    Sort your ACCA Tuition for 2019.  Save money, pass quicker and embrace your future
+    %span.font-weight-medium Note:
+    You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.
 
-%a.btn.btn-text.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans'} Show all Plans
+%a.text-purple5.js-show-more-plans{:id => 'show_all_plans', :href => "#all-plans", :data => {toggle: 'collapse'}, 'aria-expanded' => false, 'aria-controls' => 'all-plans', style: 'text-decoration: none;'} Show all Plans
 
 :javascript
 
