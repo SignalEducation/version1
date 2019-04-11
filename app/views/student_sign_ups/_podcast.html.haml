@@ -2,33 +2,17 @@
 %main.margin-top
   %article.bg-gray5
     .container
-      %header.hero-section.hero-section-external
-        %h1.h1-mega
+      %header.hero-section
+        %h1.h1-hero.mb-3
           ='Forget The Numbers: The Student Accounting Show'
-        %p
-          Sometime to keep going you need to stop, listen and start again.
+        %p.p-hero.px-lg-8
+          Sometimes to keep going you need to stop, listen and start again.
 
     %section#podcast
       .container-md
         .col-sm-12.pb-3
           %p
             Tune in to our weekly podcast show featuring advice, motivation and the tools you need to succeed in your exam or career goals. And don't forget to subscribe, rate and review us on Apple Podcast, Spotify or whichever player you prefer.
-        .col-sm-12
+        .col-sm-12.p-4
           %script{src: 'https://www.buzzsprout.com/172305.js?player=large&artist=LearnSignal', type: 'text/javascript', charset: 'utf-8'}
 
-
-  .container-bg.bg-gray5
-    .container-sm
-      %article.text-center.py-6.py-lg-7
-        %header
-          %h2.h1.mb-4.px-4 We're here to guide you through.
-          %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
-        .py-4.d-flex.justify-content-center
-          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Cliodhna_CHD_5369.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
-            =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
-        .py-3
-          %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
-            Chat with our experts
-
-
-=render partial: 'footer_pages/contact_us_form_modal'

@@ -3,8 +3,8 @@
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
     .container
-      %header.hero-section.hero-section-external
-        %h1.h1-mega
+      %header.hero-section
+        %h1.h1-hero.mb-3
           =t('views.subscriptions.upgrade_complete.h1')
 
       %section.pb-md-6.pb-5

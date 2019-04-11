@@ -2792,7 +2792,7 @@ button.bg-black:hover {
 .container-bg {
   display: block;
   width: 100%;
-  max-width: 1600px;
+  //max-width: 1600px;
   margin: 0 auto
 }
 .container-md {
@@ -4364,7 +4364,7 @@ a.card:hover .card-title .card-explanation {
   }
 }
 .hero-section {
-  padding: 3rem 0;
+  padding: 2rem 0;
   text-align: center;
   -webkit-background-size: cover;
   background-size: cover;
@@ -4372,7 +4372,7 @@ a.card:hover .card-title .card-explanation {
 }
 @media (min-width:768px) {
   .hero-section {
-    padding: 7rem 0
+    padding: 3rem 0;
   }
 }
 @media (min-width:1200px) {
@@ -4389,14 +4389,6 @@ a.card:hover .card-title .card-explanation {
 @media (min-width:768px) {
   .hero-section.hero-section-revisions {
     padding: 5rem 0
-  }
-}
-.hero-section.hero-section-external {
-  padding: 2rem 0;
-}
-@media (min-width:768px) {
-  .hero-section.hero-section-external {
-    padding: 4rem 0
   }
 }
 .hero-section.sign-in-register {

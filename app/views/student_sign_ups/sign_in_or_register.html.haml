@@ -1,7 +1,7 @@
 %main
   %article.bg-gray5
     .container
-      %header.hero-section.hero-section-external
+      %header.hero-section
         %h1.h2-hero.mb-2
           -if @plan
             = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Registration"
@@ -9,7 +9,6 @@
             = "#{@product.mock_exam.name} Purchase Process"
 
       %section.pb-md-6.pb-5
-
         .row
           -if @plan
             .col-md-4.mb-5.mb-xl-0

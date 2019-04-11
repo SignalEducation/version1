@@ -5,7 +5,7 @@
         %h1.h1-hero.mb-3.text-white
           =@group.name
           ='Courses'
-        %p.p-hero.px-lg-8.text-white
+        %p.p-hero.px-lg-6.text-white
           =@group.short_description
 
       %section.py-5.py-md-6
@@ -35,9 +35,9 @@
       .container
         %section.pb-md-6.pb-5.pt-md-6.pt-5
           .container-md.pb-3.text-center
-            %h2.h1-mega
+            %h2.h2-hero.mb-2
               ="#{@group.name} Payment Plans"
-            %h2.h5
+            %p.p-hero.px-lg-6
               ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
           .row.row-lg.justify-content-center
@@ -53,8 +53,8 @@
                         %p=bullet
 
                     -else
-                      %p="Access to all #{@group.name} courses"
-                      %p="Topic-by-topic video lectures"
+                      %p="Access all #{@group.name} courses"
+                      %p="Topic-by-topic lectures"
                       %p="24/7 tutor support"
 
                     %p{style: 'font-style: italic;'}
