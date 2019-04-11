@@ -7,7 +7,7 @@ class FooterPagesController < ApplicationController
   end
 
   def acca_info
-    seo_title_maker('ACCA at LearnSignal', '', nil)
+    seo_title_maker('ACCA Information | LearnSignal', 'This ACCA guideline from learnsignal provides information on exams, EPSM and PER and links to key ACCA resources to help you get your ACCA qualification.', nil)
   end
 
   def contact
@@ -29,7 +29,7 @@ class FooterPagesController < ApplicationController
   end
 
   def frequently_asked_questions
-    seo_title_maker('FAQs', 'Frequently Asked Questions', nil)
+    seo_title_maker('Frequently Asked Questions | LearnSignal', "Find answers to learnsignal's frequently asked questions. If you have a question that you can't see the answer to don't hesitate to get in touch.", nil)
     @faq_section = FaqSection.all_active.all_in_order
   end
 

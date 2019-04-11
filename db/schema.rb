@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_10_151608) do
+ActiveRecord::Schema.define(version: 2019_04_11_101757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1062,6 +1062,8 @@ ActiveRecord::Schema.define(version: 2019_04_10_151608) do
     t.integer "constructed_response_count", default: 0
     t.integer "completion_cme_count"
     t.date "release_date"
+    t.string "seo_title"
+    t.string "seo_description"
     t.index ["name"], name: "index_subject_courses_on_name"
   end
 

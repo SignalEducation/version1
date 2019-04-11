@@ -38,7 +38,7 @@ class LibraryController < ApplicationController
   def course_show
     # Course Data necessary for logged out state
     tag_manager_data_layer(@course.name)
-    seo_title_maker(@course.name, @course.description, nil)
+    seo_title_maker(@course.seo_title, @course.seo_description, nil)
     @form_type = "Course Tutor Question. Course: #{@course.name}"
     @course_tutor_details = @course.course_tutor_details.all_in_order
 

@@ -9,7 +9,7 @@
           =faq_section.description
 
       -faq_section.faqs.all_active.all_in_order.each do |faq|
-        .col-sm-10.col-sm-offset-1
+        .col-sm-12
           %section{id: faq.name_url}
             .faq-box
               .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-none"); $(this).find(".faq-answer-expanded").toggleClass("d-none");'}

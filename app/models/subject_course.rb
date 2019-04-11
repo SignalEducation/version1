@@ -31,6 +31,8 @@
 #  constructed_response_count              :integer          default(0)
 #  completion_cme_count                    :integer
 #  release_date                            :date
+#  seo_title                               :string
+#  seo_description                         :string
 #
 
 class SubjectCourse < ActiveRecord::Base
