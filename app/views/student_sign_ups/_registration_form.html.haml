@@ -7,11 +7,12 @@
 
   #sign-up.my-3.mx-5.pt-4
     .row
-      %h2.h5.text-center
-        -if @home_page.registration_form_heading
-          =@home_page.registration_form_heading
-        -else
-          Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
+      .col-sm-12
+        %h2.h5.text-center
+          -if @home_page.registration_form_heading
+            =@home_page.registration_form_heading
+          -else
+            Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
 
       =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
       .col-sm-6

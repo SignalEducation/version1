@@ -1,11 +1,14 @@
 =form_for(@user_session, html: {class: 'py-3 mr-5 ml-5'}) do |f|
-  =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
-  .row.pt-4
-    -if @home_page.login_form_heading
-      =@home_page.login_form_heading
-    -else
-      Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
 
+  .row.pt-4
+    .col-sm-12
+      -if @home_page.login_form_heading
+        %h2.h5.text-center
+          =@home_page.login_form_heading
+      -else
+        %h2.h5.text-center
+          Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
+    =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
     .col-sm-12
       .form-group
         =f.label :email, t('views.user_sessions.form.email')
