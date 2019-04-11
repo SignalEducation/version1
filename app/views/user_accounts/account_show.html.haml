@@ -27,6 +27,9 @@
                 %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
                   Account Info
               %li.nav-item
+                %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab"}
+                  Card Details
+              %li.nav-item
                 %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
                   Orders
               %li.nav-item
@@ -41,6 +44,9 @@
 
             #account-info.tab-pane.tab-account.tab-account-info{"aria-labelledby" => "account-info-tab", :role => "tabpanel"}
               =render partial: 'account_info'
+
+            #payment-details.tab-pane.tab-account.tab-payment-details{"aria-labelledby" => "payment-details-tab", :role => "tabpanel"}
+              =render partial: 'payment_details'
 
             #orders.tab-pane.tab-account.tab-order{"aria-labelledby" => "orders-tab", :role => "tabpanel"}
               =render partial: 'orders_info'

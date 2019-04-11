@@ -80,6 +80,7 @@ Rails.application.routes.draw do
       get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses
       resources :exercises, only: [:index, :show, :edit, :update], shallow: true
+      resources :invoices, only: [:index, :show], shallow: true
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
@@ -208,7 +209,7 @@ Rails.application.routes.draw do
     end
     namespace :subscriptions do
       resources :suspensions, only: [:create, :destroy]
-      resources :cancellations, only: :create
+      resources :cancellations, only: [:new, :create]
     end
 
     resources :subscription_payment_cards, only: [:create, :update, :destroy]

@@ -16,14 +16,14 @@
 
               %p.mb-1
                 Subscription created on
-                %span=humanize_datetime(subscription.created_at)
+                %span=humanize_datetime_full(subscription.created_at)
               %p
                 Payment Type:
                 %span
                   =subscription.stripe? ? 'Credit card' : "PayPal"
 
             .col-md-4.text-md-right
-              %button.btn.btn-secondary.btn-sm.js-show-hide-details.collapsed{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"} Show details
+              %button.btn.btn-secondary.btn-sm.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
 
           .collapse{id: "sub-#{subscription.id}"}
             .pt-5.pb-4
@@ -67,12 +67,12 @@
                               View
 
 
+              %div.mr-3.mb-4
+                =link_to 'View All Invoices', user_invoices_path(current_user)
               %div
-                %button.btn.btn-primary.btn-sm.mr-4.mb-2{"data-target" => "#confirm-cancellation-modal", "data-toggle" => "modal", "data-sub" => subscription}
+                %button.btn.btn-primary.btn-sm.mb-2{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => subscription.id}
                   Pause Subscription
-                %button.btn.btn-danger.btn-sm.mb-2{"data-target" => "#confirm-pause-modal", "data-toggle" => "modal"}
-                  Cancel Subscription
+                =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-sm', style: 'vertical-align: top;'
+                  
 
-
-=#render partial: 'subscriptions/confirm_cancellation_modal', modal_subscription: subscription
-=#render partial: 'subscriptions/confirm_pause_modal'
+=render partial: 'subscriptions/confirm_pause_modal'

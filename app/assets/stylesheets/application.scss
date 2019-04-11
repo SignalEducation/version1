@@ -6142,3 +6142,11 @@ input[type="radio"] {
 @import "calculator.scss";
 
 @import "components/master";
+
+button.sub-details[aria-expanded="false"]:before{
+  content:"Show details";
+}
+
+button.sub-details[aria-expanded="true"]:before{
+  content: "Hide details";
+}
