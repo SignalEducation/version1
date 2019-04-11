@@ -70,8 +70,11 @@
               %div.mr-3.mb-4
                 =link_to 'View All Invoices', user_invoices_path(current_user)
               %div
-                %button.btn.btn-primary.btn-sm.mb-2{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => subscription.id}
-                  Pause Subscription
+                -if subscription.active?
+                  %button.btn.btn-primary.btn-sm.mb-2{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => subscription.id}
+                    Pause Subscription
+                -elsif subscription.paused? 
+                  =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-primary btn-sm', style: 'vertical-align: top;'
                 =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-sm', style: 'vertical-align: top;'
                   
 
