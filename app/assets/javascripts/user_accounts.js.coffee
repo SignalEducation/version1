@@ -23,3 +23,7 @@ $(document).on "ready page:load", ->
       $('#cancellation-reason-error').text("Please tell us why you're cancelling")
       $('.cancellation-reason').addClass('error')
       $('#cancellation-reason-error').show()
+
+  $('#confirmPauseBtn').on 'click', (e) ->
+    $('#confirm-pause-modal').show()
+    $('#confirmPauseLink').attr("href", "/subscriptions/suspensions?id=" + $(this).data('sub'))

@@ -5,6 +5,9 @@ class Subscriptions::CancellationsController < ApplicationController
   end
   before_action :get_subscription
 
+  def new
+  end
+
   def create
     @subscription.cancelling_subscription = true
     if @subscription.update(subscription_params) && @subscription.cancel_by_user

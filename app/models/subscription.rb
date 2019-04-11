@@ -74,7 +74,7 @@ class Subscription < ActiveRecord::Base
   scope :in_created_order, -> { order(:created_at) }
   scope :in_reverse_created_order, -> { order(:created_at).reverse_order }
   scope :all_of_status, lambda { |the_status| where(stripe_status: the_status) }
-  scope :all_active, -> { where(active: true) }
+  scope :all_active, -> { with_states(:active, :paused, :errored, :pending_cancellation) }
   scope :all_valid, -> { where(state: VALID_STATES) }
   scope :not_pending, -> { where.not(state: 'pending') }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
