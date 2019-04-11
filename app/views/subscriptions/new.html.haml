@@ -3,13 +3,15 @@
     .container
       %header.hero-section
         -if @plans && @plans.first
-          %h1.h2-hero.mb-2
+          %h1.h2-hero.mb-3
             = "#{@plans.first.exam_body.name} Tuition Payment"
-          %p
+          %p.p-hero.px-lg-6
             =@plans.first.checkout_sub_heading
         -else
           %h1.h1-hero.mb-2
             = "Exam Tuition Payment"
+          %p.p-hero.px-lg-6
+            ='Achieve your study goals with professional courses delivered online so you can study on a schedule that suits your needs.'
 
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription
