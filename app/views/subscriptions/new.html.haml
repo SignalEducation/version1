@@ -3,7 +3,7 @@
     .container
       %header.hero-section.hero-section-external
         -if @plans && @plans.first
-          %h1.h1-hero.mb-2
+          %h1.h2-hero.mb-2
             = "#{@plans.first.exam_body.name} Tuition Payment"
           %p
             =@plans.first.checkout_sub_heading
@@ -30,7 +30,7 @@
 
               .container.payment
                 .row
-                  .col-lg-6.mb-5.mb-xl-0.mt-2
+                  .col-lg-6.mb-5.mb-xl-0
                     %fieldset
                       %legend.sr-only Select a Plan
                       - if params[:prioritise_plan_frequency].present? || params[:plan_guid].present?
@@ -64,6 +64,10 @@
                             %span.custom-check
                               / custom checkbox
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
+
+
+
+
 
 
     .container-bg.bg-white

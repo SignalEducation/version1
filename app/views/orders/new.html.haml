@@ -72,16 +72,6 @@
 
   $(document).on('ready', function() {
 
-    $('.terms-and-conditions').on('change', function() {
-      if ($(this).is(':checked')) {
-        $('#paypal_terms_and_conditions, #stripe_terms_and_conditions').prop('checked', true);
-        $('#hidden_term_and_conditions').val(true);
-      } else {
-        $('#paypal_terms_and_conditions, #stripe_terms_and_conditions').prop('checked', false);
-        $('#hidden_term_and_conditions').val(false);
-      }
-    })
-
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
@@ -121,13 +111,6 @@
 
 
     $(".sk-circle").hide();
-    $('input[type="checkbox"]').on('change', function() {
-      if($('#terms_and_conditions').prop('checked') == true) {
-        $("#hidden_term_and_conditions").val('true');
-      } else if($('#terms_and_conditions').prop('checked') == false) {
-        $("#hidden_term_and_conditions").val('false');
-      }
-    });
 
     var style = {
       base: {
