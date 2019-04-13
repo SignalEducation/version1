@@ -14,7 +14,7 @@
                 ='Are you sure you want to cancel?'
 
             .modal-body
-              =render partial: 'layouts/error_messages', locals: {thing: @current_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+              =#render partial: 'layouts/error_messages', locals: {thing: @current_subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
 
               .row
                 .col-sm-12.l-margin-top

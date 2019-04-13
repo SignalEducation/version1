@@ -14,8 +14,13 @@ class UserVerificationsController < ApplicationController
     elsif @user
       UserSession.create(@user)
       set_current_visit
-      flash[:warning] = 'Thank you! Your email is now verified'
-      redirect_to student_dashboard_url
+      flash[:success] = 'Thank you! Your email is now verified'
+      if @user.preferred_exam_body&.group
+        redirect_to library_special_link(@user.preferred_exam_body.group)
+      else
+        student_dashboard_url
+      end
+
     else
       flash[:warning] = 'Sorry! That link has expired. Please try to sign in or contact us for assistance'
       redirect_to sign_in_url
