@@ -42,7 +42,7 @@ describe SubscriptionService, type: :service do
       end
 
       it 'calls #suspend_billing_agreement on the PaypalSubscriptionsService' do
-        expect_any_instance_of(PaypalSubscriptionsService).to receive(:suspend_billing_agreement).with(subscription)
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:suspend_billing_agreement)
 
         sub_service.pause
       end
@@ -68,7 +68,7 @@ describe SubscriptionService, type: :service do
       end
 
       it 'calls #reactivate_billing_agreement on the PaypalSubscriptionsService' do
-        expect_any_instance_of(PaypalSubscriptionsService).to receive(:reactivate_billing_agreement).with(subscription)
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:reactivate_billing_agreement)
 
         sub_service.re_activate
       end

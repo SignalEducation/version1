@@ -3,7 +3,6 @@ require 'rails_helper'
 describe PaypalService, type: :service do
 
   describe '#create_purchase' do
-
     let(:order) { build_stubbed(:order) }
     let(:payment_dbl) { 
       double(

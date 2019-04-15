@@ -27,7 +27,7 @@ class PaypalWebhook < ActiveRecord::Base
   def process_sale_completed
     if (invoice = Invoice.build_from_paypal_data(payload)) && invoice.valid?
       invoice.update!(paid: true, payment_closed: true)
-      PaypalSubscriptionsService.new.update_next_billing_date(invoice.subscription)
+      PaypalSubscriptionsService.new(invoice.subscription).update_next_billing_date
       update!(processed_at: Time.now)
       invoice.subscription.update!(paypal_status: 'Active') unless invoice.subscription.paypal_status == 'Active'
     else
