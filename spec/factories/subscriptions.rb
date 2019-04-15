@@ -35,7 +35,6 @@ FactoryBot.define do
     stripe_status         { 'active' }
     livemode              { false }
     terms_and_conditions  { true }
-    active                { true }
 
     factory :stripe_subscription do
       sequence(:stripe_guid)      { |n| "sub_DUMMY-#{n}" }

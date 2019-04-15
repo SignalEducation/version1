@@ -66,6 +66,13 @@ describe PaypalSubscriptionsService, type: :service do
 
   describe '#execute_billing_agreement' do
     let(:subscription) { create(:subscription) }
+    let(:agreement_dbl) { 
+      double(
+        'Agreement', 
+        id: 'I-ERW92H1T8T1ST',
+        state: 'Active'
+      )
+    }
 
     before :each do
       allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
@@ -107,7 +114,7 @@ describe PaypalSubscriptionsService, type: :service do
         'Agreement', 
         token: 'tok_FDAF343DFDA', 
         links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
-        state: 'PENDING'
+        state: 'Pending'
       )
     }
 
@@ -158,7 +165,7 @@ describe PaypalSubscriptionsService, type: :service do
     end
 
     it 'calls FIND on an instance of PayPal::SDK::REST::DataTypes::Agreement::Plan' do
-      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).and_return(@dbl)
+      expect(PayPal::SDK::REST::DataTypes::Agreement).to receive(:find).twice.and_return(@dbl)
       allow(@dbl).to receive(:suspend).and_return(true)
 
       subject.suspend_billing_agreement(subscription)
