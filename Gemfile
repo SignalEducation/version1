@@ -94,6 +94,7 @@ group :development, :test do
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'rspec-rails' # our core testing environment
   gem 'ultrahook' # allows incoming webhooks from stripe
+  gem 'faker'
 end
 
 group :test do

@@ -44,15 +44,17 @@ FactoryBot.define do
     cme_count { 1 }
     video_count { 1 }
     quiz_count { 1 }
-    question_count { 1 }
+    # question_count { 1 }
     description { "MyText" }
-    short_description { "MyString" }
-    email_content { "MyString" }
+    # short_description { "MyString" }
+    # email_content { "MyString" }
     default_number_of_possible_exam_answers { 4 }
     quiz_pass_rate { 10 }
     group
     survey_url { 'SurveyURL' }
     exam_body
+    category_label 'Category'
+    icon_label 'Icon'
 
     factory :active_subject_course do
       active                       { true }

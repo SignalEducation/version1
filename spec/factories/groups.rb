@@ -31,8 +31,11 @@ FactoryBot.define do
     sequence(:name)           { |n| "Group #{n}" }
     sequence(:name_url)           { |n| "group-#{n}" }
     description { 'Basic Description of the Course' }
+    exam_body
     active { true }
     sorting_order { 1 }
+    short_description 'A short description'
+    seo_description 'The SEO description'
+    seo_title { Faker::Bank.name }
   end
-
 end
