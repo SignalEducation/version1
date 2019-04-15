@@ -41,8 +41,8 @@ describe SubscriptionService, type: :service do
         allow(sub_service).to receive(:paypal?).and_return(true)
       end
 
-      it 'calls #suspend_billing_agreement on the PaypalService' do
-        expect_any_instance_of(PaypalService).to receive(:suspend_billing_agreement).with(subscription)
+      it 'calls #suspend_billing_agreement on the PaypalSubscriptionsService' do
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:suspend_billing_agreement).with(subscription)
 
         sub_service.pause
       end
@@ -67,8 +67,8 @@ describe SubscriptionService, type: :service do
         allow(sub_service).to receive(:paypal?).and_return(true)
       end
 
-      it 'calls #reactivate_billing_agreement on the PaypalService' do
-        expect_any_instance_of(PaypalService).to receive(:reactivate_billing_agreement).with(subscription)
+      it 'calls #reactivate_billing_agreement on the PaypalSubscriptionsService' do
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:reactivate_billing_agreement).with(subscription)
 
         sub_service.re_activate
       end
@@ -198,7 +198,7 @@ end
 #       @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
 #     elsif self.paypal?
 #       @subscription.save!
-#       @subscription = PaypalService.new.create_and_return_subscription(@subscription)
+#       @subscription = PaypalPlansService.new.create_and_return_subscription(@subscription)
 #     end
 #   end
 

@@ -4,29 +4,6 @@ class PaypalSubscriptionsService
   include Rails.application.routes.url_helpers
   include PayPal::SDK::REST
 
-  # PLANS ======================================================================
-
-  def create_plan(subscription_plan)
-    paypal_plan = Plan.new(plan_attributes(subscription_plan))
-    paypal_plan.create
-    update_subscription_plan(subscription_plan, paypal_plan)
-    if paypal_plan.update(patch('replace', { state: 'ACTIVE' }))
-      update_subscription_plan_state(subscription_plan, 'ACTIVE')
-    end
-  end
-
-  def update_plan(subscription_plan)
-    delete_plan(subscription_plan.paypal_guid)
-    create_plan(subscription_plan)
-  end
-
-  def delete_plan(paypal_plan_id)
-    plan = Plan.find(paypal_plan_id)
-    plan.update(patch('replace', { state: 'DELETED' }))
-  end
-
-  # BILLING AGREEMENTS =========================================================
-
   def create_and_return_subscription(subscription)
     agreement = create_billing_agreement(subscription)
     subscription.assign_attributes(
@@ -153,91 +130,6 @@ class PaypalSubscriptionsService
         id: subscription_plan.paypal_guid
       }
     }
-  end
-
-  def payment_attributes(order)
-    {
-      intent: 'sale',
-      payer: {
-        payment_method: 'paypal'
-      },
-      redirect_urls: {
-        return_url: execute_order_url(id: order.id, host: learnsignal_host, payment_processor: 'paypal'),
-        cancel_url: new_order_url(product_id: order.product_id, host: learnsignal_host, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
-      },
-      transactions: [
-        {
-          item_list: {
-            items: [
-              {
-                name: order.product.name,
-                price: order.product.price.to_s,
-                currency: order.product.currency.iso_code,
-                quantity: 1 
-              }
-            ]
-          },
-          amount: {
-            total: order.product.price.to_s,
-            currency: order.product.currency.iso_code
-          },
-          description: "Mock exam purchase - #{order.product.name}" 
-        }
-      ]
-    }
-  end
-
-  def patch(op, update_attributes)
-    patch = Patch.new
-    patch.op = op
-    patch.path = "/"
-    patch.value = update_attributes
-    patch
-  end
-
-  def plan_attributes(subscription_plan)
-    {
-      name: "LearnSignal #{subscription_plan.name}",
-      description: subscription_plan.description,
-      type: "INFINITE",
-      payment_definitions: [
-        {
-          name: "Regular payment definition",
-          type: "REGULAR",
-          frequency: "MONTH",
-          frequency_interval: subscription_plan.payment_frequency_in_months.to_s,
-          amount: {
-            value: subscription_plan.price.to_s,
-            currency: subscription_plan.currency.iso_code
-          },
-          cycles: "0",
-        }
-      ],
-      merchant_preferences: {
-        setup_fee: {
-          value: "0",
-          currency: subscription_plan.currency.iso_code
-        },
-        return_url: "https://example.com",
-        cancel_url: "https://example.com/cancel",
-        auto_bill_amount: "YES",
-        initial_fail_amount_action: "CANCEL",
-        max_fail_attempts: "4"
-      }
-    }
-  end
-
-  def update_subscription_plan(subscription_plan, paypal_plan)
-    subscription_plan.update(
-      paypal_guid: paypal_plan.id,
-      paypal_state: paypal_plan.state
-    )    
-  end
-
-  def update_subscription_plan_state(subscription_plan, state)
-    subscription_plan.update(
-      paypal_state: state
-    ) 
   end
 
   def learnsignal_host

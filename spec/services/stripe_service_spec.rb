@@ -6,20 +6,20 @@ describe StripeService, type: :service do
 
   # CUSTOMERS ==================================================================
 
-  describe '#create_customer' do
+  describe '#create_customer!' do
     let(:user) { create(:user) }
 
     it 'creates the customer on Stripe' do
       expect(Stripe::Customer).to receive(:create).and_return(double(id: 'stripe_test_id'))
 
-      subject.create_customer(user)
+      subject.create_customer!(user)
     end
 
     it 'updates the user with the Stripe customer id' do
       allow(Stripe::Customer).to receive(:create).and_return(double(id: 'stripe_test_id'))
 
       expect {
-        subject.create_customer(user)
+        subject.create_customer!(user)
       }.to change { user.stripe_customer_id }.from(nil).to('stripe_test_id')
     end
   end
