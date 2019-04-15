@@ -27,6 +27,7 @@ class PaypalService
   def execute_payment(order, payment_id, payer_id)
     payment = Payment.find(order.paypal_guid)
     if payment_id == order.paypal_guid && payment.execute(payer_id: payer_id)
+      payment = Payment.find(order.paypal_guid)
       order.update!(
         paypal_status: payment.state,
       )
