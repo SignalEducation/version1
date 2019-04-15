@@ -316,7 +316,7 @@ class Subscription < ActiveRecord::Base
 
   def schedule_paypal_cancellation
     self.cancel_pending if self.active?
-    PaypalService.new.set_cancellation_date(self)
+    PaypalSubscriptionsService.new.set_cancellation_date(self)
   end
 
   def upgrade_options

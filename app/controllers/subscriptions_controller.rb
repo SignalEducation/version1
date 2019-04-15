@@ -98,7 +98,7 @@ class SubscriptionsController < ApplicationController
   def execute
     case params[:payment_processor]
     when 'paypal'
-      if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
+      if PaypalSubscriptionsService.new.execute_billing_agreement(@subscription, params[:token])
         @subscription.start!
         SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url

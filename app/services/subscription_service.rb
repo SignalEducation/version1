@@ -27,19 +27,19 @@ class SubscriptionService
       @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
     elsif self.paypal?
       @subscription.save!
-      @subscription = PaypalService.new.create_and_return_subscription(@subscription)
+      @subscription = PaypalSubscriptionsService.new.create_and_return_subscription(@subscription)
     end
   end
 
   def cancel_subscription
     if self.paypal?
-      PaypalService.new.cancel_billing_agreement(@subscription)
+      PaypalSubscriptionsService.new.cancel_billing_agreement(@subscription)
     end
   end
 
   def pause
     if self.paypal?
-      PaypalService.new.suspend_billing_agreement(@subscription)
+      PaypalSubscriptionsService.new.suspend_billing_agreement(@subscription)
     elsif self.stripe?
       StripeService.new.pause_subscription(@subscription)
     end
@@ -47,7 +47,7 @@ class SubscriptionService
 
   def re_activate
     if self.paypal?
-      PaypalService.new.reactivate_billing_agreement(@subscription)
+      PaypalSubscriptionsService.new.reactivate_billing_agreement(@subscription)
     elsif self.stripe?
       StripeService.new.reactivate_subscription(@subscription)
     end
