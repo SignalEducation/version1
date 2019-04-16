@@ -23,11 +23,12 @@
           -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
             %h6.pb-3.pt-3
               ='Help/Formulae Sheets'
-            -@course_module_element.course_module_element_resources.each do |resource|
-              .col-sm-6
-                =link_to resource.upload.url, target: '_blank' do
-                  .btn.btn-secondary
-                    =resource.name
+            .row
+              -@course_module_element.course_module_element_resources.each do |resource|
+                .col-sm-6.pb-2
+                  =link_to resource.upload.url, target: '_blank' do
+                    .btn.btn-secondary
+                      =resource.name
 
         .col-sm.text-center
           =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.course_section.subject_course.name_url,

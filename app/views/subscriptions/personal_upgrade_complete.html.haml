@@ -4,7 +4,7 @@
       =render partial: 'layouts/flash_messages'
     .container
       %header.hero-section
-        %h1.h1-hero.mb-3
+        %h1.h2-hero.mb-2
           =t('views.subscriptions.upgrade_complete.h1')
 
       %section.pb-md-6.pb-5
@@ -25,7 +25,7 @@
                 %p
                   ="Your payment receipt will be sent to #{current_user.email}"
 
-                =link_to student_dashboard_url do
+                =link_to library_special_link(@subscription&.exam_body&.group) do
                   .btn.btn-primary
                     ='Continue Learning'
 
