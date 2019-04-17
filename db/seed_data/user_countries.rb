@@ -1,15 +1,9 @@
 print 'Users: '
 
-  unless Rails.env.production?
+unless Rails.env.production?
     generic_default_values = {
             password: '123123123', password_confirmation: '123123123',
             country_id: 1,
-            operational_email_frequency: 'daily',
-            study_plan_notifications_email_frequency: 'daily',
-            falling_behind_email_alert_frequency: 'daily',
-            marketing_email_frequency: 'daily',
-            blog_notification_email_frequency: 'daily',
-            forum_notification_email_frequency: 'daily',
             locale: 'en'
     }
     User.where(id: 1).first_or_create!(generic_default_values.merge({
@@ -56,5 +50,6 @@ print 'Users: '
 
     User.where(id: (1..6).to_a).update_all(active: true, account_activated_at: Time.now, account_activation_code: nil)
   end
+
 
   puts ' DONE'
