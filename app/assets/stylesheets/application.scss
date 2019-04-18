@@ -4279,6 +4279,7 @@ textarea.form-control {
 }
 .label,
 label {
+  margin-bottom: .6rem;
   font-size: .875rem;
   font-weight: 500;
   color: #657786
@@ -4286,7 +4287,8 @@ label {
 @media (min-width:576px) {
   .label,
   label {
-    font-size: 1rem
+    font-size: 1rem;
+    font-weight: 600
   }
 }
 .invalid-feedback {
@@ -4787,8 +4789,10 @@ a.card:hover .card-title .card-explanation {
 }
 @media (min-width:1320px) {
   .home-hero.home-hero-alt {
-    padding-top: 0;
-    padding-bottom: 0
+    //padding-top: 0;
+    //padding-bottom: 0
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
   }
 }
 .home-hero.home-hero-alt .logo-acca {

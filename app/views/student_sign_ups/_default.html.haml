@@ -42,7 +42,7 @@
               -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
                 %h3.text-white.pr-xl-4
                   =@preferred_plan.currency.format_number(@preferred_plan.price)
-
+              <h3 class="text-white pr-xl-4">No credit card required. Set-up takes one minute.</h3>
           .col-xl-6
             -if (@home_page.registration_form || @home_page.login_form) && !current_user
               =render partial: 'registration_login_form'
