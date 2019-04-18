@@ -96,8 +96,9 @@ class PaypalSubscriptionsService
   def change_plan(plan_id)
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     next_billing_date = Time.parse(agreement.agreement_details.next_billing_date).iso8601
-    if cancel_billing_agreement(note: 'User changing plans')
-      create_new_subscription(plan_id, next_billing_date)
+    if new_subscription = create_new_subscription(plan_id, next_billing_date)
+      cancel_billing_agreement(note: 'User changing plans')
+      new_subscription
     else
       Rails.logger.error "DEBUG: Subscription#change_plan Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong changing your subscription with PayPal. Please contact us for assistance.')
