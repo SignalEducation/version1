@@ -95,9 +95,9 @@ class PaypalSubscriptionsService
 
   def change_plan(plan_id)
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
-    next_billing_date = Time.parse(agreement.agreement_details.next_billing_date).iso8601
+    next_billing_date = next_billing_date(agreement.agreement_details.next_billing_date)
     if new_subscription = create_new_subscription(plan_id, next_billing_date)
-      cancel_billing_agreement(note: 'User changing plans')
+      cancel_billing_agreement(note: 'User changing plans') if %w(Active Suspended).include?(agreement.state)
       new_subscription
     else
       Rails.logger.error "DEBUG: Subscription#change_plan Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
@@ -138,6 +138,12 @@ class PaypalSubscriptionsService
 
   def subscription_start_date(plan)
     (Time.zone.now + plan.payment_frequency_in_months.months).iso8601
+  end
+
+  def next_billing_date(date)
+    if !date.nil?
+      Time.parse(date).iso8601
+    end
   end
 
   def agreement_attributes(subscription:, start_date: nil)
