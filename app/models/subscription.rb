@@ -118,8 +118,20 @@ class Subscription < ActiveRecord::Base
       end
     end
 
-    after_transition pending: :active do |subscription, _transition|
+    state all - [:active, :paused, :pending_cancellation, :errored] do
+      def can_change_plan?
+        false
+      end
+    end
 
+    state :active, :paused, :pending_cancellation, :errored do
+      def can_change_plan?
+        true
+      end
+    end
+
+    after_transition pending: :active do |subscription, _transition|
+      # ??
     end
 
     after_transition all => :errored do |subscription, _transition|

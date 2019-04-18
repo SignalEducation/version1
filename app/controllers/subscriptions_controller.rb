@@ -127,7 +127,7 @@ class SubscriptionsController < ApplicationController
   def change_plan
     # TODO change plan must know what plan
     #@current_subscription = current_user.current_subscription
-    @subscription_plans = @current_subscription.upgrade_options
+    @subscription_plans = @subscription.upgrade_options
   end
 
   def un_cancel_subscription

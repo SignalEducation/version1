@@ -4,7 +4,7 @@
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
 
-    =form_for(@subscription, method: :put, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
+    =form_for(@subscription, url: subscriptions_plan_changes_path(id: @subscription.id), method: :patch, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
       =f.hidden_field :subscription_plan_id
 
 
