@@ -21,7 +21,35 @@
               %span Login
 
 %main
-  .container.home-hero-container
+  .container-bg.home-hero-alt-bg
+    .container
+      %article.home-hero.home-hero-alt
+        .row.justify-content-between
+          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
+            %header.home-hero-header
+              -if @home_page.header_h1 && !@home_page.header_h1.empty?
+                %h1.h1-hero.text-white.mb-5
+                  =@home_page.header_h1
+              -else
+                <h1 class="h1-hero text-white">the smarter<br>way to study<span class="text-mint">.</span></h1>
+              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+                %p.text-white.mb-5.pr-xl-4
+                  =@home_page.header_paragraph
+              -else
+                %p.text-white.mb-5.pr-xl-4
+                  Designed by experts and delivered online so that you can study on a schedule that suits your needs.
+
+              -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+                %h3.text-white.pr-xl-4
+                  =@preferred_plan.currency.format_number(@preferred_plan.price)
+
+          .col-xl-6
+            -if (@home_page.registration_form || @home_page.login_form) && !current_user
+              =render partial: 'registration_login_form'
+
+
+
+  -#.container.home-hero-container
     %article.home-hero
       .row.no-gutters
         .col-xl-4
