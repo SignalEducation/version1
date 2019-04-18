@@ -8,9 +8,9 @@ class SubscriptionService
 
   def change_plan(new_plan_id)
     if paypal?
-      raise Learnsignal::SubscriptionError.new('Sorry! We do not allow upgrading PayPal plans yet. Get in touch if you would like us to change it for you.')
+      new_subscription = PaypalSubscriptionsService.new(@subscription).change_plan(new_plan_id)
     elsif stripe?
-      StripeService.new.change_plan(@subscription, new_plan_id)
+      new_subscription = StripeService.new.change_plan(@subscription, new_plan_id)
     end
   end
 

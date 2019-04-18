@@ -9,26 +9,13 @@ class PaypalSubscriptionsService
   end
 
   def create_and_return_subscription
-    agreement = create_billing_agreement
+    agreement = create_billing_agreement(@subscription)
     @subscription.assign_attributes(
       paypal_token: agreement.token,
       paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href,
       paypal_status: agreement.state
     )
     @subscription
-  end
-
-  def create_billing_agreement
-    agreement = Agreement.new(agreement_attributes)
-    if agreement.create
-      agreement
-    else
-      Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - Error: #{agreement.inspect}"
-      raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
-    end
-  rescue PayPal::SDK::Core::Exceptions::ServerError => e
-    Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - PayPal Error - Error: #{e.message}"
-    raise Learnsignal::SubscriptionError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
   end
 
   def execute_billing_agreement(token)
@@ -77,9 +64,9 @@ class PaypalSubscriptionsService
     end
   end
 
-  def cancel_billing_agreement
+  def cancel_billing_agreement(note: 'User cancelling the agreement')
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
-    state_descriptor = AgreementStateDescriptor.new(note: "Cancelling the agreement")
+    state_descriptor = AgreementStateDescriptor.new(note: note)
     if agreement.cancel(state_descriptor)
       @subscription.update!(paypal_status: agreement.state)
       @subscription.cancel_pending
@@ -106,14 +93,50 @@ class PaypalSubscriptionsService
     end
   end
 
-  def change_plan
-    # 
+  def change_plan(plan_id)
+    agreement = Agreement.find(@subscription.paypal_subscription_guid)
+    next_billing_date = agreement.agreement_details.next_billing_date
+    if cancel_billing_agreement(note: 'User changing plans')
+      create_new_subscription(plan_id)
+    else
+      Rails.logger.error "DEBUG: Subscription#change_plan Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
+      raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong changing your subscription with PayPal. Please contact us for assistance.')
+    end
+  end
+
+  def create_new_subscription(plan_id)
+    user = @subscription.user
+    new_subscription = user.subscriptions.create(
+      subscription_plan_id: new_plan_id,
+      complimentary: false
+    )
+
+    new_agreement = create_billing_agreement(new_subscription)
+    new_subscription.update(
+      paypal_token: new_agreement.token,
+      paypal_approval_url: new_agreement.links.find{|v| v.rel == "approval_url" }.href,
+      paypal_status: new_agreement.state
+    )
+    new_subscription
   end
 
   private
 
-  def agreement_attributes
-    subscription_plan = @subscription.subscription_plan
+  def create_billing_agreement(subscription)
+    agreement = Agreement.new(agreement_attributes(subscription))
+    if agreement.create
+      agreement
+    else
+      Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - Error: #{agreement.inspect}"
+      raise Learnsignal::SubscriptionError.new('Sorry Something went wrong with PayPal! Please contact us for assistance.')
+    end
+  rescue PayPal::SDK::Core::Exceptions::ServerError => e
+    Rails.logger.error "DEBUG: Subscription#create Failure to create BillingAgreement - PayPal Error - Error: #{e.message}"
+    raise Learnsignal::SubscriptionError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
+  end
+
+  def agreement_attributes(subscription)
+    subscription_plan = subscription.subscription_plan
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
@@ -121,9 +144,9 @@ class PaypalSubscriptionsService
       payer: {
         payment_method: "paypal",
         payer_info: {
-          email: @subscription.user.email,
-          first_name: @subscription.user.first_name,
-          last_name: @subscription.user.last_name
+          email: subscription.user.email,
+          first_name: subscription.user.first_name,
+          last_name: subscription.user.last_name
         }
       },
       override_merchant_preferences: {
@@ -131,7 +154,7 @@ class PaypalSubscriptionsService
           value: subscription_plan.price.to_s,
           currency: subscription_plan.currency.iso_code
         },
-        return_url: execute_subscription_url(id: @subscription.id, host: learnsignal_host, payment_processor: 'paypal'),
+        return_url: execute_subscription_url(id: subscription.id, host: learnsignal_host, payment_processor: 'paypal'),
         cancel_url: new_subscription_url(host: learnsignal_host, flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')
       },
       plan: {

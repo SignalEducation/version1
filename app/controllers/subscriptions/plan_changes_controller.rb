@@ -9,14 +9,19 @@ class Subscriptions::PlanChangesController < ApplicationController
   end
 
   def create
-     subscription_object = SubscriptionService.new(@subscription)
+    subscription_object = SubscriptionService.new(@subscription)
     if @subscription = subscription_object.change_plan(plan_change_params[:subscription_plan_id].to_i)
-      flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
+      if subscription_object.stripe?
+        @subscription.start
+        subscription_object.validate_referral
+        redirect_to personal_upgrade_complete_url, notice: 'Your new plan is confirmed!'
+      elsif subscription_object.paypal?
+        redirect_to @subscription.paypal_approval_url
+      end
     else
       Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
       flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
     end
-    redirect_to account_url(anchor: 'subscriptions')
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
     redirect_to account_url(anchor: 'subscriptions')
