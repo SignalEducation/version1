@@ -275,8 +275,7 @@ class Subscription < ActiveRecord::Base
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&
-      self.subscription_transactions.empty? &&
-      self.referred_signup.nil?
+      self.subscription_transactions.empty?
       #self.livemode == Invoice::STRIPE_LIVE_MODE &&
   end
 

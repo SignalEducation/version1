@@ -9,7 +9,7 @@ class PaypalSubscriptionsService
   end
 
   def create_and_return_subscription
-    agreement = create_billing_agreement(@subscription)
+    agreement = create_billing_agreement(subscription: @subscription)
     @subscription.assign_attributes(
       paypal_token: agreement.token,
       paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href,
@@ -95,23 +95,23 @@ class PaypalSubscriptionsService
 
   def change_plan(plan_id)
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
-    next_billing_date = agreement.agreement_details.next_billing_date
+    next_billing_date = Time.parse(agreement.agreement_details.next_billing_date).iso8601
     if cancel_billing_agreement(note: 'User changing plans')
-      create_new_subscription(plan_id)
+      create_new_subscription(plan_id, next_billing_date)
     else
       Rails.logger.error "DEBUG: Subscription#change_plan Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong changing your subscription with PayPal. Please contact us for assistance.')
     end
   end
 
-  def create_new_subscription(plan_id)
+  def create_new_subscription(plan_id, start_date)
     user = @subscription.user
     new_subscription = user.subscriptions.create(
       subscription_plan_id: plan_id,
       complimentary: false
     )
 
-    new_agreement = create_billing_agreement(new_subscription)
+    new_agreement = create_billing_agreement(subscription: new_subscription, start_date: start_date)
     new_subscription.update(
       paypal_token: new_agreement.token,
       paypal_approval_url: new_agreement.links.find{|v| v.rel == "approval_url" }.href,
@@ -122,8 +122,8 @@ class PaypalSubscriptionsService
 
   private
 
-  def create_billing_agreement(subscription)
-    agreement = Agreement.new(agreement_attributes(subscription))
+  def create_billing_agreement(subscription:, start_date: nil)
+    agreement = Agreement.new(agreement_attributes(subscription: subscription, start_date: start_date))
     if agreement.create
       agreement
     else
@@ -135,12 +135,16 @@ class PaypalSubscriptionsService
     raise Learnsignal::SubscriptionError.new('PayPal seems to be having issues right now. Please try again in a few minutes. If this problem continues, contact us for assistance.')
   end
 
-  def agreement_attributes(subscription)
+  def subscription_start_date(plan)
+    (Time.zone.now + plan.payment_frequency_in_months.months).iso8601
+  end
+
+  def agreement_attributes(subscription:, start_date: nil)
     subscription_plan = subscription.subscription_plan
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
-      start_date: (Time.zone.now + subscription_plan.payment_frequency_in_months.months).iso8601,
+      start_date: (start_date.nil? ? subscription_start_date(subscription_plan) : start_date.iso8601),
       payer: {
         payment_method: "paypal",
         payer_info: {
