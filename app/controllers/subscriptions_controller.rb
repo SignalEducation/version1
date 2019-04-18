@@ -124,12 +124,6 @@ class SubscriptionsController < ApplicationController
                     false)
   end
 
-  def change_plan
-    # TODO change plan must know what plan
-    #@current_subscription = current_user.current_subscription
-    @subscription_plans = @subscription.upgrade_options
-  end
-
   def un_cancel_subscription
     if @subscription && @subscription.stripe_status == 'canceled-pending'
       @subscription.un_cancel
@@ -145,21 +139,6 @@ class SubscriptionsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
       redirect_to account_url(anchor: 'subscriptions')
     end
-  end
-
-  #Upgrading current subscription to a new subscription plan
-  def update
-    subscription_object = SubscriptionService.new(@subscription)
-    if @subscription = subscription_object.change_plan(updatable_params[:subscription_plan_id].to_i)
-      flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
-    else
-      Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
-      flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
-    end
-    redirect_to account_url(anchor: 'subscriptions')
-  rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e.message
-    redirect_to account_url(anchor: 'subscriptions')
   end
 
   #Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
@@ -213,10 +192,6 @@ class SubscriptionsController < ApplicationController
   def subscription_params
     params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions,
                                          :hidden_coupon_code, :use_paypal)
-  end
-
-  def updatable_params
-    params.require(:subscription).permit(:subscription_plan_id)
   end
 
   def get_subscription
