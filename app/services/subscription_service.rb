@@ -8,9 +8,9 @@ class SubscriptionService
 
   def change_plan(new_plan_id)
     if paypal?
-      raise Learnsignal::SubscriptionError.new('Sorry! We do not allow upgrading PayPal plans yet. Get in touch if you would like us to change it for you.')
+      new_subscription = PaypalSubscriptionsService.new(@subscription).change_plan(new_plan_id)
     elsif stripe?
-      StripeService.new.change_plan(@subscription, new_plan_id)
+      new_subscription = StripeService.new.change_plan(@subscription, new_plan_id)
     end
   end
 
@@ -27,19 +27,19 @@ class SubscriptionService
       @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
     elsif self.paypal?
       @subscription.save!
-      @subscription = PaypalService.new.create_and_return_subscription(@subscription)
+      @subscription = PaypalSubscriptionsService.new(@subscription).create_and_return_subscription
     end
   end
 
   def cancel_subscription
     if self.paypal?
-      PaypalService.new.cancel_billing_agreement(@subscription)
+      PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement
     end
   end
 
   def pause
     if self.paypal?
-      PaypalService.new.suspend_billing_agreement(@subscription)
+      PaypalSubscriptionsService.new(@subscription).suspend_billing_agreement
     elsif self.stripe?
       StripeService.new.pause_subscription(@subscription)
     end
@@ -47,7 +47,7 @@ class SubscriptionService
 
   def re_activate
     if self.paypal?
-      PaypalService.new.reactivate_billing_agreement(@subscription)
+      PaypalSubscriptionsService.new(@subscription).reactivate_billing_agreement
     elsif self.stripe?
       StripeService.new.reactivate_subscription(@subscription)
     end

@@ -31,11 +31,7 @@ class SubscriptionPlan < ActiveRecord::Base
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
-  PAYPAL_STATES = %w[
-    'CREATED',
-    'ACTIVE',
-    'INACTIVE'
-  ]
+  PAYPAL_STATES = %w(CREATED ACTIVE INACTIVE)
 
   # relationships
   belongs_to :exam_body

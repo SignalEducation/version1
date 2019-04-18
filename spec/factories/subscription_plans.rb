@@ -27,7 +27,6 @@
 
 FactoryBot.define do
   factory :subscription_plan do
-    organisation
     sequence(:name)                 { |n| "Test #{n}" }
     payment_frequency_in_months     { 1 }
     association                     :currency
@@ -36,6 +35,7 @@ FactoryBot.define do
     available_to                    { 7.days.from_now }
     #stripe_guid                     'plan_ABC123123123'
     livemode                        false
+    exam_body
 
 
     factory :student_subscription_plan do

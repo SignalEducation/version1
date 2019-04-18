@@ -5,7 +5,7 @@ describe FooterPagesController, type: :controller do
   let!(:gbp) { FactoryBot.create(:gbp) }
   let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
 
-  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course, group_id: 1, exam_body_id: 1) }
+  let!(:subject_course_1)  { FactoryBot.create(:active_subject_course) }
   let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
   let(:tutor_user_1) { FactoryBot.create(:tutor_user, user_group_id: tutor_user_group.id) }
   let!(:tutor_student_access_1) { FactoryBot.create(:complimentary_student_access, user_id: tutor_user_1.id) }
