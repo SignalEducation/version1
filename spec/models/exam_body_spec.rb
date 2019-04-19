@@ -2,15 +2,17 @@
 #
 # Table name: exam_bodies
 #
-#  id                                :integer          not null, primary key
-#  name                              :string
-#  url                               :string
-#  created_at                        :datetime         not null
-#  updated_at                        :datetime         not null
-#  active                            :boolean          default(FALSE), not null
-#  has_sittings                      :boolean          default(FALSE), not null
-#  preferred_payment_frequency       :integer
-#  subscription_page_subheading_text :string
+#  id                                 :integer          not null, primary key
+#  name                               :string
+#  url                                :string
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  active                             :boolean          default(FALSE), not null
+#  has_sittings                       :boolean          default(FALSE), not null
+#  preferred_payment_frequency        :integer
+#  subscription_page_subheading_text  :string
+#  constructed_response_intro_heading :string
+#  constructed_response_intro_text    :text
 #
 
 require 'rails_helper'

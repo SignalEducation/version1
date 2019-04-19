@@ -2,15 +2,17 @@
 #
 # Table name: exam_bodies
 #
-#  id                                :integer          not null, primary key
-#  name                              :string
-#  url                               :string
-#  created_at                        :datetime         not null
-#  updated_at                        :datetime         not null
-#  active                            :boolean          default(FALSE), not null
-#  has_sittings                      :boolean          default(FALSE), not null
-#  preferred_payment_frequency       :integer
-#  subscription_page_subheading_text :string
+#  id                                 :integer          not null, primary key
+#  name                               :string
+#  url                                :string
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  active                             :boolean          default(FALSE), not null
+#  has_sittings                       :boolean          default(FALSE), not null
+#  preferred_payment_frequency        :integer
+#  subscription_page_subheading_text  :string
+#  constructed_response_intro_heading :string
+#  constructed_response_intro_text    :text
 #
 
 class ExamBody < ActiveRecord::Base
@@ -23,6 +25,8 @@ class ExamBody < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :url, presence: true
+  validates :constructed_response_intro_heading, presence: true
+  validates :constructed_response_intro_text, presence: true
 
   before_destroy :check_dependencies
 

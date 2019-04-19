@@ -699,6 +699,9 @@ en:
         preferred_payment_frequency: Preferred Payment Interval
         subscription_page_subheading_text: Subscription Payment Subheading
         subscription_page_subheading_text_placeholder: Subscription Payment Subheading
+        constructed_response_intro_heading: Constructed Response Start Screen Heading
+        constructed_response_intro_heading_placeholder: Constructed Response Start Screen Heading
+        constructed_response_intro_text: Constructed Response Start Screen Instructions
 
       index:
         h1: Exam Bodies
