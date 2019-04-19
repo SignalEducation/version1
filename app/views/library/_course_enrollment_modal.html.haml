@@ -2,8 +2,6 @@
   .modal-dialog{role: 'document'}
     .modal-content
       %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-        %span
-          Close
         %i.material-icons.ml-1{'aria-hidden': 'true'}
           close
       .modal-header
@@ -16,39 +14,40 @@
           =form_for(@new_enrollment, html: {class: 'form py-2', role: 'form', name: 'enrollment_modal_form'}) do |f|
             =f.hidden_field :subject_course_id, value: @course.id
             =f.hidden_field :exam_body_id, value: @course.exam_body_id
+            =f.hidden_field :notifications, value: 0
             =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id), id: 'scul_id'
 
             .row
-              .col-sm-6
+              .col-sm-12
                 .form-group
                   -if @course.computer_based && @computer_exam_sitting
                     =f.hidden_field :exam_sitting_id, value: @computer_exam_sitting.id
                     #custom_exam_date
-                      =f.label :exam_date, t('views.enrollments.form.select_exam_date'), class: 'control-label'
-                      .input-group.input-group-lg.full-width
-                        =f.text_field :exam_date, placeholder: 'Select Date ...', autocomplete: 'off', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
+                      =f.label :exam_date, t('views.enrollments.form.select_exam_date')
+                      .input-group.input-group-lg
+                        =f.text_field :exam_date, placeholder: 'Select Date ...', autocomplete: 'off', class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
                   -else
-                    =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
-                    .input-group.input-group-lg.full-width
-                      =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
-
-              .col-sm-6
-                -if @subject_course_user_log
-                  .form-group
-                    .l-margin-top-big
-                      %label.check
-                        %input{type: "checkbox", id: 'use_new_scul'}
-                          %span
-                            %i.fa.fa-check
-                          ='Reset all course progress'
-
-            .col-sm-12.l-margin-top-big
-              %p.p.text-center
-                ="Enrolment is a requirement of the #{@course.exam_body.name}, it also allows us to better support and help you for your exam."
+                    =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id')
+                    .input-group.input-group-lg
+                      =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'exam_sitting_select'}
 
 
+                -# TODO - Make this work with JS to set hidden field
+                %fieldset
+                  %legend.sr-only Notifications Checkbox
+                  .custom-control.custom-checkbox.mb-3
+                    %input{type: "checkbox", class: "custom-control-input", id: "notifications"}
+                    %label{class: "custom-control-label", for: "notifications"}
+                      ='BootCamp Notifications'
 
-            #actions_btns.pt-1.l-margin-top-huge
+                  -if @subject_course_user_log
+                    .custom-control.custom-checkbox.mb-3
+                      %input{type: "checkbox", class: "custom-control-input", id: "use_new_scul"}
+                      %label{class: "custom-control-label", for: "use_new_scul"}
+                        ='Reset all course progress'
+
+
+            #actions_btns.pt-1
               #enroll_now
                 =submit_tag 'Enrol Now', class: 'btn btn-primary', id: 'enroll_submit_button'
 

@@ -158,7 +158,8 @@ class LibraryController < ApplicationController
     end
 
     @new_enrollment = Enrollment.new(subject_course_user_log_id: scul.try(:id),
-                                     subject_course_id: course.id, exam_body_id: course.exam_body_id)
+                                     subject_course_id: course.id, notifications: false,
+                                     exam_body_id: course.exam_body_id)
   end
 
 

@@ -75,7 +75,7 @@ class EnrollmentsController < ApplicationController
 
   def allowed_params
     params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id,
-                                       :exam_sitting_id, :percentage_complete, :exam_body_id)
+                                       :exam_sitting_id, :percentage_complete, :exam_body_id, :notifications)
   end
 
   def get_variables
