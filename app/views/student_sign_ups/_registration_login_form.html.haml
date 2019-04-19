@@ -1,6 +1,6 @@
--if @home_page.registration_form && @home_page.login_form
+.h-100.d-flex.flex-column.justify-content-center
+  -if @home_page.registration_form && @home_page.login_form
 
-  .h-100.d-flex.flex-column.justify-content-center
     #registration-login
       %nav.register-login-nav
         %ul.nav.nav-tabs.nav-tabs-no-collapse#registerLoginTabs{role: "tablist"}
@@ -21,13 +21,13 @@
 
 
 
--elsif @home_page.registration_form
-  =render partial: 'registration_form'
+  -elsif @home_page.registration_form
+    =render partial: 'registration_form'
 
 
 
--elsif @home_page.login_form
-  =render partial: 'login_form'
+  -elsif @home_page.login_form
+    =render partial: 'login_form'
 
 
 
