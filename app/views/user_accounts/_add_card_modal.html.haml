@@ -4,7 +4,7 @@
       %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
         %i.material-icons{"aria-hidden" => "true"} close
       .modal-header
-        %h3#add-card-modal.text-gray2.mb-5 Change Card Details
+        %h3#add-card-modal.text-gray2.mb-5 Add New Card
       .modal-body
         =form_for(SubscriptionPaymentCard.new, method: :post, html: {class: 'py-2', role: 'form', id: 'new-subscription-payment-card-form'}, name: 'add_card_form') do |f|
           =f.hidden_field :user_id, value: current_user.id
@@ -52,10 +52,18 @@
   // Custom styling can be passed to options when creating an Element.
   var style = {
     base: {
-      fontWeight: 300,
-      fontFamily: 'Rubik',
-      fontSize: '20px',
-      lineHeight: '24px'
+      color: '#32325d',
+      lineHeight: '18px',
+      fontFamily: '"OakesGrotesk", "Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      }
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a'
     }
   };
 

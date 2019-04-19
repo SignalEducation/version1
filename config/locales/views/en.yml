@@ -1497,7 +1497,7 @@ en:
         confirm_subscription_pause: PAUSE MEMBERSHIP
         confirm_subscription_cancellation: Cancel My Subscription
         confirm_subscription_reactivate: Reactivate My Subscription
-        keep_subscription: KEEP MEMBERSHIP
+        keep_subscription: Keep Subscription
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
