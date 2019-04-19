@@ -51,10 +51,7 @@ class ApplicationController < ActionController::Base
     @footer_content_pages = ContentPage.for_footer
     @footer_landing_pages = HomePage.for_footer
 
-    if ExternalBanner::BANNER_CONTROLLERS.include?(controller_name)
-      @banner = ExternalBanner.all_without_parent.render_for(controller_name).all_in_order.first
-    end
-
+    
   end
 
   def logged_in_required
