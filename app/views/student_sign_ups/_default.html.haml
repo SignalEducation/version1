@@ -47,7 +47,7 @@
                   No credit card required. Set-up takes one minute.
 
           -if (@home_page.registration_form || @home_page.login_form) && !current_user
-            .col-xl-6
+            .col-xl-6.mt-6
               =render partial: 'registration_login_form'
           -elsif @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
             .col-lg-5.offset-lg-1.offset-xl-3.col-xl-4

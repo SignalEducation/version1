@@ -1,5 +1,5 @@
-.h-100.d-flex.flex-column.justify-content-center
-  -if @home_page.registration_form && @home_page.login_form
+.d-flex.flex-column.justify-content-center
+  -if (@home_page && @home_page.registration_form && @home_page.login_form) || !@home_page
 
     #registration-login
       %nav.register-login-nav
