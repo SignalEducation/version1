@@ -43,7 +43,7 @@
 
         -elsif @product
           .col-lg-4
-            %article.card.card-primary.card-primary-alt.mt-lg-tabs.mb-6.mb-lg-0
+            %article.mb-6.mb-lg-0
               .card.card-link.text-center.mb-5
                 .py-4
                   %h4.text-ellipsis.mb-4
@@ -55,6 +55,8 @@
                       Total:
                       %span
                         =number_in_local_currency(@product.price, @product.currency_id)
+                  .pt-4.pt-md-5
+                    %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
 
 
 
