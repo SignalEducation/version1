@@ -24,8 +24,11 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   print "* " * 100
   load "db/seed_data/course_seed.rb"
   load "db/seed_data/course_content_data.rb"
+  load "db/seed_data/home_page_seed.rb"
   puts "\n course course_content_data"
         
+
+
   print "* " * 100
   puts "\n Completed the db/seed process"
   puts '*' * 100
