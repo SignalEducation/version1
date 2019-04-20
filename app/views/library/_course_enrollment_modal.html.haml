@@ -34,13 +34,14 @@
 
                 -# TODO - Make this work with JS to set hidden field
                 %fieldset
-                  %legend.sr-only Notifications Checkbox
+                  %legend.sr-only Notification Checkbox
                   .custom-control.custom-checkbox.mb-3
                     %input{type: "checkbox", class: "custom-control-input", id: "notifications"}
                     %label{class: "custom-control-label", for: "notifications"}
                       ='BootCamp Notifications'
 
                   -if @subject_course_user_log
+                    %legend.sr-only Reset Progress Checkbox
                     .custom-control.custom-checkbox.mb-3
                       %input{type: "checkbox", class: "custom-control-input", id: "use_new_scul"}
                       %label{class: "custom-control-label", for: "use_new_scul"}

@@ -31,49 +31,47 @@
 
 
   -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
-    .container-bg.bg-gray5#plans
-      .container
-        %section.pb-md-6.pb-5.pt-md-6.pt-5
-          .container-md.pb-3.text-center
-            %h2.h2-hero.mb-2
+    .container-bg.bg-gray5
+      .container#plans
+        %article.py-6
+          %header.text-center.pb-5.pb-md-6
+            %h2.h1-mega
               ="#{@group.name} Payment Plans"
-            %p.p-hero.px-lg-6
+            %p.p-hero.px-lg-8
               ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
-          .row.row-lg.justify-content-center
+          .row.row-md
             -@subscription_plans.each do |plan|
               .col-lg-4
-                %article.card.card-primary.card-pink
-                  .card-body.text-center
-                    %h2.h1.card-title
+                %article.card.card-primary.card-primary-alt
+                  -if plan.most_popular
+                    .card-banner.bg-mint
+                      %small.text-white
+                        Most popular payment plan
+                  .card-body.text-center.py-4.py-sm-5
+                    %h2.card-title
                       =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
 
-                    -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                      - plan.bullet_points_list.split(/, ?/).each do |bullet|
-                        %p=bullet
+                    %ul.list-centered
+                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                          %li=bullet
+                      -else
+                        %li="Access all #{@group.name} courses"
+                        %li="Topic-by-topic lectures"
+                        %li="24/7 tutor support"
 
-                    -else
-                      %p="Access all #{@group.name} courses"
-                      %p="Topic-by-topic lectures"
-                      %p="24/7 tutor support"
+                      %li{style: 'font-style: italic;'}
+                        Cancel anytime
 
-                    %p{style: 'font-style: italic;'}
-                      Cancel anytime
-                    %p.h3
+                    %p.h2.mb-0
                       =plan.currency.format_number(plan.price)
 
-
                     -if plan.monthly_percentage_off
-                      %p.h5
+                      %p.h5.text-gray2
                         Save over
                         =plan.monthly_percentage_off
                         ='%'
-
-                    -if plan.most_popular
-                      %p.h5.text-primary
-                        Our most popular payment plan
-
                     .mt-auto
                       =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
                         Choose this plan
-

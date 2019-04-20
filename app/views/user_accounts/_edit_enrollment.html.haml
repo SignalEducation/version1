@@ -8,6 +8,7 @@
           =enrollment.subject_course.name
       .modal-body
         =form_for(enrollment, html: {class: 'py-2', role: 'form'}) do |f|
+          =f.hidden_field :notifications, value: 0
           .py-3
             -if enrollment.computer_based_exam
               .form-group
@@ -23,6 +24,12 @@
                 .input-group.input-group-lg
                   =f.collection_select :exam_sitting_id, enrollment.alternate_exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', id: 'exam_sitting_select'}
 
+            %fieldset
+              %legend.sr-only Notification Checkbox
+              .custom-control.custom-checkbox.mb-3
+                %input{type: "checkbox", class: "custom-control-input", id: "notifications"}
+                %label{class: "custom-control-label", for: "notifications"}
+                  ='BootCamp Notifications'
 
           .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
             %div
