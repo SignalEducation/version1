@@ -1,17 +1,35 @@
--@sculs.each do |scul|
-  -if scul.subject_course && scul.subject_course.active
-    .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
-      .card-header.justify-content-center.align-items-center.d-none.d-sm-block
-        .pt-4.text-center
-          .h4
-            =scul.percentage_complete.to_s << '%'
-          .h4
-            Complete
+-if @sculs.any?
+  -@sculs.each do |scul|
+    -if scul.subject_course && scul.subject_course.active
+      .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+        .card-header.justify-content-center.align-items-center.d-none.d-sm-block
+          .pt-4.text-center
+            .h4
+              =scul.percentage_complete.to_s << '%'
+            .h4
+              Complete
 
-      .card-body.d-flex.flex-column.justify-content-center
+        .card-body.d-flex.flex-column.justify-content-center
 
-        %h5.card-title.mb-1
-          %span.mr-1
-            =scul.subject_course.name
-      .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
-        =link_to 'Resume Course', library_special_link(scul.subject_course), class: 'btn btn-primary'
+          %h5.card-title.mb-1
+            %span.mr-1
+              =scul.subject_course.name
+        .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+          =link_to 'Resume Course', library_special_link(scul.subject_course), class: 'btn btn-primary'
+
+-else
+  %h2.h2-hero.mb-2
+    ="Get started with an #{@default_group.name} course"
+  .row.row-lg
+    -@default_group.subject_courses.all_active.all_in_order.each do |course|
+      .col-sm
+        =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+          .card-header.d-flex.justify-content-center.align-items-center
+            %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+          .card-body.d-flex.flex-column.justify-content-center
+            %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+              =course.category_label
+            %h5.card-title.mb-1
+              %span.mr-1
+                =course.name

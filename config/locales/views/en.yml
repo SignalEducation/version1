@@ -1684,6 +1684,7 @@ en:
         student_user: Student User
         trial_or_sub_required: Trial or Sub Required
         blocked_user: Blocked User
+        exercise_corrections_access: Exercise Corrections
 
       edit:
         h1: Edit User Group
