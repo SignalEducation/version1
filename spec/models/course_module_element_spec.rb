@@ -43,25 +43,16 @@ describe CourseModuleElement do
   end
 
   describe 'validations' do
-    subject { FactoryBot.build(:course_module_element) }
 
     it { should validate_presence_of(:name) }
     it { should validate_length_of(:name).is_at_most(255) }
 
     it { should validate_presence_of(:name_url) }
-    it { should validate_uniqueness_of(:name_url).scoped_to(:course_module) }
-    it { should validate_length_of(:name_url).is_at_most(255) }
-
-    context 'if cme_is_video?' do
-      before { allow(subject).to receive(:cme_is_video?).and_return(true) }
-      it { should validate_presence_of(:description) }
-    end
+    it { should validate_uniqueness_of(:name_url).scoped_to(:course_module_id).with_message('must be unique within the course module') }
 
     it { should validate_presence_of(:course_module_id) }
 
     it { should validate_presence_of(:sorting_order) }
-
-    it { should validate_length_of(:seo_description).is_at_most(255) }
   end
 
   describe 'callbacks' do
@@ -76,6 +67,7 @@ describe CourseModuleElement do
     it { expect(CourseModuleElement).to respond_to(:all_destroyed) }
     it { expect(CourseModuleElement).to respond_to(:all_videos) }
     it { expect(CourseModuleElement).to respond_to(:all_quizzes) }
+    it { expect(CourseModuleElement).to respond_to(:all_constructed_response) }
   end
 
   describe 'instance methods' do
@@ -93,7 +85,6 @@ describe CourseModuleElement do
     it { should respond_to(:started_by_user) }
 
     it { should respond_to(:previous_cme_restriction) }
-    it { should respond_to(:available_for_trial) }
     it { should respond_to(:available_for_subscription) }
     it { should respond_to(:available_for_complimentary) }
     it { should respond_to(:available_to_user) }

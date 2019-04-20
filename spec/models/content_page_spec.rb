@@ -23,11 +23,8 @@ describe ContentPage do
 
   subject { FactoryBot.build(:content_page) }
 
-  describe 'constants' do
-    it { expect(ContentPage.const_defined?(:NAV_OPTIONS)).to eq(true) }
-  end
-
   describe 'relationships' do
+    it { should have_many(:content_page_sections) }
     it { should have_many(:external_banners) }
   end
 
@@ -50,7 +47,6 @@ describe ContentPage do
 
   describe 'callbacks' do
     it { should callback(:check_dependencies).before(:destroy) }
-    it { should callback(:remove_empty_banner).before(:validation) }
   end
 
   describe 'scopes' do
@@ -61,8 +57,6 @@ describe ContentPage do
 
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
-    it { should respond_to(:standard_nav?) }
-    it { should respond_to(:transparent_nav?) }
   end
 
 

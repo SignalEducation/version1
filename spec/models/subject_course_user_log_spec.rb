@@ -55,13 +55,18 @@ describe SubjectCourseUserLog do
 
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
-    it { should respond_to(:elements_total) }
     it { should respond_to(:elements_total_for_completion) }
     it { should respond_to(:active_enrollment) }
-    it { should respond_to(:update_enrollment) }
-    it { should respond_to(:last_element) }
-    it { should respond_to(:recalculate_completeness) }
-    it { should respond_to(:student_exam_track_course_module_ids) }
+    it { should respond_to(:recalculate_scul_completeness) }
+    it { should respond_to(:f_name) }
+    it { should respond_to(:l_name) }
+    it { should respond_to(:user_email) }
+    it { should respond_to(:date_of_birth) }
+    it { should respond_to(:enrolled) }
+    it { should respond_to(:exam_date) }
+    it { should respond_to(:enrollment_sitting) }
+    it { should respond_to(:student_number) }
+    it { should respond_to(:completion_cme_count) }
   end
 
 end

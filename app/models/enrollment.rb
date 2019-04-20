@@ -24,11 +24,11 @@ class Enrollment < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :exam_body
-  belongs_to :exam_sitting
-  belongs_to :user
-  belongs_to :subject_course
-  belongs_to :subject_course_user_log
+  belongs_to :exam_body, optional: true
+  belongs_to :exam_sitting, optional: true
+  belongs_to :user, optional: true
+  belongs_to :subject_course, optional: true
+  belongs_to :subject_course_user_log, optional: true
 
   # validation
   validates :user_id, presence: true

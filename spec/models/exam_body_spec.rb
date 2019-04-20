@@ -34,6 +34,10 @@ describe ExamBody do
 
   it { should validate_presence_of(:url) }
 
+  it { should validate_presence_of(:constructed_response_intro_heading) }
+
+  it { should validate_presence_of(:constructed_response_intro_text) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 

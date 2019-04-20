@@ -69,7 +69,7 @@ describe StudentExamTrack do
   describe 'callbacks' do
     it { should callback(:check_dependencies).before(:destroy) }
     it { should callback(:create_course_section_user_log).before(:validation), unless: :course_section_user_log_id }
-    it { should callback(:update_course_section_user_log).after(:save) }
+    it { should callback(:update_course_section_user_log).after(:update) }
   end
 
   describe 'scopes' do
@@ -92,8 +92,7 @@ describe StudentExamTrack do
     it { should respond_to(:latest_cme_user_logs) }
     it { should respond_to(:unique_logs) }
     it { should respond_to(:enrollment) }
-    it { should respond_to(:worker_update_completeness) }
-    it { should respond_to(:recalculate_completeness) }
+    it { should respond_to(:recalculate_set_completeness) }
   end
 
 

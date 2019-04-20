@@ -34,7 +34,6 @@ describe QuizQuestion do
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_course_module_element).before(:validation) }
-  it { should callback(:set_subject_course_id).before(:save) }
 
   # scopes
   it { expect(QuizQuestion).to respond_to(:all_in_order) }
