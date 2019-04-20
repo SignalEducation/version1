@@ -118,8 +118,20 @@ class Subscription < ActiveRecord::Base
       end
     end
 
-    after_transition pending: :active do |subscription, _transition|
+    state all - [:active, :paused, :pending_cancellation, :errored] do
+      def can_change_plan?
+        false
+      end
+    end
 
+    state :active, :paused, :pending_cancellation, :errored do
+      def can_change_plan?
+        true
+      end
+    end
+
+    after_transition pending: :active do |subscription, _transition|
+      # ??
     end
 
     after_transition all => :errored do |subscription, _transition|
@@ -263,8 +275,7 @@ class Subscription < ActiveRecord::Base
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&
-      self.subscription_transactions.empty? &&
-      self.referred_signup.nil?
+      self.subscription_transactions.empty?
       #self.livemode == Invoice::STRIPE_LIVE_MODE &&
   end
 
@@ -316,7 +327,7 @@ class Subscription < ActiveRecord::Base
 
   def schedule_paypal_cancellation
     self.cancel_pending if self.active?
-    PaypalService.new.set_cancellation_date(self)
+    PaypalSubscriptionsService.new(self).set_cancellation_date
   end
 
   def upgrade_options

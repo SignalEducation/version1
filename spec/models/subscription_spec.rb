@@ -42,7 +42,6 @@ describe Subscription do
 
   # Constants
   it { expect(Subscription.const_defined?(:STATUSES)).to eq(true) }
-  it { expect(Subscription.const_defined?(:STRIPE_VALID_STATES)).to eq(true) }
 
   # relationships
   it { should belong_to(:user) }
@@ -54,7 +53,6 @@ describe Subscription do
   it { should have_many(:subscription_transactions) }
   it { should have_many(:charges) }
   it { should have_many(:refunds) }
-  it { should have_one(:referred_signup) }
 
   # validation
   it { should validate_presence_of(:user_id).on(:update) }
@@ -69,7 +67,6 @@ describe Subscription do
   # callbacks
   it { should callback(:create_subscription_payment_card).after(:create) }
   it { should callback(:update_coupon_count).after(:create) }
-  it { should callback(:update_student_access).after(:save) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -94,7 +91,7 @@ describe Subscription do
       let(:subscription) { build_stubbed(:subscription, state: 'pending_cancellation')}
 
       it 'calls #set_cancellation_date on the subscription' do
-        expect_any_instance_of(PaypalService).to receive(:set_cancellation_date).with(subscription)
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
 
         subscription.schedule_paypal_cancellation
       end
@@ -104,7 +101,7 @@ describe Subscription do
       let(:subscription) { create(:subscription, state: 'active')}
 
       it 'updates the state to #cancelled_pending' do
-        allow_any_instance_of(PaypalService).to receive(:set_cancellation_date).with(subscription)
+        allow_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
         expect(subscription.state).to eq 'active'
 
         subscription.schedule_paypal_cancellation
@@ -114,7 +111,7 @@ describe Subscription do
       end
 
       it 'calls #set_cancellation_date on the subscription' do
-        expect_any_instance_of(PaypalService).to receive(:set_cancellation_date).with(subscription)
+        expect_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
 
         subscription.schedule_paypal_cancellation
       end

@@ -70,6 +70,8 @@ FactoryBot.define do
     date_of_birth                              { '2001-10-03' }
     student_number                             { '123456789' }
     association :user_group
+    association :preferred_exam_body, factory: :exam_body
+
     after :create do |user|
       create :student_access, user: user
     end

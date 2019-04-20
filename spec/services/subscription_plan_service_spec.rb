@@ -45,7 +45,7 @@ describe SubscriptionPlanService, type: :service do
   describe '#create_remote_plans' do
     before :each do
       allow_any_instance_of(StripeService).to receive(:create_plan)
-      allow_any_instance_of(PaypalService).to receive(:create_plan)
+      allow_any_instance_of(PaypalPlansService).to receive(:create_plan)
     end
 
     it 'calls #create_plan on an instance of StripeService' do
@@ -54,8 +54,8 @@ describe SubscriptionPlanService, type: :service do
       sub_plan_service.send(:create_remote_plans)
     end
 
-    it 'calls #create_plan on an instance of PaypalService' do
-      expect_any_instance_of(PaypalService).to receive(:create_plan)
+    it 'calls #create_plan on an instance of PaypalPlansService' do
+      expect_any_instance_of(PaypalPlansService).to receive(:create_plan)
 
       sub_plan_service.send(:create_remote_plans)
     end
@@ -64,7 +64,7 @@ describe SubscriptionPlanService, type: :service do
   describe '#update_remote_plans' do
     before :each do
       allow_any_instance_of(StripeService).to receive(:update_plan)
-      allow_any_instance_of(PaypalService).to receive(:update_plan)
+      allow_any_instance_of(PaypalPlansService).to receive(:update_plan)
     end
 
     it 'calls #update_plan on an instance of StripeService' do
@@ -73,8 +73,8 @@ describe SubscriptionPlanService, type: :service do
       sub_plan_service.send(:update_remote_plans)
     end
 
-    it 'calls #update_plan on an instance of PaypalService' do
-      expect_any_instance_of(PaypalService).to receive(:update_plan)
+    it 'calls #update_plan on an instance of PaypalPlansService' do
+      expect_any_instance_of(PaypalPlansService).to receive(:update_plan)
 
       sub_plan_service.send(:update_remote_plans)
     end
@@ -83,7 +83,7 @@ describe SubscriptionPlanService, type: :service do
   describe '#delete_remote_plans' do
     before :each do
       allow_any_instance_of(StripeService).to receive(:delete_plan)
-      allow_any_instance_of(PaypalService).to receive(:delete_plan)
+      allow_any_instance_of(PaypalPlansService).to receive(:delete_plan)
     end
 
     it 'calls #delete_plan on an instance of StripeService' do
@@ -92,8 +92,8 @@ describe SubscriptionPlanService, type: :service do
       sub_plan_service.send(:delete_remote_plans)
     end
 
-    it 'calls #delete_plan on an instance of PaypalService' do
-      expect_any_instance_of(PaypalService).to receive(:delete_plan)
+    it 'calls #delete_plan on an instance of PaypalPlansService' do
+      expect_any_instance_of(PaypalPlansService).to receive(:delete_plan)
 
       sub_plan_service.send(:delete_remote_plans)
     end
