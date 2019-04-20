@@ -421,7 +421,7 @@ class User < ActiveRecord::Base
   end
 
   def default_card
-    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
+    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first
   end
 
   def subscriptions_for_exam_body(exam_body_id)

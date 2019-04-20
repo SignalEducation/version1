@@ -331,7 +331,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def upgrade_options
-    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).in_currency(subscription_plan.currency_id).all_active.all_in_order
+    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).where(subscription_plan_category_id: nil).for_exam_body(subscription_plan.exam_body_id).in_currency(subscription_plan.currency_id).all_active.all_in_order
   end
 
   def update_from_stripe
