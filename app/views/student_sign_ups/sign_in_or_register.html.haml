@@ -62,112 +62,24 @@
 
         .col-lg-8{class: "#{(@plan || @product) ? '' : 'offset-2'}"}
           =render partial: 'registration_login_form'
-          -#.form-box.sign-in-register
-            #session-tabs
-              %nav
-                %ul.nav.nav-tabs.nav-justified{id: 'sessionTabs', role: 'tablist'}
-                  %li.nav-item
-                    %a{href: "#registration-tab", role: 'tab', class: 'nav-link active', data: {toggle: 'tab'}, aria: {controls: "registration", selected: 'true'}}
-                      ='Register'
-                  %li.nav-item
-                    %a{href: "#sign-in-tab", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "sign-in", selected: 'false'}}
-                      ='Log In'
 
 
-            #sessionTabsContent.tab-content
-              .tab-pane.registration-tab.active.show{id: 'registration-tab', role: 'tabpanel', 'aria-labelledby': 'registration-tab'}
-                .row.row-lg
-                  .col-sm-12
-                    =render partial: 'sign_up_form'
+:javascript
 
-              .tab-pane.sign-in-tab{id: 'sign-in-tab', role: 'tabpanel', 'aria-labelledby': 'sign-in-tab'}
-                .row.row-lg
-                  .col-sm-12
-                    =render partial: 'sign_in_form'
+  $(document).ready(function(){
+    let hash = window.location.hash;
+    let elements = $('a[href="' + hash + '"]');
 
+    if (elements.length > 0) {
+      elements.click();
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    }
 
-
-      -#.py-5.py-md-6
-        .row.row-lg
-
-          .col-lg-8
-            %nav.register-login-nav
-              %ul#registerLoginTabs.nav.nav-tabs.nav-tabs-no-collapse.nav-tabs-border-tab{:role => "tablist"}
-                %li.nav-item
-                  %a#register-tab.nav-link.active{"aria-controls" => "register", "aria-selected" => "true", "data-toggle" => "tab", :href => "#register", :role => "tab"}
-                    Register
-                %li.nav-item
-                  %a#log-in-tab.nav-link{"aria-controls" => "log-in", "aria-selected" => "false", "data-toggle" => "tab", :href => "#log-in", :role => "tab"}
-                    Log in
-            #registerLoginTabsContent.tab-content.border
-              #register.tab-pane.show.active.tab-register{"aria-labelledby" => "register-tab", :role => "tabpanel"}
-                %form.bg-white.p-3.px-sm-5.pt-sm-4
-                  .py-3
-                    %p Explore our innovative learning platform and discover how LearnSignal helps you pass your exams faster.
-                  %fieldset.pb-3
-                    %legend.sr-only Registration Details
-                    .row
-                      .col-md-6
-                        .form-group
-                          %label.sr-only{:for => "first-name"} First Name
-                          %input#first-name.form-control{:placeholder => "First Name", :type => "text"}
-                        .col-md-6
-                          .form-group
-                            %label.sr-only{:for => "last-name"} Last Name
-                            %input#last-name.form-control{:placeholder => "Last Name", :type => "text"}
-                        .row
-                          .col-md-6
-                            .form-group
-                              %label.sr-only{:for => "email-address"} Your e-mail address
-                              %input#email-address.form-control{:placeholder => "Your e-mail address", :type => "text"}
-                            .col-md-6
-                              .form-group
-                                %select.custom-select
-                                  %option{:value => ""} Study preferences
-                                  %option{:value => "option-1"} Option 1
-                                  %option{:value => "option-2"} Option 2
-                                  %option{:value => "option-3"} Option 3
-                          .row
-                            .col-md-6
-                              .form-group
-                                %label.sr-only{:for => "create-pwd"} Create a password
-                                %input#create-pwd.form-control{:placeholder => "Create a password", :type => "password"}
-                              .col-md-6
-                                .form-group
-                                  %label.sr-only{:for => "confirm-pwd"} Confirm your password
-                                  %input#confirm-pwd.form-control{:placeholder => "Confirm your password", :type => "password"}
-                            %fieldset
-                              %legend.sr-only Terms and Conditions checkboxes
-                              .custom-control.custom-checkbox.mb-3
-                                %input#ls-communication.custom-control-input{:type => "checkbox"}
-                                  %label.custom-control-label{:for => "ls-communication"} I agree to receiving communication from LearnSignal (you can unsubscribe at any time)
-                                .custom-control.custom-checkbox.mb-3
-                                  %input#ls-terms.custom-control-input{:type => "checkbox"}
-                                    %label.custom-control-label{:for => "ls-terms"}
-                                      I agree to LearnSignal
-                                      %a{:href => "#"} Terms  Conditions
-                                .d-flex.justify-content-between.align-items-center
-                                  %div
-                                    %button.btn.btn-primary Register Now!
-                                  %div
-                                    %img.logo-acca{:alt => "ACCA logo", :src => "assets/img/icons/learning-partner-badge.png"}
-                              #log-in.tab-pane.tab-log-in{"aria-labelledby" => "log-in-tab", :role => "tabpanel"}
-                                %form.bg-white.p-3.px-sm-5.pt-sm-4
-                                  %fieldset.py-3
-                                    %legend.sr-only Log in Details
-                                    .row
-                                      .col-md-6
-                                        .form-group
-                                          %label{:for => "e-mail-address"} E-mail address
-                                          %input#e-mail-address.form-control{:placeholder => "Your e-mail address", :type => "text"}
-                                        .col-md-6
-                                          .form-group
-                                            %label{:for => "log-in-pwd"} Password
-                                            %input#log-in-pwd.form-control{:placeholder => "Enter your password", :type => "password"}
-                                      .d-flex.justify-content-between.align-items-center
-                                        %div
-                                          %button.btn.btn-primary.mb-4 Log in
-                                        %div
-                                          %a{:href => "#"}
-                                            %span.text-size-small Forgot password?
-
+    if ($(".notice.error")[0]){
+      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
+      let tabLink = $('#' + tabId + '-tab');
+      tabLink.tab('show');
+    }
+  })

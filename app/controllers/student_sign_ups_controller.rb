@@ -2,7 +2,8 @@ class StudentSignUpsController < ApplicationController
 
   before_action :check_logged_in_status, except: [:landing, :subscribe]
   before_action :get_variables
-  before_action :create_user_object, only: [:home, :new, :sign_in_or_register, :landing]
+  before_action :create_user_object, only: [:new, :sign_in_or_register, :landing]
+  before_action :create_user_session_object, only: [:sign_in_or_register, :landing]
   before_action :layout_variables, only: [:home, :landing]
 
   def home
@@ -31,9 +32,6 @@ class StudentSignUpsController < ApplicationController
         ip_country = IpAddress.get_country(request.remote_ip)
         country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
         @currency_id = country.currency_id
-      else
-        create_user_object
-        @user_session = UserSession.new
       end
 
       if @home_page.subscription_plan_category && @home_page.subscription_plan_category.current
@@ -64,7 +62,6 @@ class StudentSignUpsController < ApplicationController
     @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
     @product = Product.where(id: params[:product_id]).last
     @exam_body = ExamBody.where(id: params[:exam_body_id]).last
-    @user_session = UserSession.new
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
     flash[:product_id] = @product.id if @product
@@ -211,6 +208,20 @@ class StudentSignUpsController < ApplicationController
       @user.preferred_exam_body_id = session[:valid_params][4]
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
+    end
+  end
+
+  def create_user_session_object
+    @user_session = UserSession.new
+    #To allow displaying of user_session_errors
+    if session[:login_errors] && session[:valid_user_session_params]
+      session[:login_errors].each do |k, v|
+        v.each { |err| @user_session.errors.add(k, err) }
+      end
+      @user_session.email = session[:valid_user_session_params][0]
+      @user_session.password = session[:valid_user_session_params][1]
+      session.delete(:login_errors)
+      session.delete(:valid_user_session_params)
     end
   end
 

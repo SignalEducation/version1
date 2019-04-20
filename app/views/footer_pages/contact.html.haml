@@ -41,3 +41,12 @@
 =render partial: 'complaints_form_modal'
 =render partial: 'contact_us_form_modal'
 
+:javascript
+
+    hash = window.location.hash;
+    if (hash === '#contact-us-modal') {
+      $('#contact-us-modal').modal('show');
+    } else if (hash === '#complaints-modal') {
+      $('#complaints-modal').modal('show');
+    }
+

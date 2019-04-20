@@ -138,7 +138,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   .margin-top {
-    margin-top: 84px;
+    margin-top: 80px;
   }
   .margin-top-lg {
     margin-top: 127px;
@@ -4258,11 +4258,13 @@ a.card:hover .card-title .card-explanation {
   background: #f0ca28;
   color: #fff;
   border-radius: 0;
-  margin-bottom: $gutter/2;
-  padding: $gutter/2;
+  margin-bottom: $gutter/3;
+  padding: $gutter/4;
   i {
     color: #fff;
-    padding-right: 6px;
+    padding: 0 6px;
+    font-size: 20px;
+    font-weight: bold;
   }
   a {
     color: $red1;
@@ -4275,11 +4277,13 @@ a.card:hover .card-title .card-explanation {
   background: #dc3545;
   color: #fff;
   border-radius: 0;
-  margin-bottom: $gutter/2;
-  padding: $gutter/2;
+  margin: $gutter/3 0;
+  padding: $gutter/4;
   i {
     color: #fff;
-    padding-right: 6px;
+    padding: 0 6px;
+    font-size: 20px;
+    font-weight: bold;
   }
   .p {
     margin: 0;

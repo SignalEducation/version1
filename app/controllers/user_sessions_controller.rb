@@ -30,7 +30,12 @@ class UserSessionsController < ApplicationController
         redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
     else
-      render action: :new
+      if flash[:plan_guid] || flash[:product_id]
+        set_session_errors(@user_session)
+        redirect_back(fallback_location: sign_in_url)
+      else
+        render action: :new
+      end
     end
   end
 
@@ -43,6 +48,14 @@ class UserSessionsController < ApplicationController
 
   def user_session_params
     params.require(:user_session).permit(:email, :password)
+  end
+
+  def set_session_errors(user_session)
+    session[:login_errors] = user_session.errors unless user_session.errors.empty?
+    session[:valid_user_session_params] = [
+        user_session.email,
+        user_session.password
+    ] unless user_session.errors.empty?
   end
 
   def check_user_group

@@ -10,6 +10,10 @@
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item
+            =link_to student_dashboard_url, class: 'nav-link' do
+              %span Dashboard
           %li.nav-item
             =link_to library_url, class: 'nav-link' do
               %span Courses
@@ -212,3 +216,28 @@
 
 
 =render partial: 'footer_pages/contact_us_form_modal'
+
+:javascript
+
+  $(document).ready(function(){
+    let hash = window.location.hash;
+    let elements = $('a[href="' + hash + '"]');
+
+    if (elements.length > 0) {
+      elements.click();
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    } else if (hash === '#contact-us-modal') {
+      $('#contact-us-modal').modal('show');
+    }
+
+    if ($(".notice.error")[0]){
+      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
+      let tabLink = $('#' + tabId + '-tab');
+      tabLink.tab('show');
+    }
+
+  })
+
+
