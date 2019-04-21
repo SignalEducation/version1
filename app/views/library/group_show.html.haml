@@ -38,9 +38,12 @@
             %h2.h1-mega
               ="#{@group.name} Payment Plans"
             %p.p-hero.px-lg-8
-              ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
+              -if @group.exam_body.subscription_page_subheading_text
+                =@group.exam_body.subscription_page_subheading_text
+              -else
+                ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
-          .row.row-md
+          .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
                 %article.card.card-primary.card-primary-alt

@@ -3,7 +3,7 @@ class FooterPagesController < ApplicationController
   before_action :get_variables, except: [:missing_page]
 
   def privacy_policy
-    seo_title_maker('Privacy Policy', 'Privacy Policy of learnsignal.com. This Application collects some Personal Data from its Users.', nil)
+    seo_title_maker('Read Our Privacy Policy | LearnSignal', 'Read the Privacy Policy for learnsignal.com. Find out about our privacy and cookies policy here including how your data is used.', nil)
   end
 
   def acca_info
