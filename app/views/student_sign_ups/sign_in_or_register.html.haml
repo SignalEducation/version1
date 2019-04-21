@@ -7,6 +7,10 @@
             = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Registration"
           -elsif @product
             = "#{@product.mock_exam.name} Purchase Process"
+          -elsif @exam_body
+            = "#{@exam_body.name} Tuition Registration"
+          -else
+            = "Register or Login"
 
       .row.row-lg
         -if @plan

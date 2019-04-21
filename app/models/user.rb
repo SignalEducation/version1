@@ -116,6 +116,8 @@ class User < ActiveRecord::Base
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates :preferred_exam_body_id, presence: true, on: :create
   validates :user_group_id, presence: true
+  validates :communication_approval, presence: true, on: :create
+  validates :terms_and_conditions, presence: true, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :locale, inclusion: {in: LOCALES}
