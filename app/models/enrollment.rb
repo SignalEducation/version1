@@ -78,6 +78,16 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
+  def self.create_on_register_login(user, subject_course_id)
+    subject_course = SubjectCourse.where(id: subject_course_id).first
+    exam_sitting = subject_course.exam_sittings.all_active.all_in_order.first
+    if subject_course&.active && exam_sitting
+      Enrollment.create!(user_id: user.id, active: true, subject_course_id: subject_course.id,
+                         exam_sitting_id: exam_sitting.id,
+                         exam_body_id: subject_course.exam_body_id, notifications: true)
+    end
+  end
+
   # instance methods
   def destroyable?
     false # Can never be destroyed because the CSV data files will not be accurate

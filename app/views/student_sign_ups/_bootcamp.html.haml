@@ -1,265 +1,166 @@
-.landing
-  =render partial: 'layouts/external_banner'
-  #wrapper{style: 'background: #F5F5FC;'}
-    -#loading
-    %header#header
-      =render 'layouts/landing_navbar'
+%header.header
+  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
+    .container.animate.fade-in-up
+      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+        %span.navbar-toggler-bar.frst
+        %span.navbar-toggler-bar.scnd
 
+      =link_to home_url, class: 'navbar-brand logo' do
+        =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
 
-    %section#bootcamp_guarantee
-      .tmain
-        .tbase
-          .container
-            .row
-              .col-md-9
-                %h1.title1
-                  ='Welcome to the ACCA Exam Bootcamp'
-              .col-md-3
-                .logo-center
-                  =image_tag('acca_approved_white.png')
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item
+            =link_to student_dashboard_url, class: 'nav-link' do
+              %span Dashboard
+          %li.nav-item
+            =link_to library_url, class: 'nav-link' do
+              %span Courses
+          %li.nav-item
+            =link_to new_student_url, class: 'nav-link' do
+              %span Register
+          %li.nav-item
+            =link_to sign_in_url, class: 'nav-link navbar-login' do
+              %span Login
 
-          .container.l-margin-top
-            .row
-              .col-md-8
-
-                %h2.subtitle
-                  ='LearnSignal Bootcamp is your daily dose of motivation, coaching and support ensuring you pass your ACCA exams.'
-                %p.subtitle
-                  ='LearnSignal is inviting you to join Exam Bootcamp starting on Monday 11 February for the 21 days leading up to the March ACCA exams.'
-
-                %p.subtitle{style: 'font-weight: bold; margin-bottom: 4px;margin-top: 8px;'}
-                  ='What Is Exam Bootcamp?'
-                %p.subtitle
-                  ='Every day, we will send you an email with a link to that day’s Exam Bootcamp activity page. On that day’s page, you’ll find the activity for your chosen exam paper and off you go!'
-
-
-
-                %p.subtitle{style: 'margin-bottom: 4px; margin-top: 8px;'}
-                  ='Existing LearnSignal members will have access to the solutions and accompanying videos, remember,  you can become an existing member today - cancel anytime.'
-                .list.l-margin-bottom-big
-                  %ul
-                    %li
-                      ='Sign-Up For Exam Bootcamp Email Now (It’s Free)'
-                    %li
-                      ='For full access to course material & videos you can subscribe here'
-
-                %p.subtitle
-                  ='Give yourself the best chance of a PASS this December'
-
-
-              .col-md-4
-                -if @home_page.mailchimp_list_guid && !@home_page.mailchimp_list_guid.empty?
-                  #response.form
-                    =form_tag('/home_page_subscribe', method: 'post', id: 'mailchimpform', remote: 'true') do
-                      =hidden_field_tag(:mailchimp_list_guid, @home_page.mailchimp_list_guid)
-                      .row
-                        .col-sm-12
-                          =label(:first_name, 'First Name')
-                          .input-group.input-group-lg.full-width
-                            =text_field(:first_name, :address, {id: 'name', placeholder: 'Your first name', class: 'form-control', style: 'border-radius: 6px;'})
-                          %br/
-                          =label(:first_name, 'Last Name')
-                          .input-group.input-group-lg.full-width
-                            =text_field(:last_name, :address, {id: 'name', placeholder: 'Your last name', class: 'form-control', style: 'border-radius: 6px;'})
-                          %br/
-                          =label(:email, 'Email Address')
-                          .input-group.input-group-lg.full-width
-                            =email_field(:email, :address, {id: 'email', placeholder: 'Your email address', class: 'form-control', style: 'border-radius: 6px;'})
-
-                          %br/
-                          =label(:course_name, 'Course')
-                          .input-group.input-group-lg.full-width
-                            =select_tag('course', options_for_select(@group.subject_courses.all_in_order.all_active.collect{ |u| [u.name, u.name] }), {include_blank: t('views.general.select'), class: 'form-control'})
-
-
-                          .l-margin-top
-                            %button.btn.btn-red{:type => "submit"}
-                              ='Register Now'
-
-
-
-
-
-    -#%section#highlighter_person.diag-r-down
-      .tmain
-        .tbase
-          .container
-            .row
-              .col-md-10
-                %h1.title1
-                  -if @home_page && @home_page.header_heading && !@home_page.header_heading.empty?
-                    =@home_page.header_heading
-                  -else
-                    ='ACCA Exam Bootcamp'
-
-                %h2.subtitle
-                  -if @home_page && @home_page.header_paragraph && !@home_page.header_paragraph.empty?
-                    =@home_page.header_paragraph
-                  -else
-                    ='LearnSignal is inviting you to join Exam Bootcamp for the 21 days leading up to the exam.'
-
-              .col-md-2
-                .approved
-                  =image_tag('acca_approved_white.png')
-
-
-
-
-    -if @home_page && @home_page.blog_posts && @home_page.blog_posts.any?
-      %section#homeblog
-        .container
-          %h2.title1 Access our latest free advice
-          .posts.first
-            .row
-              -@home_page.blog_posts.each do |blog_post|
-                .col-md-4.col-sm-6
-                  .post
-                    .photo
-                      =link_to blog_post.url, target: '_blank' do
-                        =image_tag(blog_post.image.url)
-
-                    .cat
-                      =link_to blog_post.url, target: '_blank' do
-                        .hu
-                          Blog
-                    .title
-                      =link_to blog_post.url, target: '_blank' do
-                        .hu
-                          =blog_post.title
-                    .excerpt
-                      =link_to blog_post.url, target: '_blank' do
-                        .hu
-                          =blog_post.description
-
-
-
-          .row.btnset
-            .col-lg-6.col-lg-offset-3.col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3.col-xs-6.col-xs-offset-3
-              %a.lsbtn.v3{href: 'http://blog.learnsignal.com/', target: '_blank'} Visit our blog
-
-
-
-
-    -if @group
-      %section#explore
-        .container
-          %h2.title1
-            ="Explore our #{@group.name} courses"
-          %h2.subtitle
-            Taking your accounting skills to the next level.
-          .row
-            -@group.active_children.all_in_order.each do |course|
-              .col-md-4.col-sm-6
-                =link_to library_special_link(course) do
-                  .course
-                    .tmain
-                      .tbase
-                        =course.name
-                    .bg{style: "background: url(#{course.background_image.url});"}
-
-
-          -if current_user && current_user.trial_or_sub_user?
-            .btn-base
-              =link_to 'Get started', new_subscription_url, class: 'lsbtn'
-
-          -else
-            .btn-base
-              =link_to 'Get started', new_student_url, class: 'lsbtn'
-
-
-    -elsif @subject_course
-      %section#explore
-        .container
-          %h2.title1
-            ="Explore our #{@subject_course.name} modules"
-          %h2.subtitle
-            Taking your skills to the next level.
-          .row
-            -@subject_course.active_children.all_in_order.each do |course_module|
-              .col-md-4.col-sm-6
-                =link_to library_special_link(@subject_course) do
-                  .course
-                    .tmain
-                      .tbase
-                        =course_module.name
-                    .bg{style: "background: #35B8CF;"}
-
-
-          .btn-base
-            -if current_user && current_user.trial_or_sub_user?
-              =link_to 'Get started', new_subscription_url, class: 'lsbtn'
-            -else
-              =link_to 'Get started', new_student_url, class: 'lsbtn'
-
-
-
-    %section#reviews
-      =render partial: 'layouts/image_slider'
-
-
-    %section#plans
-      .container
-        .row.header
-          .col-lg-8.col-lg-offset-1.col-sm-10
-            %h2.title1
-              Invest in
-              %strong your
-              future.
-            %h2.subtitle2
-              ='With LearnSignal, you can gain access to our body of ACCA accounting expert tutors from as little as'
-              %strong
-                =@subscription_plans.first.currency.format_number(@subscription_plans.first.price).to_s + '.'
-              ='We also offer a selection of payment plans to suit you and your study needs.'
-          .col-sm-2
-            .approved
-              =image_tag('acca_approved_red.png')
-
-        %ul.plans.clearfix
-          -@subscription_plans.each do |plan|
-            %li.plan{class: plan_interval(plan.payment_frequency_in_months)}
-              .base
-                .topbox
-                  -if plan.payment_frequency_in_months == 3
-                    %span Our most popular payment plan
-                .box
-                  .name
-                    =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
-                  %ul.details.fa-ul
-                    %li
-                      %i.fa-li.fa.fa-check
-                      Get unlimited access
-                    %li
-                      %i.fa-li.fa.fa-check
-                      Cancel anytime
-
-                  .price
-                    =plan.currency.format_number(plan.price)
-
-                -if current_user && current_user.trial_or_sub_user?
-                  .lsbtn-base
-                    =link_to new_subscription_url do
-                      .lsbtn
-                        %i.fa.fa-check
-                        Choose this plan
+%main
+  .container-bg.home-hero-alt-bg
+    .container
+      %article.home-hero.home-hero-alt
+        .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
+          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
+            %header.home-hero-header
+              %h1.h1-hero.text-white.mb-5
+                -if @home_page.header_h1 && !@home_page.header_h1.empty?
+                  =@home_page.header_h1
                 -else
-                  .lsbtn-base
-                    =link_to new_student_url do
-                      .lsbtn
-                        Get Started For Free
+                  ="#{@home_page.group.name} Exam Bootcamp"
+
+              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+                %p.text-white.mb-5.pr-xl-4
+                  =@home_page.header_paragraph
+              -else
+                %p.text-white.mb-5.pr-xl-4
+                  The learnsignal Bootcamp is your daily dose of motivation, coaching and support ensuring you pass your ACCA exams.
+
+              -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+                %h3.text-white.pr-xl-4
+                  =@preferred_plan.currency.format_number(@preferred_plan.price)
+              -else
+                %h3.text-white.pr-xl-4
+                  Register Now (It’s Free)
+
+          -if (@home_page.registration_form || @home_page.login_form) && !current_user
+            .col-xl-6.mt-6
+              =render partial: 'registration_login_form'
+
+
+  .container
+    %article.py-5
+      %header.text-center.pb-sm-4.pb-md-5
+        %h2
+          ="Explore our #{@group.name} courses"
+        %p Studying for your exams has never been easier
+
+      .row.row-lg
+        -@group.subject_courses.all_in_order.limit(6).each do |course|
+          .col-sm
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+              .card-header.d-flex.justify-content-center.align-items-center
+                %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+              .card-body.d-flex.flex-column.justify-content-center
+                %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                  =course.category_label
+                %h5.card-title.mb-1
+                  %span.mr-1
+                    =course.name
+
+
+  .container-bg.bg-navy
+    .container
+      %article.text-gray3.text-center.py-6.py-sm-7
+        %header.pb-3
+          %h1.text-white.px-5.px-sm-6 Discover the smarter way to study
+          %p.p-hero Studying has never been easier with our expertly designed online courses.
+        .px-4.px-lg-8
+          .row.row-lg
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Access anytime, anywhere
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-card-slides{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Topic-by-topic online lectures
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-doc-marker{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Expert notes and corrected questions
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-happy-chat{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
 
 
 
-    %section#through
-      .container
-        .row
-          .col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1
-            %h2.title1 We’re here to guide you through.
-            %h2.subtitle All the team here at LearnSignal are 100% dedicated to helping you pass your ACCA exams first time around. If you have any questions or concerns about enrolling in our online learning programme then we’re here for you, and we’d love to help.
-            .lsbtn-base
-              %a{data: {remodal: {target: 'contact-us-modal'}}, class: 'lsbtn v3'}
-                ='Chat with our experts'
+  .container
+    %article.py-3.py-6.text-center.text-lg-left
+      %header.sr-only
+        %h2 Testimonial
+      .row.row-lg
+        .col-lg-5
+          =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+        .col-lg-7
+          .d-flex.h-100.align-items-center
+            %blockquote.mb-0.ml-lg-6.mr-lg-6
+              %p.text-gray2
+                "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+              %footer
+                %cite.font-weight-semi-bold.text-gray2
+                  Rebecca Nagujja, Ireland
+  .container-bg.bg-gray5
+    .container-sm
+      %article.text-center.py-6.py-lg-7
+        %header
+          %h2.h1.mb-4.px-4 We're here to guide you through.
+          %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
+        .py-4.d-flex.justify-content-center
+          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Cliodhna_CHD_5369.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
+            =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+        .py-3
+          %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
+            Chat with our experts
+
 
 =render partial: 'footer_pages/contact_us_form_modal'
--#:javascript
-  var player = new Vimeo.Player('vimeo-player', {id: '224044673'});
+
+:javascript
+
+  $(document).ready(function(){
+    let hash = window.location.hash;
+    let elements = $('a[href="' + hash + '"]');
+
+    if (elements.length > 0) {
+      elements.click();
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    } else if (hash === '#contact-us-modal') {
+      $('#contact-us-modal').modal('show');
+    }
+
+    if ($(".notice.error")[0]){
+      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
+      let tabLink = $('#' + tabId + '-tab');
+      tabLink.tab('show');
+    }
+
+  })
+
 

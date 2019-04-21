@@ -88,6 +88,7 @@ class StudentSignUpsController < ApplicationController
 
     if @user.valid? && @user.save
       handle_post_user_creation(@user)
+      handle_course_enrollment(@user, params[:subject_course_id]) if params[:subject_course_id]
 
       if flash[:plan_guid]
         UserSession.create(@user)
@@ -251,6 +252,10 @@ class StudentSignUpsController < ApplicationController
     )
     user.validate_referral(cookies.encrypted[:referral_data])
     cookies.delete(:referral_data)
+  end
+
+  def handle_course_enrollment(user, subject_course_id)
+    Enrollment.create_on_register_login(user, subject_course_id)
   end
 
   def set_session_errors(user)
