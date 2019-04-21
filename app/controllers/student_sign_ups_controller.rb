@@ -53,7 +53,6 @@ class StudentSignUpsController < ApplicationController
     else
       redirect_to root_url
     end
-
     @footer = 'white'
     @form_type = 'Landing Page Contact'
   end

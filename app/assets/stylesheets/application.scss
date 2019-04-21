@@ -4135,7 +4135,15 @@ a.card:hover .card-title .card-explanation {
     padding-bottom: 12.75rem
   }
 }
-.home-hero-header {
+.podcast-hero-header {
+  padding-top: 1.5rem;
+  padding-bottom: 1rem
+}
+@media (min-width:1320px) {
+  .podcast-hero-header {
+    padding-top: 3rem
+  }
+}.home-hero-header {
   padding-top: 1.5rem;
   padding-bottom: 1rem
 }

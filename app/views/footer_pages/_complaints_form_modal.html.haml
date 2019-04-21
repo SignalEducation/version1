@@ -12,6 +12,7 @@
 
       .modal-body
         =form_tag(complaints_intercom_url, {class: 'form py-2', role: 'form', name: 'complaints_intercom_form'}) do
+          =hidden_field_tag :type, value: 'Complaints Form'
           .row
             .col-sm-6
               .form-group

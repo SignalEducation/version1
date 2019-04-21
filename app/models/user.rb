@@ -529,9 +529,7 @@ class User < ActiveRecord::Base
   end
 
   def activate_user
-    self.active = true
-    self.account_activated_at = Proc.new{Time.now}.call
-    self.account_activation_code = nil
+    update(active: true, account_activated_at: Proc.new{Time.now}.call, account_activation_code: nil)
   end
 
   def validate_user
