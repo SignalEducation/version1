@@ -72,7 +72,8 @@ describe SubscriptionPlan do
   end
 
   describe 'class methods' do
-    it { expect(SubscriptionPlan).to respond_to(:generally_available_or_for_category_guid) }
+    it { expect(SubscriptionPlan).to respond_to(:get_relevant) }
+    it { expect(SubscriptionPlan).to respond_to(:get_related_plans) }
   end
 
   describe 'scopes' do

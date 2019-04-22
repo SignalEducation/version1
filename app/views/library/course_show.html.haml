@@ -261,7 +261,7 @@
 
               - @correction_pack_products.each do |product|
                 .col-sm-6
-                  =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
                     .card-header.bg-white.d-flex.align-items-center.justify-content-center
                       %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                     .card-body.d-flex.align-items-center.pl-1
@@ -270,7 +270,7 @@
 
               - @mock_exam_products.each do |product|
                 .col-sm-6
-                  =link_to new_order_url(product), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
                     .card-header.bg-white.d-flex.align-items-center.justify-content-center
                       %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                     .card-body.d-flex.align-items-center.pl-1
@@ -287,7 +287,6 @@
 =render partial: 'account_required_modal'
 =render partial: 'tutor_contact'
 - if current_user
-  =render partial: 'user_exam_body_details_modal'
   =render partial: 'subscription_restriction_modal'
   =render partial: 'verification_restriction_modal'
   =render partial: 'related_lesson_restriction_modal'
@@ -326,16 +325,11 @@
 
 
 -if current_user && current_user.active_subscription_for_exam_body?(@group.exam_body_id)
-
   -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >= 3
     :javascript
       $(document).ready(function() {
-        $('#enrollment-modal').modal('show');
-      });
-
-  -if @exam_body_user_details && !@exam_body_user_details.student_number || !current_user.date_of_birth
-    :javascript
-      $(document).ready(function() {
-        $('#exam-body-details-required').modal('show');
+        setTimeout(function() {
+          $('#enrollment-modal').modal('show');
+        }, 900);
       });
 

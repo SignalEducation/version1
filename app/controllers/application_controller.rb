@@ -279,6 +279,21 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
+  # Enrollment Navigation Links
+  def course_enrollment_special_link(course_id)
+    subject_course = SubjectCourse.where(id: course_id).first
+    if subject_course && subject_course.active
+      library_course_url(
+          subject_course.parent.name_url,
+          subject_course.name_url,
+          anchor: :bootcamp
+      )
+    else
+      student_dashboard_url
+    end
+  end
+  helper_method :course_enrollment_special_link
+
   # Library Navigation Links
   def navigation_special_link(the_thing)
     the_thing = the_thing

@@ -10,6 +10,10 @@
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item
+            =link_to student_dashboard_url, class: 'nav-link' do
+              %span Dashboard
           %li.nav-item
             =link_to library_url, class: 'nav-link' do
               %span Courses
@@ -21,46 +25,66 @@
               %span Login
 
 %main
-  .container.home-hero-container
-    %article.home-hero
-      .row.no-gutters
-        .col-xl-4
-          %header.home-hero-header.pb-2
-            -if @home_page.header_h1
-              %h1.h1-hero
-                =@home_page.header_h1
-            -else
-              <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
-            -if @home_page.header_paragraph
-              %p.p-hero
-                =@home_page.header_paragraph
-            -else
-              %p.p-hero Designed by experts and delivered online so that you can study on a schedule that suits your needs.
+  .container-bg.home-hero-alt-bg
+    .container
+      %article.home-hero.home-hero-alt
+        .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
+          .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
+            %header.home-hero-header
+              -if @home_page.header_h1 && !@home_page.header_h1.empty?
+                %h1.h1-hero.text-white.mb-5
+                  =@home_page.header_h1
+              -else
+                <h1 class="h1-hero text-white">the smarter<br>way to study<span class="text-mint">.</span></h1>
+              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+                %p.text-white.mb-5.pr-xl-4
+                  =@home_page.header_paragraph
+              -else
+                %p.text-white.mb-5.pr-xl-4
+                  Designed by experts and delivered online so that you can study on a schedule that suits your needs.
 
-            -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
-              %h4
-                =@preferred_plan.currency.format_number(@preferred_plan.price)
-            -else
-              %h4
-                ='Designed by experts and delivered online so that you can study on a schedule that suits your needs.'
+              -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+                %h3.text-white.pr-xl-4
+                  =@preferred_plan.currency.format_number(@preferred_plan.price)
+              -else
+                %h3.text-white.pr-xl-4
+                  No credit card required. Set-up takes one minute.
 
-
-        .col-xl-8
-          %aside.home-hero-aside.py-2.py-sm-0.ml-5.mr-5
-            -if (@home_page.registration_form || @home_page.login_form) && !current_user
+          -if (@home_page.registration_form || @home_page.login_form) && !current_user
+            .col-xl-6.mt-6
               =render partial: 'registration_login_form'
-            -else
-              .home-hero-img-wrap
-                .circle-top-wrap
-                  %svg{:fill => "none", :viewbox => "0 0 237 237", :xmlns => "http://www.w3.org/2000/svg"}
-                    %path.turquoise-oval{:d => "M118.5 237C183.946 237 237 183.946 237 118.5C237 53.0543 183.946 0 118.5 0C53.0543 0 0 53.0543 0 118.5C0 183.946 53.0543 237 118.5 237Z", :fill => "#30AABC", :opacity => "0.1"}
-                =image_tag('laptop-with-lms-2.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
-                .circle-bottom-wrap
-                  %svg{:fill => "none", :viewbox => "0 0 312 312", :xmlns => "http://www.w3.org/2000/svg"}
-                    %path.yellow-oval{:d => "M156 312C242.156 312 312 242.156 312 156C312 69.8436 242.156 1.52588e-05 156 1.52588e-05C69.8436 1.52588e-05 0 69.8436 0 156C0 242.156 69.8436 312 156 312Z", :fill => "#F0CA28", :opacity => "0.1"}
+          -elsif @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+            .col-lg-5.offset-lg-1.offset-xl-3.col-xl-4
+              .h-100.d-flex.flex-column.justify-content-center
+                %article.card.card-primary.card-primary-alt.card-with-banner.mb-0
+                  -if @preferred_plan.most_popular
+                    .card-banner.bg-mint
+                      %small.text-white
+                        Most popular payment plan
 
-
-
+                  .card-body.text-center.py-4.py-sm-5.border-gray3
+                    %h2.card-title
+                      =t("views.general.payment_frequency_in_months.a#{@preferred_plan.payment_frequency_in_months}")
+                    %ul.list-centered
+                      -if @preferred_plan.bullet_points_list && !@preferred_plan.bullet_points_list.empty?
+                        - @preferred_plan.bullet_points_list.split(/, ?/).each do |bullet|
+                          %li=bullet
+                      -else
+                        %li="Access all #{@group.name} courses"
+                        %li="Topic-by-topic lectures"
+                        %li="24/7 tutor support"
+                      %li{style: 'font-style: italic;'}
+                        Cancel anytime
+                    %p.h2.mb-0
+                      =@preferred_plan.currency.format_number(@preferred_plan.price)
+                    -if @preferred_plan.monthly_percentage_off
+                      %p.h5.text-gray2
+                        Save over
+                        =@preferred_plan.monthly_percentage_off
+                        ='%'
+                    .mt-auto
+                      =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm' do
+                        Choose this plan
 
 
   .container
@@ -117,47 +141,48 @@
   -if @home_page.pricing_section && @subscription_plans.any?
     .container-bg.bg-gray5
       .container#plans
-        %section.pb-md-6.pb-5.pt-md-6.pt-5
-          .container-md.pb-3.text-center
+        %article.py-6
+          %header.text-center.pb-5.pb-md-6
             %h2.h1-mega
               ="#{@group.name} Payment Plans"
             %p.p-hero.px-lg-8
-              ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
+              -if @group.exam_body.subscription_page_subheading_text
+                =@group.exam_body.subscription_page_subheading_text
+              -else
+                ="Get one step closer to passing your #{@group.name}. Choose a payment plan that suits your needs and discover learning that works around your schedule."
 
           .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
-                %article.card.card-primary.card-pink
-                  .card-body.text-center
-                    %h2.h1.card-title
+                %article.card.card-primary.card-primary-alt
+                  -if plan.most_popular
+                    .card-banner.bg-mint
+                      %small.text-white
+                        Most popular payment plan
+                  .card-body.text-center.py-4.py-sm-5
+                    %h2.card-title
                       =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
 
-                    -if plan.bullet_points_list && !plan.bullet_points_list.empty?
-                      - plan.bullet_points_list.split(/, ?/).each do |bullet|
-                        %p=bullet
+                    %ul.list-centered
+                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                          %li=bullet
+                      -else
+                        %li="Access all #{@group.name} courses"
+                        %li="Topic-by-topic lectures"
+                        %li="24/7 tutor support"
 
-                    -else
-                      %p="Access all #{@group.name} courses"
-                      %p="Topic-by-topic lectures"
-                      %p="24/7 tutor support"
+                      %li{style: 'font-style: italic;'}
+                        Cancel anytime
 
-                    %p{style: 'font-style: italic;'}
-                      Cancel anytime
-
-                    %p.h3
+                    %p.h2.mb-0
                       =plan.currency.format_number(plan.price)
 
-
                     -if plan.monthly_percentage_off
-                      %p.h5
+                      %p.h5.text-gray2
                         Save over
                         =plan.monthly_percentage_off
                         ='%'
-
-                    -if plan.most_popular
-                      %p.h5.text-primary
-                        Our most popular payment plan
-
                     .mt-auto
                       =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
                         Choose this plan
@@ -194,3 +219,28 @@
 
 
 =render partial: 'footer_pages/contact_us_form_modal'
+
+:javascript
+
+  $(document).ready(function(){
+    let hash = window.location.hash;
+    let elements = $('a[href="' + hash + '"]');
+
+    if (elements.length > 0) {
+      elements.click();
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    } else if (hash === '#contact-us-modal') {
+      $('#contact-us-modal').modal('show');
+    }
+
+    if ($(".notice.error")[0]){
+      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
+      let tabLink = $('#' + tabId + '-tab');
+      tabLink.tab('show');
+    }
+
+  })
+
+

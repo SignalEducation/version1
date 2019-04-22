@@ -99,8 +99,7 @@ class LibraryController < ApplicationController
   def get_exam_body_user_details
     if @exam_body.has_sittings
       # exam_body_user_details modal form variable and any session errors
-      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(
-          current_user.id).last
+      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id).last
       unless @exam_body_user_details
         @exam_body_user_details = current_user.exam_body_user_details.build(
             exam_body_id: @course.exam_body_id
@@ -158,7 +157,8 @@ class LibraryController < ApplicationController
     end
 
     @new_enrollment = Enrollment.new(subject_course_user_log_id: scul.try(:id),
-                                     subject_course_id: course.id, exam_body_id: course.exam_body_id)
+                                     subject_course_id: course.id, notifications: false,
+                                     exam_body_id: course.exam_body_id)
   end
 
 

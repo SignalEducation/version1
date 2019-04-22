@@ -23,10 +23,6 @@
               =link_to library_url, class: 'nav-link' do
                 %span Courses
 
-            -#%li.nav-item
-              %a.nav-link{:href => "#"}
-                %span Upgrade
-
             -if current_user.non_student_user?
               %li.nav-item
                 =link_to management_consoles_url, class: 'nav-link' do

@@ -699,6 +699,9 @@ en:
         preferred_payment_frequency: Preferred Payment Interval
         subscription_page_subheading_text: Subscription Payment Subheading
         subscription_page_subheading_text_placeholder: Subscription Payment Subheading
+        constructed_response_intro_heading: Constructed Response Start Screen Heading
+        constructed_response_intro_heading_placeholder: Constructed Response Start Screen Heading
+        constructed_response_intro_text: Constructed Response Start Screen Instructions
 
       index:
         h1: Exam Bodies
@@ -1497,7 +1500,7 @@ en:
         confirm_subscription_pause: PAUSE MEMBERSHIP
         confirm_subscription_cancellation: Cancel My Subscription
         confirm_subscription_reactivate: Reactivate My Subscription
-        keep_subscription: KEEP MEMBERSHIP
+        keep_subscription: Keep Subscription
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
@@ -1681,6 +1684,7 @@ en:
         student_user: Student User
         trial_or_sub_required: Trial or Sub Required
         blocked_user: Blocked User
+        exercise_corrections_access: Exercise Corrections
 
       edit:
         h1: Edit User Group

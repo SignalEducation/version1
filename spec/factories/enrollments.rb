@@ -24,7 +24,7 @@ FactoryBot.define do
     user_id { 1 }
     subject_course_id { 1 }
     subject_course_user_log_id { 11 }
-    exam_date { '2017-01-17' }
+    exam_date { '2020-01-17' }
     exam_body_id { 1 }
     expired { false }
     paused { false }

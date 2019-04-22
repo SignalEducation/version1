@@ -108,6 +108,7 @@ class UsersController < ApplicationController
 
     if @user.save
       @user.create_stripe_customer
+      @user.activate_user
 
       MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.users.create.flash.success')
@@ -168,7 +169,7 @@ class UsersController < ApplicationController
   end
 
   def user_enrollments_details
-    @enrollments = @user.enrollments.all_in_admin_order
+    @enrollments = @user.enrollments.all_reverse_order
   end
 
   def user_purchases_details

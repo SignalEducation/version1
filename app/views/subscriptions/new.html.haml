@@ -22,7 +22,7 @@
             =f.hidden_field :stripe_token
             =f.hidden_field :use_paypal, value: false
 
-            .bg-asphalt
+            .bg-gray5
               .container
                 -if flash[:success] || flash[:error] || flash[:warning]
                   .row.subscription-flash
@@ -157,7 +157,7 @@
         selectPaymentMethod($(this).val())
       }
     });
-    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+    //$('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
 
 
     $('#all-plans').collapse({
@@ -191,7 +191,7 @@
       base: {
         color: '#32325d',
         lineHeight: '18px',
-        fontFamily: '"Rubik", "Helvetica Neue", Helvetica, sans-serif',
+        fontFamily: '"OakesGrotesk", "Helvetica Neue", Helvetica, sans-serif',
         fontSmoothing: 'antialiased',
         fontSize: '16px',
         '::placeholder': {

@@ -41,7 +41,28 @@
                   =f.check_box :has_sittings
                   =t('views.exam_bodies.form.has_sittings')
 
+        .row.mt-4
+          .col-sm-12
+            =f.label :constructed_response_intro_heading, t('views.exam_bodies.form.constructed_response_intro_heading')
+            .input-group.input-group-lg
+              =f.text_field :constructed_response_intro_heading, placeholder: t('views.exam_bodies.form.constructed_response_intro_heading_placeholder'), class: 'form-control'
+
+        .row.pt-5
+          .col-sm-12
+            =f.label :constructed_response_intro_text, t('views.exam_bodies.form.constructed_response_intro_text')
+            .input-group.input-group-lg
+              =f.text_area :constructed_response_intro_text, as: :summernote, placeholder: t('views.exam_bodies.form.constructed_response_intro_text'), rows: 5, class: 'form-control', id: 'editor'
+
     .row.pt-5
       .col-sm-12
         =f.submit t('views.general.save'), class: 'btn btn-primary'
         =link_to t('views.general.cancel'), exam_bodies_path, class: 'btn btn-secondary'
+
+
+:javascript
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+

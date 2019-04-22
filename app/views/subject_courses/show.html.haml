@@ -14,12 +14,12 @@
     -else
       .row
         .col-sm-12
-          =link_to 'Trial Content', subject_course_trial_content_url(@subject_course), class: 'btn btn-secondary-reverse'
+          =link_to 'Trial Content', subject_course_trial_content_url(@subject_course), class: 'btn btn-warning'
           =link_to t('views.subject_course_resources.show.h2'), course_resources_url(@subject_course), class: 'btn btn-secondary'
           =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-primary'
-          =link_to 'Reorder Course Sections', reorder_course_sections_url(@subject_course.id), class: 'btn btn-orange'
-          =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-secondary-reverse'
-          =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-secondary'
+          =link_to 'Reorder Course Sections', reorder_course_sections_url(@subject_course.id), class: 'btn btn-warning'
+          =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-secondary'
+          =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-danger'
       .row
         .col-sm-12
           Quizzes

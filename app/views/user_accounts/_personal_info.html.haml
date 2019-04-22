@@ -21,7 +21,7 @@
           =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth')
           .form-row.align-items-center.justify-content-xl-between
             %span.custom-date-select.input-group.input-group-lg
-              =f.date_select :date_of_birth, {order: [:month, :day, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+              =f.date_select :date_of_birth, {order: [:day, :month, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
                start_year: Date.today.year - 15, end_year: Date.today.year - 100}, class: 'form-control custom-select'
 
 

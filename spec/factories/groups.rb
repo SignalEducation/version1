@@ -36,6 +36,6 @@ FactoryBot.define do
     sorting_order { 1 }
     short_description 'A short description'
     seo_description 'The SEO description'
-    seo_title { Faker::Bank.unique.name }
+    sequence(:seo_title)           { |n| "Group #{n}" }
   end
 end

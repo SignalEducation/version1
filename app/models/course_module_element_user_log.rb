@@ -35,14 +35,14 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :user
+  belongs_to :user, optional: true
   belongs_to :subject_course, optional: true
   belongs_to :subject_course_user_log, optional: true
   belongs_to :course_section, optional: true
   belongs_to :course_section_user_log, optional: true
   belongs_to :course_module, optional: true
   belongs_to :student_exam_track, optional: true
-  belongs_to :course_module_element
+  belongs_to :course_module_element, optional: true
   has_many   :quiz_attempts, inverse_of: :course_module_element_user_log
   has_one   :constructed_response_attempt
   accepts_nested_attributes_for :quiz_attempts, :constructed_response_attempt

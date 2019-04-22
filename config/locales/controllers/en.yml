@@ -311,7 +311,7 @@ en:
       create:
         flash:
           success: Your Purchase was successfull, a receipt will be emailed to you shortly.
-          mock_exam_success: "Your Purchase was successful, the Mock Exam will be emailed to you. Please submit the completed Mock Exam by email to mockexams@learnsignal.com"
+          mock_exam_success: "Your Purchase was successful, please follow the instructions below"
       update:
         flash:
           success: Order details have been updated successfully

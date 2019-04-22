@@ -71,8 +71,6 @@ describe Order do
     end
   end
 
-  it { should validate_presence_of(:terms_and_conditions) }
-
   it { should_not validate_presence_of(:coupon_code) }
 
   it { should_not validate_presence_of(:subject_course_id) }

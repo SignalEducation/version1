@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_11_101757) do
+ActiveRecord::Schema.define(version: 2019_04_19_162831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -426,6 +426,8 @@ ActiveRecord::Schema.define(version: 2019_04_11_101757) do
     t.boolean "has_sittings", default: false, null: false
     t.integer "preferred_payment_frequency"
     t.string "subscription_page_subheading_text"
+    t.string "constructed_response_intro_heading"
+    t.text "constructed_response_intro_text"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -542,8 +544,8 @@ ActiveRecord::Schema.define(version: 2019_04_11_101757) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"

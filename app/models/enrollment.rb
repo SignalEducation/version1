@@ -24,11 +24,11 @@ class Enrollment < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :exam_body
-  belongs_to :exam_sitting
-  belongs_to :user
-  belongs_to :subject_course
-  belongs_to :subject_course_user_log
+  belongs_to :exam_body, optional: true
+  belongs_to :exam_sitting, optional: true
+  belongs_to :user, optional: true
+  belongs_to :subject_course, optional: true
+  belongs_to :subject_course_user_log, optional: true
 
   # validation
   validates :user_id, presence: true
@@ -75,6 +75,16 @@ class Enrollment < ActiveRecord::Base
       Enrollment.joins(:user).where('users.email ILIKE ? ', "%#{search}%")
     else
       Enrollment.paginate(per_page: 50, page: params[:page])
+    end
+  end
+
+  def self.create_on_register_login(user, subject_course_id)
+    subject_course = SubjectCourse.where(id: subject_course_id).first
+    exam_sitting = subject_course.exam_sittings.all_active.all_in_order.first
+    if subject_course&.active && exam_sitting
+      Enrollment.create!(user_id: user.id, active: true, subject_course_id: subject_course.id,
+                         exam_sitting_id: exam_sitting.id,
+                         exam_body_id: subject_course.exam_body_id, notifications: true)
     end
   end
 

@@ -42,12 +42,11 @@ describe SubjectCourse do
   describe 'relationships' do
     it { should belong_to(:exam_body) }
     it { should belong_to(:group) }
+
     it { should have_many(:course_tutor_details) }
-    it { should have_many(:quiz_questions) }
     it { should have_many(:home_pages) }
     it { should have_many(:subject_course_resources) }
     it { should have_many(:orders) }
-    it { should have_many(:white_papers) }
     it { should have_many(:mock_exams) }
     it { should have_many(:exam_sittings) }
     it { should have_many(:enrollments) }
@@ -72,8 +71,6 @@ describe SubjectCourse do
     it { should validate_uniqueness_of(:name_url) }
 
     it { should validate_presence_of(:description) }
-
-    it { should_not validate_presence_of(:short_description) }
 
     it { should validate_presence_of(:quiz_pass_rate) }
 

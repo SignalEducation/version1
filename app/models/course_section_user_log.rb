@@ -25,10 +25,10 @@ class CourseSectionUserLog < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :user
-  belongs_to :subject_course
-  belongs_to :subject_course_user_log
-  belongs_to :course_section
+  belongs_to :user, optional: true
+  belongs_to :subject_course, optional: true
+  belongs_to :subject_course_user_log, optional: true
+  belongs_to :course_section, optional: true
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
 
@@ -36,7 +36,7 @@ class CourseSectionUserLog < ActiveRecord::Base
   validates :user_id, presence: true
   validates :course_section_id, presence: true
   validates :subject_course_user_log_id, presence: true
-  validates :subject_course, presence: true
+  validates :subject_course_id, presence: true
 
   # callbacks
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id

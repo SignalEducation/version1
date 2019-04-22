@@ -14,25 +14,35 @@
           .col-lg-2-7
             %nav.mb-4.account-nav
               %ul#dashboardTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
-                %li.nav-item
-                  %a#enrollments-tab.nav-link.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
-                    Enrolments
-                %li.nav-item
-                  %a#exercises-tab.nav-link{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
-                    Exercises
-                %li.nav-item
-                  %a#activity-tab.nav-link{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
-                    Other Activity
+                -if @enrollments.any?
+                  %li.nav-item
+                    %a#enrollments-tab.nav-link.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                      Enrolments
+                  %li.nav-item
+                    %a#activity-tab.nav-link{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                      Activity
+                -else
+                  %li.nav-item
+                    %a#activity-tab.nav-link.active{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                      Activity
+                -if current_user.exercises.any?
+                  %li.nav-item
+                    %a#exercises-tab.nav-link{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                      Exercises
 
           .col-lg-5-7
             #accountTabsContent.tab-content
-              #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
-                =render partial: 'enrollments'
+              -if @enrollments.any?
+                #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+                  =render partial: 'enrollments'
 
-              #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
-                =render partial: 'exercises'
+                #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                  =render partial: 'activity'
+              -else
+                #activity.tab-pane.tab-account.active.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                  =render partial: 'activity'
 
-              #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
-                =render partial: 'activity'
-
+              -if current_user.exercises.any?
+                #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
+                  =render partial: 'exercises'
 
