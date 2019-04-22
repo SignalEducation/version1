@@ -14,7 +14,7 @@
                 =f.label :exam_date, t('views.enrollments.form.edit_exam_date')
                 .form-row.align-items-center.justify-content-xl-between
                   %span.custom-date-select.input-group.input-group-lg
-                    =f.date_select :exam_date, {order: [:month, :day, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+                    =f.date_select :exam_date, {order: [:day, :month, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
                      start_year: Date.today.year - 1, end_year: Date.today.year + 2}, class: 'form-control custom-select'
 
             -else

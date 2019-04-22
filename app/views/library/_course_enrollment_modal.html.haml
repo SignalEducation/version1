@@ -1,102 +1,137 @@
 .modal.fade{id: 'enrollment-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'enrollmentModal', 'aria-hidden': 'true'}
-  .modal-dialog{role: 'document'}
-    .modal-content
-      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
-        %i.material-icons.ml-1{'aria-hidden': 'true'}
-          close
-      .modal-header
-        %h3{id: 'enrollmentModalForm'}
-          ="Enrol in #{@course.try(:name)}"
+  #enrollment_user_details_modal
+    .modal-dialog.modal-lg{role: 'document'}
+      .modal-content
+        %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+          %i.material-icons.ml-1{'aria-hidden': 'true'}
+            close
+        .modal-header
+          %h3{id: 'enrollmentModalForm'}
+            ="Enrol in #{@course.try(:name)}"
 
 
-      .modal-body
-        #enrollment_form
-          =form_for(@new_enrollment, html: {class: 'form py-2', role: 'form', name: 'enrollment_modal_form'}) do |f|
-            =f.hidden_field :subject_course_id, value: @course.id
-            =f.hidden_field :exam_body_id, value: @course.exam_body_id
-            =f.hidden_field :notifications, value: 0
-            =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id), id: 'scul_id'
+        .modal-body
+          %fieldset.modal-forms
+            .form-group.form-group-expandable
+              .custom-control.custom-radio
+                %input#enrollment-form.custom-control-input.style-radio{:name => "enrol-user-details-options", :type => "radio", :value => 'enroll', :checked => true}
+                %label.custom-control-label{:for => "enrollment-form"}
+                  %span.custom-label-info
+                    %span.h5.m-0
+                      %span Step 1 - Exam Sitting Details
+                  %span.custom-check
 
-            .row
-              .col-sm-12
-                .form-group
-                  -if @course.computer_based && @computer_exam_sitting
-                    =f.hidden_field :exam_sitting_id, value: @computer_exam_sitting.id
-                    #custom_exam_date
-                      =f.label :exam_date, t('views.enrollments.form.select_exam_date')
-                      .input-group.input-group-lg
-                        =f.text_field :exam_date, placeholder: 'Select Date ...', autocomplete: 'off', class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
-                  -else
-                    =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id')
-                    .input-group.input-group-lg
-                      =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'exam_sitting_select'}
+              .form-details#enrollment_form
+                =form_for(@new_enrollment, html: {class: 'form py-2 enrollment_modal_form', role: 'form', name: 'enrollment_modal_form'}, remote: true) do |f|
+                  =f.hidden_field :subject_course_id, value: @course.id
+                  =f.hidden_field :exam_body_id, value: @course.exam_body_id
+                  =f.hidden_field :notifications, value: false, id: 'hidden_notifications'
+                  =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id), id: 'scul_id'
+
+                  .row
+                    .col-sm-6
+                      .form-group
+                        -if @course.computer_based && @computer_exam_sitting
+
+                          #custom_exam_date
+                            =f.hidden_field :exam_sitting_id, value: @computer_exam_sitting.id
+                            .form-group
+                              =f.label :exam_date, t('views.enrollments.form.select_exam_date')
+                              .form-row.align-items-center.justify-content-between
+                                %span.custom-date-select.input-group.input-group-lg
+                                  =f.date_select :exam_date, {order: [:day, :month, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+                                   start_year: Date.today.year, end_year: Date.today.year + 2}, class: 'form-control custom-select'
+
+                        -else
+                          =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id')
+                          .input-group.input-group-lg
+                            =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'exam_sitting_select'}
+
+                    .col-sm-6
+                      -# TODO - Make this work with JS to set hidden field
+                      %fieldset.pt-md-4
+                        %legend.sr-only Notification Checkbox
+                        .custom-control.custom-checkbox.mb-4.mt-2
+                          %input{type: "checkbox", class: "custom-control-input", id: "notifications"}
+                          %label{class: "custom-control-label", for: "notifications"}
+                            ='BootCamp Notifications'
+
+                        -if @subject_course_user_log
+                          %legend.sr-only Reset Progress Checkbox
+                          .custom-control.custom-checkbox.mb-4
+                            %input{type: "checkbox", class: "custom-control-input", id: "use_new_scul"}
+                            %label{class: "custom-control-label", for: "use_new_scul"}
+                              ='Reset all course progress'
+
+                  .py-1
+                    =submit_tag 'Next Step', class: 'btn btn-primary', id: 'enroll_submit_button'
+                    %p#enrollment_message.text-warning.hidden Visit your account page to edit this enrollment
+
+            .form-group.form-group-expandable
+              .custom-control.custom-radio
+                %input#user-details-form.custom-control-input.style-radio{:name => "enrol-user-details-options", :type => "radio", :value => 'user-details'}
+                %label.custom-control-label{:for => "user-details-form"}
+                  %span.custom-label-info
+                    %span.h5.m-0
+                      %span Step 2 - Exam Body Details
+                  %span.custom-check
+
+              .form-details#exam_body_user_details_form
+                =form_for(current_user, url: update_exam_body_user_details_url, html: {class: 'form py-2 user_modal_form', role: 'form', name: 'user_modal_form'}) do |f|
+                  -if current_user.date_of_birth
+                    %p Please confirm your Student Number & D.O.B
+
+                  .row
+                    .col-sm-6
+                      =f.fields_for :exam_body_user_details, @exam_body_user_details do |detail|
+                        =detail.hidden_field :exam_body_id
+                        .form-group
+                          =detail.label :student_number, "#{detail.object.exam_body.name} Student Number"
+                          .input-group.input-group-lg
+                            =detail.text_field :student_number, class: 'form-control'
+                    .col-sm-6
+                      .form-group
+                        =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth')
+                        .form-row.align-items-center.justify-content-between
+                          %span.custom-date-select.input-group.input-group-lg
+                            =f.date_select :date_of_birth, {order: [:day, :month, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+                             start_year: Date.today.year - 15, end_year: Date.today.year - 100}, class: 'form-control custom-select'
 
 
-                -# TODO - Make this work with JS to set hidden field
-                %fieldset
-                  %legend.sr-only Notification Checkbox
-                  .custom-control.custom-checkbox.mb-3
-                    %input{type: "checkbox", class: "custom-control-input", id: "notifications"}
-                    %label{class: "custom-control-label", for: "notifications"}
-                      ='BootCamp Notifications'
+                  .pt-1
+                    #submit
+                      =submit_tag 'Complete Enrolment', class: 'btn btn-primary'
 
-                  -if @subject_course_user_log
-                    %legend.sr-only Reset Progress Checkbox
-                    .custom-control.custom-checkbox.mb-3
-                      %input{type: "checkbox", class: "custom-control-input", id: "use_new_scul"}
-                      %label{class: "custom-control-label", for: "use_new_scul"}
-                        ='Reset all course progress'
-
-
-            #actions_btns.pt-1
-              #enroll_now
-                =submit_tag 'Enrol Now', class: 'btn btn-primary', id: 'enroll_submit_button'
-
-
--if @course.computer_based && @computer_exam_sitting
-
-  :javascript
-    $( document ).ready(function() {
-      $('#enroll_submit_button').attr('disabled', true);
-    });
-    $('#exam_date_timepicker').focusout(function(){
-      if ($('#exam_date_timepicker').val().length !=0) {
-        $('#enroll_submit_button').attr('disabled', false);
-      } else if ($('#exam_date_timepicker').val().length == 0) {
-        $('#enroll_submit_button').attr('disabled', true);
-      }
-    });
-
--else
-  :javascript
-    $( document ).ready(function() {
-      $('#enroll_submit_button').attr('disabled', true);
-    });
-    $('#exam_sitting_select').change(function () {
-      if ($('#exam_sitting_select option:selected').text() == 'Select...') {
-        $('#enroll_submit_button').attr('disabled', true);
-      } else {
-        $('#enroll_submit_button').attr('disabled', false);
-      }
-    });
 
 
 :javascript
 
-  // JS to submit form when modal confirmation btn is clicked
-  $(document).on('confirmation', '.remodal', function () {
-    $("#enrollment_form").hide();
-    document.forms['enrollment_modal_form'].submit();
+  $( document ).ready(function() {
+    $('#enroll_submit_button').attr('disabled', true);
   });
 
-  // Date Picker
-  $(function () {
-    $('#exam_date_timepicker').datetimepicker({
-      useCurrent: false,
-      minDate: moment(), // Current day
-      maxDate: moment().add(365, 'days'), // 365 days from the current day
-    });
+  $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="enrol-user-details-options"]', function() {
+    $(this).closest('.modal-forms').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.form-details').slideUp();
+    if ($(this).is(':checked')) {
+      $(this).closest('.custom-control').siblings('.form-details').slideDown();
+    }
   });
+  $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.form-details').show();
+
+  $(document).on('submit','form.enrollment_modal_form',function(){
+    $(this).closest('.form-group-expandable').siblings('.form-group-expandable').find('.custom-control-input[type="radio"]').click();
+    $('#enroll_submit_button').hide();
+    $('#enrollment_message').fadeIn(900);
+  });
+
+  $('input[type="checkbox"]').on('change', function() {
+    if($('#notifications').prop('checked') == true) {
+      $("#hidden_notifications").val('true');
+    } else if($('#notifications').prop('checked') == false) {
+      $("#hidden_notifications").val('false');
+    }
+  });
+
 
 -if @subject_course_user_log
 
@@ -110,3 +145,28 @@
         $("#scul_id").val(scul_id);
       }
     });
+
+
+-if @course.computer_based && @computer_exam_sitting
+
+  :javascript
+    $('#custom_exam_date .custom-date-select').change(function () {
+      if ($('#custom_exam_date .custom-date-select select:nth-child(1) option:selected').text() != 'Day' &&
+       $('#custom_exam_date .custom-date-select select:nth-child(2) option:selected').text() != 'Month' &&
+       $('#custom_exam_date .custom-date-select select:nth-child(3) option:selected').text() != 'Year') {
+        $('#enroll_submit_button').attr('disabled', false);
+      } else {
+        $('#enroll_submit_button').attr('disabled', true);
+      }
+    });
+
+-else
+  :javascript
+    $('#exam_sitting_select').change(function () {
+      if ($('#exam_sitting_select option:selected').text() == 'Select...') {
+        $('#enroll_submit_button').attr('disabled', true);
+      } else {
+        $('#enroll_submit_button').attr('disabled', false);
+      }
+    });
+

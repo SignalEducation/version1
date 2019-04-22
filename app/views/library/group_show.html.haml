@@ -21,7 +21,7 @@
                   .card-body.d-flex.flex-column.justify-content-center
                     %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
                       -if course.preview && course.release_date
-                        Coming Soon
+                        ="Coming Soon - #{course.release_date}"
                       -else
                         =course.category_label
                     %h5.card-title.mb-1

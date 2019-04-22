@@ -169,7 +169,7 @@ class UsersController < ApplicationController
   end
 
   def user_enrollments_details
-    @enrollments = @user.enrollments.all_in_admin_order
+    @enrollments = @user.enrollments.all_reverse_order
   end
 
   def user_purchases_details

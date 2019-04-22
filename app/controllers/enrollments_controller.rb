@@ -33,8 +33,8 @@ class EnrollmentsController < ApplicationController
 
 
     if @enrollment.save
-      redirect_to library_special_link(@enrollment.subject_course)
-      flash[:success] = t('controllers.enrollments.create.flash.success')
+      #redirect_to library_special_link(@enrollment.subject_course)
+      flash[:success] = "Thank you. You have successfully enrolled in #{@enrollment&.subject_course&.name}"
     else
       flash[:error] = t('controllers.enrollments.create.flash.error')
       redirect_to library_special_link(@enrollment.subject_course)
@@ -65,6 +65,14 @@ class EnrollmentsController < ApplicationController
 
   end
 
+  def update_exam_body_user_details
+    if @user && @user.update_attributes(exam_body_user_allowed_params)
+      redirect_to request.referrer
+    else
+      session[:user_exam_body_errors] = @user.errors unless @user.errors.empty?
+      redirect_to request.referrer
+    end
+  end
 
   protected
 
@@ -76,6 +84,13 @@ class EnrollmentsController < ApplicationController
   def allowed_params
     params.require(:enrollment).permit(:subject_course_id, :exam_date, :subject_course_user_log_id,
                                        :exam_sitting_id, :percentage_complete, :exam_body_id, :notifications)
+  end
+
+  def exam_body_user_allowed_params
+    params.require(:user).permit(:date_of_birth, exam_body_user_details_attributes: [
+        :id,
+        :exam_body_id,
+        :student_number])
   end
 
   def get_variables
