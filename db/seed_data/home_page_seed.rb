@@ -8,4 +8,4 @@ unless Rails.env.test?
     HomePage.create(name: 'CFA', public_url: '/cfa', seo_title: 'Learn Signal', seo_description: 'Learn Signal').tap do |cfa|
       cfa.save
     end
-  end
+  end 
