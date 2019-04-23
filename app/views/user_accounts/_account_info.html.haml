@@ -44,40 +44,41 @@
 
               .overflow-x.mb-5
                 %h4.text-gray2 Invoice History
-                %table.table
-                  %thead
-                    %tr
-                      %th Reference N.
-                      %th Date Created
-                      %th Amount Charged
-                      %th Status
-                      %th PDF
-                  %tbody
-                    -subscription.invoices.each do |invoice|
+                .table-responsive
+                  %table.table
+                    %thead
                       %tr
-                        %td=invoice.id
-                        %td=humanize_datetime(invoice.issued_at)
-                        %td=number_in_local_currency(invoice.total, invoice.currency_id)
-                        %td
-                          %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
-                            =invoice.status
-                        %td
-                          =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
-                            %button.btn.btn-text
-                              View
+                        %th Reference N.
+                        %th Date Created
+                        %th Amount Charged
+                        %th Status
+                        %th PDF
+                    %tbody
+                      -subscription.invoices.each do |invoice|
+                        %tr
+                          %td=invoice.id
+                          %td=humanize_datetime(invoice.issued_at)
+                          %td=number_in_local_currency(invoice.total, invoice.currency_id)
+                          %td
+                            %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
+                              =invoice.status
+                          %td
+                            =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+                              .btn.btn-link.btn-xs
+                                View
 
 
               %div.mr-3.mb-4
                 =link_to 'View All Invoices', user_invoices_path(current_user)
               %div
                 -if subscription.can_change_plan?
-                  =link_to 'Change Subscription Plan', new_subscriptions_plan_change_path(id: subscription.id), class: 'btn btn-primary btn-sm', style: 'vertical-align: top;'
+                  =link_to 'Change Subscription Plan', new_subscriptions_plan_change_path(id: subscription.id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
                 -if subscription.active?
-                  %button.btn.btn-warning.btn-sm.mb-2{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => subscription.id}
+                  %button.btn.btn-secondary.btn-xs.mb-2{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => subscription.id}
                     Pause Subscription
-                -elsif subscription.paused? 
-                  =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-warning btn-sm', style: 'vertical-align: top;'
-                =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-sm', style: 'vertical-align: top;'
-                  
+                -elsif subscription.paused?
+                  =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-secondary btn-xs', style: 'vertical-align: top;'
+                =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+
 
 =render partial: 'subscriptions/confirm_pause_modal'

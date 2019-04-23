@@ -18,7 +18,7 @@ class UserVerificationsController < ApplicationController
       if @user.preferred_exam_body&.group
         redirect_to library_special_link(@user.preferred_exam_body.group)
       else
-        student_dashboard_url
+        redirect_to student_dashboard_url
       end
 
     else

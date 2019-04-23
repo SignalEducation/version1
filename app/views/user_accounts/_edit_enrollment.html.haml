@@ -14,7 +14,7 @@
                 =f.label :exam_date, t('views.enrollments.form.edit_exam_date')
                 .form-row.align-items-center.justify-content-xl-between
                   %span.custom-date-select.input-group.input-group-lg
-                    =f.date_select :exam_date, {order: [:month, :day, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+                    =f.date_select :exam_date, {order: [:day, :month, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
                      start_year: Date.today.year - 1, end_year: Date.today.year + 2}, class: 'form-control custom-select'
 
             -else
@@ -23,10 +23,16 @@
                 .input-group.input-group-lg
                   =f.collection_select :exam_sitting_id, enrollment.alternate_exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', id: 'exam_sitting_select'}
 
+            .form-group
+              %label
+                =f.check_box :notifications
+                =t('views.enrollments.form.notifications')
+
+
 
           .pt-2.d-flex.flex-wrap.flex-sm-nowrap.justify-content-between
             %div
-              =f.submit t('views.general.save_changes'), class: 'btn btn-primary float-left mb-2', id: 'enroll_now'
+              =f.submit t('views.general.save_changes'), class: 'btn btn-primary btn-sm float-left mb-2', id: 'enroll_now'
             %div
-              %button.btn.btn-secondary.float-right.mb-2{'data-dismiss' => "modal"} Cancel
+              %button.btn.btn-secondary.btn-sm.float-right.mb-2{'data-dismiss' => "modal"} Cancel
 

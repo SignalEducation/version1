@@ -32,10 +32,23 @@ describe Enrollment do
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:subject_course_id) }
-    it { should validate_presence_of(:subject_course_user_log_id) }
-    it { should validate_presence_of(:exam_body_id) }
+    before do
+      @enrollment = build(:enrollment, user_id: 1, subject_course_id: 1,
+                          subject_course_user_log_id: 1, exam_body_id: 1, exam_sitting_id: 1)
+    end
+
+    it 'should have a valid user_id' do
+      expect{ @enrollment.user_id = nil }.to change{ @enrollment.valid? }.to false
+    end
+
+    it 'should have a valid exam_body_id' do
+      expect{ @enrollment.exam_body_id = nil }.to change{ @enrollment.valid? }.to false
+    end
+
+    it 'should have a valid subject_course_id' do
+      expect{ @enrollment.subject_course_id = nil }.to change{ @enrollment.valid? }.to false
+    end
+
   end
 
   describe 'callbacks' do
@@ -67,24 +80,16 @@ describe Enrollment do
 
   describe 'class methods' do
     it { expect(Enrollment).to respond_to(:search) }
-    it { expect(Enrollment).to respond_to(:to_csv) }
   end
 
   describe 'instance methods' do
     it { should respond_to(:destroyable?) }
     it { should respond_to(:valid_enrollment?) }
     it { should respond_to(:enrollment_date) }
-    it { should respond_to(:course_name) }
-    it { should respond_to(:exam_sitting_name) }
-    it { should respond_to(:user_email) }
     it { should respond_to(:student_number) }
-    it { should respond_to(:f_name) }
-    it { should respond_to(:l_name) }
-    it { should respond_to(:date_of_birth) }
-    it { should respond_to(:display_percentage_complete) }
-    it { should respond_to(:elements_complete_count) }
-    it { should respond_to(:course_elements_count) }
+    it { should respond_to(:alternate_exam_sittings) }
     it { should respond_to(:sibling_enrollments) }
+    it { should respond_to(:display_percentage_complete) }
     it { should respond_to(:status) }
     it { should respond_to(:days_until_exam) }
   end

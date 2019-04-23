@@ -26,23 +26,34 @@ describe CourseSectionUserLog do
     it { should belong_to(:subject_course) }
     it { should belong_to(:subject_course_user_log) }
     it { should belong_to(:course_section) }
-    it { should belong_to(:latest_course_module_element) }
     it { should have_many(:student_exam_tracks) }
     it { should have_many(:course_module_element_user_logs) }
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:user_id) }
+    before do
+      @csul = build(:course_section_user_log, user_id: 1, subject_course_id: 1,
+                   course_section_id: 1, subject_course_user_log_id: 1)
+    end
 
-    it { should validate_presence_of(:course_section_id) }
+    it 'should have a valid user_id' do
+      expect{ @csul.user_id = nil }.to change{ @csul.valid? }.to false
+    end
 
-    it { should validate_presence_of(:subject_course_user_log_id) }
+    it 'should have a valid subject_course_id' do
+      expect{ @csul.subject_course_id = nil }.to change{ @csul.valid? }.to false
+    end
+
+    it 'should have a valid course_section_id' do
+      expect{ @csul.course_section_id = nil }.to change{ @csul.valid? }.to false
+    end
+
   end
 
   describe 'callbacks' do
     it { should callback(:check_dependencies).before(:destroy) }
     it { should callback(:create_subject_course_user_log).before(:validation), unless: :subject_course_user_log_id }
-    it { should callback(:update_subject_course_user_log).after(:save) }
+    it { should callback(:update_subject_course_user_log).after(:update) }
   end
 
   describe 'scopes' do
@@ -59,7 +70,7 @@ describe CourseSectionUserLog do
     it { should respond_to(:destroyable?) }
     it { should respond_to(:elements_total) }
     it { should respond_to(:completed?) }
-    it { should respond_to(:recalculate_completeness) }
+    it { should respond_to(:recalculate_csul_completeness) }
   end
 
 

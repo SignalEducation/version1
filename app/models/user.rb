@@ -115,6 +115,9 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
   validates :preferred_exam_body_id, presence: true, on: :create
+  validates :user_group_id, presence: true
+  validates :communication_approval, presence: true, on: :create
+  validates :terms_and_conditions, presence: true, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :locale, inclusion: {in: LOCALES}
@@ -421,7 +424,7 @@ class User < ActiveRecord::Base
   end
 
   def default_card
-    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
+    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first
   end
 
   def subscriptions_for_exam_body(exam_body_id)
@@ -528,9 +531,7 @@ class User < ActiveRecord::Base
   end
 
   def activate_user
-    self.active = true
-    self.account_activated_at = Proc.new{Time.now}.call
-    self.account_activation_code = nil
+    update(active: true, account_activated_at: Proc.new{Time.now}.call, account_activation_code: nil)
   end
 
   def validate_user

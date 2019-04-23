@@ -8,16 +8,22 @@
       .row
         .col-sm.mb-3
           .welcome-text
-            ='WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL'
-          .before-text
-            ='Before you attempt this question for the first time:'
+            -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_heading
+              =@group.exam_body.constructed_response_intro_heading
+            -else
+              WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL
 
-          %ul
-            -#%li='Watch your CBE introduction video'
-            %li='Ensure you have watched all the lectures and read the notes associated with this topic'
-            %li='Only watch the tutor completing this question after your first attempt'
-            %li='Keep track of time to get into the exam mindset from your first attempt – roughly 1.8 minutes per mark'
-            %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
+          -if @group && @group.exam_body && @group.exam_body.constructed_response_intro_text
+            =@group.exam_body.constructed_response_intro_text.html_safe
+          -else
+            .before-text
+              ='Before you attempt this question for the first time:'
+            %ul
+              -#%li='Watch your CBE introduction video'
+              %li='Ensure you have watched all the lectures and read the notes associated with this topic'
+              %li='Only watch the tutor completing this question after your first attempt'
+              %li='Keep track of time to get into the exam mindset from your first attempt – roughly 1.8 minutes per mark'
+              %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
 
 
           -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?

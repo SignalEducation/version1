@@ -30,12 +30,12 @@ class StudentExamTrack < ActiveRecord::Base
   # Constants
 
   # relationships
-  belongs_to :user
-  belongs_to :subject_course
-  belongs_to :subject_course_user_log
-  belongs_to :course_section
-  belongs_to :course_section_user_log
-  belongs_to :course_module
+  belongs_to :user, optional: true
+  belongs_to :subject_course, optional: true
+  belongs_to :subject_course_user_log, optional: true
+  belongs_to :course_section, optional: true
+  belongs_to :course_section_user_log, optional: true
+  belongs_to :course_module, optional: true
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
              foreign_key: :latest_course_module_element_id, optional: true
   has_many :course_module_element_user_logs

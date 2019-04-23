@@ -28,7 +28,6 @@ describe ContentPageSection do
 
     it { should validate_presence_of(:text_content) }
     it { should validate_presence_of(:panel_colour) }
-    it { should validate_presence_of(:sorting_order) }
   end
 
   describe 'callbacks' do

@@ -20,7 +20,7 @@
 #
 
 FactoryBot.define do
-  factory :course_sections do
+  factory :course_section do
     subject_course_id 1
     name "MyString"
     name_url "MyString"

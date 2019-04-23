@@ -50,10 +50,11 @@ class CourseModule < ActiveRecord::Base
   validates :subject_course_id, presence: true
   validates :course_section_id, presence: true
   validates :name, presence: true, uniqueness: {
-    scope: :course_section
-  }, length: { maximum: 255 }
+    scope: :course_section_id,
+    message: "must be unique within the course section"
+  }
   validates :name_url, presence: true, uniqueness: { 
-    scope: :course_section,
+    scope: :course_section_id,
     message: "must be unique within the course section"
   }
 

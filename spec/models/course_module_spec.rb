@@ -49,12 +49,10 @@ describe CourseModule do
     it { should validate_presence_of(:course_section_id)}
 
     it { should validate_presence_of(:name) }
-    it { should validate_uniqueness_of(:name).scoped_to(:course_section_id) }
-    it { should validate_length_of(:name).is_at_most(255) }
+    it { should validate_uniqueness_of(:name).scoped_to(:course_section_id).with_message('must be unique within the course section') }
 
     it { should validate_presence_of(:name_url) }
-    it { should validate_uniqueness_of(:name_url).scoped_to(:course_section_id) }
-    it { should validate_length_of(:name_url).is_at_most(255) }
+    it { should validate_uniqueness_of(:name_url).scoped_to(:course_section_id).with_message('must be unique within the course section') }
 
     it { should validate_presence_of(:sorting_order) }
   end
@@ -90,12 +88,12 @@ describe CourseModule do
     it { should respond_to(:destroyable?) }
     it { should respond_to(:destroyable_children) }
     it { should respond_to(:update_video_and_quiz_counts) }
+
     it { should respond_to(:completed_by_user) }
     it { should respond_to(:percentage_complete_by_user) }
-    it { should respond_to(:completed_for_enrollment) }
-    it { should respond_to(:percentage_complete_for_enrollment) }
-    it { should respond_to(:category) }
-    it { should respond_to(:full_name) }
+    it { should respond_to(:completed_for_scul) }
+    it { should respond_to(:percentage_complete_for_scul) }
+    it { should respond_to(:all_content_restricted?) }
   end
 
 end

@@ -20,20 +20,18 @@ describe PaypalWebhook do
 
   it { should validate_presence_of(:payload) }
 
-  it { should validate_presence_of(:processed_at) }
+  it { should validate_presence_of(:event_type) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
-  it { expect(PaypalWebhook).to respond_to(:all_in_order) }
-
-  # class methods
-  #it { expect(PaypalWebhook).to respond_to(:method_name) }
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-  pending "Please review #{__FILE__}"
+  it { should respond_to(:process_sale_completed) }
+  it { should respond_to(:process_sale_denied) }
+  it { should respond_to(:process_subscription_cancelled) }
+  it { should respond_to(:reprocess) }
 
 end

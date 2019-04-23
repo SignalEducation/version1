@@ -57,7 +57,7 @@ class CourseModuleElement < ActiveRecord::Base
   # validation
   validates :course_module_id, presence: true
   validates :name, presence: true, length: {maximum: 255}
-  validates :name_url, uniqueness: { scope: :course_module,
+  validates :name_url, presence: true, uniqueness: { scope: :course_module_id,
                                      message: "must be unique within the course module" }
   validates :sorting_order, presence: true
 

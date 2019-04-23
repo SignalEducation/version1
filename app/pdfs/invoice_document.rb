@@ -101,7 +101,7 @@ class InvoiceDocument < Prawn::Document
   def logo
     logopath =  "#{Rails.root}/app/assets/images/learnsignal_mark_RGB.png"
     y_position = cursor
-    image logopath, width: 275, height: 40, at: [0, y_position]
+    image logopath, width: 40, height: 40, at: [0, y_position]
   end
 
   def footer

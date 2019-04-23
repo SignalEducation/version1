@@ -25,9 +25,9 @@
                       %th
                         Exam Sitting
                       %th
-                        Active
+                        Status
                       %th
-                        Expired
+                        Notifications
                       %th
                       %th
                   %tbody
@@ -37,12 +37,15 @@
                           -if enrollment.subject_course
                             =enrollment.subject_course.name
                         %td
-                          -if enrollment.exam_date
-                            =exam_sitting_date(enrollment.exam_date)
+                          =enrollment&.exam_sitting&.name
                         %td
-                          =tick_or_cross(enrollment.active)
+                          =enrollment.expired ? 'Expired' : 'Valid'
                         %td
-                          =tick_or_cross(enrollment.expired)
+                          =tick_or_cross(enrollment.notifications)
+                        %td
+                          =link_to edit_enrollment_management_url(enrollment) do
+                            .btn.btn-primary.btn-xs
+                              =t('views.general.edit')
                         %td
                           =link_to enrollment_management_url(enrollment) do
                             .btn.btn-secondary.btn-xs

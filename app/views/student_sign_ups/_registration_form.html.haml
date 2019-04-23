@@ -1,75 +1,80 @@
-=form_for @user, url: create_student_url do |f|
+=form_for @user, url: create_student_url, html: {style: 'min-height: 600px;'} do |f|
   =f.hidden_field :locale, value: (params[:locale] || 'en')
   =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
   =f.hidden_field :communication_approval, id: 'hidden_communication_approval'
   -if @exam_body
     =f.hidden_field :preferred_exam_body_id, id: 'hidden_preferred_exam_body_id', value: @exam_body.id
 
-  #sign-up.my-3.mx-5.pt-4
-    .row
-      .col-sm-12
-        %h2.h5.text-center
-          -if @home_page.registration_form_heading
-            =@home_page.registration_form_heading
-          -else
-            Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
+  .bg-white.p-3.px-sm-5.pt-sm-4
+    .py-3
+      -if @home_page && @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
+        =@home_page.registration_form_heading
+      -else
+        Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
 
-      =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
-      .col-sm-6
-        .form-group
-          =f.label :first_name, t('views.users.form.first_name')
-          =f.text_field :first_name, placeholder: t('views.users.form.your_first_name'), class: 'form-control'
-      .col-sm-6
-        .form-group
-          =f.label :last_name, t('views.users.form.last_name')
-          =f.text_field :last_name, placeholder: t('views.users.form.your_last_name'), class: 'form-control'
-
-      .col-sm-12
-        .form-group
-          =f.label :email, t('views.users.form.email')
-          =f.email_field :email, placeholder: t('views.users.form.your_email'), class: 'form-control'
-
-      -unless @exam_body
-        .col-sm-12
+    =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
+    %fieldset.pb-3
+      %legend.sr-only Registration Details
+      .row
+        .col-md-6
           .form-group
-            =f.label :preferred_exam_body_id, t('views.users.form.exam_body')
-            .input-group.input-group-lg
-              =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'user_exam_body'}
+            %label.sr-only{:for => "first-name"} First Name
+            =f.text_field :first_name, placeholder: 'First Name', class: 'form-control'
+        .col-md-6
+          .form-group
+            %label.sr-only{:for => "last-name"} Last Name
+            =f.text_field :last_name, placeholder: 'Last Name', class: 'form-control'
+      .row
+        -if @home_page && @home_page.public_url == 'bootcamp'
+          .col-md-6
+            .form-group
+              %label.sr-only{:for => "email-address"} Your e-mail address
+              =f.email_field :email, placeholder: 'Your e-mail address', class: 'form-control'
+          .col-md-6
+            .form-group
+              %label.sr-only{:for => "subject_course_id"} Course Selection
+              .input-group.input-group-lg
+                =select_tag "subject_course_id", options_from_collection_for_select(@home_page.group.subject_courses.all_active.all_in_order, "id", "name"), include_blank: 'Course Selection', class: 'form-control custom-select', id: 'subject_course_id'
 
-      .col-sm-6
-        .form-group
-          =f.label :password, t('views.users.form.password')
-          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control'
-      .col-sm-6
-        .form-group
-          =f.label :password_confirmation, t('views.users.form.password_confirmation')
-          =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation'
+        -else
+          .col-md-12
+            .form-group
+              %label.sr-only{:for => "email-address"} Your e-mail address
+              =f.email_field :email, placeholder: 'Your e-mail address', class: 'form-control'
+        -unless @exam_body
+          .col-md-12
+            .form-group
+              =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'sr-only'
+              .input-group.input-group-lg
+                =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.users.form.exam_body')}, {class: 'form-control custom-select', id: 'user_exam_body'}
 
-      .col-sm-12.pt-3
-        .form-group
-          %label.check.terms_and_conditions
-            %input{type: 'checkbox', id: 'terms_and_conditions', required: true}
-              %span
-                ="I agree to learnsignal's"
-                =link_to 'terms & conditions', terms_and_conditions_url, target: '_blank'
 
-      .col-sm-12
-        .form-group
-          %label.check.communication_approval
-            %input{type: 'checkbox', id: 'communication_approval', required: true}
-              %span
-                ='I agree to receiving communications from learnsignal.'
-          %p
-            ="We're committed to your privacy. The information you provide is used to contact you about relevant content,
-               products, and services. You may unsubscribe from these communications at any time. For more information,
-                check out our"
-            =link_to 'Privacy Policy.', privacy_policy_url, target: '_blank'
+      .row
+        .col-md-6
+          .form-group
+            %label.sr-only{:for => "create-pwd"} Create a password
+            =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control'
+        .col-md-6
+          .form-group
+            %label.sr-only{:for => "confirm-pwd"} Confirm your password
+            =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation'
 
-    .pt-5.px-lg-6.text-center
-      %p.h5
-        ='No credit card required. Set-up takes one minute.'
+    %fieldset
+      %legend.sr-only Terms and Conditions checkboxes
+      .custom-control.custom-checkbox.mb-3
+        %input{type: "checkbox", class: "custom-control-input", id: "communication_approval", required: true}
+        %label{class: "custom-control-label", for: "communication_approval"}
+          I agree to receiving communication from learnsignal (you can unsubscribe at any time)
 
-      =f.submit 'Register Now', class: 'btn btn-primary', id: 'signUp'
+      .custom-control.custom-checkbox.mb-3
+        %input{type: "checkbox", class: "custom-control-input", id: "terms_and_conditions", required: true}
+        %label{class: "custom-control-label", for: "terms_and_conditions"}
+          I agree to learnsignal
+          =link_to 'Terms & Conditions', terms_and_conditions_url, target: '_blank'
+
+
+    .d-flex.justify-content-between.align-items-center.pt-4
+      =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'
       .sk-circle
         .sk-circle1.sk-child
         .sk-circle2.sk-child
@@ -84,11 +89,10 @@
         .sk-circle11.sk-child
         .sk-circle12.sk-child
 
-    -if @home_page.logo_image && @home_page.logo_image.present?
-      .pt-2.px-lg-2.pb-2.pb-lg-7
-        .home-hero-img-wrap.pl-4
-          =image_tag(@home_page.logo_image, class: '', alt: 'Logo')
-
+      .logo-acca
+        -if @home_page && @home_page.logo_image && @home_page.logo_image.present?
+          =#image_tag(@home_page.logo_image, class: 'logo-acca', alt: 'Logo')
+          =image_tag('learning-partner-badge.png', alt: 'Logo')
 
 
 

@@ -46,20 +46,28 @@ describe CourseModuleElementUserLog do
   end
 
   describe 'validations' do
-    it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:subject_course_id) }
-    it { should validate_presence_of(:course_section_id) }
-    it { should validate_presence_of(:course_module_id) }
 
-    it { should_not validate_presence_of(:course_module_element_id) }
-
-    describe 'for quizzes...' do
-      before :each do
-        allow(subject).to receive(:is_quiz).and_return(true)
-      end
-      it { should validate_presence_of(:quiz_score_actual).on(:update) }
-      it { should validate_presence_of(:quiz_score_potential).on(:update) }
+    before do
+      @cmeul = build(:course_module_element_user_log, user_id: 1, subject_course_id: 1,
+                     course_section_id: 1, course_module_id: 1, student_exam_track_id: 1)
     end
+
+    it 'should have a valid user_id' do
+      expect{ @cmeul.user_id = nil }.to change{ @cmeul.valid? }.to false
+    end
+
+    it 'should have a valid subject_course_id' do
+      expect{ @cmeul.subject_course_id = nil }.to change{ @cmeul.valid? }.to false
+    end
+
+    it 'should have a valid course_module_id' do
+      expect{ @cmeul.course_module_id = nil }.to change{ @cmeul.valid? }.to false
+    end
+
+    it 'should have a valid course_section_id' do
+      expect{ @cmeul.course_section_id = nil }.to change{ @cmeul.valid? }.to false
+    end
+
   end
 
   describe 'callbacks' do
@@ -67,7 +75,6 @@ describe CourseModuleElementUserLog do
     it { should callback(:set_latest_attempt).before(:create) }
     it { should callback(:set_booleans).before(:create) }
     it { should callback(:calculate_score).after(:create) }
-    it { should callback(:create_lesson_intercom_event).after(:create) }
     it { should callback(:update_student_exam_track).after(:save) }
     it { should callback(:check_dependencies).before(:destroy) }
   end
@@ -88,8 +95,6 @@ describe CourseModuleElementUserLog do
     it { expect(CourseModuleElementUserLog).to respond_to(:with_elements_active) }
     it { expect(CourseModuleElementUserLog).to respond_to(:this_week) }
     it { expect(CourseModuleElementUserLog).to respond_to(:this_month) }
-    it { expect(CourseModuleElementUserLog).to respond_to(:two_months_ago) }
-    it { expect(CourseModuleElementUserLog).to respond_to(:three_months_ago) }
   end
 
   describe 'class methods' do
@@ -105,7 +110,6 @@ describe CourseModuleElementUserLog do
     it { should respond_to(:score) }
     it { should respond_to(:seconds) }
     it { should respond_to(:destroyable?) }
-    it { should respond_to(:recent_attempts) }
   end
 
 end

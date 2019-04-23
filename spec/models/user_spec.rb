@@ -120,6 +120,9 @@ describe User do
 
   it { should validate_presence_of(:user_group_id) }
 
+  it { should validate_presence_of(:communication_approval).on(:create) }
+  it { should validate_presence_of(:terms_and_conditions).on(:create) }
+
   context "user email validation" do
     before do
       user_group = FactoryBot.create(:student_user_group)
@@ -138,7 +141,6 @@ describe User do
   it { should callback(:add_guid).before(:create) }
   it { should callback(:create_referral_code_record).after(:create) }
   it { should callback(:update_stripe_customer).after(:update) }
-  it { should callback(:update_student_access).after(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -157,7 +159,6 @@ describe User do
   it { expect(User).to respond_to(:all_students) }
   it { expect(User).to respond_to(:all_trial_or_sub_students) }
   it { expect(User).to respond_to(:all_tutors) }
-  it { expect(User).to respond_to(:get_and_activate) }
   it { expect(User).to respond_to(:get_and_verify) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:resend_pw_reset_email) }
@@ -171,13 +172,10 @@ describe User do
   it { expect(User).to respond_to(:create_csv_user) }
 
   # instance methods
-  it { should respond_to(:date_of_birth_is_possible?) }
-
   it { should respond_to(:student_user?) }
   it { should respond_to(:non_student_user?) }
   it { should respond_to(:standard_student_user?) }
   it { should respond_to(:complimentary_user?) }
-  it { should respond_to(:tutor_user?) }
   it { should respond_to(:blocked_user?) }
   it { should respond_to(:system_requirements_access?) }
   it { should respond_to(:content_management_access?) }
@@ -200,7 +198,6 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:activate_user) }
   it { should respond_to(:validate_user) }
-  it { should respond_to(:de_activate_user) }
   it { should respond_to(:generate_email_verification_code) }
   it { should respond_to(:create_referral) }
   it { should respond_to(:destroyable?) }
@@ -221,8 +218,5 @@ describe User do
 
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }
-
-  it { should respond_to(:update_from_stripe) }
-  it { should respond_to(:create_subscription_from_stripe) }
 
 end
