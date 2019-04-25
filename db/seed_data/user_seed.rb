@@ -1,10 +1,10 @@
 unless Rails.env.production?
-    generic_default_values = {
-            password: '123123123', password_confirmation: '123123123',
+generic_default_values = {password: '123123123', password_confirmation: '123123123',
             country_id: 1,
             preferred_exam_body_id: 1,
             locale: 'en'
     }
+
     User.where(id: 1).first_or_create!(generic_default_values.merge({
             email: 'individual.student@example.com',
             first_name: 'Individual',
