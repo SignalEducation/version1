@@ -458,6 +458,13 @@ code {
   -webkit-box-shadow: none;
   box-shadow: none
 }
+.modal .input-group .form-control.full-width {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  margin-bottom: 0;
+}
+
 .form-control::-webkit-input-placeholder {
   color: #657786;
   opacity: 1

@@ -45,7 +45,7 @@
                         -else
                           =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id')
                           .input-group.input-group-lg
-                            =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control custom-select', id: 'exam_sitting_select'}
+                            =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control custom-select full-width', id: 'exam_sitting_select'}
 
                     .col-sm-6
                       -# TODO - Make this work with JS to set hidden field
@@ -88,7 +88,7 @@
                         .form-group
                           =detail.label :student_number, "#{detail.object.exam_body.name} Student Number"
                           .input-group.input-group-lg
-                            =detail.text_field :student_number, class: 'form-control'
+                            =detail.text_field :student_number, class: 'form-control full-width'
                     .col-sm-6
                       .form-group
                         =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth')

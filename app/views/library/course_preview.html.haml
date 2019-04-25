@@ -9,10 +9,10 @@
                 =@course.parent.name
 
           .mw-0
-            %h4.text-warning
-              Coming Soon
-
-              =@course.release_date
+            - if @course.release_date
+              %h4.text-warning
+                Coming
+                =@course.release_date.strftime("%B, %Y")
 
         .pt-3
           %h1.h1-hero
