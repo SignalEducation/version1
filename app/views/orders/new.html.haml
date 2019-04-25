@@ -3,9 +3,12 @@
     .container
       %header.hero-section
         %h1.h1-hero.mb-2
-          =@mock_exam.name
+          ="#{@mock_exam.name} Purchase"
         %p.p-hero.px-lg-8
-          Purchase Process
+          -if @product.mock_exam?
+            Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.
+          -else
+            This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.
 
       -if flash[:success] || flash[:error] || flash[:warning]
         =render partial: 'layouts/flash_messages'
@@ -37,7 +40,7 @@
                             .pt-2
                               %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                             .pt-4.pb-2
-                              %p.h4.text-torquoise
+                              .h6.text-ellipsis
                                 Total:
                                 %span
                                   =number_in_local_currency(@product.price, @product.currency_id)

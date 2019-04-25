@@ -49,7 +49,7 @@ class OrdersController < ApplicationController
     @course = @mock_exam.subject_course
     @order = Order.new
     @layout = 'standard'
-    seo_title_maker("#{@mock_exam.name} Order Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
+    seo_title_maker("#{@mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create

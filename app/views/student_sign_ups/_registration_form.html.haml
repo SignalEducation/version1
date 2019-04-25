@@ -19,17 +19,17 @@
         .col-md-6
           .form-group
             %label.sr-only{:for => "first-name"} First Name
-            =f.text_field :first_name, placeholder: 'First Name', class: 'form-control'
+            =f.text_field :first_name, placeholder: 'Enter your first name', class: 'form-control'
         .col-md-6
           .form-group
             %label.sr-only{:for => "last-name"} Last Name
-            =f.text_field :last_name, placeholder: 'Last Name', class: 'form-control'
+            =f.text_field :last_name, placeholder: 'Enter your last Name', class: 'form-control'
       .row
         -if @home_page && @home_page.public_url == 'bootcamp'
           .col-md-6
             .form-group
               %label.sr-only{:for => "email-address"} Your e-mail address
-              =f.email_field :email, placeholder: 'Your e-mail address', class: 'form-control'
+              =f.email_field :email, placeholder: 'Enter your your e-mail', class: 'form-control'
           .col-md-6
             .form-group
               %label.sr-only{:for => "subject_course_id"} Course Selection
@@ -61,16 +61,17 @@
 
     %fieldset
       %legend.sr-only Terms and Conditions checkboxes
-      .custom-control.custom-checkbox.mb-3
-        %input{type: "checkbox", class: "custom-control-input", id: "communication_approval", required: true}
-        %label{class: "custom-control-label", for: "communication_approval"}
-          I agree to receiving communication from learnsignal (you can unsubscribe at any time)
 
       .custom-control.custom-checkbox.mb-3
         %input{type: "checkbox", class: "custom-control-input", id: "terms_and_conditions", required: true}
         %label{class: "custom-control-label", for: "terms_and_conditions"}
-          I agree to learnsignal
-          =link_to 'Terms & Conditions', terms_and_conditions_url, target: '_blank'
+          I agree to learnsignal's
+          =link_to 'terms and conditions', terms_and_conditions_url, target: '_blank'
+
+      .custom-control.custom-checkbox.mb-3
+        %input{type: "checkbox", class: "custom-control-input", id: "communication_approval", required: true}
+        %label{class: "custom-control-label", for: "communication_approval"}
+          I agree to receiving communication from learnsignal
 
 
     .d-flex.justify-content-between.align-items-center.pt-4

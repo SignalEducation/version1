@@ -7,7 +7,7 @@
             close
         .modal-header
           %h3{id: 'enrollmentModalForm'}
-            ="Enrol in #{@course.try(:name)}"
+            ="#{@course.try(:name)} Enrolment"
 
 
         .modal-body
@@ -54,7 +54,7 @@
                         .custom-control.custom-checkbox.mb-4.mt-2
                           %input{type: "checkbox", class: "custom-control-input", id: "notifications"}
                           %label{class: "custom-control-label", for: "notifications"}
-                            ='BootCamp Notifications'
+                            ='Bootcamp Notifications'
 
                         -if @subject_course_user_log
                           %legend.sr-only Reset Progress Checkbox
@@ -65,7 +65,7 @@
 
                   .py-1
                     =submit_tag 'Next Step', class: 'btn btn-primary', id: 'enroll_submit_button'
-                    %p#enrollment_message.text-warning.hidden Visit your account page to edit this enrollment
+                    %p#enrollment_message.text-warning.hidden Visit your account page to edit this enrolment
 
             .form-group.form-group-expandable
               .custom-control.custom-radio
@@ -79,7 +79,7 @@
               .form-details#exam_body_user_details_form
                 =form_for(current_user, url: update_exam_body_user_details_url, html: {class: 'form py-2 user_modal_form', role: 'form', name: 'user_modal_form'}) do |f|
                   -if current_user.date_of_birth
-                    %p Please confirm your Student Number & D.O.B
+                    %p="Confirm #{@exam_body.name} Student Number and Date of Birth"
 
                   .row
                     .col-sm-6
