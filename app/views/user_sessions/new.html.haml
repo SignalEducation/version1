@@ -10,7 +10,7 @@
       %section.pb-md-6.pb-5
         .login-section
           #sign-in.form-box
-            =form_for(@user_session, html: {class: 'py-3 mr-5 ml-5'}) do |f|
+            =form_for(@user_session, html: {class: 'py-3 '}) do |f|
               =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
               .row
                 .col-sm-12
