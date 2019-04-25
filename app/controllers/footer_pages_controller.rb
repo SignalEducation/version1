@@ -23,7 +23,7 @@ class FooterPagesController < ApplicationController
       seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
       render 'content_pages/show'
     else
-      seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
+      seo_title_maker('Terms and Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
       render 'terms_and_conditions'
     end
   end
@@ -34,13 +34,16 @@ class FooterPagesController < ApplicationController
   end
 
   def media_library
+    seo_title_maker('ACCA Correction Packs and Mock Exams | LearnSignal', "Get access to ACCA question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.", nil)
     if current_user
-      @country = current_user.country
+      country = IpAddress.get_country(request.remote_ip) || current_user.country
+      currency = current_user.get_currency(country)
+      @currency_id = currency.id
     else
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      country = IpAddress.get_country(request.remote_ip)
+      @currency_id = country.currency_id
     end
-    @currency_id = @country.currency_id
+
     @products = Product.includes(:currency)
                        .in_currency(@currency_id)
                        .all_active

@@ -5,8 +5,21 @@
         %h1.h1-hero.pt-5
           =@exercise.product.name
 
+
       %section.pb-md-6.pt-4
-        .row.row-md
-          .card
-            =@exercise.state
-            =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary', target: '_blank'
+        %article.card.mb-5
+          .card-body.card-body-sm
+            .row
+              .col-md-8
+                %h3.text-gray2
+                  %span.mr-1
+                    ="Status: "
+                    =@exercise.state
+
+                %p.mb-1
+                  Submitted on
+                  %span=humanize_datetime_full(@exercise.submitted_on)
+
+              .col-md-4.text-md-right
+                =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary btn-sm', target: '_blank'
+

@@ -7,7 +7,7 @@
 
       .modal-header
         %h3.mb-3{id: 'askTutorQuestion'}
-          Ask The Tutor A Question
+          Ask The Tutor
 
 
       .modal-body
@@ -19,19 +19,19 @@
               .col-sm-6
                 .form-group
                   =label_tag :full_name, 'Name'
-                  =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Full Name'
+                  =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Enter your full name'
 
               .col-sm-6
                 .form-group
                   =label_tag :email, 'Email'
-                  =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Email Address'
+                  =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Enter your Email'
 
               .col-sm-12
                 .form-group
                   =label_tag :question, 'Question'
                   =text_area_tag :question, nil, rows: 3, class: 'form-control', placeholder: 'Please outline your question'
             .pt-2
-              =submit_tag 'Send The Question', class: 'btn btn-primary btn-sm'
+              =submit_tag 'Submit', class: 'btn btn-primary btn-sm'
 
         -else
           %p.font-weight-medium.mb-4.text-purple
