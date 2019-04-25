@@ -106,8 +106,7 @@ class PaypalSubscriptionsService
   end
 
   def create_new_subscription(plan_id, start_date)
-    user = @subscription.user
-    new_subscription = user.subscriptions.create(
+    new_subscription = @subscription.user.subscriptions.create(
       subscription_plan_id: plan_id,
       complimentary: false
     )
