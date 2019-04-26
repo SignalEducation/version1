@@ -1,0 +1,93 @@
+.question-box-item.question.l-margin-top
+  .row
+    =scenario_question.hidden_field :sorting_order
+    .quiz-question
+      .col-sm-6
+        %h6=scenario_question.object.id.nil? ? 'New Scenario Question' : 'Scenario Question #' + scenario_question.object.id.to_s
+      .col-sm-6
+        .form-group
+          .col-sm-8.col-sm-offset-4
+            .checkbox
+              %label
+                =scenario_question.check_box :_destroy
+                ='Remove Question Block'
+
+      .input-group.input-group-lg.full-width
+        =scenario_question.text_area :text_content, class: 'form-control', style: 'border-radius: 6px;', id: "scenario_question_text_area_#{scenario_question.options[:child_index]}"
+      %br/
+    =scenario_question.fields_for :scenario_answer_templates do |scenario_answer_template|
+      =scenario_answer_template.hidden_field :sorting_order
+      =scenario_answer_template.hidden_field :editor_type
+      -if scenario_answer_template.object.text_editor?
+        .row.l-margin-top
+          =render partial: 'constructed_responses/fields_for_texteditor_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, texteditor_scenario_answer_template: scenario_answer_template}
+      -elsif scenario_answer_template.object.spreadsheet_editor?
+        .row.l-margin-top
+          =render partial: 'constructed_responses/fields_for_spreadsheet_answer_template', locals: {f: f, constructed_response: constructed_response, scenario: scenario, scenario_question: scenario_question, spreadsheet_scenario_answer_template: scenario_answer_template}
+
+
+
+
+
+
+
+:javascript
+  $(document).ready(function(){
+    $("#scenario_question_text_area_#{scenario_question.options[:child_index]}").kendoEditor({
+      encoded: false,
+      pasteCleanup: {
+          keepNewLines: true
+      },
+      tools: [
+        "cut", //missing
+        "copy", //missing
+        "paste", //missing
+        {
+          name: "customUndo",
+          tooltip: "Undo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("undo");
+          }
+        },
+        {
+          name: "customRedo",
+          tooltip: "Redo",
+          exec: function (e) {
+            var editor = $(this).data("kendoEditor");
+            editor.exec("redo");
+          }
+        },
+        "findReplace", //missing
+        "bold",
+        "italic",
+        "underline",
+        "strikethrough",
+        "subscript",
+        "superscript",
+        "cleanFormatting",
+        "formatting",
+        "insertImage",
+        "createLink",
+        "unlink",
+        "tableWizard", //Can't make exact match -- having issue with width of dialog modal
+        "createTable",
+        "addRowAbove",
+        "addRowBelow",
+        "addColumnLeft",
+        "addColumnRight",
+        "deleteRow",
+        "deleteColumn",
+        "justifyLeft",
+        "justifyCenter",
+        "justifyRight",
+        "justifyFull",
+        "insertUnorderedList",
+        "insertOrderedList",
+        "indent",
+        "outdent",
+        "viewHtml"
+      ]
+    });
+
+  });

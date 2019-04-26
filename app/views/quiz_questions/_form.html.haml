@@ -1,0 +1,208 @@
+=form_for @quiz_question, html: { class: 'form-horizontal', role: 'form', multipart: true } do |f|
+  =f.hidden_field :course_module_element_quiz_id
+  .row
+    .box-item
+      =render partial: 'layouts/error_messages', locals: {thing: @quiz_question, message: nil}
+      .col-sm-12
+        %h2 Question
+        .well.well-sm
+          .form-group
+            =label_tag :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
+            .col-sm-10.question_contents
+              =f.fields_for :quiz_contents do |c|
+                .question_content_block
+                  =render partial: 'quiz_contents/fields_for', locals: {qc: c, the_type: 'question'}
+
+          .form-group
+            =label_tag :quiz_question_quiz_solutions_attributes_0_text_content, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
+            .col-sm-10.solution_contents
+              =f.fields_for :quiz_solutions do |solution|
+                .solution_content_block
+                  =render partial: 'quiz_contents/fields_for', locals: {qc: solution, the_type: 'solution'}
+
+      %h2=t('views.quiz_questions.form.answers')
+      =f.fields_for :quiz_answers do |qa|
+        =render partial: 'quiz_questions/answers_form', locals: {qa: qa}
+
+      %p
+        =f.submit t('views.general.save'), class: 'btn btn-red'
+        -if @quiz_question.id.nil?
+          =link_to t('views.general.cancel'), course_modules_url, class: 'btn btn-cyan'
+        -else
+          =link_to t('views.general.cancel'), edit_course_module_element_url(@quiz_question.course_module_element_quiz.course_module_element_id), class: 'btn btn-cyan'
+
+:javascript
+
+  $('#question').summernote({
+    height: 100,
+    disableDragAndDrop: true,
+    toolbar: [
+      // Default  Settings
+      ["style", ["style"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["font", ["superscript", "subscript"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ['insert', ['picture', 'link']],
+      ['fullscreen', ['fullscreen']],
+      ['codeview', ['codeview']],
+
+      //Additional Math Symbols
+      ['eventButton', ['event1']],
+      ['eventButton', ['event2']],
+      ['eventButton', ['event3']]
+    ],
+
+    buttons: {
+      event1: MathData1,
+      event2: MathData2,
+      event3: MathData3
+    }
+  });
+
+  $('#solution').summernote({
+    height: 100,
+    disableDragAndDrop: true,
+    toolbar: [
+      // Default  Settings
+      ["style", ["style"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["font", ["superscript", "subscript"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ['insert', ['picture', 'link']],
+      ['fullscreen', ['fullscreen']],
+      ['codeview', ['codeview']],
+
+      //Additional Math Symbols
+      ['eventButton', ['event1']],
+      ['eventButton', ['event2']],
+      ['eventButton', ['event3']]
+    ],
+
+    buttons: {
+      event1: MathData1,
+      event2: MathData2,
+      event3: MathData3
+    }
+  });
+
+  $('#answer0').summernote({
+    height: 100,
+    disableDragAndDrop: true,
+    toolbar: [
+      // Default  Settings
+      ["style", ["style"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["font", ["superscript", "subscript"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ['insert', ['picture', 'link']],
+      ['fullscreen', ['fullscreen']],
+      ['codeview', ['codeview']],
+
+      //Additional Math Symbols
+      ['eventButton', ['event1']],
+      ['eventButton', ['event2']],
+      ['eventButton', ['event3']]
+    ],
+
+    buttons: {
+      event1: MathData1,
+      event2: MathData2,
+      event3: MathData3
+    }
+  });
+
+  $('#answer1').summernote({
+    height: 100,
+    disableDragAndDrop: true,
+    toolbar: [
+      // Default  Settings
+      ["style", ["style"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["font", ["superscript", "subscript"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ['insert', ['picture', 'link']],
+      ['fullscreen', ['fullscreen']],
+      ['codeview', ['codeview']],
+
+      //Additional Math Symbols
+      ['eventButton', ['event1']],
+      ['eventButton', ['event2']],
+      ['eventButton', ['event3']]
+    ],
+
+    buttons: {
+      event1: MathData1,
+      event2: MathData2,
+      event3: MathData3
+    }
+  });
+
+  $('#answer2').summernote({
+    height: 100,
+    disableDragAndDrop: true,
+    toolbar: [
+      // Default  Settings
+      ["style", ["style"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["font", ["superscript", "subscript"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ['insert', ['picture', 'link']],
+      ['fullscreen', ['fullscreen']],
+      ['codeview', ['codeview']],
+
+      //Additional Math Symbols
+      ['eventButton', ['event1']],
+      ['eventButton', ['event2']],
+      ['eventButton', ['event3']]
+    ],
+
+    buttons: {
+      event1: MathData1,
+      event2: MathData2,
+      event3: MathData3
+    }
+  });
+
+  $('#answer3').summernote({
+    height: 100,
+    disableDragAndDrop: true,
+    toolbar: [
+      // Default  Settings
+      ["style", ["style"]],
+      ["style", ["bold", "italic", "underline", "clear"]],
+      ["fontsize", ["fontsize"]],
+      ["font", ["superscript", "subscript"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ['insert', ['picture', 'link']],
+      ['fullscreen', ['fullscreen']],
+      ['codeview', ['codeview']],
+
+      //Additional Math Symbols
+      ['eventButton', ['event1']],
+      ['eventButton', ['event2']],
+      ['eventButton', ['event3']]
+    ],
+
+    buttons: {
+      event1: MathData1,
+      event2: MathData2,
+      event3: MathData3
+    }
+  });

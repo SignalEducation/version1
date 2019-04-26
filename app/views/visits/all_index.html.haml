@@ -1,0 +1,44 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.visits.all_index.h1')
+
+  %section.pb-3
+    =render partial: 'management_consoles/user_management_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              .search-container
+                =form_tag(visits_all_index_url, method: :get, role: 'form', class: 'form-inline') do
+                  =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
+
+          .table-responsive.pt-5
+            %table.table.sorted_table{style: 'font-size: 18px;'}
+              %thead
+                %tr
+                  %th=t('views.visits.index.ip')
+                  %th=t('views.visits.index.utm_source')
+                  %th=t('views.visits.index.utm_medium')
+                  %th=t('views.visits.index.utm_term')
+                  %th=t('views.visits.index.utm_content')
+                  %th=t('views.visits.index.utm_campaign')
+                  %th=t('views.visits.index.started_at')
+                  %th
+              %tbody
+                -@visits.each do |visit|
+                  %tr
+                    %td=visit.ip
+                    %td=visit.utm_source
+                    %td=visit.utm_medium
+                    %td=visit.utm_term
+                    %td=visit.utm_content
+                    %td=visit.utm_campaign
+                    %td=humanize_datetime(visit.started_at)
+                    %td
+                      =link_to t('views.general.view'), visits_all_show_url(visit), class: 'btn btn-secondary btn-small'
+
+            =will_paginate @visits, renderer: BootstrapPagination::Rails

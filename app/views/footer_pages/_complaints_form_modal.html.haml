@@ -1,0 +1,32 @@
+.modal.fade{id: 'complaints-modal', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'complaintsModal', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-text.modal-close.p-0{"data-dismiss" => "modal"}
+        %span.sr-only Close Modal
+        %i.material-icons{"aria-hidden" => "true"} close
+
+      .modal-header
+        %h3.mb-3{id: 'complaintsModal'}
+          Complaints Form
+
+
+      .modal-body
+        =form_tag(complaints_intercom_url, {class: 'form py-2', role: 'form', name: 'complaints_intercom_form'}) do
+          .row
+            .col-sm-6
+              .form-group
+                =label_tag :full_name, 'Name'
+                =text_field_tag :full_name, nil, class: 'form-control', placeholder: 'Enter your full name'
+
+            .col-sm-6
+              .form-group
+                =label_tag :email, 'Email'
+                =email_field_tag :email_address, nil, class: 'form-control', placeholder: 'Enter your email'
+
+            .col-sm-12
+              .form-group
+                =label_tag :body, 'Issue'
+                =text_area_tag :body, nil, class: 'form-control', placeholder: 'Please describe your issue'
+
+          .pt-2
+            =submit_tag 'Submit', class: 'btn btn-primary btn-sm'

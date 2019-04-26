@@ -1,0 +1,39 @@
+# == Schema Information
+#
+# Table name: coupons
+#
+#  id                 :integer          not null, primary key
+#  name               :string
+#  code               :string
+#  currency_id        :integer
+#  livemode           :boolean          default(FALSE)
+#  active             :boolean          default(FALSE)
+#  amount_off         :integer
+#  duration           :string
+#  duration_in_months :integer
+#  max_redemptions    :integer
+#  percent_off        :integer
+#  redeem_by          :datetime
+#  times_redeemed     :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  stripe_coupon_data :text
+#
+
+FactoryBot.define do
+  factory :coupon do
+    sequence(:name)           { |n| "Coupon #{n}" }
+    sequence(:code)           { |n| "Code #{n}" }
+    currency
+    livemode                  { false }
+    active                    { true }
+    amount_off                { nil }
+    duration                  { 'once' }
+    duration_in_months        { 1 }
+    max_redemptions           { 1 }
+    percent_off               { 1 }
+    redeem_by                 { '2017-11-29 16:14:46' }
+    times_redeemed            { 1 }
+    stripe_coupon_data        { 'Stripe Data' }
+  end
+end

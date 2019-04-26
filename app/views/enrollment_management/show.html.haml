@@ -1,0 +1,90 @@
+.container
+  %header.management-console-section
+    %h1
+      ="Enrolment ID:#{@enrollment.id}"
+    %p.p-hero.px-lg-8
+      =@enrollment.user.email
+
+  %section.pb-7
+    .row
+      .col-md-12
+        .box-item.table-box
+          .row
+            .col-sm-10
+              .row
+                .col-sm-6
+                  .h3
+                    User
+                  .h6
+                    =@enrollment.user.full_name
+                  .h6
+                    =@enrollment.user.email
+
+                .col-sm-6
+                  .h3
+                    Course
+                  .h6
+                    =@enrollment.subject_course.name
+
+            .col-sm-2
+              =link_to 'Edit Details', edit_enrollment_management_url(@enrollment), class: 'btn btn-primary'
+
+
+          .row
+            .col-sm-10
+              .row
+                .col-sm-6
+                  .h3
+                    Exam Date (Sitting)
+                  .h6
+                    =exam_sitting_date(@enrollment.exam_date) if @enrollment.exam_date
+
+                .col-sm-6
+                  .h3
+                    Exam Body
+                  .h6
+                    =@enrollment.exam_body.name
+
+            .col-sm-2
+              =link_to 'CSV - Excel', export_enrollment_log_data_path(id: @enrollment.id, format: :xls), class: 'btn btn-secondary-reverse'
+
+
+
+    -if @enrollment.subject_course_user_log
+      .row
+        -@enrollment.subject_course_user_log.student_exam_tracks.each do |set|
+          .col-md-12
+            .box-item.table-box
+              %h4
+                =set.course_module.name
+              .table-responsive
+                %table.table.sorted_table
+                  %thead
+                    %tr
+                      %th Element
+                      %th Completed
+                      %th Type
+                      %th Latest Attempt
+                      %th Score
+                      %th Seconds
+                      %th Date
+                  %tbody
+                    -set.course_module_element_user_logs.each do |log|
+                      %tr
+                        %td
+                          =log.course_module_element.try(:name)
+                        %td
+                          =tick_or_cross(log.element_completed)
+                        %td
+                          =#log.is_video ? 'Video' : 'Quiz'
+                          =log.type
+                        %td
+                          =tick_or_cross(log.latest_attempt)
+                        %td
+                          =log.quiz_score_actual
+                        %td
+                          =log.seconds_watched
+                        %td
+                          =humanize_datetime(log.created_at)
+
+

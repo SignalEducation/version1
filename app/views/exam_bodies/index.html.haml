@@ -1,0 +1,34 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.exam_bodies.index.h1')
+
+  %section.pb-3
+    =render partial: 'management_consoles/system_requirements_nav'
+
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            =link_to 'New Exam Body', new_exam_body_url, class: 'btn btn-primary btn-xs'
+
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th=t('views.exam_bodies.form.name')
+                  %th=t('views.exam_bodies.form.url')
+                  %th
+                  %th
+              %tbody
+                -@exam_bodies.each do |exam_body|
+                  %tr{id: exam_body.id}
+                    %td=exam_body.name
+                    %td=exam_body.url
+                    %td
+                      =link_to t('views.general.view'), exam_body_url(exam_body), class: 'btn btn-secondary btn-xs'
+                      =link_to t('views.general.edit'), edit_exam_body_url(exam_body), class: 'btn btn-primary btn-xs'
+                      -if exam_body.destroyable?
+                        =link_to t('views.general.delete'), exam_body, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+

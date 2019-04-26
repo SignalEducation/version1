@@ -1,0 +1,35 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.mock_exams.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/course_content_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm-12
+              =link_to 'New Mock Exam', new_mock_exam_url, class: 'btn btn-primary btn-sm'
+
+          .table-responsive.pt-3
+            %table.table.sorted_table{data: {destination: mock_exams_url}}
+              %thead
+                %tr
+                  %th=t('views.mock_exams.form.name')
+                  %th
+                  %th
+                  %th
+                  %th
+              %tbody
+                -@mock_exams.each do |mock_exam|
+                  %tr{id: mock_exam.id}
+                    %td=mock_exam.name
+                    %td=link_to t('views.general.edit'), edit_mock_exam_url(mock_exam), class: 'btn btn-primary btn-xs'
+                    %td=link_to t('views.general.show'), mock_exam.file.url, target: '_blank', class: 'btn btn-secondary btn-xs'
+                    %td
+                      -if mock_exam.destroyable?
+                        =link_to t('views.general.delete'), mock_exam, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+

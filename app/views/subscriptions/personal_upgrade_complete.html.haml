@@ -1,0 +1,31 @@
+%main
+  %article.bg-gray5
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+    .container
+      %header.hero-section
+        %h1.h2-hero.mb-2
+          =t('views.subscriptions.upgrade_complete.h1')
+
+      %section.pb-md-6.pb-5
+        .row.justify-content-center
+          .col-xs-12.col-sm-8
+            .box-item.text-center
+              -if current_user.non_verified_user?
+                %h3.text-warning
+                  Your email requires verification. You will be unable to access content until you verify your email.
+                %p
+                  ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
+                %p
+                  ="Your payment receipt will be sent to #{current_user.email}"
+
+              -else
+                %p
+                  ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
+                %p
+                  ="Your payment receipt will be sent to #{current_user.email}"
+
+                =link_to library_special_link(@subscription&.exam_body&.group) do
+                  .btn.btn-primary
+                    ='Continue Learning'
+

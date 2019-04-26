@@ -1,0 +1,95 @@
+.row.row-lg
+  .col-xl-12.mb-5
+    .start-screen-box-nav.start-screen-box-nav-header
+      .cr-resources
+        =@course_module_element.try(:name).try(:html_safe)
+
+    .start-screen-box
+      .row
+        .col-sm.mb-3
+          .welcome-text
+            ='WELCOME TO YOUR CBE CONSTRUCTED RESPONSE TOOL'
+          .before-text
+            ='Before you attempt this question for the first time:'
+
+          %ul
+            -#%li='Watch your CBE introduction video'
+            %li='Ensure you have watched all the lectures and read the notes associated with this topic'
+            %li='Only watch the tutor completing this question after your first attempt'
+            %li='Keep track of time to get into the exam mindset from your first attempt – roughly 1.8 minutes per mark'
+            %li='You can make as many attempts as you like but only your most recent 8 attempts will be available to view'
+
+
+          -if @course_module_element.course_module_element_resources && @course_module_element.course_module_element_resources.any?
+            %h6.pb-3.pt-3
+              ='Help/Formulae Sheets'
+            .row
+              -@course_module_element.course_module_element_resources.each do |resource|
+                .col-sm-6.pb-2
+                  =link_to resource.upload.url, target: '_blank' do
+                    .btn.btn-secondary
+                      =resource.name
+
+        .col-sm.text-center
+          =link_to courses_constructed_response_url(subject_course_name_url: @course_module_element.course_module.course_section.subject_course.name_url,
+           course_section_name_url: @course_module_element.course_module.course_section.name_url,
+            course_module_name_url: @course_module_element.course_module.name_url,
+             course_module_element_name_url: @course_module_element.name_url), id: 'newConstructedResponseButton' do
+            .btn.btn-primary.mt-3
+              ='New Constructed Response'
+
+          .sk-circle
+            .sk-circle1.sk-child
+            .sk-circle2.sk-child
+            .sk-circle3.sk-child
+            .sk-circle4.sk-child
+            .sk-circle5.sk-child
+            .sk-circle6.sk-child
+            .sk-circle7.sk-child
+            .sk-circle8.sk-child
+            .sk-circle9.sk-child
+            .sk-circle10.sk-child
+            .sk-circle11.sk-child
+            .sk-circle12.sk-child
+
+
+
+          -if @course_module_element_user_logs && @course_module_element_user_logs.any?
+            .table-responsive.pt-3
+              %table.table
+                %thead
+                  %tr
+                    %th='Previous Responses'
+                    %th='Created'
+                    %th='Updated'
+                    %th='Status'
+
+                %tbody
+                  -@course_module_element_user_logs.each do |cmeul|
+                    %tr
+                      %td
+                        =link_to "Response-##{cmeul.constructed_response_attempt.try(:guid)}", courses_constructed_response_url(@course_module_element.course_module.subject_course.name_url, @course_module_element.course_module.course_section.name_url, @course_module_element.course_module.name_url, @course_module_element.name_url, cmeul.id)
+                      %td
+                        =humanize_datetime(cmeul.created_at)
+                      %td
+                        =humanize_datetime(cmeul.updated_at)
+                      %td
+                        =cmeul.constructed_response_attempt.status
+
+
+
+
+    .start-screen-box-nav.start-screen-box-nav-footer{style: 'min-height: 35px;'}
+      .cr-resources
+        =''
+
+
+:javascript
+  $(".sk-circle").hide();
+  $(document).on('ready', function() {
+
+    $("#newConstructedResponseButton").click(function(event) {
+      $("#newConstructedResponseButton").hide();
+      $(".sk-circle").show();
+    });
+  });

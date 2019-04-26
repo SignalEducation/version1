@@ -1,0 +1,150 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@invoice.user.full_name
+          %p
+            ='Invoice ID: '
+            =@invoice.id
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-sm-12.col-xs-12
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Invoice ID
+                .h6
+                  =@invoice.id
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Stripe ID
+                .h6
+                  =@invoice.stripe_guid
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Subscription ID
+                .h6
+                  =@invoice.subscription_id
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Payment Attempt
+                .h6
+                  =@invoice.payment_attempted
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Payment Closed
+                .h6
+                  =@invoice.payment_closed
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Paid
+                .h6
+                  =@invoice.paid
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Attempt Count
+                .h6
+                  =@invoice.attempt_count
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Next Attempt At
+                .h6
+                  =humanize_stripe_date(@invoice.next_payment_attempt_at) if @invoice.next_payment_attempt_at
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Last Charge ID
+                .h6
+                  =@invoice.charge_guid || '----'
+
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Sub Total
+                .h6
+                  =@invoice.sub_total
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Total
+                .h6
+                  =@invoice.total
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Amount Due
+                .h6
+                  =@invoice.amount_due
+
+              -if @invoice.invoice_line_items.where(prorated: true).any?
+                .col-sm-4.l-margin-bottom
+                  .h3
+                    Proration
+                  .h6
+                    =@invoice.invoice_line_items.where(prorated: true).any?
+
+                .col-sm-4.l-margin-bottom
+                  .h3
+                    Proration Adjustment
+                  .h6
+                    =@invoice.invoice_line_items.where(prorated: true).first.amount
+
+
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item.table-box#invoices-panel.l-margin-bottom-huge
+            .col-sm-12
+              %h2.l-margin-bottom
+                Charges
+              .table-responsive
+                %table.table{style: 'font-size: 18px;'}
+                  %thead
+                    %tr
+                      %th
+                        Charge ID
+                      %th
+                        Stripe ID
+                      %th
+                        Refunded
+                      %th
+                        Status
+                      %th
+                        Paid
+                      %th
+
+                  %tbody
+                    -@charges.each do |charge|
+                      %tr
+                        %td
+                          =charge.id
+                        %td
+                          =charge.stripe_guid
+                        %td
+                          =tick_or_cross(charge.amount_refunded >= 1)
+                        %td
+                          =charge.status
+                        %td
+                          =tick_or_cross(charge.paid)
+                        %td
+                          =link_to 'View', subscription_management_invoice_charge_url(@subscription.id, @invoice.id, charge.id), class: 'btn btn-purple btn-small'
+
+
+
+

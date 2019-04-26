@@ -1,0 +1,196 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h1-hero.mb-2
+          =@mock_exam.name
+        %p.p-hero.px-lg-8
+          Purchase Process
+
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
+
+      %section.pb-md-6.pb-5
+        .order-checkout-section
+          .container#product_purchase
+            -if current_user.purchased_products && current_user.purchased_products.include?(@product)
+              .row
+                .col-md-12
+                  .payment-heading.text-center
+                    %p.p
+                      You have already purchased this Product. Visit your account page to view your purchase history.
+            -else
+              =form_for(@order, html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
+                =f.hidden_field :product_id, value: @product.id
+                =f.hidden_field :stripe_token
+                =f.hidden_field :use_paypal, value: false
+                =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+
+                .row.row-lg.justify-content-center
+                  .col-lg-6.mb-5.mb-xl-0
+                    %fieldset.text-center
+                      %h3.mb-3
+                        =@mock_exam.name
+                      %p.h4.mb-3.text-torquoise
+                        Total:
+                        %span
+                          =number_in_local_currency(@product.price, @product.currency_id)
+                      .mt-4.mb-5
+                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                      .px-4
+                        %p.text-left
+                          -if @product.mock_exam?
+                            Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.
+                          -else
+                            This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource.  Once submitted your work, our expert tutors will correct it and give you feedback within 3 days.
+                  .col-lg-6.mb-5
+                    %fieldset.form-box
+                      %p.h2.mb-1 Choose a way to pay
+                      %p.mb-4 Choose your preferred method of payment
+                      .form-group.form-group-expandable
+                        .custom-control.custom-radio
+                          %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                          %label.custom-control-label{:for => "pay-with-card"}
+                            %span.custom-label-info
+                              %span.h3.m-0
+                                =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                                %span Credit / Debit Card
+                            %span.custom-check
+                        =render partial: 'orders/order_card_form', locals: {f: f}
+                      .form-group.form-group-expandable
+                        .custom-control.custom-radio
+                          %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                          %label.custom-control-label{:for => "pay-with-paypal"}
+                            %span.custom-label-info
+                              %span.h3.m-0
+                                =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                                %span PayPal
+                            %span.custom-check
+                        =render partial: 'orders/paypal_form', locals: {f: f}
+
+:javascript
+
+  $(document).on('ready', function() {
+
+    $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
+      $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
+      if ($(this).is(':checked')) {
+        $(this).closest('.custom-control').siblings('.payment-details').slideDown();
+        selectPaymentMethod($(this).val());
+        $('#stripe_terms_and_conditions').prop('required', true);
+        $('#paypal_terms_and_conditions').prop('required', true);
+      }
+    });
+    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+
+    function selectPaymentMethod(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#order_use_paypal').val(true);
+          break;
+        case 'stripe':
+          $('#order_use_paypal').val(false);
+          break;
+        default:
+          $('#order_use_paypal').val(false);
+      }
+    }
+
+    function acceptedTerms(paymentType) {
+      switch(paymentType) {
+        case 'paypal':
+          $('#stripe_terms_and_conditions').prop('required', false);
+          return true;
+        case 'stripe':
+          $('#paypal_terms_and_conditions').prop('required', false);
+          return true;
+        default:
+          return false;
+      }
+    }
+
+
+    $(".sk-circle").hide();
+
+    var style = {
+      base: {
+        color: '#32325d',
+        lineHeight: '18px',
+        fontFamily: '"Rubik", "Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
+    };
+
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements = stripe.elements();
+
+    var card = elements.create('card', {hidePostalCode: true, style: style});
+    card.mount('#card-element');
+
+    // Create a token when the form is submitted.
+    var form = document.getElementById('orders-form');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      //Replace submit button with spinning JS
+      $('#card_submit').prop('disabled',true);
+      $('#card_submit').hide();
+      $('#paypal_submit').prop('disabled',true);
+      $('#paypal_submit').hide();
+      $(".sk-circle").show();
+      if ($('#order_use_paypal').val() === 'true') {
+        if(acceptedTerms('paypal')){
+          document.getElementById('orders-form').submit();
+        }
+      } else {
+        if(acceptedTerms('stripe')){
+          createToken();
+        }
+      }
+    });
+
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    function stripeTokenHandler(token) {
+      // Insert the token ID into the form so it gets submitted to the server
+      var form = document.getElementById('orders-form');
+      $('#order_stripe_token').val(token.id);
+
+      // Submit the form
+      form.submit();
+      $('#card_submit').hide();
+      $(".sk-circle").show();
+    }
+
+    function createToken() {
+      stripe.createToken(card).then(function(result) {
+        if (result.error) {
+          // Inform the user if there was an error
+          var errorElement = document.getElementById('card-errors');
+          errorElement.textContent = result.error.message;
+          //Replace spinning JS with Submit button
+          $('#card_submit').prop('disabled',false);
+          $('#card_submit').show();
+          $(".sk-circle").hide();
+
+        } else {
+          // Send the token to your server
+          stripeTokenHandler(result.token);
+        }
+      });
+    };
+  });

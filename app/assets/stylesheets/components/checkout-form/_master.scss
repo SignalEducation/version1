@@ -1,0 +1,34 @@
+@import "plan-selection";
+@import "payment-options";
+@import "product-payment-options";
+
+.subscription-flash {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.plans-container {
+  padding-top: 20px;  
+}
+
+@media only screen and (min-width: 1200px) {
+  .payment-options-container {
+    border: 1px solid #d0cccc;
+    border-radius: 8px;
+    margin-left: 10px;
+    padding: 20px;
+    background-color: #f7f7fa;
+
+    .summary-container {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  .plans-container {
+    border: 1px solid #d0cccc;
+    border-radius: 8px;
+    margin-right: 10px;
+    padding: 10px;
+  }
+}

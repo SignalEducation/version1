@@ -1,0 +1,17 @@
+-@sculs.each do |scul|
+  -if scul.subject_course && scul.subject_course.active
+    .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+      .card-header.justify-content-center.align-items-center.d-none.d-sm-block
+        .pt-4.text-center
+          .h4
+            =scul.percentage_complete.to_s << '%'
+          .h4
+            Complete
+
+      .card-body.d-flex.flex-column.justify-content-center
+
+        %h5.card-title.mb-1
+          %span.mr-1
+            =scul.subject_course.name
+      .card-footer.d-flex.justify-content-center.align-items-center{style: 'background-color: #fff; border-top: none;'}
+        =link_to 'Resume Course', library_special_link(scul.subject_course), class: 'btn btn-primary'

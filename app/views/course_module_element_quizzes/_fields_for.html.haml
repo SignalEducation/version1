@@ -1,0 +1,17 @@
+=f.fields_for :course_module_element_quiz do |cme_quiz|
+  .form-group
+    =cme_quiz.label :number_of_questions, t('views.course_module_element_quizzes.form.number_of_questions')
+    .input-group.input-group-lg
+      =cme_quiz.select :number_of_questions, options_for_select([1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75], cme_quiz.object.number_of_questions || 5), {}, {class: 'form-control custom-select'}
+  .form-group
+    =cme_quiz.label :question_selection_strategy, t('views.course_module_element_quizzes.form.question_selection_strategy')
+    .input-group.input-group-lg
+      =cme_quiz.select :question_selection_strategy, options_for_select(CourseModuleElementQuiz::STRATEGIES, cme_quiz.object.question_selection_strategy), {}, {class: 'form-control custom-select'}
+
+  .form-group
+    =f.label :estimated_time_in_seconds, t('views.course_module_elements.form.estimated_time_in_seconds')
+    .input-group.input-group-lg
+      =f.text_field :estimated_time_in_seconds, placeholder: t('views.course_module_elements.form.estimated_time_in_seconds_placeholder'), class: 'form-control'
+    %p
+      =t('views.course_module_elements.form.estimated_time_in_seconds_tag')
+

@@ -1,0 +1,40 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.vat_codes.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/system_requirements_nav'
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            =link_to 'New Vat Code', new_vat_code_url, class: 'btn btn-primary btn-xs'
+
+          .table-responsive.pt-4
+            %table.table
+              %thead
+                %tr
+                  %th=t('views.vat_codes.form.country_id')
+                  %th=t('views.vat_codes.form.name')
+                  %th=t('views.vat_rates.form.percentage_rate')
+                  %th
+                  %th
+              %tbody
+                -@vat_codes.each do |vat_code|
+                  %tr{id: vat_code.id}
+                    %td=vat_code.country.name
+                    %td=vat_code.name
+                    %td
+                      -vat_code.vat_rates.each do |rate|
+                        =rate.percentage_rate.to_s + '%'
+                        %br/
+                    %td
+                      =link_to t('views.general.view'), vat_code, class: 'btn btn-secondary btn-xs'
+                      =link_to t('views.general.edit'), edit_vat_code_url(vat_code), class: 'btn btn-primary btn-xs'
+                      -if vat_code.destroyable?
+                        =link_to t('views.general.delete'), vat_code, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+
+
+            =will_paginate @vat_codes, renderer: BootstrapPagination::Rails

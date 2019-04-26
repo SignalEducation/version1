@@ -1,0 +1,97 @@
+.row.row-lg
+  .col-xl-8
+    -if cme.course_module_element_video.vimeo_guid
+      #vimeo-player-window.vimeo-player-window
+
+
+    .pt-5.pb-5
+      -unless @course_module_element.description.empty? || @course_module_element.description == '<p><br></p>'
+        %h2.h4 Description
+        %p.mb-4
+          =@course_module_element.description.html_safe
+
+
+
+  .col-xl-4
+    -if @course_module_element.course_module_element_resources.any?
+      %h4.text-gray1.mb-2.mb-sm-3.mt-sm-4.mt-md-0
+        ='Additional Resources'
+      -@course_module_element.course_module_element_resources.each do |resource|
+
+        -if resource.web_url && resource.web_url.length > 0
+          =link_to resource.web_url, class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+            .card-header.bg-white.d-flex.align-items-center.justify-content-center
+              %i.budicon-internal-link{"aria-label" => "", :role => "img"}
+            .card-body.d-flex.align-items-center.pl-1
+              %h5.m-0.text-truncate.text-gray2
+                =resource.name
+        -else
+          =link_to resource.upload.url, class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+            .card-header.bg-white.d-flex.align-items-center.justify-content-center
+              %i.budicon-files-download{"aria-label" => "", :role => "img"}
+            .card-body.d-flex.align-items-center.pl-1
+              %h5.m-0.text-truncate.text-gray2
+                =resource.name
+
+
+
+
+-if cme.course_module_element_video.vimeo_guid
+
+  :javascript
+    let video_cme_id = "#{@course_module_element.id || ''}";
+    let course_log_id = "#{@subject_course_user_log.try(:id) || ''}";
+    let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
+    let exam_track_id = "#{@student_exam_track.try(:id) || ''}";
+    let logId = '';
+    let options = {
+      id: "#{cme.course_module_element_video.vimeo_guid}",
+      frameborder: 0,
+      webkitAllowFullScreen: true,
+      mozallowfullscreen: true,
+      allowFullScreen: true
+    };
+
+    let player = new Vimeo.Player('vimeo-player-window', options);
+
+    let timeUpdate = function(data) {
+      if (data.percent >= 0.90) {
+        $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+          url: '#{video_watched_data_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'videoLogId': logId}),
+          method: 'PATCH',
+          contentType: "application/json; charset=utf-8"
+        });
+        player.off('timeupdate', timeUpdate);
+      }
+    };
+
+    //When the player starts send JSON request to create CMEUL
+    let onPlay = function(data) {
+      if (logId === '') {
+        $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+          url: '#{create_video_user_log_courses_path}',
+          dataType: 'json',
+          data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'csul_id': section_log_id, 'set_id': exam_track_id }),
+          method: 'POST',
+          contentType: "application/json; charset=utf-8",
+          success: function(data,status,xhr){
+            logId = data.video_log_id;
+          },
+          error: function(xhr,status,error){
+            console.log(xhr);
+            alert(error);
+          }
+        });
+      }
+    };
+
+    player.on('play', onPlay);
+    player.on('timeupdate', timeUpdate);
+
+
+
+

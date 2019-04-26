@@ -1,0 +1,44 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.subscription_plans.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/subscriptions_nav'
+
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            =link_to 'New Subscription Plan', new_subscription_plan_url, class: 'btn btn-primary btn-xs', title: t('views.general.new_tooltip')
+
+
+          .table-responsive.pt-4
+            %table.table.sorted_table{style: 'font-size: 18px;'}
+              %thead
+                %tr
+                  %th=t('views.subscription_plans.form.name')
+                  %th Exam Body
+                  %th=t('views.subscription_plans.form.currency_id')
+                  %th=t('views.subscription_plans.form.price')
+                  %th=t('views.subscription_plans.form.active')
+                  %th
+                  %th
+                  %th
+              %tbody
+                -@subscription_plans.each do |plan|
+                  %tr
+                    %td=plan.name
+                    %td=plan.exam_body
+                    %td=plan.currency.iso_code
+                    %td=plan.price
+                    %td=tick_or_cross(plan.active?)
+                    %td=link_to t('views.general.show'), subscription_plan_url(plan), class: 'btn btn-secondary btn-xs'
+                    %td=link_to t('views.general.edit'), edit_subscription_plan_url(plan), class: 'btn btn-primary btn-xs'
+                    %td
+                      -if plan.destroyable?
+                        =link_to t('views.general.delete'), plan, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+
+
+

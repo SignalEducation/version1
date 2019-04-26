@@ -1,0 +1,38 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.orders.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/subscriptions_nav'
+
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+
+          .table-responsive
+
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th=t('views.orders.index.product_id')
+                  %th=t('views.orders.index.user_id')
+                  %th=t('views.orders.index.stripe_status')
+                  %th
+              %tbody
+                -@orders.each do |order|
+                  %tr{id: order.id}
+                    %td=order.product.try(:name)
+                    %td
+                      -if order.user_id
+                        =order.user.full_name
+                    %td=order.stripe_status
+                    %td
+                      =link_to 'Order', order, class: 'btn btn-secondary btn-xs'
+                      =link_to 'Product', order.product, class: 'btn btn-secondary-reverse btn-xs'
+                      -if order.user_id
+                        =link_to t('views.orders.index.user_id'), user_url(order.user_id), class: 'btn btn-primary btn-xs'
+
+            =will_paginate @orders, renderer: BootstrapPagination::Rails

@@ -1,0 +1,42 @@
+.container
+  %header.management-console-section
+    %h1
+      Management Console
+
+  %section.pb-3
+    .box-item
+      %canvas#myChart{:height => "200", :width => "400"}
+
+
+:javascript
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  var ctx = document.getElementById('myChart').getContext('2d');
+
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: MONTHS,
+          datasets: [{
+              label: 'First dataset',
+              borderColor: '#00b67b',
+              data: [12, 366, 5, 7, 344, 443, 222, 123, 74, 93, 135, 135]
+          },
+          {
+              label: 'Second dataset',
+              borderColor: '#000032',
+              data: [22, 44, 2, 66, 111, 55, 222, 123, 200, 234, 51, 44]
+          },
+
+          ]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });

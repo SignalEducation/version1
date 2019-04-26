@@ -1,0 +1,23 @@
+!!! XML
+%workbook{:xmlns => "urn:schemas-microsoft-com:office:spreadsheet", "xmlns:html" => "http://www.w3.org/TR/REC-html40", "xmlns:o" => "urn:schemas-microsoft-com:office:office", "xmlns:ss" => "urn:schemas-microsoft-com:office:spreadsheet", "xmlns:x" => "urn:schemas-microsoft-com:office:excel"}
+  %worksheet{"ss:name" => "Sheet1"}
+    %table
+      %row
+        %cell
+          %data{"ss:type" => "String"} First Name
+        %cell
+          %data{"ss:type" => "String"} Last Name
+        %cell
+          %data{"ss:type" => "String"} Email
+        %cell
+          %data{"ss:type" => "String"} ID
+      - @users.each do |user|
+        %row
+          %cell
+            %data{"ss:type" => "String"}= user.first_name
+          %cell
+            %data{"ss:type" => "String"}= user.last_name
+          %cell
+            %data{"ss:type" => "String"}= user.email
+          %cell
+            %data{"ss:type" => "Number"}= user.id

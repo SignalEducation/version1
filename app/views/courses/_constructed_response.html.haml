@@ -1,0 +1,418 @@
+.col-sm-12
+  .scenario-box-nav.scenario-box-nav-header
+    .cr-navigation
+      .cr-navigation-left
+        %ul
+
+          %li.cr-nav-link#open-calculator-dialog{onclick: 'openCalculatorDialog(); return false;'}
+            .k-icon.k-i-calculator
+            ='Calculator'
+          %li.cr-nav-link.d-none#close-calculator-dialog{onclick: 'closeCalculatorDialog(); return false;'}
+            .k-icon.k-i-calculator
+            ='Calculator'
+
+
+          &#124;
+          %li.cr-nav-link#open-scratch-pad-dialog{onclick: 'openScratchPadDialog(); return false;'}
+            .k-icon.k-i-track-changes-enable
+            ='Scratch Pad'
+          %li.cr-nav-link.d-none#close-scratch-pad-dialog{onclick: 'closeScratchPadDialog(); return false;'}
+            .k-icon.k-i-track-changes-enable
+            ='Scratch Pad'
+
+      .cr-navigation-right
+        %ul
+          %li.question-count
+            ='Question 1 of 1'
+          &#124;
+
+          -@all_scenario_question_attempt.each do |question_attempt|
+            %li.cr-nav-link.review-flag{id: "review_flag_#{question_attempt.id}", onclick: "flagForReview(#{question_attempt.id}); return false;"}
+              =flagged_for_review(question_attempt.flagged_for_review)
+              ='Flag for review'
+
+          &#124;
+          %li
+            =link_to course_special_link(@course_module_element, @group.exam_body_id, @subject_course_user_log), class: 'cr-nav-link' do
+              -# Add 'Confirm' Modal
+              ='Exit'
+
+  .scenario-box
+    =form_for @course_module_element_user_log, url: update_constructed_response_user_log_courses_url, remote: true do |f|
+      =f.hidden_field :id
+      =f.fields_for :constructed_response_attempt do |constructed_response_attempt|
+        =constructed_response_attempt.hidden_field :user_id
+        =constructed_response_attempt.hidden_field :constructed_response_id
+        =constructed_response_attempt.hidden_field :scenario_id
+        =constructed_response_attempt.hidden_field :course_module_element_id
+        =constructed_response_attempt.hidden_field :original_scenario_text_content
+        =constructed_response_attempt.hidden_field :user_edited_scenario_text_content
+        =constructed_response_attempt.hidden_field :scratch_pad_text
+        -cr_attempt = constructed_response_attempt.object
+
+        #splitter
+          .pane-content
+            .scenario-content
+              =cr_attempt.user_edited_scenario_text_content.try(:html_safe)
+
+          .pane-content
+            =constructed_response_attempt.fields_for :scenario_question_attempts, cr_attempt.scenario_question_attempts.all_in_order do |scenario_question_attempt|
+              =scenario_question_attempt.hidden_field :constructed_response_attempt_id
+              =scenario_question_attempt.hidden_field :user_id
+              =scenario_question_attempt.hidden_field :scenario_question_id
+              =scenario_question_attempt.hidden_field :status
+              =scenario_question_attempt.hidden_field :flagged_for_review
+              =scenario_question_attempt.hidden_field :original_scenario_question_text
+              =scenario_question_attempt.hidden_field :user_edited_scenario_question_text
+              -sq_attempt = scenario_question_attempt.object
+
+              .cr-question{id: "scenario_question_attempt_#{sq_attempt.id}"}
+
+
+                =sq_attempt.user_edited_scenario_question_text.try(:html_safe)
+
+                =scenario_question_attempt.fields_for :scenario_answer_attempts, sq_attempt.scenario_answer_attempts.all_in_order do |scenario_answer_attempt|
+                  -sa_attempt = scenario_answer_attempt.object
+                  =scenario_answer_attempt.hidden_field :scenario_question_attempt_id
+                  =scenario_answer_attempt.hidden_field :user_id
+                  =scenario_answer_attempt.hidden_field :scenario_answer_template_id
+                  =scenario_answer_attempt.hidden_field :original_answer_template_text
+
+                  -if sa_attempt.spreadsheet_editor?
+                    =scenario_answer_attempt.hidden_field :user_edited_answer_template_text
+
+
+
+
+                  -if sa_attempt.spreadsheet_editor?
+                    =render partial: 'courses/spread_sheet_template', locals: {sq_attempt: sq_attempt, sa_attempt: sa_attempt, scenario_answer_attempt: scenario_answer_attempt, original_spreadsheet_json: sa_attempt.original_answer_template_text, spreadsheet_json: sa_attempt.user_edited_answer_template_text}
+                  -elsif sa_attempt.text_editor?
+                    =render partial: 'courses/text_editor_template', locals: {scenario_answer_attempt: scenario_answer_attempt, sq_attempt: sq_attempt, sa_attempt: sa_attempt}
+
+            .submission-pane-content.d-none
+              .table-responsive.l-margin-top
+                %table.table
+                  %thead
+                    %tr
+                      %th='Question'
+                      %th='Status'
+                      %th='Flagged for review'
+
+                  %tbody
+                    -counter = 0
+                    -@all_scenario_question_attempt.each do |question_attempt|
+                      -counter = counter + 1
+                      %tr
+                        %td="Question #{counter}"
+                        %td{id: "td_question_attempt_#{question_attempt.id}_status"}
+                          =question_attempt.status
+                        %td{id: "td_question_attempt_#{question_attempt.id}_review"}
+                          =flagged_for_review(question_attempt.flagged_for_review)
+
+              .final-submission.text-center
+                =link_to submit_constructed_response_user_log_url(@course_module_element_user_log.id) do
+                  .btn.btn-primary.btn-secondary
+                    ='Submit Constructed Response'
+
+
+
+
+    .scenario-box-nav.scenario-box-nav-footer
+      .cr-navigation
+        .cr-navigation-left
+          -#%ul
+            %li.cr-nav-link
+              ='Resources Will Go Here!'
+
+        .cr-navigation-right
+          %ul
+            %li.cr-nav-link{onclick: 'previousQuestion(); return false;'}
+              .glyphicon.glyphicon-arrow-left
+              ='Previous'
+            &#124;
+            %li.cr-nav-link#open-navigation-dialog{onclick: 'openNavDialog(); return false;'}
+              .glyphicon.glyphicon-screenshot
+              ='Navigation'
+            %li.cr-nav-link.d-none#close-navigation-dialog{onclick: 'closeNavDialog(); return false;'}
+              .glyphicon.glyphicon-screenshot
+              ='Navigation'
+            &#124;
+            %li.cr-nav-link{onclick: 'loadSubmission(); return false;'}
+              ='Submit'
+
+            &#124;
+            %li.cr-nav-link{onclick: 'nextQuestion(); return false;'}
+              ='Next'
+              .glyphicon.glyphicon-arrow-right
+
+
+  #navigation-dialog.nav-dialog
+    %table.table
+      %thead
+        %tr
+          %th='Question #'
+          %th='Status'
+          %th.text-center='Flagged - Review'
+      %tbody
+        -counter = 0
+        -@all_scenario_question_attempt.each do |scenario_question_attempt|
+          -counter = counter + 1
+          %tr
+            %td.nav-link{onclick: "revealQuestion(#{scenario_question_attempt.id}); return false;"}
+              ="Question #{counter}"
+            %td{id: "nav_dialog_td_question_attempt_#{scenario_question_attempt.id}_status"}
+              =scenario_question_attempt.status
+            %td.text-center{id: "td_question_attempt_#{scenario_question_attempt.id}_review", onclick: "flagForReview(#{scenario_question_attempt.id}); return false;"}
+              =flagged_for_review(scenario_question_attempt.flagged_for_review)
+
+
+  #scratch-pad-dialog.scratch-pad-dialog
+    .scratchpad_texteditor
+      %textarea#constructed_response_attempt_scratchpad_texteditor
+
+  #calculator-dialog.calculator-dialog
+    =render partial: 'courses/cbe_calculator'
+
+
+:javascript
+  //
+  //All of this JQuery needs to be cleaned up
+  //
+
+  $(document).on('ready page:load', function() {
+
+    $("#splitter").kendoSplitter({
+      panes: [
+        { scrollable: true },
+        { scrollable: true, size: "60%" }
+        ]
+
+    });
+
+    var outerBox = $("#splitter").parent().parent().parent();
+    var outerSplitter = $("#splitter").data("kendoSplitter");
+    var browserWindow = $(window);
+    var headerFooterHeight = $(".navbar.fixed-top").height() + 210;
+
+    function resizeSplitter() {
+        outerBox.height(browserWindow.height() - headerFooterHeight);
+        outerSplitter.wrapper.height(browserWindow.height() - headerFooterHeight);
+        outerSplitter.resize();
+    }
+
+    resizeSplitter();
+    browserWindow.resize(resizeSplitter);
+
+    questionNumber = questionsList[0];
+    revealQuestion(questionNumber);
+
+  });
+
+  // Navigation Dialog & Buttons
+  $("#calculator-dialog").kendoDialog({
+    width: "550px",
+    height: "400px",
+    title: "Calculator",
+    closable: true,
+    modal: false,
+    visible: false,
+    close: onCalculatorClose
+  });
+  var calculatorDialog = $("#calculator-dialog").data("kendoDialog");
+
+
+  // Navigation Dialog & Buttons
+  $("#navigation-dialog").kendoDialog({
+    width: "400px",
+    title: "Navigation",
+    closable: true,
+    modal: false,
+    visible: false,
+    close: onClose
+  });
+  var navDialog = $("#navigation-dialog").data("kendoDialog");
+
+
+  // ScratchPad Dialog & Buttons
+  $("#scratch-pad-dialog").kendoDialog({
+    width: "400px",
+    title: "Scratch Pad",
+    closable: true,
+    modal: false,
+    visible: false,
+    open: populateEditorText,
+    close: updateText
+  });
+  var scratchPadDialog = $("#scratch-pad-dialog").data("kendoDialog");
+
+  $("#constructed_response_attempt_scratchpad_texteditor").kendoEditor({
+    encoded: false,
+    tools: []
+  });
+  var scratchPadEditor = $("#constructed_response_attempt_scratchpad_texteditor").data("kendoEditor");
+  function populateEditorText(){
+    scratchPadEditor.value($("#course_module_element_user_log_constructed_response_attempt_attributes_scratch_pad_text").val());
+  }
+  function updateText(){
+    $("#course_module_element_user_log_constructed_response_attempt_attributes_scratch_pad_text").val(scratchPadEditor.value());
+    $("#open-scratch-pad-dialog").removeClass('d-none');
+    $("#close-scratch-pad-dialog").addClass('d-none');
+  }
+
+
+  var questionsList = #{@all_scenario_question_attempt_ids},
+      currentQuestion = 1;
+
+
+  function openNavDialog() {
+    navDialog.open();
+    $("#open-navigation-dialog").addClass('d-none');
+    $("#close-navigation-dialog").removeClass('d-none');
+  };
+
+  function closeNavDialog() {
+    navDialog.close();
+    $("#open-navigation-dialog").removeClass('d-none');
+    $("#close-navigation-dialog").addClass('d-none');
+  };
+
+
+  function openScratchPadDialog() {
+    scratchPadDialog.open();
+    $("#open-scratch-pad-dialog").addClass('d-none');
+    $("#close-scratch-pad-dialog").removeClass('d-none');
+  };
+
+  function closeScratchPadDialog() {
+    scratchPadDialog.close();
+    $("#open-scratch-pad-dialog").removeClass('d-none');
+    $("#close-scratch-pad-dialog").addClass('d-none');
+  };
+
+  function openCalculatorDialog() {
+    calculatorDialog.open();
+    $("#open-calculator-dialog").addClass('d-none');
+    $("#close-calculator-dialog").removeClass('d-none');
+  };
+
+  function closeCalculatorDialog() {
+    calculatorDialog.close();
+    $("#open-calculator-dialog").removeClass('d-none');
+    $("#close-calculator-dialog").addClass('d-none');
+  };
+
+
+
+  function onClose() {
+    $("#open-navigation-dialog").removeClass('d-none');
+    $("#close-navigation-dialog").addClass('d-none');
+  }
+
+  function onCalculatorClose() {
+    $("#open-calculator-dialog").removeClass('d-none');
+    $("#close-calculator-dialog").addClass('d-none');
+  }
+
+  function flagForReview(question_attempt_id) {
+    var flagValue = $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_flagged_for_review').val();
+    if(flagValue == 'false') {
+      // Change the val to 1
+      $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_flagged_for_review').val('true');
+      // Change the span css to red
+      $('#review_flag_' + question_attempt_id + ' span').css('color','#eb4242');
+      //Change the final screen icon to red
+      $('#td_question_attempt_' + question_attempt_id + '_review  span').css('color','#eb4242');
+
+    } else if(flagValue == 'true') {
+      // Change the val to 0
+      $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_flagged_for_review').val('false');
+      // Change the span css to white
+      $('#review_flag_' + question_attempt_id + ' span').css('color','#FFFFFF');
+      // Change the final screen icon to white
+      $('#td_question_attempt_' + question_attempt_id + '_review  span').css('color','#FFFFFF');
+    }
+    submitForm();
+  }
+
+  function updateHiddenField(sq_attempt_id, sa_attempt_id) {
+
+    var data = $("#scenario_question_attempt_" + sq_attempt_id + "_scenario_answer_attempt_" + sa_attempt_id + "_spreadsheet").data("kendoSpreadsheet");
+    var data2 = data.toJSON();
+    var json = JSON.stringify(data2, null, 2);
+
+    var ssa = $("#input_scenario_question_attempt_" + sq_attempt_id + "_scenario_answer_attempt_" + sa_attempt_id + "_spreadsheet_json");
+    ssa.val(json);
+  }
+
+
+  function nextQuestion() {
+    $('.cr-question').hide();
+    $('.review-flag').hide();
+    if(currentQuestion < (questionsList.length -1 )) {
+      currentQuestion++;
+    }
+    $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+
+    $('#review_flag_' + questionsList[currentQuestion]).show();
+    $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
+    $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('#nav_dialog_td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
+
+    $('.answer_spreadsheet').each(function (index, value){
+      updateHiddenField($(this).attr('sq_attempt_id'), $(this).attr('sa_attempt_id'))
+    });
+    $('.submission-pane-content').addClass('d-none');
+
+    closeNavDialog();
+    closeScratchPadDialog();
+    submitForm();
+  };
+
+  function previousQuestion() {
+    $('.cr-question').hide();
+    $('.review-flag').hide();
+    if(currentQuestion != 0) {
+      currentQuestion--;
+    }
+    $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
+    $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+    $('#review_flag_' + questionsList[currentQuestion]).show();
+    $('.submission-pane-content').addClass('d-none');
+    closeNavDialog();
+    closeScratchPadDialog();
+    submitForm();
+  };
+
+  function revealQuestion(questionNumber) {
+    $('.cr-question').hide();
+    $('.review-flag').hide();
+    currentQuestion = questionsList.indexOf(questionNumber);
+    $('#course_module_element_user_log_constructed_response_attempt_attributes_scenario_question_attempts_attributes_' + currentQuestion + '_status').val('Seen');
+    $('#td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+    $('#nav_dialog_td_question_attempt_' + questionsList[currentQuestion] + '_status').text('Seen');
+
+    $('.question-count').text('Question ' + (currentQuestion + 1) + ' of ' + questionsList.length);
+    $('#review_flag_' + questionsList[currentQuestion]).show();
+
+    $('#scenario_question_attempt_' + questionsList[currentQuestion]).fadeIn();
+    $('.submission-pane-content').addClass('hidden');
+    closeNavDialog();
+    closeScratchPadDialog();
+    submitForm();
+  };
+
+  function loadSubmission() {
+    $('.cr-question').hide();
+    $('.submission-pane-content').removeClass('d-none');
+    closeNavDialog();
+    closeScratchPadDialog();
+    submitForm();
+  };
+
+
+
+  function submitForm() {
+    $("#edit_course_module_element_user_log_#{@course_module_element_user_log.id}").submit();
+  };
+

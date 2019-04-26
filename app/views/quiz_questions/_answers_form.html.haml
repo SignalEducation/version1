@@ -1,0 +1,18 @@
+.row
+  .col-sm-12
+    .well.well-sm
+      .form-group
+        .col-sm-1
+          .label
+            =('A'..'Z').to_a[qa.options[:child_index]]
+        .col-sm-1
+          =label_tag :quiz_question_quiz_answers_attributes_0_quiz_contents_attributes_0_text_content, t('views.quiz_answer.form.answer_text'), class: 'control-label'
+        .col-sm-10{class: "answer_contents_#{qa.options[:child_index]}"}
+          =qa.fields_for :quiz_contents do |c|
+            .answer_content_block
+              =render partial: 'quiz_contents/fields_for', locals: {qc: c, the_type: "answer#{qa.options[:child_index]}"}
+
+      .form-group
+        =qa.label :degree_of_wrongness, t('views.quiz_questions.form.degree_of_wrongness'), class: 'control-label col-sm-2'
+        .col-sm-10
+          =qa.select :degree_of_wrongness, options_for_select(QuizAnswer::WRONGNESS, qa.object.degree_of_wrongness), {include_blank: t('views.general.select')}, {class: 'form-control'}

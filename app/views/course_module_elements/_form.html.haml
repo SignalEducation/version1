@@ -1,0 +1,140 @@
+=form_for(@course_module_element, html: {class: 'form-horizontal', role: 'form', id: 'course_module_element_form'}, multipart: true) do |f|
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_module_element, message: nil}
+        =f.hidden_field :sorting_order
+        =f.hidden_field :course_module_id
+        =f.hidden_field :is_quiz
+        =f.hidden_field :is_video
+        =f.hidden_field :is_constructed_response
+
+
+        .row
+          .col-sm-6
+            -# Extra CourseModuleElement Fields unique for Videos or Quizzes
+            -if @course_module_element.course_module_element_video
+              =render partial: 'course_module_element_videos/fields_for', locals: {f: f}
+            -elsif @course_module_element.course_module_element_quiz
+              =render partial: 'course_module_element_quizzes/fields_for', locals: {f: f}
+            -elsif @course_module_element.constructed_response
+              =render partial: 'constructed_responses/basic_fields_for', locals: {f: f}
+
+
+            -# Dropdown list of other CourseModules in the SubjectCourse
+            .form-group
+              =f.label :course_module_id, t('views.course_module_elements.form.course_module_id')
+              .input-group.input-group-lg
+                =f.collection_select :course_module_id, @course_modules, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            .form-group
+              -# Dropdown list of other CMEs in current course module
+              =f.label :related_course_module_element_id, t('views.course_module_elements.form.related_course_module_element_id')
+              .input-group.input-group-lg.full-width
+                =f.collection_select :related_course_module_element_id, @related_cmes, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.course_module_elements.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.course_module_elements.form.name_placeholder'), class: 'form-control update-my-url'
+
+            .form-group
+              =f.label :name_url, t('views.course_module_elements.form.name_url')
+              -#TODO onscreen validation stops the form submission but summernote blocks why
+              .input-group.input-group-lg
+                =f.text_field :name_url, placeholder: t('views.course_module_elements.form.name_url_placeholder'), class: 'form-control'
+
+            .form-group
+              =f.label :temporary_label, t('views.course_module_elements.form.temporary_label')
+              .input-group.input-group-lg
+                =f.text_field :temporary_label, placeholder: t('views.course_module_elements.form.temporary_label_placeholder'), class: 'form-control'
+
+
+            .col-md-6
+              .form-group
+                .col-sm-8.col-sm-offset-1
+                  .checkbox
+                    %label
+                      =f.check_box :active, default: true
+                      =t('views.course_modules.form.active')
+
+            .col-md-6
+              .form-group
+                .col-sm-8.col-sm-offset-1
+                  .checkbox
+                    %label
+                      =f.check_box :available_on_trial
+                      Available on Trial
+
+            -if @course_module_element.is_quiz? && !@course_module_element.new_record?
+              %br/
+              %br/
+              =link_to 'Reorder Quiz Questions', quiz_questions_order_url(@course_module_element), class: 'btn btn-secondary'
+
+
+
+  -if @course_module_element.course_module_element_quiz
+    -# CourseModuleElementQuiz Partial
+    %hr/
+    %h2.h3=t('views.course_module_elements.form.questions')
+    =render partial: 'course_module_element_quizzes/fields_for_question', locals: {f: f}
+
+  -elsif @course_module_element.course_module_element_video
+    -# CourseModuleElementVideo Partial
+    .box-item
+      .row
+        .col-sm-12
+          =f.label :description, t('views.course_module_elements.form.description'), class: 'control-label'
+          .input-group.input-group-lg
+            =f.text_area :description, as: :summernote, class: 'form-control', id: 'description'
+
+    -#.box-item
+      .row
+        .col-sm-12
+          =render partial: 'course_module_element_videos/fields_for_video_resources', locals: {f: f}
+
+    -if @course_module_element.course_module_element_resources.any?
+      =render partial: 'course_module_element_videos/fields_for_course_module_element_resources', locals: {f: f}
+
+  -elsif @course_module_element.constructed_response
+    %br/
+    %hr/
+    %br/
+    =render partial: 'constructed_responses/fields_for', locals: {f: f}
+
+  .row
+    .col-md-12
+      %br/
+      %br/
+      -if @course_module_element.course_module_element_video
+        =f.submit t('views.general.save'), class: 'btn btn-primary', disabled: false
+      -else
+        =f.submit t('views.general.save'), class: 'btn btn-primary clear-question', id: 'submit_button'
+      -if f.object.course_module_element_quiz || f.object.constructed_response
+        =f.submit t('views.course_module_elements.form.save_and_add_another'), class: 'btn btn-primary'
+
+      =link_to t('views.general.cancel'), course_module_special_link(@course_module_element.course_module), class: 'btn btn-secondary'
+
+
+-if @course_module_element.is_video
+  =render partial: 'course_module_element_videos/vimeo_video_form_modal'
+
+-if @course_module_element.is_quiz && !@course_module_element.new_record?
+  :javascript
+    $(document).on('ready', function() {
+      $('.clear-question').bind('click', function() {
+        if ($('#the_new_question').find('input[type=text],textarea,select').filter(':visible:first').val() == "") {
+          $('#the_new_question').remove();;
+        }
+      });
+    })
+
+:javascript
+
+  $('#description').summernote({
+    disableDragAndDrop: true,
+    placeholder: 'write description here...'
+  });
+

@@ -1,0 +1,20 @@
+%main
+  %article.bg-gray5
+    .container.mb-7
+      %header.hero-section
+        %h1.h1-hero.mb-3
+          Our Tutors
+        %p.p-hero.px-lg-6
+          All of our tutors are industry experts dedicated to helping students achieve their learning goals. Whether it be passing professional exams, advancing their careers or simply grasping a new concept.
+
+      %section.pb-md-6.pb-5
+        .row
+          -@tutors.each do |tutor|
+            .col-sm-6.col-md-4.col-lg-3
+              =link_to profile_url(tutor.name_url), class: 'card text-center mb-4' do
+                .py-4
+                  = image_tag tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm', alt: 'Tutor Profile Image'
+
+                %p.h4.text-ellipsis.mb-4
+                  =tutor.full_name
+

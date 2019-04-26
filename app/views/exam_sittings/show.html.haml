@@ -1,0 +1,41 @@
+.container
+  %header.management-console-section
+    %h1
+      =@exam_sitting.name
+
+  %section.pb-7
+    .col-sm.pt-4
+
+      .row
+        .col-sm-12
+          .box-item.table-box
+            .row.l-margin-bottom
+              .col-sm-6
+                =# link_to 'CSV Download', export_exam_sitting_enrollments_path(format: :xls), class: 'btn btn-primary'
+
+            .table-responsive
+              %table.table.sorted_table
+                %thead
+                  %tr
+                    %th User
+                    %th Sitting
+                    %th Expired
+                    %th
+                    %th
+                %tbody
+                  -@exam_sitting.enrollments.each do |enrollment|
+                    %tr
+                      %td
+                        =enrollment.user.try(:full_name)
+                      %td
+                        =enrollment.try(:exam_sitting).try(:name)
+                      %td
+                        =tick_or_cross(enrollment.expired)
+                      %td
+                        =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-xs btn-secondary'
+                      %td
+                        =#link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-primary btn-small'
+
+
+
+

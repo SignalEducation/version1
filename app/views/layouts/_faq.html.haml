@@ -1,0 +1,45 @@
+-@faq_section.each do |faq_section|
+  -if faq_section.faqs.any?
+    .col-sm-12
+      -if faq_section.description
+        %h3
+          =faq_section.name
+      -if faq_section.description
+        %p
+          =faq_section.description
+
+      -faq_section.faqs.all_active.all_in_order.each do |faq|
+        .col-sm-12
+          %section{id: faq.name_url}
+            .faq-box
+              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-none"); $(this).find(".faq-answer-expanded").toggleClass("d-none");'}
+                .faq-title
+                  =faq.question_text.html_safe
+
+                .faq-answer.closed
+                  %p
+                    =faq.pre_answer_text.truncate(100)
+
+                .faq-answer-expanded.d-none
+                  =faq.answer_text.html_safe
+
+
+
+
+
+
+
+
+
+:javascript
+  $(document).on('ready', function() {
+    var urlHash = window.location.href.split("#")[1];
+    if (window.location.href.indexOf("#") > -1) {
+      var urlSection = $('#' + urlHash);
+      $('html,body').animate({
+        scrollTop: $('#' + urlHash).offset().top
+
+      }, 2000);
+      urlSection.find(".faq-inner").click();
+    }
+  });

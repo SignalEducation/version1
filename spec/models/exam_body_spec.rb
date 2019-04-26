@@ -1,0 +1,45 @@
+# == Schema Information
+#
+# Table name: exam_bodies
+#
+#  id                                :integer          not null, primary key
+#  name                              :string
+#  url                               :string
+#  created_at                        :datetime         not null
+#  updated_at                        :datetime         not null
+#  active                            :boolean          default(FALSE), not null
+#  has_sittings                      :boolean          default(FALSE), not null
+#  preferred_payment_frequency       :integer
+#  subscription_page_subheading_text :string
+#
+
+require 'rails_helper'
+
+describe ExamBody do
+
+  subject { FactoryBot.build(:exam_body) }
+
+  # Constants
+
+  # relationships
+  it { should have_many(:enrollments) }
+  it { should have_many(:exam_sittings) }
+  it { should have_many(:subject_courses) }
+
+  # validation
+  it { should validate_presence_of(:name) }
+  it { should validate_uniqueness_of(:name) }
+
+  it { should validate_presence_of(:url) }
+
+  # callbacks
+  it { should callback(:check_dependencies).before(:destroy) }
+
+  # scopes
+  it { expect(ExamBody).to respond_to(:all_in_order) }
+
+  # class methods
+
+  # instance methods
+  it { should respond_to(:destroyable?) }
+end

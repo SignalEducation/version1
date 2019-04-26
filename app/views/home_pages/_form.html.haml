@@ -1,0 +1,104 @@
+=form_for(@home_page, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .box-item.form-box
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @home_page, message: nil}
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.home_pages.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.home_pages.form.name_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :seo_title, t('views.home_pages.form.seo_title')
+              .input-group.input-group-lg
+                =f.text_field :seo_title, placeholder: t('views.home_pages.form.seo_title_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :seo_description, t('views.home_pages.form.seo_description')
+              .input-group.input-group-lg
+                =f.text_field :seo_description, placeholder: t('views.home_pages.form.seo_description_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :logo_image, t('views.home_pages.form.logo_image')
+              .input-group.input-group-lg
+                =f.select :logo_image, HomePage::LOGO_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+            .form-group.pt-5
+              .row
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :registration_form
+                      =t('views.home_pages.form.registration_form')
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :login_form
+                      =t('views.home_pages.form.login_form')
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :pricing_section
+                      =t('views.home_pages.form.pricing_section')
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :footer_link
+                      ='Footer Link'
+                .col
+                  .checkbox
+                    %label
+                      =f.check_box :seo_no_index
+                      ='No Index'
+
+
+          .col-sm-6
+            -unless @home_page.home
+              .form-group
+                =f.label :public_url, t('views.home_pages.form.public_url')
+                .input-group.input-group-lg
+                  =f.text_field :public_url, placeholder: t('views.home_pages.form.public_url_placeholder'), class: 'form-control'
+              .form-group
+                =f.label :custom_file_name, t('views.home_pages.form.custom_file_name')
+                .input-group.input-group-lg
+                  =f.text_field :custom_file_name, placeholder: t('views.home_pages.form.custom_file_name_placeholder'), class: 'form-control'
+
+            .form-group
+              =f.label :group_id, t('views.home_pages.form.group_id')
+              .input-group.input-group-lg
+                =f.collection_select :group_id, @groups, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
+
+            .form-group
+              =f.label :preferred_payment_frequency, t('views.home_pages.form.preferred_payment_frequency')
+              .input-group.input-group-lg
+                =f.select :preferred_payment_frequency, options_for_select([1, 3, 12,], selected: f.object.preferred_payment_frequency),
+                 {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+
+            .form-group
+              =f.label :subscription_plan_category_id, t('views.home_pages.form.subscription_plan_category_id')
+              .input-group.input-group-lg
+                =f.collection_select :subscription_plan_category_id, @subscription_plan_categories, :id, :name, {include_blank: t('views.general.none')}, {class: 'form-control custom-select'}
+
+
+            .form-group
+              =f.label :header_h1, t('views.home_pages.form.header_h1')
+              .input-group.input-group-lg
+                =f.text_field :header_h1, placeholder: t('views.home_pages.form.header_h1_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :header_paragraph, t('views.home_pages.form.header_paragraph')
+              .input-group.input-group-lg
+                =f.text_field :header_paragraph, placeholder: t('views.home_pages.form.header_paragraph_placeholder'), class: 'form-control'
+
+            .form-group
+              =f.label :registration_form_heading, t('views.home_pages.form.registration_form_heading')
+              .input-group.input-group-lg
+                =f.text_field :registration_form_heading, placeholder: t('views.home_pages.form.registration_form_heading_placeholder'), class: 'form-control'
+            .form-group
+              =f.label :login_form_heading, t('views.home_pages.form.login_form_heading')
+              .input-group.input-group-lg
+                =f.text_field :login_form_heading, placeholder: t('views.home_pages.form.login_form_heading_placeholder'), class: 'form-control'
+
+
+
+  .row.pt-4
+    .col-sm-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), home_pages_path, class: 'btn btn-secondary'

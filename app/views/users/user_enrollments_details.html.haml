@@ -1,0 +1,49 @@
+.container
+  %header.management-console-section
+    %h1
+      =@user.full_name
+    %p.p-hero.px-lg-8
+      =@user.email
+
+  %section.pb-7
+    =render partial: 'user_tabs'
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %h3.h-dark
+            Enrolments
+
+          .table-responsive
+            .row
+              .col-sm-12
+                %table.table
+                  %thead
+                    %tr
+                      %th
+                        Course
+                      %th
+                        Exam Sitting
+                      %th
+                        Active
+                      %th
+                        Expired
+                      %th
+                      %th
+                  %tbody
+                    -@enrollments.each do |enrollment|
+                      %tr
+                        %td
+                          -if enrollment.subject_course
+                            =enrollment.subject_course.name
+                        %td
+                          -if enrollment.exam_date
+                            =exam_sitting_date(enrollment.exam_date)
+                        %td
+                          =tick_or_cross(enrollment.active)
+                        %td
+                          =tick_or_cross(enrollment.expired)
+                        %td
+                          =link_to enrollment_management_url(enrollment) do
+                            .btn.btn-secondary.btn-xs
+                              =t('views.general.view')

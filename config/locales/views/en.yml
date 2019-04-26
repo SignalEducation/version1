@@ -1,0 +1,1889 @@
+# Views language - English
+
+en:
+  views:
+    general:
+      numbers:
+        thousands_separator: ","
+        decimal_separator: "."
+      active: Active
+      add_user: Add User
+      add_student: Add Student
+      add_manager: Add Manager
+      add_group: Add Team
+      edit_user: Edit user
+      edit_group: Edit Team
+      admin: Admin
+      approve: Approve
+      approve_tooltip: click to approve
+      at_date_time: At
+      author: "Author : "
+      course_tutors: Course Tutors
+      course_structure: Course Stucture
+      course_content: Course Content
+      course_tuition: Tuition
+      course_revision: Revision
+      question_bank: Question Bank
+      course_test: Test
+      final_exam: Final Exam
+      back: Back
+      browse: Browse
+      by: by
+      cancel: Cancel
+      close: Close
+      coming_soon: Coming soon
+      delete: Delete
+      delete_answer: Delete Answer
+      delete_block: Delete Question
+      delete_tooltip: click to delete
+      delete_confirmation: Are you sure?
+      details: Details
+      drag_to_reorder: Drag to reorder
+      duration: "Duration : "
+      edit: Edit
+      edit_courses: Edit Courses
+      show: Show
+      edit_tooltip: click to edit
+      example: Example
+      go: Go
+      home: Home
+      inactive: Inactive
+      links: Links
+      more_info: More Info
+      missing_data_error: Sorry, some data is missing
+      new: New
+      new_tooltip: click to add a new one
+      no: No
+      none: None
+      ok: ok
+      or: or
+      review: Review
+      return: Return
+      save: Save
+      continue: Continue
+      download: Download Now
+      create_account: Create Account
+      upload: Upload
+      save_changes: Save Changes
+      save_and_continue_editing: Save and continue Editing
+      search: Search...
+      select: Select...
+      send: Send
+      settings: Settings
+      sign_in: Log in
+      enter: Enter
+      log_out: Log out
+      sign_out: Sign out
+      sign_up: Sign up
+      sign_up_now: Sign up Now
+      start: Start
+      start_free_trial: Free Trial
+      table_of_contents: Table of Contents
+      these_are_optional: These are optional
+      time: Time
+      toggle_navigation: Toggle navigation
+      terms_and_conditions: I Agree to LearnSignal Terms & Conditions
+      tools: Tools
+      view: View
+      view_tooltip: click to view
+      yes: Yes
+      tooltips:
+        click_to_edit: click to edit
+        click_to_print: click to print
+        click_to_refresh: click to refresh
+        click_to_search: click to search
+        click_to_view: click to view
+        coming_soon: Coming Soon
+      created_at: Created at
+      updated_at: "Last Updated : "
+      credit_card_number_placeholder: Card Number
+      expiry_month_prompt: "Exp Mth"
+      expiry_year_prompt: "Exp Year"
+      payment_frequency_in_months:
+        a1: Pay monthly
+        a3: Pay quarterly
+        a6: Half-yearly
+        a12: Pay yearly
+      payment_intervals:
+        a1: Month
+        a3: Quarter
+        a6: 6 Months
+        a12: Year
+      subscription_label_in_months:
+        a1: Monthly Subscription Plan
+        a3: Quarterly Subscription Plan
+        a6: Half-yearly Subscription Plan
+        a12: Yearly Subscription Plan
+      subscription_in_months:
+        a1: LearnSignal Monthly Subscription
+        a3: LearnSignal Quarterly Subscription
+        a6: LearnSignal Half-yearly Subscription
+        a12: Yearly subscription
+      pay_frequency_in_months:
+        a1: Pay Monthly
+        a3: Pay Quarterly
+        a12: Pay Yearly
+      subscription_ideal_line:
+        a1: Ideal for Revision
+        a3: Ideal for a full sitting
+        a12: Ideal for corporates
+      day: " Day"
+      free_trial: " Free Trial"
+      all_courses: "Unlimited Courses"
+      cancel_anytime: "Cancel Anytime"
+      actual_submit: Submit
+      user_name: "Hi, "
+      upload_csv: Upload CSV File
+      csv_upload: CSV Upload
+      csv_download: Download CSV
+      preview_csv: CSV Data Preview
+      errors: Errors
+      submit: Submit
+      file: File
+
+    locales:
+      en: English
+      es: Spanish
+
+    duplicate_me_for_new_views:
+      form:
+        name: Name
+        name_placeholder: First category name
+        category_id: Category
+        active: 'Active?'
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+
+      index:
+        h1: Categoreez
+
+      show:
+        h1: Category
+
+      edit:
+        h1: Edit Category
+
+      new:
+        h1: New Category
+
+    exercises:
+      show: 
+      admin:
+        index:
+          h1: Student Exercises
+          name: Name
+          email: Email
+          state: Current State
+          submitted_on: Submitted On
+        form:
+          correction: Upload Correction
+        show:
+        edit:
+
+    orders:
+      index:
+        h1: Orders
+        subject_course_id: Course
+        mock_exam_id: Mock
+        product_id: Product
+        order: Order
+        user_id: User
+        stripe_status: Status
+
+
+      show:
+        h1: Order
+        product_id: Product
+        subject_course_id: Course
+        user_id: User
+        stripe_guid: Stripe Id
+        stripe_customer_id: Stripe Customer Id
+        stripe_status: Order Status
+
+      new:
+        h1: New Order
+
+    blog_posts:
+      form:
+        home_page_id: Landing page
+        title: Title
+        title_placeholder: Title of Blog Post
+        description: Description Text
+        description_placeholder: Description of your resource
+        url: URL
+        url_placeholder: Blog Post URL
+        image: Image
+        iamge_file_name: Image file name
+        image_content_type: Image content type
+        image_file_size: Image file size
+        image_updated_at: Image updated at
+        replace: Replace Image
+
+
+    content_pages:
+      form:
+        name: Name
+        name_placeholder: Name
+        public_url: URL
+        public_url_placeholder: Page URL
+        seo_title: SEO Title
+        seo_title_placeholder: SEO/Meta Title Tag
+        seo_description: SEO Description
+        seo_description_placeholder: SEO/Meta Description Tag
+        text_content: Text Content
+        text_content_placeholder: Text Content
+        h1_text: H1
+        h1_text_placeholder: H1 Text
+        h1_subtext: H1 Subtext
+        h1_subtext_placeholder: H1 Subtext
+        nav_type: Navigation Bar
+        footer_link: Footer Link
+        active: Active
+
+      index:
+        h1: Content Pages
+
+      show:
+        h1: Content Page
+
+      edit:
+        h1: Edit Content Page
+
+      new:
+        h1: New Content Page
+
+    corporate_requests:
+      form:
+        name: Name
+        name_placeholder: Full Name
+        title: Title
+        title_placeholder: Your Job Title
+        company: Company
+        company_placeholder: Company Name
+        email: Email
+        email_placeholder: Your Email
+        phone_number: Phone Number
+        phone_number_placeholder: Contact Number
+        website: Website
+        website_placeholder: Company Website or Linkedin
+        personal_message: Message
+        personal_message_placeholder: Message (Optional)
+
+      index:
+        h1: Corporate Enquiries
+
+      show:
+        h1: Corporate Enquiry
+
+      edit:
+        h1: Corporate Enquiry
+
+      new:
+        h1: Corporate Enquiry
+
+    countries:
+      form:
+        name: Name
+        name_placeholder: Name of the country
+        iso_code: ISO code
+        iso_code_placeholder: "ie gb ca us etc"
+        country_tld: Country TLD
+        country_tld_placeholder: ".com"
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        in_the_eu: In the EU
+        currency_id: Currency
+        continent: Continent
+
+      index:
+        h1: Countries
+
+      show:
+        h1: Country
+
+      edit:
+        h1: Edit Country
+
+      new:
+        h1: New Country
+
+    coupons:
+      form:
+        name: Name
+        name_placeholder: Name
+        code: Code
+        code_placeholder: Code for coupon
+        currency_id: Currency
+        active: Active
+        amount_off: Amount Off (cents)
+        amount_off_placeholder: Amount Off
+        duration: Duration
+        duration_placeholder: Duration Type
+        duration_in_months: Duration in Months
+        duration_in_months_placeholder: Number of Months the Coupon Applies
+        max_redemptions: Max Redemptions
+        max_redemptions_placeholder: Limit the number of times this can be used
+        percent_off: Percentage Off
+        percent_off_placeholder: Percentage Off
+        redeem_by: Redeem By (Date)
+        redeem_by_placeholder: Redeem By Specific Date
+
+
+      index:
+        h1: Coupons
+        name: Name
+        code: Code
+        currency_id: Currency
+        active: Active
+        amount_off: Amount Off
+        duration: Duration (forever, once, repeating)
+        duration_in_months: Duration in Months
+        max_redemptions: Max Redemptions
+        percent_off: Percentage Off
+        redeem_by: Redeem By
+        times_redeemed: Times Redeemed
+
+      show:
+        h1: Coupon
+        stripe_coupon_data: Stripe Coupon Object
+
+      edit:
+        h1: Edit Coupon
+
+      new:
+        h1: New Coupon
+
+
+    courses:
+      show:
+        h1: Courses
+        done: Done
+        coming_soon: "We don't have any content for this course module right now."
+
+      content_denied:
+          subscription: Upgrade to a Subscription
+          subscription_required: A valid subscription is required to view this content. Upgrade to access this course.
+          product: Purchase this Course
+          product_required: You must first purchase this course to access it's content.
+
+      show_results:
+        result: 'Result:'
+        score: 'Score:'
+        summary: Summary
+        q: Q
+        answers: Possible Answers
+        correct_answer: "Correct Answer: "
+        your_answer: "Your Answer: "
+        solution: "Solution"
+        check_out: "Review the video: "
+        attempts_table:
+          question: 'Question'
+          result: Result
+          score: Score
+          level: Level
+          video: Video
+          total: Total
+        scoring_system: Scoring system
+        previous_attempts: Previous Attempts
+        no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
+
+
+    course_sections:
+      form:
+        course_module_elements: Course Module Elements
+        subject_course_id: Course
+        name: Name
+        name_placeholder: Course Section (tab) Name
+        name_url: Name URL
+        name_url_placeholder: course-section-name
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+        counts_towards_completion: Counts towards Completion
+        assumed_knowledge: Assumed Knowledge
+
+      edit:
+        h1: Edit Course Section
+
+      index:
+        h1: Course Sections
+        delete: Delete Course Section
+
+      new:
+        h1: New Course Section
+
+      show:
+        h1: Course Section
+
+    course_modules:
+      form:
+        course_module_elements: Course Module Elements
+        subject_course_id: Course
+        course_section_id: Course Section (tab)
+        name: Name
+        name_placeholder: Course Module Name
+        name_url: Name URL
+        name_url_placeholder: course-module-name
+        description: Description
+        description_placeholder: Describe the course module here
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        estimated_time_in_seconds: "Time (in seconds)"
+        estimated_time_in_seconds_placeholder: 600
+        active: Active
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
+        is_past_paper: Past Paper Module
+        highlight_colour: "Highlight Colour (Default Color is #FFFFFF)"
+        colour_placeholder: "eg. #fff"
+        tuition: Tuition
+        test: Test
+        revision: Revision
+        question_bank: Question Bank
+
+      edit:
+        h1: Edit Course Module
+
+      index:
+        h1: Course Modules
+        delete: Delete Course Module
+
+      new:
+        h1: New Course Module
+
+      show:
+        h1: Course Module
+        click_a_module: Click on a Course Module to view its details or click on "New" to create a new Course Module.
+        link_to_student_ui: "View in the student-facing UI"
+        add_more_questions: More questions needed
+
+
+    course_module_elements:
+      form:
+        name: Name
+        name_placeholder: Give a title that users will see
+        name_url: Name URL
+        name_url_placeholder: auto-populated-for-you
+        temporary_label: Label
+        temporary_label_placeholder: Temp Label
+        delete: Delete File
+        description: Description
+        description_placeholder: Description (This is optional)
+        estimated_time_in_seconds: Estimated time in seconds
+        estimated_time_in_seconds_tag: (If blank this will be auto-populated with 60 seconds per question)
+        estimated_time_in_seconds_placeholder: 180
+        course_module_id: Course module
+        course_module_element_video_id: Course module element video id
+        course_module_element_quiz_id: Course module element quiz id
+        related_course_module_element_id: Related Course Module Element
+        sorting_order: Sorting order
+        forum_topic_id: Forum topic
+        created_at: Created at
+        updated_at: Updated_at
+        new_video: New video
+        new_quiz: New quiz
+        new_constructed_response: New CR
+        questions: Questions
+        save_and_add_another: Save and add another Question
+        active: Active
+        seo_description: SEO description
+        seo_description_placeholder: Description text that Google will show in search results
+        seo_no_index: "SEO no-index flag"
+
+      edit:
+        h1: Edit Course Module Element
+        video: Edit Video
+        quiz: Edit Quiz
+
+      index:
+        h1: Course Module Elements
+
+      new:
+        h1: New Course Module Element
+        video: New Video
+        quiz: New Quiz
+        constructed_response: New Constructed Response
+
+      show:
+        h1: Course Module Element
+        quiz_preview: Quiz Preview
+        video_preview: Video Preview
+        constructed_response_preview: Constructed Response Preview
+        next: Next
+        next_step: Next Step
+        skip_step: Skip Step
+        retake_quiz: Retake Quiz
+        mark_complete: Mark as Complete
+        previous: Previous
+        previous_step: Previous Lesson
+        preview: Preview
+        continue: Continue
+
+        tabs:
+          description: Description
+          question: Question
+          answer: Answer
+          notes: Notes
+          resources: Resources
+          transcript: Transcript
+
+    course_module_element_quizzes:
+      form:
+        number_of_questions: No. of Questions Asked
+        number_of_questions_placeholder: 10
+        question_selection_strategy: Question Selection Strategy
+        question_selection_strategy_placeholder: 1
+        advanced_setup_link: Advanced
+        preview_button: Save and View
+        video: Video
+        h3:
+          question_number: "Question #"
+          question_new: New Question
+
+    constructed_responses:
+      form:
+        time_allowed: Time Allowed
+        time_allowed_placeholder: Time in Seconds
+        new_scenario: New Scenario
+        scenario_number: "Scenario #"
+        type: Answer Template Type
+
+        scenarios:
+          text_content: Scenario Text
+        scenario_question:
+          text_content: Scenario Question Text
+        scenario_answer_template:
+          text_content: Answer Template Text
+
+    course_module_element_resources:
+      form:
+        course_module_element_id: Course module element
+        name: File Name
+        name_placeholder: Name that users will see
+        description: Description
+        description_placeholder: Description of your resource
+        web_url: Web URL
+        web_url_placeholder: http://en.wikipedia.org/learnsignal
+        upload_file_name: Upload file name
+        upload_content_type: Upload content type
+        upload_file_size: Upload file size
+        upload_updated_at: Upload updated at
+        upload: Upload File
+        replace: Replace Current File
+        type: Type
+
+      edit:
+        h1: Edit Resource
+
+      index:
+        h1: File Uploads - (PDF's, Excel Files, etc)
+        index_h1: Course Module Element Resources
+
+      new:
+        h1: New Resource
+        new_button: New Resource
+
+      show:
+
+    course_module_element_videos:
+      form:
+        video_file: Video File
+        duration: Video Duration in seconds
+        duration_placeholder: Duration in Seconds
+        video_id: Video ID
+        video_id_placeholder: Wistia ID
+        vimeo_guid: Vimeo ID
+        vimeo_guid_placeholder: Vimeo ID (in the URL on Vimeo)
+
+    course_tutor_details:
+      form:
+        subject_course_id: Course
+        user_id: Tutor User
+        title: Title
+        title_placeholder: Course Tutor Title
+
+      index:
+        h1: Course Tutor Details
+        new_tutor_details: Add Tutor Details
+
+
+      edit:
+        h1: Edit Course Tutor Details
+
+      new:
+        h1: New Course Tutor Details
+
+
+    currencies:
+      form:
+        iso_code: ISO code
+        iso_code_placeholder: EUR
+        name: Name
+        name_placeholder: Euro
+        leading_symbol: Leading symbol
+        leading_symbol_placeholder: "€"
+        trailing_symbol: Trailing symbol
+        trailing_symbol_placeholder: "c"
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+
+      edit:
+        h1: Edit Currency
+
+      index:
+        h1: Currencies
+
+      new:
+        h1: New Currency
+
+      show:
+        h1: Currency
+
+    dashboard:
+      index:
+        h1: Dashboard
+
+      student:
+        h1: Dashboard
+
+      individual_student:
+        in-progress: In-progress
+        completed: Completed
+        none_in_progress: "Remember, you can study multiple modules at the same time."
+        none_completed: "This panel will show you the modules that you have completed. Keep going!"
+        no_content_right_now_h1: Your Learn Signal Dashboard
+        no_content_right_now_h5: Your progress through all courses will be recorded here.
+        overview: Overview
+
+      tutor:
+        title: Dashboard
+        total_course_module_elements: Total Course Modules Elements
+        course_module_element_videos: Number of Videos
+        course_module_element_quizzes: Number of Quizzes
+        total_time_watched: Total Time Watched
+
+      admin:
+        user_data: User Data
+        total_number_of_items: Total
+        new_items_in_last_7_days: New in last 7 Days
+        active: Active
+        users: Users
+        user_groups: User Groups
+        course_content_data: Courses Data
+
+        csv_upload_modal:
+          h1: Upload CSV File
+          file: Upload CSV File
+
+        preview_csv:
+          h1: Upload Preview
+
+      content_manager:
+        edited_in_last_3_days: Edited in the last 3 days
+        expired_in_last_3_days: Expired in the last 3 days
+        expires_in_next_3_days: Expires in the next 3 days
+        published_in_last_3_days: Published in the last 3 days
+        publishes_in_next_3_days: Publishes in the next 3 days
+        see_all_static_pages: See All Static Pages
+
+    exam_bodies:
+      form:
+        name: Name
+        name_placeholder: Name of Examining Body
+        url: Url
+        url_placeholder: Home URL of Examining Body
+        active: Active
+        has_sittings: Has Sittings?
+        preferred_payment_frequency: Preferred Payment Interval
+        subscription_page_subheading_text: Subscription Payment Subheading
+        subscription_page_subheading_text_placeholder: Subscription Payment Subheading
+
+      index:
+        h1: Exam Bodies
+
+      show:
+        h1: Exam Body
+
+      edit:
+        h1: Edit Exam Body
+
+      new:
+        h1: New Exam Body
+
+    exam_sittings:
+      form:
+        name: Name
+        subject_course_id: Course
+        exam_body_id: Exam Body
+        active: Active
+        computer_based: Computer Based
+        date: Date
+        date_placeholder: "2015-01-01"
+
+      index:
+        h1: Exam Sittings
+
+      show:
+        h1: Exam Sitting
+
+      edit:
+        h1: Edit Exam Sitting
+
+      new:
+        h1: New Exam Sitting
+
+    external_banners:
+      form:
+        name: Name
+        name_placeholder: Banner Name
+        name_url: Name URL
+        name_url_placeholder: Banner Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        background_colour: Background Colour
+        background_colour_placeholder: "eg. #fff"
+        text_content: Banner Text
+        text_content_placeholder: Banner Text
+        user_sessions: Sign In Page
+        library: Library Pages
+        subscription_plans: Pricing Page
+        footer_pages: Footer Pages [Contact, Privacy, T+C, ACCA, Lecturers, Media]
+        student_sign_ups: Sign Up Page
+
+      index:
+        h1: External Banners
+        delete: Delete
+
+      show:
+        h1: Banner
+
+      edit:
+        h1: Edit Banner
+
+      new:
+        h1: New Banner
+
+
+    faqs:
+      form:
+        name: Name
+        name_placeholder: FAQ Name
+        name_url: Name URL
+        name_url_placeholder: FAQ Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        faq_section_id: FAQ Section
+        faq_section_id_placeholder: FAQ Section - Parent
+        question_text: Question Text
+        question_text_placeholder: Question Text
+        answer_text: Answer Text
+        answer_text_placeholder: Answer Text
+        pre_answer_text: Basic Answer Text
+        pre_answer_text_placeholder: Basic Version of the Answer Text without any Text Formatting or HTML elements
+
+      index:
+        h1: FAQs
+        delete: Delete FAQ
+
+      show:
+        h1: FAQ
+
+      edit:
+        h1: Edit FAQ
+
+      new:
+        h1: New FAQ
+
+    faq_sections:
+      form:
+        name: Name
+        name_placeholder: Section Name
+        name_url: Name URL
+        name_url_placeholder: Section Name URL
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        description: Description
+        description_placeholder: Description - Optional
+
+      index:
+        h1: FAQ Sections
+        delete: Delete Section
+
+      show:
+        h1: FAQ Section
+
+      edit:
+        h1: Edit Section
+
+      new:
+        h1: New FAQ Section
+
+
+    groups:
+      form:
+        name: Name
+        name_placeholder: Name
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        description: Description
+        description_placeholder: Description goes here!
+        active: Active
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        course_count: No. of Courses
+        background_colour: Background Colour
+        exam_body: Exam body
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
+        short_description: Short Description
+        short_description_placeholder: Subheading Tagline
+
+      index:
+        h1: Groups
+
+      show:
+        h1: Course Group
+
+      edit:
+        h1: Edit Course Group
+
+      new:
+        h1: New Course Group
+
+      manage_courses:
+        course: Courses
+
+
+
+    home_pages:
+      form:
+        name: Name
+        name_placeholder: Name for Landing Page
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title or Meta Title
+        seo_description: SEO Description or Meta description
+        seo_description_placeholder: SEO Description Placeholder
+        subscription_plan_category_id: Subscription Plan Category
+        monthly_percentage_off: Optional percentage saving
+        group_id: Related Group
+        subject_course_id: Related Course
+        public_url: Public URL
+        public_url_placeholder: Public URL Placeholder
+        custom_file_name: View File Name
+        custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
+        blog_posts: Blog Posts
+        mailchimp_list_guid: MailChimp List ID
+        mailchimp_list_guid_placeholder: MailChimp List ID
+        logo_image: Logo Image
+        registration_form: Registration Form
+        login_form: Login Form
+        pricing_section: Pricing Section
+        preferred_payment_frequency: Preferred Payment Frequency
+        header_h1: Header H1
+        header_h1_placeholder: Header H1
+        header_paragraph: Header Paragraph
+        header_paragraph_placeholder: Header Paragraph
+        registration_form_heading: Reg Form Heading
+        registration_form_heading_placeholder: Reg Form Heading Text
+        login_form_heading: Login Form Heading
+        login_form_heading_placeholder: Login Form Header text
+
+      index:
+        h1: Landing Pages
+
+      show:
+        h1: Home Page
+
+      edit:
+        h1: Edit Landing Page
+
+      new:
+        h1: New Landing Page
+
+      sign_up_form:
+        confirm_password: Confirm Password
+        submit: Submit
+        no_credit_card_needed: No credit card needed
+        error_panel_caption: "prevented your Sign-Up from being completed:"
+
+    invoices:
+      form:
+        user_id: User
+        subscription_transaction_id: Subscription transaction
+        subscription_id: Subscription
+        number_of_users: No. of Users
+        number_of_users_placeholder: 2
+        currency_id: Currency
+        unit_price_ex_vat: Unit price
+        unit_price_ex_vat_placeholder: 10.00
+        line_total_ex_vat: Total ex VAT
+        vat_rate_id: VAT Rate
+        line_total_vat_amount: Total VAT
+        line_total_inc_vat: Total
+        status: 'Status'
+        issued_at: "Issued at"
+        date: Date
+        subject_course: Course
+        mock_exam: Mock Exam
+        stripe_guid: "Stripe GUID"
+        sub_total: "Sub- total"
+        total: "Total"
+        total_tax: "Total Tax"
+        stripe_customer_guid: "Stripe customer GUID"
+        object_type: "Type"
+        payment_attempted: "Payment attempted"
+        payment_closed: "Payment closed"
+        forgiven: "Forgiven"
+        paid: "Paid"
+        due: "Due"
+        livemode: "Livemode"
+        attempt_count: "Attempt count"
+        amount_due: "Amount due"
+        next_payment_attempt_at: "Next payment attempt at"
+        webhooks_delivered_at: "Webhooks delivered at"
+        charge_guid: "Charge GUID"
+        subscription_guid: "Subscription GUID"
+        tax_percent: "Tax %"
+        tax: "Tax"
+        original_stripe_data: "Original Stripe data"
+
+      edit:
+        h1: Edit Invoice
+
+      index:
+        h1: Invoices
+        print: Print
+
+      new:
+        h1: New Invoice
+
+      show:
+        h1: Invoice
+        disclaimer: "E&OE. Use of our services is subject to our Terms Of Business."
+
+    invoice_line_items:
+      form:
+        invoice_id: "invoice ID"
+        amount: "Amount"
+        currency_id: "Currency"
+        prorated: "prorated"
+        period_start_at: "Period Start at"
+        period_end_at: "Period End at"
+        subscription_id: "Subscription"
+        subscription_plan_id: Subscription Plan
+        original_stripe_data: Original Stripe data
+
+      show:
+        from_to: "From / To"
+        description: "Description"
+
+    layouts:
+      error_messages:
+        error: error
+        preface: 'prevented this item from being saved:'
+        is_invalid: is invalid
+      navigation:
+        learn_signal: Learn Signal
+        course_content: Course Content
+        content_management: Content Management
+
+    library:
+      show:
+        h1: Library
+        item: item
+        items: items
+        questions: Questions
+        question: Question
+        quiz: Quiz
+        quizzes: MCQs
+        lessons: Steps
+        lesson: Step
+        mcq: MCQ
+        mcqs: MCQs
+        video: Video
+        number_of_videos: Videos
+        videos: of Video
+        course_module: Course Module
+        course_module_element: Step
+        table_of_contents: Table of contents
+        description: Description
+
+      index:
+        continue_course: Continue Course
+        start_course: Start Course
+
+    mock_exams:
+      form:
+        name: Name
+        name_placeholder: Mock Exam Name
+        subject_course_id: Course
+        product_id: Product
+        file: Upload the Exam File
+        file_replacement: Upload the Exam File
+        cover_image: Upload the Cover Image File
+        sorting_order: Sorting Order
+
+      index:
+        h1: Mock Exams
+
+      show:
+        h1: Mock Exam
+
+      edit:
+        h1: Edit Mock Exam
+
+      new:
+        h1: New Mock Exam
+
+    products:
+      form:
+        name: Name
+        name_placeholder: Name of Product
+        price: Price
+        price_placeholder: Price of Product
+        active: Active
+        currency: Currency
+        mock_exam_id: Mock Exam
+        product_type: Product Type
+        correction_pack_count: Number of Corrections
+        subject_course: Course
+        type: Type
+
+      index:
+        h1: Products
+
+      show:
+        h1: Product
+
+      edit:
+        h1: Edit Product
+
+      new:
+        h1: New Product
+
+    quiz_answer:
+      form:
+        answer_content_placeholder: Answer Text
+        answer_solution_content_placeholder: "Explain why this is answer is wrong (optional)"
+        answer_text: Answer
+        answer_text_placeholder: Fill in the Answer Here
+        degree_of_wrongness: Select Correct/Incorrect
+
+    quiz_contents:
+      form:
+        content_type:
+          text: Text
+          image: Image
+          mathjax: MathJax
+        placeholder_for:
+          question: Ask the question
+          solution: Enter the solution
+          answer: Fill in the answer here
+
+    quiz_questions:
+      form:
+        mathjax_prompt: "You can incorporate MathJax using (&shy;math) and (/math)"
+        difficulty_level: Difficulty Level
+        question_text: Question Text
+        solution_to_the_question: Solution to the Question
+        answers: Answers
+        solutions: Solutions
+        degree_of_wrongness: "Right/Wrong"
+        text_content_placeholder: Question Text
+        solution_to_the_question_placeholder: Solution Text
+        #custom_styles: Apply Custom Styles
+        custom_styles: Remove Standard Styles
+
+      edit:
+        h1: "Edit Quiz Question - Advanced"
+
+      new:
+        h1: "New Quiz Question - Advanced"
+
+      show:
+        h1: Quiz Question Preview
+        preview_mode: Preview Mode
+        choose_an_answer: Choose an Answer
+
+    refunds:
+      form:
+        charge_id: Charge ID
+        subscription_id: Subscription ID
+        invoice_id: Invoice ID
+        user_id: User ID
+        amount: Amount (In Cents)
+        amount_placeholder: Refund Amount
+        reason: Reason for Refund
+
+      show:
+        h1: Refund
+
+      new:
+        h1: New Refund
+
+
+    shared:
+      filter_panel:
+        filter: 'filter:'
+
+    student_sign_ups:
+      show:
+        h1: "Thanks for joining us!"
+        sub-head: "E-mail with activation link has been sent. Please check your inbox and click on the link to activate your LearnSignal account."
+
+    subscription_payment_cards:
+      show:
+        h1: Your Card Details
+      index:
+        h1: Your Payment Details
+        h4: Card Details
+        status: Status
+
+      form:
+        make_default_card: Use this as your default Card
+
+      modal:
+        h4: New Card Details
+
+    subject_courses:
+      form:
+        name: Name
+        name_placeholder: Course name
+        name_url: Name URL
+        name_url_placeholder: Name URL
+        active: Active
+        preview: Preview Mode
+        computer_based: Computer Based
+        highlight_colour: Highlight Colour
+        release_date: Release Date
+        exam_body_id: Exam Body
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        description: Description
+        description_placeholder: Course Description
+        survey_url: Completion Survey URL
+        survey_url_placeholder: Survey Monkey URL
+        default_number_of_possible_exam_answers: Default No. of Questions
+        default_number_of_possible_exam_answers_placeholder: No. of Questions
+        group_id: Group
+        quiz_pass_rate: Quiz Pass Rate
+        quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
+        icon_label: Icon Label
+        icon_label_placeholder: Budicon Text Label
+        category_label: Category Label
+        category_label_placeholder: Category Label [Applied Knowledge]
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
+
+      index:
+        h1: Courses
+        your_courses: Courses
+        manager_courses: Course Content
+        add_course: Add Course
+        edit_content: Edit Content
+        edit_tutors: Tutors
+
+
+      show:
+        h1: Course
+        add_course_module: Please create a Course module to begin
+        description: Description
+        info: Course Info
+        update_student_logs: Update Student Logs
+        course_tutor_details: Tutors Details
+
+      edit:
+        h1: Edit Course
+
+      course_modules_order:
+        return: Return
+
+      reorder: Reorder Course Modules
+
+      new:
+        h1: New Course
+
+    subject_course_resources:
+      form:
+        name: Name
+        name_placeholder: Link/Button Name
+        description: Description
+        description_placeholder: Description
+        subject_course_id: Course
+        subject_course_id_placeholder: Course
+        external_url: External URL
+        external_url_placeholder: External Web URL
+
+      index:
+        h1: Course Resources
+        add_course_resource: Add Course Resource
+        edit_course_resource: Edit Course Resource
+
+      show:
+        h1: Course Resource
+        h2: Course Resources
+        description: Description
+        name: Name
+        subject_course_id: Course
+
+      edit:
+        h1: Edit Course Resource
+
+      new:
+        h1: New Course Resource
+
+    subject_course_user_log:
+      show:
+        course: Course
+        completed_at: Completed At
+
+    enrollments:
+      show:
+        course: Course
+        started_at: Started At
+        progress: Progress
+
+      form:
+        registered: Registered
+        exam_date: Select your Exam Date
+        computer_based_exam_date: Select Computer Based Exam Date
+        edit_exam_date: Edit Exam Date
+        select_exam_date: Select Exam Date
+        exam_sitting_id: Select your Exam Sitting
+        edit_exam_sitting: Change Sitting
+        student_number: Student Number
+        student_number_placeholder: Student Number
+        notifications: Receive Notifications
+        expired: Cancel Enrolment
+
+      admin_form:
+        registered: Registered
+        exam_date: Select your Exam Date
+        student_number: Student Number
+        student_number_placeholder: Student Number
+        active: Active
+        expired: Expired
+        notifications: Notifications
+
+
+
+    subscriptions:
+      new_subscription:
+        time_h4: 'Time left in FREE trial:'
+        h1: Get unlimited access today.
+        h2a: Thank you so much for trialling LearnSignal, we hope you found it valuable.
+        h2b: Now just imagine how much easier it could be to pass your ACCA exams with all this support and expertise at your fingertips. We’d love to see you inside!
+        h2c: Some great savings can be made.
+        h2d: Pick which plan suits you best
+        h2e: Reactivate your Membership.
+        most_popular_plan: Our most popular payment plan
+        get_unlimited_access: Get unlimited access
+        cancel_anytime: Cancel anytime
+        select_this_plan: Choose this plan
+        and_dont_forget: And don’t forget,
+        you_can_cancel_anytime: you can cancel anytime.
+        no_commitments: No lengthy commitments or obligations.
+        enter_payment_details: Simply enter your payment details
+        continue_right_away: And you can continue your studying straight away, without wasting a moment.
+        credit_card: Credit/Debit Card
+        coupon_code: Coupon Code
+        remember_cancel_anytime: Remember, you can cancel at anytime
+
+      upgrade_complete:
+        h1: Thank you for subscribing
+        h2:
+
+
+    subscription_plans:
+      form:
+        name: Name
+        exam_body_id: Exam Body
+        name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
+        payment_frequency_in_months: Payment frequency in months
+        currency_id: Currency
+        price: Price
+        price_placeholder: '19.99'
+        available_from: Available from
+        available_from_placeholder: "2014-07-31"
+        available_to: Available to
+        available_to_placeholder: "2019-12-31"
+        stripe_guid: Stripe ID
+        subscription_plan_category_id: Subscription Plan Category
+        monthly_percentage_off: Optional monthly percentage saving
+        previous_plan_price: Optional previous plan price
+        active: Active
+        guid: Guid - autogenerated
+        sub_heading_text: Sub Heading Text
+        sub_heading_text_placeholder: Payment Checkout Sub Heading
+        bullet_points_list: Bullet Points
+        bullet_points_list_placeholder: Point divided by commas
+        most_popular: Most Popular Plan
+
+      edit:
+        h1: Edit Subscription Plan
+
+      index:
+        h1: Subscription Plans
+        students: For Students
+
+      public_index:
+        h1: Pricing
+        corporates: For businesses
+        students: For individuals
+
+      new:
+        h1: New Subscription Plan
+
+      show:
+        h1: Subscription Plan
+
+    subscription_plan_categories:
+      form:
+        name: Name
+        name_placeholder: Special Category Name
+        available_from: Available from
+        available_from_placeholder: "2015-01-01 0:00"
+        available_to: Available to
+        available_to_placeholder: "2015-12-31 23:59"
+        guid: GUID
+        sub_heading_text: Sub Heading Text
+        sub_heading_text_placeholder: Payment page subheading
+
+      edit:
+        h1: Edit Subscription Plan Category
+
+      index:
+        h1: Subscription Plan Categories
+
+      new:
+        h1: New Subscription Plan Category
+
+      show:
+        h1: Subscrption Plan Category
+
+    tutor_applications:
+      form:
+        first_name: First Name
+        first_name_placeholder: Name
+        last_name: Last Name
+        last_name_placeholder: Name
+        email: Email
+        email_placeholder: tutor@example.com
+        info: Where can we learn more about you (LinkedIn, Website)
+        info_placeholder: asdf
+        description: What would you like to teach? Please give us a short description.
+        description_placeholder: asdf
+
+
+      index:
+        h1: Tutor Applications
+
+      show:
+        h1: Tutor Application
+
+      edit:
+        h1: Edit Tutor Application
+
+      new:
+        h1: Tutor Application
+
+
+    users:
+      form:
+        email: Email
+        email_confirmation: Email Confirmation
+        exam_body: Area of Study
+        area_of_study: Area of Study
+        your_email: Enter your email
+        email_placeholder: user@example.com
+        phone_number: Phone Number
+        interest: Topic
+        phone_number_placeholder: Phone Number
+        first_name: First Name
+        your_first_name: Enter your first name
+        first_name_placeholder: John
+        last_name: Last Name
+        your_last_name: Enter your last name
+        username: Community Username
+        username_placeholder: Username for LearnSignal Community Forum
+        last_name_placeholder: Smith
+        full_name: Name
+        current_password: Current password
+        current_password_placeholder: Current password
+        create_password: Create a password
+        password: Password
+        password_placeholder: Enter your password
+        new_password: New Password
+        new_password_placeholder: New Password
+        password_confirmation: Password Confirmation
+        password_confirmation_placeholder: Confirm your password
+        address: Address
+        address_placeholder: Billing address
+        name_url: Name URL
+        name_url_placeholder: must-be-lower-case-and-no-spaces
+        country_id: Country
+        login_count: Login count
+        failed_login_count: Failed login count
+        last_request_at: Last request at
+        current_login_at: Current login at
+        last_login_at: Last login at
+        current_login_ip: Current login IP
+        last_login_ip: Cast login IP
+        account_activated_at: Activated at
+        active: Active
+        user_group_id: User group
+        subscription_status: Status
+        password_reset_requested_at: Password reset requested at
+        password_reset_at: Password reset at
+        stripe_customer_id: Stripe customer ID
+        email_verified: Email Verified
+        created_at: Created at
+        updated_at: Updated at
+        guid: GUID
+        employee_guid: Employee GUID
+        employee_guid_placeholder: Employee GUID
+        profile_image: Profile Image
+        date_of_birth: Date of Birth
+        date_of_birth_placeholder: D.O.B
+        description: Description
+        description_placeholder: Tutor Info
+        tutor_title: Tutor Title
+        tutor_title_placeholder: Tutor Title
+        student_number: Student Number
+        student_number_placeholder: Student Number
+        stripe_account_balance: Stripe Account Balance (in Cents)
+        stripe_account_balance_placeholder: Student Number
+
+        student_access:
+          account_type: Account Type
+          trial_seconds_limit: Trial Content Limit (Seconds)
+          trial_seconds_limit_placeholder: Trial Content Limit (Seconds)
+          trial_days_limit: Trial Day Limit (Days)
+          trial_days_limit_placeholder: Trial Day Limit (Days)
+
+
+
+      edit:
+        h1: Edit User
+
+      index:
+        h1: Users
+
+      new:
+        h1: "Start your 7 day Free Trial"
+      admin_new:
+        h1: New User
+
+      show:
+        h1: Account
+        edit: Edit Account
+        add_new_card: Update Payment Info
+        new_card: Add New Card
+        change_company_data: "Change Company Data"
+        change_your_password:
+          link: Change password
+          h4: Change your password
+        pause_your_subscription_plan: Pause Recurring Payments
+        cancel_your_subscription_plan: Cancel Subscription
+        confirm_subscription_pause: PAUSE MEMBERSHIP
+        confirm_subscription_cancellation: Cancel My Subscription
+        confirm_subscription_reactivate: Reactivate My Subscription
+        keep_subscription: KEEP MEMBERSHIP
+        card_expired: "Expired"
+        card_expires: "Expires"
+        card_live: "Live Card"
+        card_no: "Card No.:"
+        confirm_deletion: "If you cancel your subscription, you may continue to use LearnSignal until your current billing period expires. After that, you will be limited to just our free content.  Are you certain you wish to cancel your subscription?"
+        confirm_immediate_deletion: "Cancel Your Membership? Cancellation will be effective at the end of your current billing period on "
+        confirm_cancellation_modal: "Cancellation will be effective at the end of your current billing period"
+        no_upgrade_options_available: "You are on the best Subscription Plan we offer."
+        reactivate_subscription:
+          h3: Reactivate Your Account
+          features_and_benefits: "Get back on track with your study plans and realise your full career potential. Your study history and an ever expanding range of content are just a few clicks away."
+          button_call_to_action: 'Reactivate Account'
+        un_cancel_subscription:
+          h3: "Undo Your Account Cancellation"
+          features_and_benefits: "Don't give up! You can do it, and the whole Learn Signal community are here to help. It's not too late to keep uninterrupted access to your account."
+          button_call_to_action: 'Un-cancel Now'
+          reactivate_sub: Reactivate Subscription
+        re_subscribe_plan: Select a Plan below to reactivate your account
+        tabs:
+          personal_details: Personal Info
+          corporation: Corporation
+          subscriptions: Account Info
+          orders: Purchase History
+          payments: Payment Info
+          enrollments: Enrolments
+          exam_sittings: Exam Sittings
+          notifications: Notifications
+          admin: Admin
+          referral_code: Referrals
+          your_referral_code: Your Referral Code
+        upgrade_now: Upgrade Now
+        upgrade_subscription_plan: Upgrade Subscription
+        change_subscription_plan: Change Subscription
+        use_this_card: "Use this card"
+        confirm_use_this_card: Are you sure you want to change payment cards? All future invoices will charge this card.
+
+        remove_this_card: Remove card
+        your_card_details: Update Payment Info
+        your_invoices: Payment History
+        free_trial_heading: Free Trial
+        your_next_payment_will_be_on: Next Bill Due
+        your_plans_current_status: "Your subscription is"
+        your_plan_expired_on: "Your plan expired on"
+        subscription_set_to_cancel: "Your subscription is set to cancel at the end of the current billing period."
+        your_plan_will_expire_on: "You will continue to have access until: "
+        your_subscription: My Subscription
+        you_dont_have_referral_code: "You don't have a referral code Yet."
+        total_number_of_referred_users: Total number of referred users
+        number_of_referred_users_this_month: Number of referred users this month
+        number_of_referred_users_last_month: Number of referred users last month
+      upgrade_subscription:
+        error_panel_caption: "prevented your subscription upgrade from being completed"
+        stripe_com_logo: "Stripe.com logo"
+        secure_server: "Secure server"
+        upgrade_subscription: Get unlimited access
+        reactivate_account: Reactivate Account
+        h2:
+          subscription: Choose your subscription plan
+          payment: Enter your payment details
+
+      user_subscription_status:
+        trial_info:
+          trial_started_date: Trial Started
+          trial_ending_at_date: Trial Ending
+          trial_ended_date: Trial Ended
+          trial_seconds_limit: Trial Content Limit (secs)
+          trial_days_limit: Trial Days Limit
+          content_seconds_consumed: Content Consumed (secs)
+          account_type: Account Access Type
+          content_access: Access to Content
+          subscription_id: Subscription
+
+        subscription_info:
+          subscription_status: Subscription Status
+          subscription_created: Subscription Created
+          cancel_at_billing_end: Cancel Subscription
+          cancel_immediately: Cancel Immediately
+          subscription_plan: Subscription Plan
+          billing_interval: Billing Interval
+          start_of_billing: Start of Current Billing
+          next_billing_date: Next Billing Date
+          last_billing_date: Last Billing Date
+          subscription_ending: Current Billing Ends
+          subscription_ended: Billing Ended
+          next_billing_amount: Next Billing Amount
+          current_billing_ending: Current Billing Ending
+          invoices: Invoices
+          stripe_sub_guid: Stripe Subscription ID
+          stripe_sub_status: Stripe Subscription Status
+          valid_payment_card: Valid Payment Card
+
+
+    user_accounts:
+      account_show:
+        h1: Account Details
+
+      personal_info:
+        tab_heading: Personal Info
+        first_name: First Name
+        last_name: Last Name
+        email: Email
+        date_of_birth: Date of Birth
+        student_number: Student Number
+
+      trial_info:
+        tab_heading: Trial Info
+        trial_started: Trial Started
+        trial_status: Trial Status
+        trial_ending: Trial Ending
+        trial_ended: Trial Ended
+        remaning_minutes: Remaining Trial Minutes
+        upgrade_button: Upgrade Account
+
+      account_info:
+        tab_heading: Account Info
+        member_since: Member Since
+        account_type: Account Type
+        upgrade_button: Upgrade Account
+
+
+      subscription_info:
+        tab_heading: Subscription Info
+        subscription_status: Subscription Status
+        member_since: Account Created
+        start_of_billing: Start of Current Billing
+        next_billing_date: Next Billing Date
+        subscription_ending: Current Billing Ends
+        subscription_ended: Billing Ended
+        next_billing_amount: Next Billing Amount
+        stripe_account_balance: Account Credit
+        current_billing_ending: Current Billing Ending
+        invoices: Invoices
+
+      payment_details:
+        tab_heading: Payment Info
+
+      orders_info:
+        tab_heading: Purchase Info
+
+      enrollments_info:
+        tab_heading: Enrolments Info
+
+      referral_info:
+        tab_heading: Referral Program
+
+      student_user_form:
+        button_label: Edit Details
+        heading: Edit Personal Details
+        first_name: First Name
+        last_name: Last Name
+        email: Email
+        date_of_birth: Date of Birth
+        student_number: Student Number
+        unsubscribed_from_emails: Unsubscribe from Emails
+
+      change_password:
+        button_label: Change Password
+        heading: Change your password
+        current_password: Current Password
+        current_password_placeholder: Current password
+        new_password: "New Password"
+        new_password_placeholder: New Password
+        password_confirmation: Confirm New Password
+        password_confirmation_placeholder: Password Confirmation
+
+
+    user_groups:
+      form:
+        name: Name
+        name_placeholder: Name of your user group
+        description: Description
+        description_placeholder: Give a general description of your group
+        system_requirements_access: System Requirements Access
+        content_management_access: Course Content Access
+        stripe_management_access: Sub Plan & Product Access
+        user_management_access: User Management Access
+        developer_access: Developer Access
+        marketing_resources_access: Marketing Management Access
+        user_group_management_access: User Group Management Access
+        tutor: Tutor User Access
+        student_user: Student User
+        trial_or_sub_required: Trial or Sub Required
+        blocked_user: Blocked User
+
+      edit:
+        h1: Edit User Group
+
+      index:
+        h1: User Groups
+
+      new:
+        h1: Create a User Group
+
+      show:
+        h1: User Group
+        users: Users
+
+    user_passwords:
+      new:
+        h1: Forgot Your Password?
+        paragraph_1: Enter your email address below to reset your password.
+        email: Email
+        email_placeholder: Enter Your Email Address
+        submit: Reset My Password
+
+      create:
+        h1: Reset your password...
+        paragraph_1: "No problem! check your mailbox for further instructions. If you don't receive an email within a couple of minutes, check your spam folder."
+
+      edit:
+        h1: Reset Your Password
+        paragraph_1: Enter a new password for your account.
+
+      set_password:
+        h1: Enter password
+        h2: Complete Account Setup
+        paragraph_1: The following information is required to complete your account setup
+
+
+
+    user_sessions:
+      new:
+        h1: Log In
+      form:
+        error_message: 'prevented you from signing in'
+        email: Email
+        email_placeholder: 'Enter your e-mail address'
+        user_name: Username
+        password: Password
+        password_placeholder: 'Enter your password'
+        forgot_password: 'Forgot password?'
+
+    vat_codes:
+      form:
+        name: Name
+        name_placeholder: Standard or Reduced
+        country_id: Country
+        label:  Label
+        label_placeholder:  VAT or GST
+        wiki_url: Wiki URL
+        wiki_url_placeholder: wikipedia.com/xyz
+        vat_rates: VAT rates
+
+      index:
+        h1: VAT Codes
+
+      show:
+        h1: VAT Code
+
+      edit:
+        h1: Edit VAT Code
+
+      new:
+        h1: New VAT Code
+
+    vat_rates:
+      form:
+        percentage_rate: Percentage Rate
+        percentage_rate_placeholder: "12.5"
+        effective_from: Effective from
+        effective_from_placeholder: "2014-12-31"
+
+    referral_codes:
+      index:
+        h1: Referral Codes
+        code: Code
+        name: Name
+        email: Referrer Email
+        paid_referred_no: Paid referred no.
+        unpaid_referred_no: Unpaid referred no.
+        for_paying_no: For paying no.
+        country: Country
+        trial_referred_signups: Trial
+        subscription_referred_signups: Sub
+        total_referred_signups: Total
+
+      modal:
+        h1: Get $25
+        info1: Every time that someone you refer Signs Up for an account on LearnSignal we put $25 into your account.
+        info2: Share the link below.
+        copy: Copy
+        email: Email
+        share: Share
+        tweet: Tweet
+        copy_button_title: Click me to copy to clipboard
+
+    referred_signups:
+      index:
+        h1: Referred Signups
+        referrer: Referrer
+        referral_code: Referral Code
+        referrer_url: Referrer URL
+        referred_user: Referred User
+        subscription: Subscription
+        maturing_on: Maturing On
+        payed_at: Payed At
+      edit:
+        h1: Editing Referred Signup
+        payed_at: Payed At
+
+    contact_modal:
+      form:
+        email: Email
+        email_placeholder: jay@example.com
+        name: Name
+        name_placeholder: Full Name
+        title: Title
+        title_placeholder: Your job title
+        company: Company
+        company_placeholder: Your companies name
+        phone_number: Phone Number
+        phone_number_placeholder: A Contact Phone Number
+        website: Website
+        website_placeholder: Company Website or Linkedin
+        message: Message
+        message_placeholder: Message (optional)
+
+
+    video_resource:
+      form:
+        question: Question
+        answer: Answer
+        notes: Notes
+        transcript: Transcript
+
+      show:
+        question: Question
+        answer: Answer
+        notes: Notes
+
+      edit:
+        h1: Aditional Resources - (Optional)
+
+      new:
+        h1: Aditional Resources - (Optional)
+
+    visits:
+      all_index:
+        h1: All Visits
+
+      index:
+        h1: User Visits
+        id: Visit ID
+        visitor_id: Visitor ID
+        ip: IP
+        user_agent: User Agent
+        referrer: Referrer
+        landing_page: Landing Page
+        user_id: User ID
+        referring_domain: Referring Domain
+        search_keyword: Search Keyword
+        browser: Browser
+        os: OS
+        device_type: Device Type
+        screen_height: Screen Height
+        screen_width: Screen Width
+        country: Country
+        region: Region
+        city: City
+        utm_source: UTM Source
+        utm_medium: UTM Medium
+        utm_term: UTM Term
+        utm_content: UTM Content
+        utm_campaign: UTM Campaign
+        started_at: Started At
+
+      show:
+        h1: Visits
+        ip: IP
+        user_agent: User Agent
+        referrer: Referrer
+        landing_page: Landing Page
+        user_id: User ID
+        referring_domain: Referring Domain
+        search_keyword: Search Keyword
+        browser: Browser
+        os: OS
+        device_type: Device Type
+        screen_height: Screen Height
+        screen_width: Screen Width
+        country: Country
+        region: Region
+        city: City
+        utm_source: UTM Source
+        utm_medium: UTM Medium
+        utm_term: UTM Term
+        utm_content: UTM Content
+        utm_campaign: UTM Campaign
+        started_at: Started At

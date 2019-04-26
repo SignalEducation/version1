@@ -1,0 +1,46 @@
+.modal.fade{id: 'exam-body-details-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'accountRequired', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3{id: 'examBodyDetailsRequired'}
+          ="#{@course.exam_body.name} Details Required"
+
+      .modal-body
+        =render partial: '/layouts/error_messages', locals: {thing: current_user, message: nil}
+        =form_for(current_user, url: update_exam_body_user_details_url, html: {class: 'form py-2', role: 'form', name: 'user_modal_form'}) do |f|
+          .row
+            =f.fields_for :exam_body_user_details, @exam_body_user_details do |detail|
+              =detail.hidden_field :exam_body_id
+              .col-sm-6
+                .form-group
+                  =detail.label :student_number, "#{detail.object.exam_body.name} Student Number", class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =detail.text_field :student_number, class: 'form-control', style: 'border-radius: 6px;'
+            .col-sm-6
+              =f.label :date_of_birth, t('views.users.form.date_of_birth'), class: 'control-label'
+              .input-group.input-group-lg.full-width
+                =f.text_field :date_of_birth, placeholder: 'Select Date ...', class: 'form-control', style: 'border-radius: 6px;', id: 'dob_datepicker'
+
+
+
+          .pt-1
+            #submit
+              =submit_tag 'Submit', class: 'btn btn-primary'
+
+
+
+:javascript
+
+  // Date Picker
+  $(function () {
+    $('#dob_datepicker').datetimepicker({
+      viewMode: 'years',
+      useCurrent: false,
+      format: 'DD/MM/YYYY',
+      minDate: moment().subtract(100, 'years'),
+      maxDate: moment()
+    });
+  });

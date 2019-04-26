@@ -1,0 +1,23 @@
+=f.fields_for :content_page_sections do |section|
+  .box-item.form-box
+    =section.hidden_field :subject_course_id
+    =section.hidden_field :sorting_order
+    .col-sm-12
+      .form-group
+        =section.label :text_content, 'Text'
+        .input-group.input-group-lg
+          =section.text_area :text_content, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control section_editor', as: :summernote
+
+      -if section.object.destroyable?
+        .form-group.pt-4
+          .checkbox
+            %label
+              =section.check_box :_destroy
+              Remove Section
+
+
+:javascript
+  $('.section_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

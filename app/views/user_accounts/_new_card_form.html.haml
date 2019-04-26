@@ -1,0 +1,75 @@
+.col-sm-10.col-sm-offset-1
+  .payment-errors
+    .form-group.cc
+      %label
+        Credit or debit card
+      .clearfix
+        #card-element
+
+        #card-errors{role: 'alert'}
+
+
+    .form-group.l-margin-top
+      .tot-get
+        %div
+          = f.button :submit, class: 'lsbtn', id: 'card_submit' do
+            %i.fa.fa-lock
+            ='Add New Card'
+
+          .sk-circle{style: 'margin-right: 50px; margin-left: 50px;'}
+            .sk-circle1.sk-child
+            .sk-circle2.sk-child
+            .sk-circle3.sk-child
+            .sk-circle4.sk-child
+            .sk-circle5.sk-child
+            .sk-circle6.sk-child
+            .sk-circle7.sk-child
+            .sk-circle8.sk-child
+            .sk-circle9.sk-child
+            .sk-circle10.sk-child
+            .sk-circle11.sk-child
+            .sk-circle12.sk-child
+
+
+
+:javascript
+
+  $(".sk-circle").hide();
+
+  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+  var elements = stripe.elements();
+
+  var card = elements.create('card', {hidePostalCode: true,});
+  card.mount('#card-element');
+
+
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('new-subscription-payment-card-form');
+    $('#subscription_payment_card_stripe_token').val(token.id);
+
+    // Submit the form
+    form.submit();
+    $('#card_submit').hide();
+    $(".sk-circle").show();
+  }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+      } else {
+        // Send the token to your server
+        stripeTokenHandler(result.token);
+      }
+    });
+  };
+
+  // Create a token when the form is submitted.
+  var form = document.getElementById('new-subscription-payment-card-form');
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    createToken();
+  });

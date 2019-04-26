@@ -1,0 +1,35 @@
+=form_for(@user_session, html: {class: 'py-3 mr-5 ml-5'}) do |f|
+
+  .row.pt-4
+    .col-sm-12
+      -if @home_page.login_form_heading
+        %h2.h5.text-center
+          =@home_page.login_form_heading
+      -else
+        %h2.h5.text-center
+          Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
+    =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+    .col-sm-12
+      .form-group
+        =f.label :email, t('views.user_sessions.form.email')
+        =f.email_field :email, placeholder: 'Enter your email here', class: 'form-control'
+
+    .col-sm-12
+      .form-group
+        =f.label :password, t('views.user_sessions.form.password')
+        =f.password_field :password, placeholder: 'Enter your password here', class: 'form-control'
+
+
+  .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.pt-3
+    =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm'
+    =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: 'btn btn-link'
+
+  -if @home_page.logo_image && @home_page.logo_image.present?
+    .pt-2.px-lg-2.pb-2.pb-lg-7
+      =image_tag(@home_page.logo_image, class: '', alt: 'Logo')
+
+
+
+
+
+

@@ -1,0 +1,55 @@
+=form_for(@exam_sitting, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .box-item.form-box
+    =render partial: '/layouts/error_messages', locals: {thing: @exam_sitting, message: nil}
+    .row
+      .col-sm-6
+        .form-group
+          =f.label :name, t('views.exam_sittings.form.name')
+          .input-group.input-group-lg
+            =f.text_field :name, class: 'form-control', autofocus: true
+
+        .form-group
+          =f.label :exam_body_id, t('views.exam_sittings.form.exam_body_id')
+          .input-group.input-group-lg
+            =f.collection_select :exam_body_id, @exam_bodies, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+      .col-sm-6
+        .form-group
+          =f.label :subject_course_id, t('views.exam_sittings.form.subject_course_id')
+          .input-group.input-group-lg
+            =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+        -if @exam_sitting.new_record?
+          .form-group
+            =f.label :date, t('views.exam_sittings.form.date')
+            .input-group.input-group-lg
+              =f.text_field :date, placeholder: t('views.exam_sittings.form.date_placeholder'), class: 'form-control', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'datetimepicker'
+
+        .col-sm-12
+          .col-sm-6
+            .form-group
+              .col-sm-12
+                %label.check
+                  =f.check_box :active
+                  =t('views.exam_sittings.form.active')
+          .col-sm-6
+            -if @exam_sitting.new_record?
+              .form-group
+                .col-sm-12
+                  %label.check
+                    =f.check_box :computer_based
+                    =t('views.exam_sittings.form.computer_based')
+
+
+    .row.pt-4
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), exam_sittings_path, class: 'btn btn-secondary'
+
+:javascript
+
+  $(function () {
+    $('#datetimepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });

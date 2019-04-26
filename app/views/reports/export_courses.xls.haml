@@ -1,0 +1,23 @@
+!!! XML
+%workbook{:xmlns => "urn:schemas-microsoft-com:office:spreadsheet", "xmlns:html" => "http://www.w3.org/TR/REC-html40", "xmlns:o" => "urn:schemas-microsoft-com:office:office", "xmlns:ss" => "urn:schemas-microsoft-com:office:spreadsheet", "xmlns:x" => "urn:schemas-microsoft-com:office:excel"}
+  %worksheet{"ss:name" => "Sheet1"}
+    %table
+      %row
+        %cell
+          %data{"ss:type" => "String"} Name
+        %cell
+          %data{"ss:type" => "String"} Subject Area
+        %cell
+          %data{"ss:type" => "String"} New Enrollments
+        %cell
+          %data{"ss:type" => "String"} Total Enrollments
+      - @courses.each do |course|
+        %row
+          %cell
+            %data{"ss:type" => "String"}= course.name
+          %cell
+            %data{"ss:type" => "String"}= course.parent.name
+          %cell
+            %data{"ss:type" => "Number"}= course.enrollments.count
+          %cell
+            %data{"ss:type" => "Number"}= course.enrollments.count

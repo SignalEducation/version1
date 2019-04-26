@@ -1,0 +1,38 @@
+%main
+  %article.dashboard.bg-gray5
+    -if current_user.non_verified_user?
+      .alert.alert-warning
+        Your email requires verification. You will be unable to access content until you verify your email
+
+    .container
+      %header
+        %h1.h1-hero.pt-5
+          =t('views.dashboard.student.h1')
+
+      %section.pb-md-6.pt-4
+        .row.row-md
+          .col-lg-2-7
+            %nav.mb-4.account-nav
+              %ul#dashboardTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
+                %li.nav-item
+                  %a#enrollments-tab.nav-link.active{"aria-controls" => "enrollments", "aria-selected" => "true", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                    Enrolments
+                %li.nav-item
+                  %a#exercises-tab.nav-link{"aria-controls" => "exercises", "aria-selected" => "true", "data-toggle" => "tab", :href => "#exercises", :role => "tab"}
+                    Exercises
+                %li.nav-item
+                  %a#activity-tab.nav-link{"aria-controls" => "activity", "aria-selected" => "false", "data-toggle" => "tab", :href => "#activity", :role => "tab"}
+                    Other Activity
+
+          .col-lg-5-7
+            #accountTabsContent.tab-content
+              #enrollments.tab-pane.show.active.tab-dashboard.tab-enrollments{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+                =render partial: 'enrollments'
+
+              #exercises.tab-pane.show.tab-dashboard.tab-exercises{"aria-labelledby" => "exercises-tab", :role => "tabpanel"}
+                =render partial: 'exercises'
+
+              #activity.tab-pane.tab-account.tab-dashboard{"aria-labelledby" => "activity-tab", :role => "tabpanel"}
+                =render partial: 'activity'
+
+

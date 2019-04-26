@@ -1,0 +1,82 @@
+=form_for(@external_banner, html: {class: 'form-horizontal', role: 'form'}) do |f|
+  .box-item.form-box
+    =f.hidden_field :sorting_order
+    =render partial: '/layouts/error_messages', locals: {thing: @external_banner, message: nil}
+    .row
+      .col-sm-6
+
+        .form-group
+          =f.label :name, t('views.external_banners.form.name')
+          .input-group.input-group-lg
+            =f.text_field :name, placeholder: t('views.external_banners.form.name_placeholder'), class: 'form-control', autofocus: true
+      .col-sm-6
+        .form-group
+          =f.label :background_colour, t('views.external_banners.form.background_colour')
+          .input-group.input-group-lg
+            =f.color_field :background_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control'
+
+
+        .form-group.pt-4
+          .checkbox
+            %label
+              =f.check_box :active
+              =t('views.external_banners.form.active')
+
+      .col-sm-12
+        =f.label :text_content, t('views.external_banners.form.text_content')
+        .input-group.input-group-lg
+          =f.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', id: 'editor'
+
+
+        -if !@external_banner.new_record? && !@external_banner.content_page_id
+          .col-sm-12
+            %h3
+              ='Pages to render the banner'
+
+            .col-sm-3
+              .checkbox
+                %label
+                  =f.check_box :user_sessions
+                  =t('views.external_banners.form.user_sessions')
+
+
+            .col-sm-3
+              .checkbox
+                %label
+                  =f.check_box :subscription_plans
+                  =t('views.external_banners.form.subscription_plans')
+
+            .col-sm-3
+              .checkbox
+                %label
+                  =f.check_box :student_sign_ups
+                  =t('views.external_banners.form.student_sign_ups')
+
+
+            .col-sm-3
+              .checkbox
+                %label
+                  =f.check_box :library
+                  =t('views.external_banners.form.library')
+
+            .col-sm-12
+              .checkbox
+                %label
+                  =f.check_box :footer_pages
+                  =t('views.external_banners.form.footer_pages')
+
+
+    .row
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), external_banners_path, class: 'btn btn-secondary'
+
+
+
+
+:javascript
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

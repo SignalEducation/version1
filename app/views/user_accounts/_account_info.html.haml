@@ -1,0 +1,83 @@
+%article.card.mb-3
+  .card-body.card-body
+    %h2.mb-5.text-gray2 Account Information
+
+    -@subscriptions.each do |subscription|
+      %article.card.mb-5
+        .card-body.card-body-sm
+          .row
+            .col-md-8
+              %h3.text-gray2
+                %span.mr-1
+                  =subscription.user_readable_name
+
+                %span.badge.badge-warning.align-middle
+                  =subscription.state.capitalize
+
+              %p.mb-1
+                Subscription created on
+                %span=humanize_datetime_full(subscription.created_at)
+              %p
+                Payment Type:
+                %span
+                  =subscription.stripe? ? 'Credit card' : "PayPal"
+
+            .col-md-4.text-md-right
+              %button.btn.btn-secondary.btn-sm.js-show-hide-details.collapsed.sub-details{"aria-controls" => "#sub-#{subscription.id}", "aria-expanded" => "false", "data-target" => "#sub-#{subscription.id}", "data-toggle" => "collapse"}
+
+          .collapse{id: "sub-#{subscription.id}"}
+            .pt-5.pb-4
+              -if subscription.stripe?
+                %div
+                  %h4.mb-4.text-gray2 Payment Details
+                  %p
+                    Card ending in
+                    = succeed "." do
+                      %span.font-weight-semi-bold
+                        =@default_payment_card.last_4
+                      ='. Expires on'
+                      %span
+                        =@default_payment_card.expiry_date
+
+                  .pb-4
+                    %button.btn.btn-secondary.btn-sm.mb-4{"data-target" => "#add-card-modal", "data-toggle" => "modal"} Change card
+
+              .overflow-x.mb-5
+                %h4.text-gray2 Invoice History
+                %table.table
+                  %thead
+                    %tr
+                      %th Reference N.
+                      %th Date Created
+                      %th Amount Charged
+                      %th Status
+                      %th PDF
+                  %tbody
+                    -subscription.invoices.each do |invoice|
+                      %tr
+                        %td=invoice.id
+                        %td=humanize_datetime(invoice.issued_at)
+                        %td=number_in_local_currency(invoice.total, invoice.currency_id)
+                        %td
+                          %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
+                            =invoice.status
+                        %td
+                          =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+                            %button.btn.btn-text
+                              View
+
+
+              %div.mr-3.mb-4
+                =link_to 'View All Invoices', user_invoices_path(current_user)
+              %div
+                -if subscription.can_change_plan?
+                  =link_to 'Change Subscription Plan', new_subscriptions_plan_change_path(id: subscription.id), class: 'btn btn-primary btn-sm', style: 'vertical-align: top;'
+                -if subscription.active?
+                  %button.btn.btn-warning.btn-sm.mb-2{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => subscription.id}
+                    Pause Subscription
+                -elsif subscription.paused? 
+                  =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-warning btn-sm', style: 'vertical-align: top;'
+                =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-sm', style: 'vertical-align: top;'
+                  
+
+=render partial: 'subscriptions/confirm_pause_modal'

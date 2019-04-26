@@ -1,0 +1,32 @@
+.payment-details.credit-card
+  .payment-errors
+    .form-group.cc
+      .clearfix
+        #card-element
+        #card-errors{role: 'alert'}
+
+  .row
+    .col-sm-6.mb-2.mt-sm-4
+      %h4.m-0.pt-2
+        Total:
+        %span.value
+          =number_in_local_currency(@product.price, @product.currency_id)
+
+    .col-sm-6.mb-2.mt-sm-4
+      = f.button :submit, class: 'btn btn-primary w-100 mb-2', id: 'card_submit' do
+        ='Purchase Mock Exam'
+
+      .sk-circle.text-center
+        .sk-circle1.sk-child
+        .sk-circle2.sk-child
+        .sk-circle3.sk-child
+        .sk-circle4.sk-child
+        .sk-circle5.sk-child
+        .sk-circle6.sk-child
+        .sk-circle7.sk-child
+        .sk-circle8.sk-child
+        .sk-circle9.sk-child
+        .sk-circle10.sk-child
+        .sk-circle11.sk-child
+        .sk-circle12.sk-child
+

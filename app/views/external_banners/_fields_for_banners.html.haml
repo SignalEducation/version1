@@ -1,0 +1,45 @@
+.col-sm-12
+  .box-item.form-box
+    =f.fields_for :external_banners do |banner|
+      =banner.hidden_field :sorting_order
+      -if banner.object.new_record?
+        %h4
+          Add Banner - Optional!
+
+      .row
+        .col-sm-6
+          .form-group
+            =banner.label :name, t('views.external_banners.form.name')
+            .input-group.input-group-lg
+              =banner.text_field :name, placeholder: t('views.external_banners.form.name_placeholder'), class: 'form-control'
+
+        .col-sm-6
+          .form-group
+            =banner.label :background_colour, t('views.external_banners.form.background_colour')
+            .input-group.input-group-lg
+              =banner.color_field :background_colour, placeholder: t('views.external_banners.form.background_colour_placeholder'), class: 'form-control'
+
+
+
+      .col-sm-12.pt-4
+        =banner.label :text_content, t('views.external_banners.form.text_content')
+        .input-group.input-group-lg
+          =banner.text_area :text_content, placeholder: t('views.external_banners.form.text_content_placeholder'), as: :summernote, rows: 5, class: 'form-control', id: 'banner_editor'
+
+        -if !banner.object.new_record? && banner.object.destroyable?
+          %br/
+          .checkbox
+            %label
+              =banner.check_box :_destroy
+              Remove Banner
+
+
+
+
+
+:javascript
+
+  $('#banner_editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });

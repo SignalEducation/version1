@@ -1,0 +1,38 @@
+.container
+  %header.management-console-section
+    %h1
+      =t('views.external_banners.index.h1')
+
+  %section.pb-7
+    =render partial: 'management_consoles/public_resources_nav'
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            =link_to 'New Banner', new_external_banner_url, class: 'btn btn-primary btn-xs'
+
+
+          .table-responsive.pt-4
+            %table.table.sorted_table{data: {destination: external_banners_url}}
+              %thead
+                %tr
+                  %th=t('views.external_banners.form.name')
+                  %th=t('views.external_banners.form.active')
+                  %th=t('views.external_banners.form.background_colour')
+                  %th
+                  %th
+              %tbody
+                -@external_banners.each do |external_banner|
+                  %tr{id: external_banner.id}
+                    %td=external_banner.name
+                    %td=tick_or_cross(external_banner.active)
+                    %td=external_banner.background_colour
+                    %td
+                      =link_to 'Preview', external_banner, class: 'btn btn-secondary btn-xs'
+                      =link_to t('views.general.edit'), edit_external_banner_url(external_banner), class: 'btn btn-primary btn-xs'
+                      -if external_banner.destroyable?
+                        =link_to t('views.general.delete'), external_banner, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'
+                    %td
+                      %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+

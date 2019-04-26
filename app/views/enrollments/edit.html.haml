@@ -1,0 +1,72 @@
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            Edit Enrolment
+
+      #enrollment_form.box-item.form-box
+        =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form'}) do |f|
+          .col-sm-6.col-sm-offset-3.l-margin-bottom
+            .row
+              -if @enrollment.computer_based_exam && @subject_course.computer_based
+                .col-sm-12
+                  #custom_exam_date
+                    =f.label :exam_date, t('views.enrollments.form.computer_based_exam_date'), class: 'control-label'
+                    .input-group.input-group-lg.full-width
+                      =f.text_field :exam_date, placeholder: 'Select Date ', class: 'form-control', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}, id: 'exam_date_timepicker'
+              -else
+                .col-sm-12
+                  =f.label :exam_sitting_id, t('views.enrollments.form.exam_sitting_id'), class: 'control-label'
+                  .input-group.input-group-lg.full-width
+                    =f.collection_select :exam_sitting_id, @exam_sittings, :id, :formatted_date, {include_blank: t('views.general.select')}, {class: 'form-control', style: 'border-radius: 6px;', id: 'exam_sitting_select'}
+                  %br/
+
+
+
+
+            .row.l-margin-top-huge
+              .col-sm-12
+                =f.submit t('views.general.save'), class: 'btn btn-primary', id: 'enroll_now'
+                =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-secondary'
+
+
+-if @enrollment.computer_based_exam && @subject_course.computer_based
+  :javascript
+    $('#exam_date_timepicker').focusout(function(){
+      if ($('#exam_date_timepicker').val().length !=0) {
+        $('#enroll_now').attr('disabled', false);
+      } else if ($('#exam_date_timepicker').val().length == 0) {
+        $('#enroll_now').attr('disabled', true);
+      }
+    });
+
+-else
+
+  :javascript
+    $( document ).ready(function() {
+      if ($('#exam_sitting_select option:selected').text() == 'Computer Based Exam') {
+        $("#custom_exam_date").show();
+      } else {
+        $("#custom_exam_date").hide();
+      }
+    });
+
+    $('#exam_sitting_select').change(function () {
+      if ($('#exam_sitting_select option:selected').text() == 'Select...') {
+        $('#enroll_now').attr('disabled', true);
+      } else {
+        $('#enroll_now').attr('disabled', false);
+      }
+    });
+
+
+
+:javascript
+  $(function () {
+    $('#exam_date_timepicker').datetimepicker();
+      format: 'DD/MM/YYYY'
+  });
+
+
