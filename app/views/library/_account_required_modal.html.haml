@@ -10,7 +10,11 @@
 
       .modal-body
         %p.mb-4
-          A valid account is required to access that content. Register today for our basic plan. No credit card required.
+          -if @group.exam_body.has_sittings?
+            ="A valid account is required to access that content. Register today for an #{@group.name} subscription."
+          -else
+            ="A valid account is required to access that content. Register today for a #{@group.name} subscription."
+
         %p.mb-5
           If you already have an account log in now.
 

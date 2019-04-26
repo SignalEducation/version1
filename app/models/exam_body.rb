@@ -25,8 +25,8 @@ class ExamBody < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :url, presence: true
-  validates :constructed_response_intro_heading, presence: true
-  validates :constructed_response_intro_text, presence: true
+  #validates :constructed_response_intro_heading, presence: true
+  #validates :constructed_response_intro_text, presence: true
 
   before_destroy :check_dependencies
 
