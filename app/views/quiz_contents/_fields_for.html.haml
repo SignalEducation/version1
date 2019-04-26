@@ -1,7 +1,0 @@
--# call this with the following
-  =render partial: 'quiz_contents/fields_for', locals: {qc: f, the_type: 'question | solution | answer'}
-
-=qc.hidden_field :_destroy, value: false, class: 'destroy'
-=qc.hidden_field :id, class: 'the_id'
-=qc.hidden_field :sorting_order, value: (qc.options[:child_index] * 100), class: 'sorting_order'
-=qc.text_area :text_content, as: :summernote, placeholder: t('views.quiz_contents.form.content_type.text'), class: 'form-control', rows: 6, id: "#{the_type}"
