@@ -89,6 +89,7 @@ class SubjectCourse < ActiveRecord::Base
   scope :with_active_children, -> { where(active: true).includes(:course_modules).where(course_modules: {active: true}) }
   scope :all_preview, -> { where(preview: true) }
   scope :all_computer_based, -> { where(computer_based: true) }
+  scope :all_standard, -> { where(computer_based: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 

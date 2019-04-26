@@ -9,8 +9,6 @@
     .py-3
       -if @home_page && @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
         =@home_page.registration_form_heading
-      -else
-        Explore our innovative learning platform and discover how learnsignal helps you pass your exams faster
 
     =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
     %fieldset.pb-3
@@ -23,7 +21,7 @@
         .col-md-6
           .form-group
             %label.sr-only{:for => "last-name"} Last Name
-            =f.text_field :last_name, placeholder: 'Enter your last Name', class: 'form-control'
+            =f.text_field :last_name, placeholder: 'Enter your last name', class: 'form-control'
       .row
         -if @home_page && @home_page.public_url == 'bootcamp'
           .col-md-6
@@ -34,7 +32,7 @@
             .form-group
               %label.sr-only{:for => "subject_course_id"} Course Selection
               .input-group.input-group-lg
-                =select_tag "subject_course_id", options_from_collection_for_select(@home_page.group.subject_courses.all_active.all_in_order, "id", "name"), include_blank: 'Course Selection', class: 'form-control custom-select', id: 'subject_course_id'
+                =select_tag "subject_course_id", options_from_collection_for_select(@home_page.group.subject_courses.all_standard.all_active.all_in_order, "id", "name"), include_blank: 'Course Selection', class: 'form-control custom-select', id: 'subject_course_id'
 
         -else
           .col-md-12
