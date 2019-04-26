@@ -63,3 +63,7 @@ coverage
 
 # Emacs tags file
 TAGS
+
+
+# .env files
+.env
