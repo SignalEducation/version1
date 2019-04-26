@@ -66,4 +66,5 @@ TAGS
 
 
 # .env files
+/.env
 *.env
