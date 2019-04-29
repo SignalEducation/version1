@@ -95,7 +95,7 @@
         %p Studying for your exams has never been easier
 
       .row.row-lg
-        -@group.subject_courses.all_in_order.limit(6).each do |course|
+        -@group.subject_courses.all_in_order.each do |course|
           .col-sm
             =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
               .card-header.d-flex.justify-content-center.align-items-center

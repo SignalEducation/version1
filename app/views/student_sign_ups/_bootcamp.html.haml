@@ -49,7 +49,7 @@
                   =@preferred_plan.currency.format_number(@preferred_plan.price)
               -else
                 %h3.text-white.pr-xl-4
-                  Register Now (It’s Free)
+                  Register Now
 
           -if (@home_page.registration_form || @home_page.login_form) && !current_user
             .col-xl-6.mt-6
@@ -61,10 +61,11 @@
       %header.text-center.pb-sm-4.pb-md-5
         %h2
           ="Explore our #{@group.name} courses"
-        %p Studying for your exams has never been easier
+        %p
+          =@group.description
 
       .row.row-lg
-        -@group.subject_courses.all_in_order.limit(6).each do |course|
+        -@group.subject_courses.all_in_order.each do |course|
           .col-sm
             =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
               .card-header.d-flex.justify-content-center.align-items-center

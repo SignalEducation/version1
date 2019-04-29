@@ -100,7 +100,7 @@ class SubjectCourse < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+      where('name ILIKE ? OR description ILIKE ?', "%#{search}%", "%#{search}%")
     else
       SubjectCourse.all_active.all_in_order
     end

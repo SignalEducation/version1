@@ -10,7 +10,7 @@ class IntercomCreateUserWorker
 
     if user
 
-      intercom.users.create(user_id: user_id,
+      intercom.users.create(user_id: user.id,
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,

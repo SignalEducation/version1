@@ -84,16 +84,14 @@ class LibraryController < ApplicationController
 
   protected
 
-  #TODO - what is this about?
   def check_course_available
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @group = @course.group
-    @exam_body = @group.exam_body
     if @course && !@course.active
       redirect_to library_url
     elsif @course && @course.active && @course.preview
-
     end
+    @group = @course.group
+    @exam_body = @group.exam_body
   end
 
   def get_exam_body_user_details
@@ -127,15 +125,13 @@ class LibraryController < ApplicationController
                      .in_currency(@currency_id)
                      .all_active
                      .all_in_order
+                     .where("product_type = ?", Product.product_types[:mock_exam])
                      .where(mock_exam_id: mock_exam_ids)
     @products = @correction_pack_products + @mock_exam_products
     @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
 
-    ip_country = IpAddress.get_country(request.remote_ip)
-    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = country.try(:currency_id)
 
-    if country && @currency_id
+    if @country && @currency_id
       @subscription_plan = SubscriptionPlan.where(
           subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
           payment_frequency_in_months: @group.exam_body.try(:preferred_payment_frequency)
