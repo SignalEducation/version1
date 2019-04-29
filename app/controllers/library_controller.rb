@@ -84,16 +84,14 @@ class LibraryController < ApplicationController
 
   protected
 
-  #TODO - what is this about?
   def check_course_available
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    @group = @course.group
-    @exam_body = @group.exam_body
     if @course && !@course.active
       redirect_to library_url
     elsif @course && @course.active && @course.preview
-
     end
+    @group = @course.group
+    @exam_body = @group.exam_body
   end
 
   def get_exam_body_user_details
