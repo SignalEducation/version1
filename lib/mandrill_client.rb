@@ -7,9 +7,9 @@ class MandrillClient
 
   # Basic Account Emails
   def send_verification_email(verification_url)
-    msg = message_stub.merge({"subject" => "Welcome to LearnSignal - Please verify your email address"})
+    msg = message_stub.merge({"subject" => "Please Verify your email"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('email_verification_181015', msg)
+    send_template('Email_Verification_190429', msg)
   end
 
   def admin_invite(verification_url)
