@@ -49,7 +49,7 @@
                   =@preferred_plan.currency.format_number(@preferred_plan.price)
               -else
                 %h3.text-white.pr-xl-4
-                  Register Now (It’s Free)
+                  Register Now
 
           -if (@home_page.registration_form || @home_page.login_form) && !current_user
             .col-xl-6.mt-6
@@ -59,12 +59,13 @@
   .container
     %article.py-5
       %header.text-center.pb-sm-4.pb-md-5
-        %h2
+        %h2.h1-mega
           ="Explore our #{@group.name} courses"
-        %p Studying for your exams has never been easier
+        %p.p-hero.px-lg-6
+          =@group.description
 
       .row.row-lg
-        -@group.subject_courses.all_in_order.limit(6).each do |course|
+        -@group.subject_courses.all_active.all_in_order.each do |course|
           .col-sm
             =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
               .card-header.d-flex.justify-content-center.align-items-center
@@ -82,7 +83,7 @@
     .container
       %article.text-gray3.text-center.py-6.py-sm-7
         %header.pb-3
-          %h1.text-white.px-5.px-sm-6 Discover the smarter way to study
+          %h2.h1-mega.text-white.px-5.px-sm-6 Discover the smarter way to study
           %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
         .px-4.px-lg-8
           .row.row-lg

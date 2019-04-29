@@ -10,7 +10,7 @@
 
       #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
         %ul.navbar-nav.align-items-lg-center
-          -if action_name == 'group_show' && @subscription_plans
+          -if action_name == 'group_show' && @subscription_plans && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
             %li.nav-item
               =link_to "#plans", class: 'nav-link' do
                 %span Pricing

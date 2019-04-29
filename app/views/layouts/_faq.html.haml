@@ -12,7 +12,7 @@
         .col-sm-12
           %section{id: faq.name_url}
             .faq-box
-              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-none"); $(this).find(".faq-answer-expanded").toggleClass("d-none");'}
+              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none");'}
                 .faq-title
                   =faq.question_text.html_safe
 
