@@ -47,9 +47,9 @@
 #info-text
   - if @yearly_plan && @yearly_plan.previous_plan_price.present? && @yearly_plan.previous_plan_price > 0
     %p.mb-2.price
-      %span
+      -#%span
         25%
-      =' off original plan price'
+      ='Currently we are offering a discount off the Annual Plan. Original Price '
       %span
         =@yearly_plan.currency.format_number(@yearly_plan.previous_plan_price)
 
