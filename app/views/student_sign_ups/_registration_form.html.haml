@@ -23,7 +23,7 @@
             %label.sr-only{:for => "last-name"} Last Name
             =f.text_field :last_name, placeholder: 'Enter your last name', class: 'form-control'
       .row
-        -if @home_page && @home_page.public_url == 'acca_bootcamp'
+        -if @home_page && @home_page.public_url == 'bootcamp'
           .col-md-6
             .form-group
               %label.sr-only{:for => "email-address"} Your email address
