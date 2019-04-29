@@ -14,7 +14,7 @@
               =form_for @user, url: create_student_url do |f|
                 .bg-white.p-3.px-sm-5.pt-sm-4
                   .py-3
-                    ='Register for free on our basic plan to explore our innovative learning platform and discover the smarter way to study with learnsignal.'
+                    ='Get started with our free Basic Plan to explore our innovative learning platform and access selected course content.'
 
                   =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
                   =f.hidden_field :locale, value: (params[:locale] || 'en')
@@ -26,16 +26,16 @@
                       .col-sm-6
                         .form-group
                           =f.label :first_name, t('views.users.form.first_name')
-                          =f.text_field :first_name, autofocus: true, class: 'form-control', id: 'user_first_name'
+                          =f.text_field :first_name, autofocus: true, placeholder: 'Enter your first name', class: 'form-control', id: 'user_first_name'
                       .col-sm-6
                         .form-group
                           =f.label :last_name, t('views.users.form.last_name')
-                          =f.text_field :last_name, class: 'form-control', id: 'user_last_name'
+                          =f.text_field :last_name, class: 'form-control', placeholder: 'Enter your last name', id: 'user_last_name'
 
                       .col-sm-6
                         .form-group
                           =f.label :email, t('views.users.form.email')
-                          =f.email_field :email, class: 'form-control', id: 'user_email'
+                          =f.email_field :email, class: 'form-control', placeholder: 'Enter your your e-mail', id: 'user_email'
 
                       .col-sm-6
                         .form-group
@@ -46,12 +46,12 @@
                       .col-sm-6
                         .form-group
                           =f.label :password, t('views.users.form.password')
-                          =f.password_field :password, class: 'form-control', id: 'user_password'
+                          =f.password_field :password, placeholder: t('views.users.form.create_password'), class: 'form-control', id: 'user_password'
 
                       .col-sm-6
                         .form-group
                           =f.label :password_confirmation, t('views.users.form.password_confirmation')
-                          =f.password_field :password_confirmation, class: 'form-control', id: 'user_password_confirmation'
+                          =f.password_field :password_confirmation, placeholder: t('views.users.form.password_confirmation_placeholder'), class: 'form-control', id: 'user_password_confirmation'
 
                     %fieldset.pt-2
                       %legend.sr-only Terms and Conditions checkboxes
