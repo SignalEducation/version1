@@ -60,6 +60,7 @@ class Enrollment < ActiveRecord::Base
   scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
+  scope :for_active_course, -> { where(active: true).where(subject_courses: {active: true}) }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
   scope :for_course_and_user, lambda { |course_id, user_id| where(subject_course_id: course_id, user_id: user_id) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }

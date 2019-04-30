@@ -129,6 +129,29 @@ class SubjectCourseUserLog < ActiveRecord::Base
     self.subject_course.completion_cme_count
   end
 
+  def create_missing_sets_and_csuls
+    self.course_module_element_user_logs.where(student_exam_track_id: nil).each do |cmeul|
+
+      if cmeul.student_exam_track_id && cmeul.course_section_user_log_id
+        cmeul.student_exam_track.recalculate_set_completeness
+      else
+
+        csul = CourseSectionUserLog.where(subject_course_id: self.subject_course_id, user_id: self.user_id,
+                                          subject_course_user_log_id: self.id, course_section: cmeul.course_module.course_section_id
+        ).first_or_create!
+
+        set = StudentExamTrack.where(subject_course_id: self.subject_course_id, user_id: self.user_id,
+                                     subject_course_user_log_id: self.id, course_module_id: cmeul.course_module_id,
+                                     course_section_id: cmeul.course_module.course_section_id, course_section_user_log_id: csul.id
+        ).first_or_create!
+
+
+        cmeul.update_columns(student_exam_track_id: set.id, course_section_user_log_id: csul.id)
+
+      end
+    end
+  end
+
   protected
 
   def check_dependencies

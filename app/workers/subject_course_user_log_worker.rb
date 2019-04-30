@@ -7,9 +7,8 @@ class SubjectCourseUserLogWorker
     sculs = SubjectCourseUserLog.for_subject_course(course_id).all_incomplete
 
     sculs.each do |scul|
-      scul.student_exam_tracks.each do |set|
-        set.recalculate_set_completeness
-      end
+      #scul.create_missing_sets_and_csuls
+
     end
   end
 

@@ -631,12 +631,12 @@ class User < ActiveRecord::Base
 
   #TODO - valid enrollments ??
   def valid_enrollments_in_sitting_order
-    self.enrollments.all_active.by_sitting_date
+    self.enrollments.for_active_course.by_sitting_date
   end
 
   #TODO - invalid enrollments ??
   def expired_enrollments_in_sitting_order
-    self.enrollments.all_active.by_sitting_date
+    self.enrollments.for_active_course.by_sitting_date
   end
 
   def active_enrollments_in_sitting_order
