@@ -54,7 +54,7 @@
             %li.nav-item
               %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}}
                 ='Resources'
-          -if @products.any?
+          -if @products && @products.any?
             %li.nav-item
               %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
                 ='Products'
