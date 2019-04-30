@@ -49,10 +49,17 @@
           .col-lg-6
             %ul.nav.flex-column
               %li.nav-item
-                %a.nav-link{:href => "https://www.facebook.com/learnsignal1/", target: '_blank'} Facebook
+                =link_to "https://www.facebook.com/learnsignal1/", class: 'nav-link social-icon', target: '_blank' do
+                  =image_tag('facebook_social.png')
+                  Facebook
               %li.nav-item
-                %a.nav-link{:href => "https://twitter.com/learnsignal", target: '_blank'} Twitter
+                =link_to "https://twitter.com/learnsignal", class: 'nav-link social-icon', target: '_blank' do
+                  =image_tag('twitter_social.png')
+                  Twitter
               %li.nav-item
-                %a.nav-link{:href => "https://www.linkedin.com/company/learnsignal", target: '_blank'} LinkedIn
+                =link_to "https://www.linkedin.com/company/learnsignal", class: 'nav-link social-icon', target: '_blank' do
+                  =image_tag('linkedin_social.png')
+                  LinkedIn
+
     %small.footer-info.d-block
       ="© #{Time.new.year} learnsignal"
