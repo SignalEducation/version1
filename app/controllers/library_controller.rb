@@ -114,20 +114,22 @@ class LibraryController < ApplicationController
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-    @correction_pack_products = Product.includes(:currency)
-                           .in_currency(@currency_id)
-                           .all_active
-                           .all_in_order
-                           .where("mock_exam_id IS NOT NULL")
-                           .where("product_type = ?", Product.product_types[:correction_pack])
-    mock_exam_ids = @course.mock_exams.map(&:id)
-    @mock_exam_products = Product.includes(:mock_exam)
-                     .in_currency(@currency_id)
-                     .all_active
-                     .all_in_order
-                     .where("product_type = ?", Product.product_types[:mock_exam])
-                     .where(mock_exam_id: mock_exam_ids)
-    @products = @correction_pack_products + @mock_exam_products
+    if @course.exam_body.has_sittings
+      @correction_pack_products = Product.includes(:currency)
+                             .in_currency(@currency_id)
+                             .all_active
+                             .all_in_order
+                             .where("mock_exam_id IS NOT NULL")
+                             .where("product_type = ?", Product.product_types[:correction_pack])
+      mock_exam_ids = @course.mock_exams.map(&:id)
+      @mock_exam_products = Product.includes(:mock_exam)
+                       .in_currency(@currency_id)
+                       .all_active
+                       .all_in_order
+                       .where("product_type = ?", Product.product_types[:mock_exam])
+                       .where(mock_exam_id: mock_exam_ids)
+      @products = @correction_pack_products + @mock_exam_products
+    end
     @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
 
 

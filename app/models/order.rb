@@ -98,6 +98,10 @@ class Order < ActiveRecord::Base
     self.product.mock_exam
   end
 
+  def stripe?
+    stripe_token.present? || stripe_guid.present?
+  end
+
   protected
 
   def assign_random_guid
@@ -115,7 +119,4 @@ class Order < ActiveRecord::Base
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
   end
 
-  def stripe?
-    stripe_token.present? || stripe_guid.present?
-  end
 end
