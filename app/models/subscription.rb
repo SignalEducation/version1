@@ -36,7 +36,7 @@ class Subscription < ActiveRecord::Base
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
   PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
-  VALID_STATES = %w(active past_due canceled-pending pending_cancellation)
+  VALID_STATES = %w(active past_due canceled-pending pending_cancellation paused)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
