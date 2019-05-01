@@ -1232,6 +1232,10 @@ textarea.form-control {
   }
 
 }
+.social-icon img {
+  max-width: 20px;
+  margin-right: 5px;
+}
 .nav-tabs .nav-link {
   border: 3px solid transparent;
   border-top-left-radius: 0;
@@ -4140,6 +4144,21 @@ a.card:hover .card-title .card-explanation {
   .home-hero.home-hero-alt-plan .home-hero-header {
     padding-top: 12.75rem;
     padding-bottom: 12.75rem
+  }
+}
+.home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+  padding-top: 6.5rem;
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+    padding-top: 9.5rem;
+    padding-bottom: 5rem
+  }
+}
+@media (min-width:1320px) {
+  .home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+    padding-top: 9.5rem;
+    padding-bottom: 6.5rem;
   }
 }
 .podcast-hero-header {
