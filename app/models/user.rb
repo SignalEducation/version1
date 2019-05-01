@@ -629,12 +629,10 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
-  #TODO - valid enrollments ??
   def valid_enrollments_in_sitting_order
     self.enrollments.for_active_course.by_sitting_date
   end
 
-  #TODO - invalid enrollments ??
   def expired_enrollments_in_sitting_order
     self.enrollments.for_active_course.by_sitting_date
   end
