@@ -12,7 +12,7 @@
           Log in Details
 
         .row
-          -if @home_page && @home_page.public_url == 'bootcamp'
+          -if @home_page && @home_page.custom_file_name == 'bootcamp.html.haml'
             .col-sm-12
               .form-group
                 %label{:for => "subject_course_id"} Course Selection
