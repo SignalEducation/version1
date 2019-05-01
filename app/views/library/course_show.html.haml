@@ -54,7 +54,7 @@
             %li.nav-item
               %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}}
                 ='Resources'
-          -if @products.any?
+          -if @products && @products.any?
             %li.nav-item
               %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
                 ='Products'
@@ -253,7 +253,7 @@
                           =resource.name
 
 
-      -if @products.any?
+      -if @products && @products.any?
         .tab-pane.tab-products{id: 'products', role: 'tabpanel', 'aria-labelledby': 'products-tab'}
           %section.mb-5
             %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products

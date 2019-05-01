@@ -27,32 +27,32 @@
 %main
   .container-bg.home-hero-alt-bg
     .container
-      %article.home-hero.home-hero-alt
+      %article.home-hero.home-hero-bootcamp
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
           .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
-            %header.home-hero-header
-              %h1.h1-hero.text-white.mb-5
+            %header.home-hero-header.mt-5
+              %h1.h1-hero.text-white.mb-3
+                ="#{@home_page.group.name} Exam Bootcamp"
+
                 -if @home_page.header_h1 && !@home_page.header_h1.empty?
-                  =@home_page.header_h1
+                  %h3.text-white.pr-xl-4
+                    =@home_page.header_h1
                 -else
-                  ="#{@home_page.group.name} Exam Bootcamp"
+                  %h3.text-white.pr-xl-4
+                    June 2019 Sitting
 
               -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
-                %p.text-white.mb-5.pr-xl-4
+                %p.text-white.mb-5.pr-xl-4.pt-5
                   =@home_page.header_paragraph
               -else
-                %p.text-white.mb-5.pr-xl-4
-                  The learnsignal Bootcamp is your daily dose of motivation, coaching and support ensuring you pass your ACCA exams.
+                %p.text-white.mb-5.pr-xl-4.pt-5
+                  Register for free today to get 21 days of daily advice, motivation, exam tips and recommended exam questions.
 
-              -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
-                %h3.text-white.pr-xl-4
-                  =@preferred_plan.currency.format_number(@preferred_plan.price)
-              -else
-                %h3.text-white.pr-xl-4
-                  Register Now
+              %h3.text-white.pr-xl-4.d-none.d-sm-block
+                Register Now
 
           -if (@home_page.registration_form || @home_page.login_form) && !current_user
-            .col-xl-6.mt-6
+            .col-xl-6.mt-sm-4.mt-md-6
               =render partial: 'registration_login_form'
 
 
