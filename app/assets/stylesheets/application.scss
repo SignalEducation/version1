@@ -4146,6 +4146,21 @@ a.card:hover .card-title .card-explanation {
     padding-bottom: 12.75rem
   }
 }
+.home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+  padding-top: 6.5rem;
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+    padding-top: 9.5rem;
+    padding-bottom: 5rem
+  }
+}
+@media (min-width:1320px) {
+  .home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+    padding-top: 9.5rem;
+    padding-bottom: 6.5rem;
+  }
+}
 .podcast-hero-header {
   padding-top: 1.5rem;
   padding-bottom: 1rem
