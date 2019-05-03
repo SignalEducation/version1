@@ -57,8 +57,6 @@ class Exercise < ApplicationRecord
 
     after_transition pending: :submitted do |exercise, _transition|
       exercise.update_columns(submitted_on: Time.zone.now)
-      # email the user to confirm
-      # email the correctors
       exercise.notify_submitted
     end
 
