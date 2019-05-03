@@ -18,17 +18,19 @@
 #  correction_file_size    :bigint(8)
 #  correction_updated_at   :datetime
 #  submitted_on            :datetime
+#  corrected_on            :datetime
+#  returned_on             :datetime
 #
 
 class Exercise < ApplicationRecord
   belongs_to :product
   belongs_to :user
-  belongs_to :corrector, optional: true
+  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true
 
   has_attached_file :submission, default_url: nil
   has_attached_file :correction, default_url: nil
   validates_attachment_content_type :submission,
-    :correction, content_type: 'application/pdf'
+    :correction, content_type: ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
 
   # after_submission_post_process :submit
   # after_correction_post_process :return
@@ -60,11 +62,13 @@ class Exercise < ApplicationRecord
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
+      exercise.update_columns(corrected_on: Time.zone.now)
       # no need to do anything here, just to show the other correctors that it
       # is in progress
     end
 
     after_transition correcting: :returned do |exercise, _transition|
+      exercise.update_columns(returned_on: Time.zone.now)
       # email the user to say their corrections are available
     end
   end
