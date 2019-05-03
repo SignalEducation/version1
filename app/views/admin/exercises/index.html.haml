@@ -36,7 +36,7 @@
                       =link_to t('views.general.edit'), edit_admin_exercise_path(exercise), class: 'btn btn-primary btn-xs'
                       =link_to t('views.general.view'), admin_exercise_path(exercise), class: 'btn btn-secondary btn-xs'
                       -if exercise.corrector_id.present?
-                        %span Claimed
+                        %span= "Claimed By (#{exercise.corrector.name})"
                       -else
                         =link_to 'Claim', admin_exercise_path(exercise, exercise: { corrector_id: current_user.id }), method: :patch, class: 'btn btn-secondary btn-xs'
 
