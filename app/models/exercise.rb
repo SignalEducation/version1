@@ -59,18 +59,25 @@ class Exercise < ApplicationRecord
       exercise.update_columns(submitted_on: Time.zone.now)
       # email the user to confirm
       # email the correctors
+      exercise.notify_submitted
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
       exercise.update_columns(corrected_on: Time.zone.now)
-      # no need to do anything here, just to show the other correctors that it
-      # is in progress
     end
 
     after_transition correcting: :returned do |exercise, _transition|
       exercise.update_columns(returned_on: Time.zone.now)
-      # email the user to say their corrections are available
+      exercise.notify_returned
     end
+  end
+
+  def notify_submitted
+    MandrillWorker.perform_async(self.user_id, 'send_exercise_submitted_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
+  end
+
+  def notify_returned
+    MandrillWorker.perform_async(self.user_id, 'send_exercise_retruned_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
   end
 
   private

@@ -118,5 +118,4 @@ class Order < ActiveRecord::Base
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
   end
-
 end
