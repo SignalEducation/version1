@@ -341,7 +341,22 @@ code {
   color: #fd5c63;
   word-break: break-word
 }
-
+.strikethrough-diagonal {
+  position: relative;
+  color: #fd5c63;
+  font-weight: bold;
+  &:before {
+    position: absolute;
+    content: '';
+    left: 6%;
+    top: 35%;
+    right: 2%;
+    border-top: 0.07em solid #fd5c63;
+    -webkit-transform: skewY(-6deg);
+    -moz-transform: skewY(-6deg);
+    transform: skewY(-6deg);
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3. Container & Table
