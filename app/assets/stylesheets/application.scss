@@ -358,6 +358,22 @@ code {
   }
 }
 
+.strikethrough-diagonal {
+  position: relative;
+  color: #fd5c63;
+  font-weight: bold;
+  &:before {
+    position: absolute;
+    content: '';
+    left: 6%;
+    top: 35%;
+    right: 2%;
+    border-top: 0.07em solid #fd5c63;
+    -webkit-transform: skewY(-6deg);
+    -moz-transform: skewY(-6deg);
+    transform: skewY(-6deg);
+  }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3. Container & Table
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3765,12 +3781,12 @@ label {
   }
 }
 .card.card-horizontal .card-body {
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.25rem;
   overflow: hidden
 }
 @media (min-width:576px) {
   .card.card-horizontal .card-body {
-    padding: 1.25rem 1.75rem
+    padding: 1.25rem 1.50rem
   }
 }
 .card.card-horizontal .card-explanation {

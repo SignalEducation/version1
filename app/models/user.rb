@@ -114,10 +114,7 @@ class User < ActiveRecord::Base
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
-  validates :preferred_exam_body_id, presence: true, on: :create
   validates :user_group_id, presence: true
-  validates :communication_approval, presence: true, on: :create
-  validates :terms_and_conditions, presence: true, on: :create
   validates_confirmation_of :password, on: :create
   validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :locale, inclusion: {in: LOCALES}
@@ -568,7 +565,7 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if existing_sub = subscriptions.not_pending.all_active.first
+    if existing_sub = subscriptions.not_pending.first
       existing_sub.subscription_plan&.currency || country.currency
     elsif existing_order = orders.all.first
       existing_order.product&.currency || country.currency
@@ -629,14 +626,12 @@ class User < ActiveRecord::Base
     self.enrollments.map(&:subject_course_id)
   end
 
-  #TODO - valid enrollments ??
   def valid_enrollments_in_sitting_order
-    self.enrollments.all_active.by_sitting_date
+    self.enrollments.for_active_course.by_sitting_date
   end
 
-  #TODO - invalid enrollments ??
   def expired_enrollments_in_sitting_order
-    self.enrollments.all_active.by_sitting_date
+    self.enrollments.for_active_course.by_sitting_date
   end
 
   def active_enrollments_in_sitting_order
