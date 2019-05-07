@@ -46,6 +46,19 @@
               -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
                 %h3.text-white.pr-xl-4
                   =@preferred_plan.currency.format_number(@preferred_plan.price)
+                  %span.h5.text-white
+                    -if @preferred_plan.monthly_percentage_off
+                      Save over
+                      =@preferred_plan.monthly_percentage_off
+                      ='%'
+                    -else
+                      -if @preferred_plan.previous_plan_price && !@preferred_plan.previous_plan_price.blank?
+                        was
+                        %span.strikethrough-diagonal
+                          %span.text-white
+                            =@preferred_plan.currency.format_number(@preferred_plan.previous_plan_price)
+
+
               -else
                 %h3.text-white.pr-xl-4
                   No credit card required. Set-up takes one minute.
@@ -114,7 +127,7 @@
     .container
       %article.text-gray3.text-center.py-6.py-sm-7
         %header.pb-3
-          %h2.h1-mega Discover the smarter way to study
+          %h2.h1-mega.text-white.px-5.px-sm-6 Discover the smarter way to study
           %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
         .px-4.px-lg-8
           .row.row-lg
@@ -184,6 +197,14 @@
                         Save over
                         =plan.monthly_percentage_off
                         ='%'
+                    -else
+                      -if plan.previous_plan_price && !plan.previous_plan_price.blank?
+                        %p.h5.text-gray2
+                          was
+                          %span.strikethrough-diagonal
+                            %span{style: 'color:#647786'}
+                              =plan.currency.format_number(plan.previous_plan_price)
+
                     .mt-auto
                       =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
                         Choose this plan
