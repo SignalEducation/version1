@@ -84,13 +84,9 @@ class Order < ActiveRecord::Base
   end
 
   def generate_exercises
-    if product.mock_exam?
+    count = product.correction_pack_count || 1
+    (1..count).each do |ex|
       user.exercises.create(product_id: product_id)
-    elsif product.correction_pack?
-      count = product.correction_pack_count || 1
-      (1..count).each do |ex|
-        user.exercises.create(product_id: product_id)
-      end
     end
   end
 
