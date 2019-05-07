@@ -341,7 +341,22 @@ code {
   color: #fd5c63;
   word-break: break-word
 }
-
+.strikethrough-diagonal {
+  position: relative;
+  color: #fd5c63;
+  font-weight: bold;
+  &:before {
+    position: absolute;
+    content: '';
+    left: 6%;
+    top: 35%;
+    right: 2%;
+    border-top: 0.07em solid #fd5c63;
+    -webkit-transform: skewY(-6deg);
+    -moz-transform: skewY(-6deg);
+    transform: skewY(-6deg);
+  }
+}
 
 .strikethrough-diagonal {
   position: relative;
@@ -4162,25 +4177,21 @@ a.card:hover .card-title .card-explanation {
     padding-bottom: 12.75rem
   }
 }
-.home-hero.home-hero-bootcamp {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem
+.home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+  padding-top: 6.5rem;
 }
 @media (min-width:576px) {
-  .home-hero.home-hero-bootcamp {
-    padding-top: 5rem;
+  .home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+    padding-top: 9.5rem;
     padding-bottom: 5rem
   }
 }
 @media (min-width:1320px) {
-  .home-hero.home-hero-bootcamp {
-    //padding-top: 0;
-    //padding-bottom: 0
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+  .home-hero.home-hero-alt .home-hero-header .home-hero-bootcamp {
+    padding-top: 9.5rem;
+    padding-bottom: 6.5rem;
   }
 }
-
 .podcast-hero-header {
   padding-top: 1.5rem;
   padding-bottom: 1rem
