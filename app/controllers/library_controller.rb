@@ -47,11 +47,13 @@ class LibraryController < ApplicationController
         if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
           # Find the latest SCUL record for this user/course
           @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
-          @cmeuls = @subject_course_user_log.course_module_element_user_logs.all.map(&:course_module_element_id)
-          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-          @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-          @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+
+          #@cmeuls = @subject_course_user_log.course_module_element_user_logs.all.map(&:course_module_element_id)
+          #@completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+          #@completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+          #@incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
+          #@incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+
 
           if @exam_body.has_sittings
             @exam_body_user_details = get_exam_body_user_details

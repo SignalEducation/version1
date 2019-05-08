@@ -19,7 +19,7 @@
             =@course.name
 
       %section.course-progress
-        -if @subject_course_user_log
+        -#if @subject_course_user_log
           -total_lessons = @subject_course_user_log.subject_course.completion_cme_count
           -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
           -complete_percent = @subject_course_user_log.try(:percentage_complete)
@@ -37,8 +37,8 @@
 
 
 
-        -else
-          =render partial: 'course_info'
+        -#else
+        =render partial: 'course_info'
 
 
       %nav.courses-nav
