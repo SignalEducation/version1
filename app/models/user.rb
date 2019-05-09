@@ -565,9 +565,9 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if existing_sub = subscriptions.not_pending.first
+    if existing_sub = subscriptions.all_stripe.not_pending.first
       existing_sub.subscription_plan&.currency || country.currency
-    elsif existing_order = orders.all.first
+    elsif existing_order = orders.all_stripe.first
       existing_order.product&.currency || country.currency
     else
       country.currency

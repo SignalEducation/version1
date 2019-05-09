@@ -78,6 +78,8 @@ class Subscription < ActiveRecord::Base
   scope :all_valid, -> { where(state: VALID_STATES) }
   scope :not_pending, -> { where.not(state: 'pending') }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
+  scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_token: nil) }
+  scope :all_paypal, -> { where.not(paypal_token: nil).where(stripe_guid: nil) }
 
   # STATE MACHINE ==============================================================
 
