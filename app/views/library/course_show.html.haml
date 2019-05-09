@@ -19,7 +19,7 @@
             =@course.name
 
       %section.course-progress
-        -#if @subject_course_user_log
+        - if @subject_course_user_log
           -total_lessons = @subject_course_user_log.subject_course.completion_cme_count
           -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
           -complete_percent = @subject_course_user_log.try(:percentage_complete)
@@ -37,8 +37,8 @@
 
 
 
-        -#else
-        =render partial: 'course_info'
+        - else
+          =render partial: 'course_info'
 
 
       %nav.courses-nav
@@ -77,12 +77,12 @@
                   .card.card-collapse.mb-4
                     - # TODO add hover text colour change
                     %a.btn.btn-text.btn-collapse.w-100.text-left{'data-toggle': "collapse", href: "#collapse_#{course_module.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_module.name_url}_#{counter}",id: course_module.id}
-                      .lesson-item.w-100{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
+                      .lesson-item.w-100{class: @completed_student_exam_tracks && @completed_student_exam_track_ids.include?(course_module.id) ? 'completed' : ''}
                         %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                          - if current_user && course_module.all_content_restricted? && !current_user.active_subscription_for_exam_body?(@group.exam_body_id)
+                          -# if current_user && course_module.all_content_restricted? && !current_user.active_subscription_for_exam_body?(@group.exam_body_id)
                             lock_outline
-                          - else
-                            check
+                          -# else
+                          check
                         .lesson-item-content.pl-3
                           .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
                             %p.lesson-item-text.text-truncate.w-100
@@ -101,16 +101,16 @@
                     .collapse{id: "collapse_#{course_module.name_url}_#{counter}"}
                       .card-body
                         %ul.list-unstyled
-                          -course_module.children.all_in_order.all_active.each do |cme|
+                          -course_module.children.all_in_order.all_active.includes(:course_module_element_video).each do |cme|
 
                             %li.py-2.border-top
 
-                              - if current_user #Logged In User
-                                - permission = cme.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)
+                              - if @user #Logged In User
+                                - permission = cme.available_to_user(@user, @group.exam_body_id, @subject_course_user_log)
                                 - if permission[:view]
 
                                   =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
-                                    .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls.include?(cme.id) ? (@completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                    .lesson-item.lesson-item-inner.w-100{class: @completed_cmeuls && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
                                       %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
                                         -if cme.is_video?
                                           ondemand_video
@@ -145,7 +145,7 @@
 
                                 - else
                                   %a.btn.btn-text.py-3.w-100.text-left{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
-                                    .lesson-item.lesson-item-inner.w-100{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
+                                    .lesson-item.lesson-item-inner.w-100{class: @completed_cmeuls && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
                                       %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
                                         lock_outline
                                       .lesson-item-content.pl-3
@@ -226,8 +226,8 @@
             .row.row-lg
               - @subject_course_resources.each do |resource|
                 .col-sm-6
-                  - if current_user
-                    - permission = resource.available_to_user(current_user, @group.exam_body_id)
+                  - if @user
+                    - permission = resource.available_to_user(@user, @group.exam_body_id)
                     - if  permission[:view]
                       =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
                         .card-header.bg-white.d-flex.align-items-center.justify-content-center
@@ -286,7 +286,7 @@
 -# Modals
 =render partial: 'account_required_modal'
 =render partial: 'tutor_contact'
-- if current_user
+- if @user
   =render partial: 'subscription_restriction_modal'
   =render partial: 'verification_restriction_modal'
   =render partial: 'related_lesson_restriction_modal'
@@ -324,7 +324,7 @@
 
 
 
--if current_user && current_user.active_subscription_for_exam_body?(@group.exam_body_id)
+-if @user && @user.active_subscription_for_exam_body?(@group.exam_body_id)
   -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >= 3
     :javascript
       $(document).ready(function() {

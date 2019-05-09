@@ -43,21 +43,23 @@ class LibraryController < ApplicationController
     @course_tutor_details = @course.course_tutor_details.all_in_order
 
     if @course && @exam_body.active && !@course.preview
-      if current_user
-        if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
-          # Find the latest SCUL record for this user/course
-          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+      if @user
+        @valid_subscription = @user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
 
-          #@cmeuls = @subject_course_user_log.course_module_element_user_logs.all.map(&:course_module_element_id)
+        if @user.subject_course_user_logs.for_subject_course(@course.id).any?
+          # Find the latest SCUL record for this user/course
+          @subject_course_user_log = @user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+
+          @completed_student_exam_tracks = @subject_course_user_log.student_exam_tracks.all_complete
+          @completed_student_exam_track_ids = @subject_course_user_log.student_exam_tracks.all_complete.map(&:course_module_id)
+
           #@completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
           #@completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-          #@incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-          #@incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
 
 
           if @exam_body.has_sittings
             @exam_body_user_details = get_exam_body_user_details
-            @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
+            @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, @user.id).all_in_order.last
             if (@enrollment && @enrollment.expired) || !@enrollment
               get_enrollment_form_variables(@course, @subject_course_user_log)
             end
@@ -87,6 +89,7 @@ class LibraryController < ApplicationController
   protected
 
   def check_course_available
+    @user = User.find(12794)
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
     if @course && !@course.active
       redirect_to library_url
@@ -99,14 +102,14 @@ class LibraryController < ApplicationController
   def get_exam_body_user_details
     if @exam_body.has_sittings
       # exam_body_user_details modal form variable and any session errors
-      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id).last
+      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(@user.id).last
       unless @exam_body_user_details
-        @exam_body_user_details = current_user.exam_body_user_details.build(
+        @exam_body_user_details = @user.exam_body_user_details.build(
             exam_body_id: @course.exam_body_id
         )
       end
       if session[:user_exam_body_errors]
-        current_user.errors.add(:base, 'Details entered are not valid!')
+        @user.errors.add(:base, 'Details entered are not valid!')
         session[:user_exam_body_errors] = nil
       end
     end
