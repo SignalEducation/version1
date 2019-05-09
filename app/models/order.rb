@@ -51,6 +51,7 @@ class Order < ActiveRecord::Base
   scope :all_for_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :all_for_product, lambda { |product_id| where(product_id: product_id) }
   scope :all_for_user, lambda { |user_id| where(user_id: user_id) }
+  scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
 
   # INSTANCE METHODS ===========================================================
 
