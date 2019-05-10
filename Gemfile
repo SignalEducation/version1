@@ -64,6 +64,9 @@ gem 'font-awesome-rails' # Font Awesome with lot of useful icons
 gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works only if Flash is enabled and present)
 gem 'mandrill-api' # official Mandrill's gem
 
+gem 'rack-mini-profiler', require: false
+#gem 'flamegraph'
+#gem 'stackprof'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

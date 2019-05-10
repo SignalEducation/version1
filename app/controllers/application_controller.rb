@@ -327,24 +327,45 @@ class ApplicationController < ActionController::Base
           anchor: the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
-      if current_user
-
-        permission = the_thing.available_to_user(current_user, exam_body_id, scul)
-        if permission[:view]
-          course_url(
-              the_thing.course_module.course_section.subject_course.name_url,
-              the_thing.course_module.course_section.name_url,
-              the_thing.course_module.name_url,
-              the_thing.name_url
-          )
-
-        else
+      if current_user #current_user
+        if current_user.non_verified_user? #current_user.non_verified_user?
           library_course_url(
               the_thing.course_module.course_section.subject_course.group.name_url,
               the_thing.course_module.course_section.subject_course.name_url,
-              anchor: permission[:reason]
+              anchor: 'verification-required'
+          )
+
+        elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
+          library_course_url(
+              the_thing.course_module.course_section.subject_course.group.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
+              anchor: 'related-lesson-restriction'
+          )
+        else
+          course_url(
+            the_thing.course_module.course_section.subject_course.name_url,
+            the_thing.course_module.course_section.name_url,
+            the_thing.course_module.name_url,
+            the_thing.name_url
           )
         end
+
+        #permission = the_thing.available_to_user(current_user, exam_body_id, scul)
+        #if permission[:view]
+        #  course_url(
+        #      the_thing.course_module.course_section.subject_course.name_url,
+        #      the_thing.course_module.course_section.name_url,
+        #      the_thing.course_module.name_url,
+        #      the_thing.name_url
+        #  )
+
+        #else
+        #  library_course_url(
+        #      the_thing.course_module.course_section.subject_course.group.name_url,
+        #      the_thing.course_module.course_section.subject_course.name_url,
+        #      anchor: permission[:reason]
+        #  )
+        #end
       else
         new_student_url
       end
