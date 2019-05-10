@@ -57,7 +57,7 @@ class Exercise < ApplicationRecord
 
     after_transition pending: :submitted do |exercise, _transition|
       exercise.update_columns(submitted_on: Time.zone.now)
-      exercise.notify_submitted
+      # exercise.notify_submitted
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
@@ -65,7 +65,7 @@ class Exercise < ApplicationRecord
     end
 
     after_transition correcting: :returned do |exercise, _transition|
-<<<<<<< HEAD
+      exercise.update_columns(returned_on: Time.zone.now)
       exercise.send_returned_email
     end
   end
@@ -75,11 +75,8 @@ class Exercise < ApplicationRecord
       self.user_id,
       'send_correction_returned_email',
       Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'),
-      product.mock_exam.name,
-=======
-      exercise.update_columns(returned_on: Time.zone.now)
-      exercise.notify_returned
-    end
+      product.mock_exam.name
+    )
   end
 
   def notify_submitted
@@ -92,20 +89,6 @@ class Exercise < ApplicationRecord
       product.mock_exam.name, 
       product.mock_exam.file, 
       self.reference_guid
-    )
-  end
-
-  def notify_returned
-    MandrillWorker.perform_async(
-      self.user_id, 
-      'send_exercise_retruned_email', 
-      Rails.application.routes.url_helpers.account_url(
-        host: 'https://learnsignal.com'
-      ),
-      product.mock_exam.name,
-      product.mock_exam.file,
-      self.reference_guid
->>>>>>> cc4e4739111b9a08c36ba69ddbd1177f03aed9ab
     )
   end
 
