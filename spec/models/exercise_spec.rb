@@ -18,6 +18,8 @@
 #  correction_file_size    :bigint(8)
 #  correction_updated_at   :datetime
 #  submitted_on            :datetime
+#  corrected_on            :datetime
+#  returned_on             :datetime
 #
 
 require 'rails_helper'

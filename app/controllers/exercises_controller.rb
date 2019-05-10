@@ -14,7 +14,8 @@ class ExercisesController < ApplicationController
       @exercise.submit if @exercise.submission.present?
       redirect_to exercise_path(@exercise), notice: 'Submission successful. You will be notified when corrections become available.'
     else
-      render :new
+      flash[:error] = 'Unable to upload your submission'
+      redirect_to edit_exercise_path(@exercise)
     end
   end
 

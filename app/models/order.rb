@@ -81,7 +81,13 @@ class Order < ActiveRecord::Base
   end
 
   def execute_order_completion
-    MandrillWorker.perform_async(self.user_id, 'send_mock_exam_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
+    MandrillWorker.perform_async(
+      self.user_id,
+      'send_mock_exam_email',
+      Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'),
+      product.mock_exam.name,
+      self.reference_guid
+    )
   end
 
   def generate_exercises
@@ -115,5 +121,4 @@ class Order < ActiveRecord::Base
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
   end
-
 end
