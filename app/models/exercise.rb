@@ -18,12 +18,14 @@
 #  correction_file_size    :bigint(8)
 #  correction_updated_at   :datetime
 #  submitted_on            :datetime
+#  corrected_on            :datetime
+#  returned_on             :datetime
 #
 
 class Exercise < ApplicationRecord
   belongs_to :product
   belongs_to :user
-  belongs_to :corrector, optional: true
+  belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true
 
   has_attached_file :submission, default_url: nil
   has_attached_file :correction, default_url: nil
@@ -55,16 +57,15 @@ class Exercise < ApplicationRecord
 
     after_transition pending: :submitted do |exercise, _transition|
       exercise.update_columns(submitted_on: Time.zone.now)
-      # email the user to confirm
-      # email the correctors
+      exercise.notify_submitted
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
-      # no need to do anything here, just to show the other correctors that it
-      # is in progress
+      exercise.update_columns(corrected_on: Time.zone.now)
     end
 
     after_transition correcting: :returned do |exercise, _transition|
+<<<<<<< HEAD
       exercise.send_returned_email
     end
   end
@@ -75,6 +76,36 @@ class Exercise < ApplicationRecord
       'send_correction_returned_email',
       Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'),
       product.mock_exam.name,
+=======
+      exercise.update_columns(returned_on: Time.zone.now)
+      exercise.notify_returned
+    end
+  end
+
+  def notify_submitted
+    MandrillWorker.perform_async(
+      self.user_id, 
+      'send_exercise_submitted_email', 
+      Rails.application.routes.url_helpers.account_url(
+        host: 'https://learnsignal.com'
+      ), 
+      product.mock_exam.name, 
+      product.mock_exam.file, 
+      self.reference_guid
+    )
+  end
+
+  def notify_returned
+    MandrillWorker.perform_async(
+      self.user_id, 
+      'send_exercise_retruned_email', 
+      Rails.application.routes.url_helpers.account_url(
+        host: 'https://learnsignal.com'
+      ),
+      product.mock_exam.name,
+      product.mock_exam.file,
+      self.reference_guid
+>>>>>>> cc4e4739111b9a08c36ba69ddbd1177f03aed9ab
     )
   end
 
