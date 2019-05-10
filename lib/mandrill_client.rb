@@ -61,13 +61,19 @@ class MandrillClient
     send_template('referral-discount-20-02-17', msg)
   end
 
-  def send_mock_exam_email(account_url, file_name, attachment, guid)
-    msg = message_stub.merge({"subject" => "LearnSignal Mock Exam "})
-    msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
+  def send_mock_exam_email(account_url, product_name, guid)
+    msg = message_stub.merge({"subject" => "LearnSignal Mock Exam"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => product_name }
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
-    msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
     msg["global_merge_vars"] << { "name" => "GUID", "content" => guid }
-    send_template('mock_exam_purchase_170811', msg)
+    send_template('mock-exam-confirmation-190510', msg)
+  end
+
+  def send_correction_returned_email(account_url, product_name, guid)
+    msg = message_stub.merge({"subject" => "LearnSignal Corrections Returned"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => product_name }
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    send_template('corrections-returned-190510', msg)
   end
 
   # Enrollments Emails (Unsubscribe possible)
@@ -77,8 +83,6 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "LINK", "content" => url }
     send_template('enrolment_welcome_170811', msg)
   end
-
-
 
   #Free Trial Emails
 

@@ -28,7 +28,7 @@ class Exercise < ApplicationRecord
   has_attached_file :submission, default_url: nil
   has_attached_file :correction, default_url: nil
   validates_attachment_content_type :submission,
-    :correction, content_type: 'application/pdf'
+    :correction, content_type: ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg']
 
   # after_submission_post_process :submit
   # after_correction_post_process :return
@@ -65,8 +65,17 @@ class Exercise < ApplicationRecord
     end
 
     after_transition correcting: :returned do |exercise, _transition|
-      # email the user to say their corrections are available
+      exercise.send_returned_email
     end
+  end
+
+  def send_returned_email
+    MandrillWorker.perform_async(
+      self.user_id,
+      'send_correction_returned_email',
+      Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'),
+      product.mock_exam.name,
+    )
   end
 
   private
