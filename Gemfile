@@ -65,8 +65,8 @@ gem 'zeroclipboard-rails' # For copying referral code URL to clipboard (works on
 gem 'mandrill-api' # official Mandrill's gem
 
 gem 'rack-mini-profiler', require: false
-#gem 'flamegraph'
-#gem 'stackprof'
+gem 'flamegraph'
+gem 'stackprof'
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 
