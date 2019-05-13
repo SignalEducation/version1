@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
+  before_action :authorize_rack_profiler
 
   helper_method :current_user_session, :current_user
 
@@ -115,7 +116,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_has_access_rights
 
-
   def authenticate_if_staging
     if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
@@ -124,11 +124,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def authenticate_if_staging
-    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
-      authenticate_or_request_with_http_basic 'Staging' do |name, password|
-        name == 'signal' && password == '27(South!)'
-      end
+  def authorize_rack_profiler
+    if current_user && current_user.is_admin?
+      Rack::MiniProfiler.authorize_request
     end
   end
 
