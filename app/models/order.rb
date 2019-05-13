@@ -84,7 +84,7 @@ class Order < ActiveRecord::Base
     MandrillWorker.perform_async(
       self.user_id,
       'send_mock_exam_email',
-      Rails.application.routes.url_helpers.user_exercises_path(
+      Rails.application.routes.url_helpers.user_exercises_url(
         id: self.user_id,
         host: 'https://learnsignal.com'
       ),
