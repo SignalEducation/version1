@@ -57,7 +57,8 @@ class LibraryController < ApplicationController
 
           @cmeuls = @subject_course_user_log.course_module_element_user_logs
           @cmeuls_ids = @cmeuls.map(&:course_module_element_id)
-          @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
+
+          @completed_cmeuls = @cmeuls.all_completed
           @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
 
 
