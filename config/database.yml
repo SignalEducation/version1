@@ -1,5 +1,4 @@
 default: &default
-  host: production-read.cobzk4ao6i5h.eu-west-1.rds.amazonaws.com
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
@@ -7,10 +6,12 @@ default: &default
 
 development:
   <<: *default
+  #host: localhost
+  host: development-may10.cobzk4ao6i5h.eu-west-1.rds.amazonaws.com
   #database: db/learnsignal_development
+  database: production
   username: productiondbuser
   password: KbUPHEfGHMkw0JwCgphit6z30I1MlA8s50e4cidioWqdL2SFImfZQzZ21MTIsxE5
-  database: production
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

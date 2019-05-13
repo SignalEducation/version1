@@ -435,6 +435,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    scout_apm (2.4.24)
     scrypt (3.0.6)
       ffi-compiler (>= 1.0, < 2.0)
     selenium-webdriver (3.141.0)
@@ -605,6 +606,7 @@ DEPENDENCIES
   rspec_junit_formatter
   rubocop-rspec
   sass-rails (~> 5.0)
+  scout_apm
   scrypt
   selenium-webdriver
   shoulda-callback-matchers
