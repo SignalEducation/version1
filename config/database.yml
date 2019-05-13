@@ -6,10 +6,10 @@ default: &default
 
 development:
   <<: *default
-  #host: localhost
-  host: development-may10.cobzk4ao6i5h.eu-west-1.rds.amazonaws.com
-  #database: db/learnsignal_development
-  database: production
+  host: localhost
+  #host: development-may10.cobzk4ao6i5h.eu-west-1.rds.amazonaws.com
+  database: db/learnsignal_development
+  #database: production
   username: productiondbuser
   password: KbUPHEfGHMkw0JwCgphit6z30I1MlA8s50e4cidioWqdL2SFImfZQzZ21MTIsxE5
 
