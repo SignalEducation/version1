@@ -54,7 +54,7 @@ class SubscriptionsController < ApplicationController
       elsif params[:plan_guid].present?
         @subscription = Subscription.new(
           user_id: current_user.id,
-          subscription_plan_id: @plans.where(guid: params[:plan_guid].to_s).first.id || @plans.where(payment_frequency_in_months: 12).first.id
+          subscription_plan_id: @plans.where(guid: params[:plan_guid].to_s).first.id || @plans.last.id
         )
       else
         @subscription = Subscription.new(
