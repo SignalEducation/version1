@@ -5,6 +5,7 @@
 
   %section.pb-3
     =form_for(@exercise, url: admin_exercise_path(@exercise), method: :patch, html: {class: 'form-horizontal', role: 'form'}) do |f|
+      =f.hidden_field :id
       .box-item.form-box
         =render partial: '/layouts/error_messages', locals: {thing: @exercise, message: nil}
         .row
