@@ -96,12 +96,12 @@ class LibraryController < ApplicationController
   def check_course_available
     #@user = User.find(52157)
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    if @course && !@course.active
+    if @course && @course.active
+      @group = @course.group
+      @exam_body = @group.exam_body
+    else
       redirect_to library_url
-    elsif @course && @course.active && @course.preview
     end
-    @group = @course.group
-    @exam_body = @group.exam_body
   end
 
   def get_exam_body_user_details

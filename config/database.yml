@@ -10,8 +10,8 @@ development:
   #host: development-may10.cobzk4ao6i5h.eu-west-1.rds.amazonaws.com
   database: db/learnsignal_development
   #database: production
-  username: productiondbuser
-  password: KbUPHEfGHMkw0JwCgphit6z30I1MlA8s50e4cidioWqdL2SFImfZQzZ21MTIsxE5
+  #username: productiondbuser
+  #password: KbUPHEfGHMkw0JwCgphit6z30I1MlA8s50e4cidioWqdL2SFImfZQzZ21MTIsxE5
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
