@@ -11,8 +11,13 @@ class ExercisesController < ApplicationController
 
   def update
     if @exercise.update(exercise_params)
-      @exercise.submit if @exercise.submission.present?
-      redirect_to exercise_path(@exercise), notice: 'Submission successful. You will be notified when corrections become available.'
+      if @exercise.submission.present?
+        @exercise.submit
+        redirect_to exercise_path(@exercise), notice: 'Submission successful. You will be notified when corrections become available.'
+      else
+        flash[:error] = 'Submission unsuccessful. You must upload a submission file.'
+        redirect_to edit_exercise_path(@exercise)
+      end
     else
       flash[:error] = 'Unable to upload your submission'
       redirect_to edit_exercise_path(@exercise)
