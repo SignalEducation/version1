@@ -69,7 +69,7 @@ class MandrillClient
     send_template('mock-exam-confirmation-190510', msg)
   end
 
-  def send_correction_returned_email(account_url, product_name, guid)
+  def send_correction_returned_email(account_url, product_name)
     msg = message_stub.merge({"subject" => "LearnSignal Corrections Returned"})
     msg["global_merge_vars"] << { "name" => "NAME", "content" => product_name }
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
