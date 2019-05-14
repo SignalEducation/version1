@@ -16,6 +16,7 @@ gem 'blazer'
 gem 'scrypt' # S-Crypt for Authlogic
 # gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk-s3', '~> 1'
+gem 'slack-ruby-client'
 gem 'bootstrap', '~> 4.3.1'
 gem 'browser' # user-agent detection
 gem 'chart-js-rails', '~> 0.1.6' #Graphs

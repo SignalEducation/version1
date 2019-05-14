@@ -57,7 +57,7 @@ class Exercise < ApplicationRecord
 
     after_transition pending: :submitted do |exercise, _transition|
       exercise.update_columns(submitted_on: Time.zone.now)
-      # exercise.notify_submitted
+      exercise.notify_submitted
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
@@ -83,6 +83,34 @@ class Exercise < ApplicationRecord
   end
 
   def notify_submitted
+    # send_submitted_email
+    send_slack_message
+  end
+
+  private
+
+  def check_corrector
+    self.correct if corrector_id_previously_changed?
+  end
+
+  def send_slack_message
+    attachments = [{
+      fallback: "#{user.name} uploaded an exercise. - #{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}",
+      title: "<#{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}|#{user.name}> - uploaded an exercise.",
+      title_link: "#{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}",
+      color: '#7CD197',
+      fields: [
+        {
+          title: product.mock_exam? ? 'Mock Exam' : 'General Correction',
+          value: "#{product.name}",
+          short: true
+        }
+      ],
+    }]
+    SlackService.new.notify_channel('customer_service', attachments)
+  end
+
+  def send_submitted_email
     MandrillWorker.perform_async(
       self.user_id, 
       'send_exercise_submitted_email', 
@@ -92,12 +120,6 @@ class Exercise < ApplicationRecord
       product.mock_exam.name, 
       product.mock_exam.file, 
       self.reference_guid
-    )
-  end
-
-  private
-
-  def check_corrector
-    self.correct if corrector_id_previously_changed?
+    )    
   end
 end
