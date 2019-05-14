@@ -15,7 +15,22 @@
       %section.pb-md-6.pb-5
         .forgot-password-section
           .form-box
+            %h2=@exercise.product.name
+            -if @exercise.product.mock_exam?
+              %p
+                To help us mark your exam properly, please include a single PDF file with your solution.
+              %p
+                For Mock Exam Bundles, please only upload one question per exercise. If the bundle you purchased includes two mock exams, there should be two pending exercises available for you to submit solutions.
+            -else
+              %p
+                To help us mark your exam properly, please include a single PDF file with the following information:
+              %ul.list
+                %li Question Subject (E.g Audit and Assurance)
+                %li Question Name / Number - Task (E.g James Ltd - Part a)
+              %p
+                If you are submitting an external question for correction please include a copy of the question and solution / marking scheme with your upload
             =form_for @exercise, {class: 'py-3 mr-5 ml-5', role: 'form'} do |f|
+              =f.hidden_field :id
               .row
                 .col-sm-12
                   .form-group

@@ -59,7 +59,8 @@ class SubjectCourseResource < ActiveRecord::Base
     if user.non_verified_user?
       result = {view: false, reason: 'verification-required'}
     elsif user.standard_student_user?
-      result = available_for_subscription(user, exam_body_id)
+      #result = available_for_subscription(user, exam_body_id)
+      result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
     else
       result = {view: true, reason: nil}
     end

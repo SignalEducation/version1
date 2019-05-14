@@ -408,6 +408,10 @@ class User < ActiveRecord::Base
     self.user_group.user_group_management_access
   end
 
+  def is_admin?
+    user_group_management_access? && developer_access? && system_requirements_access?
+  end
+
   ## StudentAccess methods
 
   def make_student_access
