@@ -75,7 +75,7 @@ class Exercise < ApplicationRecord
       self.user_id,
       'send_correction_returned_email',
       Rails.application.routes.url_helpers.user_exercises_url(
-        id: self.user_id,
+        user_id: self.user_id,
         host: 'https://learnsignal.com'
       ),
       product.mock_exam.name

@@ -1030,8 +1030,8 @@ en:
         name_placeholder: Mock Exam Name
         subject_course_id: Course
         product_id: Product
-        file: Upload the Exam File
-        file_replacement: Upload the Exam File
+        file: Upload a PDF of your solution
+        file_replacement: Upload a replacement solution
         cover_image: Upload the Cover Image File
         sorting_order: Sorting Order
 
