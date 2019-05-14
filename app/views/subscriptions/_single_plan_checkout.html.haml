@@ -1,5 +1,5 @@
 .form-group
-  .custom-control.custom-radio
+  .custom-control.custom-radio{onclick: "addToCart('#{subscription.subscription_plan.currency.iso_code}', '#{subscription.subscription_plan.name}', '#{subscription.subscription_plan.id}', '#{number_in_local_currency(subscription.subscription_plan.price, subscription.subscription_plan.currency_id)}', '#{subscription.subscription_plan.exam_body.name}');"}
     %input.custom-control-input.custom-control-input-card.style-checkbox{:id => subscription.subscription_plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => subscription.subscription_plan.price, :frequency => subscription.subscription_plan.payment_frequency_in_months}, :value => subscription.subscription_plan.id, :checked => true}
     %label.custom-control-label{:for => subscription.subscription_plan.interval_name.downcase}
       %span.custom-label-info
@@ -23,7 +23,7 @@
 #all-plans
   -(plans.where(id: (plans.ids - [subscription.subscription_plan.id]))).each do |plan|
     .form-group
-      .custom-control.custom-radio
+      .custom-control.custom-radio{onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{number_in_local_currency(plan.price, plan.currency_id)}', '#{plan.exam_body.name}');"}
         %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
         %label.custom-control-label{:for => plan.interval_name.downcase}
           %span.custom-label-info

@@ -29,3 +29,27 @@
                   .btn.btn-primary
                     ='Continue Learning'
 
+
+:javascript
+
+  dataLayer = [];
+
+  dataLayer.push({
+    'ecommerce': {
+      'purchase': {
+        'actionField': {
+          'id': "#{@subscription.id}",
+          'revenue': "#{number_in_local_currency(@subscription.subscription_plan.price, @subscription.subscription_plan.currency_id)}"
+        },
+        'products': [{
+          'name': "#{@subscription.subscription_plan.name}",
+          'id': "#{@subscription.subscription_plan.id}",
+          'price': "#{number_in_local_currency(@subscription.subscription_plan.price, @subscription.subscription_plan.currency_id)}",
+          'brand': "#{@subscription.subscription_plan.exam_body.name}",
+          'category': 'Subscription',
+          'quantity': 1
+          }]
+      }
+    },
+  'event':'ecomSuccess'}
+  );

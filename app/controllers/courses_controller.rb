@@ -349,10 +349,11 @@ class CoursesController < ApplicationController
     @course_module = @course_section.course_modules.find_by(name_url: params[:course_module_name_url]) if @course_section
     @course_module_element = @course_module.course_module_elements.find_by(name_url: params[:course_module_element_name_url]) if @course_module
     @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
+    @valid_subscription = current_user.active_subscriptions_for_exam_body(@group.exam_body_id).all_valid.first
 
     unless @course && @course.active && @course_section && @course_section.active && @course_module &&
         @course_module.active && @course_module_element && @course_module_element.active &&
-        current_user && @course_module_element.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)[:view]
+        current_user && (@valid_subscription || @course_module_element.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)[:view])
 
       flash[:warning] = 'Sorry, you are not permitted to access that content. '
       redirect_to library_special_link(@course)

@@ -7,7 +7,7 @@ class UserAccountsController < ApplicationController
   def account_show
     @orders = @user.orders
     @referral_code = @user.referral_code
-    @enrollments = current_user.active_enrollments_in_sitting_order
+    @enrollments = current_user.valid_enrollments_in_sitting_order
 
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_payment_card = @subscription_payment_cards.all_default_cards.first

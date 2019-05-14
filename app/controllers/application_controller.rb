@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
+  before_action :authorize_rack_profiler
 
   helper_method :current_user_session, :current_user
 
@@ -115,7 +116,6 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_has_access_rights
 
-
   def authenticate_if_staging
     if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
       authenticate_or_request_with_http_basic 'Staging' do |name, password|
@@ -124,11 +124,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def authenticate_if_staging
-    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
-      authenticate_or_request_with_http_basic 'Staging' do |name, password|
-        name == 'signal' && password == '27(South!)'
-      end
+  def authorize_rack_profiler
+    if current_user && current_user.is_admin?
+      Rack::MiniProfiler.authorize_request
     end
   end
 
@@ -327,24 +325,45 @@ class ApplicationController < ActionController::Base
           anchor: the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
-      if current_user
-
-        permission = the_thing.available_to_user(current_user, exam_body_id, scul)
-        if permission[:view]
-          course_url(
-              the_thing.course_module.course_section.subject_course.name_url,
-              the_thing.course_module.course_section.name_url,
-              the_thing.course_module.name_url,
-              the_thing.name_url
-          )
-
-        else
+      if current_user #current_user
+        if current_user.non_verified_user? #current_user.non_verified_user?
           library_course_url(
               the_thing.course_module.course_section.subject_course.group.name_url,
               the_thing.course_module.course_section.subject_course.name_url,
-              anchor: permission[:reason]
+              anchor: 'verification-required'
+          )
+
+        elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
+          library_course_url(
+              the_thing.course_module.course_section.subject_course.group.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
+              anchor: 'related-lesson-restriction'
+          )
+        else
+          course_url(
+            the_thing.course_module.course_section.subject_course.name_url,
+            the_thing.course_module.course_section.name_url,
+            the_thing.course_module.name_url,
+            the_thing.name_url
           )
         end
+
+        #permission = the_thing.available_to_user(current_user, exam_body_id, scul)
+        #if permission[:view]
+        #  course_url(
+        #      the_thing.course_module.course_section.subject_course.name_url,
+        #      the_thing.course_module.course_section.name_url,
+        #      the_thing.course_module.name_url,
+        #      the_thing.name_url
+        #  )
+
+        #else
+        #  library_course_url(
+        #      the_thing.course_module.course_section.subject_course.group.name_url,
+        #      the_thing.course_module.course_section.subject_course.name_url,
+        #      anchor: permission[:reason]
+        #  )
+        #end
       else
         new_student_url
       end

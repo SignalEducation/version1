@@ -76,5 +76,27 @@
                         =plan.monthly_percentage_off
                         ='%'
                     .mt-auto
-                      =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm' do
+                      =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{number_in_local_currency(plan.price, plan.currency_id)}', '#{plan.exam_body.name}');" do
                         Choose this plan
+
+
+    :javascript
+      dataLayer = [];
+      function addToCart(currency, name, id, price, body) {
+        dataLayer.push({
+          'event': 'addToCart',
+          'ecommerce': {
+            'currencyCode': currency,
+            'add': {
+              'products': [{
+                'name': name,
+                'id': id,
+                'price': price,
+                'brand': body,
+                'category': 'Subscription',
+                'quantity': 1
+                }]
+            }
+          }
+        });
+      }

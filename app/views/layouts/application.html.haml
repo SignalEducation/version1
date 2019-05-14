@@ -56,7 +56,7 @@
       %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
     height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
-    -if Rails.env.production?
+    -unless Rails.env.development?
       =render partial: 'layouts/google_tag_manager'
 
     -if @layout == 'standard'

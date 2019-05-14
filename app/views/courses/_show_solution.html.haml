@@ -55,7 +55,7 @@
   .panel.panel-default.border-same-backcolor
     .list-group
       -if attempt.try(:quiz_question).try(:quiz_answers)
-        -attempt.answers.each_with_index do |qa, counter2|
+        -attempt.answers.includes(:quiz_contents).each_with_index do |qa, counter2|
           %li.list-group-item.quiz-answer-clickable
             .container-fluid
               .row

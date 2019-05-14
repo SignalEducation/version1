@@ -8,7 +8,7 @@ sitemap :site do
   url root_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
   HomePage.where(home: false).each do |home_page|
-    url "http://#{host}/#{home_page.public_url}", last_mod: home_page.updated_at, change_freq: 'monthly', priority: 1.0
+    url "https://#{host}/#{home_page.public_url}", last_mod: home_page.updated_at, change_freq: 'monthly', priority: 1.0
   end
 
 
@@ -25,11 +25,10 @@ sitemap :site do
   url privacy_policy_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url terms_and_conditions_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url public_faqs_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-  url media_library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
   #Library
   if Group.all_active.count > 1
-    url library_url, last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
+    url library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   end
 
   group = Group.all_active.all_in_order.first
@@ -39,6 +38,7 @@ sitemap :site do
 
   #Sign In, Forgot Password
   url new_student_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url sign_in_or_register_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url sign_in_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url forgot_password_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 

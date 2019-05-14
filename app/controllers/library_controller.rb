@@ -44,15 +44,22 @@ class LibraryController < ApplicationController
 
     if @course && @exam_body.active && !@course.preview
       if current_user
+
+        @valid_subscription = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
+
+
         if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
           # Find the latest SCUL record for this user/course
           @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
 
-          #@cmeuls = @subject_course_user_log.course_module_element_user_logs.all.map(&:course_module_element_id)
-          #@completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-          #@completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-          #@incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-          #@incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
+          @completed_student_exam_tracks = @subject_course_user_log.student_exam_tracks.all_complete
+          @completed_course_module_ids = @completed_student_exam_tracks.map(&:course_module_id)
+
+          @cmeuls = @subject_course_user_log.course_module_element_user_logs
+          @cmeuls_ids = @cmeuls.map(&:course_module_element_id)
+
+          @completed_cmeuls = @cmeuls.all_completed
+          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
 
 
           if @exam_body.has_sittings
@@ -87,13 +94,14 @@ class LibraryController < ApplicationController
   protected
 
   def check_course_available
+    #@user = User.find(52157)
     @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    if @course && !@course.active
+    if @course && @course.active
+      @group = @course.group
+      @exam_body = @group.exam_body
+    else
       redirect_to library_url
-    elsif @course && @course.active && @course.preview
     end
-    @group = @course.group
-    @exam_body = @group.exam_body
   end
 
   def get_exam_body_user_details
@@ -117,14 +125,14 @@ class LibraryController < ApplicationController
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
     @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
     if @course.exam_body.has_sittings
-      @correction_pack_products = Product.includes(:currency)
+      @correction_pack_products = Product.includes(:mock_exam => :subject_course)
                              .in_currency(@currency_id)
                              .all_active
                              .all_in_order
                              .where("mock_exam_id IS NOT NULL")
                              .where("product_type = ?", Product.product_types[:correction_pack])
       mock_exam_ids = @course.mock_exams.map(&:id)
-      @mock_exam_products = Product.includes(:mock_exam)
+      @mock_exam_products = Product.includes(:mock_exam => :subject_course)
                        .in_currency(@currency_id)
                        .all_active
                        .all_in_order
@@ -139,7 +147,7 @@ class LibraryController < ApplicationController
       @subscription_plan = SubscriptionPlan.where(
           subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
           payment_frequency_in_months: @group.exam_body.try(:preferred_payment_frequency)
-      ).includes(:currency).in_currency(@currency_id).all_active.first
+      ).in_currency(@currency_id).all_active.first
     end
 
 
