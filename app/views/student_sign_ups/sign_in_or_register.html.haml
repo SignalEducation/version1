@@ -87,3 +87,46 @@
       tabLink.tab('show');
     }
   })
+
+
+-if @plan
+
+  :javascript
+    dataLayer = [];
+    function loginCheckout() {
+      dataLayer.push({
+        'event': 'checkout',
+        'ecommerce': {
+          'checkout': {
+            'actionField': {'step': 1, 'option':'Login'},
+            'products': [{
+              'name': "#{@plan.name}",
+              'id': "#{@plan.id}",
+              'price': "#{@plan.currency.format_number(@plan.price)}",
+              'brand': "#{plan.exam_body.name}",
+              'category': 'Subscription',
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+    function registerCheckout() {
+      dataLayer.push({
+        'event': 'checkout',
+        'ecommerce': {
+          'checkout': {
+            'actionField': {'step': 1, 'option':'Register'},
+            'products': [{
+              'name': "#{@plan.name}",
+              'id': "#{@plan.id}",
+              'price': "#{@plan.currency.format_number(@plan.price)}",
+              'brand': "#{plan.exam_body.name}",
+              'category': 'Subscription',
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+

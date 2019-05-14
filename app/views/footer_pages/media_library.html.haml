@@ -34,16 +34,17 @@
             .row.row-lg
               -@products.each do |product|
                 .col-xs-12.col-sm-6.col-md-4
-                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-link text-center mb-5' do
-                    .py-4
-                      %h4.text-ellipsis.mb-4
-                        =product.mock_exam.try(:name)
-                      .pt-2
-                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
-                      %p.h6.text-ellipsis.pt-4
-                        =number_in_local_currency(product.price, product.currency_id)
-                      .pt-2
-                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+                  - if product.mock_exam.subject_course.group.exam_body.id && product.mock_exam.subject_course.exam_body.name
+                    =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-link text-center mb-5', onclick: "addToCart('#{product.currency.iso_code}', '#{product.name}', '#{product.id}', '#{number_in_local_currency(product.price, product.currency_id)}', '#{product.mock_exam.subject_course.exam_body.name}'); return false;" do
+                      .py-4
+                        %h4.text-ellipsis.mb-4
+                          =product.mock_exam.try(:name)
+                        .pt-2
+                          %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                        %p.h6.text-ellipsis.pt-4
+                          =number_in_local_currency(product.price, product.currency_id)
+                        .pt-2
+                          %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
 
 
       -if @questions.any?
@@ -81,3 +82,30 @@
     }
 
   });
+
+  dataLayer = [];
+
+  function addToCart(currency, name, id, price, body) {
+    let currencyIso = currency;
+    let productName = name;
+    let productId = id;
+    let productPrice = price;
+    let productBody = body;
+    dataLayer.push({
+      'event': 'addToCart',
+      'ecommerce': {
+        'currencyCode': currencyIso,
+        'add': {
+          'products': [{
+            'name': productName,
+            'id': productId,
+            'price': productPrice,
+            'brand': productBody,
+            'category': 'Preparation',
+            'quantity': 1
+            }]
+        }
+      }
+    });
+  }
+
