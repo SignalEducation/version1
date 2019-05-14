@@ -9,7 +9,12 @@ class Admin::ExercisesController < ApplicationController
 
   def index
     states = params[:state].present? ? [params[:state]] : %w(submitted correcting)
-    @exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page]).all_in_order
+    exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page])
+    if params[:state] == 'returned'
+      @exercises = exercises.order(created_at: :desc)
+    else
+      @exercises = exercises.order(created_at: :asc)
+    end
   end
 
   def show
