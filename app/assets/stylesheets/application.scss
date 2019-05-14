@@ -1424,7 +1424,10 @@ textarea.form-control {
 .card-footer {
   padding: 2rem 2.5rem;
   background-color: #f5f8fa;
-  border-top: 1px solid #e1e8ed
+  border-top: 1px solid #e1e8ed;
+  .btn {
+    margin-left: 10px;
+  }
 }
 .card-footer:last-child {
   border-radius: 0 0 -webkit-calc(0 - 1px) -webkit-calc(0 - 1px);
