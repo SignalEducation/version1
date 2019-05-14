@@ -208,7 +208,13 @@ class CourseModuleElement < ActiveRecord::Base
     if user.non_verified_user?
       result = {view: false, reason: 'verification-required'}
     elsif user.standard_student_user?
-      result = available_for_subscription(user, exam_body_id, scul)
+      #result = available_for_subscription(user, exam_body_id, scul)
+
+      if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+        result = {view: false, reason: 'related-lesson-restriction'}
+      else
+        result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+      end
     else
       result = available_for_complimentary(scul)
     end
@@ -233,6 +239,18 @@ class CourseModuleElement < ActiveRecord::Base
       'Constructed Response'
     else
       'Unknown'
+    end
+  end
+
+  def icon_label
+    if is_video
+      'ondemand_video'
+    elsif is_quiz
+      'playlist_add_check'
+    elsif is_constructed_response
+       'grid_on'
+    else
+      'checked'
     end
   end
 

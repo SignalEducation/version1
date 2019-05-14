@@ -54,7 +54,7 @@ class Product < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
-  scope :all_active, -> { where(active: true) }
+  scope :all_active, -> { where(active: true).includes(:mock_exam => :subject_course) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
 
   # class methods

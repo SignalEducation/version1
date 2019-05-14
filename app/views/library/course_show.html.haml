@@ -19,7 +19,7 @@
             =@course.name
 
       %section.course-progress
-        -#if @subject_course_user_log
+        - if @subject_course_user_log
           -total_lessons = @subject_course_user_log.subject_course.completion_cme_count
           -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
           -complete_percent = @subject_course_user_log.try(:percentage_complete)
@@ -37,8 +37,8 @@
 
 
 
-        -#else
-        =render partial: 'course_info'
+        - else
+          =render partial: 'course_info'
 
 
       %nav.courses-nav
@@ -77,50 +77,37 @@
                   .card.card-collapse.mb-4
                     - # TODO add hover text colour change
                     %a.btn.btn-text.btn-collapse.w-100.text-left{'data-toggle': "collapse", href: "#collapse_#{course_module.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_module.name_url}_#{counter}",id: course_module.id}
-                      .lesson-item.w-100{class: course_module.completed_for_scul(@subject_course_user_log.try(:id)) ? 'completed' : ''}
+                      .lesson-item.w-100{class: @completed_student_exam_tracks && @completed_course_module_ids.include?(course_module.id) ? 'completed' : ''}
                         %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-                          - if current_user && course_module.all_content_restricted? && !current_user.active_subscription_for_exam_body?(@group.exam_body_id)
+                          -# if current_user && course_module.all_content_restricted? && !current_user.active_subscription_for_exam_body?(@group.exam_body_id)
                             lock_outline
-                          - else
-                            check
+                          -# else
+                          check
                         .lesson-item-content.pl-3
                           .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
                             %p.lesson-item-text.text-truncate.w-100
                               =course_module.name
                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                              - if course_module.children.any?
-                                %span
-                                  -if course_module.cme_count.to_i > 1
-                                    =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                  -else
-                                    =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
-                              -else
-                                %span
-                                  Coming Soon
+                              %span
+                                -if course_module.cme_count.to_i > 1
+                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                -else
+                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
+
 
                     .collapse{id: "collapse_#{course_module.name_url}_#{counter}"}
                       .card-body
                         %ul.list-unstyled
-                          -course_module.children.all_in_order.all_active.each do |cme|
+                          -course_module.active_children.each do |cme|
 
                             %li.py-2.border-top
 
                               - if current_user #Logged In User
-                                - permission = cme.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)
-                                - if permission[:view]
-
+                                -if @valid_subscription
                                   =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
-                                    .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls.include?(cme.id) ? (@completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                    .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                                       %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                                        -if cme.is_video?
-                                          ondemand_video
-                                        -elsif cme.is_quiz?
-                                          playlist_add_check
-                                        -elsif cme.is_constructed_response?
-                                          grid_on
-                                        -else
-                                          checked
-
+                                        =cme.icon_label
 
                                       .lesson-item-content.pl-3
                                         .d-flex.flex-column.flex-sm-row.align-items-start
@@ -131,55 +118,70 @@
                                               %span=cme.temporary_label
                                             -else
                                               %span
-                                                -if cme.is_video
-                                                  -if cme.try(:course_module_element_video).try(:duration)
-                                                    =humanize_time(cme.course_module_element_video.duration)
-                                                  -elsif cme.try(:estimated_time_in_seconds)
-                                                    =humanize_time(cme.try(:estimated_time_in_seconds))
+                                                -if cme.is_video && cme.estimated_time_in_seconds
+                                                  =humanize_time(cme.estimated_time_in_seconds)
                                                 -elsif cme.is_quiz
                                                   -if cme.number_of_questions.to_i > 1
                                                     =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
                                                   -else
                                                     =cme.number_of_questions.to_s + ' ' +  'Question'
 
+                                -else
+                                  - permission = cme.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)
 
-                                - else
-                                  %a.btn.btn-text.py-3.w-100.text-left{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
-                                    .lesson-item.lesson-item-inner.w-100{class: @completed_cmeuls_cme_ids && @completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : ''}
-                                      %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                                        lock_outline
-                                      .lesson-item-content.pl-3
-                                        .d-flex.flex-column.flex-sm-row.align-items-start
-                                          %p.lesson-item-text
-                                            =cme.name
-                                          %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                                            -if cme.temporary_label && !cme.temporary_label.empty?
-                                              %span=cme.temporary_label
-                                            -else
-                                              %span
-                                                -if cme.is_video
-                                                  -if cme.try(:course_module_element_video).try(:duration)
-                                                    =humanize_time(cme.course_module_element_video.duration)
-                                                  -elsif cme.try(:estimated_time_in_seconds)
-                                                    =humanize_time(cme.try(:estimated_time_in_seconds))
-                                                -elsif cme.is_quiz
-                                                  -if cme.number_of_questions.to_i > 1
-                                                    =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
-                                                  -else
-                                                    =cme.number_of_questions.to_s + ' ' +  'Question'
+                                  - if permission[:view]
+
+                                    =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                      .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                        %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                          =cme.icon_label
+
+
+                                        .lesson-item-content.pl-3
+                                          .d-flex.flex-column.flex-sm-row.align-items-start
+                                            %p.lesson-item-text
+                                              =cme.name
+                                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                              -if cme.temporary_label && !cme.temporary_label.empty?
+                                                %span=cme.temporary_label
+                                              -else
+                                                %span
+                                                  -if cme.is_video && cme.estimated_time_in_seconds
+                                                    =humanize_time(cme.estimated_time_in_seconds)
+                                                  -elsif cme.is_quiz
+                                                    -if cme.number_of_questions.to_i > 1
+                                                      =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                    -else
+                                                      =cme.number_of_questions.to_s + ' ' +  'Question'
+
+
+                                  - else
+                                    %a.btn.btn-text.py-3.w-100.text-left{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
+                                      .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                        %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                          lock_outline
+                                        .lesson-item-content.pl-3
+                                          .d-flex.flex-column.flex-sm-row.align-items-start
+                                            %p.lesson-item-text
+                                              =cme.name
+                                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                              -if cme.temporary_label && !cme.temporary_label.empty?
+                                                %span=cme.temporary_label
+                                              -else
+                                                %span
+                                                  -if cme.is_video && cme.estimated_time_in_seconds
+                                                    =humanize_time(cme.estimated_time_in_seconds)
+                                                  -elsif cme.is_quiz
+                                                    -if cme.number_of_questions.to_i > 1
+                                                      =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                    -else
+                                                      =cme.number_of_questions.to_s + ' ' +  'Question'
 
                               - else #Anonymous User
                                 %a.btn.btn-text.py-3.w-100.text-left{data: {target: '#account-required', toggle: 'modal', href: '#'}}
                                   .lesson-item.lesson-item-inner.w-100
                                     %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
-                                      -if cme.is_video?
-                                        ondemand_video
-                                      -elsif cme.is_quiz?
-                                        playlist_add_check
-                                      -elsif cme.is_constructed_response?
-                                        grid_on
-                                      -else
-                                        checked
+                                      =cme.icon_label
 
                                     .lesson-item-content.pl-3
                                       .d-flex.flex-column.flex-sm-row.align-items-start
@@ -190,11 +192,8 @@
                                             %span=cme.temporary_label
                                           -else
                                             %span
-                                              -if cme.is_video
-                                                -if cme.try(:course_module_element_video).try(:duration)
-                                                  =humanize_time(cme.course_module_element_video.duration)
-                                                -elsif cme.try(:estimated_time_in_seconds)
-                                                  =humanize_time(cme.try(:estimated_time_in_seconds))
+                                              -if cme.is_video && cme.estimated_time_in_seconds
+                                                =humanize_time(cme.estimated_time_in_seconds)
                                               -elsif cme.is_quiz
                                                 -if cme.number_of_questions.to_i > 1
                                                   =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
@@ -227,8 +226,7 @@
               - @subject_course_resources.each do |resource|
                 .col-sm-6
                   - if current_user
-                    - permission = resource.available_to_user(current_user, @group.exam_body_id)
-                    - if  permission[:view]
+                    - if @valid_subscription
                       =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
                         .card-header.bg-white.d-flex.align-items-center.justify-content-center
                           %i.budicon-files-download{"aria-label" => "", :role => "img"}
@@ -236,13 +234,24 @@
                           %h5.m-0.text-truncate.text-gray2
                             =resource.name
 
+
                     - else
-                      %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
-                        .card-header.bg-white.d-flex.align-items-center.justify-content-center
-                          %i.budicon-files-download{"aria-label" => "", :role => "img"}
-                        .card-body.d-flex.align-items-center.pl-1
-                          %h5.m-0.text-truncate.text-gray2
-                            =resource.name
+                      - permission = resource.available_to_user(current_user, @group.exam_body_id)
+                      - if  permission[:view]
+                        =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                          .card-body.d-flex.align-items-center.pl-1
+                            %h5.m-0.text-truncate.text-gray2
+                              =resource.name
+
+                      - else
+                        %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
+                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                          .card-body.d-flex.align-items-center.pl-1
+                            %h5.m-0.text-truncate.text-gray2
+                              =resource.name
 
                   - else
                     %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: '#account-required', toggle: 'modal', href: '#'}}
