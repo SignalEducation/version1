@@ -90,7 +90,7 @@ class SubscriptionPlan < ActiveRecord::Base
           currency.id).all_active.all_in_order
     else
       plans = self.in_currency(currency.id)
-                  .where(subscription_plan_category_id: nil)
+                  .generally_available
                   .all_active
                   .all_in_order
     end

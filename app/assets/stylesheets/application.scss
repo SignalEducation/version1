@@ -224,6 +224,17 @@ ul.list li::before {
   content: '';
   background-color: #e6eaf2
 }
+ol {
+  margin: 0;
+  padding: 0;
+  padding-left: 2.25rem;
+  list-style-type: decimal !important;
+}
+ol li {
+  position: relative;
+  margin-bottom: 1rem
+}
+
 b,
 strong {
   font-weight: 500
