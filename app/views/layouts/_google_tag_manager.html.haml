@@ -1,13 +1,4 @@
 
--if flash[:datalayer_verify]
-  :javascript
-    dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
-
--if flash[:new_session]
-  :javascript
-    dataLayer.push({'event':'login', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
-
-
 -# Google Tag Manager
 :javascript
   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'}); var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:''; j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5SC76S');
