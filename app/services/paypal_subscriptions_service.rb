@@ -150,7 +150,7 @@ class PaypalSubscriptionsService
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
-      start_date: (start_date.nil? ? subscription_start_date(subscription_plan) : start_date.iso8601),
+      start_date: (start_date.nil? ? subscription_start_date(subscription_plan) : start_date),
       payer: {
         payment_method: "paypal",
         payer_info: {

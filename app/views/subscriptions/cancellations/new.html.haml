@@ -39,7 +39,7 @@
                       Pause Subscription
 
                   .col-sm-4
-                    =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm'
+                    =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm', data: { disable_with: false }
 
                   .col-sm-12.mt-3
                     %p
