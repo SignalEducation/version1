@@ -107,7 +107,7 @@ class Exercise < ApplicationRecord
         }
       ],
     }]
-    SlackService.new.notify_channel('customer_service', attachments)
+    SlackService.new.notify_channel('corrections', attachments)
   end
 
   def send_submitted_email
