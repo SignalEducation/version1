@@ -116,3 +116,8 @@
 
     -unless controller_name == 'home_pages'
       %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+
+    -if flash[:datalayer]
+      :javascript
+        dataLayer = [];
+        dataLayer.push({'event':'registration', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
