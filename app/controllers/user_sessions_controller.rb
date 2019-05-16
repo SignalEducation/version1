@@ -19,6 +19,7 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit
+      flash[:new_session] = true
       handle_course_enrollment(@user_session.user, params[:subject_course_id]) if params[:subject_course_id]
       flash[:error] = nil
       if flash[:plan_guid]

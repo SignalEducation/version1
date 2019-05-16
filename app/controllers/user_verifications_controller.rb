@@ -15,7 +15,7 @@ class UserVerificationsController < ApplicationController
       UserSession.create(@user)
       set_current_visit
       flash[:success] = 'Thank you! Your email is now verified'
-      flash[:datalayer] = true
+      flash[:datalayer_verify] = true
       if @user.preferred_exam_body&.group
         redirect_to library_special_link(@user.preferred_exam_body.group)
       else
