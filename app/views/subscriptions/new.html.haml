@@ -252,6 +252,8 @@
     card.addEventListener('change', function(event) {
       var displayError = document.getElementById('card-errors');
       if (event.error) {
+        $('#paypal_submit').show();
+        $('#paypal_submit').prop('disabled',true);
         displayError.textContent = event.error.message;
       } else {
         displayError.textContent = '';
