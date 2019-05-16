@@ -99,6 +99,8 @@ class StudentSignUpsController < ApplicationController
         set_current_visit
         redirect_to new_order_url(product_id: flash[:product_id])
       else
+        flash[:datalayer_id] = @user.id
+        flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
         redirect_to personal_sign_up_complete_url
       end
 
