@@ -52,12 +52,8 @@
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
 
-    %noscript
-      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
-    height: 0, width: 0, style: 'display:none;visibility:hidden'}
-
-    -unless Rails.env.development?
-      =render partial: 'layouts/google_tag_manager'
+    :javascript
+      dataLayer = [];
 
     -if @layout == 'standard'
       -if @navbar
@@ -104,6 +100,21 @@
     -unless controller_name == 'courses'
       =render partial: 'layouts/intercom'
 
+    -if flash[:datalayer_verify]
+      :javascript
+        dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+
+    -if flash[:just_signed_in]
+      :javascript
+        dataLayer.push({'event':'login', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+
+    %noscript
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
+    height: 0, width: 0, style: 'display:none;visibility:hidden'}
+
+    -unless Rails.env.development?
+      =render partial: 'layouts/google_tag_manager'
+
     <!-- Mathjax -->
 
     -if @mathjax_required && !controller_name == 'home_pages'
@@ -116,3 +127,4 @@
 
     -unless controller_name == 'home_pages'
       %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+
