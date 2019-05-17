@@ -120,8 +120,6 @@ describe User do
 
   it { should validate_presence_of(:user_group_id) }
 
-  it { should validate_presence_of(:communication_approval).on(:create) }
-  it { should validate_presence_of(:terms_and_conditions).on(:create) }
 
   context "user email validation" do
     before do
