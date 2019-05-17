@@ -4,7 +4,10 @@ shared_context 'course_content' do
 
 
   #Courses first set
+  let!(:course_section_1) { FactoryBot.create(:course_section,
+                           subject_course: subject_course_1) }
   let!(:course_module_1) { FactoryBot.create(:active_course_module,
+                           course_section: course_section_1,
                            subject_course: subject_course_1) }
   let!(:course_module_element_1_1) { FactoryBot.create(:cme_quiz,
                            course_module: course_module_1) }
@@ -28,7 +31,8 @@ shared_context 'course_content' do
   #Courses Second set
 
   let!(:course_module_2) { FactoryBot.create(:active_course_module,
-                                              subject_course_id: subject_course_2.id) }
+                                              subject_course_id: subject_course_2.id,
+                                             course_section: course_section_1) }
   let!(:course_module_element_2_1) { FactoryBot.create(:cme_quiz,
                            course_module: course_module_2) }
   let!(:course_module_element_quiz_2_2_1) { FactoryBot.create(:course_module_element_quiz,
