@@ -146,16 +146,8 @@
           .btn.btn-secondary.full-width.l-margin-bottom
             =t('views.users.show.change_subscription_plan')
 
-      %a{data: {target: '#confirm-pause-modal', toggle: 'modal'}, href: '#', class: 'btn btn-orange full-width l-margin-bottom confirm-pause-modal'}
-        =t('views.users.show.pause_your_subscription_plan')
-
       %a{data: {target: '#confirm-cancellation-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
-
-    -elsif @current_subscription.paused?
-      =link_to subscriptions_suspension_path(id: @current_subscription.id), method: :delete do
-        .btn.btn-orange.full-width.l-margin-bottom
-          =t('views.users.show.confirm_subscription_reactivate')
 
     -elsif @current_subscription.canceled_pending_status?
 
@@ -184,5 +176,4 @@
         =render partial: 'invoices_index'
 
 =#render partial: 'confirm_cancellation_modal'
-=#render partial: 'confirm_pause_modal'
 
