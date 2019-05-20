@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: pass2015
       PGDATA: /pgdata
     env_file:
-      - .env
+      - local_env.yml
     image: postgres:9.6-alpine
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
@@ -18,7 +18,7 @@ services:
     volumes:
       - .:/version1
     ports:
-      - 3000:3000
+      - 5432:5432
     depends_on:
       - db
       - sidekiq
