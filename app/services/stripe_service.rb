@@ -134,25 +134,6 @@ class StripeService
     subscription
   end
 
-  def pause_subscription(subscription)
-    stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_guid)
-    stripe_sub.coupon = 'paused-subscription'
-    stripe_sub.save
-    subscription.pause
-  rescue Stripe::StripeError => e
-    Rails.logger.error "DEBUG: Subscription#pause Failure to apply paused coupon for Subscription: ##{subscription.id}"
-    raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong pausing your subscription. Please try again or contact us for assistance.')
-  end
-
-  def reactivate_subscription(subscription)
-    stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_guid)
-    stripe_sub.delete_discount
-    subscription.restart
-  rescue Stripe::StripeError => e
-    Rails.logger.error "DEBUG: Subscription#restart Failure to revoke paused coupon for Subscription: ##{subscription.id}"
-    raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong restarting your subscription. Please try again or contact us for assistance.')
-  end
-
   # PRIVATE ====================================================================
 
   private
