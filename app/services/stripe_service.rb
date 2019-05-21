@@ -144,7 +144,7 @@ class StripeService
         subscription.cancel_pending
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{subscription}. StripeResponse:#{response}."
-        raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
+        raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
@@ -165,7 +165,7 @@ class StripeService
         subscription.cancel
       else
         Rails.logger.error "ERROR: Subscription#cancel_immediately failed to cancel an 'active' sub. Self:#{subscription}. StripeResponse:#{response}."
-        raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
+        raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
