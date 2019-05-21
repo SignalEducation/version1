@@ -42,6 +42,7 @@ class SubscriptionsController < ApplicationController
 
   def new
     #redirect_to already_subscribed_url
+
     if ExamBody.exists?(params[:exam_body_id]) 
       current_user.preferred_exam_body.present?
     else
@@ -51,7 +52,17 @@ class SubscriptionsController < ApplicationController
 
     if current_user.active_subscriptions_for_exam_body(params[:exam_body_id])
       if current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).count > 0
-        redirect_to account_change_plan_url
+
+        other_plans = SubscriptionPlan.get_related_plans(current_user, 
+          current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).last.currency, params[:exam_body_id], 
+          current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).last.subscription_plan.guid 
+          )
+        if other_plans.count  <= 1
+         flash[:warning] = 'No other plans exist'
+         redirect_to account_url         
+        else
+          redirect_to new_subscriptions_plan_change_url(id: current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).first.id)
+        end
       end
     end
 
