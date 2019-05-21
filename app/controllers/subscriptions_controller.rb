@@ -41,11 +41,17 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
+    #redirect_to already_subscribed_url
+    
     if !current_user.preferred_exam_body.present? && !params[:exam_body_id]
+      #redirect_to already_subscribed_url
       redirect_to edit_preferred_exam_body_path
     elsif current_user.standard_student_user?
       @plans, country = get_relevant_subscription_plans
       @yearly_plan = @plans.yearly.first
+      if current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).count > 0
+        redirect_to already_subscribed_url
+      end
       if params[:prioritise_plan_frequency].present?
         @subscription = Subscription.new(
           user_id: current_user.id,
@@ -204,6 +210,9 @@ class SubscriptionsController < ApplicationController
     # elsif current_user && !current_user.trial_or_sub_user?
     #   redirect_to root_url
     # end
+  end
+
+  def already_subscribed
   end
 
 end
