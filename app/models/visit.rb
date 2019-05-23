@@ -34,5 +34,5 @@ class Visit < ActiveRecord::Base
   has_many :events, class_name: "Ahoy::Event"
   belongs_to :user, optional: true
 
-  scope :search_for, lambda { |search_term| where('utm_source ILIKE :t OR utm_medium ILIKE :t OR utm_term ILIKE :t  OR utm_content ILIKE :t  OR utm_campaign ILIKE :t ', t: '%' + search_term + '%') }
+  scope :search_for, lambda { |search_term| where('utm_source ILIKE :t OR utm_medium ILIKE :t OR utm_term ILIKE :t  OR utm_content ILIKE :t  OR utm_campaign ILIKE :t ', t: '%' + search_term + '%').order(started_at: :desc) }
 end
