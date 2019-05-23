@@ -1,31 +1,26 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            ='Create Activation Worker'
+.container
+  %header.management-console-section
+    %h1
+      ="Create New Activation Worker"
 
-      .row.l-margin-bottom
-        .col-md-12
-          =form_tag(content_activations_url, method: 'post') do
-            =hidden_field_tag :id, params[:id]
-            =hidden_field_tag :type, params[:type]
-
-            .row.l-margin-bottom-huge.l-margin-top{style: "overflow:hidden;"}
-              .form-group
-                .row
+  %section.pb-7                 
+    .col-md-12
+      =form_tag(content_activations_url, method: 'post') do
+        =hidden_field_tag :id, params[:id]
+        =hidden_field_tag :type, params[:type]
+        .row.l-margin-top
+          .form-group
+            .row.l-margin-top.col-md-offset-10
+              .col-md-16.col-md-offset-10
+              %label
+                ='Select a valid Date & Time'                    
+                %span.custom-date-select.input-group.input-group-lg                                                         
+                  =date_select :activation_date, :date, class: 'form-control custom-select'
+                .row.l-margin-top
                   .col-md-8.col-md-offset-2.text-center
-                    %label
-                      ='Select a valid Date & Time'
-                    .l-margin-top
-                    =label :datetime, t('views.user_accounts.student_user_form.date_of_birth')                                          
-                    =date_select :activation_date, :date
+                    %button{:type => "submit", class: 'btn btn-red'} Save
 
-            .row.l-margin-top
-              .col-md-8.col-md-offset-2.text-center
-                %button{:type => "submit", class: 'btn btn-red'} Save
-
+        
 
 
 
