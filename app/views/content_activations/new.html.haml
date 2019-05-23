@@ -20,9 +20,7 @@
                       ='Select a valid Date & Time'
                     .l-margin-top
                     =label :datetime, t('views.user_accounts.student_user_form.date_of_birth')                                          
-                    =date_select :date, :start_year => Date.current.year
-
-
+                    =date_select :activation_date, :date
 
             .row.l-margin-top
               .col-md-8.col-md-offset-2.text-center

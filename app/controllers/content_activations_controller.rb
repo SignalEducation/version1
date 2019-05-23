@@ -11,10 +11,17 @@ class ContentActivationsController < ApplicationController
   end
 
   def create
-    params
-    pry
+
+    
     record_type = params[:type].constantize
     @record = record_type.find(params[:id])
+    @date = DateTime.new(params[:activation_date]["date(1i)"].to_i,
+                       params[:activation_date]["date(2i)"].to_i,
+                       params[:activation_date]["date(3i)"].to_i
+                      )
+
+    
+    pry
     if @record && params[:datetime]
       datetime = params[:datetime]
      #parsed_time = DateTime.strptime(datetime, '%d/%m/%Y %H:%M:%S')
