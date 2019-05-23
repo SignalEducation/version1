@@ -19,7 +19,8 @@
                     %label
                       ='Select a valid Date & Time'
                     .l-margin-top
-                      =text_field_tag(:datetime, nil, {id: 'dateTimePicker', style: 'width: 50%'})
+                    =label :datetime, t('views.user_accounts.student_user_form.date_of_birth')                                          
+                    =date_select :date, :start_year => Date.current.year
 
 
 

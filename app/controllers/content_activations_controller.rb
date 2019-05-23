@@ -11,12 +11,14 @@ class ContentActivationsController < ApplicationController
   end
 
   def create
+    params
+    pry
     record_type = params[:type].constantize
     @record = record_type.find(params[:id])
     if @record && params[:datetime]
       datetime = params[:datetime]
-      parsed_time = DateTime.strptime(datetime, '%d/%m/%Y %H:%M:%S')
-      ContentActivationWorker.perform_at(parsed_time, record_type, @record.id)
+     #parsed_time = DateTime.strptime(datetime, '%d/%m/%Y %H:%M:%S')
+      ContentActivationWorker.perform_at(datetime, record_type, @record.id)
 
       redirect_to content_activation_special_link(@record)
     end
