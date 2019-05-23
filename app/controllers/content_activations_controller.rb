@@ -21,14 +21,12 @@ class ContentActivationsController < ApplicationController
                        params[:activation_date]["date(2i)"].to_i,
                        params[:activation_date]["date(3i)"].to_i, 
                        2
-                      )
-
+                      )    
     
-    pry
-    if @record && params[:datetime]
-      datetime = params[:datetime]
+    if @record && params[:activation_date]
+
      #parsed_time = DateTime.strptime(datetime, '%d/%m/%Y %H:%M:%S')
-      ContentActivationWorker.perform_at(datetime, record_type, @record.id)
+      ContentActivationWorker.perform_at(@date, record_type, @record.id)
 
       redirect_to content_activation_special_link(@record)
     end
