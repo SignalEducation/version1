@@ -3,7 +3,7 @@
   -if current_user.exercises.with_states([:submitted, :correcting]).any?
     %h2 Submitted Exercises
     -current_user.exercises.with_states([:submitted, :correcting]).each do |exercise|
-      .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+      .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-body.d-flex.flex-column.justify-content-center
           %small.card-category.mb-2{style: 'color: #5e90ef'}
             =exercise.state
@@ -20,7 +20,7 @@
   -if current_user.exercises.with_state(:pending).any?
     %h2 Pending Exercises
     -current_user.exercises.with_state(:pending).each do |exercise|
-      .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+      .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-body.d-flex.flex-column.justify-content-center
           %small.card-category.mb-2{style: 'color: #5e90ef'}
             =exercise.product.name
@@ -37,7 +37,7 @@
   -if current_user.exercises.with_states(:returned).any?
     %h2 Returned Exercises
     -current_user.exercises.with_states(:returned).each do |exercise|
-      .card.card-horizontal.flex-row{style: 'margin-bottom: 1.5rem;'}
+      .card.card-horizontal.flex-md-row{style: 'margin-bottom: 1.5rem;'}
         .card-body.d-flex.flex-column.justify-content-center
           %small.card-category.mb-2{style: 'color: #5e90ef'}
             =exercise.product.name

@@ -34,22 +34,16 @@ class SubscriptionService
   def cancel_subscription
     if self.paypal?
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement
+    elsif self.stripe?
+      StripeService.new.cancel_subscription(@subscription)
     end
   end
 
-  def pause
+  def cancel_subscription_immediately
     if self.paypal?
-      PaypalSubscriptionsService.new(@subscription).suspend_billing_agreement
+      PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement_immediately
     elsif self.stripe?
-      StripeService.new.pause_subscription(@subscription)
-    end
-  end
-
-  def re_activate
-    if self.paypal?
-      PaypalSubscriptionsService.new(@subscription).reactivate_billing_agreement
-    elsif self.stripe?
-      StripeService.new.reactivate_subscription(@subscription)
+      StripeService.new.cancel_subscription_immediately(@subscription)
     end
   end
 

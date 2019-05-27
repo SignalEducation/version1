@@ -70,32 +70,34 @@ class SubscriptionManagementController < ApplicationController
   end
 
   def cancel
-    # Set Subscription to canceled-pending
     @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    if @subscription.cancel
+    if SubscriptionService.new(@subscription).cancel
       flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscription_management.cancel.flash.error')
     end
     redirect_to subscription_management_url(@subscription)
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to subscription_management_url(@subscription)
   end
 
   def immediate_cancel
-    # Set Subscription to canceled
     @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    if @subscription.immediate_cancel
+    if SubscriptionService.new(@subscription).cancel_subscription_immediately
       flash[:success] = I18n.t('controllers.subscription_management.immediately_cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#immediately_cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscription_management.immediately_cancel.flash.error')
     end
     redirect_to subscription_management_url(@subscription)
+  rescue Learnsignal::SubscriptionError => e
+    flash[:error] = e.message
+    redirect_to subscription_management_url(@subscription)
   end
 
   def reactivate_subscription
-    # Set Subscription from canceled to active with new subscription record on stripe
-
     @subscription = Subscription.where(id: params[:subscription_management_id]).first
     if @subscription.reactivate_canceled
       flash[:success] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.success')

@@ -5,10 +5,6 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
-  host: localhost
-  #host: development-may10.cobzk4ao6i5h.eu-west-1.rds.amazonaws.com
-  database: learnsignal_development
   adapter: <%= ENV['DB_ADAPTER'] %>
   host: <%= ENV['DB_HOSTNAME'] %>
   username: <%= ENV['DB_USERNAME'] %>

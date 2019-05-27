@@ -70,6 +70,16 @@ class Exercise < ApplicationRecord
     end
   end
 
+  # CLASS METHODS ==============================================================
+
+  def self.search(term)
+    self.joins(:user).where(
+      "users.email ILIKE :t OR users.first_name ILIKE :t OR users.last_name ILIKE :t OR textcat(users.first_name, textcat(text(' '), users.last_name)) ILIKE :t", t: "%#{term}%"
+    )
+  end
+
+  # INSTANCE METHODS ===========================================================
+
   def send_returned_email
     MandrillWorker.perform_async(
       self.user_id,
