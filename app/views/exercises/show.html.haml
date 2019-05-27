@@ -30,22 +30,22 @@
 -if flash[:success]
   :javascript
     dataLayer = [];
-    function addToCart(currency, name, id, price, body) {
-      dataLayer.push({
-        'event': 'addToCart',
-        'ecommerce': {
-          'currencyCode': currency,
-          'add': {
-            'products': [{
-              'name': name,
-              'id': id,
-              'price': price,
-              'brand': body,
-              'category': 'Subscription',
-              'quantity': 1
-              }]
-          }
+    dataLayer.push({
+      'ecommerce': {
+        'purchase': {
+          'actionField': {
+            'id': "#{@exercise.product.id}",
+            'revenue': "#{@exercise.product.price}"
+          },
+          'products': [{
+            'name': "#{@exercise.product.name}",
+            'id': "#{@exercise.product.id}",
+            'price': "#{@exercise.product.price}",
+            'brand': "#{@exercise.product.mock_exam.subject_course.exam_body.name}",
+            'category': 'Preparation',
+            'quantity': 1
+            }]
         }
-      });
-
-    }
+      },
+    'event':'ecomSuccess'}
+    );
