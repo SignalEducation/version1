@@ -39,12 +39,12 @@
       'purchase': {
         'actionField': {
           'id': "#{@subscription.id}",
-          'revenue': "#{number_in_local_currency(@subscription.subscription_plan.price, @subscription.subscription_plan.currency_id)}"
+          'revenue': "#{@subscription.subscription_plan.price}"
         },
         'products': [{
           'name': "#{@subscription.subscription_plan.name}",
           'id': "#{@subscription.subscription_plan.id}",
-          'price': "#{number_in_local_currency(@subscription.subscription_plan.price, @subscription.subscription_plan.currency_id)}",
+          'price': "#{@subscription.subscription_plan.price}",
           'brand': "#{@subscription.subscription_plan.exam_body.name}",
           'category': 'Subscription',
           'quantity': 1
