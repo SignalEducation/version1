@@ -128,6 +128,25 @@
     });
   }
 
+  function selectPayment(type) {
+    var selectedPlan = $("input[name='plans']:checked");
+    dataLayer.push({ 'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': {'step': 1, 'option':type},
+          'products': [{
+            'name': selectedPlan.attr('data-name'),
+            'id': selectedPlan.attr('value'),
+            'price': selectedPlan.attr('data-price'),
+            'brand': selectedPlan.attr('data-body'),
+            'category': 'Subscription',
+            'quantity': 1
+          }]
+        }
+      }
+    });
+  }
+
   function intervalSummary(frequency) {
     switch (frequency) {
       case '1':
@@ -196,6 +215,7 @@
     });
 
     function selectPaymentMethod(paymentType) {
+      selectPayment(paymentType);
       switch(paymentType) {
         case 'paypal':
           $('#subscription_use_paypal').val(true);
