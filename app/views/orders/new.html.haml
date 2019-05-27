@@ -80,6 +80,48 @@
 
   $(document).on('ready', function() {
 
+    dataLayer = [];
+    let currencyIso = "#{@product.currency.iso_code}";
+    let productName = "#{@product.name}";
+    let productId = "#{@product.id}";
+    let productPrice = "#{@product.price}";
+    let productBody = "#{@product.mock_exam.subject_course.exam_body.name}";
+    dataLayer.push({
+      'event': 'addToCart',
+      'ecommerce': {
+        'currencyCode': currencyIso,
+        'add': {
+          'products': [{
+            'name': productName,
+            'id': productId,
+            'price': productPrice,
+            'brand': productBody,
+            'category': 'Preparation',
+            'quantity': 1
+            }]
+        }
+      }
+    });
+    function selectPayment(type) {
+      var selectedPlan = $("input[name='plans']:checked");
+      dataLayer.push({ 'event': 'checkout',
+        'ecommerce': {
+          'checkout': {
+            'actionField': {'step': 1, 'option':type},
+            'products': [{
+              'name': productName,
+              'id': productId,
+              'price': productPrice,
+              'brand': productBody,
+              'category': 'Preparation',
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+
+
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
       if ($(this).is(':checked')) {
@@ -92,6 +134,7 @@
     //$('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
 
     function selectPaymentMethod(paymentType) {
+      selectPayment(paymentType);
       switch(paymentType) {
         case 'paypal':
           $('#order_use_paypal').val(true);
