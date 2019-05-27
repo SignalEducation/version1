@@ -11,6 +11,8 @@
     student_number: current_user.try(:student_number),
     date_of_birth: current_user.try(:date_of_birth),
     }})
+-else
+  =intercom_script_tag({app_id: (ENV['INTERCOM_APP_ID']) })
 
 :javascript
   Intercom('onShow', function() { dataLayer.push({'event':'chatbox'}); });
