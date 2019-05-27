@@ -17,12 +17,13 @@ describe ExamBodiesController, type: :controller do
 
   let(:system_requirements_user_group) { FactoryBot.create(:system_requirements_user_group) }
   let(:system_requirements_user) { FactoryBot.create(:system_requirements_user, user_group_id: system_requirements_user_group.id) }
-  let!(:system_requirements_student_access) { FactoryBot.create(:complimentary_student_access, user_id: system_requirements_user.id) }
 
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:exam_body_2) { FactoryBot.create(:exam_body) }
-  let!(:exam_sitting_1) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id)}
-  let!(:exam_sitting_2) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id)}
+  let!(:group) { FactoryBot.create(:group) }
+  let!(:subject_course)  { FactoryBot.create(:active_subject_course, group_id: group.id, exam_body_id: exam_body_1.id) }
+  let!(:exam_sitting_1) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, subject_course: subject_course)}
+  let!(:exam_sitting_2) {FactoryBot.create(:exam_sitting, exam_body_id: exam_body_1.id, subject_course: subject_course)}
   let!(:valid_params) { FactoryBot.attributes_for(:exam_body) }
 
 
@@ -36,19 +37,19 @@ describe ExamBodiesController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('exam_bodies', 2)
+        expect_index_success_with_model('exam_bodies', 4)
       end
     end
 
     describe "GET 'show/1'" do
       it 'should see exam_body_1' do
-        get :show, id: exam_body_1.id
+        get :show, params: { id: exam_body_1.id }
         expect_show_success_with_model('exam_body', exam_body_1.id)
       end
 
       # optional - some other object
       it 'should see exam_body_2' do
-        get :show, id: exam_body_2.id
+        get :show, params: { id: exam_body_2.id }
         expect_show_success_with_model('exam_body', exam_body_2.id)
       end
     end
@@ -62,44 +63,44 @@ describe ExamBodiesController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with exam_body_1' do
-        get :edit, id: exam_body_1.id
+        get :edit, params: { id: exam_body_1.id }
         expect_edit_success_with_model('exam_body', exam_body_1.id)
       end
 
       # optional
       it 'should respond OK with exam_body_2' do
-        get :edit, id: exam_body_2.id
+        get :edit, params: { id: exam_body_2.id }
         expect_edit_success_with_model('exam_body', exam_body_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, exam_body: valid_params
+        post :create, params: { exam_body: valid_params }
         expect_create_success_with_model('exam_body', exam_bodies_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, exam_body: {valid_params.keys.first => ''}
+        post :create, params: { exam_body: {valid_params.keys.first => ''} }
         expect_create_error_with_model('exam_body')
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for exam_body_1' do
-        put :update, id: exam_body_1.id, exam_body: valid_params
+        put :update, params: { id: exam_body_1.id, exam_body: valid_params }
         expect_update_success_with_model('exam_body', exam_bodies_url)
       end
 
       # optional
       it 'should respond OK to valid params for exam_body_2' do
-        put :update, id: exam_body_2.id, exam_body: valid_params
+        put :update, params: { id: exam_body_2.id, exam_body: valid_params }
         expect_update_success_with_model('exam_body', exam_bodies_url)
         expect(assigns(:exam_body).id).to eq(exam_body_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: exam_body_1.id, exam_body: {valid_params.keys.first => ''}
+        put :update, params: { id: exam_body_1.id, exam_body: {valid_params.keys.first => ''} }
         expect_update_error_with_model('exam_body')
         expect(assigns(:exam_body).id).to eq(exam_body_1.id)
       end
@@ -108,12 +109,12 @@ describe ExamBodiesController, type: :controller do
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: exam_body_1.id
+        delete :destroy, params: { id: exam_body_1.id }
         expect_delete_error_with_model('exam_body', exam_bodies_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: exam_body_2.id
+        delete :destroy, params: { id: exam_body_2.id }
         expect_delete_success_with_model('exam_body', exam_bodies_url)
       end
     end

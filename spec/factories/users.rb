@@ -72,11 +72,7 @@ FactoryBot.define do
     association :user_group
     association :preferred_exam_body, factory: :exam_body
 
-    after :create do |user|
-      create :student_access, user: user
-    end
-
-    factory :free_trial_student do
+    factory :basic_student do
       sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
       active                            { true }
       sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
@@ -84,32 +80,6 @@ FactoryBot.define do
       email_verification_code         { nil }
       email_verified_at               { Time.now }
 
-      factory :valid_free_trial_student do
-        sequence(:email)                  { |n| "valid.trial.student-#{n}@example.com" }
-        free_trial                        { true }
-      end
-      factory :invalid_free_trial_student do
-        sequence(:email)                  { |n| "invalid.trial.student-#{n}@example.com" }
-        free_trial                        { false }
-      end
-    end
-
-    factory :subscription_student do
-      sequence(:email)                  { |n| "subscription.student-#{n}@example.com" }
-      active                            { true }
-      sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
-      email_verified                  { true }
-      email_verification_code         { nil }
-      email_verified_at               { Time.now }
-
-      factory :valid_subscription_student do
-        sequence(:email)                  { |n| "valid.subscription.student-#{n}@example.com" }
-        free_trial                        { false }
-      end
-      factory :invalid_subscription_student do
-        sequence(:email)                  { |n| "invalid.subscription.student-#{n}@example.com" }
-        free_trial                        { false }
-      end
     end
 
     factory :student_user do
