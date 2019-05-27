@@ -26,3 +26,26 @@
                 -if @exercise.correction.present?
                   =link_to 'Download Response', @exercise.correction.url, class: 'btn btn-primary btn-sm', target: '_blank'
 
+
+-if flash[:success]
+  :javascript
+    dataLayer = [];
+    function addToCart(currency, name, id, price, body) {
+      dataLayer.push({
+        'event': 'addToCart',
+        'ecommerce': {
+          'currencyCode': currency,
+          'add': {
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': 'Subscription',
+              'quantity': 1
+              }]
+          }
+        }
+      });
+
+    }
