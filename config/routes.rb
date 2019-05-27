@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     end
 
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
+    get 'already_subscribed', to: 'subscriptions#already_subscribed', as: :already_subscribed
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
     resources :subscriptions, only: :show
