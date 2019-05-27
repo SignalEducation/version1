@@ -57,7 +57,11 @@ class Exercise < ApplicationRecord
 
     after_transition pending: :submitted do |exercise, _transition|
       exercise.update_columns(submitted_on: Time.zone.now)
-      exercise.notify_submitted
+      SlackNotificationWorker.perform_async(
+        :exercise,
+        exercise.id,
+        :notify_submitted
+      )
     end
 
     after_transition submitted: :correcting do |exercise, _transition|
@@ -93,8 +97,7 @@ class Exercise < ApplicationRecord
   end
 
   def notify_submitted
-    # send_submitted_email
-    send_slack_message
+    send_submitted_slack_message
   end
 
   private
@@ -103,7 +106,7 @@ class Exercise < ApplicationRecord
     self.correct if corrector_id_previously_changed?
   end
 
-  def send_slack_message
+  def send_submitted_slack_message
     attachments = [{
       fallback: "#{user.name} uploaded an exercise. - #{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}",
       title: "<#{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}|#{user.name}> - uploaded an exercise.",
