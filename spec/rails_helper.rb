@@ -4,7 +4,7 @@ SimpleCov.start
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV['RAILS_ENV'] ||= 'test'
 require 'spec_helper'
-require File.expand_path('../../config/environment', __FILE__)
+require_relative '../config/environment'
 require 'rspec/rails'
 require 'factory_bot_rails'       # suggested by stack overflow
 #require 'rspec/autorun'
@@ -13,7 +13,6 @@ include Authlogic::TestCase       # required for Authlogic
 require 'support/dry_specs'       # our handy way of doing lots of repetitive tests
 require 'support/feature_specs'   # shortcuts for our feature tests
 require 'capybara/rspec'
-require 'capybara/poltergeist'
 require 'database_cleaner'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'sidekiq/testing'
@@ -33,6 +32,18 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+# PAYPAL CONFIGURATION #########################################################
+
+# PayPal::SDK::Core::Config.load(File.expand_path(Rails.root.join('config/paypal.yml').to_s, __FILE__), 'test')
+# require 'paypal-sdk-rest'
+# include PayPal::SDK::REST
+# include PayPal::SDK::Core::Logging
+# require 'logger'
+# PayPal::SDK.load(File.expand_path(Rails.root.join('config/paypal.yml').to_s, __FILE__), 'test')
+# PayPal::SDK.logger = Logger.new(STDERR)
+
+# JS DRIVER ####################################################################
 
 Capybara.register_driver :selenium do |app|
   client = Selenium::WebDriver::Remote::Http::Default.new
@@ -73,6 +84,8 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
+
+  config.include FactoryBot::Syntax::Methods
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

@@ -15,43 +15,30 @@ require 'rails_helper'
 
 describe CourseTutorDetail do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  CourseTutorDetail.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
+  describe 'relationships' do
+    it { should belong_to(:subject_course) }
+    it { should belong_to(:user) }
   end
 
-  # Constants
+  describe 'validations' do
+    it { should validate_presence_of(:subject_course_id) }
+    it { should validate_numericality_of(:subject_course_id) }
+    it { should validate_presence_of(:user_id) }
+    it { should validate_numericality_of(:user_id) }
+    it { should validate_presence_of(:sorting_order) }
+    it { should_not validate_presence_of(:title) }
+  end
 
-  # relationships
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:user) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  # validation
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  describe 'scopes' do
+    it { expect(CourseTutorDetail).to respond_to(:all_in_order) }
+  end
 
-  it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
-
-  it { should validate_presence_of(:sorting_order) }
-
-  it { should_not validate_presence_of(:title) }
-
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-
-  # scopes
-  it { expect(CourseTutorDetail).to respond_to(:all_in_order) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+  end
 
 end

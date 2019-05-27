@@ -1,104 +1,87 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =@user.full_name
-          %p.h5.text-center
-            =@user.email
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'user_tabs'
+.container
+  %header.management-console-section
+    %h1
+      =@user.full_name
+    %p.p-hero.px-lg-8
+      =@user.email
+
+  %section.pb-7
+    =render partial: 'user_tabs'
+    .row
+      .col-sm-12
+        .box-item
+          .row
+            .col-sm-10
+              .row
+                .col-sm-6
+                  .h3
+                    Email
+                  .h6
+                    =@user.email
+
+                .col-sm-6
+                  .h3
+                    ="D.O.B"
+                  .h6
+                    =@user.date_of_birth || '--------'
+
+                .col-sm-6
+                  .h3
+                    First Name
+                  .h6
+                    =@user.first_name
+
+                .col-sm-6
+                  .h3
+                    Last Name
+                  .h6
+                    =@user.last_name
+
+            .col-sm-2
+              =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-primary'
 
 
-      .row.l-margin-top.l-margin-bottom
-        .col-sm-12
-          .box-item
-            .col-sm-10.l-margin-top
-              .col-sm-6
-                .h3
-                  Email
-                .h6
-                  =@user.email
+        .box-item
 
-              .col-sm-6
-                .h3
-                  ="D.O.B"
-                .h6
-                  =@user.date_of_birth || '--------'
+          .row
+            .col-sm-6
+              .h3
+                Country
+              .h6
+                -if @user.country
+                  =@user.country.name
+                -else
+                  ='-------'
 
-            .col-sm-2.l-margin-top
-              =link_to 'Edit Details', edit_user_url(@user), class: 'btn btn-red'
+            .col-sm-6
+              .h3
+                Last IP Address
+              .h6
+                =@user.last_login_ip.to_s
 
+            .col-sm-6
+              .h3
+                User Group
+              .h6
+                =@user.user_group.name
 
-            .col-sm-10.l-margin-top-big
-              .col-sm-6
-                .h3
-                  First Name
-                .h6
-                  =@user.first_name
+            .col-sm-6
+              .h3
+                Stripe Customer ID
+              .h6
+                =@user.stripe_customer_id
 
-              .col-sm-6
-                .h3
-                  Last Name
-                .h6
-                  =@user.last_name
+            .col-sm-6
+              .h3
+                Account Created
+              .h6
+                =humanize_datetime(@user.created_at)
 
-
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          .box-item
-            .col-sm-12.l-margin-top-big
-              .col-sm-6
-                .h3
-                  Country
-                .h6
-                  -if @user.country
-                    =@user.country.name
-                  -else
-                    ='-------'
-
-              .col-sm-6
-                .h3
-                  Last IP Address
-                .h6
-                  =@user.last_login_ip.to_s
-
-            .col-sm-12.l-margin-top-big
-              .col-sm-6
-                .h3
-                  User Group
-                .h6
-                  =@user.user_group.name
-
-              .col-sm-6
-                .h3
-                  Stripe Customer ID
-                .h6
-                  =@user.stripe_customer_id
+            .col-sm-6
+              .h3
+                Account Verified
+              .h6
+                -if @user.email_verified
+                  =humanize_datetime(@user.email_verified_at)
 
 
-            .col-sm-12.l-margin-top-big
-              .col-sm-6
-                .h3
-                  Account Created
-                .h6
-                  =humanize_datetime(@user.created_at)
-
-              .col-sm-6
-                .h3
-                  Trial Started
-                .h6
-                  -if @user.student_access && @user.student_access.trial_started_date
-                    =humanize_datetime(@user.student_access.trial_started_date)
-
-
-
-            .col-sm-12.l-margin-top-big
-              .col-sm-6
-                .h3
-                  Account Type
-                .h6
-                  =@user.user_account_status
-              .col-sm-6

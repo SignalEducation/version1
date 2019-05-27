@@ -24,17 +24,16 @@ FactoryBot.define do
   factory :coupon do
     sequence(:name)           { |n| "Coupon #{n}" }
     sequence(:code)           { |n| "Code #{n}" }
-    currency_id               1
-    livemode                  false
-    active                    true
-    amount_off                nil
-    duration                  'once'
-    duration_in_months        1
-    max_redemptions           1
-    percent_off               1
-    redeem_by                 '2017-11-29 16:14:46'
-    times_redeemed            1
-    stripe_coupon_data        'Stripe Data'
+    currency
+    livemode                  { false }
+    active                    { true }
+    amount_off                { nil }
+    duration                  { 'once' }
+    duration_in_months        { 1 }
+    max_redemptions           { 1 }
+    percent_off               { 1 }
+    redeem_by                 { '2017-11-29 16:14:46' }
+    times_redeemed            { 1 }
+    stripe_coupon_data        { 'Stripe Data' }
   end
-
 end

@@ -10,13 +10,11 @@
 #  time       :datetime
 #
 
-module Ahoy
-  class Event < ActiveRecord::Base
-    self.table_name = "ahoy_events"
+class Ahoy::Event < ApplicationRecord
+  include Ahoy::QueryMethods
 
-    belongs_to :visit
-    belongs_to :user
+  self.table_name = "ahoy_events"
 
-    serialize :properties, JSON
-  end
+  belongs_to :visit
+  belongs_to :user, optional: true
 end

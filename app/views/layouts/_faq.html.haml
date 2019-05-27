@@ -1,6 +1,6 @@
 -@faq_section.each do |faq_section|
   -if faq_section.faqs.any?
-    .col-sm-12.l-margin-bottom.l-margin-top
+    .col-sm-12
       -if faq_section.description
         %h3
           =faq_section.name
@@ -8,19 +8,19 @@
         %p
           =faq_section.description
 
-      -faq_section.faqs.all_in_order.each do |faq|
-        .col-sm-10.col-sm-offset-1
+      -faq_section.faqs.all_active.all_in_order.each do |faq|
+        .col-sm-12
           %section{id: faq.name_url}
             .faq-box
-              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("hidden"); $(this).find(".faq-answer-expanded").toggleClass("hidden");'}
+              .faq-inner.narrow{onclick: '$(this).toggleClass("narrow"); $(this).find(".faq-answer").toggleClass("d-md-block"); $(this).find(".faq-answer-expanded").toggleClass("d-none");'}
                 .faq-title
                   =faq.question_text.html_safe
 
-                .faq-answer.closed
+                .faq-answer.closed.d-none.d-sm-none.d-md-block
                   %p
                     =faq.pre_answer_text.truncate(100)
 
-                .faq-answer-expanded.hidden
+                .faq-answer-expanded.d-none
                   =faq.answer_text.html_safe
 
 

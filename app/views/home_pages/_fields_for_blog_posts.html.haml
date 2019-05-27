@@ -1,50 +1,51 @@
-.col-md-12
-  =f.fields_for :blog_posts do |blog_post|
-    .question-box-item.l-margin-top
+.col-sm-12
+  .box-item.form-box
+    =f.fields_for :blog_posts do |blog_post|
       -if blog_post.object.new_record?
         %h4
           New Blog Post
       -else
         %h4
           Edit Blog Post
-      .col-sm-6
-        =blog_post.label :title, t('views.blog_posts.form.title'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =blog_post.text_field :title, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-        %br
-        =blog_post.label :description, t('views.blog_posts.form.description'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =blog_post.text_area :description, placeholder: t('views.blog_posts.form.description_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
 
-        -if !blog_post.object.new_record? && blog_post.object.destroyable?
-          %br/
-          %br/
-          .checkbox.l-margin-top
-            %label
-              =blog_post.check_box :_destroy
-              Remove Blog Post
+      .row
+        .col-sm-6
+          .form-group
+            =blog_post.label :title, t('views.blog_posts.form.title')
+            .input-group.input-group-lg
+              =blog_post.text_field :title, placeholder: t('views.blog_posts.form.title_placeholder'), class: 'form-control'
 
+          .form-group
+            =blog_post.label :description, t('views.blog_posts.form.description')
+            .input-group.input-group-lg
+              =blog_post.text_area :description, placeholder: t('views.blog_posts.form.description_placeholder'), class: 'form-control'
 
-
-      .col-sm-6
-        =blog_post.label :url, t('views.blog_posts.form.url'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =blog_post.text_field :url, placeholder: t('views.blog_posts.form.url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-        %br
-
-        =blog_post.label :upload, t('views.blog_posts.form.image'), class: 'control-label'
-        -if blog_post.object.image_file_name
-          .form-control-static
-            =link_to blog_post.object.image_file_name, blog_post.object.image.url, target: '_blank'
-            =number_to_human_size(blog_post.object.image_file_size)
+          -if !blog_post.object.new_record? && blog_post.object.destroyable?
             %br/
             %br/
+            .checkbox
+              %label
+                =blog_post.check_box :_destroy
+                Remove Blog Post
 
-          .input-group.input-group-lg
-            =blog_post.label :image, t('views.blog_posts.form.replace')
-            =blog_post.file_field :image, class: 'form-control', style: 'border-radius: 6px;'
 
-        -else
+
+        .col-sm-6
+          =blog_post.label :url, t('views.blog_posts.form.url')
           .input-group.input-group-lg
-            =blog_post.file_field :image, class: 'form-control', style: 'border-radius: 6px;'
+            =blog_post.text_field :url, placeholder: t('views.blog_posts.form.url_placeholder'), class: 'form-control'
+          %br
+
+          =blog_post.label :upload, t('views.blog_posts.form.image')
+          -if blog_post.object.image.present?
+            .form-control-static
+              =image_tag blog_post.object.image.url, class: 'md-image'
+
+            .input-group.input-group-lg
+              =blog_post.label :image, t('views.blog_posts.form.replace')
+              =blog_post.file_field :image, class: 'form-control'
+
+          -else
+            .input-group.input-group-lg
+              =blog_post.file_field :image, class: 'form-control'
 

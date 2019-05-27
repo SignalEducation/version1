@@ -1,133 +1,173 @@
 class LibraryController < ApplicationController
 
+  before_action :check_course_available, :get_course_products_and_resources,
+                only: [:course_show, :course_preview]
+
+
   def index
     @groups = Group.all_active.all_in_order
-    if @groups.count == 1
-      @group = Group.all_active.all_in_order.first
-      redirect_to library_group_url(@group.name_url)
-    end
-    seo_title_maker('Library', 'Learn anytime, anywhere from our library of business-focused courses taught by expert tutors.', nil)
+    redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1
+    group_names = @groups.map(&:name).join(' and ')
+    seo_title_maker("#{group_names} Professional Courses | LearnSignal",
+                    'Discover professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.',
+                    nil)
   end
 
   def group_show
     @group = Group.find_by_name_url(params[:group_name_url])
     if @group
       @courses = @group.active_children.all_in_order
-      seo_title_maker(@group.name, @group.description, nil)
+      seo_title_maker(@group.seo_title, @group.seo_description, nil)
       tag_manager_data_layer(@group.try(:name))
+
+      ip_country = IpAddress.get_country(request.remote_ip)
+      country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
+
+      if country && @currency_id
+        @subscription_plans = SubscriptionPlan.where(
+            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+        ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+      end
+
     else
       redirect_to root_url
     end
   end
 
   def course_show
+    # Course Data necessary for logged out state
+    tag_manager_data_layer(@course.name)
+    seo_title_maker(@course.seo_title, @course.seo_description, nil)
+    @form_type = "Course Tutor Question. Course: #{@course.name}"
+    @course_tutor_details = @course.course_tutor_details.all_in_order
 
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-
-    if @course && @course.active && !@course.preview
-      @course_tutor_details = @course.course_tutor_details.all_in_order
-      # Course is active Data necessary for logged out state
-      tag_manager_data_layer(@course.name)
-      seo_title_maker(@course.name, @course.description, nil)
-      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
-      @tuition_course_modules = @course_modules.all_tuition.all_in_order
-      @test_course_modules = @course_modules.all_test.all_in_order
-      @revision_course_modules = @course_modules.all_revision.all_in_order
-
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-      @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-      mock_exam_ids = @course.mock_exams.map(&:id)
-      @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-      @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
-
-
-
+    if @course && @exam_body.active && !@course.preview
       if current_user
-        # User Session present
-        @user = current_user
-        if session[:user_exam_body_errors]
-          @user.errors.add(:base, 'Details entered are not valid!')
-          session[:user_exam_body_errors] = nil
-        end
+
+        @valid_subscription = current_user.active_subscriptions_for_exam_body(@exam_body.id).all_valid.first
 
 
-        if current_user.enrollment_for_course?(@course.id)
-          # User has a valid trial or valid sub
-          # User has an enrollment for this course
+        if current_user.subject_course_user_logs.for_subject_course(@course.id).any?
+          # Find the latest SCUL record for this user/course
+          @subject_course_user_log = current_user.subject_course_user_logs.for_subject_course(@course.id).all_in_order.last
 
-          @active_enrollment = current_user.enrollments.for_subject_course(@course.id).all_active.all_in_order.last
-          @subject_course_user_log = @active_enrollment.subject_course_user_log
+          @completed_student_exam_tracks = @subject_course_user_log.student_exam_tracks.all_complete
+          @completed_course_module_ids = @completed_student_exam_tracks.map(&:course_module_id)
 
-            if @active_enrollment.expired
-              # User's enrollment is expired - needs to create a new one
-              # User can view all links/buttons but they trigger the enrollment modal
-              get_enrollment_form_variables(@course.id, @course.exam_body_id)
-            else
-              # User's enrollment is not expired - full access allowed
-              # User can view and click on all links/buttons
+          @cmeuls = @subject_course_user_log.course_module_element_user_logs
+          @cmeuls_ids = @cmeuls.map(&:course_module_element_id)
 
-              @latest_element_id = @subject_course_user_log.latest_course_module_element_id
-              @next_element = CourseModuleElement.where(id: @latest_element_id).first.try(:next_element)
+          @completed_cmeuls = @cmeuls.all_completed
+          @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
+
+
+          if @exam_body.has_sittings
+            @exam_body_user_details = get_exam_body_user_details
+            @enrollment = @subject_course_user_log.enrollments.for_course_and_user(@course.id, current_user.id).all_in_order.last
+            if (@enrollment && @enrollment.expired) || !@enrollment
+              get_enrollment_form_variables(@course, @subject_course_user_log)
             end
-
-
-            @completed_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_completed
-            @completed_cmeuls_cme_ids = @completed_cmeuls.map(&:course_module_element_id)
-            @incomplete_cmeuls = @subject_course_user_log.course_module_element_user_logs.all_incomplete
-            @incomplete_cmeuls_cme_ids = @incomplete_cmeuls.map(&:course_module_element_id)
-            @form_type = "Course Tutor Question. Course: #{@course.name}"
+          end
 
         else
-          # Both modals need rendering
-          # Enrollment and permission-denied
-          get_enrollment_form_variables(@course.id, @course.exam_body_id)
+          get_enrollment_form_variables(@course, nil) if @exam_body.has_sittings
         end
+
       end
 
-    elsif @course && @course.active && @course.preview
-      redirect_to library_preview_url(@course)
     else
-      redirect_to library_url
+      render 'course_preview'
     end
-  end
 
-  def course_preview
-    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
-    if @course && @course.active && @course.preview
-      tag_manager_data_layer(@course.name)
-      seo_title_maker(@course.name, @course.description, nil)
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-      @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
-      mock_exam_ids = @course.mock_exams.map(&:id)
-      @products = Product.includes(:mock_exam).in_currency(@currency_id).all_active.all_in_order.where(mock_exam_id: mock_exam_ids)
-
-      @course_modules = CourseModule.includes(:course_module_elements).includes(:subject_course).where(subject_course_id: @course.id).all_active.all_in_order
-      @tuition_course_modules = @course_modules.all_tuition.all_in_order
-      @test_course_modules = @course_modules.all_test.all_in_order
-      @revision_course_modules = @course_modules.all_revision.all_in_order
-
-    else
-      redirect_to library_url
-    end
   end
 
   def tutor_contact_form
     user_id = current_user ? current_user.id : nil
-    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name], params[:question], params[:type])
+    IntercomCreateMessageWorker.perform_async(user_id, params[:email_address], params[:full_name],
+                                              params[:question], params[:type])
     flash[:success] = 'Thank you! Your submission was successful. We will contact you shortly.'
     redirect_to request.referrer
   end
 
-  def get_enrollment_form_variables(course_id, exam_body_id)
-    subject_course = SubjectCourse.find(course_id)
 
-    @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true, exam_body_id: subject_course.exam_body_id).all_in_order.first #Should only be one
+  protected
 
-    @exam_sittings = ExamSitting.where(active: true, computer_based: false, subject_course_id: course_id, exam_body_id: subject_course.exam_body_id).all_in_order
-
-    @new_enrollment = Enrollment.new(subject_course_id: course_id, exam_body_id: exam_body_id)
+  def check_course_available
+    #@user = User.find(52157)
+    @course = SubjectCourse.find_by_name_url(params[:subject_course_name_url])
+    if @course && @course.active
+      @group = @course.group
+      @exam_body = @group.exam_body
+    else
+      redirect_to library_url
+    end
   end
+
+  def get_exam_body_user_details
+    if @exam_body.has_sittings
+      # exam_body_user_details modal form variable and any session errors
+      @exam_body_user_details = @course.exam_body.exam_body_user_details.for_user(current_user.id).last
+      unless @exam_body_user_details
+        @exam_body_user_details = current_user.exam_body_user_details.build(
+            exam_body_id: @course.exam_body_id
+        )
+      end
+      if session[:user_exam_body_errors]
+        current_user.errors.add(:base, 'Details entered are not valid!')
+        session[:user_exam_body_errors] = nil
+      end
+    end
+  end
+
+  def get_course_products_and_resources
+    ip_country = IpAddress.get_country(request.remote_ip)
+    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @currency_id = @country ? @country.currency_id : Currency.all_active.all_in_order.first
+    if @course.exam_body.has_sittings
+      @correction_pack_products = Product.includes(:mock_exam => :subject_course)
+                             .in_currency(@currency_id)
+                             .all_active
+                             .all_in_order
+                             .where("mock_exam_id IS NOT NULL")
+                             .where("product_type = ?", Product.product_types[:correction_pack])
+      mock_exam_ids = @course.mock_exams.map(&:id)
+      @mock_exam_products = Product.includes(:mock_exam => :subject_course)
+                       .in_currency(@currency_id)
+                       .all_active
+                       .all_in_order
+                       .where("product_type = ?", Product.product_types[:mock_exam])
+                       .where(mock_exam_id: mock_exam_ids)
+      @products = @correction_pack_products + @mock_exam_products
+    end
+    @subject_course_resources = @course.subject_course_resources.all_active.all_in_order
+
+
+    if @country && @currency_id
+      @subscription_plan = SubscriptionPlan.where(
+          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id,
+          payment_frequency_in_months: @group.exam_body.try(:preferred_payment_frequency)
+      ).in_currency(@currency_id).all_active.first
+    end
+
+
+  end
+
+  def get_enrollment_form_variables(course, scul=nil)
+    if course.computer_based
+      @computer_exam_sitting = ExamSitting.where(active: true, computer_based: true,
+                                                 exam_body_id: course.exam_body_id,
+                                                 subject_course_id: course.id).all_in_order.first #Should only be one
+    else
+      @exam_sittings = ExamSitting.where(active: true, computer_based: false,
+                                         subject_course_id: course.id,
+                                         exam_body_id: course.exam_body_id).all_in_order
+    end
+
+    @new_enrollment = Enrollment.new(subject_course_user_log_id: scul.try(:id),
+                                     subject_course_id: course.id, notifications: false,
+                                     exam_body_id: course.exam_body_id)
+  end
+
 
 end

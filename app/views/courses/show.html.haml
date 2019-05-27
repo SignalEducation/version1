@@ -1,43 +1,28 @@
-.is-bg-asphalt.l-section-small
-  .l-wrap
-    .container-fluid{style: 'margin-bottom: 60px;'}
-      -#TODO fix this hidden sections by screen-width
-      .row.l-margin-bottom.hidden-xs.visible-sm.visible-md.visible-lg
-        .col-sm-6.col-md-4
-          =link_to library_special_link(@course_module.parent) do
-            .btn.btn-red.btn-secondary
-              &#60;
-              ="Back To #{@course_module.try(:subject_course).try(:name)}"
-        .col-md-4
-        .col-sm-6.col-md-4
+%main
+  %article.courses.bg-gray5
+    .container
+      %header
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-4
+          .mw-0
+            =link_to navigation_special_link(@course_module_element), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
+              =@course_module_element.course_module.course_section.subject_course.name
+
           -if @course_module_element && @course_module_element.is_video?
-            =link_to course_special_link(@course_module_element.next_element), style: 'margin-left: 10px;' do
-              .btn.btn-red.btn-secondary.full-width
-                =t('views.course_module_elements.show.next_step')
-                &#62;
+            .mw-0
+              =link_to course_special_link(@course_module_element.next_element, @group.exam_body_id, @subject_course_user_log) do
+                .btn.btn-primary.btn-sm.btn-sm-arrow-right
+                  =t('views.course_module_elements.show.next_step')
 
-      .row.l-margin-bottom.l-margin-top.visible-xs.hidden-sm
-        .col-xs-12
-          =link_to library_special_link(@course_module.parent) do
-            .btn.btn-red.btn-secondary.full-width
-              &#60;
-              ="Back To #{@course_module.try(:subject_course).try(:name)}"
-        .col-xs-12.l-margin-top
-          -if @course_module_element && @course_module_element.is_video?
-            =link_to course_special_link(@course_module_element.next_element) do
-              .btn.btn-red.btn-secondary.full-width
-                =t('views.course_module_elements.show.next_step')
-                &#62;
+        -if @course_module_element.try(:is_video)
+          .pt-3
+            %h1.h3
+              =@course_module_element.name
 
 
-
-
-      .row.l-margin-bottom-big
+      %section.course-content
         -if defined?(@results)
           =render partial: 'courses/show_results', locals: {cme: @course_module_element}
-        -elsif @course_module_element && paywall_checkpoint[:course_content][:view_all] == false
-          =render partial: 'courses/content_denied'
-        -elsif (@course_module_element && @course_module_element.active && paywall_checkpoint[:course_content][:view_all] == true) || @course_module_element && paywall_checkpoint[:course_content][:view_all] == true
+        -else
           -if @course_module_element.try(:is_video)
             =render partial: 'courses/show_video', locals: {cme: @course_module_element}
           -elsif @course_module_element.try(:is_quiz)
@@ -47,16 +32,12 @@
           -else
             %h2 Course module element - type unknown
             -Rails.logger.error "views/courses/show - unknown CME type. CME: #{@course_module_element.inspect}."
-        -elsif @course_module
-          .well
-            %h3=t('views.general.coming_soon')
-            %p=t('views.courses.show.coming_soon')
 
 
 
 
       -# Tabs for Question, Answer, Notes and Description
-      -if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
+      -#if @course_module_element.try(:is_video) && (@course_module_element.description? || @course_module_element.course_module_element_resources.count > 0 || @course_module_element.video_resource)
         .row.l-margin-top-huge
           .col-md-12{role: 'tablist'}
             .col-sm-12
@@ -87,7 +68,5 @@
         =render partial: 'resources'
 
 
-=render partial: 'shared/activate_tab'
 =render partial: 'layouts/intercom'
-=render partial: 'courses/resources_unavailable_modal'
 

@@ -32,22 +32,12 @@
 #  tax_percent                 :decimal(, )
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
+#  paypal_payment_guid         :string
 #
 
 require 'rails_helper'
 
 describe Invoice do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at line_total_ex_vat line_total_vat_amount line_total_inc_vat)
-  Invoice.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
   # Constants
   it { expect(Invoice.const_defined?(:STRIPE_LIVE_MODE)).to eq(true) }
 
@@ -70,8 +60,6 @@ describe Invoice do
 
   it { should validate_presence_of(:total) }
 
-  it { should validate_inclusion_of(:livemode).in_array([Invoice::STRIPE_LIVE_MODE])}
-
   it { should validate_length_of(:stripe_guid).is_at_most(255) }
   it { should validate_length_of(:stripe_customer_guid).is_at_most(255) }
   it { should validate_length_of(:object_type).is_at_most(255) }
@@ -93,5 +81,4 @@ describe Invoice do
   it { should respond_to(:destroyable?) }
   it { should respond_to(:status) }
   it { should respond_to(:update_from_stripe) }
-
 end

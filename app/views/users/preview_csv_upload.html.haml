@@ -1,49 +1,48 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center
-            =t('views.dashboard.admin.preview_csv.h1')
-          %p
-            Please check that the data below is correct and then click Submit
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12.l-margin-top-big
-          =form_tag(import_csv_upload_path, authenticity_token: true, id: 'import_csv_corporate_students_form', role: 'form', class: 'form-horizontal') do
+.container
+  %header.management-console-section
+    %h1
+      =t('views.dashboard.admin.preview_csv.h1')
+    %p.p-hero.px-lg-8
+      Please check that the data below is correct and then click Submit
 
+  %section.pb-3
+    .row
+      .col-md-12
+        =form_tag(import_csv_upload_path, authenticity_token: true, id: 'import_csv_corporate_students_form', role: 'form', class: 'form-horizontal') do
+
+          .box-item.table-box.pt-3
             =label(:user_group_id, t('views.users.form.user_group_id'))
-            .input-group.input-group-lg.full-width
-              =select_tag(:user_group_id, options_for_select(@user_groups.collect{ |u| [u.name, u.id] }), {include_blank: t('views.general.select'), class: 'form-control'})
-            %br/
-            .corporate-box-item.table-box
-              .table-responsive
-                %table.table{style: 'font-size: 18px;'}
-                  %thead
-                    %tr
-                      %th
-                        Email
-                      %th
-                        First Name
-                      %th
-                        Last Name
-                      %th
-                        Errors
-                  %tbody
-                    -@csv_data.each_with_index do |csd, idx|
-                      %tr{id: "csvdata-#{idx}"}
-                        =hidden_field_tag "csvdata[#{idx}][email]", csd[:values][0]
-                        =hidden_field_tag "csvdata[#{idx}][first_name]", csd[:values][1]
-                        =hidden_field_tag "csvdata[#{idx}][last_name]", csd[:values][2]
-                        %td
-                          =csd[:values][0]
-                        %td
-                          =csd[:values][1]
-                        %td
-                          =csd[:values][2]
-                        %td=csd[:error_messages].map {|em| "<p>#{em}</p>"}.join("\n").html_safe
+            =select_tag(:user_group_id, options_for_select(@user_groups.collect{ |u| [u.name, u.id] }), {include_blank: t('views.general.select'), class: 'form-control'})
 
-              .row
-                .col-sm-12
-                  -unless @has_errors
-                    =submit_tag 'Submit', class: 'btn btn-red'
-                  =link_to t('views.general.cancel'), users_url, class: 'btn btn-cyan'
+            .table-responsive.pt-4
+              %table.table
+                %thead
+                  %tr
+                    %th
+                      Email
+                    %th
+                      First Name
+                    %th
+                      Last Name
+                    %th
+                      Errors
+                %tbody
+                  -@csv_data.each_with_index do |csd, idx|
+                    %tr{id: "csvdata-#{idx}"}
+                      =hidden_field_tag "csvdata[#{idx}][email]", csd[:values][0]
+                      =hidden_field_tag "csvdata[#{idx}][first_name]", csd[:values][1]
+                      =hidden_field_tag "csvdata[#{idx}][last_name]", csd[:values][2]
+                      %td
+                        =csd[:values][0]
+                      %td
+                        =csd[:values][1]
+                      %td
+                        =csd[:values][2]
+                      %td
+                        =csd[:error_messages].map {|em| "<p style= 'color: #dc3545;'>#{em}</p>"}.join("\n").html_safe
+
+            .row
+              .col-sm-12
+                -unless @has_errors
+                  =submit_tag 'Submit', class: 'btn btn-primary'
+                =link_to t('views.general.cancel'), users_url, class: 'btn btn-secondary'

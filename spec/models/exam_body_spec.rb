@@ -2,28 +2,22 @@
 #
 # Table name: exam_bodies
 #
-#  id            :integer          not null, primary key
-#  name          :string
-#  url           :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  modal_heading :string
-#  modal_text    :text
+#  id                                 :integer          not null, primary key
+#  name                               :string
+#  url                                :string
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  active                             :boolean          default(FALSE), not null
+#  has_sittings                       :boolean          default(FALSE), not null
+#  preferred_payment_frequency        :integer
+#  subscription_page_subheading_text  :string
+#  constructed_response_intro_heading :string
+#  constructed_response_intro_text    :text
 #
 
 require 'rails_helper'
 
 describe ExamBody do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  ExamBody.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
 
   subject { FactoryBot.build(:exam_body) }
 
@@ -40,6 +34,10 @@ describe ExamBody do
 
   it { should validate_presence_of(:url) }
 
+  it { should validate_presence_of(:constructed_response_intro_heading) }
+
+  it { should validate_presence_of(:constructed_response_intro_text) }
+
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
 
@@ -50,6 +48,4 @@ describe ExamBody do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
-
 end

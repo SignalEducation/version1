@@ -471,11 +471,8 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   print 'SubscriptionPlans: '
   subscription_plan_stuff = {
           name: 'Personal',
-          available_to_students: true,
-          all_you_can_eat: true,
           available_from: '2014-01-01',
           available_to: '2099-12-31',
-          trial_period_in_days: 0
   }
   # Euro
   SubscriptionPlan.where(id: 1).first_or_create!(subscription_plan_stuff.merge({

@@ -32,19 +32,19 @@
 #  tax_percent                 :decimal(, )
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
+#  paypal_payment_guid         :string
 #
 
 FactoryBot.define do
   factory :invoice do
-    user_id 1
-    subscription_transaction_id 1
-    subscription_id 1
-    number_of_users 1
-    currency_id 1
-    sub_total 9.99
-    total 9.99
-    total_tax 9.99
-    vat_rate_id 1
+    user
+    subscription_transaction
+    subscription
+    number_of_users { 1 }
+    currency
+    sub_total { 9.99 }
+    total { 9.99 }
+    total_tax { 9.99 }
+    vat_rate
   end
-
 end

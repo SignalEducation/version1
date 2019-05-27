@@ -1,0 +1,25 @@
+.modal.fade{id: 'related-lesson-restriction', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'lessonRestricted', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header
+        %h3.text-red{id: 'lessonRestricted'}
+          Lesson Restricted
+
+      .modal-body
+        %p.mb-4
+          This lesson is restricted until you complete the <b class="font-weight-medium">Test Quiz</b> lesson.
+
+
+:javascript
+  $('#related-lesson-restriction').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var recipient = button.data('related'); // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    var modal = $(this);
+    modal.find('.modal-body p').text('This lesson is restricted until you complete the ' + recipient + ' lesson.')
+
+  })

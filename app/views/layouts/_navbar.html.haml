@@ -1,57 +1,49 @@
-.nav-header.header-dark.navbar-fixed-top{role: 'banner'}
-  =render partial: 'layouts/external_banner'
+%header.header
+  -#=render partial: 'layouts/external_banner'
+  %nav.navbar.fixed-top.navbar-dark.navbar-expand-lg
+    .container.animate.fade-in-up
+      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+        %span.navbar-toggler-bar.frst
+        %span.navbar-toggler-bar.scnd
+      =link_to home_url, class: 'navbar-brand logo' do
+        =image_tag('learnsignal-Logo-white.svg', class: 'logo-img', alt: "LearnSignal Logo")
 
-  .l-wrap
-    .container-fluid
-      %nav.navbar.navbar-default
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -if action_name == 'group_show' && @subscription_plans && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
+            %li.nav-item
+              =link_to "#plans", class: 'nav-link' do
+                %span Pricing
 
-        %button.navbar-toggle{type: 'button', data: {toggle: 'collapse', target: '#myNavbar'}}
-          %span.icon-bar
-          %span.icon-bar
-          %span.icon-bar
+          -if current_user
+            %li.nav-item
+              =link_to student_dashboard_url, class: 'nav-link' do
+                %span Dashboard
+            %li.nav-item
+              =link_to library_url, class: 'nav-link' do
+                %span Courses
 
-        =link_to home_url do
-          =image_tag('ls-logo-white.svg', class: 'logo')
-
-        #myNavbar.collapse.navbar-collapse
-          %ul.nav.navbar-nav.navbar-right
-            -if current_user
-              %li
-                =link_to 'Dashboard', student_dashboard_url
-              %li
-                =link_to 'Courses', library_url
-              -if current_user.trial_user?
-                %li
-                  =link_to 'Upgrade Account', new_subscription_url, class: 'days-left', title: 'Upgrade your account'
-              -elsif current_user.canceled_member?
-                %li
-                  =link_to 'Reactivate Account', new_subscription_url, class: 'days-left', title: 'Reactivate your account'
-
-              -if current_user.non_student_user?
-                -unless current_user && current_user.user_group.name == 'Demo Video Group'
-                  %li=link_to 'Console', management_consoles_url
+            -if current_user.non_student_user?
+              %li.nav-item
+                =link_to management_consoles_url, class: 'nav-link' do
+                  %span Console
 
 
-              -#Student/Tutor/Content Manager Dropdown
-              %li.dropdown.dropdown-normal
-                %a#drop.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+            %li.nav-item.dropdown
+              %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                %span
                   =t('views.general.user_name') + current_user.first_name.to_s
-                  %span.caret
-                %ul#menu.dropdown-menu
-                  %li
-                    %li=link_to t('views.users.show.h1'), account_url
-                  %li
-                    =link_to t('views.general.sign_out'), sign_out_url
+              .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
-            -else
-              %li
-                =link_to 'Blog', 'http://blog.learnsignal.com/', target: '_blank'
-              %li
-                =link_to 'Pricing', pricing_url
-              %li
-                =link_to 'Courses', library_url
-              %li
-                =link_to 'Free Trial', new_student_url
+          -else
+            %li.nav-item
+              =link_to library_url, class: 'nav-link' do
+                %span Courses
+            %li.nav-item
+              =link_to new_student_url, class: 'nav-link' do
+                %span Register
+            %li.nav-item
+              =link_to 'Log In', sign_in_url, {class: 'nav-link'}
 
-              %li
-                =link_to 'Sign In', sign_in_url, {class: 'sign-in-link'}

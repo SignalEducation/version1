@@ -1,4 +1,4 @@
-class AddNameUrlToCourseModuleJumboQuizzes < ActiveRecord::Migration
+class AddNameUrlToCourseModuleJumboQuizzes < ActiveRecord::Migration[4.2]
   def up
     add_column :course_module_jumbo_quizzes, :name_url, :string
   end

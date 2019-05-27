@@ -6,7 +6,7 @@
           %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
             Edit Enrolment
 
-      #enrollment_form
+      #enrollment_form.box-item.form-box
         =form_for(@enrollment, html: {class: 'form-horizontal', role: 'form'}) do |f|
           .col-sm-6.col-sm-offset-3.l-margin-bottom
             .row
@@ -28,8 +28,8 @@
 
             .row.l-margin-top-huge
               .col-sm-12
-                =f.submit t('views.general.save'), class: 'btn btn-red', id: 'enroll_now'
-                =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-cyan'
+                =f.submit t('views.general.save'), class: 'btn btn-primary', id: 'enroll_now'
+                =link_to t('views.general.cancel'), account_url, anchor: :enrollments, class: 'btn btn-secondary'
 
 
 -if @enrollment.computer_based_exam && @subject_course.computer_based

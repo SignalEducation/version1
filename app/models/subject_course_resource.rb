@@ -15,19 +15,16 @@
 #  external_url             :string
 #  active                   :boolean          default(FALSE)
 #  sorting_order            :integer
+#  available_on_trial       :boolean          default(FALSE)
 #
 
 class SubjectCourseResource < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :name, :subject_course_id, :description, :file_upload, :external_url,
-                  :active, :sorting_order
 
   # Constants
 
   # relationships
   belongs_to :subject_course
-  has_attached_file :file_upload, default_url: '/assets/images/missing_corporate_logo.png'
+  has_attached_file :file_upload, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :name, presence: true
@@ -46,6 +43,35 @@ class SubjectCourseResource < ActiveRecord::Base
   # class methods
 
   # instance methods
+  def available_for_subscription(user, exam_body_id)
+
+    if user.valid_subscription_for_exam_body?(exam_body_id)
+      {view: true, reason: nil}
+    else
+      self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+    end
+
+  end
+
+
+  def available_to_user(user, exam_body_id)
+    result = {view: false, reason: nil}
+    if user.non_verified_user?
+      result = {view: false, reason: 'verification-required'}
+    elsif user.standard_student_user?
+      #result = available_for_subscription(user, exam_body_id)
+      result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+    else
+      result = {view: true, reason: nil}
+    end
+
+    result
+
+    # Return true/false and reason
+    # false will display lock icon
+    # reason will populate modal
+  end
+
   def destroyable?
     true
   end

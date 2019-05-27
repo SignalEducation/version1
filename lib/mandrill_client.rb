@@ -7,9 +7,9 @@ class MandrillClient
 
   # Basic Account Emails
   def send_verification_email(verification_url)
-    msg = message_stub.merge({"subject" => "Welcome to LearnSignal - Please verify your email address"})
+    msg = message_stub.merge({"subject" => "Please Verify your email"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('email_verification_181015', msg)
+    send_template('email-verification-190429', msg)
   end
 
   def admin_invite(verification_url)
@@ -61,23 +61,20 @@ class MandrillClient
     send_template('referral-discount-20-02-17', msg)
   end
 
-  def send_mock_exam_email(account_url, file_name, attachment, guid)
-    msg = message_stub.merge({"subject" => "LearnSignal Mock Exam "})
-    msg["global_merge_vars"] << { "name" => "NAME", "content" => file_name }
+  def send_mock_exam_email(account_url, product_name, guid)
+    msg = message_stub.merge({"subject" => "LearnSignal Mock Exam"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => product_name }
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
-    msg["global_merge_vars"] << { "name" => "ATTACHMENTURL", "content" => attachment }
     msg["global_merge_vars"] << { "name" => "GUID", "content" => guid }
-    send_template('mock_exam_purchase_170811', msg)
+    send_template('mock-exam-confirmation-190510', msg)
   end
 
-  def send_white_paper_request_email(name, title, url)
-    msg = message_stub.merge({"subject" => "#{title}"})
-    msg["global_merge_vars"] << { "name" => "NAME", "content" => name }
-    msg["global_merge_vars"] << { "name" => "TITLE", "content" => title }
-    msg["global_merge_vars"] << { "name" => "URL", "content" => url }
-    send_template('white-paper-download-20-02-17', msg)
+  def send_correction_returned_email(account_url, product_name)
+    msg = message_stub.merge({"subject" => "LearnSignal Corrections Returned"})
+    msg["global_merge_vars"] << { "name" => "NAME", "content" => product_name }
+    msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
+    send_template('corrections-returned-190510', msg)
   end
-
 
   # Enrollments Emails (Unsubscribe possible)
   def send_enrollment_welcome_email(course_name, url)
@@ -86,8 +83,6 @@ class MandrillClient
     msg["global_merge_vars"] << { "name" => "LINK", "content" => url }
     send_template('enrolment_welcome_170811', msg)
   end
-
-
 
   #Free Trial Emails
 

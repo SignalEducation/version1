@@ -72,7 +72,11 @@ class ExamBodiesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:exam_body).permit(:name, :url, :modal_heading, :modal_text)
+    params.require(:exam_body).permit(:name, :url, :active, :has_sittings,
+                                      :preferred_payment_frequency,
+                                      :subscription_page_subheading_text,
+                                      :constructed_response_intro_heading,
+                                      :constructed_response_intro_text)
   end
 
 end

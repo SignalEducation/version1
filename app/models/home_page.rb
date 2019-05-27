@@ -14,38 +14,31 @@
 #  group_id                      :integer
 #  name                          :string
 #  home                          :boolean          default(FALSE)
-#  header_heading                :string
-#  header_paragraph              :text
-#  header_button_text            :string
-#  background_image              :string
-#  header_button_link            :string
-#  header_button_subtext         :string
+#  logo_image                    :string
 #  footer_link                   :boolean          default(FALSE)
 #  mailchimp_list_guid           :string
-#  mailchimp_section_heading     :string
-#  mailchimp_section_subheading  :string
-#  mailchimp_subscribe_section   :boolean          default(FALSE)
+#  registration_form             :boolean          default(FALSE), not null
+#  pricing_section               :boolean          default(FALSE), not null
+#  seo_no_index                  :boolean          default(FALSE), not null
+#  login_form                    :boolean          default(FALSE), not null
+#  preferred_payment_frequency   :integer
+#  header_h1                     :string
+#  header_paragraph              :string
+#  registration_form_heading     :string
+#  login_form_heading            :string
 #
 
 class HomePage < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :seo_title, :seo_description, :subscription_plan_category_id,
-                  :public_url, :subject_course_id, :custom_file_name,
-                  :blog_posts_attributes, :group_id, :name, :home, :external_banners_attributes,
-                  :header_heading, :header_paragraph, :header_button_text, :background_image,
-                  :header_button_link, :header_button_subtext, :footer_link, :mailchimp_list_guid,
-                  :mailchimp_section_heading, :mailchimp_section_subheading, :mailchimp_subscribe_section
-
   # Constants
-  BACKGROUND_IMAGES = %w(watch_person highlighter_person lamp_person glasses_person meeting_persons)
+  LOGO_IMAGES = %w(acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
 
   # relationships
-  belongs_to :subscription_plan_category
-  belongs_to :group
-  belongs_to :subject_course
+  belongs_to :subscription_plan_category, optional: true
+  belongs_to :group, optional: true
+  belongs_to :subject_course, optional: true
   has_many :blog_posts
   has_many :external_banners
 
@@ -59,8 +52,7 @@ class HomePage < ActiveRecord::Base
   validates :public_url, presence: true, length: {maximum: 255},
             uniqueness: true
 
-  validate :group_xor_course
-  #TODO add custom validation to ensure only one can be 'home: true'
+  validate :group_xor_course, unless: :home
 
 
   # callbacks

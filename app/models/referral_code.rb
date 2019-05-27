@@ -11,9 +11,6 @@
 
 class ReferralCode < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id
-
   # Constants
 
   # relationships

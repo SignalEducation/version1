@@ -20,14 +20,11 @@ class CourseModuleElementResource < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :course_module_element_id, :name, :upload, :_destroy
-
   # Constants
 
   # relationships
   belongs_to :course_module_element
-  has_attached_file :upload, default_url: '/assets/images/missing_corporate_logo.png'
+  has_attached_file :upload
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
@@ -50,7 +47,7 @@ class CourseModuleElementResource < ActiveRecord::Base
   end
 
   def type
-    self.web_url ? 'External LInk' : 'File Upload'
+    self.web_url ? 'External Link' : 'File Upload'
   end
 
   protected

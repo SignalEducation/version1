@@ -1,4 +1,4 @@
-class RemoveCourseModuleJumboQuizModel < ActiveRecord::Migration
+class RemoveCourseModuleJumboQuizModel < ActiveRecord::Migration[4.2]
   def change
     remove_column :course_module_element_quizzes, :is_final_quiz, :boolean
     remove_column :course_module_element_quizzes, :course_module_jumbo_quiz_id, :integer

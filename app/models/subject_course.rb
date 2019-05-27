@@ -10,23 +10,15 @@
 #  cme_count                               :integer
 #  video_count                             :integer
 #  quiz_count                              :integer
-#  question_count                          :integer
 #  description                             :text
-#  short_description                       :string
 #  created_at                              :datetime         not null
 #  updated_at                              :datetime         not null
-#  best_possible_first_attempt_score       :float
 #  default_number_of_possible_exam_answers :integer
-#  total_video_duration                    :float            default(0.0)
 #  destroyed_at                            :datetime
-#  email_content                           :text
-#  external_url_name                       :string
-#  external_url                            :string
 #  exam_body_id                            :integer
 #  survey_url                              :string
 #  group_id                                :integer
 #  quiz_pass_rate                          :integer
-#  total_estimated_time_in_seconds         :integer
 #  background_image_file_name              :string
 #  background_image_content_type           :string
 #  background_image_file_size              :integer
@@ -35,7 +27,12 @@
 #  computer_based                          :boolean          default(FALSE)
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
-#  additional_text_label                   :string
+#  icon_label                              :string
+#  constructed_response_count              :integer          default(0)
+#  completion_cme_count                    :integer
+#  release_date                            :date
+#  seo_title                               :string
+#  seo_description                         :string
 #
 
 class SubjectCourse < ActiveRecord::Base
@@ -43,48 +40,40 @@ class SubjectCourse < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :sorting_order, :active,
-                  :cme_count, :description, :short_description,
-                  :default_number_of_possible_exam_answers,
-                  :email_content, :external_url, :external_url_name,
-                  :quiz_count, :question_count, :video_count,
-                  :total_video_duration, :exam_body_id, :survey_url,
-                  :group_id, :quiz_pass_rate, :total_estimated_time_in_seconds,
-                  :background_image, :preview, :computer_based, :highlight_colour,
-                  :category_label, :additional_text_label
-
   # Constants
 
   # relationships
   belongs_to :exam_body
   belongs_to :group
-  has_many :course_modules
-  has_many :course_module_elements, through: :course_modules
-  has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_tutor_details
-  has_many :quiz_questions
-  has_many :enrollments
   has_many :home_pages
-  has_many :student_exam_tracks
-  has_many :subject_course_user_logs
   has_many :subject_course_resources
   has_many :orders
-  has_many :white_papers
   has_many :mock_exams
   has_many :exam_sittings
+  has_many :enrollments
+  has_many :subject_course_user_logs
+  has_many :course_sections
+  has_many :course_section_user_logs
+  has_many :course_modules
+  has_many :student_exam_tracks
+  has_many :course_module_element_quizzes, through: :course_module_elements
+  has_many :course_module_elements, through: :course_modules
+  has_many :course_module_element_user_logs
   has_attached_file :background_image, default_url: "images/home_explore2.jpg"
 
+  accepts_nested_attributes_for :subject_course_resources
+  accepts_nested_attributes_for :course_sections
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :name_url, presence: true, uniqueness: true,
-            length: {maximum: 255}
+  validates :category_label, presence: true, length: {maximum: 255}
+  validates :icon_label, presence: true, length: {maximum: 255}
+  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
-  #validates :group_id, presence: true
+  validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
   validates :survey_url, presence: true, length: {maximum: 255}
-  validates :short_description, allow_nil: true, length: {maximum: 255}
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
 
@@ -96,9 +85,11 @@ class SubjectCourse < ActiveRecord::Base
 
   # scopes
   scope :all_live, -> { where(active: true, preview: false).includes(:course_modules).where(course_modules: {active: true}) }
-  scope :all_active, -> { where(active: true).includes(:course_modules).where(course_modules: {active: true}) }
+  scope :all_active, -> { where(active: true) }
+  scope :with_active_children, -> { where(active: true).includes(:course_modules).where(course_modules: {active: true}) }
   scope :all_preview, -> { where(preview: true) }
   scope :all_computer_based, -> { where(computer_based: true) }
+  scope :all_standard, -> { where(computer_based: false) }
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :this_month, -> { where(created_at: Time.now.beginning_of_month..Time.now.end_of_month) }
 
@@ -109,7 +100,7 @@ class SubjectCourse < ActiveRecord::Base
 
   def self.search(search)
     if search
-      where('name ILIKE ? OR description ILIKE ? OR short_description ILIKE ?', "%#{search}%", "%#{search}%", "%#{search}%")
+      where('name ILIKE ? OR description ILIKE ?', "%#{search}%", "%#{search}%")
     else
       SubjectCourse.all_active.all_in_order
     end
@@ -137,7 +128,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def children
-    self.course_modules.all
+    self.course_sections.all
   end
 
   def active_children
@@ -145,9 +136,7 @@ class SubjectCourse < ActiveRecord::Base
   end
 
   def valid_children
-    # Temp addition here - filter out the test boolean true records
-    # so as not to count these in the %_complete
-    self.children.all_active.where(test: false).all_in_order
+    self.children.all_active.all_in_order
   end
 
   def first_active_child
@@ -158,17 +147,6 @@ class SubjectCourse < ActiveRecord::Base
     self.active_children.first.try(:first_active_cme)
   end
 
-  def tuition_children?
-    self.active_children.all_tuition.count >= 1
-  end
-
-  def test_children?
-    self.active_children.all_test.count >= 1
-  end
-
-  def revision_children?
-    self.active_children.all_revision.count >= 1
-  end
 
   #######################################################################
 
@@ -179,7 +157,7 @@ class SubjectCourse < ActiveRecord::Base
 
   def destroyable_children
     the_list = []
-    the_list += self.course_modules.to_a
+    the_list += self.course_sections.to_a
     the_list
   end
 
@@ -190,34 +168,35 @@ class SubjectCourse < ActiveRecord::Base
 
   ### Triggered by Child Model ###
   def recalculate_fields
-    # Temp change here - active_children to valid_children
-    # filter out the test boolean true records so as not to count these in the %_complete
+    #Count of all CMEs in the course
+    cme_count = valid_children.sum(:cme_count)
+    #Count CMEs which count towards completion of the Course
+    completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
 
-    cme_count = self.valid_children.sum(:cme_count)
-    quiz_count = self.valid_children.sum(:quiz_count)
-    question_count = self.valid_children.sum(:number_of_questions)
-    video_count = self.valid_children.sum(:video_count)
-    video_duration = self.valid_children.sum(:video_duration)
-    total_estimated_time_in_seconds = self.valid_children.sum(:estimated_time_in_seconds)
+    quiz_count = valid_children.sum(:quiz_count)
+    video_count = valid_children.sum(:video_count)
+    cr_count = valid_children.sum(:constructed_response_count)
 
-    self.update_attributes(cme_count: cme_count, quiz_count: quiz_count, question_count: question_count, video_count: video_count, total_video_duration: video_duration, total_estimated_time_in_seconds: total_estimated_time_in_seconds)
+    self.update_attributes(cme_count: cme_count, completion_cme_count: completion_cme_count,
+                           video_count: video_count, quiz_count: quiz_count,
+                           constructed_response_count: cr_count)
   end
 
   ### Callback before_save ###
   def set_count_fields
-    # Temp change here - active_children to valid_children
-    # filter out the test boolean true records so as not to count these in the %_complete
+    #Count of all CMEs in the course
+    self.cme_count = valid_children.sum(:cme_count)
+    #Count CMEs which count towards completion of the Course
+    self.completion_cme_count = valid_children.all_for_completion.sum(:cme_count)
 
-    self.cme_count = self.valid_children.sum(:cme_count)
-    self.quiz_count = self.valid_children.sum(:quiz_count)
-    self.question_count = self.valid_children.sum(:number_of_questions)
-    self.video_count = self.valid_children.sum(:video_count)
-    self.total_video_duration = self.valid_children.sum(:video_duration)
-    self.total_estimated_time_in_seconds = self.valid_children.sum(:estimated_time_in_seconds)
+    self.quiz_count = valid_children.sum(:quiz_count)
+    self.video_count = valid_children.sum(:video_count)
+    self.constructed_response_count = valid_children.sum(:constructed_response_count)
   end
 
 
   ########################################################################
+
 
   ## User Course Tracking ##
   def enrolled_user_ids
@@ -307,8 +286,5 @@ class SubjectCourse < ActiveRecord::Base
     end
   end
 
-  def update_course_logs
-    SubjectCourseUserLogWorker.perform_async(self.id)
-  end
 
 end

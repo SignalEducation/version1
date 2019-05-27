@@ -1,4 +1,4 @@
-class CreateMarketingCategories < ActiveRecord::Migration
+class CreateMarketingCategories < ActiveRecord::Migration[4.2]
   def up
     create_table :marketing_categories do |t|
       t.string :name

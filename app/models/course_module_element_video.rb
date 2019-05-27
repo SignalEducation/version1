@@ -17,9 +17,6 @@ class CourseModuleElementVideo < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :course_module_element_id, :video_id, :duration, :vimeo_guid
-
   # Constants
 
   # relationships

@@ -1,4 +1,4 @@
-class CreateFaqSections < ActiveRecord::Migration
+class CreateFaqSections < ActiveRecord::Migration[4.2]
   def change
     create_table :faq_sections do |t|
       t.string :name, index: true

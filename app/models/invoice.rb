@@ -32,6 +32,7 @@
 #  tax_percent                 :decimal(, )
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
+#  paypal_payment_guid         :string
 #
 
 class Invoice < ActiveRecord::Base
@@ -39,16 +40,6 @@ class Invoice < ActiveRecord::Base
   include LearnSignalModelExtras
 
   serialize :original_stripe_data, Hash
-
-  # attr-accessible
-  attr_accessible :user_id, :subscription_transaction_id,
-                  :subscription_id, :number_of_users, :currency_id, :vat_rate_id,
-                  :issued_at, :stripe_guid, :sub_total, :total, :total_tax,
-                  :stripe_customer_guid, :object_type, :payment_attempted,
-                  :payment_closed, :forgiven, :paid, :livemode, :attempt_count,
-                  :amount_due, :next_payment_attempt_at, :webhooks_delivered_at,
-                  :charge_guid, :subscription_guid, :tax_percent, :tax,
-                  :original_stripe_data
 
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
@@ -58,18 +49,14 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_line_items
   has_many :charges
   has_many :refunds
-  belongs_to :subscription_transaction
+  belongs_to :subscription_transaction, optional: true
   belongs_to :subscription
   belongs_to :user
-  belongs_to :vat_rate
+  belongs_to :vat_rate, optional: true
 
   # validation
-  validates :user_id, presence: true
-  validates :subscription_id, presence: true
-  validates :number_of_users, presence: true
-  validates :currency_id, presence: true
-  validates :total, presence: true
-  validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}
+  validates :user_id, :subscription_id, :number_of_users, :currency_id, :total, presence: true
+  validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}, if: :strip_invoice?
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true
   validates_length_of :charge_guid, maximum: 255, allow_blank: true
@@ -141,6 +128,39 @@ class Invoice < ActiveRecord::Base
     inv
   end
 
+  def self.build_from_paypal_data(paypal_body)
+    inv = Invoice.find_or_initialize_by(paypal_payment_guid: paypal_body['resource']['id'])
+    subscription = Subscription.find_by(paypal_subscription_guid: paypal_body['resource']['billing_agreement_id'])
+    Invoice.transaction do
+      if subscription.user && subscription && subscription.currency
+        inv.assign_attributes(
+          user_id: subscription.user.id,
+          subscription_id: subscription.id,
+          number_of_users: 1,
+          currency_id: subscription.currency.id,
+          issued_at: Time.parse(paypal_body['create_time']),
+          total: paypal_body['resource']['amount']['total'].to_f,
+          sub_total: paypal_body['resource']['amount']['total'].to_f,
+          paypal_payment_guid: paypal_body['resource']['id']
+        )
+        if inv.save
+          begin
+            InvoiceLineItem.build_from_paypal_data(inv)
+          rescue NoMethodError => err
+            Rails.logger.error "ERROR: Invoice with id #{inv.id} was be rolledback due to the error in creating invoice line items."
+            inv = nil
+            raise ActiveRecord::Rollback
+          end
+        else
+          Rails.logger.error "ERROR: Invoice#build_from_paypal_data failed to saved an invoice. Errors: #{inv.errors.full_messages.inspect}. Original data: #{paypal_body}."
+        end
+      else
+        Rails.logger.error "ERROR: Invoice#build_from_paypal_data find Billing Agreement-#{paypal_body['resource']['billing_agreement_id']}}"
+      end
+    end
+    inv
+  end
+
   ## Updates the Invoice from stripe data sent to a StripeApiEvent ##
   def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
@@ -203,5 +223,9 @@ class Invoice < ActiveRecord::Base
       vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).try(:id)
       self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
     end
+  end
+
+  def strip_invoice?
+    subscription_guid.present?
   end
 end

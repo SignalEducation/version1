@@ -2,19 +2,24 @@
 #
 # Table name: exam_bodies
 #
-#  id            :integer          not null, primary key
-#  name          :string
-#  url           :string
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  modal_heading :string
-#  modal_text    :text
+#  id                                 :integer          not null, primary key
+#  name                               :string
+#  url                                :string
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  active                             :boolean          default(FALSE), not null
+#  has_sittings                       :boolean          default(FALSE), not null
+#  preferred_payment_frequency        :integer
+#  subscription_page_subheading_text  :string
+#  constructed_response_intro_heading :string
+#  constructed_response_intro_text    :text
 #
 
 FactoryBot.define do
   factory :exam_body do
     sequence(:name)           { |n| "ACCA #{n}" }
-    url 'accaglobal.com/ie/en.html'
+    url { 'accaglobal.com/ie/en.html' }
+    constructed_response_intro_heading {'Intro Heading'}
+    constructed_response_intro_text {'Intro Text'}
   end
-
 end

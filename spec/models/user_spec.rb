@@ -53,21 +53,15 @@
 #  unsubscribed_from_emails        :boolean          default(FALSE)
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
+#  preferred_exam_body_id          :bigint(8)
 #
 
 require 'rails_helper'
 
 describe User do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at crypted_password password_salt persistence_token perishable_token single_access_token login_count failed_login_count last_request_at current_login_at last_login_at current_login_ip last_login_ip guid subscription_plan_category_id profile_image_updated_at profile_image_file_size profile_image_content_type profile_image_file_name phone_number name_url analytics_guid)
-
-  User.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
+  it 'should have a valid factory' do
+    expect(build(:user)).to be_valid
   end
 
   # Constants
@@ -80,6 +74,7 @@ describe User do
   it { should have_many(:completed_course_module_element_user_logs) }
   it { should have_many(:incomplete_course_module_element_user_logs) }
   it { should have_many(:course_tutor_details) }
+  it { should have_many(:exam_body_user_details) }
   it { should have_many(:enrollments) }
   it { should have_many(:invoices) }
   it { should have_many(:quiz_attempts) }
@@ -88,6 +83,7 @@ describe User do
   it { should have_many(:subscription_payment_cards) }
   it { should have_many(:subscription_transactions) }
   it { should have_many(:student_exam_tracks) }
+  it { should have_many(:course_section_user_logs) }
   it { should have_many(:subject_course_user_logs) }
   it { should belong_to(:user_group) }
   it { should have_many(:visits) }
@@ -124,6 +120,9 @@ describe User do
 
   it { should validate_presence_of(:user_group_id) }
 
+  it { should validate_presence_of(:communication_approval).on(:create) }
+  it { should validate_presence_of(:terms_and_conditions).on(:create) }
+
   context "user email validation" do
     before do
       user_group = FactoryBot.create(:student_user_group)
@@ -142,7 +141,6 @@ describe User do
   it { should callback(:add_guid).before(:create) }
   it { should callback(:create_referral_code_record).after(:create) }
   it { should callback(:update_stripe_customer).after(:update) }
-  it { should callback(:update_student_access).after(:update) }
   it { should callback(:check_dependencies).before(:destroy) }
 
   # scopes
@@ -161,7 +159,6 @@ describe User do
   it { expect(User).to respond_to(:all_students) }
   it { expect(User).to respond_to(:all_trial_or_sub_students) }
   it { expect(User).to respond_to(:all_tutors) }
-  it { expect(User).to respond_to(:get_and_activate) }
   it { expect(User).to respond_to(:get_and_verify) }
   it { expect(User).to respond_to(:start_password_reset_process) }
   it { expect(User).to respond_to(:resend_pw_reset_email) }
@@ -175,12 +172,10 @@ describe User do
   it { expect(User).to respond_to(:create_csv_user) }
 
   # instance methods
-  it { should respond_to(:date_of_birth_is_possible?) }
   it { should respond_to(:student_user?) }
   it { should respond_to(:non_student_user?) }
-  it { should respond_to(:trial_or_sub_user?) }
+  it { should respond_to(:standard_student_user?) }
   it { should respond_to(:complimentary_user?) }
-  it { should respond_to(:tutor_user?) }
   it { should respond_to(:blocked_user?) }
   it { should respond_to(:system_requirements_access?) }
   it { should respond_to(:content_management_access?) }
@@ -190,30 +185,12 @@ describe User do
   it { should respond_to(:marketing_resources_access?) }
   it { should respond_to(:user_group_management_access?) }
 
-  it { should respond_to(:trial_user?) }
-  it { should respond_to(:valid_trial_user?) }
-  it { should respond_to(:not_started_trial_user?) }
-  it { should respond_to(:expired_trial_user?) }
-  it { should respond_to(:trial_limits_valid?) }
-  it { should respond_to(:trial_days_valid?) }
-  it { should respond_to(:trial_seconds_valid?) }
-  it { should respond_to(:trial_days_left) }
-  it { should respond_to(:trial_seconds_left) }
-  it { should respond_to(:trial_minutes_left) }
-
-  it { should respond_to(:subscription_user?) }
-  it { should respond_to(:valid_subscription?) }
-  it { should respond_to(:canceled_pending?) }
-  it { should respond_to(:canceled_member?) }
-  it { should respond_to(:current_subscription) }
   it { should respond_to(:default_card) }
-  it { should respond_to(:user_subscription_status) }
-  it { should respond_to(:user_account_status) }
-  it { should respond_to(:permission_to_see_content) }
-  it { should respond_to(:enrollment_for_course?) }
+
+  it { should respond_to(:enrolled_course?) }
   it { should respond_to(:enrolled_in_course?) }
 
-  it { should respond_to(:referred_user) }
+  it { should respond_to(:referred_user?) }
   it { should respond_to(:valid_order_ids) }
   it { should respond_to(:valid_orders?) }
   it { should respond_to(:purchased_products) }
@@ -221,7 +198,6 @@ describe User do
   it { should respond_to(:change_the_password) }
   it { should respond_to(:activate_user) }
   it { should respond_to(:validate_user) }
-  it { should respond_to(:de_activate_user) }
   it { should respond_to(:generate_email_verification_code) }
   it { should respond_to(:create_referral) }
   it { should respond_to(:destroyable?) }
@@ -242,8 +218,5 @@ describe User do
 
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }
-
-  it { should respond_to(:update_from_stripe) }
-  it { should respond_to(:create_subscription_from_stripe) }
 
 end

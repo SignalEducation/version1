@@ -1,4 +1,4 @@
-class AddRenderBooleansToExternalBanners < ActiveRecord::Migration
+class AddRenderBooleansToExternalBanners < ActiveRecord::Migration[4.2]
   def change
     add_column :external_banners, :user_sessions, :boolean, index: true, default: false
     add_column :external_banners, :library, :boolean, index: true, default: false

@@ -22,7 +22,7 @@
                 .row
                   -group.active_children.all_in_order.reverse.each do |course|
                     .col-md-4.col-sm-6.col-xs-12
-                      =link_to library_special_link(course), class: 'card card-course' do
+                      =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
                         .card-inner.text-center
                           %h3.h3.card-title
                             =course.try(:name)
@@ -32,24 +32,5 @@
                             .col-md-12.col-xs-12.text-center
                               %h4{style: 'color: #fff;'}
                                 =course.category_label ? course.category_label : 'Enrol Now'
-
-
-      %hr/
-
-      .l-margin-top-huge.l-margin-bottom
-        .col-md-10.col-md-offset-1
-          %p.h2.text-center.h-separator.h-separator-center
-            Why LearnSignal?
-          .video.l-margin-top
-            .play
-              #vimeo-player.vimeo-player
-
-
-
-
-
-:javascript
-
-  var player = new Vimeo.Player('vimeo-player', {id: '288321878'});
 
 

@@ -1,50 +1,31 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom#thank-you-message
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.subscriptions.upgrade_complete.h1')
-        .col-md-8.col-md-offset-2.l-margin-bottom-6x
-          .box-item
-            .col-md-8.col-md-offset-2.l-margin-top.text-center
-              %p
-                =#"You have subscribed to the #{@subscription.subscription_plan.label} Subscription Plan"
-                ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
-              %p
-                ="An email containing your first invoice will be sent to #{current_user.email}"
+%main
+  %article.bg-gray5
+    -if flash[:success] || flash[:error] || flash[:warning]
+      =render partial: 'layouts/flash_messages'
+    .container
+      %header.hero-section
+        %h1.h2-hero.mb-2
+          =t('views.subscriptions.upgrade_complete.h1')
 
-            .col-md-10.col-md-offset-1.l-margin-top.text-center
-              %p{style: 'letter-spacing: 0.5px;'}
-                ='Visit your'
-                =link_to 'account page', account_url(anchor: 'subscriptions')
-                ='to view your subscription details.'
+      %section.pb-md-6.pb-5
+        .row.justify-content-center
+          .col-xs-12.col-sm-8
+            .box-item.text-center
+              -if current_user.non_verified_user?
+                %h3.text-warning
+                  Your email requires verification. You will be unable to access content until you verify your email.
+                %p
+                  ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
+                %p
+                  ="Your payment receipt will be sent to #{current_user.email}"
 
-          %br/
-          .l-margin-top
-            =link_to student_dashboard_url do
-              .btn.btn-red.btn-wide
-                ='Continue Learning'
+              -else
+                %p
+                  ="You have subscribed to the #{t("views.general.subscription_label_in_months.a#{@subscription.subscription_plan.payment_frequency_in_months}")}."
+                %p
+                  ="Your payment receipt will be sent to #{current_user.email}"
 
+                =link_to library_special_link(@subscription&.exam_body&.group) do
+                  .btn.btn-primary
+                    ='Continue Learning'
 
-
--if @subscription.subscription_plan && @subscription.subscription_plan.currency
-  / Facebook Pixel Code
-  :javascript
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '560636230988559');
-    fbq('track', 'Purchase', {value: "#{@subscription.subscription_plan.price}", currency: "#{@subscription.subscription_plan.currency.iso_code}"});
-
-
-  %noscript
-    %img{:height => "1", :src => "https://www.facebook.com/tr?id=560636230988559&ev=PageView", :style => "display:none", :width => "1"}/
-  / End Facebook Pixel Code

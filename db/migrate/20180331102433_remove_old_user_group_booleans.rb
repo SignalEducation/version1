@@ -1,4 +1,4 @@
-class RemoveOldUserGroupBooleans < ActiveRecord::Migration
+class RemoveOldUserGroupBooleans < ActiveRecord::Migration[4.2]
   def change
     remove_column :user_groups, :individual_student, :boolean, default: false, null: false
     remove_column :user_groups, :complimentary, :boolean, default: false, null: false

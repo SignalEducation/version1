@@ -1,0 +1,28 @@
+-plans.each do |plan|
+  .form-group
+    .custom-control.custom-radio
+      %input.custom-control-input.custom-control-input-card.style-checkbox{:id => plan.interval_name.downcase, :name => "plans", :type => "radio", :data => {:price => plan.price, :frequency => plan.payment_frequency_in_months}, :value => plan.id, :checked => ("checked" if subscription.subscription_plan_id == plan.id)}
+      %label.custom-control-label{:for => plan.interval_name.downcase}
+        %span.custom-label-info
+          %span.h3.m-0
+            %span
+              =plan.interval_name
+          - if plan.monthly_percentage_off.present? && plan.monthly_percentage_off > 0
+            %span.discount
+              Save over
+              %span.text-with-bg.bg-yellow2
+                ="#{plan.monthly_percentage_off}%"
+
+        %span.custom-label-amount
+          %span.text-purple5.text-xl
+            =plan.currency.format_number(plan.price)
+          %span.p
+            ="Billed every #{plan.payment_frequency_in_months > 1 ? pluralize(plan.payment_frequency_in_months, 'month') : 'month'}"
+        %span.custom-check
+          / custom checkbox
+
+#info-text
+
+  %p.mb-2
+    %span.font-weight-medium Note:
+    You are subscribing to a recurring payment which will continue until you cancel your subscription. You can cancel your subscription at anytime.

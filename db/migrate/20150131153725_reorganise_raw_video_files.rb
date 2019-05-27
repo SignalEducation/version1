@@ -1,4 +1,4 @@
-class ReorganiseRawVideoFiles < ActiveRecord::Migration
+class ReorganiseRawVideoFiles < ActiveRecord::Migration[4.2]
   def up
     remove_column :raw_video_files, :transcode_requested
     remove_column :raw_video_files, :course_module_element_video_id

@@ -1,45 +1,34 @@
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt{style: 'padding-bottom: 0px;'}
-  .l-wrap
-    .container-fluid
-      .profile-single
+%main
+  %article.bg-gray5.pb-7
+    .container.mb-7
+      %header.hero-section
+        = image_tag @tutor.profile_image.url, class: 'img-thumbnail img-thumbnail-sm mb-3', alt: 'Tutor Profile Image'
+
+        %h1.h1-mega
+          =@tutor.full_name
+
+      %section.pb-md-6.pb-5
         .row
-          .pull-left
-            = image_tag @tutor.profile_image.url, class: 'profile-pic profile-pic-big'
-          .pull-left{style: 'margin-left: 40px;'}
-            %h1.h1.h-separator.h-separator-left.text-left.l-margin-bottom-big
-              =@tutor.full_name
-        .row.l-margin-top
-          .col-sm-10.col-md-offset-1
-            .profile-text
-              -if @tutor.description
-                %p
-                  =@tutor.description.html_safe
+          -if @tutor.description
+            %p
+              =@tutor.description.html_safe
 
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row
-        .col-md-12.text-center
-          -if @courses.present?
-            %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-              ="Courses by #{@tutor.first_name}"
-            .course-list-wrap
-              .row
-                -@courses.each do |course|
-                  -if course.parent && course.parent.active && course.active_children
-                    .col-sm-4
-                      =link_to library_special_link(course), class: 'card card-course' do
-                        .card-inner.text-center
-                          %h3.h3.card-title
-                            =course.try(:name)
-                        .card-info.text-center
-                          %p.h5{style: 'color: #f092b0; '}
-                            =course.try(:additional_text_label)
 
-                        .card-label{style: "background: #{course.highlight_colour};"}
-                          .row
-                            .col-md-12.col-xs-12.text-center
-                              %h4{style: 'color: #fff;'}
-                                =course.category_label ? course.category_label : 'Enrol Now'
+      -if @courses.present?
+        %section
+          %h2.mb-5.text-center
+            ="Courses by #{@tutor.first_name}"
+          .row.row-lg
+            -if @courses
+              -@courses.each do |course|
+                .col-lg-6.col-xl-4
+                  =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+                    .card-header.d-flex.justify-content-center.align-items-center
+                      %i{"aria-label" => "Strategic Professional", :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+                    .card-body.d-flex.flex-column.justify-content-center
+                      %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                        =course.category_label
+                      %h5.card-title.mb-1
+                        %span.mr-1
+                          =course.name

@@ -1,4 +1,4 @@
-class AddAttachmentFileToWhitePapers < ActiveRecord::Migration
+class AddAttachmentFileToWhitePapers < ActiveRecord::Migration[4.2]
   def self.up
     change_table :white_papers do |t|
       t.attachment :file

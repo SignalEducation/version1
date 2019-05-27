@@ -1,97 +1,79 @@
--if flash[:success] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .col-sm-12
-        %h1.h1.h-separator.h-separator-left.l-margin-bottom
-          =t('views.user_accounts.account_show.h1')
+%article.account.bg-white
+  .container
+    %header
+      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-5.py-md-6
+        .mw-0
+          %h1.mb-0.h1-hero.mr-2 Profile
+        .mw-0
+          %h5.mb-0.text-gray2
+            =@user.full_name
 
-      .col-md-12.l-margin-top-big{role: 'tablist'}
-        .signal-tabs
-          %a{href: '#personal-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-            =t('views.user_accounts.personal_info.tab_heading')
+  -if current_user.non_verified_user?
+    .alert.alert-warning
+      Your email requires verification. You will be unable to access content until you verify your email
 
-          -if @user.trial_or_sub_user? && @user.student_access
-            -if @user.trial_user?
-              %a{href: '#trial', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                =t('views.user_accounts.trial_info.tab_heading')
-            -elsif @user.subscription_user?
-              %a{href: '#subscriptions', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-                =t('views.user_accounts.subscription_info.tab_heading')
+  -if flash[:success] || flash[:warning] || flash[:error]
+    =render partial: 'layouts/flash_messages'
+  .bg-gray5.py-5
+    .container
+      .row.row-md
+        .col-lg-2-7
+          %nav.mb-4.account-nav
+            %ul#accountTabs.nav.nav-tabs.nav-tabs-vertical{:role => "tablist"}
+              %li.nav-item
+                %a#personal-info-tab.nav-link.active{"aria-controls" => "personal-info", "aria-selected" => "true", "data-toggle" => "tab", :href => "#personal-info", :role => "tab"}
+                  Personal Info
+              %li.nav-item
+                %a#account-info-tab.nav-link{"aria-controls" => "account-info", "aria-selected" => "false", "data-toggle" => "tab", :href => "#account-info", :role => "tab"}
+                  Account Info
+              %li.nav-item
+                %a#payment-details-tab.nav-link{"aria-controls" => "payment-details", "aria-selected" => "false", "data-toggle" => "tab", :href => "#payment-details", :role => "tab"}
+                  Card Details
+              %li.nav-item
+                %a#orders-tab.nav-link{"aria-controls" => "orders", "aria-selected" => "false", "data-toggle" => "tab", :href => "#orders", :role => "tab"}
+                  Orders
+              %li.nav-item
+                %a#enrollments-tab.nav-link{"aria-controls" => "enrollments", "aria-selected" => "false", "data-toggle" => "tab", :href => "#enrollments", :role => "tab"}
+                  Enrolments
 
-          -if @user.trial_or_sub_user? && @subscription_payment_cards.any?
-            %a{href: '#payment-details', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.payment_details.tab_heading')
+        .col-lg-5-7
+          #accountTabsContent.tab-content
 
-          -if @user.trial_or_sub_user? && @orders.any?
-            %a{href: '#orders', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.orders_info.tab_heading')
+            #personal-info.tab-pane.show.active.tab-account.tab-personal-info{"aria-labelledby" => "personal-info-tab", :role => "tabpanel"}
+              =render partial: 'personal_info'
 
-          %a{href: '#enrollments', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-            =t('views.user_accounts.enrollments_info.tab_heading')
+            #account-info.tab-pane.tab-account.tab-account-info{"aria-labelledby" => "account-info-tab", :role => "tabpanel"}
+              =render partial: 'account_info'
 
-          -if @user.referral_code
-            %a{href: '#referral', role: 'tab', class: 'signal-tab', data: {toggle: 'tab'}}
-              =t('views.user_accounts.referral_info.tab_heading')
+            #payment-details.tab-pane.tab-account.tab-payment-details{"aria-labelledby" => "payment-details-tab", :role => "tabpanel"}
+              =render partial: 'payment_details'
 
+            #orders.tab-pane.tab-account.tab-order{"aria-labelledby" => "orders-tab", :role => "tabpanel"}
+              =render partial: 'orders_info'
 
-
-      .tab-content
-        .tab-pane.fade.in.active#personal-details{role: 'tabpanel'}
-          .col-md-12
-            .content-box.content-box-outer.l-margin-bottom-huge
-              .content-box-inner
-                =render partial: 'personal_info'
-
-        -if @user.trial_or_sub_user? && @user.student_access
-          -if @user.trial_user?
-            .tab-pane.fade#trial{role: 'tabpanel'}
-              .col-md-12
-                .content-box.content-box-outer.l-margin-bottom-huge
-                  .content-box-inner
-                    =render partial: 'trial_info'
-          -elsif @user.subscription_user?
-            .tab-pane.fade#subscriptions{role: 'tabpanel'}
-              .col-md-12
-                .content-box.content-box-outer.l-margin-bottom-huge
-                  .content-box-inner
-                    =render partial: 'subscription_info'
-
-
-        -if @user.subscription_user? && @subscription_payment_cards.any?
-          .tab-pane.fade#payment-details{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'payment_details'
-
-
-        -if @orders.any?
-          .tab-pane.fade#orders{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'orders_info'
-
-        .tab-pane.fade#enrollments{role: 'tabpanel'}
-          .col-md-12
-            .content-box.content-box-outer.l-margin-bottom-huge
-              .content-box-inner
-                =render partial: 'enrollments_info'
-
-        -if @user.referral_code
-          .tab-pane.fade#referral{role: 'tabpanel'}
-            .col-md-12
-              .content-box.content-box-outer.l-margin-bottom-huge
-                .content-box-inner
-                  =render partial: 'referral_details'
+            #enrollments.tab-pane.tab-account.tab-enrollment{"aria-labelledby" => "enrollments-tab", :role => "tabpanel"}
+              =render partial: 'enrollments_info'
 
 
 
 
 
-=render partial: 'shared/activate_tab'
 =render partial: 'add_card_modal'
-=render partial: 'student_user_form'
-=render partial: 'change_password'
+
+:javascript
+    $(document).ready(function(){
+
+      hash = window.location.hash;
+      elements = $('a[href="' + hash + '"]');
+      if (elements.length === 0) {
+        let selectedTab = $(".account-nav a:first");
+        selectedTab.click();
+      } else {
+        elements.click();
+      }
+
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+
+    });

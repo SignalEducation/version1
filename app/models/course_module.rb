@@ -2,28 +2,30 @@
 #
 # Table name: course_modules
 #
-#  id                        :integer          not null, primary key
-#  name                      :string
-#  name_url                  :string
-#  description               :text
-#  sorting_order             :integer
-#  estimated_time_in_seconds :integer
-#  active                    :boolean          default(FALSE), not null
-#  created_at                :datetime
-#  updated_at                :datetime
-#  cme_count                 :integer          default(0)
-#  seo_description           :string
-#  seo_no_index              :boolean          default(FALSE)
-#  destroyed_at              :datetime
-#  number_of_questions       :integer          default(0)
-#  subject_course_id         :integer
-#  video_duration            :float            default(0.0)
-#  video_count               :integer          default(0)
-#  quiz_count                :integer          default(0)
-#  highlight_colour          :string
-#  tuition                   :boolean          default(FALSE)
-#  test                      :boolean          default(FALSE)
-#  revision                  :boolean          default(FALSE)
+#  id                         :integer          not null, primary key
+#  name                       :string
+#  name_url                   :string
+#  description                :text
+#  sorting_order              :integer
+#  estimated_time_in_seconds  :integer
+#  active                     :boolean          default(FALSE), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  cme_count                  :integer          default(0)
+#  seo_description            :string
+#  seo_no_index               :boolean          default(FALSE)
+#  destroyed_at               :datetime
+#  number_of_questions        :integer          default(0)
+#  subject_course_id          :integer
+#  video_duration             :float            default(0.0)
+#  video_count                :integer          default(0)
+#  quiz_count                 :integer          default(0)
+#  highlight_colour           :string
+#  tuition                    :boolean          default(FALSE)
+#  test                       :boolean          default(FALSE)
+#  revision                   :boolean          default(FALSE)
+#  course_section_id          :integer
+#  constructed_response_count :integer          default(0)
 #
 
 class CourseModule < ActiveRecord::Base
@@ -31,32 +33,32 @@ class CourseModule < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :description, :sorting_order,
-                  :estimated_time_in_seconds, :active, :cme_count,
-                  :seo_description, :seo_no_index, :number_of_questions,
-                  :subject_course_id, :highlight_colour, :tuition, :test,
-                  :revision, :quiz_count, :video_duration,
-                  :video_count
-
   # Constants
 
   # relationships
   belongs_to :subject_course
+  belongs_to :course_section
+  has_many :student_exam_tracks
   has_many :course_module_elements
   has_many :course_module_element_quizzes, through: :course_module_elements
   has_many :course_module_element_videos, through: :course_module_elements
   has_many :course_module_element_user_logs
-  has_many :student_exam_tracks
+
+  accepts_nested_attributes_for :course_module_elements
 
   # validation
   validates :subject_course_id, presence: true
-  validates :name, presence: true,
-            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
-  validates :name_url, presence: true,
-            uniqueness: {scope: :subject_course_id}, length: {maximum: 255}
+  validates :course_section_id, presence: true
+  validates :name, presence: true, uniqueness: {
+    scope: :course_section_id,
+    message: "must be unique within the course section"
+  }
+  validates :name_url, presence: true, uniqueness: { 
+    scope: :course_section_id,
+    message: "must be unique within the course section"
+  }
+
   validates :sorting_order, presence: true
-  validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
@@ -65,11 +67,8 @@ class CourseModule < ActiveRecord::Base
   after_update :update_parent
 
   # scopes
-  scope :all_in_order, -> { order(:sorting_order) }
+  scope :all_in_order, -> { order(:sorting_order, :course_section_id) }
   scope :all_active, -> { where(active: true, destroyed_at: nil) }
-  scope :all_tuition, -> { where(tuition: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
-  scope :all_revision, -> { where(revision: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
-  scope :all_test, -> { where(test: true, destroyed_at: nil).includes(course_module_elements: :course_module_element_video).where(course_module_elements: {active: true})  }
   scope :all_inactive, -> { where(active: false) }
   scope :with_url, lambda { |the_url| where(name_url: the_url) }
 
@@ -79,7 +78,7 @@ class CourseModule < ActiveRecord::Base
 
   ## Parent & Child associations ##
   def parent
-    self.subject_course
+    self.course_section
   end
 
   def children
@@ -95,12 +94,15 @@ class CourseModule < ActiveRecord::Base
   end
 
   def children_available_count
-    self.active_children.all_active.count
+    self.active_children.count
   end
 
   #######################################################################
 
   ## Methods allow for navigation from one CM to the next ##
+
+  #TODO - these do not work when latest course modules are made inactive
+  # Needs a fallback
 
   def array_of_sibling_ids
     self.parent.course_modules.all_active.all_in_order.map(&:id)
@@ -115,7 +117,7 @@ class CourseModule < ActiveRecord::Base
   end
 
   def next_module_id
-    if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+    if self.my_position_among_siblings && self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
       self.array_of_sibling_ids[self.my_position_among_siblings + 1]
     else
       nil
@@ -159,13 +161,13 @@ class CourseModule < ActiveRecord::Base
 
   ### Triggered by child CME after_save callback ###
   def update_video_and_quiz_counts
-    estimated_time = self.active_children.sum(:estimated_time_in_seconds)
-    num_questions = self.active_children.sum(:number_of_questions)
-    duration = self.active_children.sum(:duration)
     quiz_count = self.active_children.all_active.all_quizzes.count
     video_count = self.active_children.all_active.all_videos.count
+    cr_count = self.active_children.all_active.all_constructed_response.count
 
-    self.update_attributes(estimated_time_in_seconds: estimated_time, number_of_questions: num_questions, video_duration: duration, quiz_count: quiz_count, video_count: video_count, cme_count: quiz_count + video_count)
+    self.update_attributes(quiz_count: quiz_count, video_count: video_count,
+                           constructed_response_count: cr_count,
+                           cme_count: quiz_count + video_count + cr_count)
   end
 
 
@@ -182,52 +184,35 @@ class CourseModule < ActiveRecord::Base
     set.try(:percentage_complete) || 0
   end
 
-  def completed_for_enrollment(enrollment_id)
-    self.percentage_complete_for_enrollment(enrollment_id) >= 100
+  def completed_for_scul(scul_id)
+    self.percentage_complete_for_scul(scul_id) >= 100
   end
 
-  def percentage_complete_for_enrollment(enrollment_id)
-    enrollment = Enrollment.where(id: enrollment_id).first
-    if enrollment
+  def percentage_complete_for_scul(scul_id)
+    scul = SubjectCourseUserLog.where(id: scul_id).first
+    if scul
       #TODO - investigate why two SET records exist
       # Created At - [Thu, 11 Oct 2018 18:07:25 IST +01:00, Thu, 11 Oct 2018 18:05:52 IST +01:00]
-      set = enrollment.subject_course_user_log.student_exam_tracks.where(course_module_id: self.id).all_in_order.first
-      set.try(:percentage_complete) || 0
+      set = scul.student_exam_tracks.where(course_module_id: self.id).all_in_order.first
+      set.try(:percentage_complete) || 0.0
     else
-      0
+      0.0
     end
   end
 
+  def all_content_restricted?
+    active_children.count == active_children.where(available_on_trial: false).count
+  end
 
   ########################################################################
-
-  ## Model info for Views ##
-
-  def category
-    if self.revision
-      'Question Bank'
-    elsif self.tuition
-      'Tuition'
-    elsif self.test
-      'Additional'
-    else
-      ''
-    end
-  end
-
-  def full_name
-    self.parent.name + ' > ' + self.name
-  end
 
 
   protected
 
   def set_count_fields
-    self.estimated_time_in_seconds = self.active_children.sum(:estimated_time_in_seconds)
-    self.number_of_questions = self.active_children.sum(:number_of_questions)
-    self.quiz_count = self.active_children.all_active.all_quizzes.count
-    self.video_count = self.active_children.all_active.all_videos.count
-    self.video_duration = self.active_children.sum(:duration)
+    self.quiz_count = self.active_children.all_quizzes.count
+    self.video_count = self.active_children.all_videos.count
+    self.constructed_response_count = self.active_children.all_constructed_response.count
     self.cme_count = children_available_count
   end
 

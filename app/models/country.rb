@@ -18,10 +18,6 @@ class Country < ActiveRecord::Base
 
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :name, :iso_code, :country_tld, :sorting_order,
-                  :in_the_eu, :currency_id, :continent
-
   # Constants
   CONTINENTS = ['Europe', 'North America', 'Central America', 'South America', 'Asia', 'Africa','Australia', 'Antarctic']
 

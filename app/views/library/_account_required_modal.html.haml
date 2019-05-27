@@ -1,0 +1,24 @@
+.modal.fade{id: 'account-required', tabindex: '-1', role: 'dialog', 'aria-labelledby': 'accountRequired', 'aria-hidden': 'true'}
+  .modal-dialog{role: 'document'}
+    .modal-content
+      %button.btn.btn-icon.modal-close{'data-dismiss': 'modal'}
+        %i.material-icons.ml-1{'aria-hidden': 'true'}
+          close
+      .modal-header.mb-3
+        %h3.text-red{id: 'accountRequired'}
+          Account Required
+
+      .modal-body
+        %p.mb-4
+          -if @group.exam_body.has_sittings?
+            ="A valid account is required to access that content. Register today for an #{@group.name} subscription."
+          -else
+            ="A valid account is required to access that content. Register today for a #{@group.name} subscription."
+
+        %p.mb-5
+          If you already have an account log in now.
+
+      .modal-footer
+        =link_to 'Register Now', subscription_checkout_special_link(@group.exam_body_id, @subscription_plan.try(:guid)), class: 'btn btn-primary', title: 'Register Now'
+        =link_to 'Log In', sign_in_url, class: 'btn btn-primary', title: 'Log In'
+

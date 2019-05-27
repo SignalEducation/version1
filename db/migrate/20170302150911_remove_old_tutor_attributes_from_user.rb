@@ -1,4 +1,4 @@
-class RemoveOldTutorAttributesFromUser < ActiveRecord::Migration
+class RemoveOldTutorAttributesFromUser < ActiveRecord::Migration[4.2]
   def change
     remove_column :users, :first_description, :text
     remove_column :users, :second_description, :text

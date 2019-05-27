@@ -2,28 +2,30 @@
 #
 # Table name: course_modules
 #
-#  id                        :integer          not null, primary key
-#  name                      :string
-#  name_url                  :string
-#  description               :text
-#  sorting_order             :integer
-#  estimated_time_in_seconds :integer
-#  active                    :boolean          default(FALSE), not null
-#  created_at                :datetime
-#  updated_at                :datetime
-#  cme_count                 :integer          default(0)
-#  seo_description           :string
-#  seo_no_index              :boolean          default(FALSE)
-#  destroyed_at              :datetime
-#  number_of_questions       :integer          default(0)
-#  subject_course_id         :integer
-#  video_duration            :float            default(0.0)
-#  video_count               :integer          default(0)
-#  quiz_count                :integer          default(0)
-#  highlight_colour          :string
-#  tuition                   :boolean          default(FALSE)
-#  test                      :boolean          default(FALSE)
-#  revision                  :boolean          default(FALSE)
+#  id                         :integer          not null, primary key
+#  name                       :string
+#  name_url                   :string
+#  description                :text
+#  sorting_order              :integer
+#  estimated_time_in_seconds  :integer
+#  active                     :boolean          default(FALSE), not null
+#  created_at                 :datetime
+#  updated_at                 :datetime
+#  cme_count                  :integer          default(0)
+#  seo_description            :string
+#  seo_no_index               :boolean          default(FALSE)
+#  destroyed_at               :datetime
+#  number_of_questions        :integer          default(0)
+#  subject_course_id          :integer
+#  video_duration             :float            default(0.0)
+#  video_count                :integer          default(0)
+#  quiz_count                 :integer          default(0)
+#  highlight_colour           :string
+#  tuition                    :boolean          default(FALSE)
+#  test                       :boolean          default(FALSE)
+#  revision                   :boolean          default(FALSE)
+#  course_section_id          :integer
+#  constructed_response_count :integer          default(0)
 #
 
 class CourseModulesController < ApplicationController
@@ -36,15 +38,17 @@ class CourseModulesController < ApplicationController
 
   # Standard Actions #
   def show
-    redirect_to subject_course_url
   end
 
   def new
-    @subject_course = SubjectCourse.where(name_url: params[:subject_course_name_url]).first
-    if @subject_course && @subject_course.children.count > 0
-      @course_module = CourseModule.new(sorting_order: @subject_course.children.all_in_order.last.sorting_order + 1, subject_course_id: @subject_course.id)
+    @course_sections = @subject_course.course_sections.all_in_order
+    if @subject_course && @course_section && @course_section.course_modules.count > 0
+      @course_module = CourseModule.new(sorting_order: @course_section.course_modules.all_in_order.last.sorting_order + 1,
+                                        subject_course_id: @subject_course.id,
+                                        course_section_id: @course_section.id)
     elsif @subject_course
-      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id)
+      @course_module = CourseModule.new(sorting_order: 1, subject_course_id: @subject_course.id,
+                                        course_section_id: @course_section.id)
     else
       redirect_to root_url
     end
@@ -54,25 +58,28 @@ class CourseModulesController < ApplicationController
     @course_module = CourseModule.new(allowed_params)
     if @course_module.save
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
-      redirect_to course_module_special_link(@course_module)
+      redirect_to subject_course_url(@course_module.subject_course_id)
     else
       render action: :new
     end
   end
 
   def edit
+    @course_sections = @subject_course.course_sections.all_in_order
   end
 
   def update
+    @course_module = CourseModule.where(id: params[:id]).first
     if @course_module.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
-      redirect_to course_module_special_link(@course_module)
+      redirect_to subject_course_url(@course_module.subject_course_id)
     else
       render action: :edit
     end
   end
 
   def reorder
+    
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|
       CourseModule.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
@@ -81,6 +88,7 @@ class CourseModulesController < ApplicationController
   end
 
   def destroy
+    @course_module = CourseModule.find(params[:id])
     if @course_module.destroy
       flash[:success] = I18n.t('controllers.course_modules.destroy.flash.success')
     else
@@ -92,16 +100,16 @@ class CourseModulesController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @course_module = CourseModule.where(id: params[:id]).first
-    end
+    @subject_course = SubjectCourse.where(id: params[:id]).first if params[:id].to_i > 0
+    @course_section = CourseSection.where(id: params[:course_section_id]).first if params[:course_section_id].to_i > 0
+    @course_module = CourseModule.where(id: params[:course_module_id]).first if params[:course_module_id].to_i > 0
     @subject_courses = SubjectCourse.all_in_order
     @tutors = User.all_tutors.all_in_order
     @layout = 'management'
   end
 
   def allowed_params
-    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision)
+    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision, :course_section_id)
   end
 
 end

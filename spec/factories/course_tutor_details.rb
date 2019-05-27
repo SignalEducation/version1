@@ -13,9 +13,9 @@
 
 FactoryBot.define do
   factory :course_tutor_detail do
-    subject_course_id 1
-    user_id 1
-    sorting_order 1
-    title "MyString"
+    subject_course_id { 1 }
+    user_id { 1 }
+    sorting_order { 1 }
+    title { "MyString" }
   end
 end

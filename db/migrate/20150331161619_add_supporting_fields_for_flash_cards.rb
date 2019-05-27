@@ -1,4 +1,4 @@
-class AddSupportingFieldsForFlashCards < ActiveRecord::Migration
+class AddSupportingFieldsForFlashCards < ActiveRecord::Migration[4.2]
 
   def change
     add_column :quiz_contents, :flash_card_id, :integer, index: true

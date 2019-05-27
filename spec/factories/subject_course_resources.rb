@@ -15,13 +15,14 @@
 #  external_url             :string
 #  active                   :boolean          default(FALSE)
 #  sorting_order            :integer
+#  available_on_trial       :boolean          default(FALSE)
 #
 
 FactoryBot.define do
   factory :subject_course_resource do
-    name "MyString"
-    subject_course_id 1
-    description "MyText"
+    name { "MyString" }
+    subject_course_id { 1 }
+    description { "MyText" }
   end
 
 end

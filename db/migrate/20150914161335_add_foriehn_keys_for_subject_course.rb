@@ -1,4 +1,4 @@
-class AddForiehnKeysForSubjectCourse < ActiveRecord::Migration
+class AddForiehnKeysForSubjectCourse < ActiveRecord::Migration[4.2]
   def change
     add_column :course_modules, :subject_course_id, :integer, index: true
     add_column :question_banks, :subject_course_id, :integer, index: true

@@ -1,0 +1,132 @@
+.scenario-box {
+  display: block;
+  position: relative;
+  height: 300px;
+  border-radius: 0;
+  background: #fff;
+  color: #424465;
+
+  @include clearfix();
+
+
+}
+.scenario-box-nav {
+  background-color: #343a40;
+  color: #fff;
+  &.scenario-box-nav-header {
+    padding: 5px 20px 1px 20px;
+  }
+  &.scenario-box-nav-footer {
+    padding: 5px 20px 1px 20px;
+  }
+}
+#splitter {
+  height: 100%;
+  border:0;
+}
+.scenario-content {
+  padding: 20px;
+}
+.cr-question {
+  padding: 20px;
+  .answer_spreadsheet {
+    width: 100%;
+    margin: 20px 0;
+  }
+  .answer_texteditor {
+    width: 100%;
+    margin: 20px 0;
+    .k-editor {
+      height: 350px;
+    }
+  }
+
+}
+.hidden {
+  display: none;
+}
+.cr-navigation {
+  padding-top: 5px;
+  width: 100%;
+  display: inline-block;
+  list-style: none;
+  & ul {
+    padding-left: 0;
+  }
+  & li {
+    font-weight: 500;
+    font-size: 18px;
+    font-style: normal;
+    position: relative;
+    display: inline-block;
+  }
+
+  .cr-navigation-left {
+    float: left;
+  }
+  .cr-navigation-right {
+    float: right;
+  }
+}
+.cr-nav-link {
+  color: darken(#fff, 5);
+  &:hover {
+    cursor: pointer;
+    color: darken(#fff, 15);
+  }
+}
+.submission-pane-content {
+  padding: 20px;
+  .final-submission {
+    margin-top: 40px;
+  }
+}
+.nav-dialog {
+
+  .nav-link {
+    &:hover {
+      cursor: pointer;
+      color: darken(#fff, 25);
+    }
+  }
+}
+
+.k-loading-mask .k-loading-color {
+  background-color: #F8FAFF;
+  opacity: 1;
+}
+
+.k-toolbar .k-button {
+  padding: 4px 6px !important;
+}
+.k-spreadsheet-toolbar>.k-widget[data-property=format] {
+  width: 100px !important;
+}
+.k-widget .k-window {
+  width: 400px;
+}
+.k-spreadsheet .k-tabstrip-wrapper .k-tabstrip-items {
+  padding-top: 0 !important;
+}
+.k-spreadsheet-tabstrip {
+  padding-top: 0 !important;
+}
+
+.k-editor .k-i-custom-reset:before {
+  content: "\e906";
+}
+.k-editor .k-i-custom-undo:before {
+  content: "\e100";
+}
+.k-editor .k-i-custom-redo:before {
+  content: "\e101";
+}
+
+.k-block>.k-header, .k-window-titlebar {
+  width: auto !important;
+  background-color: #00b67B !important;
+}
+
+.k-block>.k-action-window>.k-window-content, .k-editor-table-wizard-dialog {
+  width: 500px !important;
+}

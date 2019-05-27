@@ -22,9 +22,6 @@ class StripeApiEvent < ActiveRecord::Base
 
   serialize :payload, Hash
 
-  # attr-accessible
-  attr_accessible :guid, :api_version, :account_url
-
   # Constants
   KNOWN_API_VERSIONS = %w(2015-02-18 2017-06-05 2017-05-25)
   KNOWN_PAYLOAD_TYPES = %w(invoice.created invoice.payment_succeeded invoice.payment_failed customer.subscription.deleted charge.failed charge.succeeded charge.refunded coupon.updated)
@@ -159,7 +156,7 @@ class StripeApiEvent < ActiveRecord::Base
         if stripe_subscription
           status = stripe_subscription.cancel_at_period_end ? 'canceled-pending' : stripe_subscription.status
           subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-          subscription.current_status = status
+          subscription.stripe_status = status
           subscription.livemode = stripe_subscription[:plan][:livemode]
           subscription.save(validate: false)
         end
@@ -213,6 +210,7 @@ class StripeApiEvent < ActiveRecord::Base
       self.error_message = nil
 
       subscription.update_from_stripe
+      subscription.cancel
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end

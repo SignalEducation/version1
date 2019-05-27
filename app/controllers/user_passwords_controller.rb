@@ -4,10 +4,16 @@ class UserPasswordsController < ApplicationController
   before_action :get_variables
 
   def new
+    seo_title_maker('Forgot Your LearnSignal Password | LearnSignal',
+                    'Forgot your learnsignal password? No problem! Enter your email address to reset your password and access your online learning materials today.',
+                    nil)
   end
 
   def create
     User.start_password_reset_process(params[:email_address].to_s, root_url)
+    seo_title_maker('Password Reset Email Sent | LearnSignal',
+                    "Check your mailbox for further instructions. If you don't receive an email from learnsignal within a couple of minutes, check your spam folder.",
+                    nil)
   end
 
   def manager_resend_email
@@ -16,6 +22,10 @@ class UserPasswordsController < ApplicationController
   end
 
   def edit
+    seo_title_maker('Reset Your Password | LearnSignal',
+                    "Enter a new password for your learnsignal subscription account here to access your online learning materials and start studying today.",
+                    nil)
+
     if params[:id].to_s.length == 20
       @user = User.where(password_reset_token: params[:id].to_s).first
       if @user
@@ -46,7 +56,10 @@ class UserPasswordsController < ApplicationController
         @user.update_attribute(:password_change_required, nil)
         redirect_back_or_default root_url
       else
-        #TODO need to improve if/else statements here. If @user can't be found then pw reset process needs to start again with new email submission and email with reset link. But currently could not work due to account being set to active after first part of reset process.
+        #TODO need to improve if/else statements here.
+        #If @user can't be found then pw reset process needs to start again with
+        # new email submission and email with reset link. But currently could not
+        # work due to account being set to active after first part of reset process.
 
         @user = User.find_by_password_reset_token(params[:id])
         if @user

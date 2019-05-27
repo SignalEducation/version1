@@ -1,9 +1,5 @@
 //Mixins
 
-@mixin font-size($sizeValue: 1.6) {
-  font-size: ($sizeValue * 10) + px;
-  font-size: $sizeValue + rem;
-}
 @mixin clearfix() {
   &:before,
   &:after {
@@ -51,20 +47,6 @@
   opacity: $opacity;
   $opacity-ie: $opacity * 100;
   filter: alpha(opacity=$opacity-ie); //IE8
-}
-@mixin breakpoint($point) {
-  @if $point == xs-min {
-    @media (min-width: 360px) { @content; }
-  }
-  @if $point == sm-min {
-    @media (min-width: 768px) { @content; }
-  }
-  @else if $point == md-min {
-    @media (min-width: 992px) { @content; }
-  }
-  @else if $point == lg-min {
-    @media (min-width: 1100px)  { @content; }
-  }
 }
 @mixin image-2x($image, $width, $height) {
   @media (min--moz-device-pixel-ratio: 1.3),

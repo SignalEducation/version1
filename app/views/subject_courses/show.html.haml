@@ -1,76 +1,94 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.subject_courses.show.h1')
-            \-
-            =@subject_course.name
-        -if @subject_course.children.count < 1
-          .row.l-margin-top.l-margin-bottom
-            .col-md-10.col-md-offset-1
-              %p.h6.text-center
-                Please create a Course Module to begin.  A course module will hold a collection of Videos and Quizzes under the same topic.  Each topic should have a separate Module.  The name of the Module should reflect the topic.
-          .row.l-margin-top-big.text-center
-            =link_to t('views.course_modules.new.h1'), course_module_special_link(@subject_course), class: 'btn btn-red'
-        -else
-          .pull-right
-            =link_to t('views.subject_course_resources.show.h2'), course_resources_url(@subject_course), class: 'btn btn-purple'
-            =link_to t('views.course_modules.new.h1'), course_module_special_link(@subject_course), class: 'btn btn-cyan'
-            =link_to t('views.subject_courses.reorder'), course_modules_order_url(@subject_course), class: 'btn btn-cyan'
-            =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-orange'
-            =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-red'
-        .row.l-margin-top.l-margin-bottom
-          .col-md-12.l-margin-top
-            .ol.sortable-area
-              -@subject_course.children.all_in_order.each do |course_module|
-                .li.l-margin-bottom-big
-                  .table-box
-                    .table-responsive
-                      .col-md-9.l-margin-bottom
-                        %h2=course_module.name.to_s.truncate(50)
-                      .col-md-3
+.container
+  %header.management-console-section
+    %h1
+      =@subject_course.name
+  %section.pb-3
+    -if @subject_course.course_sections.count < 1
+      .row.text-center
+        .col-sm-12
+          %p.h6
+            Please create a Course Module to begin.  A course module will hold a collection of Videos and Quizzes under the same topic.  Each topic should have a separate Module.  The name of the Module should reflect the topic.
+      .row
+        =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-primary'
+
+    -else
+      .row
+        .col-sm-12
+          =link_to 'Trial Content', subject_course_trial_content_url(@subject_course), class: 'btn btn-warning'
+          =link_to t('views.subject_course_resources.show.h2'), course_resources_url(@subject_course), class: 'btn btn-secondary'
+          =link_to 'New Course Section (tab)', new_course_section_url(@subject_course.id), class: 'btn btn-primary'
+          =link_to 'Reorder Course Sections', reorder_course_sections_url(@subject_course.id), class: 'btn btn-warning'
+          =link_to t('views.subject_courses.show.course_tutor_details'), subject_course_course_tutor_details_url(subject_course_id: @subject_course), class: 'btn btn-secondary'
+          =link_to t('views.subject_courses.show.update_student_logs'), subject_course_update_user_logs_url(@subject_course), method: :post, class: 'btn btn-danger'
+      .row
+        .col-sm-12
+          Quizzes
+          =@subject_course.quiz_count
+          &#45;
+          Videos
+          =@subject_course.video_count
+          &#45;
+          CRs
+          =@subject_course.constructed_response_count
+          &#45;
+          Completion Count
+          =@subject_course.completion_cme_count
+          &#45;
+          Total Count
+          =@subject_course.cme_count
+
+      .row
+        .col-md-12
+          .ol.sortable-area
+            -@subject_course.course_sections.all_in_order.each do |course_section|
+              .li
+                .box-item.table-box
+                  .table-responsive
+                    .row
+                      .col-sm-6
+                        %h2=course_section.name.to_s.truncate(50)
+                      .col-sm-4
+                        Quizzes
+                        =course_section.quiz_count
+                        &#45;
+                        Videos
+                        =course_section.video_count
+                        &#45;
+                        CRs
+                        =course_section.constructed_response_count
+                      .col-sm-2
                         .pull-right
-                          =course_module.category
-                          &#160;
-                          &#160;
-                          =tick_or_cross(course_module.active)
-                      %table.table.sorted_table{data: {destination: course_module_elements_url}, id: course_module.id, style: 'font-size: 18px;'}
-                        %thead
-                          %tr
-                            %th Name
-                            %th Active
-                            %th Type
-                            %th
-                            %th
-                            %th
-                        %tbody
-                          -course_module.children.all_in_order.each do |cme|
-                            %tr{id: cme.id, data: {parent: course_module.id, destination: course_module_elements_url}}
-                              %td
-                                =cme.name.to_s
-                              %td
-                                =tick_or_cross(cme.active)
-                              %td
-                                =cme.type_name
-                              %td
-                                =link_to t('views.general.edit'), edit_course_module_element_url(cme.id), class: 'btn btn-small btn-purple'
-                                =link_to t('views.course_module_elements.show.preview'), course_url(cme.course_module.subject_course.name_url, cme.course_module.name_url, cme.name_url, ), class: 'btn btn-small btn-orange', target: '_blank'
-                                -unless cme.active
-                                  =link_to 'Activate', new_content_activation_url(type: cme.class, id: cme.id), class: 'btn btn-green btn-small'
-                                -if cme.destroyable?
-                                  =link_to t('views.general.delete'), cme, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
-                              %td
-                                %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
+                          =tick_or_cross(course_section.active)
+
+                    %table.table.sorted_table{data: {destination: course_modules_url}}
+                      %thead
+                        %tr
+                          %th Name
+                          %th Active
+                          %th Lessons
+                          %th
+                          %th
+                          %th
+                      %tbody
+                        -course_section.course_modules.all_in_order.each do |course_module|
+                          %tr{id: course_module.id, data: {parent: course_section.id, destination: course_module_url}}
+                            %td
+                              =course_module.name.to_s
+                            %td
+                              =tick_or_cross(course_module.active)
+                            %td
+                              =course_module.cme_count
+                            %td
+                              =link_to t('views.general.edit'), edit_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-xs btn-primary'
+                              =link_to t('views.general.show'), show_course_module_url(@subject_course.id, course_section.id, course_module.id), class: 'btn btn-xs btn-secondary'
+                              -if course_module.destroyable?
+                                =link_to t('views.general.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-xs'
+                            %td
+                              %span.glyphicon.glyphicon-sort{title: t('views.general.drag_to_reorder')}
 
 
-                      .col-md-6
-                        =link_to t('views.course_module_elements.form.new_video'), new_course_module_element_url(type: 'video', cm_id: course_module.id), class: 'btn btn-purple'
-                        =link_to t('views.course_module_elements.form.new_quiz'), new_course_module_element_url(type: 'quiz', cm_id: course_module.id), class: 'btn btn-purple'
-                        =link_to t('views.course_module_elements.form.new_constructed_response'), new_course_module_element_url(type: 'constructed_response', cm_id: course_module.id), class: 'btn btn-purple'
-                      .col-md-6
-                        .pull-right
-                          =link_to t('views.course_modules.edit.h1'), edit_course_module_url(course_module), class: 'btn btn-purple'
-                          =link_to I18n.t('views.course_modules.index.delete'), course_module, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red'
+                  .col-sm.pt-2
+                    =link_to 'New Course Module', new_course_module_url(@subject_course.id, course_section.id), class: 'btn btn-primary btn-xs'
+                    =link_to t('views.course_sections.edit.h1'), edit_course_section_url(course_section), class: 'btn btn-primary btn-xs'
+                    =link_to I18n.t('views.course_sections.index.delete'), course_section, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary-reverse btn-xs'
 

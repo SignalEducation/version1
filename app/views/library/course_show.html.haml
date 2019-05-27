@@ -1,95 +1,351 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-sm-6
-          .l-margin-bottom
-            -if @course.parent
-              =link_to library_special_link(@course.parent), class: 'btn btn-red btn-secondary' do
-                .fa.fa-arrow-left
+%main
+  %article.courses.bg-white
+    .container
+      %header
+        .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.py-4.py-md-5
+          -if @course.parent
+            .mw-0
+              =link_to library_special_link(@course.parent), class: 'btn btn-secondary btn-sm btn-sm-arrow-left mb-3 mb-sm-0' do
                 =@course.parent.name
 
+          -if @exam_body.has_sittings && @new_enrollment && (@computer_exam_sitting || @exam_sittings)
+            .mw-0
+              %a{data: {target: '#enrollment-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm'}
+                Enrol
+              =render partial: 'course_enrollment_modal'
 
-      -if current_user
+        .pt-3
+          %h1.h1-hero
+            =@course.name
 
-        -if @active_enrollment && @active_enrollment.expired
-          =render partial: 'layouts/enrollment_notice', locals: {active_enrollment: @active_enrollment}
-          =render partial: 'enrollment_form'
-          =render partial: 'course_enrollment_modal'
+      %section.course-progress
+        - if @subject_course_user_log
+          -total_lessons = @subject_course_user_log.subject_course.completion_cme_count
+          -completed_lessons = @subject_course_user_log.try(:count_of_cmes_completed) || 0
+          -complete_percent = @subject_course_user_log.try(:percentage_complete)
 
-        -elsif @active_enrollment && !@active_enrollment.expired
-          =render partial: 'enrollment_info'
+          %h4.sr-only Course Progress
+          .pt-3.pb-4.pb-sm-6
+            %small.text-gray2.mb-3
+              %span.current-step-indicator=completed_lessons
+              out of
+              %span.total-steps-indicator=total_lessons
+              steps completed
+            .progress
+              .progress-bar{role: "progressbar", 'aria-valuenow': complete_percent, 'aria-valuemin': "0",
+               'aria-valuemax': '100', style: "width: #{complete_percent}%"}
 
-          -if current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
-            =render partial: 'user_exam_body_details_modal'
 
-        -else
-          =render partial: 'enrollment_form'
-          =render partial: 'course_enrollment_modal'
+
+        - else
           =render partial: 'course_info'
 
-      -else
-        =render partial: 'layouts/account_notice'
-        %h1.h1.h-separator.h-separator-left
-          =@course.name
-        =render partial: 'course_info'
+
+      %nav.courses-nav
+        %ul.nav.nav-tabs{id: 'coursesTabs', role: 'tablist'}
+          - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
+            %li.nav-item
+              -# TODO add active to first li
+              %a{class: "nav-link #{counter == 0 ? 'active' : ''}", id: "#{course_section.name_url}-tab", data: {toggle: 'tab'}, href: "##{course_section.name_url}", aria: {controls: "#{course_section.name_url}", selected: 'false'}, role: 'tab'}
+                =course_section.name
 
 
-      .row
-        .col-md-8.l-margin-top-big
+          -if @subject_course_resources.any?
+            %li.nav-item
+              %a{href: "#resources", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "resources", selected: 'false'}}
+                ='Resources'
+          -if @products && @products.any?
+            %li.nav-item
+              %a{href: "#products", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "products", selected: 'false'}}
+                ='Products'
 
-          -if @course.tuition_children? || @course.test_children? || @course.revision_children?
-            -if @course.tuition_children?
-              -# First Section for Course Modules for Tuition
-              %p.h4.l-margin-bottom
-                =t('views.general.course_tuition')
-              =render partial: 'library/tuition'
-
-            -if @course.test_children?
-              -# Second Section for Course Modules for Test
-              %br/
-              %p.h4.l-margin-bottom
-                -#=t('views.general.course_test')
-                Additional Content
-              =render partial: 'library/test'
-
-            -if @course.revision_children?
-              -# Third Section for Course Modules for Revision
-              %br/
-              %p.h4.l-margin-bottom
-                =t('views.general.question_bank')
-              =render partial: 'library/revision'
-
-          -else
-            -# Third Section for Course Modules for Revision
-            %br/
-            %p.h4.l-margin-bottom
-              =t('views.general.course_content')
-            =render partial: 'library/all_content'
+          -#%li.nav-item
+            %a#locked-tab.nav-link.locked{"aria-controls" => "locked", "aria-selected" => "false", "data-toggle" => "tab", :href => "#locked", :role => "tab"}
+              Locked
 
 
+.bg-gray5
+  .container.py-5.py-sm-6
+    #coursesTabsContent.tab-content
 
-        .col-md-4
-          =render partial: 'additional_content'
+      - @course.course_sections.all_active.all_in_order.each_with_index do |course_section, counter|
+        .tab-pane{id: course_section.name_url, class: "tab-#{course_section.name_url} #{counter == 0 ? 'active show' : ''} ", "aria-labelledby" => "#{course_section.name_url}-tab", :role => "tabpanel"}
+          .row.row-lg
+            .col-xl-8
+              .mb-5.mb-xl-0
+                - course_section.course_modules.all_active.all_in_order.each_with_index do |course_module, counter|
+                  .card.card-collapse.mb-4
+                    - # TODO add hover text colour change
+                    %a.btn.btn-text.btn-collapse.w-100.text-left{'data-toggle': "collapse", href: "#collapse_#{course_module.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_module.name_url}_#{counter}",id: course_module.id}
+                      .lesson-item.w-100{class: @completed_student_exam_tracks && @completed_course_module_ids.include?(course_module.id) ? 'completed' : ''}
+                        %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
+                          -# if current_user && course_module.all_content_restricted? && !current_user.active_subscription_for_exam_body?(@group.exam_body_id)
+                            lock_outline
+                          -# else
+                          check
+                        .lesson-item-content.pl-3
+                          .d-flex.flex-column.flex-sm-row.align-items-start.align-items-sm-center
+                            %p.lesson-item-text.text-truncate.w-100
+                              =course_module.name
+                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                              %span
+                                -if course_module.cme_count.to_i > 1
+                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                -else
+                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
 
 
-      -if current_user && current_user.enrollment_for_course?(@course.id)
-        .l-margin-top-huge
-          =render partial: 'course_info'
+                    .collapse{id: "collapse_#{course_module.name_url}_#{counter}"}
+                      .card-body
+                        %ul.list-unstyled
+                          -course_module.active_children.each do |cme|
 
-=render partial: 'courses/access_denied_modal'
-=render partial: 'courses/resources_unavailable_modal'
+                            %li.py-2.border-top
+
+                              - if current_user #Logged In User
+                                -if @valid_subscription
+                                  =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                    .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                      %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                        =cme.icon_label
+
+                                      .lesson-item-content.pl-3
+                                        .d-flex.flex-column.flex-sm-row.align-items-start
+                                          %p.lesson-item-text
+                                            =cme.name
+                                          %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                            -if cme.temporary_label && !cme.temporary_label.empty?
+                                              %span=cme.temporary_label
+                                            -else
+                                              %span
+                                                -if cme.is_video && cme.estimated_time_in_seconds
+                                                  =humanize_time(cme.estimated_time_in_seconds)
+                                                -elsif cme.is_quiz
+                                                  -if cme.number_of_questions.to_i > 1
+                                                    =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                  -else
+                                                    =cme.number_of_questions.to_s + ' ' +  'Question'
+
+                                -else
+                                  - permission = cme.available_to_user(current_user, @group.exam_body_id, @subject_course_user_log)
+
+                                  - if permission[:view]
+
+                                    =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                      .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                        %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                          =cme.icon_label
+
+
+                                        .lesson-item-content.pl-3
+                                          .d-flex.flex-column.flex-sm-row.align-items-start
+                                            %p.lesson-item-text
+                                              =cme.name
+                                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                              -if cme.temporary_label && !cme.temporary_label.empty?
+                                                %span=cme.temporary_label
+                                              -else
+                                                %span
+                                                  -if cme.is_video && cme.estimated_time_in_seconds
+                                                    =humanize_time(cme.estimated_time_in_seconds)
+                                                  -elsif cme.is_quiz
+                                                    -if cme.number_of_questions.to_i > 1
+                                                      =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                    -else
+                                                      =cme.number_of_questions.to_s + ' ' +  'Question'
+
+
+                                  - else
+                                    %a.btn.btn-text.py-3.w-100.text-left{data: {target: "##{permission[:reason]}", toggle: 'modal', related: cme.related_course_module_element.try(:name)}, href: '#'}
+                                      .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
+                                        %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                          lock_outline
+                                        .lesson-item-content.pl-3
+                                          .d-flex.flex-column.flex-sm-row.align-items-start
+                                            %p.lesson-item-text
+                                              =cme.name
+                                            %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                              -if cme.temporary_label && !cme.temporary_label.empty?
+                                                %span=cme.temporary_label
+                                              -else
+                                                %span
+                                                  -if cme.is_video && cme.estimated_time_in_seconds
+                                                    =humanize_time(cme.estimated_time_in_seconds)
+                                                  -elsif cme.is_quiz
+                                                    -if cme.number_of_questions.to_i > 1
+                                                      =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                    -else
+                                                      =cme.number_of_questions.to_s + ' ' +  'Question'
+
+                              - else #Anonymous User
+                                %a.btn.btn-text.py-3.w-100.text-left{data: {target: '#account-required', toggle: 'modal', href: '#'}}
+                                  .lesson-item.lesson-item-inner.w-100
+                                    %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
+                                      =cme.icon_label
+
+                                    .lesson-item-content.pl-3
+                                      .d-flex.flex-column.flex-sm-row.align-items-start
+                                        %p.lesson-item-text
+                                          =cme.name
+                                        %small.lesson-item-tag.ml-sm-auto.text-sm-right
+                                          -if cme.temporary_label && !cme.temporary_label.empty?
+                                            %span=cme.temporary_label
+                                          -else
+                                            %span
+                                              -if cme.is_video && cme.estimated_time_in_seconds
+                                                =humanize_time(cme.estimated_time_in_seconds)
+                                              -elsif cme.is_quiz
+                                                -if cme.number_of_questions.to_i > 1
+                                                  =cme.number_of_questions.to_s + ' ' +  t('views.library.show.questions')
+                                                -else
+                                                  =cme.number_of_questions.to_s + ' ' +  'Question'
+
+
+
+            .col-xl-4.mb-5
+              -if current_user && !current_user.valid_subscription_for_exam_body?(@group.exam_body_id)
+                =link_to subscription_checkout_special_link(@course.exam_body_id), class: 'btn btn-primary btn-sm mb-5' do
+                  Upgrade Now
+              -elsif !current_user
+                =link_to new_student_url, class: 'btn btn-primary btn-sm mb-5' do
+                  Register Now
+
+              %aside
+                %a.btn.btn-secondary.btn-sm.mb-5{"data-target" => "#ask-a-tutor-modal", "data-toggle" => "modal", :href => "#"}
+                  Ask the Tutor
+                -#
+                  %h3.mb-4.text-gray2 Course Resources
+                  %ul.list-default
+                    %li
+                      %a.list-default-link{:href => "#"} SBR – ACCA Syllabus
+                    %li
+                      %a.list-default-link{:href => "#"} SBR – Useful Formulas
+                    %li
+                      %a.list-default-link{:href => "#"} Lorem ipsum dolor sit ipsum dolor sit amet dolor sit
+
+
+
+      -if @subject_course_resources.any?
+        .tab-pane.tab-resources{id: 'resources', role: 'tabpanel', 'aria-labelledby': 'resources-tab'}
+          %section.mb-5
+            %h3.text-gray1.mb-4.mb-sm-5 Course Resources
+            .row.row-lg
+              - @subject_course_resources.each do |resource|
+                .col-sm-6
+                  - if current_user
+                    - if @valid_subscription
+                      =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+                        .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                          %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                        .card-body.d-flex.align-items-center.pl-1
+                          %h5.m-0.text-truncate.text-gray2
+                            =resource.name
+
+
+                    - else
+                      - permission = resource.available_to_user(current_user, @group.exam_body_id)
+                      - if  permission[:view]
+                        =link_to course_resource_special_link(resource), class: 'card card-horizontal card-horizontal-sm flex-row', target: '_blank' do
+                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                          .card-body.d-flex.align-items-center.pl-1
+                            %h5.m-0.text-truncate.text-gray2
+                              =resource.name
+
+                      - else
+                        %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: "##{permission[:reason]}", toggle: 'modal'}, href: '#'}
+                          .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                            %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                          .card-body.d-flex.align-items-center.pl-1
+                            %h5.m-0.text-truncate.text-gray2
+                              =resource.name
+
+                  - else
+                    %a.card.card-horizontal.card-horizontal-sm.flex-row{data: {target: '#account-required', toggle: 'modal', href: '#'}}
+                      .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                        %i.budicon-files-download{"aria-label" => "", :role => "img"}
+                      .card-body.d-flex.align-items-center.pl-1
+                        %h5.m-0.text-truncate.text-gray2
+                          =resource.name
+
+
+      -if @products && @products.any?
+        .tab-pane.tab-products{id: 'products', role: 'tabpanel', 'aria-labelledby': 'products-tab'}
+          %section.mb-5
+            %h3.text-gray1.mb-4.mb-sm-5 Exam Preparation Products
+            .row.row-lg
+
+              - @correction_pack_products.each do |product|
+                .col-sm-6
+                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                    .card-body.d-flex.align-items-center.pl-1
+                      %h5.m-0.text-truncate.text-gray2
+                        =product.mock_exam.try(:name)
+
+              - @mock_exam_products.each do |product|
+                .col-sm-6
+                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-horizontal card-horizontal-sm flex-row' do
+                    .card-header.bg-white.d-flex.align-items-center.justify-content-center
+                      %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                    .card-body.d-flex.align-items-center.pl-1
+                      %h5.m-0.text-truncate.text-gray2
+                        =product.mock_exam.try(:name)
+
+
+      -#locked.tab-pane.tab-locked{"aria-labelledby" => "locked-tab", :role => "tabpanel"}
+        %h4.sr-only This is placeholder Locked content
+
+
+
+-# Modals
+=render partial: 'account_required_modal'
+=render partial: 'tutor_contact'
+- if current_user
+  =render partial: 'subscription_restriction_modal'
+  =render partial: 'verification_restriction_modal'
+  =render partial: 'related_lesson_restriction_modal'
+
 
 :javascript
 
-  $('.lib-panel').click(function(){
-    if($(this).is('.radius')){$(this).removeClass('radius'); return;}
-    $(this).addClass('radius').siblings().removeClass('radius');
+  $(document).ready(function(){
+
+    hash = window.location.hash;
+    elements = $('a[href="' + hash + '"]');
+    if (elements.length > 0) {
+      elements.click();
+    } else if (hash) {
+      $(hash).modal('show');
+    }
+
+    let searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has('cm')) {
+      let moduleParam = searchParams.get('cm');
+      let coursePanel = $(".btn.btn-collapse#" + moduleParam + "");
+      coursePanel.click();
+      setTimeout(function() {
+          scrollTop: coursePanel.offset().top;
+      }, 1);
+    } else {
+      // Prevent browser jump to anchor tag
+      if (location.hash) {
+          setTimeout(function() {
+              window.scrollTo(0, 0);
+          }, 1);
+      }
+    }
   });
 
--if current_user && current_user.subscription_user? && (!current_user.student_number || !current_user.date_of_birth)
-  :javascript
-    $(document).ready(function() {
-      var inst = $('[data-remodal-id=user-exam-body-modal]').remodal();
-      inst.open();
-    });
+
+
+-if current_user && current_user.active_subscription_for_exam_body?(@group.exam_body_id)
+  -if @new_enrollment && @subject_course_user_log && @subject_course_user_log.count_of_cmes_completed >= 3
+    :javascript
+      $(document).ready(function() {
+        setTimeout(function() {
+          $('#enrollment-modal').modal('show');
+        }, 900);
+      });
+

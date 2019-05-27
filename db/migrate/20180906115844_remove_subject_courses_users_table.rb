@@ -1,4 +1,4 @@
-class RemoveSubjectCoursesUsersTable < ActiveRecord::Migration
+class RemoveSubjectCoursesUsersTable < ActiveRecord::Migration[4.2]
   def change
     drop_table :subject_courses_users
     remove_column :users, :trial_ended_notification_sent_at, :datetime

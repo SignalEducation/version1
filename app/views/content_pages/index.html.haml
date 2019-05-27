@@ -1,43 +1,41 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          %h1.l-margin-bottom.l-margin-top.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-            =t('views.content_pages.index.h1')
+.container
+  %header.management-console-section
+    %h1
+      =t('views.content_pages.index.h1')
 
+  %section.pb-7
+    =render partial: 'management_consoles/public_resources_nav'
 
-      .row.l-margin-top.l-margin-bottom
-        .col-md-12
-          =render partial: 'management_consoles/public_resources_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col
+              =link_to 'New Content Page', new_content_page_url, class: 'btn btn-primary btn-xs'
 
-      .row
-        .col-sm-12
-          =link_to 'New Content Page', new_content_page_url, class: 'btn btn-red', title: t('views.general.new_tooltip')
+              =link_to 'New Bootcamp Page', new_content_page_url(bootcamp_page: true), class: 'btn btn-secondary btn-xs'
 
-      .row
-        .col-md-12.l-margin-top
-          .corporate-box-item.table-box
-            .table-responsive
-              %table.table.sorted_table{style: 'font-size: 18px;'}
-                %thead
-                  %tr
-                    %th=t('views.content_pages.form.name')
-                    %th=t('views.content_pages.form.public_url')
-                    %th=t('views.content_pages.form.active')
-                    %th
-                    %th
-                    %th
-                %tbody
-                  -@content_pages.each do |content_page|
-                    %tr{id: content_page.id}
-                      %td=content_page.name
-                      %td=content_page.public_url
-                      %td=tick_or_cross(content_page.active)
-                      %td
-                        -unless content_page.active
-                          =link_to 'Activate', new_content_activation_url(type: content_page.class, id: content_page.id), class: 'btn btn-green btn-small'
-                      %td=link_to t('views.general.view'), footer_content_page_url(content_page.public_url), class: 'btn btn-purple btn-small', target: '_blank'
-                      %td=link_to t('views.general.edit'), edit_content_page_url(content_page), class: 'btn btn-cyan btn-small'
-                      -if content_page.destroyable?
-                        %td=link_to t('views.general.delete'), content_page, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-red btn-small'
+          .table-responsive.pt-4
+            %table.table.sorted_table
+              %thead
+                %tr
+                  %th=t('views.content_pages.form.name')
+                  %th=t('views.content_pages.form.public_url')
+                  %th=t('views.content_pages.form.active')
+                  %th
+                  %th
+                  %th
+                  %th
+              %tbody
+                -@content_pages.each do |content_page|
+                  %tr{id: content_page.id}
+                    %td=content_page.name
+                    %td=content_page.public_url
+                    %td=tick_or_cross(content_page.active)
+                    %td
+                      -unless content_page.active
+                        =link_to 'Activate', new_content_activation_url(type: content_page.class, id: content_page.id), class: 'btn btn-green btn-xs'
+                    %td=link_to t('views.general.view'), footer_content_page_url(content_page.public_url), class: 'btn btn-secondary btn-xs', target: '_blank'
+                    %td=link_to t('views.general.edit'), edit_content_page_url(content_page), class: 'btn btn-primary btn-xs'
+                    -if content_page.destroyable?
+                      %td=link_to t('views.general.delete'), content_page, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'

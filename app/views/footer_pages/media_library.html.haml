@@ -1,31 +1,83 @@
-=render partial: 'layouts/external_banner'
-.hero-library
-  .l-wrap-small
-    =render partial: 'layouts/transparent_navbar'
-    .l-section-footer-pages
-      .container-fluid
-        .row
-          .col-md-8.col-md-offset-2
-            %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
-              ACCA LearnSignal Mock Exams
-            %p.h5.h-white.text-center.l-margin-bottom-big
-              Passing is worth it
--if flash[:success] || flash[:error] || flash[:warning]
-  =render partial: 'layouts/flash_messages'
+%main
+  %article.bg-white
+    .container
+      %header.hero-section
+        %h1.h1-hero.mb-3
+          Exam Preparation Products
+        %p.p-hero.px-lg-6
+          Invest in your ACCA exam success today with our question and solution correction packs and mock exams.
 
--if @products.any?
 
-  .l-section-small.is-bg-asphalt
-    .l-wrap
-      .container-fluid
-        .col-md-12
-          -@products.each do |product|
-            .col-xs-12.col-sm-6.col-md-4
-              =link_to new_order_url(product), class: 'product-box' do
-                .product-box-title
-                  =product.mock_exam.try(:name)
-                .product-box-inner
-                  =image_tag product.mock_exam.try(:cover_image).try(:url), class: 'media-pic'
-                .product-box-label
-                  ='Buy Now'
 
+      %nav.products-nav.mt-6
+        %ul.nav.nav-tabs{id: 'productsTabs', role: 'tablist'}
+
+          -if @products.any?
+            %li.nav-item
+              %a{href: "#mocks", role: 'tab', class: 'active nav-link', data: {toggle: 'tab'}, aria: {controls: "mocks", selected: 'true'}}
+                ='Mock Exams'
+          -if @questions.any?
+            %li.nav-item
+              %a{href: "#questions", role: 'tab', class: 'nav-link', data: {toggle: 'tab'}, aria: {controls: "questions", selected: 'false'}}
+                ='Correction Packs'
+
+
+
+.bg-gray5
+  .container.py-5.py-sm-6
+    #productsTabsContent.tab-content
+
+      -if @products.any?
+        .tab-pane.tab-mocks.active.show{id: 'mocks', role: 'tabpanel', 'aria-labelledby': 'mocks-tab'}
+          %section.mb-5
+            %p.mb-4.mb-sm-5 Complete your ACCA Mock Exam. Once submitted we will give you a solution paper, your result, question by question personalised feedback on your exam, and study topic recommendations.
+            .row.row-lg
+              -@products.each do |product|
+                .col-xs-12.col-sm-6.col-md-4
+                  =link_to product_checkout_special_link(product.mock_exam.subject_course.group.exam_body.id, product.id), class: 'card card-link text-center mb-5' do
+                    .py-4
+                      %h4.text-ellipsis.mb-4
+                        =product.mock_exam.try(:name)
+                      .pt-2
+                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                      %p.h6.text-ellipsis.pt-4
+                        =number_in_local_currency(product.price, product.currency_id)
+                      .pt-2
+                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+
+
+      -if @questions.any?
+        .tab-pane.tab-questions{id: 'questions', role: 'tabpanel', 'aria-labelledby': 'questions-tab'}
+          %section.mb-5
+            %p.mb-4.mb-sm-5 These correction packs are applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.
+            .row.row-lg
+              -@questions.each do |question|
+                .col-xs-12.col-sm-6.col-md-4
+                  =link_to product_checkout_special_link(question.mock_exam.subject_course.group.exam_body.id, question.id), class: 'card card-link text-center mb-5' do
+                    .py-4
+                      %h4.text-ellipsis.mb-4
+                        =question.mock_exam.try(:name)
+                      .pt-2
+                        %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                      %p.h6.text-ellipsis.pt-4
+                        =number_in_local_currency(question.price, question.currency_id)
+                      .pt-2
+                        %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
+
+
+:javascript
+
+  $(document).ready(function(){
+
+    hash = window.location.hash;
+    elements = $('a[href="' + hash + '"]');
+    if (elements.length > 0) {
+      elements.click();
+    }
+    if (location.hash) {
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    }
+
+  });

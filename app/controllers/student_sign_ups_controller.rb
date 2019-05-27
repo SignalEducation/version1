@@ -2,20 +2,16 @@ class StudentSignUpsController < ApplicationController
 
   before_action :check_logged_in_status, except: [:landing, :subscribe]
   before_action :get_variables
-  before_action :create_user_object, only: [:home, :new]
+  before_action :create_user_object, only: [:new, :sign_in_or_register, :landing]
+  before_action :create_user_session_object, only: [:sign_in_or_register, :landing]
   before_action :layout_variables, only: [:home, :landing]
 
   def home
-
+    @footer = 'white'
     @home_page = HomePage.where(home: true).where(public_url: '/').first
-    if @home_page
-      @group = @home_page.group
-      @banner = @home_page.external_banners.first
-      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
-    else
-      @group = Group.all_active.all_in_order.first
-    end
-    @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+    #@banner = @home_page.external_banners.first
+    seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
+    @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
 
     #Added respond block to stop the missing template errors with image, text, json types
@@ -30,30 +26,95 @@ class StudentSignUpsController < ApplicationController
     if @home_page
       @public_url = params[:public_url]
       @group = @home_page.group
-      @subject_course = @home_page.subject_course
-      @banner = @home_page.external_banners.first
+      @exam_body = @group.exam_body
 
       if current_user
         ip_country = IpAddress.get_country(request.remote_ip)
         country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
         @currency_id = country.currency_id
-      else
-        create_user_object
       end
 
-      @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).for_students.in_currency(@currency_id).all_active.all_in_order.limit(3)
+      if @home_page.subscription_plan_category && @home_page.subscription_plan_category.current
+        @subscription_plans = @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
+      else
+        @subscription_plans = SubscriptionPlan.where(
+            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+        ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+      end
+      @preferred_plan = @subscription_plans.where(payment_frequency_in_months: @home_page.preferred_payment_frequency).first
+      flash[:plan_guid] = @preferred_plan.guid if @preferred_plan
+      flash[:exam_body] = @exam_body.id if @exam_body
 
       referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
       # This is for sticky sub plans
-      cookies.encrypted[:latest_subscription_plan_category_guid] = {value: @home_page.subscription_plan_category.try(:guid), httponly: true}
 
-      seo_title_maker(@home_page.seo_title, @home_page.seo_description, false)
+      seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
     else
       redirect_to root_url
     end
-
+    @footer = 'white'
     @form_type = 'Landing Page Contact'
+  end
+
+  def sign_in_or_register
+    @plan = SubscriptionPlan.where(guid: params[:plan_guid]).last
+    @product = Product.where(id: params[:product_id]).last
+    @exam_body = ExamBody.where(id: params[:exam_body_id]).last
+    flash[:plan_guid] = @plan.guid if @plan
+    flash[:exam_body] = @exam_body.id if @exam_body
+    flash[:product_id] = @product.id if @product
+  end
+
+  def new
+    @navbar = true
+    seo_title_maker('Free Basic Plan Registration | LearnSignal',
+                    'Register for our basic membership plan to access your essential course materials and discover the smarter way to study with learnsignal.',
+                    false)
+
+  end
+
+  def create
+    @navbar = false
+    @footer = false
+
+    @user = User.new(
+      student_allowed_params.merge(
+        user_group: UserGroup.student_group,
+        country: IpAddress.get_country(request.remote_ip, true)
+      )
+    )
+    @user.pre_creation_setup
+
+    if @user.valid? && @user.save
+      handle_post_user_creation(@user)
+      handle_course_enrollment(@user, params[:subject_course_id]) if params[:subject_course_id]
+
+      if flash[:plan_guid]
+        UserSession.create(@user)
+        set_current_visit
+        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+      elsif flash[:product_id]
+        UserSession.create(@user)
+        set_current_visit
+        redirect_to new_order_url(product_id: flash[:product_id])
+      else
+        redirect_to personal_sign_up_complete_url
+      end
+
+    elsif request && request.referrer
+      set_session_errors(@user)
+      redirect_to request.referrer
+    else
+      redirect_to root_url
+    end
+  end
+
+  def show
+    @banner = nil
+    seo_title_maker('Thank You for Registering | LearnSignal',
+                    "Thank you for registering to our basic membership plan you can now explore our course content and discover the smarter way to study with learnsignal.",
+                    false)
   end
 
   def subscribe
@@ -116,83 +177,13 @@ class StudentSignUpsController < ApplicationController
     end
   end
 
-  def new
-    @navbar = true
-  end
-
-  def create
-    @navbar = false
-    @footer = false
-
-    @user = User.new(student_allowed_params)
-    student_user_group = UserGroup.where(student_user: true, trial_or_sub_required: true).first
-    @user.user_group_id = student_user_group.try(:id)
-    ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    time_now = Proc.new{Time.now}.call
-    @user.communication_approval_datetime = time_now if @user.communication_approval
-    @user.account_activation_code = SecureRandom.hex(10)
-    @user.email_verification_code = SecureRandom.hex(10)
-    @user.password_confirmation = @user.password
-
-    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i, trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
-
-    # Checks for SubscriptionPlanCategory cookie to see if the user should get specific subscription plans instead of the general plans
-    if cookies.encrypted[:latest_subscription_plan_category_guid]
-      subscription_plan_category = SubscriptionPlanCategory.where(guid: cookies.encrypted[:latest_subscription_plan_category_guid]).first
-      @user.subscription_plan_category_id = subscription_plan_category.try(:id)
-      @user.student_access.trial_days_limit = subscription_plan_category.trial_period_in_days.to_i
-    end
-
-    if @user.valid? && @user.save
-      # Create the customer object on stripe
-      stripe_customer = Stripe::Customer.create(
-          email: @user.try(:email)
-      )
-      @user.update_attribute(:stripe_customer_id, stripe_customer.id)
-      @user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
-
-      # Send User Activation email through Mandrill
-      MandrillWorker.perform_async(@user.id, 'send_verification_email', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
-
-      # Checks for our referral cookie in the users browser and creates a ReferredSignUp associated with this user
-      if cookies.encrypted[:referral_data]
-        code, referrer_url = cookies.encrypted[:referral_data].split(';')
-        if code
-          referral_code = ReferralCode.find_by_code(code)
-          @user.create_referred_signup(referral_code_id: referral_code.id, referrer_url: referrer_url) if referral_code
-          cookies.delete(:referral_data)
-        end
-      end
-      redirect_to personal_sign_up_complete_url(@user.account_activation_code)
-    elsif request && request.referrer
-      session[:sign_up_errors] = @user.errors unless @user.errors.empty?
-      session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.terms_and_conditions] unless @user.errors.empty?
-      redirect_to request.referrer
-    else
-      redirect_to root_url
-    end
-  end
-
-  def show
-    #This is the post sign-up landing page - personal_sign_up_complete
-    #If no user is found redirect - because analytics counts loading of
-    # this page as new sign ups so we only want it to load once for each sign up
-    @user = User.get_and_activate(params[:account_activation_code])
-    @banner = nil
-    redirect_to sign_in_url unless @user
-  end
-
-  protected
+  private
 
   def student_allowed_params
     params.require(:user).permit(
-        :email, :first_name, :last_name,
-        :country_id, :locale,
-        :password, :password_confirmation,
-        :terms_and_conditions,
-        :communication_approval
+      :email, :first_name, :last_name, :preferred_exam_body_id, :country_id, 
+      :locale, :password, :password_confirmation, :terms_and_conditions,
+      :communication_approval
     )
   end
 
@@ -201,8 +192,10 @@ class StudentSignUpsController < ApplicationController
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
     ip_country = IpAddress.get_country(request.remote_ip)
     @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @user.country_id = @country.id
-    @currency_id = @country.currency_id
+    if @country
+      @user.country_id = @country.id
+      @currency_id = @country.currency_id
+    end
     #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home or landing actions
     if session[:sign_up_errors] && session[:valid_params]
       session[:sign_up_errors].each do |k, v|
@@ -212,8 +205,23 @@ class StudentSignUpsController < ApplicationController
       @user.last_name = session[:valid_params][1]
       @user.email = session[:valid_params][2]
       @user.terms_and_conditions = session[:valid_params][3]
+      @user.preferred_exam_body_id = session[:valid_params][4]
       session.delete(:sign_up_errors)
       session.delete(:valid_params)
+    end
+  end
+
+  def create_user_session_object
+    @user_session = UserSession.new
+    #To allow displaying of user_session_errors
+    if session[:login_errors] && session[:valid_user_session_params]
+      session[:login_errors].each do |k, v|
+        v.each { |err| @user_session.errors.add(k, err) }
+      end
+      @user_session.email = session[:valid_user_session_params][0]
+      @user_session.password = session[:valid_user_session_params][1]
+      session.delete(:login_errors)
+      session.delete(:valid_user_session_params)
     end
   end
 
@@ -235,4 +243,29 @@ class StudentSignUpsController < ApplicationController
     @footer = true
   end
 
+  def handle_post_user_creation(user)
+    user.set_analytics(cookies[:_ga])
+    user.activate_user
+    user.create_stripe_customer
+    user.send_verification_email(
+      user_verification_url(email_verification_code: user.email_verification_code)
+    )
+    user.validate_referral(cookies.encrypted[:referral_data])
+    cookies.delete(:referral_data)
+  end
+
+  def handle_course_enrollment(user, subject_course_id)
+    Enrollment.create_on_register_login(user, subject_course_id)
+  end
+
+  def set_session_errors(user)
+    session[:sign_up_errors] = user.errors unless user.errors.empty?
+    session[:valid_params] = [
+      user.first_name,
+      user.last_name,
+      user.email,
+      user.terms_and_conditions,
+      user.preferred_exam_body_id
+    ] unless user.errors.empty?
+  end
 end

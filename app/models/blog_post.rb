@@ -17,16 +17,11 @@
 #
 
 class BlogPost < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :home_page_id, :sorting_order, :title, :description, :url,
-                  :_destroy, :image
-
   # Constants
 
   # relationships
   belongs_to :home_page
-  has_attached_file :image, default_url: "images/home_explore2.jpg"
+  has_attached_file :image, default_url: 'images/missing_image.jpg'
 
   # validation
   validates :home_page_id, presence: true,

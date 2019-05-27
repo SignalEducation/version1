@@ -5,9 +5,9 @@ class DashboardController < ApplicationController
 
 
   def show
-    @default_group = Group.all_active.all_in_order.first
+    @default_group = current_user&.preferred_exam_body&.group || Group.all_active.all_active.first
     @enrollments = current_user.valid_enrollments_in_sitting_order
-    @expired_enrollments = current_user.expired_enrollments_in_sitting_order
+    @sculs = current_user.subject_course_user_logs.includes(:enrollments).where(enrollments: { id: nil })
   end
 
 
@@ -16,14 +16,6 @@ class DashboardController < ApplicationController
 
   def get_variables
     @courses = SubjectCourse.all_active.all_in_order
-    logs = SubjectCourseUserLog.where(user_id: current_user.id).all_in_order
-    @all_active_logs = logs.where('percentage_complete < ?', 100)
-    @first_active_log = @all_active_logs.first
-    active_logs_ids = @all_active_logs.all.map(&:subject_course_id)
-    @completed_logs = logs.where('percentage_complete > ?', 99)
-    completed_logs_ids = @completed_logs.all.map(&:subject_course_id)
-    @incomplete_courses = @courses.where(id: active_logs_ids)
-    @completed_courses = @courses.where(id: completed_logs_ids)
     seo_title_maker('Dashboard', 'Progress through all your courses will be recorded here.', false)
   end
 

@@ -1,0 +1,41 @@
+=form_for(@user_session, html: {style: 'min-height: 600px;'}) do |f|
+
+  .bg-white.p-3.px-sm-5.pt-sm-4
+    .py-3
+      -if @home_page && @home_page.login_form_heading && !@home_page.login_form_heading.empty?
+        =@home_page.login_form_heading
+
+      =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+
+      %fieldset.py-3
+        %legend.sr-only
+          Log in Details
+
+        .row
+          -if @home_page && @home_page.custom_file_name == 'bootcamp.html.haml'
+            .col-sm-12
+              .form-group
+                %label{:for => "subject_course_id"} Course Selection
+                .input-group.input-group-lg
+                  =select_tag "subject_course_id", options_from_collection_for_select(@home_page.group.subject_courses.all_standard.all_active.all_in_order, "id", "name"), include_blank: 'Course Selection', class: 'form-control custom-select', id: 'subject_course_id', required: true
+
+          .col-sm-12
+            .form-group
+              =f.label :email, t('views.user_sessions.form.email')
+              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
+
+          .col-sm-12
+            .form-group
+              =f.label :password, t('views.user_sessions.form.password')
+              =f.password_field :password, placeholder: 'Enter your password', class: 'form-control'
+
+
+      .d-flex.justify-content-between.align-items-center.pt-3
+        =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm mb-4'
+
+
+        .logo-acca
+          -if @home_page && @home_page.logo_image && @home_page.logo_image.present?
+            =#image_tag(@home_page.logo_image, class: 'logo-acca', alt: 'Logo')
+            =image_tag('learning-partner-badge.png', alt: 'Logo')
+

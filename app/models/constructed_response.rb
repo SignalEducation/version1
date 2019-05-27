@@ -11,10 +11,6 @@
 #
 
 class ConstructedResponse < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :course_module_element_id, :scenario_attributes
-
   # Constants
 
   # relationships

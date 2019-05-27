@@ -19,19 +19,12 @@
 #  trial_or_sub_required        :boolean          default(FALSE)
 #  blocked_user                 :boolean          default(FALSE)
 #  marketing_resources_access   :boolean          default(FALSE)
+#  exercise_corrections_access  :boolean          default(FALSE)
 #
 
 class UserGroup < ActiveRecord::Base
-
   include LearnSignalModelExtras
 
-  # attr-accessible
-  attr_accessible :name, :description, :system_requirements_access,
-                  :content_management_access, :stripe_management_access,
-                  :user_management_access, :developer_access,
-                  :marketing_resources_access, :user_group_management_access,
-                  :student_user, :trial_or_sub_required, :blocked_user,
-                  :tutor
   # Constants
 
   # relationships
@@ -53,11 +46,12 @@ class UserGroup < ActiveRecord::Base
 
   # class methods
 
+  def self.student_group
+    self.where(student_user: true, trial_or_sub_required: true).first
+  end
+
   # instance methods
   def destroyable?
     self.users.empty?
   end
-
-  protected
-
 end
