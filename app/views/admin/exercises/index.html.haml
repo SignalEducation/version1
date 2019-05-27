@@ -12,9 +12,19 @@
           =link_to 'Correcting in Progress', admin_exercises_path(state: :correcting)
         %li{style: 'margin-left: 4%; margin-right: 4%;'}
           =link_to 'Returned Exercises', admin_exercises_path(state: :returned)
+        %li{style: 'margin-left: 4%; margin-right: 4%;'}
+          =link_to 'All Exercises', admin_exercises_path(state: :all)
+
     .row
       .col-sm-12
         .box-item.table-box
+          .row
+            .col-sm
+              .search-container.float-right
+                =form_tag(admin_exercises_url, role: 'form', class: 'form-inline', method: :get) do
+                  =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
           .table-responsive.pt-4
             =will_paginate @exercises, renderer: BootstrapPagination::Rails
             %table.table

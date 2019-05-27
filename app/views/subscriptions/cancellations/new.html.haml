@@ -34,9 +34,6 @@
                 .row.mt-4
                   .col-sm-4
                     =link_to t('views.users.show.keep_subscription'), account_url(anchor: 'account-info'), class: 'btn btn-primary btn-sm'
-                  -#.col-sm-4
-                    %button.btn.btn-warning.btn-sm{id: 'confirmPauseBtn', "data-target" => "#confirm-pause-modal", "data-toggle" => "modal", "data-sub" => @subscription.id}
-                      Pause Subscription
 
                   .col-sm-4
                     =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm', data: { disable_with: false }
@@ -44,7 +41,3 @@
                   .col-sm-12.mt-3
                     %p
                       = account_cancellation_message(@subscription)
-
-
-
-=render partial: 'subscriptions/confirm_pause_modal'

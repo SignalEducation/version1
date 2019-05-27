@@ -204,7 +204,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def immediate_cancel
-    if self.stripe_customer_id && self.stripe_guid
+    if self.stripe? && self.stripe_customer_id && self.stripe_guid
       # call stripe and cancel the subscription
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
@@ -218,6 +218,8 @@ class Subscription < ActiveRecord::Base
       end
       # return true or false - if everything went well
       errors.messages.count == 0
+    elsif self.paypal?
+      # 
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end
@@ -396,6 +398,10 @@ class Subscription < ActiveRecord::Base
 
   def user_readable_name
     subscription_plan.exam_body.name + ' ' + subscription_plan.interval_name + ' Subscription'
+  end
+
+  def paypal?
+    paypal_subscription_guid.present?
   end
 
   def stripe?

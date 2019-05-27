@@ -32,8 +32,8 @@ class SubscriptionsController < ApplicationController
     ensure_user_has_access_rights(%w(student_user))
   end
   before_action :get_subscription, except: [:new, :create]
-  before_action :check_subscriptions, only: [:new, :create]
   before_action :set_flash, only: :new
+  
 
   def show
     @subscription = Subscription.find(params[:id])
@@ -41,32 +41,62 @@ class SubscriptionsController < ApplicationController
   end
 
   def new
-    if !current_user.preferred_exam_body.present? && !params[:exam_body_id]
-      redirect_to edit_preferred_exam_body_path
-    elsif current_user.standard_student_user?
-      @plans, country = get_relevant_subscription_plans
-      @yearly_plan = @plans.yearly.first
-      if params[:prioritise_plan_frequency].present?
-        @subscription = Subscription.new(
-          user_id: current_user.id,
-          subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
-        )
-      elsif params[:plan_guid].present?
-        @subscription = Subscription.new(
-          user_id: current_user.id,
-          subscription_plan_id: @plans.map(&:guid).include?(params[:plan_guid]) ? @plans.where(guid: params[:plan_guid].to_s).first.id : @plans.last.id
-        )
-      else
-        @subscription = Subscription.new(
-          user_id: current_user.id,
-          subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
-        )
-      end
-      #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
-      seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
+    #redirect_to already_subscribed_url
+
+    if ExamBody.exists?(params[:exam_body_id]) 
+      current_user.preferred_exam_body.present?
     else
-      redirect_to root_url
+      redirect_to edit_preferred_exam_body_path
+      return
     end
+
+    if current_user.active_subscriptions_for_exam_body(params[:exam_body_id])
+      if current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).count > 0
+
+        other_plans = SubscriptionPlan.get_related_plans(current_user, 
+          current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).last.currency, params[:exam_body_id], 
+          current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).last.subscription_plan.guid 
+          )
+        if other_plans.count  <= 1
+         flash[:warning] = 'No other plans exist'
+         redirect_to account_url         
+        else
+          redirect_to new_subscriptions_plan_change_url(id: current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).first.id)
+        end
+      end
+    end
+
+      if !current_user.preferred_exam_body.present? && !params[:exam_body_id] && ExamBody.exists?(params[:exam_body_id]) 
+        #redirect_to already_subscribed_url
+  
+
+        redirect_to edit_preferred_exam_body_path
+      elsif current_user.standard_student_user?
+        @plans, country = get_relevant_subscription_plans
+        @yearly_plan = @plans.yearly.first
+        
+        if params[:prioritise_plan_frequency].present?
+          @subscription = Subscription.new(
+            user_id: current_user.id,
+            subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
+          )
+        elsif params[:plan_guid].present?
+          @subscription = Subscription.new(
+            user_id: current_user.id,
+            subscription_plan_id: @plans.map(&:guid).include?(params[:plan_guid]) ? @plans.where(guid: params[:plan_guid].to_s).first.id : @plans.last.id
+          )
+        else
+          @subscription = Subscription.new(
+            user_id: current_user.id,
+            subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
+          )
+        end
+        #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
+        seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
+      else
+        redirect_to root_url
+      end
+    
   end
 
   def create
@@ -198,12 +228,7 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.find_by_id(params[:id])
   end
 
-  def check_subscriptions
-    # if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
-    #   redirect_to account_url(anchor: :subscriptions)
-    # elsif current_user && !current_user.trial_or_sub_user?
-    #   redirect_to root_url
-    # end
+  def already_subscribed
   end
 
 end

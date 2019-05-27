@@ -83,11 +83,12 @@
 
 
             .col-sm-3
-              -if @subscription.active_status? || @subscription.past_due_status?
+              -if %w(active errored).include?(@subscription.state)
                 =link_to subscription_management_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to cancel subscription?'} do
                   .btn.btn-primary.mb-3
                     =t('views.users.user_subscription_status.subscription_info.cancel_at_billing_end')
 
+              -if %w(active pending_cancellation errored).include?(@subscription.state)
                 =link_to subscription_management_immediate_cancel_url(@subscription), method: :put, data: {confirm: 'Are you sure you want to immediately cancel this subscription?'} do
                   .btn.btn-secondary.mb-3
                     =t('views.users.user_subscription_status.subscription_info.cancel_immediately')
