@@ -11,7 +11,7 @@ class UserAccountsController < ApplicationController
 
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_payment_card = @subscription_payment_cards.all_default_cards.first
-    @subscriptions = @user.subscriptions.all_active.order(created_at: :desc)
+    @subscriptions = @user.subscriptions.where(active: true).order(created_at: :desc)
 
     @invoices = @user.invoices
     @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)

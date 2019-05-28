@@ -83,10 +83,20 @@ class Enrollment < ActiveRecord::Base
     subject_course = SubjectCourse.where(id: subject_course_id).first
     exam_sitting = subject_course.exam_sittings.all_active.all_in_order.first
     if subject_course&.active && exam_sitting
-      Enrollment.create!(user_id: user.id, active: true, subject_course_id: subject_course.id,
-                         exam_sitting_id: exam_sitting.id,
-                         exam_body_id: subject_course.exam_body_id, notifications: true)
+      existing_enrollment = user.enrollments.where(exam_sitting_id: exam_sitting).all_active.all_not_expired.last
+      if existing_enrollment
+        enrollment = existing_enrollment.update_attribute(:notifications, true)
+        message = "Thank you. You have successfully registered for the #{existing_enrollment&.subject_course&.name} Bootcamp"
+      else
+        enrollment = Enrollment.create!(user_id: user.id, active: true, subject_course_id: subject_course.id,
+                           exam_sitting_id: exam_sitting.id,
+                           exam_body_id: subject_course.exam_body_id, notifications: true)
+        message = "Thank you. You have successfully enrolled in #{enrollment&.subject_course&.name} and opted into Bootcamp"
+      end
+    else
+      message = "Sorry! Bootcamp is not currently available #{'for ' + subject_course&.name}"
     end
+    return enrollment, message
   end
 
   # instance methods
