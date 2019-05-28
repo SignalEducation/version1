@@ -6,8 +6,11 @@ default: &default
 
 development:
   <<: *default
-  host: localhost
-  database: db/learnsignal_development
+  adapter: <%= ENV['DB_ADAPTER'] %>
+  host: <%= ENV['DB_HOSTNAME'] %>
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
+  database: <%= ENV['DB_NAME'] %>
 
 test:
   <<: *default
