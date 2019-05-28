@@ -8,14 +8,14 @@
         .well.well-sm
           .form-group
             =label_tag :text_content, t('views.quiz_questions.form.question_text'), class: 'control-label col-sm-2'
-            .col-sm-10.question_contents
+            .col-sm-12.question_contents
               =f.fields_for :quiz_contents do |c|
                 .question_content_block
                   =render partial: 'quiz_contents/fields_for', locals: {qc: c, the_type: 'question'}
 
           .form-group
             =label_tag :quiz_question_quiz_solutions_attributes_0_text_content, t('views.quiz_questions.form.solution_to_the_question'), class: 'control-label col-sm-2'
-            .col-sm-10.solution_contents
+            .col-sm-12.solution_contents
               =f.fields_for :quiz_solutions do |solution|
                 .solution_content_block
                   =render partial: 'quiz_contents/fields_for', locals: {qc: solution, the_type: 'solution'}

@@ -19,7 +19,7 @@ class UserSessionsController < ApplicationController
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token
       set_current_visit
-      handle_course_enrollment(@user_session.user, params[:subject_course_id]) if params[:subject_course_id]
+      enrollment, flash_message = handle_course_enrollment(@user_session.user, params[:subject_course_id]) if params[:subject_course_id] && !params[:subject_course_id].blank?
       flash[:error] = nil
       if flash[:plan_guid]
         redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
@@ -28,6 +28,7 @@ class UserSessionsController < ApplicationController
       elsif session[:return_to]
         redirect_back_or_default(student_dashboard_url)
       elsif params[:subject_course_id]
+        enrollment ? flash[:success] = flash_message : flash[:error] = flash_message
         redirect_to course_enrollment_special_link(params[:subject_course_id])
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }

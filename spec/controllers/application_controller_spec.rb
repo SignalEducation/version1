@@ -15,15 +15,15 @@ describe ApplicationController, type: :controller do
     end
 
     def index
-      render text: 'Hello'
+      render :json=>'{}'
     end
   end
 
-  describe 'handling logged_in_required before_action as a student_user' do
+  describe 'handling logged_in_required before_action as a basic_student' do
 
     it 'should allow access' do
       activate_authlogic
-      UserSession.create!(valid_trial_student)
+      UserSession.create!(basic_student)
       access_list = %w(student_user)
       get :index
       expect(flash[:success]).to be_nil
@@ -34,27 +34,6 @@ describe ApplicationController, type: :controller do
     it 'should redirect with ERROR not signed in' do
       get :index
       expect_bounce_as_not_signed_in
-    end
-  end
-
-  describe 'handling access_rights before_action as a student_user' do
-    before(:each) do
-      activate_authlogic
-      UserSession.create!(valid_trial_student)
-    end
-
-    it 'should allow access' do
-      access_list = %w(student_user)
-      get :index
-      expect(flash[:success]).to be_nil
-      expect(flash[:error]).to be_nil
-      expect(response.status).to eq(200)
-    end
-
-    it 'should redirect with ERROR not permitted' do
-      access_list = %w()
-      get :index
-      expect_bounce_as_not_allowed
     end
   end
 

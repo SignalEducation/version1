@@ -170,3 +170,17 @@
       }
     });
 
+
+:javascript
+  dataLayer = [];
+  let sittings = "#{@exam_sittings.to_json}";
+
+  $('#new_enrollment').submit(function() {
+    var values = {};
+    $.each($('#new_enrollment').serializeArray(), function(i, field) {
+      values[field.name] = field.value;
+    });
+    let course = "#{@course.name}";
+    dataLayer.push({'event':'courseEnrol', 'course_name':course, 'exam_sitting':values["enrollment[exam_sitting_id]"], 'bootcamp_notifications':values["enrollment[notifications]"]});
+  });
+

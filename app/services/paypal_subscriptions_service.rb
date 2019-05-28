@@ -39,31 +39,6 @@ class PaypalSubscriptionsService
     raise Learnsignal::SubscriptionError.new('Paypal is currently not responding. Please try again.')
   end
 
-  def suspend_billing_agreement
-    agreement = Agreement.find(@subscription.paypal_subscription_guid)
-    state_descriptor = AgreementStateDescriptor.new(note: 'Pausing the subscription')
-    if agreement.suspend(state_descriptor)
-      updated_agreement = Agreement.find(@subscription.paypal_subscription_guid)
-      @subscription.update!(paypal_status: updated_agreement.state)
-      @subscription.pause
-    else
-      Rails.logger.error "DEBUG: Subscription#pause Failure to suspend BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
-      raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong pausing your subscription with PayPal. Please contact us for assistance.')
-    end
-  end
-
-  def reactivate_billing_agreement
-    agreement = Agreement.find(@subscription.paypal_subscription_guid)
-    state_descriptor = AgreementStateDescriptor.new(note: 'Re-activating the subscription')
-    if agreement.re_activate(state_descriptor)
-      @subscription.update!(paypal_status: agreement.state)
-      @subscription.restart
-    else
-      Rails.logger.error "DEBUG: Subscription#re-activate Failure to re-activate BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
-      raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong while re-activating your subscription with PayPal. Please contact us for assistance.')
-    end
-  end
-
   def cancel_billing_agreement(note: 'User cancelling the agreement')
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     state_descriptor = AgreementStateDescriptor.new(note: note)
@@ -73,6 +48,18 @@ class PaypalSubscriptionsService
     else
       Rails.logger.error "DEBUG: Subscription#cancel Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong cancelling your subscription with PayPal. Please contact us for assistance.')
+    end
+  end
+
+  def cancel_billing_agreement_immediately
+    agreement = Agreement.find(@subscription.paypal_subscription_guid)
+    state_descriptor = AgreementStateDescriptor.new(note: 'Cancelling immediately')
+    if agreement.cancel(state_descriptor)
+      @subscription.update!(paypal_status: agreement.state)
+      @subscription.cancel
+    else
+      Rails.logger.error "DEBUG: Subscription#cancel_immediately Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
+      raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong cancelling the subscription with PayPal.')
     end
   end
 
@@ -150,7 +137,7 @@ class PaypalSubscriptionsService
     {
       name: subscription_plan.name,
       description: subscription_plan.description.gsub("\n", ""),
-      start_date: (start_date.nil? ? subscription_start_date(subscription_plan) : start_date.iso8601),
+      start_date: (start_date.nil? ? subscription_start_date(subscription_plan) : start_date),
       payer: {
         payment_method: "paypal",
         payer_info: {

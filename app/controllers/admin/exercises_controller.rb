@@ -9,9 +9,13 @@ class Admin::ExercisesController < ApplicationController
 
   def index
     states = params[:state].present? ? [params[:state]] : %w(submitted correcting)
-    exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page])
-    if params[:state] == 'returned'
+    exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page]) unless params[:state] == 'all' || params[:search_term].present?
+    if params[:search_term].present?
+      @exercises = Exercise.search(params[:search_term]).with_states(%w(submitted correcting returned)).paginate(per_page: 50, page: params[:page])
+    elsif params[:state] == 'returned'
       @exercises = exercises.order(created_at: :desc)
+    elsif params[:state] == 'all'
+      @exercises = Exercise.with_states(%w(submitted correcting returned)).paginate(per_page: 50, page: params[:page])
     else
       @exercises = exercises.order(created_at: :asc)
     end
