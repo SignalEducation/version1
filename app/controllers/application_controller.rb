@@ -87,7 +87,7 @@ class ApplicationController < ActionController::Base
       destination = default
       session[:return_to] = nil
     end
-    redirect_to(destination)
+    redirect_to(destination, flash: { just_signed_in: true })
   end
 
   def ensure_user_has_access_rights(authorised_features)

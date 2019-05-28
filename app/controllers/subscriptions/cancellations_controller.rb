@@ -13,11 +13,13 @@ class Subscriptions::CancellationsController < ApplicationController
     @subscription.cancelling_subscription = true
     if @subscription.update(subscription_params) && @subscription.cancel_by_user
       flash[:success] = I18n.t('controllers.subscriptions.destroy.flash.success')
+      flash[:datalayer_cancel] = @subscription.user_readable_name
       redirect_to account_url(anchor: 'subscriptions')
     else
       Rails.logger.warn "WARN: Subscription#delete failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscriptions.destroy.flash.error')
-      redirect_to account_url(anchor: 'subscriptions')
+      @subscription.errors.add(:cancellation_reason, 'please select an option')
+      render :new
     end
   end
 

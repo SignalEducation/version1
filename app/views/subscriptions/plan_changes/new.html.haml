@@ -16,7 +16,7 @@
             .row.row-md
               -@subscription.upgrade_options.each do |plan|
                 .col-lg
-                  %article.card.card-primary.card-primary-alt{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
+                  %article.card.card-primary.card-primary-alt{id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id, :price => plan.price, :currency => plan.currency.iso_code, :name => plan.name, :body => plan.exam_body.name}}
                     -if plan.most_popular
                       .card-banner.bg-mint
                         %small.text-white
@@ -90,6 +90,28 @@
 
 :javascript
 
+  dataLayer = [];
+
+  function addToCart(theThing) {
+    let parentThing = $(theThing).parent().parent().parent().parent();
+    dataLayer.push({
+      'event': 'addToCart',
+      'ecommerce': {
+        'currencyCode': parentThing.attr('data-currency'),
+        'add': {
+          'products': [{
+            'name': parentThing.attr('data-name'),
+            'id': parentThing.attr('data-plan_id'),
+            'price': parentThing.attr('data-price'),
+            'brand': parentThing.attr('data-body'),
+            'category': 'Subscription',
+            'quantity': 1
+            }]
+        }
+      }
+    });
+  }
+
   // UnChecks radio buttons except the one that was clicked.
   // Finds the id value of the sub plan that the radio button belongs to.
   // Sets the hidden field subscription_plan_id to that id.
@@ -97,6 +119,7 @@
     $('.option[type="radio"]:checked').prop('checked', false);
     $(theThing).find('.option[type="radio"]').prop('checked', true);
     $('#subscription_subscription_plan_id').val($(theThing).parent().parent().parent().parent().attr('data-plan-id'));
+    addToCart(theThing);
   }
 
   $(document).on('ready', function() {

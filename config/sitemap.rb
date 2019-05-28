@@ -28,7 +28,7 @@ sitemap :site do
 
   #Library
   if Group.all_active.count > 1
-    url library_url, last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
+    url library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   end
 
   group = Group.all_active.all_in_order.first

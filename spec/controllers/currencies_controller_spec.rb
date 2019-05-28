@@ -25,8 +25,6 @@ describe CurrenciesController, type: :controller do
       country: nil
     )
   }
-  let(:system_requirements_student_access) { create(:complimentary_student_access,
-                                                                user: system_requirements_user) }
 
   let!(:currency_1) { create(:gbp) }
   let!(:currency_2) { create(:usd) }

@@ -77,3 +77,8 @@
       }, 1);
 
     });
+
+-if flash[:datalayer_cancel]
+  :javascript
+    dataLayer = [];
+    dataLayer.push({'event':'subscriptionCancelled', 'user_plan':"#{flash[:datalayer_cancel]}"});
