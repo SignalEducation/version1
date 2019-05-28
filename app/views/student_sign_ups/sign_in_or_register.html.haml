@@ -110,12 +110,12 @@
       });
     }
 
-    let currencyIso = "#{@plan? @plan.currency.iso_code : @product.currency.iso_code}";
-    let name = "#{@plan? @plan.name : @product.name}";
-    let id = "#{@plan? @plan.id : @product.id}";
-    let price = "#{@plan? @plan.price : @product.price}";
-    let body = "#{@plan? @plan.exam_body.name : @product.mock_exam.subject_course.exam_body.name}";
-    let type = "#{@plan? 'Subscription' : 'Preparation'}";
+    let currencyIso = "#{@plan ? @plan.currency.iso_code : @product.currency.iso_code}";
+    let name = "#{@plan ? @plan.name : @product.name}";
+    let id = "#{@plan ? @plan.id : @product.id}";
+    let price = "#{@plan ? @plan.price : @product.price}";
+    let body = "#{@plan ? @plan.exam_body.name : @product.mock_exam.subject_course.exam_body.name}";
+    let type = "#{@plan ? 'Subscription' : 'Preparation'}";
 
     $(document).ready(function(){
       selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
