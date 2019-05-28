@@ -76,7 +76,11 @@
                     =link_to 'Change Subscription Plan', new_subscriptions_plan_change_path(id: subscription.id), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
                   -if subscription.paused?
                     =link_to 'Reactivate Subscription', subscriptions_suspension_path(id: subscription.id), method: :delete, class: 'btn btn-secondary btn-xs', style: 'vertical-align: top;'
-                  =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+                  -if !subscription.cancelled?
+                    =link_to 'Cancel Subscription', new_subscriptions_cancellation_path(id: subscription.id), class: 'btn btn-danger btn-xs', style: 'vertical-align: top;'
+                  -else
+                    =link_to 'Renew Subscription', subscription_checkout_special_link(subscription.subscription_plan.exam_body_id, subscription.subscription_plan.guid), class: 'btn btn-primary btn-xs', style: 'vertical-align: top;'
+
 
 
     -else
