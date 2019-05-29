@@ -63,10 +63,10 @@ class UsersController < ApplicationController
   end
   before_action :layout_variables
   before_action :get_variables, except: [:user_personal_details, :user_subscription_status,
-                                         :user_enrollments_details, :user_purchases_details,
+                                         :user_activity_details, :user_purchases_details,
                                          :user_courses_status, :user_referral_details]
   before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status,
-                                            :user_enrollments_details, :user_purchases_details,
+                                            :user_activity_details, :user_purchases_details,
                                             :user_courses_status, :user_referral_details]
 
 
@@ -168,8 +168,13 @@ class UsersController < ApplicationController
     @invoices = @user.invoices
   end
 
-  def user_enrollments_details
-    @enrollments = @user.enrollments.all_reverse_order
+  def user_activity_details
+    @sculs = @user.subject_course_user_logs
+  end
+
+  def subject_course_user_log_details
+    @scul = SubjectCourseUserLog.find(params[:scul_id])
+    @latest_cmeul = @scul.course_module_element_user_logs.includes(:course_module_element).order(:created_at).first
   end
 
   def user_purchases_details
