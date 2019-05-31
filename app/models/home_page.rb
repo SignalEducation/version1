@@ -107,6 +107,5 @@ class HomePage < ActiveRecord::Base
       errors.add(:base, 'Select a Group or a Course, not both')
     end
   end
-  
 
 end
