@@ -9,7 +9,7 @@
     =render partial: 'user_tabs'
     .row.pt-4
       .col-sm-12
-        .box-item
+        .box-item{style: 'margin-bottom: 10px;'}
           .row
             .col-sm-9
               .row
@@ -51,7 +51,10 @@
                   .stats-box
                     .stats-box-inner
                       .p
-                        =humanize_datetime(@user.course_module_element_user_logs.last.created_at)
+                        -if @user.course_module_element_user_logs.any?
+                          =humanize_datetime(@user.course_module_element_user_logs.last.created_at)
+                        -else
+                          ='Never'
                       .h3
                         Last Studied
 
@@ -76,6 +79,7 @@
         .box-item
           .row
             .col-sm-9
+              .h3='Subscription Access'
               .row
                 -ExamBody.all_active.all_in_order.each do |body|
                   .col-sm-4
