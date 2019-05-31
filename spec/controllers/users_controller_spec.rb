@@ -70,14 +70,7 @@ describe UsersController, type: :controller do
   let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
                                                 stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
 
-  trial_limits_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-  trial_limits_days = ENV['FREE_TRIAL_DAYS'].to_i
-
-  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id,
-                                                  student_access_attributes: {trial_seconds_limit: trial_limits_seconds,
-                                                                              trial_days_limit: trial_limits_days,
-                                                                              account_type: 'Trial'}
-  ) }
+  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
   let!(:update_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
 

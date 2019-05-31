@@ -23,7 +23,7 @@ FactoryBot.define do
   factory :course_section do
     subject_course_id 1
     name "MyString"
-    name_url "MyString"
+    sequence(:name_url)  { |x| "course-section-#{x}" }
     sorting_order 1
     active false
     counts_towards_completion false
