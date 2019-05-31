@@ -36,7 +36,7 @@ describe CourseModuleElementResourcesController, type: :controller do
   let!(:course_module_element_resource_1) { FactoryBot.create(:course_module_element_resource, course_module_element_id: course_module_element.id) }
   let!(:course_module_element_resource_2) { FactoryBot.create(:course_module_element_resource, course_module_element_id: course_module_element.id) }
 
-  let!(:valid_params) { FactoryBot.attributes_for(:course_module_element_resource) }
+  let!(:valid_params) { FactoryBot.attributes_for(:course_module_element_resource, course_module_element_id: course_module_element.id) }
 
   context 'Logged in as a content_management_user: ' do
 
@@ -62,7 +62,7 @@ describe CourseModuleElementResourcesController, type: :controller do
     describe "GET 'edit/1'" do
       it 'should respond OK with course_module_element' do
         get :edit, params: { course_module_element_id: course_module_element.id, id: course_module_element_resource_1.id }
-        expect_edit_success_with_model('course_module_element_resource', course_module_element.id)
+        expect_edit_success_with_model('course_module_element_resource', course_module_element_resource_1.id)
       end
 
       # optional

@@ -24,7 +24,7 @@ describe VatCodesController, type: :controller do
   let!(:vat_rate) { FactoryBot.create(:vat_rate, vat_code_id: vat_code_1.id) }
   let!(:ireland) { FactoryBot.create(:ireland) }
   let!(:vat_code_2) { FactoryBot.create(:vat_code, country: ireland) }
-  let!(:valid_params) { FactoryBot.attributes_for(:vat_code) }
+  let!(:valid_params) { FactoryBot.attributes_for(:vat_code, country_id: uk.id) }
 
   context 'Logged in as a system_requirements_user: ' do
 
