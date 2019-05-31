@@ -1592,6 +1592,9 @@ en:
           invoices: Invoices
           stripe_sub_guid: Stripe Subscription ID
           stripe_sub_status: Stripe Subscription Status
+          paypal_sub_guid: PayPal Subscription ID
+          paypal_sub_status: PayPal Subscription Status
+          paypal_sub_token: PayPal Subscription Token
           valid_payment_card: Valid Payment Card
 
 

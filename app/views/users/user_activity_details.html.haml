@@ -12,7 +12,7 @@
       .col-sm-12
         .box-item.table-box
           %h3.h-dark
-            Enrolments
+            Course Activity
 
           .table-responsive
             .row
@@ -23,30 +23,31 @@
                       %th
                         Course
                       %th
-                        Exam Sitting
+                        Created At
+                      %th
+                        Enrollment
                       %th
                         Status
                       %th
-                        Notifications
-                      %th
                       %th
                   %tbody
-                    -@enrollments.each do |enrollment|
+                    -@sculs.each do |scul|
                       %tr
                         %td
-                          -if enrollment.subject_course
-                            =enrollment.subject_course.name
+                          -if scul.subject_course
+                            =scul.subject_course.name
                         %td
-                          =enrollment&.exam_sitting&.name
+                          =humanize_datetime(scul.created_at)
                         %td
-                          =enrollment.expired ? 'Expired' : 'Valid'
+                          =tick_or_cross(scul.active_enrollment)
                         %td
-                          =tick_or_cross(enrollment.notifications)
+                          =scul.active_enrollment.expired ? 'Expired' : 'Valid' if scul.active_enrollment
                         %td
-                          =link_to edit_enrollment_management_url(enrollment) do
-                            .btn.btn-primary.btn-xs
-                              =t('views.general.edit')
+                          - if scul.active_enrollment
+                            =link_to edit_enrollment_management_url(scul.active_enrollment) do
+                              .btn.btn-primary.btn-xs
+                                =t('views.general.edit')
                         %td
-                          =link_to enrollment_management_url(enrollment) do
+                          =link_to user_scul_activity_url(scul_id: scul.id) do
                             .btn.btn-secondary.btn-xs
                               =t('views.general.view')

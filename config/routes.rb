@@ -76,7 +76,8 @@ Rails.application.routes.draw do
       get  '/personal', action: :user_personal_details, as: :personal
       get  '/subscription', action: :user_subscription_status, as: :subscription
       get  '/courses', action: :user_courses_status, as: :courses
-      get  '/enrollments', action: :user_enrollments_details, as: :enrollments
+      get  '/enrollments', action: :user_activity_details, as: :activity
+      get  '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
       get  '/orders', action: :user_purchases_details, as: :orders
       get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses

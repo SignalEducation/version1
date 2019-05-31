@@ -133,7 +133,7 @@
     dataLayer.push({ 'event': 'checkout',
       'ecommerce': {
         'checkout': {
-          'actionField': {'step': 1, 'option':type},
+          'actionField': {'step': 2, 'option':type},
           'products': [{
             'name': selectedPlan.attr('data-name'),
             'id': selectedPlan.attr('value'),
@@ -146,6 +146,18 @@
       }
     });
   }
+
+  function checkoutOption(type) {
+    dataLayer.push({
+      'event': 'checkoutOption',
+      'ecommerce': {
+        'checkout_option': {
+          'actionField': {'step': 1, 'option': type}
+        }
+      }
+    });
+  }
+
 
   function intervalSummary(frequency) {
     switch (frequency) {
@@ -189,6 +201,7 @@
     $(".sk-circle").hide();
     $('.invalid-code').hide();
     $('.discounted-price').hide();
+    checkoutOption("#{current_user.email_verified ? 'Log In' : 'Register'}");
 
     // Bojan Stuff
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {

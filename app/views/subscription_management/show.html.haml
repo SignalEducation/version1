@@ -56,14 +56,21 @@
                     =humanize_stripe_date(@subscription.next_renewal_date)
 
               .row.pt-3
+                -if @subscription.stripe?
+                  .col-sm-4
+                    .h3
+                      =t('views.users.user_subscription_status.subscription_info.stripe_sub_guid')
+                    .h6
+                      =@subscription.stripe_guid
+                -else
+                  .col-sm-4
+                    .h3
+                      =t('views.users.user_subscription_status.subscription_info.paypal_sub_guid')
+                    .h6
+                      =@subscription.paypal_subscription_guid
                 .col-sm-4
                   .h3
-                    =t('views.users.user_subscription_status.subscription_info.stripe_sub_guid')
-                  .h6
-                    =@subscription.stripe_guid
-                .col-sm-4
-                  .h3
-                    =t('views.users.user_subscription_status.subscription_info.stripe_sub_status')
+                    Subscription Status
                   .h6
                     =@subscription.state.to_s.capitalize
 

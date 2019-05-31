@@ -5,58 +5,60 @@
     %p.p-hero.px-lg-8
       =@user.email
 
-  %section.pb-7
+  %section.pb-4
     =render partial: 'user_tabs'
     .row.pt-4
       .col-sm-12
-        .box-item
+        .box-item{style: 'margin-bottom: 10px;'}
           .row
             .col-sm-9
               .row
                 .col-sm-4
                   .stats-box
                     .stats-box-inner
-                      .h3
-                        =humanize_datetime(@user.created_at)
                       .p
+                        =humanize_datetime(@user.created_at)
+                      .h3
                         Account Created
                 .col-sm-4
                   .stats-box
                     .stats-box-inner
-                      .h3
-                        =@user_sessions_count
                       .p
+                        =@user_sessions_count
+                      .h3
                         Sessions
                 .col-sm-4
                   .stats-box
                     .stats-box-inner
-                      .h3
+                      .p
                         -if @user.current_login_at
                           =humanize_datetime(@user.current_login_at)
                         -else
                           ='-'
-                      .p
+                      .h3
                         Last Active
 
                 .col-sm-4
                   .stats-box
                     .stats-box-inner
-                      .h3
-                        =@user.user_group.name
                       .p
+                        =@user.user_group.name
+                      .h3
                         User Group
 
 
                 .col-sm-4
                   .stats-box
                     .stats-box-inner
-                      .h3
-                        -if @user.student_number && !@user.student_number.empty?
-                          =@user.student_number
-                        -else
-                          ='-'
                       .p
-                        Student Number
+                        -if @user.course_module_element_user_logs.any?
+                          =humanize_datetime(@user.course_module_element_user_logs.last.created_at)
+                        -else
+                          ='Never'
+                      .h3
+                        Last Studied
+
+
 
 
 
@@ -72,3 +74,21 @@
               -if @user.email_verified && @user.password_reset_requested_at && @user.password_reset_token
                 =link_to 'Resend PW Reset Email', manager_resend_url(@user), method: :post, class: 'btn btn-secondary-reverse full-width'
 
+    .row
+      .col-sm-12
+        .box-item
+          .row
+            .col-sm-9
+              .h3='Subscription Access'
+              .row
+                -ExamBody.all_active.all_in_order.each do |body|
+                  .col-sm-4
+                    .stats-box
+                      .stats-box-inner
+                        .h3
+                          =body.name
+                        .p
+                          -if @user.active_subscription_for_exam_body?(body.id)
+                            =@user.active_subscriptions_for_exam_body(body.id).last.state
+                          -else
+                            ='Basic'
