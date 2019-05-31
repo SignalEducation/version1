@@ -128,7 +128,7 @@ class Subscription < ActiveRecord::Base
 
     state :active, :paused, :pending_cancellation, :errored do
       def can_change_plan?
-        true
+        upgrade_options.count > 0 ? true : false
       end
     end
 
