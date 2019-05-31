@@ -45,7 +45,7 @@ shared_context 'course_content' do
 
   # Simple Question
   let!(:quiz_question_1) { FactoryBot.create(:quiz_question,
-                           course_module_element_quiz: course_module_element_quiz_1_1) }
+                           course_module_element_quiz: course_module_element_quiz_1_1, subject_course_id: subject_course_1.id) }
   let!(:quiz_content_1)  { FactoryBot.create(:quiz_content,
                            quiz_question: quiz_question_1) }
   let!(:quiz_answer_1)   { FactoryBot.create(:correct_quiz_answer,
@@ -67,7 +67,7 @@ shared_context 'course_content' do
 
   # Complex Question
   let!(:quiz_question_2)  { FactoryBot.create(:quiz_question,
-                            course_module_element_quiz: course_module_element_quiz_2_2_1) }
+                            course_module_element_quiz: course_module_element_quiz_2_2_1, subject_course_id: subject_course_1.id) }
   let!(:quiz_content_2_1a) { FactoryBot.create(:quiz_content,
                              quiz_question: quiz_question_1) }
   let!(:quiz_content_2_1b) { FactoryBot.create(:quiz_content,

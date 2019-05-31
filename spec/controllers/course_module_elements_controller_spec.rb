@@ -162,7 +162,7 @@ describe CourseModuleElementsController, type: :controller do
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :reorder, params: { array_of_ids: [course_module_element_2_1.id, course_module_element_2_2.id] }
+        post :reorder, params: { array_of_ids: [course_module_element_1_1.id, course_module_element_1_2.id] }
         expect_reorder_success
       end
     end

@@ -15,7 +15,6 @@ describe ReferralCodesController, type: :controller do
 
   let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
   let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
-  let!(:user_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_management_user.id) }
 
   let(:tutor_user_group) { FactoryBot.create(:tutor_user_group) }
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
