@@ -28,7 +28,10 @@
                   .h3
                     Last Active
                   .h6
-                    =humanize_datetime(@latest_cmeul.course_module_element.created_at)
+                    -if @latest_cmeul
+                      =humanize_datetime(@latest_cmeul.course_module_element.created_at)
+                    -else
+                      ='Never'
                   .h6
                     =@latest_cmeul.course_module_element.name
 
