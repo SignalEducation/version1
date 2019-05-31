@@ -46,10 +46,10 @@
           .row.row-lg.justify-content-center
             -@subscription_plans.each do |plan|
               .col-lg-4
-                %article.card.card-primary.card-primary-alt
+                %article.card.card-primary.card-primary-alt.medium-gap
                   -if plan.most_popular
                     .card-banner.bg-mint
-                      %small.text-white
+                      %large.text-white
                         Most popular payment plan
                   .card-body.text-center.py-4.py-sm-5
                     %h2.card-title
