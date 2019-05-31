@@ -27,13 +27,15 @@
                 .col-sm-4
                   .h3
                     Last Active
-                  .h6
-                    -if @latest_cmeul
+
+                  -if @latest_cmeul
+                    .h6
                       =humanize_datetime(@latest_cmeul.course_module_element.created_at)
-                    -else
                       ='Never'
-                  .h6
-                    =@latest_cmeul.course_module_element.name
+                    .h6
+                      =@latest_cmeul.course_module_element.name
+                  -else
+                    ='Never'
 
               -if @scul.active_enrollment
                 .row
