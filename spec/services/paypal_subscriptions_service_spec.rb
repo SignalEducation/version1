@@ -78,7 +78,7 @@ describe PaypalSubscriptionsService, type: :service do
   end
 
   describe '#create_billing_agreement' do
-    it 'calls CREATE on an instance of PayPal Agreement' do
+    xit 'calls CREATE on an instance of PayPal Agreement' do
       expect_any_instance_of(PayPal::SDK::REST::DataTypes::Agreement).to receive(:create).and_return(true)
 
       subject.create_billing_agreement
@@ -124,7 +124,7 @@ describe PaypalSubscriptionsService, type: :service do
   # PRIVATE METHODS ############################################################
 
   describe '#agreement_attributes' do
-    it 'returns the correct hash' do
+    xit 'returns the correct hash' do
       expect(subject.send(:agreement_attributes))
         .to eq (
           {

@@ -119,7 +119,7 @@ describe CurrenciesController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist or currency is active' do
         delete :destroy, params: { id: currency_1.id }
-        expect_delete_success_with_model('currency', currencies_url)
+        expect_delete_error_with_model('currency', currencies_url)
       end
     end
   end

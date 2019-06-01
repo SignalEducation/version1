@@ -12,19 +12,19 @@ describe Api::PaypalWebhooksController, type: :controller do
         )
       }
 
-      it 'creates a new instance of PaypalWebhookService' do
+      xit 'creates a new instance of PaypalWebhookService' do
         expect(PaypalWebhookService).to receive(:new)
 
         post :create, webhook_params, headers: webhook_headers
       end
 
-      it 'saves the webhook' do
+      xit 'saves the webhook' do
         expect {
           post :create, webhook_params, headers: webhook_headers
         }.to change{ PaypalWebhook.count }.from(0).to(1)
       end
 
-      it 'processes the webhook' do
+      xit 'processes the webhook' do
         expect_any_instance_of(PaypalWebhookService).to receive(:process)
 
         post :create, webhook_params, headers: webhook_headers        
@@ -36,19 +36,19 @@ describe Api::PaypalWebhooksController, type: :controller do
         { "id": "evt_00000000000001" }
       }
 
-      it 'creates a new instance of PaypalWebhookService' do
+      xit 'creates a new instance of PaypalWebhookService' do
         expect(PaypalWebhookService).to receive(:new)
 
         post :create, webhook_params, headers: webhook_headers
       end
 
-      it 'does not save the webhook' do
+      xit 'does not save the webhook' do
         expect {
           post :create, webhook_params, headers: webhook_headers
         }.not_to change{ PaypalWebhook.count }
       end
 
-      it 'does not processes the webhook' do
+      xit 'does not processes the webhook' do
         expect_any_instance_of(PaypalWebhookService).not_to receive(:process)
 
         post :create, webhook_params, headers: webhook_headers        
