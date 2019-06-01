@@ -77,7 +77,7 @@ RSpec.describe CourseSectionsController, type: :controller do
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for course_section_1' do
-        put :update, params: { id: subject_course_1.id, course_section: {name: 'ABC', name_url: 'abc'} }
+        put :update, params: { id: course_section_1.id, course_section: valid_params }
         expect(flash[:success]).to eq(I18n.t('controllers.course_sections.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_section).class).to eq(CourseSection)
@@ -86,7 +86,7 @@ RSpec.describe CourseSectionsController, type: :controller do
 
       # optional
       it 'should respond OK to valid params for course_section_2' do
-        put :update, params: { id: subject_course_1.id, course_section: {name: 'ABC', name_url: 'abc'} }
+        put :update, params: { id: course_section_2.id, course_section: valid_params }
         expect(flash[:success]).to eq(I18n.t('controllers.course_sections.update.flash.success'))
         expect(flash[:error]).to eq(nil)
         expect(assigns(:course_section).class).to eq(CourseSection)
@@ -94,7 +94,7 @@ RSpec.describe CourseSectionsController, type: :controller do
       end
 
       it 'should reject invalid params' do
-        put :update, params: { id: subject_course_1.id, course_section: {valid_params.keys.first => ''} }
+        put :update, params: { id: course_section_1.id, course_section: {valid_params.keys.first => ''} }
         expect_update_error_with_model('course_section')
         expect(assigns(:course_section).id).to eq(course_section_1.id)
       end
