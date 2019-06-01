@@ -25,12 +25,12 @@ class EnrollmentsController < ApplicationController
   before_action :get_variables
 
   def create
+
     @enrollment = Enrollment.new(allowed_params)
 
-    @enrollment.computer_based_exam = true if @enrollment.exam_date && @enrollment.subject_course.computer_based
+    @enrollment.computer_based_exam = true if @enrollment.exam_date && @enrollment&.subject_course&.computer_based
     @enrollment.user_id = current_user.id
     @enrollment.active = true
-
 
     if @enrollment.save
       #redirect_to library_special_link(@enrollment.subject_course)
