@@ -22,7 +22,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   puts "\n subject_course user subscription_plan"
 
   print "* " * 100
-  load "db/seed_data/course_seed.rb"
+  #load "db/seed_data/course_seed.rb" - seems to be a duplicate of load "db/seed_data/subject_course.rb" on line 18
   load "db/seed_data/course_content_data.rb"
   load "db/seed_data/home_page_seed.rb"
   puts "\n course course_content_data"

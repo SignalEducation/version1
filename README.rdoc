@@ -45,8 +45,14 @@ Requirements:
 
 5. Log in credentials
 
-    - Admin User: site.admin@example.com
-    - Tutor User: tutor@example.com
+    All passwords are 123123123
+
     - Individual User: individual.student@example.com  (No subscription attached to this user, therefore is restricted by the paywall. It is recommended that you sign up a new user to simulate the actual student experience.)
+    - Admin User: site.admin@example.com
+    - Content Manager: content.manager@example.com
+    - Customer Support: customer.support@example.com
+    - Marketing Manager: custmarketing.manager@example.com
+    - Complimentary Student user: complimentary.user@example.com
+
 
 6. When testing the Sign Up process use any fake details you wish but you must use Stripe's test card number '4242 4242 4242 4242', any three/four digit number will work for the CVV and you must give valid dates for Expiry fields.
