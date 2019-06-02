@@ -7,10 +7,34 @@ sitemap :site do
   #Landing Pages
   url root_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
-  HomePage.where(home: false).each do |home_page|
+  HomePage.where(home: false, seo_no_index: false).each do |home_page|
     url "https://#{host}/#{home_page.public_url}", last_mod: home_page.updated_at, change_freq: 'monthly', priority: 1.0
   end
 
+  #Library
+
+  groups = Group.all_active.all_in_order
+  if groups.count > 1
+    url library_url, last_mod: groups.last.updated_at, change_freq: 'monthly', priority: 1.0
+  end
+
+  groups.each do |group|
+    url library_group, last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
+    group.active_children.all_in_order.each do |course|
+      url library_course_url(group_name_url: group.name_url, subject_course_name_url: course.name_url), last_mod: course.updated_at, change_freq: 'monthly', priority: 1.0
+    end
+  end
+
+  products = Product.all_active
+  if products.count > 0
+    url prep_products_url, last_mod: products.last.created_at, change_freq: 'monthly', priority: 1.0
+  end
+
+  #Sign In, Forgot Password
+  url new_student_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url sign_in_or_register_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url sign_in_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
+  url forgot_password_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
 
   #Tutor Profile pages
@@ -25,22 +49,6 @@ sitemap :site do
   url privacy_policy_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url terms_and_conditions_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
   url public_faqs_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-
-  #Library
-  if Group.all_active.count > 1
-    url library_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-  end
-
-  group = Group.all_active.all_in_order.first
-  group.active_children.all_in_order.each do |course|
-    url library_course_url(group_name_url: group.name_url, subject_course_name_url: course.name_url), last_mod: course.updated_at, change_freq: 'monthly', priority: 1.0
-  end
-
-  #Sign In, Forgot Password
-  url new_student_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-  url sign_in_or_register_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-  url sign_in_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
-  url forgot_password_url, last_mod: Time.now, change_freq: 'monthly', priority: 1.0
 
 end
 
