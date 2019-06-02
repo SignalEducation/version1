@@ -107,6 +107,15 @@ class SubscriptionPlan < ActiveRecord::Base
 
   end
 
+  def self.search(search)
+    if search
+      where('name ILIKE ? OR stripe_guid ILIKE ? OR paypal_guid ILIKE ? OR guid ILIKE ?',
+            "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
+    else
+      SubscriptionPlan.all_active.all_in_order
+    end
+  end
+
   # instance methods
   def active?
     self.available_from <= Proc.new{ Time.now.gmtime.to_date }.call && self.available_to >= Proc.new{ Time.now.gmtime.to_date }.call

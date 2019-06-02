@@ -31,7 +31,17 @@ class SubscriptionPlansController < ApplicationController
   before_action :get_variables
 
   def index
-    @subscription_plans = SubscriptionPlan.all_in_order
+    if params[:exam_body_id] && !params[:exam_body_id].blank?
+      @subscription_plans = SubscriptionPlan.where(exam_body_id: params[:exam_body_id]).all_in_order
+    elsif params[:exam_body_id] && params[:exam_body_id].blank?
+      @subscription_plans = SubscriptionPlan.all_in_order
+    else
+      @subscription_plans = SubscriptionPlan.all_in_order
+    end
+    @subscription_plans = params[:search].to_s.blank? ?
+                              @subscription_plans = @subscription_plans.all_in_order :
+                              @subscription_plans = @subscription_plans.search(params[:search])
+
     seo_title_maker('Subscription Plans', '', true)
   end
 
