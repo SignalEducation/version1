@@ -12,9 +12,11 @@
           -if @home_page.registration_form && @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
             =@home_page.registration_form_heading
         -else
-          -if @plan && @plan.sub_heading_text
-            =@plan.sub_heading_text
-          -elsif !@plan && !@product && @exam_body && @exam_body.registration_form_heading
+          -if @plan && @plan.registration_form_heading && !@plan.registration_form_heading.empty?
+            =@plan.registration_form_heading
+          -elsif !@plan && @product
+            =''
+          -elsif !@plan && !@product && @exam_body && @exam_body.registration_form_heading && !@exam_body.registration_form_heading.empty?
             =@exam_body.registration_form_heading
           -else
             ='Get started with our free Basic Plan to explore our innovative learning platform and access selected course content.'
@@ -85,6 +87,12 @@
         %label{class: "custom-control-label", for: "communication_approval"}
           I agree to receiving communication from learnsignal
 
+      -unless @home_page
+        %p.pt-2
+          ="We're committed to your privacy. The information you provide is used to contact you about relevant content,
+                       products, and services. You may unsubscribe from these communications at any time. For more information,
+                        check out our"
+          =link_to 'Privacy Policy.', privacy_policy_url, target: '_blank'
 
     .d-flex.justify-content-between.align-items-center.pt-4
       =f.submit 'Register Now', class: 'btn btn-primary btn-sm', id: 'signUp'

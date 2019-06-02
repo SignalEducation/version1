@@ -109,7 +109,8 @@ class SubscriptionPlansController < ApplicationController
       :available_from, :available_to, :name,
       :subscription_plan_category_id, :monthly_percentage_off,
       :previous_plan_price, :exam_body_id,
-      :sub_heading_text, :bullet_points_list, :most_popular
+      :sub_heading_text, :bullet_points_list, :most_popular,
+      :registration_form_heading, :login_form_heading
     )
   end
 end

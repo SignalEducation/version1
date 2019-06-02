@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_02_122118) do
+ActiveRecord::Schema.define(version: 2019_06_02_130850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1142,6 +1142,8 @@ ActiveRecord::Schema.define(version: 2019_06_02_122118) do
     t.string "bullet_points_list"
     t.string "sub_heading_text"
     t.boolean "most_popular", default: false, null: false
+    t.string "registration_form_heading"
+    t.string "login_form_heading"
     t.index ["available_from"], name: "index_subscription_plans_on_available_from"
     t.index ["available_to"], name: "index_subscription_plans_on_available_to"
     t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
