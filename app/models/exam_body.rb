@@ -13,9 +13,15 @@
 #  subscription_page_subheading_text  :string
 #  constructed_response_intro_heading :string
 #  constructed_response_intro_text    :text
+#  logo_image                         :string
+#  registration_form_heading          :string
+#  login_form_heading                 :string
 #
 
 class ExamBody < ActiveRecord::Base
+
+  LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
+
   has_one :group
   has_many :enrollments
   has_many :exam_sittings

@@ -704,6 +704,11 @@ en:
         constructed_response_intro_heading: Constructed Response Start Screen Heading
         constructed_response_intro_heading_placeholder: Constructed Response Start Screen Heading
         constructed_response_intro_text: Constructed Response Start Screen Instructions
+        registration_form_heading: Registration Form Heading
+        registration_form_heading_placeholder: Basic Registration Form Heading
+        login_form_heading: Login Form Heading
+        login_form_heading_placeholder: Login Form Heading
+        logo_image: Logo Image
 
       index:
         h1: Exam Bodies

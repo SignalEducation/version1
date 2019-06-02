@@ -7,8 +7,17 @@
 
   .bg-white.p-3.px-sm-5.pt-sm-4
     .py-3
-      -if @home_page && @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
-        =@home_page.registration_form_heading
+      %p
+        -if @home_page
+          -if @home_page.registration_form && @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
+            =@home_page.registration_form_heading
+        -else
+          -if @plan && @plan.sub_heading_text
+            =@plan.sub_heading_text
+          -elsif !@plan && !@product && @exam_body && @exam_body.registration_form_heading
+            =@exam_body.registration_form_heading
+          -else
+            ='Get started with our free Basic Plan to explore our innovative learning platform and access selected course content.'
 
     =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
     %fieldset.pb-3
@@ -34,17 +43,22 @@
               .input-group.input-group-lg
                 =select_tag "subject_course_id", options_from_collection_for_select(@home_page.group.subject_courses.all_standard.all_active.all_in_order, "id", "name"), include_blank: 'Course Selection', class: 'form-control custom-select', id: 'subject_course_id', required: true
 
+        -elsif !@home_page && !@exam_body
+          .col-md-6
+            .form-group
+              %label.sr-only{:for => "email-address"} Your email address
+              =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
+          .col-md-6
+            .form-group
+              =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'sr-only'
+              .input-group.input-group-lg
+                =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.users.form.exam_body')}, {class: 'form-control custom-select', id: 'user_exam_body'}
+
         -else
           .col-md-12
             .form-group
               %label.sr-only{:for => "email-address"} Your email address
               =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
-        -unless @exam_body
-          .col-md-12
-            .form-group
-              =f.label :preferred_exam_body_id, t('views.users.form.exam_body'), class: 'sr-only'
-              .input-group.input-group-lg
-                =f.collection_select :preferred_exam_body_id, ExamBody.all_active.all_in_order, :id, :name, {include_blank: t('views.users.form.exam_body')}, {class: 'form-control custom-select', id: 'user_exam_body'}
 
 
       .row
@@ -89,9 +103,11 @@
         .sk-circle12.sk-child
 
       .logo-acca
-        -if @home_page && @home_page.logo_image && @home_page.logo_image.present?
-          =#image_tag(@home_page.logo_image, class: 'logo-acca', alt: 'Logo')
-          =image_tag('learning-partner-badge.png', alt: 'Logo')
+        -if @home_page
+          -if @home_page.logo_image && @home_page.logo_image.present?
+            =image_tag(@exam_body.logo_image, alt: 'Logo')
+        -elsif @exam_body && @exam_body.logo_image && @exam_body.logo_image.present?
+          =image_tag(@exam_body.logo_image, alt: 'Logo')
 
 
 
