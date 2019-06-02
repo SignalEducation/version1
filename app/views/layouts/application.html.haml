@@ -20,7 +20,7 @@
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default-v2.min.css', rel: 'stylesheet'}
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css', rel: 'stylesheet'}
 
-    -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'
+    -if controller_name == 'courses' && @course_module_element && @course_module_element.is_video
       %script{src: 'https://player.vimeo.com/api/player.js'}
 
     %link{href: 'https://fonts.googleapis.com/css?family=Rubik:300,400,500,700', rel: 'stylesheet'}
