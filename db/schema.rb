@@ -478,25 +478,6 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.index ["user_id"], name: "index_exercises_on_user_id"
   end
 
-  create_table "external_banners", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.integer "sorting_order"
-    t.boolean "active", default: false
-    t.string "background_colour"
-    t.text "text_content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "user_sessions", default: false
-    t.boolean "library", default: false
-    t.boolean "subscription_plans", default: false
-    t.boolean "footer_pages", default: false
-    t.boolean "student_sign_ups", default: false
-    t.integer "home_page_id"
-    t.integer "content_page_id"
-    t.index ["active"], name: "index_external_banners_on_active"
-    t.index ["name"], name: "index_external_banners_on_name"
-  end
-
   create_table "faq_sections", id: :serial, force: :cascade do |t|
     t.string "name"
     t.string "name_url"

@@ -1,54 +1,54 @@
-SECRET_KEY_BASE: 'replace_me'
+DB_ADAPTER: 
+DB_HOSTNAME: 
+DB_USERNAME:
+DB_PASSWORD:
+DB_NAME: 
+REDIS_URL:
 
-FREE_TRIAL_DAYS: "7"
-FREE_TRIAL_LIMIT_IN_SECONDS: "2700"
 
+SECRET_KEY_BASE: 
+FREE_TRIAL_LIMIT_IN_SECONDS: 
 # Personal Email
-LEARNSIGNAL_V2_SERVER_EMAIL_SMTP: smtp.mandrillapp.com
-LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS: Signal Education
-LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN: 'localhost:3000'
+LEARNSIGNAL_V2_SERVER_EMAIL_SMTP: 
+LEARNSIGNAL_V3_SERVER_EMAIL_ADDRESS: 
+LEARNSIGNAL_V3_SERVER_EMAIL_DOMAIN: 
 #learnsignal_v3_server_email_domain: learnsignal.com
-LEARNSIGNAL_V3_SERVER_EMAIL_PASSWORD: uKK_pGl-9PK54IhUzx5Ajg
+LEARNSIGNAL_V3_SERVER_EMAIL_PASSWORD: 
 #learnsignal_v3_server_email_password: ChlsjrE7dGKKQLAWd3vwyw
-
 # Mandrill
-LEARNSIGNAL_MANDRILL_API_KEY: uKK_pGl-9PK54IhUzx5Ajg
-
+#learnsignal_mandrill_api_key: Pf3KNRuWBG7Ytfg-pn9fVg  production
+#learnsignal_mandrill_api_key: ChlsjrE7dGKKQLAWd3vwyw  #staging
+LEARNSIGNAL_MANDRILL_API_KEY: 
 # Stripe
-LEARNSIGNAL_V3_STRIPE_API_KEY: sk_test_wEVy0Tzgi3HEzoeJk4t340vI
-LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY: pk_test_QNs2TrDsJ5o0IyesV7U2THq5
-LEARNSIGNAL_V3_STRIPE_LIVE_MODE: test
-
-
+LEARNSIGNAL_V3_STRIPE_API_KEY: 
+LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY: 
+LEARNSIGNAL_V3_STRIPE_LIVE_MODE: 
 # AWS S3
-LEARNSIGNAL3_BUCKET_NAME: replace_me_with_s3_bucket_name #learnsignal3-dev-james
-LEARNSIGNAL3_S3_ACCESS_KEY_ID: replace_me_with_s3_accesskey #AKIAJOFRK7DP5CMUXHYQ
-LEARNSIGNAL3_S3_SECRET_ACCESS_KEY: replace_me_with_s3_secret_key #3cEZfgKnxtDj/2/nIgMQkSAMi7YoXn1L1C1CUJR+
-
+LEARNSIGNAL3_BUCKET_NAME: 
+LEARNSIGNAL3_S3_ACCESS_KEY_ID: 
+LEARNSIGNAL3_S3_SECRET_ACCESS_KEY: 
 # Intercom
-INTERCOM_APP_ID: j2w4wgd5
-INTERCOM_API_KEY: b1a9b2231634d4050aad1f986df1e6412f2b6614
-INTERCOM_SECRET_KEY: w-tlJqQNTRYRXL_jcJoE3DoLLkMpKMHgkGvivqbk
+INTERCOM_APP_ID: 
+#IntercomAppID: a81yx184 # live
+INTERCOM_API_KEY: 
+#INTERCOM_SECRET_KEY: rx_JkvkOGY6n0NxwjrvXoUwEsKtT1x2czo46OnK_
+INTERCOM_SECRET_KEY: 
+#Live Access Token
+#INTERCOM_ACCESS_TOKEN: dG9rOjYzMjcyZGE2XzBhNWRfNDkwZF84ODZlX2I5YWY0NTc1MzM3NDoxOjA=
 #Test Access Token
-INTERCOM_ACCESS_TOKEN: dG9rOjk1YWI5ZWY1XzY1N2NfNDA4Nl9hZWQ3X2UxNjhiMzc0N2ViZjoxOjA=
-
-
+INTERCOM_ACCESS_TOKEN: 
 # MailChimp
-LEARNSIGNAL_MAILCHIMP_API_KEY: d2eee250b68117a0ab90b6c03c0ca9d9-us3
-LEARNSIGNAL_MAILCHIMP_LIST_ID: 866fa91d62  #Test List
-
-
+LEARNSIGNAL_MAILCHIMP_API_KEY: 
+#learnsignal_mailchimp_list_id: dcac53aa7d #Production list
+LEARNSIGNAL_MAILCHIMP_LIST_ID:   #Test List
+# Wistia Data Api
+LEARNSIGNAL_WISTIA_API_KEY: 
 # Vimeo Api
-LEARNSIGNAL_VIMEO_API_KEY: a3b067f4c5605adb58d0fc1f599d76a6
-
+LEARNSIGNAL_VIMEO_API_KEY: 
 # Pointpin Api
-LEARNSIGNAL_POINTPIN_API_KEY: b36dbb3d-b657-44fb-83fd-84519a7c0520
-
-# Google Api
-LEARNSIGNAL_GOOGLE_API_KEY: AIzaSyAy_pLHbNFWC9aT-PGrkEv7fyfdiDv2ECk
-
-
-
+LEARNSIGNAL_POINTPIN_API_KEY: 
+# Zendesk Api
+LEARNSIGNAL_ZENDESK_API_KEY: 
 # AWS Load Balancers
 # For each configuration we have to list all load balancer IPs in
 # order to get real request IP. Namely ActionDispatch::RemoteIp
@@ -71,14 +71,9 @@ LEARNSIGNAL_GOOGLE_API_KEY: AIzaSyAy_pLHbNFWC9aT-PGrkEv7fyfdiDv2ECk
 # prefix length for can be seen from Availability Zones list
 # for each load balancer in AWS console (go to Load Balancers, select
 # load balancer and in bottom table all availability zones are listed).
-AWS_LOAD_BALANCERS: 172.31.16.0/20
-
-
-DB_ADAPTER: postgresql
-DB_HOSTNAME: localhost
-DB_USERNAME:
-DB_PASSWORD:
-DB_NAME: postgresql
+AWS_LOAD_BALANCERS: 
+# Google Api
+LEARNSIGNAL_GOOGLE_API_KEY: 
 
 #Redis DB
 #when "test"
@@ -87,3 +82,7 @@ DB_NAME: postgresql
 #when "development"
   #redis_host = ENV["REDIS_DEVELOPMENT_HOST"]
   #redis_host_port = ENV["REDIS_DEVELOPMENT_HOST_PORT"]
+
+
+
+

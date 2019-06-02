@@ -40,11 +40,9 @@ class HomePage < ActiveRecord::Base
   belongs_to :group, optional: true
   belongs_to :subject_course, optional: true
   has_many :blog_posts
-  has_many :external_banners
-
+ 
   accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| blog_nested_resource_is_blank?(attributes) }, allow_destroy: true
-  accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
-
+  
   # validation
   validates :name, presence: true, length: {maximum: 255}, uniqueness: true
   validates :seo_title, presence: true, length: {maximum: 255}, uniqueness: true
@@ -113,9 +111,7 @@ class HomePage < ActiveRecord::Base
     #Since the editor will always populate the text_content field
     #we must clear the entire record when no name attribute is present
     #to allow content_page records be created without nested banners
-    if self.external_banners.any? && self.external_banners[0].name.blank?
-      self.external_banners[0].destroy
-    end
+   
   end
 
 end
