@@ -14,7 +14,7 @@ class InvoiceDocument < Prawn::Document
     render_headers
     render_details
     move_up 25
-    render_test
+    render_username
     render_summary
     move_down 250
     stroke_horizontal_rule
@@ -30,7 +30,7 @@ class InvoiceDocument < Prawn::Document
     end
   end
 
-  def render_test
+  def render_username
     font(Rails.root.join("app/assets/fonts/oakes_grotesk_regular.ttf")) do
       text(recipient_name)
     end
