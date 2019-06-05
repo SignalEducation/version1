@@ -22,7 +22,7 @@ class UserSessionsController < ApplicationController
       handle_course_enrollment(@user_session.user, params[:subject_course_id]) if params[:subject_course_id]
       flash[:error] = nil
       if flash[:plan_guid]
-        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], login: true)
       elsif flash[:product_id]
         redirect_to new_order_url(product_id: flash[:product_id])
       elsif session[:return_to]
