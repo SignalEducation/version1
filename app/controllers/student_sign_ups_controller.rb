@@ -93,7 +93,7 @@ class StudentSignUpsController < ApplicationController
       if flash[:plan_guid]
         UserSession.create(@user)
         set_current_visit
-        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body])
+        redirect_to new_subscription_url(plan_guid: flash[:plan_guid], exam_body_id: flash[:exam_body], registered: true)
       elsif flash[:product_id]
         UserSession.create(@user)
         set_current_visit
