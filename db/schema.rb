@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_03_180734) do
+ActiveRecord::Schema.define(version: 2019_06_06_143543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "updated_at", null: false
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
   end
@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "updated_at"
     t.string "upload_file_name"
     t.string "upload_content_type"
-    t.bigint "upload_file_size"
+    t.integer "upload_file_size"
     t.datetime "upload_updated_at"
     t.datetime "destroyed_at"
     t.index ["course_module_element_id"], name: "cme_resources_cme_id"
@@ -428,6 +428,9 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.string "subscription_page_subheading_text"
     t.string "constructed_response_intro_heading"
     t.text "constructed_response_intro_text"
+    t.string "logo_image"
+    t.string "registration_form_heading"
+    t.string "login_form_heading"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -540,14 +543,14 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "destroyed_at"
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.string "background_image_file_name"
     t.string "background_image_content_type"
-    t.bigint "background_image_file_size"
+    t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -586,6 +589,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.string "header_paragraph"
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "footer_option", default: "white"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
@@ -687,11 +691,11 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
+    t.integer "file_file_size"
     t.datetime "file_updated_at"
     t.string "cover_image_file_name"
     t.string "cover_image_content_type"
-    t.bigint "cover_image_file_size"
+    t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
     t.index ["product_id"], name: "index_mock_exams_on_product_id"
@@ -757,7 +761,6 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -767,13 +770,13 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
-    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -812,7 +815,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "updated_at"
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.integer "quiz_solution_id"
     t.datetime "destroyed_at"
@@ -829,7 +832,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "destroyed_at"
     t.integer "subject_course_id"
     t.integer "sorting_order"
-    t.boolean "custom_styles", default: true
+    t.boolean "custom_styles", default: false
     t.index ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id"
     t.index ["course_module_element_quiz_id"], name: "index_quiz_questions_on_course_module_element_quiz_id"
     t.index ["difficulty_level"], name: "index_quiz_questions_on_difficulty_level"
@@ -1007,7 +1010,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.datetime "updated_at", null: false
     t.string "file_upload_file_name"
     t.string "file_upload_content_type"
-    t.bigint "file_upload_file_size"
+    t.integer "file_upload_file_size"
     t.datetime "file_upload_updated_at"
     t.string "external_url"
     t.boolean "active", default: false
@@ -1057,7 +1060,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.integer "quiz_pass_rate"
     t.string "background_image_file_name"
     t.string "background_image_content_type"
-    t.bigint "background_image_file_size"
+    t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
     t.boolean "preview", default: false
     t.boolean "computer_based", default: false
@@ -1140,6 +1143,8 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.string "bullet_points_list"
     t.string "sub_heading_text"
     t.boolean "most_popular", default: false, null: false
+    t.string "registration_form_heading"
+    t.string "login_form_heading"
     t.index ["available_from"], name: "index_subscription_plans_on_available_from"
     t.index ["available_to"], name: "index_subscription_plans_on_available_to"
     t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
@@ -1253,7 +1258,7 @@ ActiveRecord::Schema.define(version: 2019_05_03_180734) do
     t.string "name_url"
     t.string "profile_image_file_name"
     t.string "profile_image_content_type"
-    t.bigint "profile_image_file_size"
+    t.integer "profile_image_file_size"
     t.datetime "profile_image_updated_at"
     t.string "email_verification_code"
     t.datetime "email_verified_at"

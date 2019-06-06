@@ -887,6 +887,7 @@ en:
         mailchimp_list_guid: MailChimp List ID
         mailchimp_list_guid_placeholder: MailChimp List ID
         logo_image: Logo Image
+        footer_option: Footer Colour
         registration_form: Registration Form
         login_form: Login Form
         pricing_section: Pricing Section
