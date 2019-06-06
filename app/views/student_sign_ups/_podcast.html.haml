@@ -39,7 +39,13 @@
     .container-md.pb-4
       .col-sm-12.py-3
         %p
-          Tune in to our weekly podcast show featuring advice, motivation and the tools you need to succeed in your exam or career goals. And don't forget to subscribe, rate and review us on Apple Podcast, Spotify or whichever player you prefer.
+          Tune in to our weekly podcast show featuring advice, motivation and the tools you need to succeed in your exam or career goals. And don't forget to subscribe, rate and review us on
+          =link_to 'https://podcasts.apple.com/ie/podcast/forget-the-numbers-the-student-accounting-show/id1406751620', target: '_blank' do
+            Apple Podcast
+          ,
+          =link_to 'https://open.spotify.com/show/72hR3tuWmntqQjQLhSloDz?si=EdDsSh_mSQCwyCw3f6qHog', target: '_blank' do
+            Spotify
+          =' or whichever player you prefer.'
       .col-sm-12.p-4
         %script{src: 'https://www.buzzsprout.com/172305.js?player=large&artist=LearnSignal', type: 'text/javascript', charset: 'utf-8'}
 
