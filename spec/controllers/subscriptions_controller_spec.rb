@@ -219,7 +219,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "Post 'un_cancel_subscription'" do
-      xit 'should successfully change subscription to active' do
+      it 'should successfully change subscription to active' do
 
         sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
                    "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"

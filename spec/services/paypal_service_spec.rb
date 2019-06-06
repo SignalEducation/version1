@@ -140,7 +140,7 @@ describe PaypalService, type: :service do
   describe '#payment_attributes' do
     let(:order) { create(:order) }
 
-    xit 'returns the correct hash' do
+    it 'returns the correct hash' do
       expect(subject.send(:payment_attributes, order))
         .to eq (
           {
