@@ -101,6 +101,7 @@
                 =f.text_field :login_form_heading, placeholder: t('views.home_pages.form.login_form_heading_placeholder'), class: 'form-control'
 
 
+  =render partial: 'fields_for_blog_posts', locals: {f: f}
 
   .row.pt-4
     .col-sm-12
