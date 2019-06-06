@@ -320,22 +320,19 @@
       });
     }
 
+    $(document).ready(function(){
 
-  -if @home_page.registration_form_heading && @home_page.login_form_heading
-    :javascript
-      $(document).ready(function(){
+      if ($("#registration-login")[0]) {
         selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
-      });
-      $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
-      })
-  -elsif @home_page.registration_form_heading && !@home_page.login_form_heading
-    :javascript
-      $(document).ready(function(){
-        selectTab('Register', currencyIso, name, id, price, body, type);
-      });
-  -elsif @home_page.login_form_heading && !@home_page.registration_form_heading
-    :javascript
-      $(document).ready(function(){
-        selectTab('Login', currencyIso, name, id, price, body, type);
-      });
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+        })
+      } else if ($("#registration-option")[0]) {
+          selectTab('Register', currencyIso, name, id, price, body, type);
+      } else if ($("#login-option")[0]) {
+          selectTab('Login', currencyIso, name, id, price, body, type);
+      }
+
+    });
+
+
