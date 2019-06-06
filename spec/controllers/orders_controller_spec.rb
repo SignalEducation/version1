@@ -37,7 +37,15 @@ describe OrdersController, type: :controller do
   let!(:mock_exam_1) { FactoryBot.create(:mock_exam) }
   let!(:product_1) { FactoryBot.create(:product, currency_id: gbp.id, mock_exam_id: mock_exam_1.id, price: '99.9') }
   let!(:product_2) { FactoryBot.create(:product, currency_id: gbp.id) }
-  let!(:order_1) { FactoryBot.create(:order, product_id: product_1.id) }
+  let!(:order_1) {
+    FactoryBot.create(
+      :order,
+      product_id: product_1.id,
+      stripe_customer_id: 'cus_fadsfdsf',
+      stripe_guid: 'dsafdsfdsfdf',
+      stripe_status: 'paid'
+    )
+  }
   let!(:order_2) { FactoryBot.create(:order) }
   let!(:valid_params) { FactoryBot.attributes_for(:order, product_id: product_1.id) }
 
@@ -80,6 +88,10 @@ describe OrdersController, type: :controller do
     end
 
     describe "POST 'create'" do
+      before :each do
+        allow_any_instance_of(PurchaseService).to receive(:create_purchase).and_return(order_1)
+      end
+
       it 'should report OK for valid params' do
         post :create, params: { order: valid_params }
         expect_create_success_with_model('order', orders_url)
@@ -87,10 +99,8 @@ describe OrdersController, type: :controller do
 
       it 'should report error for invalid params' do
         post :create, params: { order: {valid_params.keys.first => ''} }
-        expect_create_error_with_model('order')
+        expect(flash[:error]).not_to be_nil
       end
     end
-
   end
-
 end
