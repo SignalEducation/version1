@@ -65,7 +65,7 @@ class CourseModuleElementsController < ApplicationController
 
   def new
     cm = CourseModule.find params[:cm_id].to_i
-    @course_modules = cm.parent.active_children
+    @course_modules = cm.parent.children
     @related_cmes = cm.course_module_elements.all_active
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
