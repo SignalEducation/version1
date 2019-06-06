@@ -142,13 +142,3 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
-require "erb"
-require "yaml"
-
-local_env_file = File.join(File.dirname(__FILE__), "config/local_env.yml")
-if File.exist?(local_env_file)
-  YAML.load(File.open(local_env_file)).each do |key, value|
-    ENV[key.to_s] = value
-  end
-end
