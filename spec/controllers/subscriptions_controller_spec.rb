@@ -73,10 +73,16 @@ describe SubscriptionsController, type: :controller do
                                           is_default_card: true, stripe_card_guid: 'guid_222',
                                           status: 'card-live' ) }
 
-  let!(:canceled_pending_subscription) { create(:canceled_pending_subscription, user: canceled_pending_student,
-                                                           subscription_plan: subscription_plan_gbp_m,
-                                                           stripe_guid: 'sub_abc123',
-                                                           stripe_customer_id: canceled_pending_student.stripe_customer_id ) }
+  let!(:canceled_pending_subscription) { 
+    create(
+      :canceled_pending_subscription,
+      state: 'pending_cancellation', 
+      user: canceled_pending_student,
+      subscription_plan: subscription_plan_gbp_m,
+      stripe_guid: 'sub_abc123',
+      stripe_customer_id: canceled_pending_student.stripe_customer_id
+    )
+  }
 
 
   let!(:upgrade_params) {
