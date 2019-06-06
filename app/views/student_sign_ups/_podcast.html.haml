@@ -25,7 +25,7 @@
               %span Login
 
 %main
-  .container-bg.home-hero-alt-bg{style: 'min-height: 0;'}
+  .container-bg.home-hero-alt-bg.podcast{style: 'min-height: 0;'}
     .container
       %article.home-hero.home-hero-alt
         .row
@@ -36,10 +36,32 @@
 
 
   %section#podcast
-    .container-md
+    .container-md.pb-4
       .col-sm-12.py-3
         %p
           Tune in to our weekly podcast show featuring advice, motivation and the tools you need to succeed in your exam or career goals. And don't forget to subscribe, rate and review us on Apple Podcast, Spotify or whichever player you prefer.
       .col-sm-12.p-4
         %script{src: 'https://www.buzzsprout.com/172305.js?player=large&artist=LearnSignal', type: 'text/javascript', charset: 'utf-8'}
 
+
+  %section#blog-posts
+    .container-bg.bg-gray5
+      .container
+        %article.py-5
+          %header.text-center.pb-sm-4.pb-md-5
+            %h2.h1-mega Explore our blog
+            %p.p-hero.px-lg-6
+              ACCA, accounting and financial industry blog articles with top tips and insights to help you pass your ACCA exams and build a rewarding career in finance.
+          .row.row-lg
+            -colours = %w[#fd5c63 #30aabc #f0ca28 #775ead #00b67b]
+            -@home_page.blog_posts.each_with_index do |blog_post, count|
+              .col-lg-4
+                %article
+                  =link_to blog_post.url, class: 'card card-primary card-pink blog-article', target: '_blank' do
+
+                    =image_tag(blog_post.image.url, class: 'card-img-top', alt: blog_post.title, style: "border-bottom-color: #{colours[count]};")
+                    .card-body.text-center.condense
+                      %h2.h5.card-title
+                        =blog_post.title
+                      %p
+                        =blog_post.description
