@@ -149,6 +149,12 @@ class SubscriptionsController < ApplicationController
 
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.last
+    if current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).any? && current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).where("cancelled_at >= ?", DateTime.now - 5.minutes).any?
+      @subscription_category = 'Change Subscription'
+    else
+      @subscription_category = 'Subscription'
+    end
+
     seo_title_maker('Thank You for Subscribing | LearnSignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
                     false)
