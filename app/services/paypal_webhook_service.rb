@@ -12,6 +12,11 @@ class PaypalWebhookService
       event_type: paypal_body['event_type'], 
       payload: paypal_body
     )
+    if @webhook.id
+      @webhook
+    else
+      false
+    end
   end
 
   def process_webhook
