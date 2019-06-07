@@ -26,6 +26,7 @@
 #  header_paragraph              :string
 #  registration_form_heading     :string
 #  login_form_heading            :string
+#  footer_option                 :string           default("white")
 #
 
 class HomePage < ActiveRecord::Base
@@ -34,6 +35,7 @@ class HomePage < ActiveRecord::Base
 
   # Constants
   LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
+  FOOTER_OPTIONS = %w(white dark)
 
   # relationships
   belongs_to :subscription_plan_category, optional: true

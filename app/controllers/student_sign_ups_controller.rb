@@ -7,13 +7,19 @@ class StudentSignUpsController < ApplicationController
   before_action :layout_variables, only: [:home, :landing]
 
   def home
-    @footer = 'white'
     @home_page = HomePage.where(home: true).where(public_url: '/').first
-    #@banner = @home_page.external_banners.first
-    seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
+    if @home_page
+      seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
+      @footer = @home_page.footer_option
+    else
+      seo_title_maker('The Smarter Way to Study | LearnSignal',
+                      'Discover learnsignal professional courses designed by experts and delivered online so that you can study on a schedule that suits your learning needs.',
+                      false)
+      @footer = 'white'
+    end
+    #TODO - Is this call to get subscription plans needed ??
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
-
     #Added respond block to stop the missing template errors with image, text, json types
     respond_to do |format|
       format.html
@@ -53,7 +59,7 @@ class StudentSignUpsController < ApplicationController
     else
       redirect_to root_url
     end
-    @footer = 'white'
+    @footer = @home_page ? @home_page.footer_option : 'white'
     @form_type = 'Landing Page Contact'
   end
 

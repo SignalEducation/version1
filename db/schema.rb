@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_02_130850) do
+ActiveRecord::Schema.define(version: 2019_06_06_143543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -589,6 +589,7 @@ ActiveRecord::Schema.define(version: 2019_06_02_130850) do
     t.string "header_paragraph"
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "footer_option", default: "white"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end

@@ -26,6 +26,7 @@
 #  header_paragraph              :string
 #  registration_form_heading     :string
 #  login_form_heading            :string
+#  footer_option                 :string           default("white")
 #
 
 require 'rails_helper'

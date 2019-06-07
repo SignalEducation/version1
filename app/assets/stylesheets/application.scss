@@ -3726,6 +3726,21 @@ label {
 .card.card-primary.card-primary-alt .card-body {
   border-top: 1px solid #e6ecf0
 }
+.condense {
+  white-space: normal;
+  //height: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (min-width:992px) {
+  .condense {
+    white-space: normal;
+    height: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 .card.card-primary .card-body {
   display: -webkit-box;
   display: -webkit-flex;
@@ -4321,6 +4336,11 @@ a.card:hover .card-title .card-explanation {
 @media (min-width:1026px) {
   .home-hero-alt-bg.home-hero-alt-bg-plan {
     padding-bottom: 0
+  }
+}
+@media (min-width:1320px) {
+  .home-hero-alt-bg.podcast {
+    background-position: 50% 20%
   }
 }
 
