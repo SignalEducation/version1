@@ -143,7 +143,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   #This triggers the creation of parent CSUL and its parent SCUL
   def create_student_exam_track
     set = StudentExamTrack.create!(user_id: self.user_id, course_module_id: self.course_module_id,
-                                   course_section_id: self.course_section_id,
+                                   course_section_id: self.course_module.course_section_id,
                                    subject_course_id: self.course_section.subject_course_id,
                                    course_section_user_log_id: self.try(:course_section_user_log_id),
                                    subject_course_user_log_id: self.try(:subject_course_user_log_id))
