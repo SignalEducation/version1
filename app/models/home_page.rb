@@ -56,7 +56,6 @@ class HomePage < ActiveRecord::Base
 
 
   # callbacks
-  before_validation :remove_empty_banner
   before_destroy :check_dependencies
 
   # scopes
@@ -106,15 +105,6 @@ class HomePage < ActiveRecord::Base
   def group_xor_course
     unless group_id.blank? ^ subject_course_id.blank?
       errors.add(:base, 'Select a Group or a Course, not both')
-    end
-  end
-
-  def remove_empty_banner
-    #Since the editor will always populate the text_content field
-    #we must clear the entire record when no name attribute is present
-    #to allow content_page records be created without nested banners
-    if self.external_banners.any? && self.external_banners[0].name.blank?
-      self.external_banners[0].destroy
     end
   end
 
