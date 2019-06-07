@@ -2,7 +2,6 @@ class InvoiceDocument < Prawn::Document
 
   def initialize(inv, view, description, vat_rate, invoice_date)
     #super()
-    @text_name = 'Piątek'
     super(top_margin: 70)
     @invoice = inv
     @view = view
