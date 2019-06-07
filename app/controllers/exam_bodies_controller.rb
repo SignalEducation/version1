@@ -76,7 +76,9 @@ class ExamBodiesController < ApplicationController
                                       :preferred_payment_frequency,
                                       :subscription_page_subheading_text,
                                       :constructed_response_intro_heading,
-                                      :constructed_response_intro_text)
+                                      :constructed_response_intro_text,
+                                      :logo_image, :registration_form_heading,
+                                      :login_form_heading)
   end
 
 end

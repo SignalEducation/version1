@@ -2,12 +2,21 @@
 
   .bg-white.p-3.px-sm-5.pt-sm-4
     .py-3
-      -if @home_page && @home_page.login_form_heading && !@home_page.login_form_heading.empty?
-        =@home_page.login_form_heading
+      %p
+        -if @home_page
+          -if @home_page.login_form && @home_page.login_form_heading && !@home_page.login_form_heading.empty?
+            =@home_page.login_form_heading
+        -else
+          -if @plan && @plan.login_form_heading && !@plan.login_form_heading.empty?
+            =@plan.login_form_heading
+          -elsif !@plan && @product
+            =''
+          -elsif !@plan && !@product && @exam_body && @exam_body.login_form_heading && !@exam_body.login_form_heading.empty?
+            =@exam_body.login_form_heading
 
       =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
 
-      %fieldset.py-3
+      %fieldset.py-2
         %legend.sr-only
           Log in Details
 
@@ -34,8 +43,4 @@
         =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm mb-4'
 
 
-        .logo-acca
-          -if @home_page && @home_page.logo_image && @home_page.logo_image.present?
-            =#image_tag(@home_page.logo_image, class: 'logo-acca', alt: 'Logo')
-            =image_tag('learning-partner-badge.png', alt: 'Logo')
-
+        =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: ''

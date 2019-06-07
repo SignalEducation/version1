@@ -34,7 +34,7 @@ class HomePage < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # Constants
-  LOGO_IMAGES = %w(acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
+  LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
   FOOTER_OPTIONS = %w(white dark)
 
   # relationships
@@ -58,7 +58,6 @@ class HomePage < ActiveRecord::Base
 
 
   # callbacks
-  before_validation :remove_empty_banner
   before_destroy :check_dependencies
 
   # scopes
@@ -110,14 +109,5 @@ class HomePage < ActiveRecord::Base
       errors.add(:base, 'Select a Group or a Course, not both')
     end
   end
-
-  def remove_empty_banner
-    #Since the editor will always populate the text_content field
-    #we must clear the entire record when no name attribute is present
-    #to allow content_page records be created without nested banners
-    if self.external_banners.any? && self.external_banners[0].name.blank?
-      self.external_banners[0].destroy
-    end
-  end
-
+  
 end

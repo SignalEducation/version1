@@ -60,6 +60,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   before_validation :create_student_exam_track, unless: :student_exam_track_id
   before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score, if: :is_quiz
+  after_create :update_previous_attempts
   after_save :update_student_exam_track
 
   # scopes
@@ -142,7 +143,7 @@ class CourseModuleElementUserLog < ActiveRecord::Base
   #This triggers the creation of parent CSUL and its parent SCUL
   def create_student_exam_track
     set = StudentExamTrack.create!(user_id: self.user_id, course_module_id: self.course_module_id,
-                                   course_section_id: self.course_section_id,
+                                   course_section_id: self.course_module.course_section_id,
                                    subject_course_id: self.course_section.subject_course_id,
                                    course_section_user_log_id: self.try(:course_section_user_log_id),
                                    subject_course_user_log_id: self.try(:subject_course_user_log_id))
@@ -167,11 +168,12 @@ class CourseModuleElementUserLog < ActiveRecord::Base
 
   # Before Create
   def set_latest_attempt
-    unless self.preview_mode
-      CourseModuleElementUserLog.for_user(self.user_id).where(course_module_element_id: self.course_module_element_id).latest_only.update_all(latest_attempt: false)
-      self.latest_attempt = true
-      true
-    end
+    self.latest_attempt = true unless self.preview_mode
+  end
+
+  # Before Create
+  def update_previous_attempts
+    UpdatePreviousAttemptsWorker.perform_async(self.user_id, self.course_module_element_id, self.id)
   end
 
   # After Create
