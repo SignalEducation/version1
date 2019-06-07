@@ -23,6 +23,8 @@
 #  bullet_points_list            :string
 #  sub_heading_text              :string
 #  most_popular                  :boolean          default(FALSE), not null
+#  registration_form_heading     :string
+#  login_form_heading            :string
 #
 
 class SubscriptionPlan < ActiveRecord::Base
@@ -103,6 +105,15 @@ class SubscriptionPlan < ActiveRecord::Base
       plans
     end
 
+  end
+
+  def self.search(search)
+    if search
+      where('name ILIKE ? OR stripe_guid ILIKE ? OR paypal_guid ILIKE ? OR guid ILIKE ?',
+            "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
+    else
+      SubscriptionPlan.all_active.all_in_order
+    end
   end
 
   # instance methods

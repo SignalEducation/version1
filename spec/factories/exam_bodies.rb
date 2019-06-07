@@ -13,6 +13,9 @@
 #  subscription_page_subheading_text  :string
 #  constructed_response_intro_heading :string
 #  constructed_response_intro_text    :text
+#  logo_image                         :string
+#  registration_form_heading          :string
+#  login_form_heading                 :string
 #
 
 FactoryBot.define do

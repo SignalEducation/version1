@@ -33,7 +33,7 @@ class HomePage < ActiveRecord::Base
   include LearnSignalModelExtras
 
   # Constants
-  LOGO_IMAGES = %w(acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
+  LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
 
   # relationships
   belongs_to :subscription_plan_category, optional: true
