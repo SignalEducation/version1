@@ -113,7 +113,7 @@
       .logo-acca
         -if @home_page
           -if @home_page.logo_image && @home_page.logo_image.present?
-            =image_tag(@exam_body.logo_image, alt: 'Logo')
+            =image_tag(@home_page.logo_image, alt: 'Logo')
         -elsif @exam_body && @exam_body.logo_image && @exam_body.logo_image.present?
           =image_tag(@exam_body.logo_image, alt: 'Logo')
 
