@@ -27,7 +27,7 @@ class MandrillClient
   def password_reset_email(password_reset_url)
     msg = message_stub.merge({"subject" => "LearnSignal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send_template('password-reset-09-01-18', msg)
+    send_template('password-reset-190605', msg)
   end
 
   def send_set_password_email(set_password_url)
