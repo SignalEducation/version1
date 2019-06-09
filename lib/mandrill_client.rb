@@ -40,7 +40,7 @@ class MandrillClient
   def send_card_payment_failed_email(account_settings_url)
     msg = message_stub.merge({"subject" => "LearnSignal - Payment Failed"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('card-payment-failed-20-02-17', msg)
+    send_template('card-payment-failed-190605', msg)
   end
 
   def send_account_suspended_email
