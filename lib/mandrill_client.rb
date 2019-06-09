@@ -97,7 +97,7 @@ class MandrillClient
   def send_survey_email(url)
     msg = message_stub.merge({"subject" => "Student Feedback Survey"})
     msg["global_merge_vars"] << { "name" => "URL", "content" => url }
-    send_template('course-completion-survey-20-02-17', msg)
+    send_template('course-completion-survey-190605', msg)
   end
 
   private
