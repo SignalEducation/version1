@@ -52,7 +52,7 @@ class MandrillClient
     msg = message_stub.merge({"subject" => "LearnSignal - Payment Invoice"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "INVOICEURL", "content" => invoice_url }
-    send_template('successful-payment-20-02-17', msg)
+    send_template('payment-invoice-new-branding-190605', msg)
   end
 
   def send_referral_discount_email(amount)
