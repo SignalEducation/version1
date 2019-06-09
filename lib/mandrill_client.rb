@@ -15,7 +15,7 @@ class MandrillClient
   def admin_invite(verification_url)
     msg = message_stub.merge({"subject" => "Welcome to LearnSignal"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('admin-invite-20-02-17', msg)
+    send_template('admin-invite-190605', msg)
   end
 
   def csv_webinar_invite(verification_url)
