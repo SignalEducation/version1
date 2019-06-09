@@ -45,7 +45,7 @@ class MandrillClient
 
   def send_account_suspended_email
     msg = message_stub.merge({"subject" => "LearnSignal - Account Suspended"})
-    send_template('account-suspended-20-02-17', msg)
+    send_template('account-suspended-190605', msg)
   end
 
   def send_successful_payment_email(account_url, invoice_url)
