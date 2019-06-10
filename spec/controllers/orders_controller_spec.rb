@@ -47,7 +47,13 @@ describe OrdersController, type: :controller do
     )
   }
   let!(:order_2) { FactoryBot.create(:order) }
-  let!(:valid_params) { FactoryBot.attributes_for(:order, product_id: product_1.id) }
+  let!(:valid_params) {
+    FactoryBot.attributes_for(
+      :order, 
+      product_id: product_1.id,
+      stripe_token: 'tok_afsdafdfafsd'
+    )
+  }
 
 
   context 'Logged in as a valid_subscription_student: ' do
