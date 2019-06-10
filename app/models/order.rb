@@ -90,7 +90,7 @@ class Order < ActiveRecord::Base
       ),
       product.mock_exam.name,
       self.reference_guid
-    )
+    ) unless Rails.env.test?
   end
 
   def generate_exercises
