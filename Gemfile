@@ -12,7 +12,7 @@ gem 'airbrake', '~> 9.2'
 gem 'authlogic', '~> 5.0.0'
 gem 'ahoy_matey' # visit tracking
 gem 'uuidtools', '~> 2.1', '>= 2.1.5'
-gem 'blazer'
+gem 'blazer', '~> 2.1'
 gem 'scrypt' # S-Crypt for Authlogic
 # gem 'autoprefixer-rails', '~> 5.0.0.1' # required by bootstrap-sass
 gem 'aws-sdk-s3', '~> 1'
