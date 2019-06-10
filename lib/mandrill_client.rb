@@ -15,7 +15,7 @@ class MandrillClient
   def admin_invite(verification_url)
     msg = message_stub.merge({"subject" => "Welcome to LearnSignal"})
     msg["global_merge_vars"] << { "name" => "VERIFICATIONURL", "content" => verification_url }
-    send_template('admin-invite-20-02-17', msg)
+    send_template('admin-invite-190605', msg)
   end
 
   def csv_webinar_invite(verification_url)
@@ -27,7 +27,7 @@ class MandrillClient
   def password_reset_email(password_reset_url)
     msg = message_stub.merge({"subject" => "LearnSignal Password Reset"})
     msg["global_merge_vars"] << { "name" => "PASSWORDRESETURL", "content" => password_reset_url }
-    send_template('password-reset-09-01-18', msg)
+    send_template('password-reset-190605', msg)
   end
 
   def send_set_password_email(set_password_url)
@@ -40,19 +40,19 @@ class MandrillClient
   def send_card_payment_failed_email(account_settings_url)
     msg = message_stub.merge({"subject" => "LearnSignal - Payment Failed"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTSETTINGSURL", "content" => account_settings_url }
-    send_template('card-payment-failed-20-02-17', msg)
+    send_template('card-payment-failed-190605', msg)
   end
 
   def send_account_suspended_email
     msg = message_stub.merge({"subject" => "LearnSignal - Account Suspended"})
-    send_template('account-suspended-20-02-17', msg)
+    send_template('account-suspended-190605', msg)
   end
 
   def send_successful_payment_email(account_url, invoice_url)
     msg = message_stub.merge({"subject" => "LearnSignal - Payment Invoice"})
     msg["global_merge_vars"] << { "name" => "ACCOUNTURL", "content" => account_url }
     msg["global_merge_vars"] << { "name" => "INVOICEURL", "content" => invoice_url }
-    send_template('successful-payment-20-02-17', msg)
+    send_template('payment-invoice-new-branding-190605', msg)
   end
 
   def send_referral_discount_email(amount)
@@ -97,7 +97,7 @@ class MandrillClient
   def send_survey_email(url)
     msg = message_stub.merge({"subject" => "Student Feedback Survey"})
     msg["global_merge_vars"] << { "name" => "URL", "content" => url }
-    send_template('course-completion-survey-20-02-17', msg)
+    send_template('course-completion-survey-190605', msg)
   end
 
   private
