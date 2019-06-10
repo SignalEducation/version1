@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :exercises, only: [:index, :show, :edit, :update]
+    post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
   # all standard, user-facing "resources" go inside this scope
