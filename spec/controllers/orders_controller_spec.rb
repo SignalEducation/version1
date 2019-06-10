@@ -100,7 +100,7 @@ describe OrdersController, type: :controller do
 
       it 'should report OK for valid params' do
         post :create, params: { order: valid_params }
-        expect_create_success_with_model('order', orders_url)
+        expect_create_success_with_model('order', user_exercises_url(basic_student), 'Your Purchase was successful, please follow the instructions below')
       end
 
       it 'should report error for invalid params' do
