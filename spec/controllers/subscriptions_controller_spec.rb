@@ -38,25 +38,25 @@ describe SubscriptionsController, type: :controller do
   let!(:gbp) { create(:gbp) }
   let!(:uk) { create(:uk, currency: gbp) }
   let!(:uk_vat_code) { create(:vat_code, country: uk) }
-  let!(:subscription_plan_gbp_m) { 
+  let!(:subscription_plan_gbp_m) {
     create(
-      :student_subscription_plan_m,
-      currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
-      payment_frequency_in_months: 3
+        :student_subscription_plan_m,
+        currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
+        payment_frequency_in_months: 3
     )
   }
-  let!(:subscription_plan_gbp_q) { 
+  let!(:subscription_plan_gbp_q) {
     create(
-      :student_subscription_plan_q,
-      currency: gbp, price: 22.50, stripe_guid: 'stripe_plan_guid_q',
-      payment_frequency_in_months: 3
+        :student_subscription_plan_q,
+        currency: gbp, price: 22.50, stripe_guid: 'stripe_plan_guid_q',
+        payment_frequency_in_months: 3
     )
   }
-  let!(:subscription_plan_gbp_y) { 
+  let!(:subscription_plan_gbp_y) {
     create(
-      :student_subscription_plan_y,
-      currency: gbp, price: 87.99, stripe_guid: 'stripe_plan_guid_y',
-      payment_frequency_in_months: 3
+        :student_subscription_plan_y,
+        currency: gbp, price: 87.99, stripe_guid: 'stripe_plan_guid_y',
+        payment_frequency_in_months: 3
     )
   }
 
@@ -66,45 +66,45 @@ describe SubscriptionsController, type: :controller do
   let!(:canceled_pending_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
 
   let!(:valid_subscription) { create(:valid_subscription, user: valid_subscription_student,
-                                                stripe_guid: 'sub_123',
-                                                subscription_plan: subscription_plan_gbp_m,
-                                                stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
+                                     stripe_guid: 'sub_123',
+                                     subscription_plan: subscription_plan_gbp_m,
+                                     stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
   let!(:default_card) { create(:subscription_payment_card, user: valid_subscription_student,
-                                          is_default_card: true, stripe_card_guid: 'guid_222',
-                                          status: 'card-live' ) }
+                               is_default_card: true, stripe_card_guid: 'guid_222',
+                               status: 'card-live' ) }
 
-  let!(:canceled_pending_subscription) { 
+  let!(:canceled_pending_subscription) {
     create(
-      :canceled_pending_subscription,
-      state: 'pending_cancellation', 
-      user: canceled_pending_student,
-      subscription_plan: subscription_plan_gbp_m,
-      stripe_guid: 'sub_abc123',
-      stripe_customer_id: canceled_pending_student.stripe_customer_id
+        :canceled_pending_subscription,
+        state: 'pending_cancellation',
+        user: canceled_pending_student,
+        subscription_plan: subscription_plan_gbp_m,
+        stripe_guid: 'sub_abc123',
+        stripe_customer_id: canceled_pending_student.stripe_customer_id
     )
   }
 
 
   let!(:upgrade_params) {
     attributes_for(
-      :subscription,
-      user_id: basic_student.id,
-      stripe_token: 'stripe_token_123',
-      subscription_plan_id: subscription_plan_gbp_m.id,
-      terms_and_conditions: 'true'
+        :subscription,
+        user_id: basic_student.id,
+        stripe_token: 'stripe_token_123',
+        subscription_plan_id: subscription_plan_gbp_m.id,
+        terms_and_conditions: 'true'
     )
   }
 
   let!(:change_plan_params) { attributes_for(:subscription, subscription_plan: subscription_plan_gbp_q,
-                                                    user: valid_subscription_student,
-                                                    stripe_token: 'stripe_token_123',
-                                                    terms_and_conditions: 'true') }
+                                             user: valid_subscription_student,
+                                             stripe_token: 'stripe_token_123',
+                                             terms_and_conditions: 'true') }
   let!(:invalid_upgrade_params_1) { attributes_for(:subscription, subscription_plan: subscription_plan_gbp_m,
-                                                    stripe_token: 'stripe_token_123',
-                                                    terms_and_conditions: 'false') }
+                                                   stripe_token: 'stripe_token_123',
+                                                   terms_and_conditions: 'false') }
   let!(:invalid_upgrade_params_2) { attributes_for(:subscription, subscription_plan: subscription_plan_gbp_m,
-                                                    stripe_token: nil,
-                                                    terms_and_conditions: 'true') }
+                                                   stripe_token: nil,
+                                                   terms_and_conditions: 'true') }
 
   let!(:valid_params) { attributes_for(:subscription) }
 
@@ -133,7 +133,7 @@ describe SubscriptionsController, type: :controller do
         }
         get_url = "https://api.stripe.com/v1/customers/#{basic_student.stripe_customer_id}"
         get_response_body = {"id": basic_student.stripe_customer_id, "object": "customer", "account_balance": 0,
-                         "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
+                             "invoice_prefix": "1C44D6D", "livemode": false,"default_source": "src_Do8swBcNDszFmc",
                              "sources": {"object": "list", "data": [sources], "has_more": false, "total_count": 0,
                                          "url": "/v1/customers/cus_Do8skFvJFlWtvy/sources"}
         }
@@ -214,16 +214,6 @@ describe SubscriptionsController, type: :controller do
 
     end
 
-    describe "GET 'personal_upgrade_complete'" do
-      it 'should render upgrade complete page' do
-        get :personal_upgrade_complete
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:personal_upgrade_complete)
-      end
-    end
-
     describe "Post 'un_cancel_subscription'" do
       it 'should successfully change subscription to active' do
 
@@ -254,9 +244,9 @@ describe SubscriptionsController, type: :controller do
         get_sub_url = "https://api.stripe.com/v1/customers/#{canceled_pending_student.stripe_customer_id}/subscriptions/#{canceled_pending_subscription.stripe_guid}"
         subscription = {      "id": canceled_pending_subscription.stripe_guid, "object": "subscription",
                               "billing": "charge_automatically",
-                               "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                               "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                               "customer": canceled_pending_student.stripe_customer_id}
+                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
+                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
+                              "customer": canceled_pending_student.stripe_customer_id}
 
         stub_subscription_get_request(get_sub_url, subscription)
 
@@ -349,4 +339,26 @@ describe SubscriptionsController, type: :controller do
       end
     end
   end
+
+  context 'Logged in as a valid_subscription_student: ' do
+
+    before(:each) do
+      activate_authlogic
+      UserSession.create!(valid_subscription_student)
+      valid_subscription.start
+    end
+
+    describe "GET 'personal_upgrade_complete'" do
+      it 'should render upgrade complete page' do
+        get :personal_upgrade_complete
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:personal_upgrade_complete)
+      end
+    end
+
+  end
+
+
 end
