@@ -2,29 +2,19 @@
 #
 # Table name: subscription_plan_categories
 #
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  available_from       :datetime
-#  available_to         :datetime
-#  guid                 :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  trial_period_in_days :integer
+#  id               :integer          not null, primary key
+#  name             :string
+#  available_from   :datetime
+#  available_to     :datetime
+#  guid             :string
+#  created_at       :datetime
+#  updated_at       :datetime
+#  sub_heading_text :string
 #
 
 require 'rails_helper'
 
 describe SubscriptionPlanCategory do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at guid)
-  SubscriptionPlanCategory.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
 
   subject { FactoryBot.build(:subscription_plan_category) }
 

@@ -21,36 +21,29 @@
 
 class Enrollment < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :subject_course_id, :subject_course_user_log_id,
-                  :active, :exam_body_id, :exam_date, :expired, :updated_at,
-                  :exam_sitting_id, :computer_based_exam, :percentage_complete
-
   # Constants
 
   # relationships
-  belongs_to :exam_body
-  belongs_to :exam_sitting
-  belongs_to :user
-  belongs_to :subject_course
-  belongs_to :subject_course_user_log
+  belongs_to :exam_body, optional: true
+  belongs_to :exam_sitting, optional: true
+  belongs_to :user, optional: true
+  belongs_to :subject_course, optional: true
+  belongs_to :subject_course_user_log, optional: true
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :exam_sitting_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_user_log_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :exam_body_id, allow_nil: true,
-            numericality: {only_integer: true, greater_than: 0}
+  validates :user_id, presence: true
+  validates :subject_course_id, presence: true
+  validates :subject_course_user_log_id, presence: true
+  validates :exam_body_id, presence: true
+  validates :exam_date, allow_nil: true, inclusion:
+      {in: Date.today..Date.today + 2.years, message: "%{value} is not a valid date" }
 
 
   # callbacks
   before_destroy :check_dependencies
-  after_create :create_expiration_worker, :deactivate_siblings, :create_intercom_event, :update_percentage_complete
+  before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
+  before_create :set_percentage_complete, if: :subject_course_user_log_id
+  after_create :create_expiration_worker, :deactivate_siblings
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -67,10 +60,9 @@ class Enrollment < ActiveRecord::Base
   scope :all_valid, -> { where(active: true, expired: false) }
   scope :all_not_expired, -> { where(expired: false) }
   scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
-  scope :all_paused, -> { where(paused: true) }
-  scope :all_un_paused, -> { where(paused: false) }
-  scope :all_for_notifications, -> { where(notifications: true) }
-  scope :all_not_for_notifications, -> { where(notifications: false) }
+  scope :for_active_course, -> { where(active: true, expired: false).includes(:subject_course).references(:subject_courses).where('subject_courses.active = ?', true) }
+  scope :for_user, lambda { |user_id| where(user_id: user_id) }
+  scope :for_course_and_user, lambda { |course_id, user_id| where(subject_course_id: course_id, user_id: user_id) }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :by_sitting, lambda { |sitting_id| where(exam_sitting_id: sitting_id) }
 
@@ -87,17 +79,25 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  def self.to_csv(options = {})
-    attributes = %w{id user_id status f_name l_name course_name exam_sitting_name enrollment_date user_email date_of_birth student_number display_percentage_complete elements_complete_count course_elements_count }
-    CSV.generate(options) do |csv|
-      csv << attributes
-
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
+  def self.create_on_register_login(user, subject_course_id)
+    subject_course = SubjectCourse.where(id: subject_course_id).first
+    exam_sitting = subject_course.exam_sittings.all_active.all_in_order.first
+    if subject_course&.active && exam_sitting
+      existing_enrollment = user.enrollments.where(exam_sitting_id: exam_sitting).all_active.all_not_expired.last
+      if existing_enrollment
+        enrollment = existing_enrollment.update_attribute(:notifications, true)
+        message = "Thank you. You have successfully registered for the #{existing_enrollment&.subject_course&.name} Bootcamp"
+      else
+        enrollment = Enrollment.create!(user_id: user.id, active: true, subject_course_id: subject_course.id,
+                           exam_sitting_id: exam_sitting.id,
+                           exam_body_id: subject_course.exam_body_id, notifications: true)
+        message = "Thank you. You have successfully enrolled in #{enrollment&.subject_course&.name} and opted into Bootcamp"
       end
+    else
+      message = "Sorry! Bootcamp is not currently available #{'for ' + subject_course&.name}"
     end
+    return enrollment, message
   end
-
 
   # instance methods
   def destroyable?
@@ -115,67 +115,25 @@ class Enrollment < ActiveRecord::Base
       #For Old Enrollments without ExamSittingIds
       self.exam_date
     else
-      self.exam_sitting.date
+      self.exam_sitting.date if self.exam_sitting
     end
   end
 
-  def course_name
-    self.subject_course.try(:name)
-  end
-
-  def exam_sitting_name
-    self.exam_sitting.try(:name)
-  end
-
-  def user_email
-    self.user.email
-  end
-
   def student_number
-    self.user.student_number
+    self.user.exam_body_user_details.for_exam_body(self.subject_course.exam_body_id).first.try(:student_number)
   end
 
-  def f_name
-    self.user.first_name
+  def alternate_exam_sittings
+    ExamSitting.where(active: true, computer_based: false, subject_course_id: subject_course.id,
+                                       exam_body_id: subject_course.exam_body_id).all_in_order
   end
 
-  def l_name
-    self.user.last_name
-  end
-
-  def date_of_birth
-    self.user.try(:date_of_birth)
+  def sibling_enrollments
+    self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def display_percentage_complete
     self.percentage_complete.to_s << '%'
-  end
-
-  def elements_complete_count
-    course_log = self.subject_course_user_log
-    if course_log
-      percentage = course_log.count_of_cmes_completed
-      percentage
-    end
-  end
-
-  def course_elements_count
-    course_log = self.subject_course_user_log
-    if course_log
-      course_log.elements_total
-    end
-  end
-
-  #def quiz_logs_count
-  #  self.subject_course_user_log.course_module_element_user_logs.quizzes.count if self.subject_course_user_log
-  #end
-
-  #def cme_quiz_count
-  #  self.subject_course.quiz_count
-  #end
-
-  def sibling_enrollments
-    self.subject_course.enrollments.where(user_id: self.user_id).where.not(id: self.id)
   end
 
   def status
@@ -212,25 +170,26 @@ class Enrollment < ActiveRecord::Base
   def deactivate_siblings
     if self.sibling_enrollments.any?
       self.sibling_enrollments.each do |enrollment|
-        enrollment.update_attributes(active: false, notifications: false)
+        enrollment.update_attribute(:active, false)
       end
     end
+  end
+
+  def create_subject_course_user_log
+    subject_course_user_log = SubjectCourseUserLog.create!(user_id: self.user_id,
+                                                           session_guid: self.user.try(:session_guid),
+                                                           subject_course_id: self.subject_course_id)
+    self.subject_course_user_log_id = subject_course_user_log.id
+  end
+
+  def set_percentage_complete
+    self.percentage_complete = subject_course_user_log.percentage_complete
   end
 
   def create_expiration_worker
     if self.computer_based_exam && self.exam_date
       EnrollmentExpirationWorker.perform_at(self.exam_date.to_datetime + 23.hours, self.id) unless Rails.env.test?
     end
-  end
-
-  def update_percentage_complete
-    if self.subject_course_user_log_id && self.active
-      self.update_attribute(:percentage_complete, self.subject_course_user_log.percentage_complete)
-    end
-  end
-
-  def create_intercom_event
-    IntercomCourseEnrolledEventWorker.perform_async(self.user_id, self.subject_course.name, self.enrollment_date) unless Rails.env.test?
   end
 
 end

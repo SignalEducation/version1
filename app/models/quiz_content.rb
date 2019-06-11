@@ -22,18 +22,13 @@ class QuizContent < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :quiz_question_id, :quiz_answer_id, :quiz_solution_id,
-                  :text_content, :sorting_order, :image, :image_file_name,
-                  :image_content_type, :image_file_size, :image_updated_at
-
   # Constants
 
   # relationships
-  belongs_to :quiz_answer
-  belongs_to :quiz_question
-  belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id
-  has_attached_file :image, default_url: '/assets/images/missing.png'
+  belongs_to :quiz_answer, optional: true
+  belongs_to :quiz_question, optional: true
+  belongs_to :quiz_solution, class_name: 'QuizQuestion', foreign_key: :quiz_solution_id, optional: true
+  has_attached_file :image, default_url: 'images/missing_image.jpg'
 
   # validation
   validate  :one_parent_only, on: :update

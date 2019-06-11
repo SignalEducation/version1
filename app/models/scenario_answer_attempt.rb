@@ -16,11 +16,6 @@
 
 class ScenarioAnswerAttempt < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :scenario_question_attempt_id, :user_id, :scenario_answer_template_id,
-                  :original_answer_template_text, :user_edited_answer_template_text,
-                  :editor_type, :sorting_order
-
   # Constants
 
   # relationships

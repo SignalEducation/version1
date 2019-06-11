@@ -14,10 +14,27 @@
 
 
 # Ignore all logfiles and tempfiles.
-/log
-/tmp
 /spec/tmp
 /public/system
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore uploaded files in development
+/storage/*
+!/storage/.keep
+
+/node_modules
+/yarn-error.log
+
+/public/assets
+.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
 
 # Ignore some hidden files
 Guardfile
@@ -39,6 +56,7 @@ config/secrets.yml
 # Ignore application configuration - figaro gem
 /config/local_env.yml
 *.dump
+*.env
 
 
 # used by SimpleCov

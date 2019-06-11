@@ -5,24 +5,15 @@ require 'mandrill'
 require 'csv'
 
 class ApplicationController < ActionController::Base
-
-  before_action :authenticate_if_staging
-  before_action :setup_mcapi
-
-  def authenticate_if_staging
-    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
-      authenticate_or_request_with_http_basic 'Staging' do |name, password|
-        name == 'signal' && password == '27(South!)'
-      end
-    end
-  end
-
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :exception, prepend: true
+  before_action :authenticate_if_staging
+  before_action :setup_mcapi
   before_action :set_locale        # not for Api::
   before_action :set_session_stuff # not for Api::
   before_action :set_layout_variables
+  before_action :authorize_rack_profiler
 
   helper_method :current_user_session, :current_user
 
@@ -96,7 +87,7 @@ class ApplicationController < ActionController::Base
       destination = default
       session[:return_to] = nil
     end
-    redirect_to(destination)
+    redirect_to(destination, flash: { just_signed_in: true })
   end
 
   def ensure_user_has_access_rights(authorised_features)
@@ -112,7 +103,8 @@ class ApplicationController < ActionController::Base
          (the_user_group.marketing_resources_access && permitted_thing == 'marketing_resources_access') ||
          (the_user_group.student_user && the_user_group.trial_or_sub_required && permitted_thing == 'student_user') ||
          (!the_user_group.student_user && permitted_thing == 'non_student_user') ||
-         (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access')
+         (the_user_group.user_group_management_access && permitted_thing == 'user_group_management_access') ||
+         (the_user_group.exercise_corrections_access && permitted_thing == 'exercise_corrections_access')
         permission_granted = true
       end
     end
@@ -124,18 +116,19 @@ class ApplicationController < ActionController::Base
   end
   helper_method :ensure_user_has_access_rights
 
-  def paywall_checkpoint
-    allowed     = {course_content: {view_all: true, reason: nil}}
-    not_allowed     = {course_content: {view_all: false, reason: nil}}
-
-    if current_user && current_user.permission_to_see_content
-      result = allowed
-    else
-      result = not_allowed
+  def authenticate_if_staging
+    if Rails.env.staging? && !%w(stripe_v02 paypal_webhooks).include?(controller_name)
+      authenticate_or_request_with_http_basic 'Staging' do |name, password|
+        name == 'signal' && password == '27(South!)'
+      end
     end
-    result
   end
-  helper_method :paywall_checkpoint
+
+  def authorize_rack_profiler
+    if current_user && current_user.is_admin?
+      Rack::MiniProfiler.authorize_request
+    end
+  end
 
   #### Locale
 
@@ -152,13 +145,13 @@ class ApplicationController < ActionController::Base
   #### Session GUIDs and user tracking
 
   def current_session_guid
-    cookies.permanent.encrypted[:session_guid]
+    cookies.encrypted[:session_guid]
   end
   helper_method :current_session_guid
 
 
   def set_session_stuff
-    cookies.permanent.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
+    cookies.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
 
     #TODO These are being filled with ConstructedResponse JSON in courses_controller tests (L125)
     #cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
@@ -221,6 +214,10 @@ class ApplicationController < ActionController::Base
       subject_course_url(
                 the_thing.subject_course)
 
+    elsif the_thing.class == CourseSection
+      subject_course_url(
+          the_thing.subject_course)
+
     elsif the_thing.class == SubjectCourse
       new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
 
@@ -253,7 +250,7 @@ class ApplicationController < ActionController::Base
 
   # Library Navigation Links
   def library_special_link(the_thing)
-    if the_thing.class == Group
+    if the_thing.class == (Group)
       the_thing = the_thing
       library_group_url(
                   the_thing.name_url
@@ -261,17 +258,10 @@ class ApplicationController < ActionController::Base
     elsif the_thing.class == SubjectCourse
       the_thing = the_thing
       if the_thing.parent
-        if the_thing.preview
-          library_preview_url(
-              the_thing.parent.name_url,
-              the_thing.name_url
-          )
-        else
-          library_course_url(
-              the_thing.parent.name_url,
-              the_thing.name_url
-          )
-        end
+        library_course_url(
+            the_thing.parent.name_url,
+            the_thing.name_url
+        )
       else
         library_url
       end
@@ -287,36 +277,93 @@ class ApplicationController < ActionController::Base
   end
   helper_method :library_special_link
 
+  # Enrollment Navigation Links
+  def course_enrollment_special_link(course_id)
+    subject_course = SubjectCourse.where(id: course_id).first
+    if subject_course && subject_course.active
+      library_course_url(
+          subject_course.parent.name_url,
+          subject_course.name_url,
+          anchor: :bootcamp
+      )
+    else
+      student_dashboard_url
+    end
+  end
+  helper_method :course_enrollment_special_link
 
-  def course_special_link(the_thing, direction='forwards')
-    if the_thing.class == CourseModule
-      library_special_link(
-              the_thing.subject_course
+  # Library Navigation Links
+  def navigation_special_link(the_thing)
+    the_thing = the_thing
+    library_course_url(
+        the_thing.course_module.course_section.subject_course.group.name_url,
+        the_thing.course_module.course_section.subject_course.name_url,
+        anchor: the_thing.course_module.course_section.name_url,
+        cm: the_thing.course_module.id
+    )
+  end
+  helper_method :navigation_special_link
+
+
+  def course_special_link(the_thing, exam_body_id, scul=nil)
+    if the_thing.class == SubjectCourse
+      library_course_url(
+          the_thing.parent.name_url,
+          the_thing.name_url
+      )
+    elsif the_thing.class == CourseSection
+      library_course_url(
+          the_thing.subject_course.group.name_url,
+          the_thing.subject_course.name_url,
+          anchor: the_thing.name_url
+      )
+    elsif the_thing.class == CourseModule
+      library_course_url(
+          the_thing.course_section.subject_course.group.name_url,
+          the_thing.course_section.subject_course.name_url,
+          the_thing.course_section.name_url,
+          anchor: the_thing.name_url
       )
     elsif the_thing.class == CourseModuleElement
-      if current_user
-        if current_user.permission_to_see_content
-          if current_user.enrolled_in_course?(the_thing.course_module.subject_course.id)
-            course_url(
-                the_thing.course_module.subject_course.name_url,
-                the_thing.course_module.name_url,
-                the_thing.name_url
-            )
-          else
-            library_course_url(
-                the_thing.parent.parent.parent.name_url,
-                the_thing.parent.parent.name_url,
-                anchor: 'enrollment-modal'
-            )
-          end
-
-        else
+      if current_user #current_user
+        if current_user.non_verified_user? #current_user.non_verified_user?
           library_course_url(
-              the_thing.parent.parent.parent.name_url,
-              the_thing.parent.parent.name_url,
-              anchor: 'access-denied-modal'
+              the_thing.course_module.course_section.subject_course.group.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
+              anchor: 'verification-required'
+          )
+
+        elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
+          library_course_url(
+              the_thing.course_module.course_section.subject_course.group.name_url,
+              the_thing.course_module.course_section.subject_course.name_url,
+              anchor: 'related-lesson-restriction'
+          )
+        else
+          course_url(
+            the_thing.course_module.course_section.subject_course.name_url,
+            the_thing.course_module.course_section.name_url,
+            the_thing.course_module.name_url,
+            the_thing.name_url
           )
         end
+
+        #permission = the_thing.available_to_user(current_user, exam_body_id, scul)
+        #if permission[:view]
+        #  course_url(
+        #      the_thing.course_module.course_section.subject_course.name_url,
+        #      the_thing.course_module.course_section.name_url,
+        #      the_thing.course_module.name_url,
+        #      the_thing.name_url
+        #  )
+
+        #else
+        #  library_course_url(
+        #      the_thing.course_module.course_section.subject_course.group.name_url,
+        #      the_thing.course_module.course_section.subject_course.name_url,
+        #      anchor: permission[:reason]
+        #  )
+        #end
       else
         new_student_url
       end
@@ -327,8 +374,37 @@ class ApplicationController < ActionController::Base
   end
   helper_method :course_special_link
 
+  def course_resource_special_link(the_thing)
+    if the_thing.class == SubjectCourseResource
+
+      the_thing.external_url.blank? ? the_thing.file_upload.url : the_thing.external_url
+
+    else
+      library_special_link(the_thing)
+    end
+  end
+  helper_method :course_resource_special_link
+
+  def subscription_checkout_special_link(exam_body_id, subscription_plan_guid=nil)
+    if current_user
+      new_subscription_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    else
+      sign_in_or_register_url(exam_body_id: exam_body_id, plan_guid: subscription_plan_guid)
+    end
+  end
+  helper_method :subscription_checkout_special_link
+
+  def product_checkout_special_link(exam_body_id, product_id=nil)
+    if current_user
+      new_order_url(product_id)
+    else
+      sign_in_or_register_url(exam_body_id: exam_body_id, product_id: product_id)
+    end
+  end
+  helper_method :product_checkout_special_link
+
   def seo_title_maker(seo_title, seo_description, seo_no_index)
-    @seo_title = seo_title.to_s.truncate(65) || 'ACCA: Professional Accountancy Courses Online| LearnSignal'
+    @seo_title = seo_title.to_s.truncate(65) || 'Professional Finance Courses Online| LearnSignal'
     @seo_description = seo_description.to_s.truncate(156)
     @seo_no_index = seo_no_index
   end
@@ -341,6 +417,4 @@ class ApplicationController < ActionController::Base
   def setup_mcapi
     @mc = Mailchimp::API.new(ENV['LEARNSIGNAL_MAILCHIMP_API_KEY'])
   end
-
-
 end

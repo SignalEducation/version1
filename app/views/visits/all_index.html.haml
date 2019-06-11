@@ -1,26 +1,22 @@
-.l-section-small.is-bg-asphalt{style: 'padding-left: 30px; padding-right: 30px;'}
-  .container-fluid.l-padding-side-3x
-    .row.l-margin-bottom.l-margin-top
-      .col-md-12.col-sm-12.col-xs-12.text-center
-        %h1.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
-          =t('views.visits.all_index.h1')
+.container
+  %header.management-console-section
+    %h1
+      =t('views.visits.all_index.h1')
 
-    .row.l-margin-top.l-margin-bottom
-      .col-md-12
-        =render partial: 'management_consoles/user_management_nav'
+  %section.pb-3
+    =render partial: 'management_consoles/user_management_nav'
+    .row
+      .col-sm-12
+        .box-item.table-box
+          .row
+            .col-sm
+              .search-container
+                =form_tag(search_visits_url, role: 'form', class: 'form-inline') do
+                  =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search')
+                  %button{type: "submit"}
+                    %i{:role => "img", class: 'budicon-search-list'}
 
-    .row.l-margin-top.l-margin-bottom
-      .col-md-12.col-sm-12.col-xs-12
-        =form_tag(visits_all_index_url, method: :get, role: 'form', class: 'form-inline input-group-lg') do
-          .form-group.input-group.input-group-lg
-            =text_field_tag :search_term, params[:search_term], class: 'form-control', placeholder: t('views.general.search'), onblur: 'this.form.submit(); return false;'
-            .input-group-addon{style: 'background-color: #EE5457; color: #fff;'}
-              %span.glyphicon.glyphicon-search
-
-      .col-md-12.l-margin-top-big
-        .corporate-box-item.table-box
-          .table-responsive
-            =will_paginate @visits, renderer: BootstrapPagination::Rails
+          .table-responsive.pt-5
             %table.table.sorted_table{style: 'font-size: 18px;'}
               %thead
                 %tr
@@ -43,4 +39,6 @@
                     %td=visit.utm_campaign
                     %td=humanize_datetime(visit.started_at)
                     %td
-                      =link_to t('views.general.view'), visits_all_show_url(visit), class: 'btn btn-cyan btn-small'
+                      =link_to t('views.general.view'), visits_all_show_url(visit), class: 'btn btn-secondary btn-small'
+
+            =will_paginate @visits, renderer: BootstrapPagination::Rails

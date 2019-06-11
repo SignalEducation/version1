@@ -35,58 +35,6 @@ describe SubscriptionService, type: :service do
     it 'does stuff'
   end
 
-  describe '#pause' do
-    describe 'for PayPal subscriptions' do
-      before :each do
-        allow(sub_service).to receive(:paypal?).and_return(true)
-      end
-
-      it 'calls #suspend_billing_agreement on the PaypalService' do
-        expect_any_instance_of(PaypalService).to receive(:suspend_billing_agreement).with(subscription)
-
-        sub_service.pause
-      end
-    end
-
-    describe 'for Stripe subscriptions' do
-      before :each do
-        allow(sub_service).to receive(:stripe?).and_return(true)
-      end
-
-      it 'calls #pause_subscription on the StripeService' do
-        expect_any_instance_of(StripeService).to receive(:pause_subscription).with(subscription)
-
-        sub_service.pause
-      end
-    end
-  end
-
-  describe '#re_activate' do
-    describe 'for PayPal subscriptions' do
-      before :each do
-        allow(sub_service).to receive(:paypal?).and_return(true)
-      end
-
-      it 'calls #reactivate_billing_agreement on the PaypalService' do
-        expect_any_instance_of(PaypalService).to receive(:reactivate_billing_agreement).with(subscription)
-
-        sub_service.re_activate
-      end
-    end
-
-    describe 'for Stripe subscriptions' do
-      before :each do
-        allow(sub_service).to receive(:stripe?).and_return(true)
-      end
-
-      it 'calls #reactivate_subscription on the StripeService' do
-        expect_any_instance_of(StripeService).to receive(:reactivate_subscription).with(subscription)
-
-        sub_service.re_activate
-      end
-    end
-  end
-
   describe '#paypal?' do
     describe 'with :use_paypal param' do
       let(:paypal_sub) { build_stubbed(:subscription, use_paypal: 'true') }
@@ -198,7 +146,7 @@ end
 #       @subscription = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
 #     elsif self.paypal?
 #       @subscription.save!
-#       @subscription = PaypalService.new.create_and_return_subscription(@subscription)
+#       @subscription = PaypalPlansService.new.create_and_return_subscription(@subscription)
 #     end
 #   end
 

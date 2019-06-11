@@ -14,39 +14,31 @@ require 'rails_helper'
 
 describe ConstructedResponse do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at time_allowed destroyed_at)
-  ConstructedResponse.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
+  describe 'relationships' do
+    it { should belong_to(:course_module_element) }
+    it { should have_one(:scenario) }
   end
 
-  # Constants
+  describe 'validations' do
+    it { should validate_presence_of(:course_module_element_id).on(:update) }
+    it { should validate_numericality_of(:course_module_element_id).on(:update) }
+  end
 
-  # relationships
-  it { should belong_to(:course_module_element) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  it { should have_one(:scenario) }
+  describe 'scopes' do
+    it { expect(ConstructedResponse).to respond_to(:all_in_order) }
+  end
 
-  # validation
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
-  it { should validate_numericality_of(:course_module_element_id).on(:update) }
+  describe 'class methods' do
+    it { expect(ConstructedResponse).to respond_to(:constructed_response_nested_scenario_text_is_blank?) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-
-  # scopes
-  it { expect(ConstructedResponse).to respond_to(:all_in_order) }
-
-  # class methods
-  it { expect(ConstructedResponse).to respond_to(:constructed_response_nested_scenario_text_is_blank?) }
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:add_an_empty_scenario) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:add_an_empty_scenario) }
+  end
 
 end

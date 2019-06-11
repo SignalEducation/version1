@@ -29,13 +29,6 @@
 #
 
 class Charge < ActiveRecord::Base
-
-  # attr-accessible
-  attr_accessible :subscription_id, :invoice_id, :user_id, :subscription_payment_card_id, :currency_id, :coupon_id,
-                  :stripe_api_event_id, :stripe_guid, :amount, :amount_refunded, :failure_code, :failure_message,
-                  :stripe_customer_id, :stripe_invoice_id, :livemode, :stripe_order_id, :paid, :refunded,
-                  :stripe_refunds_data, :status, :original_event_data
-
   # Constants
 
   # relationships
@@ -44,8 +37,8 @@ class Charge < ActiveRecord::Base
   belongs_to :user
   belongs_to :subscription_payment_card
   belongs_to :currency
-  belongs_to :coupon
-  belongs_to :stripe_api_event
+  belongs_to :coupon, optional: true
+  belongs_to :stripe_api_event, optional: true
   has_many :refunds
 
   # validation

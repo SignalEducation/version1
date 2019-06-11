@@ -14,9 +14,6 @@
 
 class FaqSection < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :description, :active, :sorting_order
-
   # Constants
 
   # relationships

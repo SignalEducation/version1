@@ -21,16 +21,12 @@
 
 class ExternalBanner < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :name, :sorting_order, :active, :background_colour, :text_content, :user_sessions,
-                  :library, :subscription_plans, :footer_pages, :student_sign_ups, :home_page_id, :content_page_id
-
   # Constants
   BANNER_CONTROLLERS = %w(user_sessions library subscription_plans footer_pages student_sign_ups)
 
   # relationships
-  belongs_to :content_page
-  belongs_to :home_page
+  belongs_to :content_page, optional: true
+  belongs_to :home_page, optional: true
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}

@@ -8,7 +8,7 @@
       -if @seo_title
         =@seo_title
       -else
-        Study ACCA Online | LearnSignal
+        The Smarter Way to Study | learnsignal
 
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
@@ -18,6 +18,7 @@
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'|| controller_name == 'content_activations'
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.common.min.css', rel: 'stylesheet'}
       %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default-v2.min.css', rel: 'stylesheet'}
+      %link{href: 'https://kendo.cdn.telerik.com/2018.2.516/styles/kendo.default.mobile.min.css', rel: 'stylesheet'}
 
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'dashboard' || controller_name == 'user_verifications' || controller_name == 'footer_pages' || controller_name == 'student_sign_ups'
       %script{src: 'https://player.vimeo.com/api/player.js'}
@@ -40,34 +41,23 @@
       %meta{name: 'description', content: @seo_description}
     -if @seo_no_index
       %meta{name: 'robots', content: 'noindex'}
+    =render 'application/favicon'
 
-    =render partial: 'layouts/favicon'
     -if Rails.env.production?
-      %script{type: 'text/javascript', src: 'https://cdn.optimizely.com/js/5168310932.js'}
-      =render partial: 'layouts/facebook_pixel'
       =render partial: 'layouts/cookie_banner'
-      =render partial: 'layouts/survicate_pixel'
-      =render partial: 'layouts/quora_js_pixel'
 
-  %body
+  -#%body.page-light
+  %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
 
-    %noscript
-      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
-    height: 0, width: 0, style: 'display:none;visibility:hidden'}
-
-    -if Rails.env.production?
-      =render partial: 'layouts/google_tag_manager'
-      =render partial: 'layouts/linkedin_pixel'
+    :javascript
+      dataLayer = [];
 
     -if @layout == 'standard'
       -if @navbar
-        -if @navbar == 'transparent'
-          =render partial: 'layouts/transparent_navbar'
-        -else
-          =render partial: 'layouts/navbar'
+        =render partial: 'layouts/navbar'
 
       -if @top_margin
         -if @banner && !current_user
@@ -86,7 +76,7 @@
 
     -elsif @layout == 'management'
       #console-wrapper
-        .hidden-xs
+        .d-none.d-sm-block
           =render partial: 'layouts/management_side_navbar'
 
         .main-content
@@ -110,6 +100,21 @@
     -unless controller_name == 'courses'
       =render partial: 'layouts/intercom'
 
+    -if current_user
+      :javascript
+        dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
+
+      -if flash[:datalayer_verify]
+        :javascript
+          dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+
+
+    %noscript
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
+
+    -unless Rails.env.development?
+      =render partial: 'layouts/google_tag_manager'
+
     <!-- Mathjax -->
 
     -if @mathjax_required && !controller_name == 'home_pages'
@@ -122,3 +127,4 @@
 
     -unless controller_name == 'home_pages'
       %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+

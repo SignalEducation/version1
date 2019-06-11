@@ -1,4 +1,4 @@
-class CreateSubjectCourses < ActiveRecord::Migration
+class CreateSubjectCourses < ActiveRecord::Migration[4.2]
   def change
     create_table :subject_courses do |t|
       t.string :name, index: true

@@ -1,4 +1,4 @@
-class RemoveForiegnKeysForOldCourseHierarchy < ActiveRecord::Migration
+class RemoveForiegnKeysForOldCourseHierarchy < ActiveRecord::Migration[4.2]
   def change
     remove_column :course_modules, :exam_level_id, :integer
     remove_column :course_modules, :exam_section_id, :integer

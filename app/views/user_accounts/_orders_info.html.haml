@@ -1,31 +1,32 @@
-.row
-  .col-sm-12
-    %table.table{style: 'font-size: 18px;'}
-      %thead
-        %tr
-          %th
-            =t('views.mock_exams.form.name')
-          %th
-            =t('views.invoices.form.date')
-          %th
-            =t('views.invoices.form.status')
-          %th
-            =t('views.invoices.form.line_total_inc_vat')
-          %th
-      %tbody
-        -@orders.each do |order|
+%article.card
+  .card-body
+    %h2.mb-4.text-gray2
+      Orders
+    .table-responsive
+      %table.table
+        %thead
           %tr
-            %td
-              -if order.product && order.product.mock_exam
-                =order.product.mock_exam.name.to_s.truncate(20)
-            %td
-              =humanize_datetime(order.created_at)
-            %td
-              =order.stripe_status.to_s.capitalize
-            %td
-              =number_in_local_currency(order.product.price, order.product.currency_id)
-            %td
-              -if order.product && order.product.mock_exam
-                =link_to order.product.mock_exam.file.url, target: '_blank' do
-                  .btn.btn-purple.btn-small.pull-right
-                    View
+            %th=t('views.mock_exams.form.name')
+            %th=t('views.invoices.form.date')
+            %th=t('views.invoices.form.status')
+            %th=t('views.invoices.form.line_total_inc_vat')
+            %th
+            %th
+        %tbody
+          -@orders.each do |order|
+            %tr
+              %td
+                -if order.product && order.product.mock_exam
+                  =order.product.mock_exam.name.to_s.truncate(20)
+              %td=humanize_datetime(order.created_at)
+              %td=order.stripe_status.to_s.capitalize
+              %td=number_in_local_currency(order.product.price, order.product.currency_id)
+              %td
+                %span{class: order.state == 'completed' ? 'text-success' : 'text-danger'}
+                  =order.state
+              %td
+                -if order.product && order.product.mock_exam
+                  =link_to order.product.mock_exam.file.url, target: '_blank' do
+                    .btn.btn-link.btn-xs
+                      View
+

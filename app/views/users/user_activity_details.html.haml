@@ -1,0 +1,53 @@
+.container
+  %header.management-console-section
+    %h1
+      =@user.full_name
+    %p.p-hero.px-lg-8
+      =@user.email
+
+  %section.pb-7
+    =render partial: 'user_tabs'
+
+    .row
+      .col-sm-12
+        .box-item.table-box
+          %h3.h-dark
+            Course Activity
+
+          .table-responsive
+            .row
+              .col-sm-12
+                %table.table
+                  %thead
+                    %tr
+                      %th
+                        Course
+                      %th
+                        Created At
+                      %th
+                        Enrollment
+                      %th
+                        Status
+                      %th
+                      %th
+                  %tbody
+                    -@sculs.each do |scul|
+                      %tr
+                        %td
+                          -if scul.subject_course
+                            =scul.subject_course.name
+                        %td
+                          =humanize_datetime(scul.created_at)
+                        %td
+                          =tick_or_cross(scul.active_enrollment)
+                        %td
+                          =scul.active_enrollment.expired ? 'Expired' : 'Valid' if scul.active_enrollment
+                        %td
+                          - if scul.active_enrollment
+                            =link_to edit_enrollment_management_url(scul.active_enrollment) do
+                              .btn.btn-primary.btn-xs
+                                =t('views.general.edit')
+                        %td
+                          =link_to user_scul_activity_url(scul_id: scul.id) do
+                            .btn.btn-secondary.btn-xs
+                              =t('views.general.view')

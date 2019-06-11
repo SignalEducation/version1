@@ -13,8 +13,8 @@
 
 FactoryBot.define do
   factory :scenario do
-    constructed_response_id 1
-    sorting_order 1
-    text_content 'MyText'
+    constructed_response_id { 1 }
+    sorting_order { 1 }
+    text_content { 'MyText' }
   end
 end

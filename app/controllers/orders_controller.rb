@@ -49,16 +49,17 @@ class OrdersController < ApplicationController
     @course = @mock_exam.subject_course
     @order = Order.new
     @layout = 'standard'
+    seo_title_maker("#{@mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create
     @order = current_user.orders.build(allowed_params)
     order_object = PurchaseService.new(@order)
     @order = order_object.create_purchase
-    if @order.save
+    if @order && @order.save
       if order_object.stripe? && @order.complete
         flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-        redirect_to order_complete_url(@order.reference_guid)
+        redirect_to user_exercises_path(current_user)
       elsif order_object.paypal?
         redirect_to @order.paypal_approval_url
       else
@@ -66,6 +67,7 @@ class OrdersController < ApplicationController
         redirect_to new_order_url(product_id: @order.product_id)
       end
     else
+      flash[:error] = 'Something went wrong. Please try again. Or contact us for assistance'
       redirect_to new_order_url(product_id: @order.product_id)
     end
     @navbar = false
@@ -79,7 +81,7 @@ class OrdersController < ApplicationController
     when 'paypal'
       PaypalService.new.execute_payment(@order, params[:paymentId], params[:PayerID])
       flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-      redirect_to order_complete_url(@order.reference_guid)
+      redirect_to user_exercises_path(current_user)
     else
       flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
       redirect_to new_order_url(product_id: @order.product_id)
@@ -110,7 +112,7 @@ class OrdersController < ApplicationController
   def allowed_params
     params.require(:order).permit(
       :subject_course_id, :product_id, :user_id, :stripe_token,
-      :terms_and_conditions, :use_paypal, :paypal_approval_url
+      :use_paypal, :paypal_approval_url
     )
   end
 

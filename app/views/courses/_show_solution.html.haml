@@ -42,7 +42,7 @@
     %p.text-inline.text-bold=(('A'..'Z').to_a[your_answer].to_s)
 
   -if attempt.try(:quiz_question).try(:quiz_solutions).try(:count).to_i > 0
-    %h3.l-margin-top-big.l-margin-bottom-big
+    %h3.mt-4.mb-3
       ='Explanation'
 
     -if attempt.try(:quiz_question).try(:quiz_solutions)
@@ -55,7 +55,7 @@
   .panel.panel-default.border-same-backcolor
     .list-group
       -if attempt.try(:quiz_question).try(:quiz_answers)
-        -attempt.answers.each_with_index do |qa, counter2|
+        -attempt.answers.includes(:quiz_contents).each_with_index do |qa, counter2|
           %li.list-group-item.quiz-answer-clickable
             .container-fluid
               .row

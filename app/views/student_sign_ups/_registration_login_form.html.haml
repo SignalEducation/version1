@@ -1,0 +1,35 @@
+.d-flex.flex-column.justify-content-center
+  -if (@home_page && @home_page.registration_form && @home_page.login_form) || !@home_page
+
+    #registration-login
+      %nav.register-login-nav
+        %ul.nav.nav-tabs.nav-tabs-no-collapse#registerLoginTabs{role: "tablist"}
+          %li.nav-item
+            %a.nav-link.active#register-tab{'data-toggle': "tab", href: "#register", 'aria-controls': "register", 'aria-selected': "true", role: "tab"}
+              Register
+
+          %li.nav-item
+            %a.nav-link{id: "log-in-tab", 'data-toggle': "tab", href: "#log-in", 'aria-controls':"log-in", 'aria-selected': "true", role: "tab"}
+              Log In
+
+      #registerLoginTabsContent.tab-content
+        #register.tab-pane.show.active.tab-register{"aria-labelledby" => "register-tab", :role => "tabpanel"}
+          =render partial: 'registration_form'
+
+        .tab-pane.log-in-tab#log-in{role: 'tabpanel', 'aria-labelledby': 'log-in-tab'}
+          =render partial: 'login_form'
+
+
+
+  -elsif @home_page.registration_form
+    #registration-option
+      =render partial: 'registration_form'
+
+
+
+  -elsif @home_page.login_form
+    #login-option
+      =render partial: 'login_form'
+
+
+

@@ -70,8 +70,9 @@ en:
       select: Select...
       send: Send
       settings: Settings
-      sign_in: Sign in
+      sign_in: Log In
       enter: Enter
+      log_out: Log out
       sign_out: Sign out
       sign_up: Sign up
       sign_up_now: Sign up Now
@@ -128,10 +129,8 @@ en:
         a12: Ideal for corporates
       day: " Day"
       free_trial: " Free Trial"
-      all_you_can_eat_yes: "Unlimited Access"
       all_courses: "Unlimited Courses"
       cancel_anytime: "Cancel Anytime"
-      submit: Sign Up Now
       actual_submit: Submit
       user_name: "Hi, "
       upload_csv: Upload CSV File
@@ -167,6 +166,21 @@ en:
       new:
         h1: New Category
 
+    exercises:
+      show: 
+      admin:
+        index:
+          h1: Student Exercises
+          name: Name
+          email: Email
+          state: Current State
+          submitted_on: Submitted On
+          corrected_on: Corrected On
+          returned_on: Returned On
+        form:
+          correction: Upload Correction
+        show:
+        edit:
 
     orders:
       index:
@@ -375,10 +389,39 @@ en:
         previous_attempts: Previous Attempts
         no_previous_attempts: "This is your first attempt at this quiz. If you re-attempt this quiz in the future, your most recent previous attempts will be shown here."
 
+
+    course_sections:
+      form:
+        course_module_elements: Course Module Elements
+        subject_course_id: Course
+        name: Name
+        name_placeholder: Course Section (tab) Name
+        name_url: Name URL
+        name_url_placeholder: course-section-name
+        sorting_order: Sorting order
+        sorting_order_placeholder: 100
+        active: Active
+        counts_towards_completion: Counts towards Completion
+        assumed_knowledge: Assumed Knowledge
+
+      edit:
+        h1: Edit Course Section
+
+      index:
+        h1: Course Sections
+        delete: Delete Course Section
+
+      new:
+        h1: New Course Section
+
+      show:
+        h1: Course Section
+
     course_modules:
       form:
         course_module_elements: Course Module Elements
         subject_course_id: Course
+        course_section_id: Course Section (tab)
         name: Name
         name_placeholder: Course Module Name
         name_url: Name URL
@@ -426,7 +469,6 @@ en:
         name_url_placeholder: auto-populated-for-you
         temporary_label: Label
         temporary_label_placeholder: Temp Label
-        active: Active
         delete: Delete File
         description: Description
         description_placeholder: Description (This is optional)
@@ -436,6 +478,7 @@ en:
         course_module_id: Course module
         course_module_element_video_id: Course module element video id
         course_module_element_quiz_id: Course module element quiz id
+        related_course_module_element_id: Related Course Module Element
         sorting_order: Sorting order
         forum_topic_id: Forum topic
         created_at: Created at
@@ -506,7 +549,6 @@ en:
         time_allowed_placeholder: Time in Seconds
         new_scenario: New Scenario
         scenario_number: "Scenario #"
-        scenario_number: "Scenario #"
         type: Answer Template Type
 
         scenarios:
@@ -553,6 +595,8 @@ en:
         duration_placeholder: Duration in Seconds
         video_id: Video ID
         video_id_placeholder: Wistia ID
+        vimeo_guid: Vimeo ID
+        vimeo_guid_placeholder: Vimeo ID (in the URL on Vimeo)
 
     course_tutor_details:
       form:
@@ -572,10 +616,6 @@ en:
       new:
         h1: New Course Tutor Details
 
-    subject_course_user_log:
-      show:
-        course: Course
-        completed_at: Completed At
 
     currencies:
       form:
@@ -642,9 +682,6 @@ en:
         preview_csv:
           h1: Upload Preview
 
-        preview_csv:
-          h1: Upload Preview
-
       content_manager:
         edited_in_last_3_days: Edited in the last 3 days
         expired_in_last_3_days: Expired in the last 3 days
@@ -659,10 +696,19 @@ en:
         name_placeholder: Name of Examining Body
         url: Url
         url_placeholder: Home URL of Examining Body
-        modal_heading: Modal Heading
-        modal_heading_placeholder: Heading for Student No. & DOB Modal
-        modal_text: Modal Text
-        modal_text_placeholder: Text for Student No. & DOB Modal
+        active: Active
+        has_sittings: Has Sittings?
+        preferred_payment_frequency: Preferred Payment Interval
+        subscription_page_subheading_text: Subscription Payment Subheading
+        subscription_page_subheading_text_placeholder: Subscription Payment Subheading
+        constructed_response_intro_heading: Constructed Response Start Screen Heading
+        constructed_response_intro_heading_placeholder: Constructed Response Start Screen Heading
+        constructed_response_intro_text: Constructed Response Start Screen Instructions
+        registration_form_heading: Registration Form Heading
+        registration_form_heading_placeholder: Basic Registration Form Heading
+        login_form_heading: Login Form Heading
+        login_form_heading_placeholder: Login Form Heading
+        logo_image: Logo Image
 
       index:
         h1: Exam Bodies
@@ -800,6 +846,14 @@ en:
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         course_count: No. of Courses
+        background_colour: Background Colour
+        exam_body: Exam body
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
+        short_description: Short Description
+        short_description_placeholder: Subheading Tagline
 
       index:
         h1: Groups
@@ -835,24 +889,22 @@ en:
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
         blog_posts: Blog Posts
-        header_heading: Header H1
-        header_heading_placeholder: Header H1 Text
-        header_paragraph: Header Paragraph
-        header_paragraph_placeholder: Header Paragraph Text
-        header_button_text: Header Button Text
-        header_button_text_placeholder: Header Button Text
-        header_button_link: Header Button Link
-        header_button_link_placeholder: Header Button Link
-        header_button_subtext: Header Button Subtext
-        header_button_subtext_placeholder: Header Button Subtext
-        background_image: Background Image
         mailchimp_list_guid: MailChimp List ID
         mailchimp_list_guid_placeholder: MailChimp List ID
-        mailchimp_subscribe_section: MailChimp Section
-        mailchimp_section_heading: MailChimp Section Heading Text
-        mailchimp_section_heading_placeholder: H1 Text
-        mailchimp_section_subheading: MailChimp Section Sub-Heading Text
-        mailchimp_section_subheading_placeholder: H2 Text
+        logo_image: Logo Image
+        footer_option: Footer Colour
+        registration_form: Registration Form
+        login_form: Login Form
+        pricing_section: Pricing Section
+        preferred_payment_frequency: Preferred Payment Frequency
+        header_h1: Header H1
+        header_h1_placeholder: Header H1
+        header_paragraph: Header Paragraph
+        header_paragraph_placeholder: Header Paragraph
+        registration_form_heading: Reg Form Heading
+        registration_form_heading_placeholder: Reg Form Heading Text
+        login_form_heading: Login Form Heading
+        login_form_heading_placeholder: Login Form Header text
 
       index:
         h1: Landing Pages
@@ -868,8 +920,7 @@ en:
 
       sign_up_form:
         confirm_password: Confirm Password
-        submit: Get free course access
-        sign_up_for_free_trial: Sign up for your 7-day free trial
+        submit: Submit
         no_credit_card_needed: No credit card needed
         error_panel_caption: "prevented your Sign-Up from being completed:"
 
@@ -888,7 +939,6 @@ en:
         line_total_vat_amount: Total VAT
         line_total_inc_vat: Total
         status: 'Status'
-        vat_rate_id: "VAT rated"
         issued_at: "Issued at"
         date: Date
         subject_course: Course
@@ -964,8 +1014,8 @@ en:
         question: Question
         quiz: Quiz
         quizzes: MCQs
-        steps: Steps
-        step: Step
+        lessons: Steps
+        lesson: Step
         mcq: MCQ
         mcqs: MCQs
         video: Video
@@ -986,7 +1036,8 @@ en:
         name_placeholder: Mock Exam Name
         subject_course_id: Course
         product_id: Product
-        file: Upload the Exam File
+        file: Upload a PDF of your solution
+        file_replacement: Upload a replacement solution
         cover_image: Upload the Cover Image File
         sorting_order: Sorting Order
 
@@ -1012,9 +1063,9 @@ en:
         currency: Currency
         mock_exam_id: Mock Exam
         product_type: Product Type
+        correction_pack_count: Number of Corrections
         subject_course: Course
         type: Type
-        currency: Currency
 
       index:
         h1: Products
@@ -1122,40 +1173,27 @@ en:
         preview: Preview Mode
         computer_based: Computer Based
         highlight_colour: Highlight Colour
+        release_date: Release Date
         exam_body_id: Exam Body
         sorting_order: Sorting order
         sorting_order_placeholder: 100
         description: Description
         description_placeholder: Course Description
-        short_description: Short Description - without any text formatting
-        short_description_placeholder: Plain Description - without any text formatting or HTML tags
         survey_url: Completion Survey URL
         survey_url_placeholder: Survey Monkey URL
-        external_url_name: Name of External Link
-        external_url_name_placeholder: Name of External Link to appear on Course Page
-        external_url: External Link
-        external_url_placeholder: External Link URL for Course Page
         default_number_of_possible_exam_answers: Default No. of Questions
         default_number_of_possible_exam_answers_placeholder: No. of Questions
         group_id: Group
         quiz_pass_rate: Quiz Pass Rate
         quiz_pass_rate_placeholder: Custom Pass Rate for Quizzes
-        email_content: Welcome Email Content
-        email_content_placeholder: Content for Enrollment Welcome Email
-        additional_text_label: Additional Text Label
-        additional_text_label_placeholder: Additional Text Label [Previously F4]
+        icon_label: Icon Label
+        icon_label_placeholder: Budicon Text Label
         category_label: Category Label
         category_label_placeholder: Category Label [Applied Knowledge]
-
-        tutor_info:
-          h1: Tutors Info
-          name: Tutor Name
-          name_placeholder: Tutor Name
-          description: Description
-          description_placeholder: Tutor Info
-          title: Tutor Title
-          title_placeholder: Tutor Title
-
+        seo_title: SEO Title
+        seo_title_placeholder: SEO Title
+        seo_description: SEO Description
+        seo_description_placeholder: SEO Description
 
       index:
         h1: Courses
@@ -1229,7 +1267,10 @@ en:
         registered: Registered
         exam_date: Select your Exam Date
         computer_based_exam_date: Select Computer Based Exam Date
+        edit_exam_date: Edit Exam Date
+        select_exam_date: Select Exam Date
         exam_sitting_id: Select your Exam Sitting
+        edit_exam_sitting: Change Sitting
         student_number: Student Number
         student_number_placeholder: Student Number
         notifications: Receive Notifications
@@ -1269,16 +1310,15 @@ en:
         remember_cancel_anytime: Remember, you can cancel at anytime
 
       upgrade_complete:
-        h1: Thanks for choosing a subscription!
+        h1: Thank you for subscribing
         h2:
 
 
     subscription_plans:
       form:
         name: Name
-        name_placeholder: 'Name of plan - Learnsignal will be automatically added for you'
-        available_to_students: Available Standard Students
-        all_you_can_eat: All you can eat
+        name_placeholder: Name of plan
+        exam_body_id: Exam Body
         payment_frequency_in_months: Payment frequency in months
         currency_id: Currency
         price: Price
@@ -1288,12 +1328,20 @@ en:
         available_to: Available to
         available_to_placeholder: "2019-12-31"
         stripe_guid: Stripe ID
-        trial_period_in_days: Trial
-        trial_period_in_days_placeholder: 14
         subscription_plan_category_id: Subscription Plan Category
-        monthly_percentage_off: Optional monthly percentage saving
-        previous_plan_price: Optional previous plan price
+        monthly_percentage_off: Percentage saving
+        previous_plan_price: Previous plan price
         active: Active
+        guid: Guid - autogenerated
+        sub_heading_text: Plan Heading Text
+        sub_heading_text_placeholder: Payment Checkout Page Heading
+        bullet_points_list: Bullet Points
+        bullet_points_list_placeholder: Point divided by commas
+        most_popular: Most Popular Plan
+        registration_form_heading: Registration Heading Text
+        registration_form_heading_placeholder: Registration Form Heading Text
+        login_form_heading: Login Heading Text
+        login_form_heading_placeholder: Login Form Heading Text
 
       edit:
         h1: Edit Subscription Plan
@@ -1322,8 +1370,8 @@ en:
         available_to: Available to
         available_to_placeholder: "2015-12-31 23:59"
         guid: GUID
-        trial_period_in_days: Trial period in days
-        trial_period_in_days_placeholder: 7
+        sub_heading_text: Sub Heading Text
+        sub_heading_text_placeholder: Payment page subheading
 
       edit:
         h1: Edit Subscription Plan Category
@@ -1368,16 +1416,18 @@ en:
       form:
         email: Email
         email_confirmation: Email Confirmation
-        your_email: Your email address
+        exam_body: Area of Study
+        area_of_study: Area of Study
+        your_email: Enter your email
         email_placeholder: user@example.com
         phone_number: Phone Number
         interest: Topic
         phone_number_placeholder: Phone Number
         first_name: First Name
-        your_first_name: Your first name
+        your_first_name: Enter your first name
         first_name_placeholder: John
         last_name: Last Name
-        your_last_name: Your last name
+        your_last_name: Enter your last name
         username: Community Username
         username_placeholder: Username for LearnSignal Community Forum
         last_name_placeholder: Smith
@@ -1386,11 +1436,11 @@ en:
         current_password_placeholder: Current password
         create_password: Create a password
         password: Password
-        password_placeholder: Password
+        password_placeholder: Enter your password
         new_password: New Password
         new_password_placeholder: New Password
         password_confirmation: Password Confirmation
-        password_confirmation_placeholder: Password Confirmation
+        password_confirmation_placeholder: Confirm your password
         address: Address
         address_placeholder: Billing address
         name_url: Name URL
@@ -1462,7 +1512,7 @@ en:
         confirm_subscription_pause: PAUSE MEMBERSHIP
         confirm_subscription_cancellation: Cancel My Subscription
         confirm_subscription_reactivate: Reactivate My Subscription
-        keep_subscription: KEEP MEMBERSHIP
+        keep_subscription: Keep Subscription
         card_expired: "Expired"
         card_expires: "Expires"
         card_live: "Live Card"
@@ -1552,6 +1602,9 @@ en:
           invoices: Invoices
           stripe_sub_guid: Stripe Subscription ID
           stripe_sub_status: Stripe Subscription Status
+          paypal_sub_guid: PayPal Subscription ID
+          paypal_sub_status: PayPal Subscription Status
+          paypal_sub_token: PayPal Subscription Token
           valid_payment_card: Valid Payment Card
 
 
@@ -1574,6 +1627,12 @@ en:
         trial_ending: Trial Ending
         trial_ended: Trial Ended
         remaning_minutes: Remaining Trial Minutes
+        upgrade_button: Upgrade Account
+
+      account_info:
+        tab_heading: Account Info
+        member_since: Member Since
+        account_type: Account Type
         upgrade_button: Upgrade Account
 
 
@@ -1615,12 +1674,12 @@ en:
       change_password:
         button_label: Change Password
         heading: Change your password
-        current_password: Current password
+        current_password: Current Password
         current_password_placeholder: Current password
-        new_password: New Password
+        new_password: "New Password"
         new_password_placeholder: New Password
-        password_confirmation: Password confirmation
-        password_confirmation_placeholder: Password confirmation
+        password_confirmation: Confirm New Password
+        password_confirmation_placeholder: Password Confirmation
 
 
     user_groups:
@@ -1640,6 +1699,7 @@ en:
         student_user: Student User
         trial_or_sub_required: Trial or Sub Required
         blocked_user: Blocked User
+        exercise_corrections_access: Exercise Corrections
 
       edit:
         h1: Edit User Group
@@ -1656,11 +1716,10 @@ en:
 
     user_passwords:
       new:
-        h1: Password Reset
-        paragraph_1: Forgot password? No problem!
-        paragraph_2: Enter your email address and we will send you further instructions.
+        h1: Forgot Your Password?
+        paragraph_1: Enter your email address below to reset your password.
         email: Email
-        email_placeholder: Enter Email Address Here
+        email_placeholder: Enter Your Email Address
         submit: Reset My Password
 
       create:
@@ -1668,19 +1727,19 @@ en:
         paragraph_1: "No problem! check your mailbox for further instructions. If you don't receive an email within a couple of minutes, check your spam folder."
 
       edit:
-        h1: Reset your password
-        paragraph_1: "Enter a new password for your account:"
+        h1: Reset Your Password
+        paragraph_1: Enter a new password for your account.
 
       set_password:
         h1: Enter password
         h2: Complete Account Setup
-        paragraph_1: "The following information required to complete your account setup"
+        paragraph_1: The following information is required to complete your account setup
 
 
 
     user_sessions:
       new:
-        h1: Sign In
+        h1: Log In
       form:
         error_message: 'prevented you from signing in'
         email: Email
@@ -1775,67 +1834,6 @@ en:
         message: Message
         message_placeholder: Message (optional)
 
-    white_papers:
-      form:
-        name: Title
-        name_placeholder: Title of White Paper
-        name_url: Name URL
-        name_url_placeholder: Name URL
-        subject_course_id: Course
-        description: Description(This accepts html tags)
-        description_placeholder: Enter description here
-        file_file_name: File name
-        file_content_type: File content type
-        file_file_size: File size
-        file_updated_at: File updated at
-        file: Upload the White Paper File
-        file_replacement: Upload replacement if you want
-        file_title: White Paper File
-        cover_image_file_name: Cover Image name
-        cover_image_content_type: Cover Image content type
-        cover_image_file_size: Cover Image size
-        cover_image_updated_at: Cover Image updated at
-        cover_image: Upload the Cover Image
-        cover_image_replacement: Upload replacement if you want
-        cover_image_title: Cover Image
-
-
-      index:
-        h1: White Papers
-        library: Media Library
-        mock_exams: Mock Exams
-
-      show:
-        h1: White Paper
-
-      edit:
-        h1: Edit White Paper
-
-      new:
-        h1: New White Paper
-
-    white_paper_requests:
-      form:
-        name: Name
-        name_placeholder: Enter Full Name
-        email: Email
-        email_placeholder: Enter Email Here
-        number: Phone Number
-        number_placeholder: Enter a Contact Number
-        company_name: Company Name
-        company_name_placeholder: Company Name
-
-      index:
-        h1: White Paper Requests
-
-      show:
-        h1: White Paper Request
-
-      edit:
-        h1: Edit White Paper Request
-
-      new:
-        h1: New White Paper Request
 
     video_resource:
       form:

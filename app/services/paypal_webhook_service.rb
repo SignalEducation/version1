@@ -4,35 +4,29 @@ class PaypalWebhookService
   include PayPal::SDK::REST
   include PayPal::SDK::Core::Logging
 
-  def initialize(request, paypal_body)
-    @request = request
-    @paypal_body = paypal_body
-    @webhook = nil
+  attr_accessor :webhook
+
+  def record_webhook(paypal_body)
+    @webhook = PaypalWebhook.find_or_create_by(
+      guid: paypal_body['id'], 
+      event_type: paypal_body['event_type'], 
+      payload: paypal_body
+    )
   end
 
-  def process
+  def process_webhook
     trigger_payment_actions
   end
 
-  def record_webhook
-    @webhook = PaypalWebhook.new(
-      guid: @paypal_body['id'], 
-      event_type: @paypal_body['event_type'], 
-      payload: @paypal_body
-    )
-    @webhook.save
-  end
-
-  def valid?
-    WebhookEvent.verify(
-      transmission_id,
-      timestamp,
-      ENV['PAYPAL_WEBHOOK_ID'],
-      @paypal_body,
-      cert_url,
-      actual_signature,
-      auth_algo
-    )
+  def reprocess_webhook(webhook)
+    @webhook = webhook
+    event = PayPal::SDK::REST::WebhookEvent.get(@webhook.guid)
+    @webhook.update_columns(payload: {})
+    payload = JSON.parse(event.to_json)
+    @webhook.update_columns(payload: payload)
+    trigger_payment_actions
+  rescue PayPal::SDK::Core::Exceptions::ResourceNotFound
+    Rails.logger.info "Webhook information no longer available for PaypalWebhook #{@webhook.id}"
   end
 
   private
@@ -54,25 +48,5 @@ class PaypalWebhookService
     when 'PAYMENT.SALE.DENIED'
       @webhook.process_sale_denied
     end
-  end
-
-  def transmission_id
-    @request.headers["Paypal-Transmission-Id"]
-  end
-
-  def actual_signature
-    @request.headers["Paypal-Transmission-Sig"]
-  end
-
-  def auth_algo
-    @request.headers["Paypal-Auth-Algo"].sub(/withRSA/i, "")
-  end
-
-  def cert_url
-    @request.headers["Paypal-Cert-Url"]
-  end
-
-  def timestamp
-    @request.headers["Paypal-Transmission-Time"]
   end
 end

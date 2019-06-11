@@ -1,33 +1,103 @@
-.l-section-small.is-bg-asphalt
-  .l-wrap
-    .container-fluid
-      .row.l-margin-bottom
-        .col-md-12.text-center
-          .group_show{style: "background: url(#{@group.background_image.url})  50% 0 no-repeat;"}
-            .row
-              .col-md-6.col-md-offset-3.l-margin-top
-                %h1.h1.bold.h-white.h-separator.h-separator-center.text-center.html_safe.l-margin-bottom
-                  =@group.name
-                %p.h5.h-white.text-center
-                  =@group.description.to_s.html_safe
+%main
+  %article.library-group-show.bg-white.py-5.py-lg-6
+    .container
+      %header.hero-section.hero-section-revisions{style: "background-image: url(#{@group.background_image.url});", title: "#{@group.name} Courses banner"}
+        %h1.h1-hero.mb-3.text-white
+          =@group.name
+          ='Courses'
+        %p.p-hero.px-lg-6.text-white
+          =@group.short_description
+
+      %section.py-5.py-md-6
+        %h2.sr-only List of Courses
+        .row.row-lg
+          -if @courses
+            -@courses.each do |course|
+              .col-lg-6.col-xl-4
+                =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+                  .card-header.d-flex.justify-content-center.align-items-center
+                    %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+                  .card-body.d-flex.flex-column.justify-content-center
+                    %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                      -if course.preview && course.release_date
+                        ="Coming #{course.release_date.strftime("%B, %Y")}"
+                      -else
+                        =course.category_label
+                    %h5.card-title.mb-1
+                      %span.mr-1
+                        =course.name
 
 
-  .l-wrap.l-margin-top-big
-    .container-fluid
-      .row.l-margin-bottom-huge
-        -if @courses
-          -@courses.each do |course|
-            .col-sm-4
-              =link_to library_special_link(course), class: 'card card-course', style: 'padding: 0px;' do
-                .card-inner.text-center
-                  %h3.h3.card-title
-                    =course.try(:name)
-                .card-info.text-center
-                  %p.h5{style: 'color: #f092b0; '}
-                    =course.try(:additional_text_label)
 
-                .card-label{style: "background: #{course.highlight_colour};"}
-                  .row
-                    .col-md-12.col-xs-12.text-center
-                      %h4{style: 'color: #fff;'}
-                        =course.category_label ? course.category_label : 'Enrol Now'
+  -if @group && @subscription_plans && @subscription_plans.any? && !(current_user && current_user.valid_subscription_for_exam_body?(@group.exam_body_id))
+    .container-bg.bg-gray5
+      .container#plans
+        %article.py-6
+          %header.text-center.pb-5.pb-md-6
+            %h2.h1-mega
+              ="#{@group.name} Subscription"
+            %p.p-hero.px-lg-8
+              -if @group.exam_body.subscription_page_subheading_text && !@group.exam_body.subscription_page_subheading_text.blank?
+                =@group.exam_body.subscription_page_subheading_text
+              -else
+                ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+
+          .row.row-lg.justify-content-center
+            -@subscription_plans.each do |plan|
+              .col-lg-4
+                %article.card.card-primary.card-primary-alt.medium-gap
+                  -if plan.most_popular
+                    .card-banner.bg-mint
+                      %large.text-white
+                        Most popular payment plan
+                  .card-body.text-center.py-4.py-sm-5
+                    %h2.card-title
+                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                    %ul.list-centered
+                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                          %li=bullet
+                      -else
+                        %li="Access all #{@group.name} courses"
+                        %li="Topic-by-topic lectures"
+                        %li="24/7 tutor support"
+
+                      %li{style: 'font-style: italic;'}
+                        Cancel anytime
+
+                    %p.h2.mb-0
+                      =plan.currency.format_number(plan.price)
+
+                    -if plan.monthly_percentage_off
+                      %p.h5.text-gray2
+                        Save over
+                        =plan.monthly_percentage_off
+                        ='%'
+                    .mt-auto
+                      =link_to subscription_checkout_special_link(plan.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                        Choose this plan
+
+
+    :javascript
+
+      function addToCart(currency, name, id, price, body) {
+        dataLayer.push({
+          'event': 'addToCart',
+          'ecommerce': {
+            'currencyCode': currency,
+            'add': {
+              'products': [{
+                'name': name,
+                'id': id,
+                'price': price,
+                'brand': body,
+                'category': 'Subscription',
+                'quantity': 1
+                }]
+            }
+          }
+        });
+
+      }

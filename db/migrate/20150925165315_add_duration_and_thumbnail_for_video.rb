@@ -1,4 +1,4 @@
-class AddDurationAndThumbnailForVideo < ActiveRecord::Migration
+class AddDurationAndThumbnailForVideo < ActiveRecord::Migration[4.2]
   def change
     add_column :course_module_element_videos, :duration, :float
     add_column :course_module_element_videos, :thumbnail, :text

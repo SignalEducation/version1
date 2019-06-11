@@ -4,16 +4,12 @@
       =link_to 'Account', user_url(@user)
     %li
       =link_to 'Personal', user_personal_url(@user)
-    -if @user.tutor_user?
-      %li
-        =link_to 'Courses', user_courses_url(@user)
-    -elsif @user.subscriptions && @user.subscriptions.any?
-      %li
-        =link_to 'Subscriptions', user_subscription_url(@user)
+    %li
+      =link_to 'Subscriptions', user_subscription_url(@user)
     %li
       =link_to 'Purchases', user_orders_url(@user)
     %li
-      =link_to 'Enrolments', user_enrollments_url(@user)
+      =link_to 'Activity', user_activity_url(@user)
     %li
       =link_to 'Referrals', user_referrals_url(@user)
 

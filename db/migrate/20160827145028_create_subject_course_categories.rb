@@ -1,4 +1,4 @@
-class CreateSubjectCourseCategories < ActiveRecord::Migration
+class CreateSubjectCourseCategories < ActiveRecord::Migration[4.2]
   def up
     create_table :subject_course_categories do |t|
       t.string :name, index: true
@@ -9,17 +9,6 @@ class CreateSubjectCourseCategories < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    unless Rails.env.test?
-      SubjectCourseCategory.new(name: "Subscription Category", payment_type: "Subscription", active: true, subdomian: nil).tap do |cat|
-        cat.save
-      end
-      SubjectCourseCategory.new(name: "Product Category", payment_type: 'Product', active: true, subdomian: nil).tap do |cat|
-        cat.save
-      end
-      SubjectCourseCategory.new(name: "Corporate Category", payment_type: 'Corporate', active: true, subdomian: nil).tap do |cat|
-        cat.save
-      end
-    end
   end
 
   def down

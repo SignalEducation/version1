@@ -7,14 +7,24 @@ class UserAccountsController < ApplicationController
   def account_show
     @orders = @user.orders
     @referral_code = @user.referral_code
-    @enrollments = current_user.active_enrollments_in_sitting_order
+    @enrollments = current_user.valid_enrollments_in_sitting_order
 
-    #@enrollments = @user.enrollments.all_in_account_order.sort_by { |enrollment| enrollment.active ? 0 : 1 }
-    if current_user.student_access
-      @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-      @current_subscription = @user.current_subscription
-      @invoices = @user.invoices
-    end
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
+    @default_payment_card = @subscription_payment_cards.all_default_cards.first
+    @subscriptions = @user.subscriptions.where(active: true).order(created_at: :desc)
+
+    @invoices = @user.invoices
+    @exam_body_user_details = @user.exam_body_user_details.where.not(student_number: nil)
+
+    #ExamBody.where.not(id: @exam_body_user_details.map(&:exam_body_id)).all.each do |exam_body|
+    #  #TODO - limit this to only exam bodies that have sittings (not CPD)
+      # and where enrolments exist for this user
+    #  @user.exam_body_user_details.build(exam_body_id: exam_body.id)
+    #end
+    seo_title_maker('View Your Account Details | LearnSignal',
+                    'Log in to view your learnsignal account details including personal information, account information, orders, enrolments and referral program.',
+                    false)
+
 
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
@@ -41,23 +51,13 @@ class UserAccountsController < ApplicationController
     end
   end
 
-  def update_exam_body_user_details
-    if @user && @user.update_attributes(exam_body_user_allowed_params)
-      flash[:success] = I18n.t('controllers.users.update_exam_body_details.flash.success')
-      redirect_to course_special_link(@user.enrollments.last.subject_course)
-    else
-      session[:user_exam_body_errors] = @user.errors unless @user.errors.empty?
-      redirect_to request.referrer
-    end
-  end
-
   def change_password
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
       redirect_to account_url
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
-      redirect_to account_url(anchor: 'change-password-modal')
+      redirect_to account_url
     end
   end
 
@@ -92,12 +92,12 @@ class UserAccountsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth, :student_number,
-    :unsubscribed_from_emails)
-  end
-
-  def exam_body_user_allowed_params
-    params.require(:user).permit(:date_of_birth, :student_number)
+    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth,
+                                 :unsubscribed_from_emails, exam_body_user_details_attributes: [
+                                                                              :id,
+                                                                              :exam_body_id,
+                                                                              :student_number]
+    )
   end
 
   def get_variables

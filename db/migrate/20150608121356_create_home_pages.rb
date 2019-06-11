@@ -1,4 +1,4 @@
-class CreateHomePages < ActiveRecord::Migration
+class CreateHomePages < ActiveRecord::Migration[4.2]
   def up
     create_table :home_pages do |t|
       t.string :seo_title
@@ -8,20 +8,6 @@ class CreateHomePages < ActiveRecord::Migration
 
       t.timestamps null: false
     end
-
-    unless Rails.env.test?
-      HomePage.create(public_url: '/', seo_title: 'Learn Signal', seo_description: 'Learn Signal').tap do |home|
-        home.save
-        end
-      HomePage.create(public_url: '/acca', seo_title: 'Learn Signal', seo_description: 'Learn Signal').tap do |acca|
-        acca.save
-      end
-      HomePage.create(public_url: '/cfa', seo_title: 'Learn Signal', seo_description: 'Learn Signal').tap do |cfa|
-        cfa.save
-      end
-
-    end
-
   end
 
   def down

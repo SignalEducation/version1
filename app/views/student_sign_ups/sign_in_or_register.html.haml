@@ -1,0 +1,126 @@
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h2-hero.mb-2
+          -if @plan
+            = "#{@plan ? @plan.exam_body.name : 'Exam'} Tuition Registration"
+          -elsif @product
+            = "#{@product.mock_exam.name} Purchase Process"
+          -elsif @exam_body
+            = "#{@exam_body.name} Tuition Registration"
+          -else
+            = "Register or Login"
+
+      .row.row-lg
+        -if @plan
+          .col-lg-4
+            %article.card.card-primary.card-primary-alt.mb-6.mb-lg-0
+              .card-body.text-center.py-4.py-sm-5
+                %h2.card-title
+                  =t("views.general.payment_frequency_in_months.a#{@plan.payment_frequency_in_months}")
+
+                %ul.list-centered
+                  -if @plan.bullet_points_list && !@plan.bullet_points_list.empty?
+                    - @plan.bullet_points_list.split(/, ?/).each do |bullet|
+                      %li=bullet
+                  -else
+                    %li="Access all #{@plan.exam_body.group.name} courses"
+                    %li="Topic-by-topic lectures"
+                    %li="24/7 tutor support"
+
+                  %li{style: 'font-style: italic;'}
+                    Cancel anytime
+
+                %p.h2.mb-0
+                  =@plan.currency.format_number(@plan.price)
+
+                -if @plan.monthly_percentage_off
+                  %p.h5.text-gray2
+                    Save over
+                    =@plan.monthly_percentage_off
+                    ='%'
+
+                .pt-4.pt-md-5
+                  %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
+
+
+        -elsif @product
+          .col-lg-4
+            %article.mb-6.mb-lg-0
+              .card.card-link.text-center.mb-5
+                .py-4
+                  %h4.text-ellipsis.mb-4
+                    =@product.mock_exam.try(:name)
+                  .pt-2
+                    %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                  .pt-5
+                    %p.h4.mb-3.text-torquoise
+                      Total:
+                      %span
+                        =number_in_local_currency(@product.price, @product.currency_id)
+                  .pt-4.pt-md-5
+                    %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
+
+
+
+        .col-lg-8{class: "#{(@plan || @product) ? '' : 'offset-2'}"}
+          =render partial: 'registration_login_form'
+
+
+:javascript
+
+  $(document).ready(function(){
+    let hash = window.location.hash;
+    let elements = $('a[href="' + hash + '"]');
+
+    if (elements.length > 0) {
+      elements.click();
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    }
+
+    if ($(".notice.error")[0]){
+      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
+      let tabLink = $('#' + tabId + '-tab');
+      tabLink.tab('show');
+    }
+  })
+
+
+-if @plan || @product
+  :javascript
+    function selectTab(tab, currencyIso, name, id, price, body, type) {
+      dataLayer.push({ 'event': 'checkout',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'checkout': {
+            'actionField': {'step': 1, 'option':tab},
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': type,
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+
+    let currencyIso = "#{@plan ? @plan.currency.iso_code : @product.currency.iso_code}";
+    let name = "#{@plan ? @plan.name : @product.name}";
+    let id = "#{@plan ? @plan.id : @product.id}";
+    let price = "#{@plan ? @plan.price : @product.price}";
+    let body = "#{@plan ? @plan.exam_body.name : @product.mock_exam.subject_course.exam_body.name}";
+    let type = "#{@plan ? 'Subscription' : 'Exam Papers'}";
+
+    $(document).ready(function(){
+      selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
+    });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+    })

@@ -1,4 +1,4 @@
-class CreateQuestionBanks < ActiveRecord::Migration
+class CreateQuestionBanks < ActiveRecord::Migration[4.2]
   def change
     create_table :question_banks do |t|
       t.integer :user_id, index: true

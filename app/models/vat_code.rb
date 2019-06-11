@@ -12,11 +12,7 @@
 #
 
 class VatCode < ActiveRecord::Base
-
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :country_id, :name, :label, :wiki_url, :vat_rates_attributes
 
   # Constants
 

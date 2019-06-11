@@ -19,38 +19,27 @@ require 'rails_helper'
 
 describe CourseModuleElementResource do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at upload_file_name upload_content_type upload_file_size upload_updated_at destroyed_at web_url)
-  CourseModuleElementResource.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
+  describe 'relationships' do
+    it { should belong_to(:course_module_element) }
   end
 
-  # Constants
+  describe 'validations' do
+    it { should validate_presence_of(:course_module_element_id).on(:update) }
+    it { should validate_presence_of(:name) }
+    it { should validate_length_of(:name).is_at_most(255) }
+  end
 
-  # relationships
-  it { should belong_to(:course_module_element) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+  end
 
-  # validation
-  it { should validate_presence_of(:course_module_element_id).on(:update) }
+  describe 'scopes' do
+    it { expect(CourseModuleElementResource).to respond_to(:all_in_order) }
+    it { expect(CourseModuleElementResource).to respond_to(:all_destroyed) }
+  end
 
-  it { should validate_presence_of(:name) }
-  it { should validate_length_of(:name).is_at_most(255) }
-
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-
-  # scopes
-  it { expect(CourseModuleElementResource).to respond_to(:all_in_order) }
-  it { expect(CourseModuleElementResource).to respond_to(:all_destroyed) }
-
-  # class methods
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+  end
 
 end

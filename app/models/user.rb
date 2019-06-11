@@ -53,44 +53,40 @@
 #  unsubscribed_from_emails        :boolean          default(FALSE)
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
+#  preferred_exam_body_id          :bigint(8)
 #
 
 class User < ActiveRecord::Base
-
   include LearnSignalModelExtras
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::SCrypt
   end
 
-  # attr-accessible
-  attr_accessible :email, :first_name, :last_name, :active,
-                  :country_id, :user_group_id, :password_reset_requested_at,
-                  :password_reset_token, :password_reset_at,
-                  :stripe_customer_id, :password, :password_confirmation,
-                  :current_password, :locale, :subscriptions_attributes,
-                  :password_change_required, :address,
-                  :profile_image, :email_verification_code, :email_verified_at,
-                  :email_verified, :account_activated_at,
-                  :account_activation_code, :session_key,
-                  :stripe_account_balance, :free_trial,
-                  :terms_and_conditions, :date_of_birth, :description,
-                  :student_number, :student_access_attributes,
-                  :unsubscribed_from_emails, :communication_approval_datetime,
-                  :communication_approval
+  delegate :account_type, :to => :student_access
 
   # Constants
   LOCALES = %w(en)
   SORT_OPTIONS = %w(created user_group name email)
 
-  # relationships
-  belongs_to :country
+  belongs_to :country, optional: true
+  belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
+  belongs_to :subscription_plan_category, optional: true
+  belongs_to :user_group
+
+  has_one :referral_code
+  has_one :student_access
+  has_one :referred_signup
+
   has_many :course_module_element_user_logs
-  has_many :completed_course_module_element_user_logs, -> {where(element_completed: true)},
-           class_name: 'CourseModuleElementUserLog'
-  has_many :incomplete_course_module_element_user_logs, -> {where(element_completed: false)},
-           class_name: 'CourseModuleElementUserLog'
+  has_many :completed_course_module_element_user_logs, -> {
+    where(element_completed: true)
+  }, class_name: 'CourseModuleElementUserLog'
+  has_many :incomplete_course_module_element_user_logs, -> {
+    where(element_completed: false)
+  }, class_name: 'CourseModuleElementUserLog'
   has_many :course_tutor_details
+  has_many :exam_body_user_details
   has_many :enrollments
   has_many :invoices
   has_many :quiz_attempts
@@ -99,42 +95,41 @@ class User < ActiveRecord::Base
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
+  has_many :course_section_user_logs
   has_many :subject_course_user_logs
-  belongs_to :user_group
   has_many :visits
   has_many :charges
   has_many :refunds
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
-  has_one :referral_code
-  has_one :student_access
-  has_one :referred_signup
-  belongs_to :subscription_plan_category
-  has_attached_file :profile_image,
-                    default_url: '/assets/images/missing_corporate_logo.png'
+  has_many :exercises
+  has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
+
+  has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
   accepts_nested_attributes_for :student_access
+  accepts_nested_attributes_for :exam_body_user_details, :reject_if => lambda { |c| c[:student_number].blank? }
 
   # validation
-  validates :email, presence: true, uniqueness: true, length: {within: 5..50}
+  validates :email, presence: true, length: {within: 5..50}, uniqueness: { case_sensitive: false }
   validates :first_name, presence: true, length: {minimum: 2, maximum: 20}
   validates :last_name, presence: true, length: {minimum: 2, maximum: 30}
   validates :password, presence: true, length: {minimum: 6, maximum: 255}, on: :create
-  validates_confirmation_of :password, on: :create
-  validates_confirmation_of :password, if: '!password.blank?'
   validates :user_group_id, presence: true
-  #validate :date_of_birth_is_possible?
+  validates_confirmation_of :password, on: :create
+  validates_confirmation_of :password, unless: Proc.new { |u| u.password.blank? }
   validates :locale, inclusion: {in: LOCALES}
   validates_attachment_content_type :profile_image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
-  after_create :create_referral_code_record
-  after_update :update_stripe_customer, :update_student_access
+  before_create :set_additional_user_attributes
+  after_create :create_referral_code_record, :create_or_update_intercom_user
+  after_update :update_stripe_customer
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
-  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
+  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR stripe_customer_id ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
   scope :sort_by_email, -> { order(:email) }
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_most_recent, -> { order(created_at: :desc) }
@@ -144,13 +139,6 @@ class User < ActiveRecord::Base
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :with_course_tutor_details, -> { joins(:course_tutor_details) }
 
-  def date_of_birth_is_possible?
-    return if self.date_of_birth.blank?
-    tens_years_ago = 10.years.ago
-    if self.date_of_birth > tens_years_ago
-      errors.add(:date_of_birth, 'is invalid')
-    end
-  end
 
   ### class methods
   def self.all_students
@@ -165,20 +153,12 @@ class User < ActiveRecord::Base
     includes(:user_group).references(:user_groups).where('user_groups.tutor = ?', true)
   end
 
-  def self.get_and_activate(activation_code)
-    user = User.where(active: false).where(account_activation_code: activation_code, account_activated_at: nil).first
-    time_now = Proc.new{Time.now}.call
-    user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) if user
-    return user
-  end
-
   def self.get_and_verify(email_verification_code, country_id)
     time_now = Proc.new{Time.now}.call
     user = User.where(email_verification_code: email_verification_code, email_verified_at: nil).first
     if user
       user.update_attributes(account_activated_at: time_now, account_activation_code: nil, active: true) unless user.active
       user.update_attributes(email_verified_at: time_now, email_verification_code: nil, email_verified: true, country_id: country_id)
-      user.student_access.start_trial_access
       return user
     end
   end
@@ -271,7 +251,7 @@ class User < ActiveRecord::Base
   end
 
   def self.to_csv_with_visits(options = {})
-    attributes = %w{email id user_account_status visit_campaigns visit_sources visit_landing_pages}
+    attributes = %w{email id visit_campaigns visit_sources visit_landing_pages}
     CSV.generate(options) do |csv|
       csv << attributes
 
@@ -279,376 +259,6 @@ class User < ActiveRecord::Base
         csv << attributes.map{ |attr| user.send(attr) }
       end
     end
-  end
-
-
-
-  ### instance methods
-
-  ## UserGroup Access methods
-  def student_user?
-    self.user_group.try(:student_user)
-  end
-
-  def non_student_user?
-    !self.user_group.student_user
-  end
-
-  def trial_or_sub_user?
-    self.student_user? && self.user_group.trial_or_sub_required && self.student_access
-  end
-
-  def complimentary_user?
-    self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
-  end
-
-  def tutor_user?
-    self.user_group.tutor
-  end
-
-  def blocked_user?
-    self.user_group.blocked_user
-  end
-
-  def system_requirements_access?
-    self.user_group.system_requirements_access
-  end
-
-  def content_management_access?
-    self.user_group.content_management_access
-  end
-
-  def stripe_management_access?
-    self.user_group.stripe_management_access
-  end
-
-  def user_management_access?
-    self.user_group.user_management_access
-  end
-
-  def developer_access?
-    self.user_group.developer_access
-  end
-
-  def marketing_resources_access?
-    self.user_group.marketing_resources_access
-  end
-
-  def user_group_management_access?
-    self.user_group.user_group_management_access
-  end
-
-
-
-
-
-  ## StudentAccess methods
-
-  # Trial Access
-
-  def trial_user?
-    self.trial_or_sub_user? &&
-      (self.student_access.trial_access? && !self.student_access.subscription_id) ||
-      (self.student_access.subscription_id? && self.student_access.subscription.pending?)
-  end
-
-  def valid_trial_user?
-    self.trial_user? && self.student_access.content_access && self.student_access.trial_started_date && !self.student_access.trial_ended_date
-  end
-
-  def not_started_trial_user?
-    self.trial_user? && !self.student_access.trial_started_date
-  end
-
-  def expired_trial_user?
-    self.trial_user? && self.student_access && self.student_access.trial_ended_date && !self.student_access.content_access
-  end
-
-  # Trial Limits
-  def trial_limits_valid?
-    self.trial_days_valid? && self.trial_seconds_valid?
-  end
-
-  def trial_days_valid?
-    time_now =Proc.new{Time.now.to_datetime}.call
-    self.student_access.trial_ending_at_date && !self.student_access.trial_ended_date && time_now <= student_access.trial_ending_at_date
-  end
-
-  def trial_seconds_valid?
-    self.student_access.content_seconds_consumed <= self.student_access.trial_seconds_limit
-  end
-
-  def trial_days_left
-    time_now = Proc.new{Time.now.to_date}.call
-    ((self.student_access.trial_started_date + self.student_access.trial_days_limit.days).to_date - time_now).to_i
-  end
-
-  def trial_seconds_left
-    self.student_access.trial_seconds_limit - self.student_access.content_seconds_consumed
-  end
-
-  def trial_minutes_left
-    self.trial_seconds_left > 1 ? self.trial_seconds_left.to_i / 60 : 0
-  end
-
-  # Subscription Access
-
-  def subscription_user?
-    self.trial_or_sub_user? && self.student_access.subscription_access? && self.student_access.subscription
-  end
-
-  def valid_subscription?
-    self.trial_or_sub_user? && self.current_subscription && self.current_subscription.valid_subscription?
-  end
-
-  def canceled_pending?
-    self.subscription_user? && self.current_subscription && self.current_subscription.stripe_status == 'canceled-pending'
-  end
-
-  def canceled_member?
-    self.subscription_user? && self.current_subscription && self.current_subscription.cancelled?
-  end
-
-  def current_subscription
-    student_access.subscription
-  end
-
-  def default_card
-    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first if self.student_access.subscription_id
-  end
-
-  def user_subscription_status
-    current_subscription = self.current_subscription
-    if current_subscription
-      current_subscription.user_readable_status
-    else
-      'Invalid Subscription'
-    end
-  end
-
-  def user_account_status
-    if self.trial_or_sub_user?
-      if self.not_started_trial_user?
-        'Trial Not Started'
-      elsif self.valid_trial_user?
-        'Valid Trial'
-      elsif self.expired_trial_user?
-        'Expired Trial'
-      elsif self.current_subscription
-        self.user_subscription_status
-      else
-        'Unknown Student'
-      end
-    else
-      if self.user_group_id
-        self.user_group.name
-      else
-        'Unknown'
-      end
-    end
-  end
-
-
-  def permission_to_see_content
-    # After successful update of all users to have a
-    # StudentAccess record change this to be only one line
-    # self.student_access.content_access
-
-    if self.student_user?
-      self.student_access.content_access
-    elsif self.non_student_user?
-      self.student_access.content_access
-    else
-      false
-    end
-  end
-
-  def enrollment_for_course?(course_id)
-    #Returns true if an active enrollment exists for this user/course
-
-    self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
-  end
-
-  def enrolled_in_course?(course_id)
-    #Returns true if a non-expired active enrollment exists for this user/course
-
-    self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
-  end
-
-  def referred_user?
-    student_user? && referred_signup
-  end
-
-  # Orders/Products
-  def valid_order_ids
-    order_ids = []
-    self.orders.each do |order|
-      if %w(paid).include?(order.stripe_status)
-        order_ids << order.id
-      end
-    end
-    return order_ids
-  end
-
-  def valid_orders?
-    self.valid_order_ids.any?
-  end
-
-  def purchased_products
-    if self.valid_orders?
-      ids = self.valid_order_ids
-      orders = Order.where(id: ids)
-      product_ids = orders.map(&:product_id)
-      products = Product.where(id: product_ids)
-      products
-    end
-  end
-
-
-  def change_the_password(options)
-    # options = {current_password: '123123123', password: 'new123',
-    #            password_confirmation: 'new123'}
-    if options[:password] == options[:password_confirmation] &&
-            options[:password].to_s != '' &&
-            self.valid_password?(options[:current_password].to_s) &&
-            options[:current_password].to_s != ''
-      self.update_attributes(
-              password: options[:password],
-              password_confirmation: options[:password_confirmation]
-      )
-    else
-      false
-    end
-  end
-
-  def activate_user
-    self.active = true
-    self.account_activated_at = Proc.new{Time.now}.call
-    self.account_activation_code = nil
-  end
-
-  def validate_user
-    self.email_verified = true
-    self.email_verified_at = Proc.new{Time.now}.call
-    self.email_verification_code = nil
-  end
-
-  def de_activate_user
-    self.active = false
-    self.account_activated_at = nil
-    self.account_activation_code = ApplicationController::generate_random_code(20)
-  end
-
-  def generate_email_verification_code
-    self.email_verified = false
-    self.email_verified_at = nil
-    self.email_verification_code = ApplicationController::generate_random_code(20)
-  end
-
-  def create_referral
-    unless self.referral_code
-      new_referral_code = ReferralCode.new
-      new_referral_code.generate_referral_code(self.id)
-    end
-  end
-
-  def destroyable?
-      self.course_module_element_user_logs.empty? &&
-      self.invoices.empty? &&
-      self.quiz_attempts.empty? &&
-      self.student_exam_tracks.empty? &&
-      self.subscriptions.empty? &&
-      self.subscription_payment_cards.empty? &&
-      self.subscription_transactions.empty?
-  end
-
-  def full_name
-    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').titleize.gsub('O\' ','O\'')
-  end
-
-  def this_hour
-    self.created_at > Time.now.beginning_of_hour
-  end
-
-  def subject_course_user_log_course_ids
-    self.subject_course_user_logs.map(&:subject_course_id)
-  end
-
-
-
-  def enrolled_courses
-    course_names = []
-    self.enrollments.each do |enrollment|
-      course_names << enrollment.subject_course.name if enrollment.subject_course
-    end
-    course_names
-  end
-
-  def valid_enrolled_courses
-    course_names = []
-    self.enrollments.all_valid.each do |enrollment|
-      course_names << enrollment.subject_course.name if enrollment.subject_course
-    end
-    course_names
-  end
-
-  def visit_campaigns
-    visits = []
-    self.visits.each do |visit|
-      visits << visit.utm_campaign
-    end
-    visits
-  end
-
-  def visit_sources
-    visits = []
-    self.visits.each do |visit|
-      visits << visit.utm_source
-    end
-    visits
-  end
-
-  def visit_landing_pages
-    visits = []
-    self.visits.each do |visit|
-      visits << visit.landing_page
-    end
-    visits
-  end
-
-  def enrolled_course_ids
-    self.enrollments.map(&:subject_course_id)
-  end
-
-  def valid_enrollments_in_sitting_order
-    self.enrollments.all_valid.by_sitting_date
-  end
-
-  def expired_enrollments_in_sitting_order
-    self.enrollments.all_active.all_expired.by_sitting_date
-  end
-
-  def active_enrollments_in_sitting_order
-    self.enrollments.all_active.by_sitting_date
-  end
-
-  def next_enrollment
-    self.valid_enrollments_in_sitting_order.first
-  end
-
-  def next_exam_date
-    self.next_enrollment.days_until_exam
-  end
-
-
-  def completed_course_module_element(cme_id)
-    cmeuls = self.completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
-    cmeuls.any?
-  end
-
-  def started_course_module_element(cme_id)
-    cmeuls = self.incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
-    cmeuls.any?
   end
 
   def self.parse_csv(csv_content)
@@ -728,8 +338,6 @@ class User < ActiveRecord::Base
                            email_verification_code: verification_code, free_trial: true,
                            user_group_id: user_group.id)
 
-    user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                              trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i, account_type: 'Trial')
 
     if user.valid? && user.save
       stripe_customer = Stripe::Customer.create(email: user.email)
@@ -741,51 +349,332 @@ class User < ActiveRecord::Base
 
   end
 
-  def update_from_stripe
-    stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
-    stripe_subscriptions = stripe_customer.subscriptions[:data]
-    if stripe_subscriptions && stripe_subscriptions.count == 1
-      stripe_subscription = stripe_customer.subscriptions[:data].first
-      if self.current_subscription && stripe_subscription.id == self.current_subscription.stripe_guid
-        self.current_subscription.update_from_stripe
-      else
-        create_subscription_from_stripe(stripe_subscription, stripe_customer)
+  ### instance methods
+
+  ## UserGroup Access methods
+  def student_user?
+    self.user_group.try(:student_user)
+  end
+
+  def non_student_user?
+    !self.user_group.student_user
+  end
+
+  def standard_student_user?
+    self.student_user? && self.user_group.trial_or_sub_required
+  end
+
+  def complimentary_user?
+    self.user_group.try(:student_user) && !self.user_group.trial_or_sub_required
+  end
+
+  def non_verified_user?
+    !self.email_verified && self.email_verification_code
+  end
+
+  def blocked_user?
+    self.user_group.blocked_user
+  end
+
+  def system_requirements_access?
+    self.user_group.system_requirements_access
+  end
+
+  def content_management_access?
+    self.user_group.content_management_access
+  end
+
+  def exercise_corrections_access?
+    self.user_group.exercise_corrections_access
+  end
+
+  def stripe_management_access?
+    self.user_group.stripe_management_access
+  end
+
+  def user_management_access?
+    self.user_group.user_management_access
+  end
+
+  def developer_access?
+    self.user_group.developer_access
+  end
+
+  def marketing_resources_access?
+    self.user_group.marketing_resources_access
+  end
+
+  def user_group_management_access?
+    self.user_group.user_group_management_access
+  end
+
+  def is_admin?
+    user_group_management_access? && developer_access? && system_requirements_access?
+  end
+
+  ## StudentAccess methods
+
+  def make_student_access
+    build_student_access(
+      account_type: 'Trial'
+    )
+  end
+
+  def name
+    [first_name, last_name].join(' ')
+  end
+
+  def default_card
+    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first
+  end
+
+  def subscriptions_for_exam_body(exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).where(active: true).all_in_order
+  end
+
+  def active_subscriptions_for_exam_body(exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).all_active
+  end
+
+  def active_subscription_for_exam_body?(exam_body_id)
+    active_subscriptions_for_exam_body(exam_body_id).any?
+  end
+
+  def valid_subscription_for_exam_body?(exam_body_id)
+    active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
+  end
+
+  def analytics_exam_body_plan_data
+    user_plans = ''
+    plans_type = ''
+    plans_status = ''
+    ExamBody.all_active.each_with_index do |body, counter|
+      if subscriptions_for_exam_body(body.id).any?
+        user_plans << subscriptions_for_exam_body(body.id).last.subscription_plan.interval_name + (counter == 1 ? '' : ' - ')
+        plans_type << subscriptions_for_exam_body(body.id).last.subscription_plan.exam_body.name + (counter == 1 ? '' : ' - ')
+        plans_status << subscriptions_for_exam_body(body.id).last.state + (counter == 1 ? '' : ' - ')
       end
+    end
+    return user_plans, plans_type, plans_status
+  end
+
+  def enrolled_course?(course_id)
+    #Returns true if an active enrollment exists for this user/course
+
+    self.enrollments.all_active.map(&:subject_course_id).include?(course_id)
+  end
+
+  def enrolled_in_course?(course_id)
+    #Returns true if a non-expired active enrollment exists for this user/course
+
+    self.enrollments.all_valid.map(&:subject_course_id).include?(course_id)
+  end
+
+  def referred_user?
+    student_user? && referred_signup
+  end
+
+  # Orders/Products
+  def valid_order_ids
+    order_ids = []
+    self.orders.each do |order|
+      if %w(paid).include?(order.stripe_status)
+        order_ids << order.id
+      end
+    end
+    return order_ids
+  end
+
+  def valid_orders?
+    self.valid_order_ids.any?
+  end
+
+  def purchased_products
+    if self.valid_orders?
+      ids = self.valid_order_ids
+      orders = Order.where(id: ids)
+      product_ids = orders.map(&:product_id)
+      products = Product.where(id: product_ids)
+      products
     end
   end
 
-
-  def create_subscription_from_stripe(stripe_subscription_object, stripe_customer_object)
-    subscription_plan = SubscriptionPlan.where(stripe_guid: stripe_subscription_object.plan.id).first
-    if subscription_plan
-      subscription = Subscription.new(
-          user_id: self.id,
-          subscription_plan_id: subscription_plan.id,
-          complimentary: false,
-          active: true,
-          livemode: stripe_subscription_object.plan.livemode,
-          stripe_status: stripe_subscription_object.status,
+  def change_the_password(options)
+    if options[:password] == options[:password_confirmation] &&
+            options[:password].to_s != '' &&
+            self.valid_password?(options[:current_password].to_s) &&
+            options[:current_password].to_s != ''
+      update(
+        password: options[:password],
+        password_confirmation: options[:password_confirmation]
       )
-      subscription.stripe_guid = stripe_subscription_object.id
-      subscription.next_renewal_date = Time.at(stripe_subscription_object.current_period_end)
-      subscription.stripe_customer_id = stripe_customer_object.id
-      subscription.terms_and_conditions = true
-      subscription.stripe_customer_data = stripe_customer_object.to_hash.deep_dup
-      subscription_saved = subscription.save(validate: false)
-      #Callbacks should create SubscriptionTransactions and SubscriptionPaymentCard
-
-      if subscription_saved
-        time_now = Proc.new{Time.now.to_datetime}.call
-        self.student_access.update_attributes(trial_ended_date: time_now, content_access: true,
-                                              subscription_id: subscription_saved.id,
-                                              account_type: 'Subscription')
-      end
+    else
+      false
     end
-
   end
 
+  def pre_creation_setup
+    make_student_access
+  end
 
-  protected
+  def send_verification_email(url)
+    MandrillWorker.perform_async(
+      id,
+      'send_verification_email',
+      url
+    ) unless Rails.env.test?
+  end
+
+  def create_stripe_customer
+    StripeCustomerCreationWorker.perform_async(id)
+  end
+
+  def set_analytics(ga_ref)
+    update(analytics_guid: ga_ref) if ga_ref
+  end
+
+  # Checks for our referral cookie in the users browser and creates a
+  # ReferredSignUp associated with this user
+  def validate_referral(cookie)
+    code, referrer_url = cookie.split(';') if cookie
+    if code && (referral_code = ReferralCode.find_by_code(code))
+      create_referred_signup(
+        referral_code_id: referral_code.id,
+        referrer_url: referrer_url
+      )
+    end
+  end
+
+  def activate_user
+    update(active: true, account_activated_at: Proc.new{Time.now}.call, account_activation_code: nil)
+  end
+
+  def validate_user
+    self.email_verified = true
+    self.email_verified_at = Proc.new{Time.now}.call
+    self.email_verification_code = nil
+  end
+
+  def generate_email_verification_code
+    self.email_verified = false
+    self.email_verified_at = nil
+    self.email_verification_code = ApplicationController::generate_random_code(20)
+  end
+
+  def create_referral
+    unless self.referral_code
+      new_referral_code = ReferralCode.new
+      new_referral_code.generate_referral_code(self.id)
+    end
+  end
+
+  def destroyable?
+      self.course_module_element_user_logs.empty? &&
+      self.invoices.empty? &&
+      self.quiz_attempts.empty? &&
+      self.student_exam_tracks.empty? &&
+      self.subscriptions.empty? &&
+      self.subscription_payment_cards.empty? &&
+      self.subscription_transactions.empty?
+  end
+
+  def full_name
+    self.first_name.titleize + ' ' + self.last_name.gsub('O\'','O\' ').gsub('O\' ','O\'')
+  end
+
+  def get_currency(country)
+    if existing_sub = subscriptions.all_stripe.not_pending.first
+      existing_sub.subscription_plan&.currency || country.currency
+    elsif existing_order = orders.all_stripe.first
+      existing_order.product&.currency || country.currency
+    else
+      country.currency
+    end
+  end
+
+  def this_hour
+    self.created_at > Time.now.beginning_of_hour
+  end
+
+  def subject_course_user_log_course_ids
+    self.subject_course_user_logs.map(&:subject_course_id)
+  end
+
+  def enrolled_courses
+    course_names = []
+    self.enrollments.each do |enrollment|
+      course_names << enrollment.subject_course.name if enrollment.subject_course
+    end
+    course_names
+  end
+
+  def valid_enrolled_courses
+    course_names = []
+    self.enrollments.all_valid.each do |enrollment|
+      course_names << enrollment.subject_course.name if enrollment.subject_course
+    end
+    course_names
+  end
+
+  def visit_campaigns
+    visits = []
+    self.visits.each do |visit|
+      visits << visit.utm_campaign
+    end
+    visits
+  end
+
+  def visit_sources
+    visits = []
+    self.visits.each do |visit|
+      visits << visit.utm_source
+    end
+    visits
+  end
+
+  def visit_landing_pages
+    visits = []
+    self.visits.each do |visit|
+      visits << visit.landing_page
+    end
+    visits
+  end
+
+  def enrolled_course_ids
+    self.enrollments.map(&:subject_course_id)
+  end
+
+  def valid_enrollments_in_sitting_order
+    self.enrollments.for_active_course.by_sitting_date
+  end
+
+  def expired_enrollments_in_sitting_order
+    self.enrollments.for_active_course.by_sitting_date
+  end
+
+  def active_enrollments_in_sitting_order
+    self.enrollments.all_active.by_sitting_date
+  end
+
+  def next_enrollment
+    self.valid_enrollments_in_sitting_order.first
+  end
+
+  def next_exam_date
+    self.next_enrollment.days_until_exam
+  end
+
+  def completed_course_module_element(cme_id)
+    cmeuls = self.completed_course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls.any?
+  end
+
+  def started_course_module_element(cme_id)
+    cmeuls = self.incomplete_course_module_element_user_logs.where(course_module_element_id: cme_id)
+    cmeuls.any?
+  end
+
+  private
 
   def add_guid
     self.guid ||= ApplicationController.generate_random_code(10)
@@ -796,24 +685,24 @@ class User < ActiveRecord::Base
     self.create_referral_code
   end
 
-  def update_student_access
-    if self.user_group_id_changed?
-      self.student_access.check_student_access
-    end
+  def set_additional_user_attributes
+    self.communication_approval_datetime = Time.zone.now if communication_approval
+    self.account_activation_code = SecureRandom.hex(10)
+    self.email_verification_code = SecureRandom.hex(10)
+  end
+
+  def create_or_update_intercom_user
+    IntercomCreateUserWorker.perform_async(self.try(:id)) unless Rails.env.test?
   end
 
   def update_stripe_customer
     unless Rails.env.test?
-      if self.stripe_account_balance_changed? || self.email_changed?
+      if self.saved_change_to_email?
         Rails.logger.debug "DEBUG: Updating stripe customer object #{self.stripe_customer_id}"
         stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
         stripe_customer.email = self.email
-        stripe_customer.account_balance = self.stripe_account_balance
         stripe_customer.save
-        self.update_column(:stripe_account_balance, stripe_customer.account_balance)
       end
     end
   end
-
-
 end

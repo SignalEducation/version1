@@ -19,6 +19,11 @@
 #  background_image_content_type :string
 #  background_image_file_size    :integer
 #  background_image_updated_at   :datetime
+#  background_colour             :string
+#  exam_body_id                  :bigint(8)
+#  seo_title                     :string
+#  seo_description               :string
+#  short_description             :string
 #
 
 class Group < ActiveRecord::Base
@@ -26,23 +31,23 @@ class Group < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :active, :sorting_order, :description,
-                  :image, :background_image
-
   # Constants
 
   # relationships
+  belongs_to :exam_body
   has_many :subject_courses
   has_many :home_pages
-  has_attached_file :image, default_url: "missing_corporate_logo.png"
-  has_attached_file :background_image, default_url: "missing_corporate_logo.png"
+  has_attached_file :image, default_url: 'courses-AAT.jpg'
+  has_attached_file :background_image, default_url: 'bg_library_group.jpg'
 
 
   # validation
   validates :name, presence: true, uniqueness: true, length: {maximum: 255}
   validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :description, presence: true
+  validates :short_description, presence: true, length: {maximum: 255}
+  validates :seo_title, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :seo_description, presence: true, length: {maximum: 255}
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 

@@ -1,45 +1,59 @@
-.row
-  .col-sm-8
+=form_for(@user, url: update_personal_details_url, html: {class: 'card mb-5', role: 'form', id: 'personal-details-form'}) do |f|
+  .card-body
+    %h2.text-gray2.mb-5 Personal Information
+    .row
+      .col-md-6
+        .form-group
+          =f.label :first_name, t('views.user_accounts.student_user_form.first_name')
+          =f.text_field :first_name, class: 'form-control'
 
-    .col-sm-6
-      .h3
-        =t('views.user_accounts.personal_info.first_name')
-      .h6
-        =@user.first_name
-
-    .col-sm-6
-      .h3
-        =t('views.user_accounts.personal_info.last_name')
-      .h6
-        =@user.last_name
-
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.email')
-      .h6
-        =@user.email
-
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.date_of_birth')
-      .h6
-        =@user.date_of_birth || '--------'
-
-    .col-sm-6.l-margin-top
-      .h3
-        =t('views.user_accounts.personal_info.student_number')
-      .h6
-        =@user.student_number || '--------'
-
-    .col-sm-6.l-margin-top
+      .col-md-6
+        .form-group
+          =f.label :last_name, t('views.user_accounts.student_user_form.last_name')
+          =f.text_field :last_name, class: 'form-control'
+    .row
+      .col-md-6
+        .form-group
+          =f.label :email, t('views.user_accounts.student_user_form.email')
+          =f.text_field :email, class: 'form-control'
+      .col-xl-6
+        .form-group
+          =f.label :date_of_birth, t('views.user_accounts.student_user_form.date_of_birth')
+          .form-row.align-items-center.justify-content-xl-between
+            %span.custom-date-select.input-group.input-group-lg
+              =f.date_select :date_of_birth, {order: [:day, :month, :year], prompt: { day: 'Day', month: 'Month', year: 'Year' },
+               start_year: Date.today.year - 15, end_year: Date.today.year - 100}, class: 'form-control custom-select'
 
 
+      =f.fields_for :exam_body_user_details do |detail|
+        =detail.hidden_field :exam_body_id
+        .col-md-6
+          .form-group
+            =detail.label :student_number, "#{detail.object.exam_body.name} Student Number"
+            =detail.text_field :student_number, class: 'form-control'
 
-  .col-sm-4
-    #modal-links
-      %a{data: {remodal: {target: 'personal-details-modal'}}, class: 'btn btn-red full-width l-margin-bottom edit-details'}
-        =t('views.user_accounts.student_user_form.button_label')
+    .py-3
+      =f.submit 'Save Personal Info', class: 'btn btn-primary btn-sm'
 
-      %a{data: {remodal: {target: 'change-password-modal'}}, class: 'btn btn-cyan full-width l-margin-bottom change-pw-link'}
-        =t('views.user_accounts.change_password.button_label')
+
+=form_for(@user, url: change_password_url, method: :post, html: {class: 'card mb-3', role: 'form'}, id: 'change_password_form', name: 'change_password_form') do |f|
+  .card-body
+    %h2.text-gray2.mb-5 Password
+    .row
+      .col-md-6.col-xl-4
+        .form-group
+          =f.label :current_password, t('views.user_accounts.change_password.current_password')
+          =f.password_field :current_password, class: 'form-control'
+
+      .col-md-6.col-xl-4
+        .form-group
+          =f.label :password, t('views.user_accounts.change_password.new_password')
+          =f.password_field :password, class: 'form-control'
+
+      .col-md-6.col-xl-4
+        .form-group
+          =f.label :password_confirmation, t('views.user_accounts.change_password.password_confirmation')
+          =f.password_field :password_confirmation, class: 'form-control'
+    .py-3
+      =f.submit 'Change Password', class: 'btn btn-primary btn-sm'
 

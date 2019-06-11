@@ -22,34 +22,30 @@
 
 class SubjectCourseUserLog < ActiveRecord::Base
 
-  # attr-accessible
-  attr_accessible :user_id, :session_guid, :subject_course_id, :completed_at
-
   # Constants
 
   # relationships
   belongs_to :user
   belongs_to :subject_course
   belongs_to :latest_course_module_element, class_name: 'CourseModuleElement',
-             foreign_key: :latest_course_module_element_id
+             foreign_key: :latest_course_module_element_id, optional: true
   has_many :enrollments
+  has_many :course_section_user_logs
   has_many :student_exam_tracks
   has_many :course_module_element_user_logs
 
 
   # validation
-  validates :user_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :subject_course_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
-  validates :session_guid, allow_nil: true, length: { maximum: 255 }
+  validates :user_id, presence: true
+  validates :subject_course_id, presence: true
+  validates :percentage_complete, presence: true
 
   # callbacks
   before_destroy :check_dependencies
   after_save :update_enrollment
 
   # scopes
-  scope :all_in_order, -> { order(user_id: :asc, updated_at: :desc) }
+  scope :all_in_order, -> { order(:user_id, :created_at) }
   scope :all_complete, -> { where('percentage_complete > 99') }
   scope :all_incomplete, -> { where('percentage_complete < 100') }
   scope :for_user, lambda { |user_id| where(user_id: user_id) }
@@ -57,59 +53,81 @@ class SubjectCourseUserLog < ActiveRecord::Base
 
 
   # class methods
+  def self.to_csv(options = {})
+    attributes = %w{id user_id user_email f_name l_name
+                     enrolled enrollment_sitting exam_date
+                     student_number date_of_birth completed percentage_complete
+                     count_of_cmes_completed completion_cme_count}
+
+    CSV.generate(options) do |csv|
+      csv << attributes
+
+      all.each do |scul|
+        csv << attributes.map{ |attr| scul.send(attr) }
+      end
+    end
+  end
 
   # instance methods
   def destroyable?
-    self.student_exam_tracks.empty?
+    self.course_section_user_logs.empty? && self.student_exam_tracks.empty?
   end
 
-  def elements_total
-    self.subject_course.try(:cme_count) || 0
+  def elements_total_for_completion
+    self.subject_course.completion_cme_count
   end
 
   def active_enrollment
     self.enrollments.where(active: true).last
   end
 
-  def update_enrollment
-    if self.active_enrollment && !self.active_enrollment.expired
-      self.active_enrollment.update_attribute(:percentage_complete, self.percentage_complete)
-      self.update_attribute(:completed_at, Proc.new{Time.now}.call) if self.completed && !self.completed_at
-    end
+  def recalculate_scul_completeness
+    self.count_of_videos_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_videos_taken)
+    self.count_of_quizzes_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_quizzes_taken)
+    self.count_of_constructed_responses_taken = self.course_section_user_logs.with_valid_course_section.sum(:count_of_constructed_responses_taken)
+    self.count_of_cmes_completed = self.course_section_user_logs.with_valid_course_section.sum(:count_of_cmes_completed)
+
+    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total_for_completion.to_f) * 100 if self.elements_total_for_completion > 0
+
+    self.completed = true if (self.percentage_complete > 99) unless self.percentage_complete.nil?
+    self.save!
   end
 
-  def last_element
-    ###
-    ###
-    ###
-    cme = CourseModuleElement.where(id: self.latest_course_module_element_id).first
-    back_up_cme = self.subject_course.first_active_cme
-    if cme
-      return cme
-    else
-      return back_up_cme
-    end
+  def f_name
+    self.user.first_name
   end
 
-  def recalculate_completeness
-    # Temp fix replaced SET scope with_active_cmes with with_valid_course_module scope
-    self.count_of_questions_correct = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_correct)
-    self.count_of_questions_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_questions_taken)
-    self.count_of_videos_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_videos_taken)
-    self.count_of_quizzes_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_quizzes_taken)
-    self.count_of_constructed_responses_taken = self.student_exam_tracks.with_valid_course_module.sum(:count_of_constructed_responses_taken)
-    self.count_of_cmes_completed = self.student_exam_tracks.with_valid_course_module.sum(:count_of_cmes_completed)
-    self.percentage_complete = (self.count_of_cmes_completed.to_f / self.elements_total.to_f) * 100
-    unless self.percentage_complete.nil?
-      self.completed = true if (self.percentage_complete > 99)
-    end
-    self.save
+  def l_name
+    self.user.last_name
   end
 
-  def student_exam_track_course_module_ids
-    self.student_exam_tracks.map(&:course_module_id)
+  def user_email
+    self.user.email
   end
 
+  def date_of_birth
+    self.user.try(:date_of_birth)
+  end
+
+  def enrolled
+    true if self.active_enrollment
+  end
+
+  def exam_date
+    self.active_enrollment.enrollment_date if enrolled
+  end
+
+  def enrollment_sitting
+    self.enrollments.last.try(:exam_date) if enrolled
+  end
+
+  def student_number
+    self.user.exam_body_user_details.for_exam_body(self.subject_course.exam_body_id).first.try(:student_number)
+  end
+
+  def completion_cme_count
+    self.subject_course.completion_cme_count
+  end
 
   protected
 
@@ -117,6 +135,13 @@ class SubjectCourseUserLog < ActiveRecord::Base
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       false
+    end
+  end
+
+  def update_enrollment
+    if self.active_enrollment && !self.active_enrollment.expired
+      self.active_enrollment.update_attribute(:percentage_complete, self.percentage_complete)
+      self.update_attribute(:completed_at, Proc.new{Time.now}.call) if self.completed && !self.completed_at
     end
   end
 

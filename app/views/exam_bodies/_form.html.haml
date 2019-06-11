@@ -1,23 +1,83 @@
 =form_for(@exam_body, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  =render partial: '/layouts/error_messages', locals: {thing: @exam_body, message: nil}
-  .row
-    .col-md-8.col-md-offset-2
-      =f.label :name, t('views.exam_bodies.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.exam_bodies.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      =f.label :url, t('views.exam_bodies.form.url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :url, placeholder: t('views.exam_bodies.form.url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :modal_heading, t('views.exam_bodies.form.modal_heading'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :modal_heading, placeholder: t('views.exam_bodies.form.modal_heading_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      =f.label :modal_text, t('views.exam_bodies.form.modal_text'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :modal_text, placeholder: t('views.exam_bodies.form.modal_text_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+  .box-item.form-box
+    =render partial: '/layouts/error_messages', locals: {thing: @exam_body, message: nil}
+    .row
+      .col-sm-12
+        .row
+          .col-sm-6
+            =f.label :name, t('views.exam_bodies.form.name')
+            .input-group.input-group-lg
+              =f.text_field :name, placeholder: t('views.exam_bodies.form.name_placeholder'), class: 'form-control', autofocus: true
 
-  .row.l-margin-top-big
-    =f.submit t('views.general.save'), class: 'btn btn-red'
-    =link_to t('views.general.cancel'), exam_bodies_path, class: 'btn btn-cyan'
+          .col-sm-6
+            =f.label :url, t('views.exam_bodies.form.url')
+            .input-group.input-group-lg
+              =f.text_field :url, placeholder: t('views.exam_bodies.form.url_placeholder'), class: 'form-control'
+
+        .row.mt-4
+          .col-sm-6
+            =f.label :registration_form_heading, t('views.exam_bodies.form.registration_form_heading')
+            .input-group.input-group-lg
+              =f.text_field :registration_form_heading, placeholder: t('views.exam_bodies.form.registration_form_heading_placeholder'), class: 'form-control'
+          .col-sm-6
+            =f.label :subscription_page_subheading_text, t('views.exam_bodies.form.subscription_page_subheading_text')
+            .input-group.input-group-lg
+              =f.text_field :subscription_page_subheading_text, placeholder: t('views.exam_bodies.form.subscription_page_subheading_text_placeholder'), class: 'form-control'
+
+
+        .row.mt-4
+          .col-sm-6
+            =f.label :login_form_heading, t('views.exam_bodies.form.login_form_heading')
+            .input-group.input-group-lg
+              =f.text_field :login_form_heading, placeholder: t('views.exam_bodies.form.login_form_heading_placeholder'), class: 'form-control'
+
+          .col-sm-6
+            =f.label :preferred_payment_frequency, t('views.exam_bodies.form.preferred_payment_frequency')
+            .input-group.input-group-lg
+              =f.select :preferred_payment_frequency, options_for_select([1, 3, 12,], selected: f.object.preferred_payment_frequency),
+               {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+
+        .row.mt-5
+          .col-sm-6
+            .form-group
+              .checkbox
+                %label
+                  =f.check_box :active
+                  =t('views.exam_bodies.form.active')
+
+            .form-group
+              .checkbox
+                %label
+                  =f.check_box :has_sittings
+                  =t('views.exam_bodies.form.has_sittings')
+
+          .col-sm-6
+            =f.label :logo_image, t('views.exam_bodies.form.logo_image')
+            .input-group.input-group-lg
+              =f.select :logo_image, ExamBody::LOGO_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+        .row.mt-4
+          .col-sm-12
+            =f.label :constructed_response_intro_heading, t('views.exam_bodies.form.constructed_response_intro_heading')
+            .input-group.input-group-lg
+              =f.text_field :constructed_response_intro_heading, placeholder: t('views.exam_bodies.form.constructed_response_intro_heading_placeholder'), class: 'form-control'
+
+        .row.pt-5
+          .col-sm-12
+            =f.label :constructed_response_intro_text, t('views.exam_bodies.form.constructed_response_intro_text')
+            .input-group.input-group-lg
+              =f.text_area :constructed_response_intro_text, as: :summernote, placeholder: t('views.exam_bodies.form.constructed_response_intro_text'), rows: 5, class: 'form-control', id: 'editor'
+
+    .row.pt-5
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), exam_bodies_path, class: 'btn btn-secondary'
+
+
+:javascript
+
+  $('#editor').summernote({
+    disableDragAndDrop: true,
+    height: 150
+  });
+

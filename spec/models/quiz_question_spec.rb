@@ -18,18 +18,6 @@ require 'rails_helper'
 
 describe QuizQuestion do
 
-  # attr-accessible
-  black_list = %w(id created_at updated_at course_module_element_id destroyed_at)
-  QuizQuestion.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
-
   # relationships
   it { should belong_to(:subject_course) }
   it { should belong_to(:course_module_element) }
@@ -46,7 +34,6 @@ describe QuizQuestion do
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
   it { should callback(:set_course_module_element).before(:validation) }
-  it { should callback(:set_subject_course_id).before(:save) }
 
   # scopes
   it { expect(QuizQuestion).to respond_to(:all_in_order) }

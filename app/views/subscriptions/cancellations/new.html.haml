@@ -1,0 +1,43 @@
+%main
+  %article.dashboard.bg-gray5
+    .container
+      %header
+        %h1.h1-hero.pt-5
+          Cancel your subscription
+
+      %section.pb-md-6.pt-4
+        .form-box
+          .row
+            .col-sm-12
+              %p
+                At LearnSignal we’re keen to keep improving our service.
+              %p.h6
+                Why do you want to cancel?
+
+              =form_for @subscription, url: subscriptions_cancellations_path(id: @subscription.id), method: :post, html: { :id => "attempt_subscription_cancellation" } do |f|
+                .row
+                  .col-sm-6
+                    .form-group.cancellation-reason
+                      =f.label :cancellation_reason, 'Please tick the box which is most applicable to you', class: 'block-label h4'
+                      #cancellation-reason-error
+                      =f.collection_radio_buttons(:cancellation_reason, [['I’ve come to the end of my studies', 'I’ve come to the end of my studies'], ['The service is too expensive', 'The service is too expensive'], ['I wasn’t using it enough', 'I wasn’t using it enough'], ['I didn’t feel like it was helping me', 'I didn’t feel like it was helping me'], ['My next exam is 3 months away', 'My next exam is 3 months away'], ['I didn’t understand the content', 'I didn’t understand the content'], ['I didn’t know how to use the platform', 'I didn’t know how to use the platform'], ['Other', 'Other']], :first, :last) do |b|
+                        %span.label.cancellation-label
+                          =b.radio_button
+                          =b.label
+                  .col-sm-6
+                    .form-group
+                      =f.label :cancellation_note, 'Please let us know if there’s any other way we could improve our service:', class: 'block-label h4'
+                      #cancellation-note-error
+                      =f.text_area :cancellation_note, :rows => 4, class: 'form-control'
+
+
+                .row.mt-4
+                  .col-sm-4
+                    =link_to t('views.users.show.keep_subscription'), account_url(anchor: 'account-info'), class: 'btn btn-primary btn-sm'
+
+                  .col-sm-4
+                    =f.submit t('views.users.show.confirm_subscription_cancellation'), id: 'confirm_cancellation_button', class: 'btn btn-danger btn-sm', data: { disable_with: false }
+
+                  .col-sm-12.mt-3
+                    %p
+                      = account_cancellation_message(@subscription)

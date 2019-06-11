@@ -1,95 +1,45 @@
-=form_for(@course_module, builder: DanFormBuilder, html: {class: 'form-horizontal', role: 'form', id: 'course_module_form'}) do |f|
+=form_for(@course_module, html: {class: 'form-horizontal', role: 'form', id: 'course_module_form'}) do |f|
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
+        =f.hidden_field :sorting_order
+        =f.hidden_field :subject_course_id
+        =f.hidden_field :course_section_id
+
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.course_modules.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url'
+
+            .form-group
+              =f.label :name_url, t('views.course_modules.form.name_url')
+              .input-group.input-group-lg
+                =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control'
+
+            .col-sm-11.col-sm-offset-1
+              .checkbox
+                %label
+                  =f.check_box :active
+                  =t('views.course_modules.form.active')
+
+          .col-sm-6
+            .form-group
+              =f.label :course_section_id, t('views.course_modules.form.course_section_id')
+              .input-group.input-group-lg
+                =f.collection_select :course_section_id, @course_sections, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+
+            .form-group
+              =f.label :description, t('views.course_modules.form.description')
+              .input-group.input-group-lg
+                =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control'
+
+
+
   .row
-    .col-md-6
-      =render partial: '/layouts/error_messages', locals: {thing: @course_module, message: nil}
-      =f.hidden_field :sorting_order
-      =f.hidden_field :subject_course_id
-
-      =f.label :subject_course_id, t('views.course_modules.form.subject_course_id'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.collection_select :subject_course_id, @subject_courses, :id, :name, {include_blank: t('views.general.select')}, {class: 'form-control'}
-      %br/
-      =f.label :name, t('views.course_modules.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.course_modules.form.name_placeholder'), class: 'form-control update-my-url', style: 'border-radius: 6px;'
-      %br/
-      =f.label :name_url, t('views.course_modules.form.name_url'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name_url, placeholder: t('views.course_modules.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      %br/
-      .col-sm-11.col-sm-offset-1
-        .checkbox
-          %label
-            =f.check_box :active
-            =t('views.course_modules.form.active')
-
-    .col-md-6
-      =f.label :description, t('views.course_modules.form.description'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_area :description, placeholder: t('views.course_modules.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
-
-      %br/
-      %br/
-      .col-sm-11.col-sm-offset-1
-        .form-group{style: 'margin-left: 0px;'}
-          %table.col-sm-12
-            %thead
-              %tr
-                %th=t('views.course_modules.form.tuition')
-                -#%th=t('views.course_modules.form.test')
-                %th='Additional'
-                %th=t('views.course_modules.form.question_bank')
-                %th
-            %tbody
-              %tr
-                %td.check
-                  =f.check_box :tuition
-                %td.check
-                  =f.check_box :test
-                %td.check
-                  =f.check_box :revision
-                %td
-                  =link_to('Clear', '#', class: 'check clear')
-      %br/
-      =f.label :highlight_colour, t('views.course_modules.form.highlight_colour'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.color_field :highlight_colour, placeholder: t('views.course_modules.form.colour_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
-      -if f.object.new_record?
-        :javascript
-          document.querySelector('input[type="color"]').value = '#FFFFFF'
-
-  %br/
-  %br/
-  %br/
-  %br/
-  .row
-    .col-md-12
-      =f.submit t('views.general.save'), class: 'btn btn-red'
-      =link_to t('views.general.cancel'), course_module_special_link(@course_module), class: 'btn btn-cyan'
-
-
-
-:javascript
-
-  function deselectSiblings(theThing) {
-    $('.check').find($( "input" )).prop('checked', false);
-    $(theThing).find($( "input" )).prop('checked', true);
-  }
-
-  function deselectAll() {
-    $('.check').find($( "input" )).prop('checked', false);
-  }
-
-  $(document).on('ready', function() {
-    $('.check').bind('click', function(event) {
-      event.stopPropagation();
-      deselectSiblings(this);
-    });
-  })
-
-  $(document).on('ready', function() {
-    $('.check.clear').bind('click', function(event) {
-      event.stopPropagation();
-      deselectAll();
-    });
-  })
+    .col-sm-12
+      =f.submit t('views.general.save'), class: 'btn btn-primary'
+      =link_to t('views.general.cancel'), course_module_special_link(@course_module), class: 'btn btn-secondary'

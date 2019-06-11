@@ -1,6 +1,8 @@
 $font-family-icon: 'FontAwesome' !default;
 $fa-var-check: "\f00c" !default;
 $check-icon: $fa-var-check !default;
+$input-border: #657786;
+$input-bg-disabled: #657786;
 
 @mixin prettyCheckbox($size: 30) {
 
@@ -44,7 +46,7 @@ $check-icon: $fa-var-check !default;
     cursor: pointer;
 
     &:focus + label::before{
-      @include tab-focus();
+      //@include tab-focus();
     }
 
     &:checked + label::after{

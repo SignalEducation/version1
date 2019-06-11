@@ -23,93 +23,75 @@ require 'rails_helper'
 
 describe Enrollment do
 
-  # attr-accessible
-  black_list = %w(id created_at paused notifications)
-  Enrollment.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
+  describe 'relationships' do
+    it { should belong_to(:exam_body) }
+    it { should belong_to(:exam_sitting) }
+    it { should belong_to(:user) }
+    it { should belong_to(:subject_course) }
+    it { should belong_to(:subject_course_user_log) }
   end
 
-  # Constants
+  describe 'validations' do
+    before do
+      @enrollment = build(:enrollment, user_id: 1, subject_course_id: 1,
+                          subject_course_user_log_id: 1, exam_body_id: 1, exam_sitting_id: 1)
+    end
 
-  # relationships
-  it { should belong_to(:exam_body) }
-  it { should belong_to(:exam_sitting) }
-  it { should belong_to(:user) }
-  it { should belong_to(:subject_course) }
-  it { should belong_to(:subject_course_user_log) }
+    it 'should have a valid user_id' do
+      expect{ @enrollment.user_id = nil }.to change{ @enrollment.valid? }.to false
+    end
 
-  # validation
-  it { should validate_presence_of(:user_id) }
-  it { should validate_numericality_of(:user_id) }
+    it 'should have a valid exam_body_id' do
+      expect{ @enrollment.exam_body_id = nil }.to change{ @enrollment.valid? }.to false
+    end
 
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+    it 'should have a valid subject_course_id' do
+      expect{ @enrollment.subject_course_id = nil }.to change{ @enrollment.valid? }.to false
+    end
 
-  it { should validate_presence_of(:exam_sitting_id) }
-  it { should validate_numericality_of(:exam_sitting_id) }
+  end
 
-  it { should_not validate_presence_of(:subject_course_user_log_id) }
-  it { should validate_numericality_of(:subject_course_user_log_id) }
+  describe 'callbacks' do
+    it { should callback(:check_dependencies).before(:destroy) }
+    it { should callback(:create_subject_course_user_log).before(:validation) }
+    it { should callback(:create_expiration_worker).after(:create) }
+    it { should callback(:deactivate_siblings).after(:create) }
+    it { should callback(:create_expiration_worker).after(:update), if: :exam_date_changed? }
+  end
 
-  it { should_not validate_presence_of(:exam_body_id) }
-  it { should validate_numericality_of(:exam_body_id) }
+  describe 'scopes' do
+    it { expect(Enrollment).to respond_to(:all_in_order) }
+    it { expect(Enrollment).to respond_to(:all_in_admin_order) }
+    it { expect(Enrollment).to respond_to(:all_in_exam_sitting_order) }
+    it { expect(Enrollment).to respond_to(:all_reverse_order) }
+    it { expect(Enrollment).to respond_to(:all_in_exam_order) }
+    it { expect(Enrollment).to respond_to(:by_sitting_date) }
+    it { expect(Enrollment).to respond_to(:all_in_recent_order) }
+    it { expect(Enrollment).to respond_to(:all_active) }
+    it { expect(Enrollment).to respond_to(:all_not_active) }
+    it { expect(Enrollment).to respond_to(:all_expired) }
+    it { expect(Enrollment).to respond_to(:all_valid) }
+    it { expect(Enrollment).to respond_to(:all_not_expired) }
+    it { expect(Enrollment).to respond_to(:for_subject_course) }
+    it { expect(Enrollment).to respond_to(:this_week) }
+    it { expect(Enrollment).to respond_to(:by_sitting) }
+    it { expect(Enrollment).to respond_to(:all_completed) }
+  end
 
-  # callbacks
-  it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:create_expiration_worker).after(:create) }
-  it { should callback(:deactivate_siblings).after(:create) }
-  it { should callback(:create_intercom_event).after(:create) }
-  it { should callback(:update_percentage_complete).after(:create) }
-  it { should callback(:create_expiration_worker).after(:update), if: :exam_date_changed? }
+  describe 'class methods' do
+    it { expect(Enrollment).to respond_to(:search) }
+  end
 
-  # scopes
-  it { expect(Enrollment).to respond_to(:all_in_order) }
-  it { expect(Enrollment).to respond_to(:all_in_admin_order) }
-  it { expect(Enrollment).to respond_to(:all_in_exam_sitting_order) }
-  it { expect(Enrollment).to respond_to(:all_reverse_order) }
-  it { expect(Enrollment).to respond_to(:all_in_exam_order) }
-  it { expect(Enrollment).to respond_to(:by_sitting_date) }
-  it { expect(Enrollment).to respond_to(:all_in_recent_order) }
-  it { expect(Enrollment).to respond_to(:all_active) }
-  it { expect(Enrollment).to respond_to(:all_not_active) }
-  it { expect(Enrollment).to respond_to(:all_expired) }
-  it { expect(Enrollment).to respond_to(:all_valid) }
-  it { expect(Enrollment).to respond_to(:all_not_expired) }
-  it { expect(Enrollment).to respond_to(:for_subject_course) }
-  it { expect(Enrollment).to respond_to(:all_paused) }
-  it { expect(Enrollment).to respond_to(:all_un_paused) }
-  it { expect(Enrollment).to respond_to(:all_for_notifications) }
-  it { expect(Enrollment).to respond_to(:all_not_for_notifications) }
-  it { expect(Enrollment).to respond_to(:this_week) }
-  it { expect(Enrollment).to respond_to(:by_sitting) }
-
-  it { expect(Enrollment).to respond_to(:all_completed) }
-
-  # class methods
-  it { expect(Enrollment).to respond_to(:search) }
-  it { expect(Enrollment).to respond_to(:to_csv) }
-
-  # instance methods
-  it { should respond_to(:destroyable?) }
-  it { should respond_to(:valid_enrollment?) }
-  it { should respond_to(:enrollment_date) }
-  it { should respond_to(:course_name) }
-  it { should respond_to(:exam_sitting_name) }
-  it { should respond_to(:user_email) }
-  it { should respond_to(:student_number) }
-  it { should respond_to(:f_name) }
-  it { should respond_to(:l_name) }
-  it { should respond_to(:date_of_birth) }
-  it { should respond_to(:display_percentage_complete) }
-  it { should respond_to(:elements_complete_count) }
-  it { should respond_to(:course_elements_count) }
-  it { should respond_to(:sibling_enrollments) }
-  it { should respond_to(:status) }
-  it { should respond_to(:days_until_exam) }
-
+  describe 'instance methods' do
+    it { should respond_to(:destroyable?) }
+    it { should respond_to(:valid_enrollment?) }
+    it { should respond_to(:enrollment_date) }
+    it { should respond_to(:student_number) }
+    it { should respond_to(:alternate_exam_sittings) }
+    it { should respond_to(:sibling_enrollments) }
+    it { should respond_to(:display_percentage_complete) }
+    it { should respond_to(:status) }
+    it { should respond_to(:days_until_exam) }
+  end
 
 end

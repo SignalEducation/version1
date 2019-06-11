@@ -31,32 +31,26 @@ class Subscription < ActiveRecord::Base
   serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription
 
-  attr_accessible :use_paypal, :paypal_token, :paypal_subscription_guid, 
-                  :paypal_approval_url, :user_id, :subscription_plan_id,
-                  :stripe_status, :stripe_customer_id, :stripe_token,
-                  :livemode, :next_renewal_date, :active, :terms_and_conditions,
-                  :stripe_guid, :stripe_customer_data, :coupon_id,
-                  :complimentary, :paypal_status, :state, :cancellation_reason, 
-                  :cancellation_note, :cancelling_subscription
-
-  # delegate :currency, to: :subscription_plan
+  delegate :currency, to: :subscription_plan
 
   # Constants
   STATUSES = %w(active past_due canceled canceled-pending)
   PAYPAL_STATUSES = %w(Pending Active Suspended Cancelled Expired)
-  STRIPE_VALID_STATES = %w(active past_due canceled-pending)
+  VALID_STATES = %w(active past_due canceled-pending pending_cancellation paused)
 
   # relationships
   belongs_to :user, inverse_of: :subscriptions
+  belongs_to :subscription_plan
+  belongs_to :coupon, optional: true
+  has_one :student_access
+
   has_many :invoices
   has_many :invoice_line_items
-  belongs_to :subscription_plan
-  belongs_to :coupon
-  has_one :student_access
   has_many :subscription_transactions
   has_many :charges
   has_many :refunds
-  has_one :referred_signup
+
+  delegate :exam_body, to: :subscription_plan, allow_nil: false
 
   # validation
   validates :user_id, presence: true,
@@ -74,16 +68,18 @@ class Subscription < ActiveRecord::Base
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_coupon_count
-  after_save :update_student_access, if: :active
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
   scope :in_created_order, -> { order(:created_at) }
   scope :in_reverse_created_order, -> { order(:created_at).reverse_order }
   scope :all_of_status, lambda { |the_status| where(stripe_status: the_status) }
-  scope :all_active, -> { where(active: true) }
-  scope :all_valid, -> { where(stripe_status: STRIPE_VALID_STATES) }
+  scope :all_active, -> { with_states(:active, :paused, :errored, :pending_cancellation) }
+  scope :all_valid, -> { where(state: VALID_STATES) }
+  scope :not_pending, -> { where.not(state: 'pending') }
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
+  scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_token: nil) }
+  scope :all_paypal, -> { where.not(paypal_token: nil).where(stripe_guid: nil) }
 
   # STATE MACHINE ==============================================================
 
@@ -124,10 +120,20 @@ class Subscription < ActiveRecord::Base
       end
     end
 
-    after_transition pending: :active do |subscription, _transition|
-      if !(subscription.user.student_access.subscription_access? && subscription.user.student_access.content_access)
-        subscription.user.student_access.convert_to_subscription_access(subscription.id)
+    state all - [:active, :paused, :pending_cancellation, :errored] do
+      def can_change_plan?
+        false
       end
+    end
+
+    state :active, :paused, :pending_cancellation, :errored do
+      def can_change_plan?
+        upgrade_options.count > 0 ? true : false
+      end
+    end
+
+    after_transition pending: :active do |subscription, _transition|
+      # ??
     end
 
     after_transition all => :errored do |subscription, _transition|
@@ -198,7 +204,7 @@ class Subscription < ActiveRecord::Base
   end
 
   def immediate_cancel
-    if self.stripe_customer_id && self.stripe_guid
+    if self.stripe? && self.stripe_customer_id && self.stripe_guid
       # call stripe and cancel the subscription
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
@@ -206,13 +212,14 @@ class Subscription < ActiveRecord::Base
       if response[:status] == 'canceled'
         self.update_attribute(:stripe_status, 'canceled')
         self.cancel
-        self.user.student_access.update_attributes(content_access: false)
       else
         Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{self}. StripeResponse:#{response}."
         errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
       end
       # return true or false - if everything went well
       errors.messages.count == 0
+    elsif self.paypal?
+      # 
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end
@@ -230,10 +237,6 @@ class Subscription < ActiveRecord::Base
     # Make sure there is a default credit card in place
     unless self.user.subscription_payment_cards.all_default_cards.length > 0
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.no_default_payment_card'))
-    end
-    # Ensure this sub is the users current_sub associated the student_access
-    unless self.id == self.user.current_subscription.id
-      errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_current_subscription'))
     end
     # Ensure this sub is canceled
     unless self.stripe_status == 'canceled'
@@ -264,7 +267,6 @@ class Subscription < ActiveRecord::Base
             active: true
         )
         self.start
-        self.user.student_access.update_attributes(content_access: true)
       end
 
     end
@@ -277,8 +279,7 @@ class Subscription < ActiveRecord::Base
   def destroyable?
     self.invoices.empty? &&
       self.invoice_line_items.empty? &&
-      self.subscription_transactions.empty? &&
-      self.referred_signup.nil?
+      self.subscription_transactions.empty?
       #self.livemode == Invoice::STRIPE_LIVE_MODE &&
   end
 
@@ -328,19 +329,18 @@ class Subscription < ActiveRecord::Base
   def reactivation_options
     SubscriptionPlan
       .where(
-        currency_id: self.subscription_plan.currency_id,
-        available_to_students: true
+        currency_id: self.subscription_plan.currency_id
       )
       .where('price > 0.0').generally_available.all_active.all_in_order
   end
 
   def schedule_paypal_cancellation
     self.cancel_pending if self.active?
-    PaypalService.new.set_cancellation_date(self)
+    PaypalSubscriptionsService.new(self).set_cancellation_date
   end
 
   def upgrade_options
-    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).for_students.in_currency(subscription_plan.currency_id).all_active.all_in_order
+    SubscriptionPlan.includes(:currency).where.not(id: subscription_plan.id).where(subscription_plan_category_id: nil).for_exam_body(subscription_plan.exam_body_id).in_currency(subscription_plan.currency_id).all_active.all_in_order
   end
 
   def update_from_stripe
@@ -403,6 +403,18 @@ class Subscription < ActiveRecord::Base
     end
   end
 
+  def user_readable_name
+    subscription_plan.exam_body.name + ' ' + subscription_plan.interval_name + ' Subscription'
+  end
+
+  def paypal?
+    paypal_subscription_guid.present?
+  end
+
+  def stripe?
+    stripe_guid.present?
+  end
+
   protected
 
   def create_subscription_payment_card
@@ -415,14 +427,6 @@ class Subscription < ActiveRecord::Base
     if self.coupon_id
       self.coupon.update_redeems
     end
-  end
-
-  def convert_student_access
-    user.student_access.convert_to_subscription_access(id)
-  end
-
-  def update_student_access
-    user.student_access.check_student_access
   end
 
   def prefix

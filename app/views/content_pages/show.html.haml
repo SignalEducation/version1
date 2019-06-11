@@ -1,39 +1,31 @@
--if @content_page.transparent_nav?
-  =render partial: 'layouts/external_banner'
-  .hero-library
-    .l-wrap-small
-      =render partial: 'layouts/transparent_navbar'
-      .l-section-footer-pages
-        .container-fluid
-          .row
-            .col-md-10.col-md-offset-1
-              %h1.h1.h-white.h-separator.h-separator-center.text-center.l-margin-bottom
-                =@content_page.h1_text
-              %p.h5.h-white.text-center.l-margin-bottom-big{style: 'font-size: 1.8rem;'}
-                =@content_page.h1_subtext
-
-
 -if flash[:success] || flash[:error] || flash[:warning]
   =render partial: 'layouts/flash_messages'
 
-.l-section-small.is-bg-asphalt
-  .l-wrap-small
-    .container-fluid
-      .row
-        .col-md-12
-          =@content_page.text_content.html_safe
+%main
+  %article.bg-white
+    .container
+      %header.hero-section
+        %h1.h1-mega
+          =@content_page.h1_text
+        %h2.h5
+          =@content_page.h1_subtext
+
+
+      %section.pb-md-3
+        .row
+          .col-sm-12
+            =@content_page.text_content.html_safe
 
       -if @content_page.content_page_sections.any?
-        .row.l-margin-top-big
-          -@content_page.content_page_sections.all_in_order.each do |section|
-            .col-md-12
-              =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-course' do
+        %section.pb-md-6.pb-5.pt-md-6.pt-5
+          .row.pt-3
+            -@content_page.content_page_sections.all_in_order.each do |section|
+              .col-sm-12
+                =link_to library_special_link(section.subject_course), target: '_blank', class: 'card card-horizontal flex-row card-mint' do
 
-                .card-info-lg
-                  =section.text_content.html_safe
+                  .card-header.d-flex.justify-content-center.align-items-center
+                    %i{"aria-label" => section.subject_course.icon_label, :role => "img", class: section.subject_course.icon_label ? section.subject_course.icon_label : 'budicon-office-bag-c', style: "color: #{section.subject_course.highlight_colour};"}
 
-                .card-label{style: "background: #{section.panel_colour};"}
-                  .row
-                    .col-md-12.col-xs-12.text-center
-                      %h4{style: 'color: #fff;'}
-
+                  .card-body.d-flex.flex-column.justify-content-center
+                    %p
+                      =section.text_content.html_safe

@@ -41,16 +41,6 @@ class Invoice < ActiveRecord::Base
 
   serialize :original_stripe_data, Hash
 
-  # attr-accessible
-  attr_accessible :user_id, :subscription_transaction_id,
-                  :subscription_id, :number_of_users, :currency_id, :vat_rate_id,
-                  :issued_at, :stripe_guid, :sub_total, :total, :total_tax,
-                  :stripe_customer_guid, :object_type, :payment_attempted,
-                  :payment_closed, :forgiven, :paid, :livemode, :attempt_count,
-                  :amount_due, :next_payment_attempt_at, :webhooks_delivered_at,
-                  :charge_guid, :subscription_guid, :tax_percent, :tax,
-                  :original_stripe_data, :paypal_payment_guid
-
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
 
@@ -59,10 +49,10 @@ class Invoice < ActiveRecord::Base
   has_many :invoice_line_items
   has_many :charges
   has_many :refunds
-  belongs_to :subscription_transaction
+  belongs_to :subscription_transaction, optional: true
   belongs_to :subscription
   belongs_to :user
-  belongs_to :vat_rate
+  belongs_to :vat_rate, optional: true
 
   # validation
   validates :user_id, :subscription_id, :number_of_users, :currency_id, :total, presence: true

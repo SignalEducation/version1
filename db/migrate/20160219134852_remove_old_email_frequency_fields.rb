@@ -1,4 +1,4 @@
-class RemoveOldEmailFrequencyFields < ActiveRecord::Migration
+class RemoveOldEmailFrequencyFields < ActiveRecord::Migration[4.2]
   def change
     remove_column :users, :operational_email_frequency, :string
     remove_column :users, :study_plan_notifications_email_frequency, :string

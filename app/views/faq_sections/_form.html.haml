@@ -1,37 +1,37 @@
 =form_for(@faq_section, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  =f.hidden_field :sorting_order
-  =render partial: '/layouts/error_messages', locals: {thing: @faq_section, message: nil}
-  .row
-    .col-md-12
-      .col-md-6
-        =f.label :name, t('views.faq_sections.form.name'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_field :name, placeholder: t('views.faq_sections.form.name_placeholder'), class: 'form-control update-my-url', autofocus: true, style: 'border-radius: 6px;'
+  .box-item.form-box
+    =f.hidden_field :sorting_order
+    =render partial: '/layouts/error_messages', locals: {thing: @faq_section, message: nil}
+    .row
+      .col-sm-6
+        .form-group
+          =f.label :name, t('views.faq_sections.form.name')
+          .input-group.input-group-lg
+            =f.text_field :name, placeholder: t('views.faq_sections.form.name_placeholder'), class: 'form-control update-my-url', autofocus: true
 
-      .col-md-6
-        =f.label :name_url, t('views.faq_sections.form.name_url'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_field :name_url, placeholder: t('views.faq_sections.form.name_url_placeholder'), class: 'form-control', style: 'border-radius: 6px;'
+        .form-group
+          =f.label :name_url, t('views.faq_sections.form.name_url')
+          .input-group.input-group-lg
+            =f.text_field :name_url, placeholder: t('views.faq_sections.form.name_url_placeholder'), class: 'form-control'
 
-      .col-md-6
-        %br/
-        .form-group.l-margin-top-big
+      .col-sm-6
+        .form-group.pt-4
           .col-sm-8.col-sm-offset-4
             .checkbox
               %label
                 =f.check_box :active
                 =t('views.faq_sections.form.active')
 
-      .col-md-6
-        %br/
-        =f.label :description, t('views.faq_sections.form.description'), class: 'control-label'
-        .input-group.input-group-lg.full-width
-          =f.text_area :description, placeholder: t('views.faq_sections.form.description_placeholder'), rows: 5, class: 'form-control', style: 'border-radius: 6px;'
+        .form-group.pt-3
+          =f.label :description, t('views.faq_sections.form.description')
+          .input-group.input-group-lg
+            =f.text_area :description, placeholder: t('views.faq_sections.form.description_placeholder'), rows: 5, class: 'form-control'
 
 
-  .row.l-margin-top-huge
-    =f.submit t('views.general.save'), class: 'btn btn-red'
-    =link_to t('views.general.cancel'), faq_sections_path, class: 'btn btn-cyan'
+    .row.pt-4
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), faq_sections_path, class: 'btn btn-secondary'
 
 
 

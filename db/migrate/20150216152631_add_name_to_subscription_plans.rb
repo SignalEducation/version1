@@ -1,4 +1,4 @@
-class AddNameToSubscriptionPlans < ActiveRecord::Migration
+class AddNameToSubscriptionPlans < ActiveRecord::Migration[4.2]
   def up
     add_column :subscription_plans, :name, :string, index: true
     SubscriptionPlan.all.each do |sp|

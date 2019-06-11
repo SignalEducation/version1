@@ -2,25 +2,27 @@
 #
 # Table name: course_module_elements
 #
-#  id                        :integer          not null, primary key
-#  name                      :string
-#  name_url                  :string
-#  description               :text
-#  estimated_time_in_seconds :integer
-#  course_module_id          :integer
-#  sorting_order             :integer
-#  created_at                :datetime
-#  updated_at                :datetime
-#  is_video                  :boolean          default(FALSE), not null
-#  is_quiz                   :boolean          default(FALSE), not null
-#  active                    :boolean          default(TRUE), not null
-#  seo_description           :string
-#  seo_no_index              :boolean          default(FALSE)
-#  destroyed_at              :datetime
-#  number_of_questions       :integer          default(0)
-#  duration                  :float            default(0.0)
-#  temporary_label           :string
-#  is_constructed_response   :boolean          default(FALSE), not null
+#  id                               :integer          not null, primary key
+#  name                             :string
+#  name_url                         :string
+#  description                      :text
+#  estimated_time_in_seconds        :integer
+#  course_module_id                 :integer
+#  sorting_order                    :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  is_video                         :boolean          default(FALSE), not null
+#  is_quiz                          :boolean          default(FALSE), not null
+#  active                           :boolean          default(TRUE), not null
+#  seo_description                  :string
+#  seo_no_index                     :boolean          default(FALSE)
+#  destroyed_at                     :datetime
+#  number_of_questions              :integer          default(0)
+#  duration                         :float            default(0.0)
+#  temporary_label                  :string
+#  is_constructed_response          :boolean          default(FALSE), not null
+#  available_on_trial               :boolean          default(FALSE)
+#  related_course_module_element_id :integer
 #
 
 class CourseModuleElement < ActiveRecord::Base
@@ -28,20 +30,12 @@ class CourseModuleElement < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :name, :name_url, :description, :estimated_time_in_seconds,
-                  :active, :course_module_id, :sorting_order, :is_video, :is_quiz,
-                  :is_constructed_response, :seo_description, :seo_no_index,
-                  :temporary_label, :number_of_questions, :_destroy,
-                  :course_module_element_video_attributes,
-                  :course_module_element_quiz_attributes,
-                  :course_module_element_resources_attributes,
-                  :video_resource_attributes, :constructed_response_attributes
-
   # Constants
 
   # relationships
   belongs_to :course_module
+  belongs_to :related_course_module_element, class_name: 'CourseModuleElement',
+             foreign_key: :related_course_module_element_id, optional: true
   has_one :course_module_element_quiz
   has_one :course_module_element_video
   has_one :constructed_response
@@ -55,16 +49,17 @@ class CourseModuleElement < ActiveRecord::Base
   accepts_nested_attributes_for :course_module_element_quiz
   accepts_nested_attributes_for :course_module_element_video
   accepts_nested_attributes_for :constructed_response
-  accepts_nested_attributes_for :video_resource, reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
-  accepts_nested_attributes_for :course_module_element_resources, reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :video_resource,
+                                reject_if: lambda { |attributes| nested_video_resource_is_blank?(attributes) }
+  accepts_nested_attributes_for :course_module_element_resources,
+                                reject_if: lambda { |attributes| nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
-  validates :name, presence: true, length: {maximum: 255}
-  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
   validates :course_module_id, presence: true
-  validates :description, presence: true, if: :cme_is_video? #Description needs to be present because summernote editor will always populate the field with hidden html tags
+  validates :name, presence: true, length: {maximum: 255}
+  validates :name_url, presence: true, uniqueness: { scope: :course_module_id,
+                                     message: "must be unique within the course module" }
   validates :sorting_order, presence: true
-  validates_length_of :seo_description, maximum: 255, allow_blank: true
 
   # callbacks
   before_validation { squish_fields(:name, :name_url, :description) }
@@ -102,24 +97,24 @@ class CourseModuleElement < ActiveRecord::Base
     self.array_of_sibling_ids.index(self.id)
   end
 
+  def with_active_parents?
+    course_module.active && course_module.course_section.active
+  end
+
   def next_element
-    if self.my_position_among_siblings && (self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1))
-      CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
-    elsif self.my_position_among_siblings && (self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1))
-      if self.course_module.next_module && self.course_module.next_module.try(:course_module_elements).try(:all_active).any?
-        #End of CourseModule continue on to first CME of next CourseModule
-        next_id = self.course_module.next_module.try(:course_module_elements).try(:all_active).try(:all_in_order).try(:first).try(:id)
-        if next_id
-          CourseModuleElement.find(next_id)
-        else
-          CourseModule.where(id: self.course_module_id).first
-        end
+    if self.active && self.with_active_parents? && self.my_position_among_siblings
+      if self.my_position_among_siblings < (self.array_of_sibling_ids.length - 1)
+        # Find the next CME in the current CM
+        CourseModuleElement.find(self.array_of_sibling_ids[self.my_position_among_siblings + 1])
+      elsif self.my_position_among_siblings == (self.array_of_sibling_ids.length - 1) && (self.course_module.next_module && self.course_module.next_module.active_children.any?)
+        # There is no next CME in current CM - find first CME in next CM
+        course_module.next_module.first_active_cme
       else
-        #End of Course redirect to Course library#live
-        self.course_module
+        # There is no next CM in current CS - return the CourseSection
+        course_module.course_section
       end
     else
-      CourseModule.where(id: self.course_module_id).first
+      course_module.course_section.subject_course
     end
   end
 
@@ -167,6 +162,69 @@ class CourseModuleElement < ActiveRecord::Base
     cmeuls.any?
   end
 
+  def previous_cme_restriction(scul)
+
+    if self.related_course_module_element_id
+
+      if scul
+        student_exam_track = scul.student_exam_tracks.for_course_module(self.course_module_id).last
+        if student_exam_track
+          !student_exam_track.completed_cme_user_logs.map(&:course_module_element_id).include?(self.related_course_module_element_id)
+        else
+          true
+        end
+
+      else
+        true
+      end
+
+    else
+      false
+    end
+  end
+
+  def available_for_subscription(user, exam_body_id, scul=nil)
+    if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+      {view: false, reason: 'related-lesson-restriction'}
+    else
+      if user.valid_subscription_for_exam_body?(exam_body_id)
+        {view: true, reason: nil}
+      else
+        self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+      end
+    end
+  end
+
+  def available_for_complimentary(scul=nil)
+    if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+      {view: false, reason: 'related-lesson-restriction'}
+    else
+      {view: true, reason: nil}
+    end
+  end
+
+  def available_to_user(user, exam_body_id, scul=nil)
+    result = {view: false, reason: nil}
+    if user.non_verified_user?
+      result = {view: false, reason: 'verification-required'}
+    elsif user.standard_student_user?
+      #result = available_for_subscription(user, exam_body_id, scul)
+
+      if self.related_course_module_element_id && self.previous_cme_restriction(scul)
+        result = {view: false, reason: 'related-lesson-restriction'}
+      else
+        result = self.available_on_trial ? {view: true, reason: nil} : {view: false, reason: 'invalid-subscription'}
+      end
+    else
+      result = available_for_complimentary(scul)
+    end
+
+    result
+
+    # Return true/false and reason
+    # false will display lock icon
+    # reason will populate modal
+  end
 
   ########################################################################
 
@@ -181,6 +239,18 @@ class CourseModuleElement < ActiveRecord::Base
       'Constructed Response'
     else
       'Unknown'
+    end
+  end
+
+  def icon_label
+    if is_video
+      'ondemand_video'
+    elsif is_quiz
+      'playlist_add_check'
+    elsif is_constructed_response
+       'grid_on'
+    else
+      'checked'
     end
   end
 
@@ -206,7 +276,7 @@ class CourseModuleElement < ActiveRecord::Base
   def log_count_fields
     if self.is_video && course_module_element_video
       self.duration = self.course_module_element_video.duration
-      self.estimated_time_in_seconds = self.duration.round
+      self.estimated_time_in_seconds = self.duration.round if self.duration
     elsif self.is_constructed_response
       self.estimated_time_in_seconds = 900
     elsif self.is_quiz && course_module_element_quiz

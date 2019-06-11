@@ -14,32 +14,24 @@
 #  group_id                      :integer
 #  name                          :string
 #  home                          :boolean          default(FALSE)
-#  header_heading                :string
-#  header_paragraph              :text
-#  header_button_text            :string
-#  background_image              :string
-#  header_button_link            :string
-#  header_button_subtext         :string
+#  logo_image                    :string
 #  footer_link                   :boolean          default(FALSE)
 #  mailchimp_list_guid           :string
-#  mailchimp_section_heading     :string
-#  mailchimp_section_subheading  :string
-#  mailchimp_subscribe_section   :boolean          default(FALSE)
+#  registration_form             :boolean          default(FALSE), not null
+#  pricing_section               :boolean          default(FALSE), not null
+#  seo_no_index                  :boolean          default(FALSE), not null
+#  login_form                    :boolean          default(FALSE), not null
+#  preferred_payment_frequency   :integer
+#  header_h1                     :string
+#  header_paragraph              :string
+#  registration_form_heading     :string
+#  login_form_heading            :string
+#  footer_option                 :string           default("white")
 #
 
 require 'rails_helper'
 
 describe HomePage do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at)
-  HomePage.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
 
   subject { FactoryBot.build(:home_page) }
 

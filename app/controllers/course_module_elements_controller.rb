@@ -2,25 +2,27 @@
 #
 # Table name: course_module_elements
 #
-#  id                        :integer          not null, primary key
-#  name                      :string
-#  name_url                  :string
-#  description               :text
-#  estimated_time_in_seconds :integer
-#  course_module_id          :integer
-#  sorting_order             :integer
-#  created_at                :datetime
-#  updated_at                :datetime
-#  is_video                  :boolean          default(FALSE), not null
-#  is_quiz                   :boolean          default(FALSE), not null
-#  active                    :boolean          default(TRUE), not null
-#  seo_description           :string
-#  seo_no_index              :boolean          default(FALSE)
-#  destroyed_at              :datetime
-#  number_of_questions       :integer          default(0)
-#  duration                  :float            default(0.0)
-#  temporary_label           :string
-#  is_constructed_response   :boolean          default(FALSE), not null
+#  id                               :integer          not null, primary key
+#  name                             :string
+#  name_url                         :string
+#  description                      :text
+#  estimated_time_in_seconds        :integer
+#  course_module_id                 :integer
+#  sorting_order                    :integer
+#  created_at                       :datetime
+#  updated_at                       :datetime
+#  is_video                         :boolean          default(FALSE), not null
+#  is_quiz                          :boolean          default(FALSE), not null
+#  active                           :boolean          default(TRUE), not null
+#  seo_description                  :string
+#  seo_no_index                     :boolean          default(FALSE)
+#  destroyed_at                     :datetime
+#  number_of_questions              :integer          default(0)
+#  duration                         :float            default(0.0)
+#  temporary_label                  :string
+#  is_constructed_response          :boolean          default(FALSE), not null
+#  available_on_trial               :boolean          default(FALSE)
+#  related_course_module_element_id :integer
 #
 
 class CourseModuleElementsController < ApplicationController
@@ -62,24 +64,19 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def new
+    cm = CourseModule.find params[:cm_id].to_i
+    @course_modules = cm.parent.children
+    @related_cmes = cm.course_module_elements.all_active
     @course_module_element = CourseModuleElement.new(
         sorting_order: (CourseModuleElement.all.maximum(:sorting_order).to_i + 1),
-        course_module_id: params[:cm_id].to_i, active: true)
-    cm = CourseModule.find params[:cm_id].to_i
-    @course_modules = cm.parent.active_children
+        course_module_id: cm.id, active: true)
+
     if params[:type] == 'video'
 
       @course_module_element.is_video = true
       @course_module_element.build_course_module_element_video
       @course_module_element.build_video_resource
       @course_module_element.course_module_element_resources.build
-
-      if params[:video_uri]
-        @video_guid = params[:video_uri].split("/").last.to_s
-      else
-        @ticket = build_vimeo_ticket(new_course_module_element_url(type: 'video', cm_id: cm.id))
-        @ticket_url = @ticket.upload_link_secure
-      end
 
     elsif params[:type] == 'quiz'
       spawn_quiz_children
@@ -99,12 +96,6 @@ class CourseModuleElementsController < ApplicationController
         unless @course_module_element.video_resource
           @course_module_element.build_video_resource
         end
-        if params[:video_uri]
-          @video_guid = params[:video_uri].split("/").last.to_s
-        else
-          @ticket = build_vimeo_ticket(edit_course_module_element_url(type: 'video', cm_id: cm.id, course_module_element_id: @course_module_element.id))
-          @ticket_url = @ticket.upload_link_secure
-        end
       elsif @course_module_element.is_constructed_response
         @course_module_element.constructed_response.scenario.add_an_empty_scenario_question
       end
@@ -123,8 +114,6 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
-    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name) if @course_module_element.is_video?
-
 
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
@@ -135,14 +124,11 @@ class CourseModuleElementsController < ApplicationController
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
         redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
-        redirect_to course_module_special_link(@course_module_element.course_module)
+        redirect_to show_course_module_url(@course_module_element.course_module.subject_course_id, @course_module_element.course_module.id, @course_module_element.course_module.id)
       end
     else
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')
         spawn_quiz_children
-      end
-      if params[:commit] == t('views.general.save') && @course_module_element.is_video && @course_module_element.course_module_element_resources.empty?
-        @course_module_element.course_module_element_resources.build
       end
       render action: :new
     end
@@ -155,7 +141,6 @@ class CourseModuleElementsController < ApplicationController
     cm = @course_module_element.parent
     @course_modules = cm.parent.active_children
 
-    verify_upload(@course_module_element.course_module_element_video.vimeo_guid, @course_module_element.name) if @course_module_element.is_video?
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.update.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
@@ -183,7 +168,6 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def destroy
-    delete_on_vimeo(@course_module_element.course_module_element_video.vimeo_guid) if @course_module_element.is_video?
     if @course_module_element.destroy
       flash[:success] = I18n.t('controllers.course_module_elements.destroy.flash.success')
     else
@@ -209,52 +193,6 @@ class CourseModuleElementsController < ApplicationController
     @layout = 'management'
   end
 
-  ## Vimeo Video Actions ##
-  def build_vimeo_ticket(url)
-    require 'net/http'
-    require 'net/http/post/multipart'
-    http = Net::HTTP.new('api.vimeo.com', 443)
-    http.use_ssl = true
-
-    http.start do |session|
-      request = Net::HTTP::Post.new('/me/videos')
-      request['authorization'] = "Bearer #{ENV['LEARNSIGNAL_VIMEO_API_KEY']}"
-      request.form_data = {'redirect_url' => url}
-      response = session.request(request)
-      ticket = OpenStruct.new(JSON.parse(response.body))
-      return ticket
-    end
-  end
-
-  def verify_upload(video_uri, cme_name)
-    require 'net/http'
-    require 'net/http/post/multipart'
-    http = Net::HTTP.new('api.vimeo.com', 443)
-    http.use_ssl = true
-
-    http.start do |session|
-      request = Net::HTTP::Patch.new("/videos/#{video_uri}")
-      request['authorization'] = "Bearer #{ENV['LEARNSIGNAL_VIMEO_API_KEY']}"
-      request.form_data = {'name' => cme_name}
-      response = session.request(request)
-      return response
-    end
-  end
-
-  def delete_on_vimeo(video_guid)
-    require 'net/http'
-    require 'net/http/post/multipart'
-    http = Net::HTTP.new('api.vimeo.com', 443)
-    http.use_ssl = true
-
-    http.start do |session|
-      request = Net::HTTP::Delete.new("/videos/#{video_guid}")
-      request['authorization'] = "Bearer #{ENV['LEARNSIGNAL_VIMEO_API_KEY']}"
-      response = session.request(request)
-      return response
-    end
-  end
-
   def spawn_quiz_children
     @course_module_element.is_quiz = true
     @course_module_element.build_course_module_element_quiz
@@ -270,7 +208,7 @@ class CourseModuleElementsController < ApplicationController
 
   def set_related_cmes
     if @course_module_element && @course_module_element.course_module
-      @related_cmes = @course_module_element.course_module.course_module_elements.all_videos
+      @related_cmes = @course_module_element.course_module.course_module_elements.all_in_order.where.not(id: @course_module_element.id)
     else
       @related_cmes = CourseModuleElement.none
     end
@@ -292,6 +230,8 @@ class CourseModuleElementsController < ApplicationController
         :seo_no_index,
         :number_of_questions,
         :temporary_label,
+        :available_on_trial,
+        :related_course_module_element_id,
         course_module_element_video_attributes: [
             :course_module_element_id,
             :id,

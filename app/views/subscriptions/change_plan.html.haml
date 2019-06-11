@@ -4,7 +4,7 @@
     -if flash[:success] || flash[:error] || flash[:warning]
       =render partial: 'layouts/flash_messages'
 
-    =form_for(@current_subscription, method: :put, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
+    =form_for(@subscription, method: :put, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
       =f.hidden_field :subscription_plan_id
 
 
@@ -16,7 +16,7 @@
           -#TODO Proration Details explained here!
 
           %ul.plans.clearfix
-            -@subscription_plans.each do |plan|
+            -@subscription.upgrade_options.each do |plan|
               %li.plan{class: plan_interval(plan.payment_frequency_in_months), id: "sub-#{plan.currency.iso_code}-#{plan.payment_frequency_in_months}", data: {plan_id: plan.id}}
                 .base
                   .topbox

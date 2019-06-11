@@ -36,6 +36,7 @@
 #  highlight_colour                        :string           default("#ef475d")
 #  category_label                          :string
 #  additional_text_label                   :string
+#  constructed_response_count              :integer          default(0)
 #
 
 class SubjectCoursesController < ApplicationController
@@ -147,6 +148,30 @@ class SubjectCoursesController < ApplicationController
     redirect_to subject_course_url(subject_course)
   end
 
+  def trial_content
+  end
+
+  def update_trial_content
+    if @subject_course.update_attributes(nested_trial_params)
+      flash[:success] = I18n.t('controllers.subject_courses.update.flash.success')
+      redirect_to subject_course_url(@subject_course)
+    else
+      render action: :trial_content
+    end
+
+  end
+
+  def export_course_user_logs
+    @course = SubjectCourse.find(params[:id])
+    @sculs = @course.subject_course_user_logs
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @sculs.to_csv() }
+      format.xls { send_data @sculs.to_csv(col_sep: "\t", headers: true), filename: "#{@course.name}-user-logs-#{Date.today}.xls" }
+    end
+
+  end
 
   protected
 
@@ -162,16 +187,34 @@ class SubjectCoursesController < ApplicationController
 
   def allowed_params
     params.require(:subject_course).permit(:name, :name_url, :sorting_order,
-                                           :active, :tutor_id, :description,
-                                           :short_description,
+                                           :active, :description, :release_date,
+                                           :short_description, :exam_body_id,
                                            :default_number_of_possible_exam_answers,
-                                           :email_content, :external_url,
-                                           :external_url_name, :exam_body_id,
                                            :background_image, :survey_url,
                                            :quiz_pass_rate, :group_id, :preview,
                                            :computer_based, :highlight_colour,
-                                           :category_label, :additional_text_label
+                                           :category_label, :icon_label,
+                                           :seo_title, :seo_description,
+                                           course_sections_attributes: [
+                                             course_modules_attributes: [
+                                                 course_module_elements_attributes: [
+                                                     :available_on_trial
+                                                 ]
+                                             ]
+                                           ]
     )
+  end
+
+  def nested_trial_params
+    params.require(:subject_course).permit(subject_course_resources_attributes: [:id, :available_on_trial],
+                                           course_sections_attributes: [
+                                               :id, course_modules_attributes: [
+                                                 :id, course_module_elements_attributes:
+                                                                             [:id, :available_on_trial]
+                                               ]
+                                           ]
+    )
+
   end
 
   def resource_allowed_params

@@ -63,10 +63,10 @@ class UsersController < ApplicationController
   end
   before_action :layout_variables
   before_action :get_variables, except: [:user_personal_details, :user_subscription_status,
-                                         :user_enrollments_details, :user_purchases_details,
+                                         :user_activity_details, :user_purchases_details,
                                          :user_courses_status, :user_referral_details]
   before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status,
-                                            :user_enrollments_details, :user_purchases_details,
+                                            :user_activity_details, :user_purchases_details,
                                             :user_courses_status, :user_referral_details]
 
 
@@ -81,7 +81,7 @@ class UsersController < ApplicationController
   def show
     @user_sessions_count = @user.login_count
     @enrollments = @user.enrollments.all_in_order
-    @subscription = @user.current_subscription if @user.subscriptions.any?
+    @subscriptions = @user.subscriptions
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last
     @invoices = @user.invoices
@@ -93,9 +93,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
-    @user.build_student_access(trial_seconds_limit: ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i,
-                               trial_days_limit: ENV['FREE_TRIAL_DAYS'].to_i,
-                               account_type: 'Trial')
+    @user.build_student_access(account_type: 'Trial')
   end
 
   def create
@@ -109,7 +107,8 @@ class UsersController < ApplicationController
     @user.locale = 'en'
 
     if @user.save
-      StripeService.new.create_customer(@user)
+      @user.create_stripe_customer
+      @user.activate_user
 
       MandrillWorker.perform_async(@user.id, 'admin_invite', user_verification_url(email_verification_code: @user.email_verification_code)) unless Rails.env.test?
       flash[:success] = I18n.t('controllers.users.create.flash.success')
@@ -163,14 +162,19 @@ class UsersController < ApplicationController
 
   def user_subscription_status
     @subscriptions = @user.subscriptions.in_reverse_created_order
-    @subscription = @user.current_subscription if @user.subscriptions.any?
+
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
     @default_card = @subscription_payment_cards.all_default_cards.last
     @invoices = @user.invoices
   end
 
-  def user_enrollments_details
-    @enrollments = @user.enrollments.all_in_admin_order
+  def user_activity_details
+    @sculs = @user.subject_course_user_logs
+  end
+
+  def subject_course_user_log_details
+    @scul = SubjectCourseUserLog.find(params[:scul_id])
+    @latest_cmeul = @scul.course_module_element_user_logs.includes(:course_module_element).order(:created_at).first
   end
 
   def user_purchases_details
@@ -204,9 +208,9 @@ class UsersController < ApplicationController
   protected
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id, :profile_image,
-                                 :date_of_birth, :description, :student_number, :stripe_account_balance,
-                                 student_access_attributes: [:id, :trial_seconds_limit, :trial_days_limit, :account_type]
+    params.require(:user).permit(:email, :first_name, :last_name, :user_group_id, :address, :country_id,
+                                 :profile_image, :date_of_birth, :description, :student_number, :name_url,
+                                 :stripe_account_balance, student_access_attributes: [:id, :account_type]
     )
   end
 

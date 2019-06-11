@@ -33,19 +33,7 @@
 #
 
 class SubscriptionPaymentCard < ActiveRecord::Base
-
   include LearnSignalModelExtras
-
-  # attr-accessible
-  attr_accessible :user_id, :stripe_card_guid, :status,
-                  :brand, :last_4, :expiry_month, :expiry_year,
-                  :address_line1, :address_line2, :address_city,
-                  :address_state, :address_zip, :address_country,
-                  :account_country, :account_country_id,
-                  :stripe_object_name, :funding, :cardholder_name, :fingerprint,
-                  :cvc_checked, :address_line1_check, :address_zip_check,
-                  :dynamic_last4, :customer_guid, :is_default_card,
-                  :stripe_token
 
   # Constants
   STATUSES = %w(card-live not-live expired)
@@ -250,6 +238,10 @@ class SubscriptionPaymentCard < ActiveRecord::Base
     Rails.logger.error "ERROR: SubscriptionPaymentCard#update_default_card failed. Error: #{e.inspect}. Self: #{self.errors.inspect}"
     errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     false
+  end
+
+  def expiry_date
+    expiry_month.to_s + '/' + expiry_year.to_s
   end
 
   protected

@@ -1,4 +1,4 @@
-class CleanUpGroupRelationships < ActiveRecord::Migration
+class CleanUpGroupRelationships < ActiveRecord::Migration[4.2]
   def change
     remove_column :home_pages, :group_id, :integer
     add_column :home_pages, :custom_file_name, :string, index: :true

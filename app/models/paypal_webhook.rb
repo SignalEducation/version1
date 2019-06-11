@@ -14,23 +14,12 @@
 
 class PaypalWebhook < ActiveRecord::Base
   serialize :payload, Hash
-  # attr-accessible
-  attr_accessible :guid, :event_type, :payload, :processed_at, :valid
 
-  # Constants
-
-  # relationships
-
-  # validation
   validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :event_type, :payload, presence: true
 
-  # callbacks
   before_destroy :check_dependencies
 
-  # class methods
-
-  # instance methods
   def destroyable?
     true
   end
@@ -38,7 +27,7 @@ class PaypalWebhook < ActiveRecord::Base
   def process_sale_completed
     if (invoice = Invoice.build_from_paypal_data(payload)) && invoice.valid?
       invoice.update!(paid: true, payment_closed: true)
-      PaypalService.new.update_next_billing_date(invoice.subscription)
+      PaypalSubscriptionsService.new(invoice.subscription).update_next_billing_date
       update!(processed_at: Time.now)
       invoice.subscription.update!(paypal_status: 'Active') unless invoice.subscription.paypal_status == 'Active'
     else
@@ -74,6 +63,10 @@ class PaypalWebhook < ActiveRecord::Base
     else
       update!(verified: false)
     end
+  end
+
+  def reprocess
+    PaypalWebhookReprocessWorker.perform_async(id)    
   end
 
   private

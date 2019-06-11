@@ -1,4 +1,4 @@
-class RemoveFlashCards < ActiveRecord::Migration
+class RemoveFlashCards < ActiveRecord::Migration[4.2]
   def change
     drop_table :course_module_element_flash_card_packs
     drop_table :flash_card_stacks

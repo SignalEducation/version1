@@ -16,12 +16,6 @@
                   %td.col-sm-4=t('views.subscription_plans.form.name')
                   %td.col-sm-8=@subscription_plan.name
                 %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.available_to_students')
-                  %td.col-sm-8=tick_or_cross(@subscription_plan.available_to_students)
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.all_you_can_eat')
-                  %td.col-sm-8=tick_or_cross(@subscription_plan.all_you_can_eat)
-                %tr
                   %td.col-sm-4=t('views.subscription_plans.form.payment_frequency_in_months')
                   %td.col-sm-8=@subscription_plan.payment_frequency_in_months
                 %tr
@@ -39,9 +33,6 @@
                 %tr
                   %td.col-sm-4=t('views.subscription_plans.form.stripe_guid')
                   %td.col-sm-8=link_to @subscription_plan.stripe_guid, "https://dashboard.stripe.com/#{Rails.env.production? ? '' : 'test/'}plans/#{@subscription_plan.stripe_guid}", title: 'stripe.com', target: '_blank'
-                %tr
-                  %td.col-sm-4=t('views.subscription_plans.form.trial_period_in_days')
-                  %td.col-sm-8=@subscription_plan.trial_period_in_days
                 %tr
                   %td.col-sm-4=t('views.subscription_plans.form.subscription_plan_category_id')
                   %td.col-sm-8=link_to @subscription_plan.subscription_plan_category.try(:full_name), @subscription_plan.subscription_plan_category, title: t('views.general.tooltips.click_to_view')

@@ -1,4 +1,4 @@
-class UpdateStateForExistingOrders < ActiveRecord::Migration
+class UpdateStateForExistingOrders < ActiveRecord::Migration[4.2]
   def change
     Order.find_each do |order|
       case order.stripe_status

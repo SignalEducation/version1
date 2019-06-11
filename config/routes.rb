@@ -18,6 +18,11 @@ Rails.application.routes.draw do
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
   end
 
+  namespace :admin do
+    resources :exercises, only: [:index, :show, :edit, :update]
+    post 'search_exercises', to: 'exercises#index', as: :search_exercises
+  end
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
@@ -29,7 +34,11 @@ Rails.application.routes.draw do
     end
 
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
+    get 'already_subscribed', to: 'subscriptions#already_subscribed', as: :already_subscribed
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
+
+    resources :subscriptions, only: :show
+    resource :preferred_exam_body, only: [:edit, :update]
 
     #User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
@@ -39,7 +48,7 @@ Rails.application.routes.draw do
     post 'resend_verification_mail/:email_verification_code', to: 'user_verifications#resend_verification_mail', as: :resend_verification_mail
 
     # User Sessions
-    get 'sign_in', to: 'user_sessions#new', as: :sign_in
+    get 'login', to: 'user_sessions#new', as: :sign_in
     resources :user_sessions, only: [:create]
     get 'sign_out', to: 'user_sessions#destroy', as: :sign_out
 
@@ -47,7 +56,7 @@ Rails.application.routes.draw do
     get 'account', to: 'user_accounts#account_show', as: :account
     post 'change_password', to: 'user_accounts#change_password', as: :change_password
     patch 'update_user_details', to: 'user_accounts#update_user', as: :update_personal_details
-    patch 'update_exam_body_user_details', to: 'user_accounts#update_exam_body_user_details', as: :update_exam_body_user_details
+    patch 'update_exam_body_user_details', to: 'enrollments#update_exam_body_user_details', as: :update_exam_body_user_details
     get 'subscription_invoice/:id', to: 'user_accounts#subscription_invoice', as: :subscription_invoices
     get 'account/change_plan', to: 'subscriptions#change_plan', as: :account_change_plan
     put 'un_cancel_subscription/:id', to: 'subscriptions#un_cancel_subscription', as: :un_cancel_subscription
@@ -68,10 +77,13 @@ Rails.application.routes.draw do
       get  '/personal', action: :user_personal_details, as: :personal
       get  '/subscription', action: :user_subscription_status, as: :subscription
       get  '/courses', action: :user_courses_status, as: :courses
-      get  '/enrollments', action: :user_enrollments_details, as: :enrollments
+      get  '/enrollments', action: :user_activity_details, as: :activity
+      get  '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
       get  '/orders', action: :user_purchases_details, as: :orders
       get  '/referrals', action: :user_referral_details, as: :referrals
       patch  '/update_courses', action: :update_courses, as: :update_courses
+      resources :exercises, only: [:index, :show, :edit, :update], shallow: true
+      resources :invoices, only: [:index, :show], shallow: true
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
@@ -81,12 +93,12 @@ Rails.application.routes.draw do
     post 'manager_resend/:id', to: 'user_passwords#manager_resend_email', as: :manager_resend
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
-    get 'personal_sign_up_complete/:account_activation_code', to: 'student_sign_ups#show', as: :personal_sign_up_complete
+    get 'personal_sign_up_complete', to: 'student_sign_ups#show', as: :personal_sign_up_complete
     get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
-    get 'new_subscription_africa', to: 'student_sign_ups#home'
 
-    get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
-    get 'courses_constructed_response/:subject_course_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
+    get 'courses/:subject_course_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show'
+    get 'courses/:subject_course_name_url/:course_section_name_url/:course_module_name_url(/:course_module_element_name_url)', to: 'courses#show', as: :course
+    get 'courses_constructed_response/:subject_course_name_url/:course_section_name_url/:course_module_name_url/:course_module_element_name_url(/:course_module_element_user_log_id)', to: 'courses#show_constructed_response', as: :courses_constructed_response
     get 'courses/:subject_course_name_url',
         to: redirect('/%{locale}/library/%{subject_course_name_url}')
 
@@ -107,12 +119,18 @@ Rails.application.routes.draw do
     resources :enrollment_management, only: [:edit, :update, :show]
     resources :enrollment_management, only: [:edit, :update, :show]
     get '/export_enrollment_log_data/:id', to: 'enrollment_management#export_enrollment_log_data', as: :export_enrollment_log_data
+    get '/export_course_log_data/:id', to: 'subject_courses#export_course_user_logs', as: :export_course_log_data
     post '/create_new_scul/:id', to: 'enrollment_management#create_new_scul', as: :reset_enrollment_scul
     get 'course_modules/:subject_course_name_url',
         to: 'course_modules#new',
         as: :new_course_modules_for_subject_course_and_name
-    get 'course_modules/:subject_course_name_url', to: 'course_modules#show',
-        as: :course_modules_for_subject_course
+    get 'subject_courses/:id/new_course_section', to: 'course_sections#new', as: :new_course_section
+    get 'subject_courses/:id/course_section/:course_section_id/new_course_module', to: 'course_modules#new', as: :new_course_module
+    get 'subject_courses/:id/course_section/:course_section_id/edit_course_module/:course_module_id', to: 'course_modules#edit', as: :edit_course_module
+    get 'subject_courses/:id/course_section/:course_section_id/course_module/:course_module_id', to: 'course_modules#show', as: :show_course_module
+    get 'subject_courses/:course_id/reorder_course_sections', to: 'course_sections#reorder_list', as: :reorder_course_sections
+
+    resources :course_sections, concerns: :supports_reordering
     resources :course_modules, concerns: :supports_reordering
     resources :course_module_elements, except: [:index], concerns: :supports_reordering do
       resources :course_module_element_resources, except: [:show], concerns: :supports_reordering
@@ -131,7 +149,8 @@ Rails.application.routes.draw do
     resources :groups, concerns: :supports_reordering
 
     #Sign Up Actions
-    get '/student_new', to: 'student_sign_ups#new', as: :new_student
+    get '/basic_registration', to: 'student_sign_ups#new', as: :new_student
+    get '/student_new', to: 'student_sign_ups#new'
     post '/student_create', to: 'student_sign_ups#create', as: :create_student
 
     post '/subscribe', to: 'library#subscribe'
@@ -146,7 +165,6 @@ Rails.application.routes.draw do
     get 'library', to: 'library#index', as: :library
     get 'library/:group_name_url', to: 'library#group_show', as: :library_group
     get 'library/:group_name_url/:subject_course_name_url', to: 'library#course_show', as: :library_course
-    get 'library/:group_name_url/preview/:subject_course_name_url', to: 'library#course_preview', as: :library_preview
 
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
@@ -178,9 +196,13 @@ Rails.application.routes.draw do
     end
     get 'subject_courses/:id/course_modules_order', to: 'subject_courses#course_modules_order', as: :course_modules_order
     post 'subject_courses/:id/update_user_logs', to: 'subject_courses#update_student_exam_tracks', as: :subject_course_update_user_logs
+    get 'subject_courses/:id/trial_content', to: 'subject_courses#trial_content', as: :subject_course_trial_content
+    patch 'subject_courses/:id/trial_content', to: 'subject_courses#update_trial_content', as: :subject_course_update_trial_content
     get 'subject_courses/:id/resources', to: 'subject_courses#subject_course_resources', as: :course_resources
     get 'subject_courses/:id/new_subject_course_resources', to: 'subject_courses#new_subject_course_resources', as: :new_course_resources
     post 'subject_courses/:id/create_subject_course_resources', to: 'subject_courses#create_subject_course_resources', as: :create_course_resources
+
+    get 'register_or_login', to: 'student_sign_ups#sign_in_or_register', as: :sign_in_or_register
 
     resources :subscriptions, only: [:new, :create, :update, :destroy] do
       member do
@@ -189,8 +211,8 @@ Rails.application.routes.draw do
       end
     end
     namespace :subscriptions do
-      resources :suspensions, only: [:create, :destroy]
-      resources :cancellations, only: :create
+      resources :cancellations, only: [:new, :create]
+      resources :plan_changes, only: [:new, :create]
     end
 
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
@@ -200,15 +222,13 @@ Rails.application.routes.draw do
     get '/subscription_show/:id', to: 'subscription_plans#subscription_show', as: :subscription_show
 
     resources :subject_course_resources, concerns: :supports_reordering
-    get 'pricing', to: 'subscription_plans#public_index', as: :pricing
     get 'acca_info', to: 'footer_pages#acca_info'
     get 'contact', to: 'footer_pages#contact'
     get 'faqs', to: 'footer_pages#frequently_asked_questions', as: :public_faqs
     get 'privacy_policy', to: 'footer_pages#privacy_policy'
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
-    get 'profile/:id', to: 'footer_pages#profile', as: :profile
-    get 'profiles', to: 'footer_pages#profile_index', as: :tutors
-    get 'welcome_video', to: 'footer_pages#welcome_video', as: :welcome_video
+    get 'tutor/:name_url', to: 'footer_pages#profile', as: :profile
+    get 'tutors', to: 'footer_pages#profile_index', as: :tutors
 
     resources :users, only: [:new, :create]
     post 'search_users', to: 'users#index', as: :search_users
@@ -219,6 +239,7 @@ Rails.application.routes.draw do
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
     get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show
+    post '/search_visits', to: 'visits#all_index', as: :search_visits
     get '/referral', to: 'referral_codes#referral', as: :refer_a_friend
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
@@ -226,12 +247,8 @@ Rails.application.routes.draw do
     end
     resources :refunds
 
-    resources :white_papers, concerns: :supports_reordering
     get 'mock_exams', to: 'footer_pages#media_library', as: :media_library
     get 'prep_products', to: 'footer_pages#media_library', as: :prep_products
-    get 'white_paper/:white_paper_name_url', to: 'footer_pages#white_paper_request', as: :public_white_paper
-    resources :white_paper_requests
-    post 'request_white_paper', to: 'white_papers#create_request', as: :request_white_paper
 
     resources :home_pages
 

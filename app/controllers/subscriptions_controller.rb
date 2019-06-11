@@ -27,41 +27,76 @@
 #
 
 class SubscriptionsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(student_user))
   end
   before_action :get_subscription, except: [:new, :create]
-  before_action :check_subscriptions, only: [:new, :create]
   before_action :set_flash, only: :new
+  
+
+  def show
+    @subscription = Subscription.find(params[:id])
+    redirect_to dashboard_path unless @subscription.user_id == current_user.id
+  end
 
   def new
-    if current_user.trial_or_sub_user?
+    #redirect_to already_subscribed_url
 
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : current_user.country
-
-      # If user has previous subscription need to use that subs currency or stripe will reject sub in different currency
-      @existing_subscription = current_user.current_subscription
-      if @existing_subscription && @existing_subscription.subscription_plan
-        @currency_id = @existing_subscription.subscription_plan.currency_id
-      else
-        @currency_id = @country.currency_id
-      end
-
-      @subscription_plans = SubscriptionPlan.includes(:currency).for_students.in_currency(@currency_id).generally_available_or_for_category_guid(cookies.encrypted[:latest_subscription_plan_category_guid]).all_active.all_in_order
-      @yearly_subscription_plan = @subscription_plans.where(payment_frequency_in_months: 12).first
-      if params[:prioritise_plan_frequency].present?
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: @subscription_plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id)
-      else
-        @subscription = Subscription.new(user_id: current_user.id, subscription_plan_id: params[:subscription_plan_id] || @subscription_plans.where(payment_frequency_in_months: 3).first.id)
-      end
-
-      IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, @country.name) unless Rails.env.test?
+    if ExamBody.exists?(params[:exam_body_id]) 
+      current_user.preferred_exam_body.present?
     else
-      redirect_to root_url
+      redirect_to edit_preferred_exam_body_path
+      return
     end
+
+    if current_user.active_subscriptions_for_exam_body(params[:exam_body_id])
+      if current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).count > 0
+
+        other_plans = SubscriptionPlan.get_related_plans(current_user, 
+          current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).last.currency, params[:exam_body_id], 
+          current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).last.subscription_plan.guid 
+          )
+        if other_plans.count  <= 1
+         flash[:warning] = 'No other plans exist'
+         redirect_to account_url         
+        else
+          redirect_to new_subscriptions_plan_change_url(id: current_user.active_subscriptions_for_exam_body(params[:exam_body_id]).first.id)
+        end
+      end
+    end
+
+      if !current_user.preferred_exam_body.present? && !params[:exam_body_id] && ExamBody.exists?(params[:exam_body_id]) 
+        #redirect_to already_subscribed_url
+  
+
+        redirect_to edit_preferred_exam_body_path
+      elsif current_user.standard_student_user?
+        @plans, country = get_relevant_subscription_plans
+        @yearly_plan = @plans.yearly.first
+        
+        if params[:prioritise_plan_frequency].present?
+          @subscription = Subscription.new(
+            user_id: current_user.id,
+            subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
+          )
+        elsif params[:plan_guid].present?
+          @subscription = Subscription.new(
+            user_id: current_user.id,
+            subscription_plan_id: @plans.map(&:guid).include?(params[:plan_guid]) ? @plans.where(guid: params[:plan_guid].to_s).first.id : @plans.last.id
+          )
+        else
+          @subscription = Subscription.new(
+            user_id: current_user.id,
+            subscription_plan_id: params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
+          )
+        end
+        #IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
+        seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
+      else
+        redirect_to root_url
+      end
+    
   end
 
   def create
@@ -72,11 +107,11 @@ class SubscriptionsController < ApplicationController
     subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
     @subscription = subscription_object.create_and_return_subscription(params)
     
-    if @subscription.save
+    if @subscription && @subscription.save
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral
-        redirect_to personal_upgrade_complete_url
+        redirect_to personal_upgrade_complete_url, notice: 'Your subscription is confirmed!'
       elsif subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
       end
@@ -93,12 +128,11 @@ class SubscriptionsController < ApplicationController
   def execute
     case params[:payment_processor]
     when 'paypal'
-      if PaypalService.new.execute_billing_agreement(@subscription, params[:token])
+      if PaypalSubscriptionsService.new(@subscription).execute_billing_agreement(params[:token])
         @subscription.start!
         SubscriptionService.new(@subscription).validate_referral
         redirect_to personal_upgrade_complete_url
       else
-        @subscription.cancel!
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
         flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
         redirect_to new_subscription_url
@@ -114,18 +148,16 @@ class SubscriptionsController < ApplicationController
   end
 
   def personal_upgrade_complete
-    @subscription = current_user.current_subscription
-  end
-
-  def change_plan
-    if current_user && current_user.trial_user?
-      redirect_to new_subscription_url
-    elsif current_user && current_user.subscription_user? && current_user.current_subscription && !current_user.current_subscription.active_status?
-      redirect_to account_url(anchor: :subscriptions)
+    @subscription = current_user.subscriptions.last
+    if current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).any? && current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).where("cancelled_at >= ?", DateTime.now - 2.minutes).any?
+      @subscription_category = 'Change Subscription'
     else
-      @current_subscription = current_user.current_subscription
-      @subscription_plans = @current_subscription.upgrade_options
+      @subscription_category = 'Subscription'
     end
+
+    seo_title_maker('Thank You for Subscribing | LearnSignal',
+                    'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
+                    false)
   end
 
   def un_cancel_subscription
@@ -145,21 +177,6 @@ class SubscriptionsController < ApplicationController
     end
   end
 
-  #Upgrading current subscription to a new subscription plan
-  def update
-    subscription_object = SubscriptionService.new(@subscription)
-    if @subscription = subscription_object.change_plan(updatable_params[:subscription_plan_id].to_i)
-      flash[:success] = I18n.t('controllers.subscriptions.update.flash.success')
-    else
-      Rails.logger.error "ERROR: SubscriptionsController#update - something went wrong."
-      flash[:error] = I18n.t('controllers.subscriptions.update.flash.error')
-    end
-    redirect_to account_url(anchor: 'subscriptions')
-  rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e.message
-    redirect_to account_url(anchor: 'subscriptions')
-  end
-
   #Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
   def destroy
     if @subscription
@@ -173,14 +190,34 @@ class SubscriptionsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
 
-    if current_user.trial_or_sub_user?
+    if current_user.standard_student_user?
       redirect_to account_url(anchor: 'subscriptions')
     else
       redirect_to user_subscription_status_url(@subscription.user)
     end
   end
 
-  protected
+  private
+
+  def get_relevant_subscription_plans
+    country = IpAddress.get_country(request.remote_ip) || current_user.country
+    currency = current_user.get_currency(country)
+    if params[:plan_guid]
+      plans = SubscriptionPlan.get_related_plans(
+          current_user,
+          currency,
+          params[:exam_body_id],
+          params[:plan_guid]
+      )
+    else
+      plans = SubscriptionPlan.get_relevant(
+          current_user,
+          currency,
+          params[:exam_body_id]
+      )
+    end
+    return plans, country
+  end
 
   def set_flash
     if params[:flash].present?
@@ -189,23 +226,15 @@ class SubscriptionsController < ApplicationController
   end
 
   def subscription_params
-    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions, :hidden_coupon_code, :use_paypal)
-  end
-
-  def updatable_params
-    params.require(:subscription).permit(:subscription_plan_id)
+    params.require(:subscription).permit(:user_id, :subscription_plan_id, :stripe_token, :terms_and_conditions,
+                                         :hidden_coupon_code, :use_paypal)
   end
 
   def get_subscription
     @subscription = Subscription.find_by_id(params[:id])
   end
 
-  def check_subscriptions
-    if current_user && (current_user.valid_subscription? || current_user.canceled_pending?)
-      redirect_to account_url(anchor: :subscriptions)
-    elsif current_user && !current_user.trial_or_sub_user?
-      redirect_to root_url
-    end
+  def already_subscribed
   end
 
 end

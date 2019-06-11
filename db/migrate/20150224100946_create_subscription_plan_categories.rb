@@ -1,4 +1,4 @@
-class CreateSubscriptionPlanCategories < ActiveRecord::Migration
+class CreateSubscriptionPlanCategories < ActiveRecord::Migration[4.2]
   def change
     create_table :subscription_plan_categories do |t|
       t.string :name, index: true

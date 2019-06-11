@@ -1,4 +1,4 @@
-class ChangePercentageCompleteToFloatInStudentExamTracks < ActiveRecord::Migration
+class ChangePercentageCompleteToFloatInStudentExamTracks < ActiveRecord::Migration[4.2]
   def up
     change_column :student_exam_tracks, :percentage_complete, :float
   end

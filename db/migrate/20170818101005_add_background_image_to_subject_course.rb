@@ -1,4 +1,4 @@
-class AddBackgroundImageToSubjectCourse < ActiveRecord::Migration
+class AddBackgroundImageToSubjectCourse < ActiveRecord::Migration[4.2]
   def up
     add_attachment :subject_courses, :background_image
   end

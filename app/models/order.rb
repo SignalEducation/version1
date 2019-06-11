@@ -23,33 +23,22 @@
 #
 
 class Order < ActiveRecord::Base
-
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
-  attr_accessor :use_paypal, :paypal_approval_url
-
-  # attr-accessible
-  attr_accessible :use_paypal, :product_id, :subject_course_id, :user_id,
-                  :stripe_guid, :stripe_customer_id, :live_mode, :stripe_status,
-                  :stripe_order_payment_data, :stripe_token,
-                  :stripe_order_payment_data, :mock_exam_id,
-                  :terms_and_conditions, :reference_guid, :paypal_approval_url,
-                  :paypal_guid, :paypal_status
+  attr_accessor :use_paypal, :paypal_approval_url, :stripe_token
 
   # Constants
   ORDER_STATUS = %w(created paid canceled)
 
   # relationships
   belongs_to :product
-  belongs_to :subject_course
-  belongs_to :mock_exam
+  belongs_to :subject_course, optional: true
+  belongs_to :mock_exam, optional: true
   belongs_to :user
   has_one :order_transaction
 
   # validation
-  validates :product, :user, presence: true
   validates :reference_guid, uniqueness: true, allow_blank: true
-  validates :terms_and_conditions, presence: true
   validates :stripe_status, :stripe_guid, :stripe_customer_id, presence: true, if: :stripe?
 
   # callbacks
@@ -62,6 +51,7 @@ class Order < ActiveRecord::Base
   scope :all_for_course, lambda { |course_id| where(subject_course_id: course_id) }
   scope :all_for_product, lambda { |product_id| where(product_id: product_id) }
   scope :all_for_user, lambda { |user_id| where(user_id: user_id) }
+  scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
 
   # INSTANCE METHODS ===========================================================
 
@@ -78,6 +68,7 @@ class Order < ActiveRecord::Base
 
     after_transition all => :completed do |order, _transition|
       order.execute_order_completion
+      order.generate_exercises
     end
   end
 
@@ -90,21 +81,31 @@ class Order < ActiveRecord::Base
   end
 
   def execute_order_completion
-    MandrillWorker.perform_async(self.user_id, 'send_mock_exam_email', Rails.application.routes.url_helpers.account_url(host: 'https://learnsignal.com'), product.mock_exam.name, product.mock_exam.file, self.reference_guid)
+    MandrillWorker.perform_async(
+      self.user_id,
+      'send_mock_exam_email',
+      Rails.application.routes.url_helpers.user_exercises_url(
+        user_id: self.user_id,
+        host: 'https://learnsignal.com'
+      ),
+      product.mock_exam.name,
+      self.reference_guid
+    )
+  end
+
+  def generate_exercises
+    count = product.correction_pack_count || 1
+    (1..count).each do |ex|
+      user.exercises.create(product_id: product_id)
+    end
   end
 
   def mock_exam
     self.product.mock_exam
   end
 
-  ## setter method ##
-  def stripe_token=(t)
-    @stripe_token = t
-  end
-
-  ## getter method ##
-  def stripe_token
-    @stripe_token
+  def stripe?
+    stripe_token.present? || stripe_guid.present?
   end
 
   protected
@@ -122,9 +123,5 @@ class Order < ActiveRecord::Base
 
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
-  end
-
-  def stripe?
-    stripe_token.present? || stripe_guid.present?
   end
 end

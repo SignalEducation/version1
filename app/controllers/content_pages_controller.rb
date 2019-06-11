@@ -32,42 +32,40 @@ class ContentPagesController < ApplicationController
   def show
     @content_page = ContentPage.where(public_url: params[:content_public_url]).first
     if @content_page && @content_page.active
-      @banner = @content_page.external_banners.first if @content_page.external_banners.any?
       seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
-      if @content_page.standard_nav?
-        @navbar = true
-        @top_margin = true
-      else
-        @navbar = false
-        @top_margin = false
-      end
+      @navbar = true
+      @top_margin = true
       @footer = true
+
     else
       redirect_to root_url
     end
   end
 
   def new
-    @group = Group.all_active.all_in_order.first
-    @courses = @group.active_children.all_in_order
-    text_content = "<p><b>Signing up to the LearnSignal is the first step in passing your next ACCA exam.</b></p><p>The Exam Bootcamp has been designed with our students in mind. We enjoy the fact that if you are not our student that you feel you are benefitting from the daily email prompt. However, to get access to all of the amazing resources offered in the Exam Bootcamp and on our learning platform then<span>&nbsp;</span><b><a href='#{new_student_url}' target='_blank'>join LearnSignal now</a></b><span>.</span></p><p><b>Now, let’s get started!</b></p><p><b>1. Scroll down to your subject, find out your topic and go straight to your course</b></p><p><b>2. Review the lectures and notes before attempting the question</b></p><p><b>3. Do it under exam conditions (that means timed!!) and use the CBE tool when applicable</b></p><p><b>4. Review your attempt against the tutor solution and correct it as you go</b></p>"
+    if params[:bootcamp_page]
+      @group = Group.all_active.all_in_order.first
+      @courses = @group.active_children.all_in_order
+      text_content = "<p><b>Signing up to the LearnSignal is the first step in passing your next ACCA exam.</b></p><p>The Exam Bootcamp has been designed with our students in mind. We enjoy the fact that if you are not our student that you feel you are benefitting from the daily email prompt. However, to get access to all of the amazing resources offered in the Exam Bootcamp and on our learning platform then<span>&nbsp;</span><b><a href='#{new_student_url}' target='_blank'>join LearnSignal now</a></b><span>.</span></p><p><b>Now, let’s get started!</b></p><p><b>1. Scroll down to your subject, find out your topic and go straight to your course</b></p><p><b>2. Review the lectures and notes before attempting the question</b></p><p><b>3. Do it under exam conditions (that means timed!!) and use the CBE tool when applicable</b></p><p><b>4. Review your attempt against the tutor solution and correct it as you go</b></p>"
 
-    @content_page = ContentPage.new(text_content: text_content)
-    @courses.reverse.each_with_index do |course, index|
-      text = "<h3>#{course.name}</h3><h5 style="">TODAY'S TOPIC IS <b>Professional and Ethical Considerations</b>&nbsp;- CLICK HERE TO GO TO YOUR COURSE PAGE AND ATTEMPT&nbsp;the <b>yes</b>&nbsp;</b><span>question</span>. remember TO MARK YOURSELF AGAINST THE TUTOR SOLUTION PROVIDED.<br></h5>"
+      @content_page = ContentPage.new(text_content: text_content)
+      @courses.reverse.each_with_index do |course, index|
+        text = "<h3>#{course.name}</h3><p style="">TODAY'S TOPIC IS <b>Professional and Ethical Considerations</b>&nbsp;- CLICK HERE TO GO TO YOUR COURSE PAGE AND ATTEMPT&nbsp;the <b>yes</b>&nbsp;</b><span>question</span>. remember TO MARK YOURSELF AGAINST THE TUTOR SOLUTION PROVIDED.<br></p>"
 
-      @content_page.content_page_sections.build(text_content: text,
-                                                subject_course_id: course.id,
-                                                sorting_order: index + 1,
-                                                panel_colour: course.highlight_colour)
+        @content_page.content_page_sections.build(text_content: text,
+                                                  subject_course_id: course.id,
+                                                  sorting_order: index + 1,
+                                                  panel_colour: course.highlight_colour)
+      end
+
+    else
+      @content_page = ContentPage.new
     end
 
-    #@content_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF')
   end
 
   def edit
-    @content_page.content_page_sections.build
-    #@content_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF') unless @content_page.external_banners.any?
+    @content_page.content_page_sections.build if params[:bootcamp_page]
   end
 
   def create
@@ -110,10 +108,7 @@ class ContentPagesController < ApplicationController
 
   def allowed_params
     params.require(:content_page).permit(:name, :public_url, :seo_title, :seo_description, :text_content,
-                                         :h1_text, :h1_subtext, :nav_type, :footer_link, :active,
-                                         external_banners_attributes: [:id, :name, :background_colour,
-                                                                       :text_content, :sorting_order,
-                                                                       :_destroy],
+                                         :h1_text, :h1_subtext, :footer_link, :active,
                                          content_page_sections_attributes: [:id, :text_content,
                                                                             :panel_colour,
                                                                             :sorting_order,

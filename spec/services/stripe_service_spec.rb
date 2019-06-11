@@ -6,20 +6,20 @@ describe StripeService, type: :service do
 
   # CUSTOMERS ==================================================================
 
-  describe '#create_customer' do
+  describe '#create_customer!' do
     let(:user) { create(:user) }
 
     it 'creates the customer on Stripe' do
       expect(Stripe::Customer).to receive(:create).and_return(double(id: 'stripe_test_id'))
 
-      subject.create_customer(user)
+      subject.create_customer!(user)
     end
 
     it 'updates the user with the Stripe customer id' do
       allow(Stripe::Customer).to receive(:create).and_return(double(id: 'stripe_test_id'))
 
       expect {
-        subject.create_customer(user)
+        subject.create_customer!(user)
       }.to change { user.stripe_customer_id }.from(nil).to('stripe_test_id')
     end
   end
@@ -125,79 +125,6 @@ describe StripeService, type: :service do
 
   describe '#create_and_return_subscription' do
     it 'creates and returns a subscription on Stripe'
-  end
-
-  describe '#pause_subscription' do
-    let(:subscription) { create(:subscription, state: 'active') }
-
-    before :each do
-      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-      @dbl = double
-      allow(Stripe::Subscription).to receive(:retrieve).with(subscription.stripe_guid).and_return(@dbl)
-    end
-
-    it 'requires a subscription to be passed in' do
-      expect { subject.pause_subscription() }.to raise_error ArgumentError
-    end
-
-    it 'calls the Stripe API correctly' do
-      expect(@dbl).to receive(:coupon=).with('paused-subscription')
-      expect(@dbl).to receive(:save)
-
-      subject.pause_subscription(subscription)
-    end
-
-    it 'updates the subscription state to PAUSED' do
-      expect(@dbl).to receive(:coupon=).with('paused-subscription')
-      allow(@dbl).to receive(:save)
-      expect(subscription.state).to eq 'active'
-
-      subject.pause_subscription(subscription)
-
-      expect(subscription.state).to eq 'paused'
-    end
-
-    it 'handles an error from Stripe in updating the subscription' do
-      allow(@dbl).to receive(:coupon=).with('paused-subscription')
-      allow(@dbl).to receive(:save).and_raise(Stripe::StripeError)
-
-      expect { subject.pause_subscription(subscription) }.to raise_error(Learnsignal::SubscriptionError)
-    end
-  end
-
-  describe '#reactivate_subscription' do
-    let(:subscription) { create(:subscription, state: 'paused') }
-
-    before :each do
-      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-      @dbl = double
-      allow(Stripe::Subscription).to receive(:retrieve).with(subscription.stripe_guid).and_return(@dbl)
-    end
-
-    it 'requires a subscription to be passed in' do
-      expect { subject.reactivate_subscription() }.to raise_error ArgumentError
-    end
-
-    it 'calls the Stripe API correctly' do
-      expect(@dbl).to receive(:delete_discount)
-
-      subject.reactivate_subscription(subscription)
-    end
-
-    it 'updates the subscription state to PAUSED' do
-      allow(@dbl).to receive(:delete_discount)
-      expect(subscription.state).to eq 'paused'
-
-      subject.reactivate_subscription(subscription)
-
-      expect(subscription.state).to eq 'active'
-    end
-
-    it 'handles an error from Stripe in updating the subscription' do
-      allow(@dbl).to receive(:delete_discount).and_raise(Stripe::StripeError)
-
-      expect { subject.reactivate_subscription(subscription) }.to raise_error(Learnsignal::SubscriptionError)
-    end
   end
 
   # PRIVATE METHODS ============================================================

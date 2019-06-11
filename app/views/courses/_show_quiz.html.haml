@@ -1,37 +1,40 @@
-.col-md-12
-  -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?)
+.row.row-lg
+  .col-xl-12
+    -if @course_module_element.try(:course_module_element_quiz).try(:enough_questions?)
+      %h1.h3
+        =@course_module_element.try(:name).try(:html_safe)
 
-    %h2
-      =@course_module_element.try(:name).try(:html_safe)
-    .box-item.question-box.border-same-backcolor#quiz-contents{style: 'min-height: 745px;'}
-      .quiz-heading.l-margin-bottom
-        #question-count.p
-          Question 1 of 4
-      .progress.l-margin-bottom-huge
-        .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
+      .box-item.question-box#quiz-contents{style: 'min-height: 645px;'}
+        .quiz-heading.mb-2
+          #question-count.p
+            Question 1 of 4
+        .progress.mb-5
+          .progress-bar{role: 'progressbar', aria: {valuenow: 0, valuemin: 0, valuemax: 100}, style: 'width: 0%;'}
 
 
-      -@quiz_questions.each do |question|
-        =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
+        -@quiz_questions.each do |question|
+          =render partial: 'quiz_questions/show', locals: {question: question, hide_me: true}
 
-      =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
-        =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
-        =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
-        =f.text_field :user_id
-        =f.text_field :course_module_id
-        =f.text_field :course_module_element_id
-        =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
-        =f.fields_for :quiz_attempts do |attempt|
-          =attempt.text_field :user_id
-          =attempt.text_field :quiz_question_id
-          =attempt.text_field :quiz_answer_id
-          =attempt.text_field :answer_array
+        =form_for @course_module_element_user_log, url: courses_url, html: {style: 'display: none;'} do |f|
+          =f.hidden_field :subject_course_user_log_id, value: @subject_course_user_log.try(:id)
+          =f.hidden_field :course_section_user_log_id, value: @course_section_user_log.try(:id)
+          =f.hidden_field :student_exam_track_id, value: @student_exam_track.try(:id)
+          =f.text_field :user_id
+          =f.text_field :course_module_id
+          =f.text_field :course_section_id
+          =f.text_field :course_module_element_id
+          =f.text_field :time_taken_in_seconds, value: @course_module_element.try(:estimated_time_in_seconds)
+          =f.fields_for :quiz_attempts do |attempt|
+            =attempt.text_field :user_id
+            =attempt.text_field :quiz_question_id
+            =attempt.text_field :quiz_answer_id
+            =attempt.text_field :answer_array
 
-  -else
-    .row
-      .col-sm-12
-        .well.well-lg
-          Sorry, there are not enough questions to present this quiz
+    -else
+      .row
+        .col-sm-12
+          .well.well-lg
+            Sorry, there are not enough questions to present this quiz
 
   :javascript
 
@@ -66,7 +69,7 @@
 
 
       if (currentQuestion < numberOfQuestions) {
-        allQuestionsList
+        allQuestionsList;
         currentQuestion++;
         updateProgressBar();
         askQuestion(currentQuestion);

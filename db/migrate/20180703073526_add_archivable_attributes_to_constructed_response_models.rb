@@ -1,4 +1,4 @@
-class AddArchivableAttributesToConstructedResponseModels < ActiveRecord::Migration
+class AddArchivableAttributesToConstructedResponseModels < ActiveRecord::Migration[4.2]
   def change
     add_column :constructed_responses, :destroyed_at, :datetime
     add_column :scenarios, :destroyed_at, :datetime

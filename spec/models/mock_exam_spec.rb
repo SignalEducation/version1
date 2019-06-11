@@ -22,27 +22,15 @@
 require 'rails_helper'
 
 describe MockExam do
-
-  # attr-accessible
-  black_list = %w(id created_at updated_at file_file_name file_content_type file_file_size file_updated_at cover_image_file_name cover_image_content_type cover_image_file_size cover_image_updated_at product_id)
-  MockExam.column_names.each do |column_name|
-    if black_list.include?(column_name)
-      it { should_not allow_mass_assignment_of(column_name.to_sym) }
-    else
-      it { should allow_mass_assignment_of(column_name.to_sym) }
-    end
-  end
-
-  # Constants
-
   # relationships
   it { should belong_to(:subject_course) }
   it { should have_many(:products) }
   it { should have_many(:orders) }
 
   # validation
-  it { should validate_presence_of(:subject_course_id) }
-  it { should validate_numericality_of(:subject_course_id) }
+  it 'is invalid without a subject_course' do
+    expect(build_stubbed(:mock_exam, subject_course: nil)).not_to be_valid
+  end
 
   it { should validate_presence_of(:name) }
 

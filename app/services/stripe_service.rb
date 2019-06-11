@@ -2,9 +2,9 @@ class StripeService
 
   # CUSTOMERS ==================================================================
 
-  def create_customer(user)
+  def create_customer!(user)
     customer = Stripe::Customer.create(email: user.email)
-    user.update(stripe_customer_id: customer.id)
+    user.update!(stripe_customer_id: customer.id)
     customer
   end
 
@@ -134,23 +134,46 @@ class StripeService
     subscription
   end
 
-  def pause_subscription(subscription)
-    stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_guid)
-    stripe_sub.coupon = 'paused-subscription'
-    stripe_sub.save
-    subscription.pause
+  def cancel_subscription(subscription)
+    if subscription.stripe_customer_id && subscription.stripe_guid
+      stripe_customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
+      response = stripe_subscription.delete(at_period_end: true).to_hash
+      if response[:status] == 'canceled'
+        subscription.update_attribute(:stripe_status, 'canceled-pending')
+        subscription.cancel_pending
+      else
+        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{subscription}. StripeResponse:#{response}."
+        raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      end
+    else
+      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
+      raise Learnsignal::SubscriptionError.new('Subscription#cancel failed because it did not have a stripe_customer_id OR a stripe_guid.')
+    end
   rescue Stripe::StripeError => e
-    Rails.logger.error "DEBUG: Subscription#pause Failure to apply paused coupon for Subscription: ##{subscription.id}"
-    raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong pausing your subscription. Please try again or contact us for assistance.')
+    Rails.logger.error "DEBUG: Subscription#cancel_immediately got an error on Stripe #{e.inspect}"
+    raise Learnsignal::SubscriptionError.new('Sorry! There was an error cancelling the subscription.')
   end
 
-  def reactivate_subscription(subscription)
-    stripe_sub = Stripe::Subscription.retrieve(subscription.stripe_guid)
-    stripe_sub.delete_discount
-    subscription.restart
+  def cancel_subscription_immediately(subscription)
+    if subscription.stripe_customer_id && subscription.stripe_guid
+      stripe_customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+      stripe_subscription = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
+      response = stripe_subscription.delete(at_period_end: false).to_hash
+      if response[:status] == 'canceled'
+        subscription.update_attribute(:stripe_status, 'canceled')
+        subscription.cancel
+      else
+        Rails.logger.error "ERROR: Subscription#cancel_immediately failed to cancel an 'active' sub. Self:#{subscription}. StripeResponse:#{response}."
+        raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
+      end
+    else
+      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
+      raise Learnsignal::SubscriptionError.new('Subscription#cancel failed because it did not have a stripe_customer_id OR a stripe_guid.')
+    end
   rescue Stripe::StripeError => e
-    Rails.logger.error "DEBUG: Subscription#restart Failure to revoke paused coupon for Subscription: ##{subscription.id}"
-    raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong restarting your subscription. Please try again or contact us for assistance.')
+    Rails.logger.error "DEBUG: Subscription#cancel_immediately got an error on Stripe #{e.inspect}"
+    raise Learnsignal::SubscriptionError.new('Sorry! There was an error cancelling the subscription.')
   end
 
   # PRIVATE ====================================================================
@@ -237,7 +260,7 @@ class StripeService
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive'))
     elsif !%w(active past_due).include?(subscription.stripe_status)
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
-    elsif !user.trial_or_sub_user?
+    elsif !user.standard_student_user?
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
     elsif !(user.subscription_payment_cards.all_default_cards.length > 0)
       raise Learnsignal::SubscriptionError.new(I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))

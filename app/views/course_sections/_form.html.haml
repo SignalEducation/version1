@@ -1,0 +1,50 @@
+=form_for(@course_section, html: {class: 'form-horizontal', role: 'form', id: 'course_section_form'}) do |f|
+  .box-item
+    .row
+      .col-sm-12
+        =render partial: '/layouts/error_messages', locals: {thing: @course_section, message: nil}
+        =f.hidden_field :sorting_order
+        =f.hidden_field :subject_course_id
+
+        .row
+          .col-sm-6
+            .form-group
+              =f.label :name, t('views.course_sections.form.name')
+              .input-group.input-group-lg
+                =f.text_field :name, placeholder: t('views.course_sections.form.name_placeholder'), class: 'form-control update-my-url'
+
+
+          .col-sm-6
+            .form-group
+              =f.label :name_url, t('views.course_sections.form.name_url')
+              .input-group.input-group-lg
+                =f.text_field :name_url, placeholder: t('views.course_sections.form.name_url_placeholder'), class: 'form-control'
+
+
+      .col-sm-12.pt-4
+        .row
+          .col-sm-4
+            .checkbox
+              %label
+                =f.check_box :active
+                =t('views.course_sections.form.active')
+
+          .col-sm-4
+            .checkbox
+              %label
+                =f.check_box :counts_towards_completion
+                =t('views.course_sections.form.counts_towards_completion')
+
+          .col-sm-4
+            .checkbox
+              %label
+                =f.check_box :assumed_knowledge
+                =t('views.course_sections.form.assumed_knowledge')
+
+    .row.pt-4
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), course_module_special_link(@course_section), class: 'btn btn-secondary'
+
+
+

@@ -1,4 +1,4 @@
-class AddAttachmentCoverImageToWhitePapers < ActiveRecord::Migration
+class AddAttachmentCoverImageToWhitePapers < ActiveRecord::Migration[4.2]
   def self.up
     change_table :white_papers do |t|
       t.attachment :cover_image

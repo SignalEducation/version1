@@ -1,81 +1,146 @@
-.bg-asphalt
-  .container
-    %article.hero
-      %h1.h1-mega.mb-3 
-        =@mock_exam.name
-      %h5.text-red Purchase Process
-    -if flash[:success] || flash[:error] || flash[:warning]
-      =render partial: 'layouts/flash_messages'
-  .container#product_purchase
-    -if current_user.purchased_products && current_user.purchased_products.include?(@product)
-      .row
-        .col-md-12
-          .payment-heading.text-center
-            %p.p
-              You have already purchased this Product. Visit your account page to view your purchase history.
-    -else
-      =form_for(@order, html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
-        =f.hidden_field :product_id, value: @product.id
-        =f.hidden_field :stripe_token
-        =f.hidden_field :terms_and_conditions, id: 'hidden_term_and_conditions'
-        =f.hidden_field :use_paypal, value: false
-        =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h1-hero.mb-2
+          ="#{@mock_exam.name} Purchase"
+        %p.p-hero.px-lg-8
+          -if @product.mock_exam?
+            Purchase an ACCA Mock Exam and increase your chances of passing the ACCA exams.
+          -else
+            Pass your ACCA exams faster with a question and solution correction pack.
 
-        .row.row-lg.justify-content-center
-          .col-lg-6.mb-5.mb-xl-0
-            %fieldset.text-center
-              %h3.mb-3 
-                =@mock_exam.name
-              %p.h4.mb-3.text-torquoise
-                Total:
-                %span
-                  =number_in_local_currency(@product.price, @product.currency_id)
-              .mb-4
-                =image_tag 'ico-exam-2.svg', alt: 'Exam'
-              .px-4
-                %p.text-left
-                  -if @product.mock_exam?
-                    Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.
-                  -else
-                    This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource.  Once submitted your work, our expert tutors will correct it and give you feedback within 3 days.
-          .col-lg-6.mb-5
-            %fieldset.card
-              %p.h2.mb-1 Choose a way to pay
-              %p.mb-4 Choose your preferred method of payment
-              .form-group.form-group-expandable
-                .custom-control.custom-radio
-                  %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
-                  %label.custom-control-label{:for => "pay-with-card"}
-                    %span.custom-label-info
-                      %span.h3.m-0
-                        =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
-                        %span Credit / Debit Card
-                    %span.custom-check
-                =render partial: 'orders/order_card_form', locals: {f: f}
-              .form-group.form-group-expandable
-                .custom-control.custom-radio
-                  %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
-                  %label.custom-control-label{:for => "pay-with-paypal"}
-                    %span.custom-label-info
-                      %span.h3.m-0
-                        =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
-                        %span PayPal
-                    %span.custom-check
-                =render partial: 'orders/paypal_form', locals: {f: f}
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
+
+      %section.pb-md-6.pb-5
+        .order-checkout-section
+          .container#product_purchase
+            -if current_user.purchased_products && current_user.purchased_products.include?(@product)
+              .row
+                .col-md-12
+                  .payment-heading.text-center
+                    %p.p
+                      You have already purchased this Product. Visit your account page to view your purchase history.
+            -else
+              =form_for(@order, html: {id: 'orders-form', class: 'payment', role: 'form'}) do |f|
+                =f.hidden_field :product_id, value: @product.id
+                =f.hidden_field :stripe_token
+                =f.hidden_field :use_paypal, value: false
+                =render partial: '/layouts/error_messages', locals: {thing: @order, message: nil}
+
+                .row
+                  .col-lg-6.mb-5.mb-xl-0
+                    .row
+                      .col-lg-8.offset-2
+                        .card.card-link.text-center.mb-5
+                          .py-4
+                            %h4.text-ellipsis.mb-4
+                              =@mock_exam.name
+                            .pt-2
+                              %i.budicon-files-tick{"aria-label" => "", :role => "img"}
+                            .pt-4.pb-2
+                              .h6.text-ellipsis
+                                Total:
+                                %span
+                                  =number_in_local_currency(@product.price, @product.currency_id)
+                    .px-4
+                      %p.text-left
+                        -if @product.mock_exam?
+                          Purchase your Mock Exam today. Once submitted we will give you a solution paper, your result, question by question, personalised feedback on your exam and study topic recommendations.
+                        -else
+                          This correction pack is applicable to all ACCA courses. Pick and complete any ACCA question from any resource. Once you have submitted your work, our expert tutors will correct it and give you feedback within 3 days.
+
+                  .col-lg-6.mb-5
+                    %fieldset.card.card-payments
+                      %p.h2.mb-1 Choose a way to pay
+                      %p.mb-4 Select your preferred method of payment
+                      .form-group.form-group-expandable
+                        .custom-control.custom-radio
+                          %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
+                          %label.custom-control-label{:for => "pay-with-card"}
+                            %span.custom-label-info
+                              %span.h3.m-0
+                                =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                                %span Credit / Debit Card
+                            %span.custom-check
+                        =render partial: 'orders/order_card_form', locals: {f: f}
+                      .form-group.form-group-expandable
+                        .custom-control.custom-radio
+                          %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
+                          %label.custom-control-label{:for => "pay-with-paypal"}
+                            %span.custom-label-info
+                              %span.h3.m-0
+                                =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                                %span PayPal
+                            %span.custom-check
+                        =render partial: 'orders/paypal_form', locals: {f: f}
 
 :javascript
 
-  $(document).on('ready', function() {
+  let currencyIso = "#{@product.currency.iso_code}";
+  let productName = "#{@product.name}";
+  let productId = "#{@product.id}";
+  let productPrice = "#{@product.price}";
+  let productBody = "#{@product.mock_exam.subject_course.exam_body.name}";
+  let searchParams = new URLSearchParams(window.location.search);
 
-    $('.terms-and-conditions').on('change', function() {
-      if ($(this).is(':checked')) {
-        $('#paypal_terms_and_conditions, #stripe_terms_and_conditions').prop('checked', true);
-        $('#hidden_term_and_conditions').val(true);
-      } else {
-        $('#paypal_terms_and_conditions, #stripe_terms_and_conditions').prop('checked', false);
-        $('#hidden_term_and_conditions').val(false);
+  function checkout1() {
+    dataLayer.push({ 'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': {'step': 1, 'option': 'Logged In'},
+          'products': [{
+            'name': productName,
+            'id': productId,
+            'price': productPrice,
+            'brand': productBody,
+            'category': 'Exam Papers',
+            'quantity': 1
+          }]
+        }
       }
-    })
+    });
+  }
+
+  function checkout2(type) {
+    let convertType = (type === "stripe") ? "Credit Card" : "PayPal";
+    dataLayer.push({ 'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': {'step': 2, 'option':convertType},
+          'products': [{
+            'name': productName,
+            'id': productId,
+            'price': productPrice,
+            'brand': productBody,
+            'category': 'Exam Papers',
+            'quantity': 1
+          }]
+        }
+      }
+    });
+  }
+
+  function checkoutOption(type) {
+    dataLayer.push({
+      'event': 'checkoutOption',
+      'ecommerce': {
+        'checkout_option': {
+          'actionField': {'step': 1, 'option': type}
+        }
+      }
+    });
+  }
+
+  $(document).on('ready', function() {
+    if (searchParams.has('login') === true) {
+      checkoutOption('Log In');
+    } else if (searchParams.has('registered') === true) {
+      checkoutOption('Registration');
+    } else {
+      checkout1();
+    }
 
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
@@ -86,9 +151,10 @@
         $('#paypal_terms_and_conditions').prop('required', true);
       }
     });
-    $('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+    //$('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
 
     function selectPaymentMethod(paymentType) {
+      checkout2(paymentType);
       switch(paymentType) {
         case 'paypal':
           $('#order_use_paypal').val(true);
@@ -116,13 +182,6 @@
 
 
     $(".sk-circle").hide();
-    $('input[type="checkbox"]').on('change', function() {
-      if($('#terms_and_conditions').prop('checked') == true) {
-        $("#hidden_term_and_conditions").val('true');
-      } else if($('#terms_and_conditions').prop('checked') == false) {
-        $("#hidden_term_and_conditions").val('false');
-      }
-    });
 
     var style = {
       base: {
@@ -205,4 +264,6 @@
         }
       });
     };
+
   });
+

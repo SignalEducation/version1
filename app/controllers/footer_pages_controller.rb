@@ -3,20 +3,18 @@ class FooterPagesController < ApplicationController
   before_action :get_variables, except: [:missing_page]
 
   def privacy_policy
-    seo_title_maker('Privacy Policy', 'Privacy Policy of learnsignal.com. This Application collects some Personal Data from its Users.', nil)
+    seo_title_maker('Read Our Privacy Policy | LearnSignal', 'Read the Privacy Policy for learnsignal.com. Find out about our privacy and cookies policy here including how your data is used.', nil)
   end
 
   def acca_info
-    seo_title_maker('ACCA at LearnSignal', '', nil)
-  end
-
-  def welcome_video
-    seo_title_maker('LearnSignal Welcome Intro Video', '', nil)
+    seo_title_maker('ACCA Information | LearnSignal', 'This ACCA guideline from learnsignal provides information on exams, EPSM and PER and links to key ACCA resources to help you get your ACCA qualification.', nil)
   end
 
   def contact
     @form_type = 'Contact Us'
-    seo_title_maker('Contact', 'If you have any queries or specific requests regarding LearnSignal’s online training faculty, get in touch with us, and a member of our team will contact you as soon as possible.', nil)
+    seo_title_maker('Contact Us Today | LearnSignal',
+                    "Contact us if you have any queries about learnsignal's online learning courses. Let us know if you have any specific feedback or complaints regarding our services.",
+                    nil)
   end
 
   def terms_and_conditions
@@ -25,54 +23,51 @@ class FooterPagesController < ApplicationController
       seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
       render 'content_pages/show'
     else
-      seo_title_maker('Terms & Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
+      seo_title_maker('Terms and Conditions', 'These terms and conditions ("Terms and Conditions") govern your use learnsignal.com ("Website") and the services offered herein (the “Services”). In these Terms and Conditions, Signal Education Limited is referred to as the “Company".', nil)
       render 'terms_and_conditions'
     end
   end
 
   def frequently_asked_questions
-    seo_title_maker('FAQs', 'Frequently Asked Questions', nil)
+    seo_title_maker('Frequently Asked Questions | LearnSignal', "Find answers to learnsignal's frequently asked questions. If you have a question that you can't see the answer to don't hesitate to get in touch.", nil)
     @faq_section = FaqSection.all_active.all_in_order
   end
 
   def media_library
+    seo_title_maker('ACCA Correction Packs and Mock Exams | LearnSignal', "Get access to ACCA question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.", nil)
     if current_user
-      @country = current_user.country
+      country = IpAddress.get_country(request.remote_ip) || current_user.country
+      currency = current_user.get_currency(country)
+      @currency_id = currency.id
     else
-      ip_country = IpAddress.get_country(request.remote_ip)
-      @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+      country = IpAddress.get_country(request.remote_ip)
+      @currency_id = country.currency_id
     end
-    @currency_id = @country.currency_id
-    @products = Product.includes(:currency)
-                       .in_currency(@currency_id)
+
+    @products = Product.in_currency(@currency_id)
                        .all_active
                        .all_in_order
                        .where("mock_exam_id IS NOT NULL")
                        .where("product_type = ?", Product.product_types[:mock_exam])
-    @questions = Product.includes(:currency)
-                       .in_currency(@currency_id)
+    @questions = Product.in_currency(@currency_id)
                        .all_active
                        .all_in_order
                        .where("mock_exam_id IS NOT NULL")
                        .where("product_type = ?", Product.product_types[:correction_pack])
   end
 
-  def white_paper_request
-    @white_paper = WhitePaper.where(name_url: params[:white_paper_name_url]).first
-    @white_paper_request = WhitePaperRequest.new(white_paper_id: @white_paper.id)
-  end
-
 
   def profile
-    #/profile/id
-    @tutor = User.all_tutors.where(id: params[:id]).first
+
+    @tutor = User.all_tutors.where(name_url: params[:name_url]).first
     if @tutor && @tutor.course_tutor_details.any?
       @course_ids = []
       @tutor.course_tutor_details.each do |course_tutor|
         @course_ids << course_tutor.subject_course if course_tutor.subject_course
       end
       @courses = SubjectCourse.where(id: @course_ids)
-      seo_title_maker(@tutor.full_name, @tutor.description, nil)
+      seo_title_maker("#{@tutor.full_name} Tutor | LearnSignal", @tutor.description, nil)
+
     else
       redirect_to tutors_url
     end
@@ -83,7 +78,7 @@ class FooterPagesController < ApplicationController
   def profile_index
     #/profiles
     @tutors = User.all_tutors.with_course_tutor_details.where.not(profile_image_file_name: nil)
-    seo_title_maker('Our Lecturers', 'Learn from industry experts that create LearnSignal’s online courses.', nil)
+    seo_title_maker('Learn About Our Tutors | LearnSignal', 'Our tutors are dedicated helping students achieve their learning goals. Read profiles of the industry experts that create learnsignal’s online courses.', nil)
     @navbar = true
     @top_margin = true
   end
@@ -156,8 +151,8 @@ class FooterPagesController < ApplicationController
   protected
 
   def get_variables
-    @navbar = false
-    @top_margin = false
+    @navbar = 'standard'
+    @top_margin = true
     @footer = true
   end
 

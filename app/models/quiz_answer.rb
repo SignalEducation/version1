@@ -16,9 +16,6 @@ class QuizAnswer < ActiveRecord::Base
   include LearnSignalModelExtras
   include Archivable
 
-  # attr-accessible
-  attr_accessible :quiz_question_id, :degree_of_wrongness, :quiz_contents_attributes
-
   # Constants
   WRONGNESS = %w(correct incorrect)
 

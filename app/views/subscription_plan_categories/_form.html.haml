@@ -1,23 +1,35 @@
 =form_for(@subscription_plan_category, html: {class: 'form-horizontal', role: 'form'}) do |f|
-  .row
-    .col-md-8.col-md-offset-2
+  .box-item.form-box
+    .row
       =render partial: '/layouts/error_messages', locals: {thing: @subscription_plan_category, message: nil}
-      =f.label :name, t('views.subscription_plan_categories.form.name'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      =f.label :trial_period_in_days, t('views.subscription_plan_categories.form.trial_period_in_days'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.number_field :trial_period_in_days, placeholder: t('views.subscription_plan_categories.form.trial_period_in_days_placeholder'), class: 'form-control', style: 'border-radius: 6px;', autofocus: true
-      %br/
-      =f.label :available_from, t('views.subscription_plan_categories.form.available_from'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
-      %br/
-      =f.label :available_to, t('views.subscription_plan_categories.form.available_to'), class: 'control-label'
-      .input-group.input-group-lg.full-width
-        =f.text_field :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', style: 'border-radius: 6px;', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
 
-  .row.l-margin-top-big
-    =f.submit t('views.general.save'), class: 'btn btn-red'
-    =link_to t('views.general.cancel'), subscription_plan_categories_path, class: 'btn btn-cyan'
+      .col-sm-6
+        .form-group
+          =f.label :name, t('views.subscription_plan_categories.form.name')
+          .input-group.input-group-lg
+            =f.text_field :name, placeholder: t('views.subscription_plan_categories.form.name_placeholder'), class: 'form-control', autofocus: true
+
+      .col-sm-6
+        .form-group
+          =f.label :sub_heading_text, t('views.subscription_plan_categories.form.sub_heading_text')
+          .input-group.input-group-lg
+            =f.text_field :sub_heading_text, placeholder: t('views.subscription_plan_categories.form.sub_heading_text_placeholder'), class: 'form-control', autofocus: true
+
+
+
+      .col-sm-6
+        .form-group
+          =f.label :available_from, t('views.subscription_plan_categories.form.available_from')
+          .input-group.input-group-lg
+            =f.datetime_select :available_from, placeholder: t('views.subscription_plan_categories.form.available_from_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+
+
+        .form-group
+          =f.label :available_to, t('views.subscription_plan_categories.form.available_to')
+          .input-group.input-group-lg
+            =f.datetime_select :available_to, placeholder: t('views.subscription_plan_categories.form.available_to_placeholder'), class: 'form-control datetimepicker', data: {'date-format' => t('controllers.application.datepicker_datetime_format')}
+
+    .row.pt-4
+      .col-sm-12
+        =f.submit t('views.general.save'), class: 'btn btn-primary'
+        =link_to t('views.general.cancel'), subscription_plan_categories_path, class: 'btn btn-secondary'

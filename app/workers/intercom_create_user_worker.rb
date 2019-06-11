@@ -10,17 +10,15 @@ class IntercomCreateUserWorker
 
     if user
 
-      intercom.users.create(user_id: user_id,
+      intercom.users.create(user_id: user.id,
                             email: user.email,
                             name: user.full_name,
                             created_at: user.created_at,
                             custom_data: {guid: user.guid,
                                           user_group: user.user_group,
-                                          account_status: user.user_account_status,
                                           email_verified: user.email_verified,
-                                          ga_id: user.analytics_guid,
-                                          student_number: user.student_number,
                                           date_of_birth: user.date_of_birth,
+                                          preferred_exam_body: user.preferred_exam_body.try(:name),
                             })
 
     end
