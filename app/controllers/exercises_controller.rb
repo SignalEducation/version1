@@ -4,6 +4,7 @@ class ExercisesController < ApplicationController
 
   def index
     @exercises = current_user.exercises
+    @exercise = @exercises.last
   end
 
   def edit

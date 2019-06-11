@@ -107,7 +107,6 @@
 
   var plan_id = '1';
   let searchParams = new URLSearchParams(window.location.search);
-  dataLayer = [];
 
   function addToCart() {
     var selectedPlan = $("input[name='plans']:checked");
@@ -229,7 +228,7 @@
     } else if (searchParams.has('registered') === true) {
       checkoutOption('Registration');
     } else {
-      checkout1;
+      checkout1();
     }
 
 
