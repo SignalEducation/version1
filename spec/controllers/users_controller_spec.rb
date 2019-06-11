@@ -199,13 +199,13 @@ describe UsersController, type: :controller do
       end
     end
 
-    describe "GET 'user_enrollments_details'" do
+    describe "GET 'user_activity_details'" do
       it 'should redirect to root' do
-        get :user_enrollments_details, params: { user_id: basic_student.id }
+        get :user_activity_details, params: { user_id: basic_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
-        expect(response).to render_template(:user_enrollments_details)
+        expect(response).to render_template(:user_activity_details)
       end
     end
 
