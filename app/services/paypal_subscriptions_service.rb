@@ -54,7 +54,9 @@ class PaypalSubscriptionsService
   def cancel_billing_agreement_immediately
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     state_descriptor = AgreementStateDescriptor.new(note: 'Cancelling immediately')
-    if agreement.cancel(state_descriptor)
+    if agreement.state == 'Cancelled'
+      @subscription.cancel
+    elsif agreement.cancel(state_descriptor)
       @subscription.update!(paypal_status: agreement.state)
       @subscription.cancel unless subscription.cancelled?
     else
