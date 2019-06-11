@@ -80,10 +80,10 @@ class SubscriptionsController < ApplicationController
             user_id: current_user.id,
             subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
           )
-        elsif params[:plan_guid].present?
+        elsif params[:plan_guid].present? && @plans.map(&:guid).include?(params[:plan_guid])
           @subscription = Subscription.new(
             user_id: current_user.id,
-            subscription_plan_id: @plans.map(&:guid).include?(params[:plan_guid]) ? @plans.where(guid: params[:plan_guid].to_s).first.id : @plans.last.id
+            subscription_plan_id: @plans.where(guid: params[:plan_guid].to_s).first.id
           )
         else
           @subscription = Subscription.new(
