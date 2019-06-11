@@ -170,6 +170,10 @@ class Subscription < ActiveRecord::Base
       # The user has reached the max_failed_payments limit or has been manually
       # cancelled and reached the end of the last billing period.
     end
+
+    after_transition all => :cancelled do |subscription, _transition|
+      subscription.update(cancelled_at: Time.zone.now)
+    end
   end
 
   # CLASS METHODS ==============================================================
