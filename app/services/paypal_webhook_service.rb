@@ -40,7 +40,7 @@ class PaypalWebhookService
     when 'BILLING.SUBSCRIPTION.RE-ACTIVATED'
       # do stuff
     when 'BILLING.SUBSCRIPTION.SUSPENDED'
-      # do stuff
+      @webhook.process_subscription_suspended
     when 'BILLING.SUBSCRIPTION.UPDATED'
       # do stuff
     when 'PAYMENT.SALE.COMPLETED'
