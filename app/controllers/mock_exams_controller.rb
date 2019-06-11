@@ -41,6 +41,7 @@ class MockExamsController < ApplicationController
 
   def create
     @mock_exam = MockExam.new(allowed_params)
+
     if @mock_exam.save
       flash[:success] = I18n.t('controllers.mock_exams.create.flash.success')
       redirect_to mock_exams_url

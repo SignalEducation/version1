@@ -26,25 +26,41 @@
 require 'rails_helper'
 
 describe SubscriptionPlansController, type: :controller do
+  before :each do
+    allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+  end
 
   let(:stripe_management_user_group) { FactoryBot.create(:stripe_management_user_group) }
   let(:stripe_management_user) { FactoryBot.create(:stripe_management_user, user_group_id: stripe_management_user_group.id) }
-  let!(:stripe_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: stripe_management_user.id) }
+
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:student_user) { FactoryBot.create(:student_user, user_group_id: student_user_group.id) }
-  let!(:student_access) { FactoryBot.create(:valid_free_trial_student_access, user_id: student_user.id) }
+  let!(:basic_student) { FactoryBot.create(:basic_student, user_group_id: student_user_group.id) }
 
-  let!(:subscription_plan_1) { FactoryBot.create(:student_subscription_plan) }
-  let!(:subscription_plan_2) { FactoryBot.create(:student_subscription_plan) }
-  let!(:stripe_student_user) { FactoryBot.create(:student_user) }
-  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access,
-                                                               user_id: stripe_student_user.id) }
+  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
+  let!(:gbp) { create(:gbp) }
+  let!(:uk) { create(:uk, currency: gbp) }
 
-  let!(:subscription_1) { FactoryBot.create(:subscription,
-                          subscription_plan_id: subscription_plan_1.id,
-                          user_id: stripe_student_user.id) }
+  let!(:subscription_plan_gbp_m) {
+    create(
+        :student_subscription_plan_m,
+        currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
+        payment_frequency_in_months: 3
+    )
+  }
+  let!(:subscription_plan_gbp_q) {
+    create(
+        :student_subscription_plan_q,
+        currency: gbp, price: 22.50, stripe_guid: 'stripe_plan_guid_q',
+        payment_frequency_in_months: 3
+    )
+  }
+  let!(:valid_subscription) { create(:valid_subscription, user: basic_student,
+                                     subscription_plan: subscription_plan_gbp_m,
+                                     stripe_customer_id: basic_student.stripe_customer_id ) }
 
-  let!(:valid_params) { FactoryBot.attributes_for(:subscription_plan) }
+  let!(:valid_params) { FactoryBot.attributes_for(:subscription_plan, exam_body_id: exam_body_1.id,
+                                                  currency_id: gbp.id, price: 220.50, stripe_guid: 'stripe_plan_guid_q',
+                                                  payment_frequency_in_months: 12) }
 
 
   context 'Logged in as a stripe_management_user: ' do
@@ -67,15 +83,15 @@ describe SubscriptionPlansController, type: :controller do
     end
 
     describe "GET 'show/1'" do
-      it 'should see subscription_plan_1' do
-        get :show, id: subscription_plan_1.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_1.id)
+      it 'should see subscription_plan_gbp_m' do
+        get :show, params: { id: subscription_plan_gbp_m.id }
+        expect_show_success_with_model('subscription_plan', subscription_plan_gbp_m.id)
       end
 
       # optional - some other object
       it 'should see subscription_plan_2' do
-        get :show, id: subscription_plan_2.id
-        expect_show_success_with_model('subscription_plan', subscription_plan_2.id)
+        get :show, params: { id: subscription_plan_gbp_q.id }
+        expect_show_success_with_model('subscription_plan', subscription_plan_gbp_q.id)
       end
     end
 
@@ -88,59 +104,52 @@ describe SubscriptionPlansController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with subscription_plan_1' do
-        get :edit, id: subscription_plan_1.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_1.id)
+        get :edit, params: { id: subscription_plan_gbp_m.id }
+        expect_edit_success_with_model('subscription_plan', subscription_plan_gbp_m.id)
       end
 
       # optional
       it 'should respond OK with subscription_plan_2' do
-        get :edit, id: subscription_plan_2.id
-        expect_edit_success_with_model('subscription_plan', subscription_plan_2.id)
+        get :edit, params: { id: subscription_plan_gbp_q.id }
+        expect_edit_success_with_model('subscription_plan', subscription_plan_gbp_q.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, subscription_plan: valid_params
+        post :create, params: { subscription_plan: valid_params }
         expect_create_success_with_model('subscription_plan', subscription_plans_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, subscription_plan: {valid_params.keys.first => ''}
+        post :create, params: { subscription_plan: {valid_params.keys.first => ''} }
         expect_create_error_with_model('subscription_plan')
       end
     end
 
     describe "PUT 'update/1'" do
-      xit 'should respond OK to valid params for subscription_plan_1' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {name: 'new-name'}
+      it 'should respond OK to valid params for subscription_plan_1' do
+        put :update, params: { id: subscription_plan_gbp_m.id, subscription_plan: {name: 'new-name'} }
         expect_update_success_with_model('subscription_plan', subscription_plans_url)
         expect(assigns(:subscription_plan).name).to eq('new-name')
       end
 
       it 'should reject invalid params' do
-        put :update, id: subscription_plan_1.id, subscription_plan: {name: nil}
+        put :update, params: { id: subscription_plan_gbp_m.id, subscription_plan: {name: nil} }
         expect_update_error_with_model('subscription_plan')
-        expect(assigns(:subscription_plan).id).to eq(subscription_plan_1.id)
+        expect(assigns(:subscription_plan).id).to eq(subscription_plan_gbp_m.id)
       end
     end
 
     describe "DELETE 'destroy'" do
-      xit 'should be ERROR as children exist' do
-        delete :destroy, id: subscription_plan_1.id
-        # expect_delete_success_with_model('subscription_plan', subscription_plans_url)
+      it 'should be ERROR as children exist' do
+        delete :destroy, params: { id: subscription_plan_gbp_m.id }
         expect_delete_error_with_model('subscription_plan', subscription_plans_url)
-        plan = Stripe::Plan.retrieve(subscription_plan_1.stripe_guid)
-        expect(plan.try(:deleted)).not_to eq(true)
       end
 
-      xit 'should be OK as no dependencies exist' do
-        delete :destroy, id: subscription_plan_2.id
+      it 'should be OK as no dependencies exist' do
+        delete :destroy, params: { id: subscription_plan_gbp_q.id }
         expect_delete_success_with_model('subscription_plan', subscription_plans_url)
-        expect{Stripe::Plan.retrieve(subscription_plan_2.stripe_guid)}.to raise_error { |e|
-                expect(e).to be_a(Stripe::InvalidRequestError)
-                expect(e.message).to eq("No such plan: #{subscription_plan_2.stripe_guid}")
-        }
       end
     end
 

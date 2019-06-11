@@ -58,6 +58,7 @@ FactoryBot.define do
 
     factory :active_subject_course do
       active                       { true }
+      preview                       { false }
     end
 
     factory :inactive_subject_course do
@@ -65,8 +66,8 @@ FactoryBot.define do
     end
 
     factory :preview_subject_course do
-      active                       { false }
-      preview                       { false }
+      active                       { true }
+      preview                       { true }
     end
   end
 end

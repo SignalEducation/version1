@@ -48,12 +48,12 @@ describe UserGroupsController, type: :controller do
 
     describe "GET 'show/1'" do
       it 'should respond with OK' do
-        get :show, id: student_user_group.id
+        get :show, params: { id: student_user_group.id }
         expect_show_success_with_model('user_group', student_user_group.id)
       end
 
         it 'should respond with OK if I ask for another' do
-        get :show, id: user_group_manager_user_group.id
+        get :show, params: { id: user_group_manager_user_group.id }
         expect_show_success_with_model('user_group', user_group_manager_user_group.id)
       end
     end
@@ -67,36 +67,36 @@ describe UserGroupsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond with OK' do
-        get :edit, id: student_user_group.id
+        get :edit, params: { id: student_user_group.id }
         expect_edit_success_with_model('user_group', student_user_group.id)
         end
 
       it 'should respond with OK' do
-        get :edit, id: user_group_manager_user_group.id
+        get :edit, params: { id: user_group_manager_user_group.id }
         expect_edit_success_with_model('user_group', user_group_manager_user_group.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should respond with OK to good input' do
-        post :create, user_group: valid_params
+        post :create, params: { user_group: valid_params }
         expect_create_success_with_model('user_group', user_groups_url)
       end
 
       it 'should reload the form for bad input' do
-        post :create, user_group: {name: '', description: ''}
+        post :create, params: { user_group: {name: '', description: ''} }
         expect_create_error_with_model('user_group')
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid input' do
-        put :update, id: student_user_group.id, user_group: valid_params
+        put :update, params: { id: student_user_group.id, user_group: valid_params }
         expect_update_success_with_model('user_group', user_groups_url)
       end
 
       it 'should reload the edit page on invalid input' do
-        put :update, id: student_user_group.id, user_group: {name: ''}
+        put :update, params: { id: student_user_group.id, user_group: {name: ''} }
         expect_update_error_with_model('user_group')
       end
     end
@@ -104,12 +104,12 @@ describe UserGroupsController, type: :controller do
     describe "DELETE 'destroy'" do
       it 'should allow the deletion as dependant has been deleted too' do
         student_user_group.users.destroy_all
-        delete :destroy, id: student_user_group.id
+        delete :destroy, params: { id: student_user_group.id }
         expect_delete_success_with_model('user_group', user_groups_url)
       end
 
       it 'should fail to delete as dependant exists' do
-        delete :destroy, id: user_group_manager_user_group.id
+        delete :destroy, params: { id: user_group_manager_user_group.id }
         expect_delete_error_with_model('user_group', user_groups_url)
       end
     end

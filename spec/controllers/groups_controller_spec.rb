@@ -32,7 +32,7 @@ describe GroupsController, type: :controller do
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
   let!(:group_1) { FactoryBot.create(:group) }
   let!(:group_2) { FactoryBot.create(:group) }
-  let!(:valid_params) { FactoryBot.attributes_for(:group) }
+  let!(:valid_params) { FactoryBot.attributes_for(:group, exam_body_id: exam_body_1.id) }
 
 
   context 'Logged in as a content_management_user: ' do

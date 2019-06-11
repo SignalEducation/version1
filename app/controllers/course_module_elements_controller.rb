@@ -124,7 +124,7 @@ class CourseModuleElementsController < ApplicationController
       elsif params[:commit] == I18n.t('views.course_module_element_quizzes.form.preview_button')
         redirect_to @course_module_element.course_module_element_quiz.quiz_questions.last
       else
-        redirect_to show_course_module_url(@course_module_element.course_module.subject_course_id, @course_module_element.course_module.id, @course_module_element.course_module.id)
+        redirect_to show_course_module_url(@course_module_element.course_module.subject_course_id, @course_module_element.course_module.course_section.id, @course_module_element.course_module.id)
       end
     else
       if params[:commit] == I18n.t('views.course_module_element_quizzes.form.advanced_setup_link')

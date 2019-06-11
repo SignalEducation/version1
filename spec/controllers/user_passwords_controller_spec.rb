@@ -27,7 +27,7 @@ RSpec.describe UserPasswordsController, type: :controller do
 
     describe 'POST create' do
       it 'returns http success' do
-        post :create, email_address: student_user.email
+        post :create, params: { email_address: student_user.email }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         test_user = User.find(student_user.id)
@@ -39,7 +39,7 @@ RSpec.describe UserPasswordsController, type: :controller do
 
     describe 'GET edit' do
       it 'returns ERROR link expired with too short token' do
-        get :edit, id: 'abc123'
+        get :edit, params: { id: 'abc123' }
         expect(flash[:success]).to be_nil
         expect(flash[:warning]).to eq(I18n.t('controllers.user_passwords.edit.flash.warning'))
         expect(response.status).to eq(302)
@@ -47,7 +47,7 @@ RSpec.describe UserPasswordsController, type: :controller do
       end
 
       it 'returns ERROR link expired with a bad token' do
-        get :edit, id: 'abc123abc123abc123ab'
+        get :edit, params: { id: 'abc123abc123abc123ab' }
         expect(flash[:success]).to be_nil
         expect(flash[:warning]).to eq(I18n.t('controllers.user_passwords.edit.flash.warning'))
         expect(response.status).to eq(302)
@@ -55,7 +55,7 @@ RSpec.describe UserPasswordsController, type: :controller do
       end
 
       it 'returns ERROR with user not verified' do
-        get :edit, id: unverified_student_user.password_reset_token
+        get :edit, params: { id: unverified_student_user.password_reset_token }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.user_passwords.edit.flash.error'))
         expect(response.status).to eq(302)
@@ -63,7 +63,7 @@ RSpec.describe UserPasswordsController, type: :controller do
       end
 
       it 'returns OK from a valid token' do
-        get :edit, id: reset_user.password_reset_token
+        get :edit, params: { id: reset_user.password_reset_token }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -73,7 +73,7 @@ RSpec.describe UserPasswordsController, type: :controller do
 
     describe 'PUT update' do
       it 'returns OK for valid params' do
-        put :update, password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token
+        put :update, params: { password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token }
         expect(flash[:success]).to eq(I18n.t('controllers.user_passwords.update.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to be(302)
@@ -81,7 +81,7 @@ RSpec.describe UserPasswordsController, type: :controller do
       end
 
       it 'returns sends e-mail to user' do
-        put :update, password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token
+        put :update, params: { password: '123123123', password_confirmation: '123123123', id: reset_user.password_reset_token }
         expect(flash[:success]).to eq(I18n.t('controllers.user_passwords.update.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to be(302)
@@ -90,7 +90,7 @@ RSpec.describe UserPasswordsController, type: :controller do
       end
 
       it 'returns ERROR for invalid params' do
-        put :update, password: '123123123', password_confirmation: '123123123', id: '123'
+        put :update, params: { password: '123123123', password_confirmation: '123123123', id: '123' }
         expect(flash[:success]).to be_nil
         #Was originally this but changes to update action during csv invite changes resulted failing test fixed for short-term with below lines
         #expect(flash[:error]).to eq(I18n.t('controllers.user_password_resets.update.flash.error'))
@@ -100,7 +100,7 @@ RSpec.describe UserPasswordsController, type: :controller do
       end
 
       it 'returns ERROR for mismatching passwords' do
-        put :update, password: '123123123', password_confirmation: '456456456', id: reset_user.password_reset_token
+        put :update, params: { password: '123123123', password_confirmation: '456456456', id: reset_user.password_reset_token }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.user_passwords.update.flash.password_and_confirmation_do_not_match'))
         expect(response).to render_template(:edit)

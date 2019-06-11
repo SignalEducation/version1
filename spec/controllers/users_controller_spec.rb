@@ -59,25 +59,37 @@ require 'rails_helper'
 require 'support/stripe_web_mock_helpers'
 
 describe UsersController, type: :controller do
+  before :each do
+    allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+  end
 
   let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
+  let!(:basic_student) { FactoryBot.create(:basic_student, user_group_id: student_user_group.id) }
+
   let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
   let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
+
   let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
-  let!(:user_management_student_access) { FactoryBot.create(:complimentary_student_access, user_id: user_management_user.id) }
-  let!(:valid_subscription_student) { FactoryBot.create(:valid_subscription_student, user_group_id: student_user_group.id) }
-  let!(:valid_subscription_student_access) { FactoryBot.create(:trial_student_access, user_id: valid_subscription_student.id) }
-  let!(:valid_subscription) { FactoryBot.create(:valid_subscription, user_id: valid_subscription_student.id,
-                                                stripe_customer_id: valid_subscription_student.stripe_customer_id ) }
 
-  trial_limits_seconds = ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i
-  trial_limits_days = ENV['FREE_TRIAL_DAYS'].to_i
+  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
+  let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
 
-  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id,
-                                                  student_access_attributes: {trial_seconds_limit: trial_limits_seconds,
-                                                                              trial_days_limit: trial_limits_days,
-                                                                              account_type: 'Trial'}
-  ) }
+  let!(:gbp) { create(:gbp) }
+  let!(:uk) { create(:uk, currency: gbp) }
+  let!(:uk_vat_code) { create(:vat_code, country: uk) }
+  let!(:uk_vat_rate) { create(:vat_rate, vat_code: uk_vat_code) }
+  let!(:subscription_plan_gbp_m) {
+    create(
+        :student_subscription_plan_m,
+        currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
+        payment_frequency_in_months: 3
+    )
+  }
+  let!(:valid_subscription) { create(:valid_subscription, user: basic_student,
+                                     subscription_plan: subscription_plan_gbp_m,
+                                     stripe_customer_id: basic_student.stripe_customer_id ) }
+
+  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
   let!(:update_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
 
 
@@ -97,15 +109,15 @@ describe UsersController, type: :controller do
 
     describe "GET 'show'" do
       it 'should successfully render show' do
-        get :show, id: valid_subscription_student.id
-        expect_show_success_with_model('user', valid_subscription_student.id)
+        get :show, params: { id: basic_student.id }
+        expect_show_success_with_model('user', basic_student.id)
       end
     end
 
     describe "GET 'edit/1'" do
       it 'should successfully render edit' do
-        get :edit, id: valid_subscription_student.id
-        expect_edit_success_with_model('user', valid_subscription_student.id)
+        get :edit, params: { id: basic_student.id }
+        expect_edit_success_with_model('user', basic_student.id)
       end
     end
 
@@ -122,7 +134,7 @@ describe UsersController, type: :controller do
         stripe_request_body = {'email'=>valid_params[:email]}
         stub_customer_create_request(stripe_url, stripe_request_body)
 
-        post :create, user: valid_params
+        post :create, params: { user: valid_params }
         expect_create_success_with_model('user', users_url)
         expect(assigns(:user).password_change_required).to eq(true)
       end
@@ -130,23 +142,23 @@ describe UsersController, type: :controller do
 
     describe "PUT 'update'" do
       it 'should respond OK to valid params' do
-        put :update, id: valid_subscription_student.id, user: update_params
+        put :update, params: { id: basic_student.id, user: update_params }
         expect_update_success_with_model('user', users_url)
       end
 
       it 'should reject invalid params' do
-        put :update, id: valid_subscription_student.id, user: {email: 'a'}
+        put :update, params: { id: basic_student.id, user: {email: 'a'} }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.users.update.flash.error'))
         expect(response.status).to eq(200)
         expect(response).to render_template(:edit)
-        expect(assigns(:user).id).to eq(valid_subscription_student.id)
+        expect(assigns(:user).id).to eq(basic_student.id)
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be OK if deleting normal user' do
-        delete :destroy, id: unverified_student_user.id
+        delete :destroy, params: { id: unverified_student_user.id }
         expect_delete_success_with_model('user', users_url)
       end
     end
@@ -154,7 +166,7 @@ describe UsersController, type: :controller do
     describe "GET 'preview_csv_upload'" do
       #TODO Test CSV Files Upload
       xit 'should redirect to root' do
-        post :preview_csv_upload, id: 1
+        post :preview_csv_upload, params: { id: 1 }
         expect_bounce_as_not_allowed
       end
     end
@@ -162,14 +174,14 @@ describe UsersController, type: :controller do
     describe "GET 'import_csv_upload'" do
       #TODO Test CSV Files Upload
       xit 'should redirect to root' do
-        post :import_csv_upload, id: 1
+        post :import_csv_upload, params: { id: 1 }
         expect_bounce_as_not_allowed
       end
     end
 
     describe "GET 'user_personal_details'" do
       it 'should redirect to root' do
-        get :user_personal_details, user_id: valid_subscription_student.id
+        get :user_personal_details, params: { user_id: basic_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -179,7 +191,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_subscription_status'" do
       it 'should redirect to root' do
-        get :user_subscription_status, user_id: valid_subscription_student.id
+        get :user_subscription_status, params: { user_id: basic_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -189,7 +201,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_enrollments_details'" do
       it 'should redirect to root' do
-        get :user_enrollments_details, user_id: valid_subscription_student.id
+        get :user_enrollments_details, params: { user_id: basic_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
@@ -199,7 +211,7 @@ describe UsersController, type: :controller do
 
     describe "GET 'user_purchases_details'" do
       it 'should redirect to root' do
-        get :user_purchases_details, user_id: valid_subscription_student.id
+        get :user_purchases_details, params: { user_id: basic_student.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)

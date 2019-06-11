@@ -57,13 +57,6 @@ class SubscriptionPlanCategory < ActiveRecord::Base
 
   protected
 
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
   def set_guid
     self.guid = ApplicationController.generate_random_code(10)
   end

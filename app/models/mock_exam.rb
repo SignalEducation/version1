@@ -56,7 +56,7 @@ class MockExam < ActiveRecord::Base
   def check_dependencies
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
+      throw :abort
     end
   end
 

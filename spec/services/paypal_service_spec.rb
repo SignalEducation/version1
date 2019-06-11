@@ -138,10 +138,10 @@ describe PaypalService, type: :service do
   # PRIVATE METHODS ############################################################
 
   describe '#payment_attributes' do
-    let(:order) { create(:order) }
+    let(:new_order) { create(:order) }
 
     it 'returns the correct hash' do
-      expect(subject.send(:payment_attributes, order))
+      expect(subject.send(:payment_attributes, new_order))
         .to eq (
           {
             intent: 'sale',
@@ -149,26 +149,26 @@ describe PaypalService, type: :service do
               payment_method: 'paypal'
             },
             redirect_urls: {
-              return_url: "https://staging.learnsignal.com/en/orders/#{order.id}/execute?payment_processor=paypal",
-              cancel_url: "https://staging.learnsignal.com/en/order/new/#{order.id}?flash=It+seems+you+cancelled+your+order+on+Paypal.+Still+want+to+purchase%3F"
+              return_url: "https://staging.learnsignal.com/en/orders/#{new_order.id}/execute?payment_processor=paypal",
+              cancel_url: "https://staging.learnsignal.com/en/order/new/#{new_order.id}?flash=It+seems+you+cancelled+your+order+on+Paypal.+Still+want+to+purchase%3F"
             },
             transactions: [
               {
                 item_list: {
                   items: [
                     {
-                      name: order.product.name,
-                      price: order.product.price.to_s,
-                      currency: order.product.currency.iso_code,
+                      name: new_order.product.name,
+                      price: new_order.product.price.to_s,
+                      currency: new_order.product.currency.iso_code,
                       quantity: 1 
                     }
                   ]
                 },
                 amount: {
-                  total: order.product.price.to_s,
-                  currency: order.product.currency.iso_code
+                  total: new_order.product.price.to_s,
+                  currency: new_order.product.currency.iso_code
                 },
-                description: "Mock exam purchase - #{order.product.name}" 
+                description: "Mock exam purchase - #{new_order.product.name}" 
               }
             ]
           }
