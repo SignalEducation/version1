@@ -35,7 +35,7 @@
                   .col-lg-6.mb-5.mb-xl-0
                     %fieldset
                       %legend.sr-only Select a Plan
-                      - if params[:prioritise_plan_frequency].present? || params[:plan_guid].present?
+                      - if params[:prioritise_plan_frequency].present? || (params[:plan_guid].present?  && @plans.map(&:guid).include?(params[:plan_guid]))
                         =render partial: 'single_plan_checkout', locals: {subscription: @subscription, plans: @plans}
                       - else
                         =render partial: 'multi_plans', locals: {subscription: @subscription, plans: @plans}
