@@ -149,7 +149,7 @@ class SubscriptionsController < ApplicationController
 
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.last
-    if current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).any? && current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).where("cancelled_at >= ?", DateTime.now - 5.minutes).any?
+    if current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).any? && current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).where("cancelled_at >= ?", DateTime.now - 2.minutes).any?
       @subscription_category = 'Change Subscription'
     else
       @subscription_category = 'Subscription'
