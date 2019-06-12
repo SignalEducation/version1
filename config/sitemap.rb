@@ -19,7 +19,7 @@ sitemap :site do
   end
 
   groups.each do |group|
-    url library_group, last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
+    url library_group_url(group_name_url: group.name_url), last_mod: group.updated_at, change_freq: 'monthly', priority: 1.0
     group.active_children.all_in_order.each do |course|
       url library_course_url(group_name_url: group.name_url, subject_course_name_url: course.name_url), last_mod: course.updated_at, change_freq: 'monthly', priority: 1.0
     end
