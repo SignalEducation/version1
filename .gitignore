@@ -56,7 +56,7 @@ config/secrets.yml
 # Ignore application configuration - figaro gem
 /config/local_env.yml
 *.dump
-.env
+*.env
 
 
 # used by SimpleCov

@@ -54,9 +54,11 @@ class PaypalSubscriptionsService
   def cancel_billing_agreement_immediately
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     state_descriptor = AgreementStateDescriptor.new(note: 'Cancelling immediately')
-    if agreement.cancel(state_descriptor)
-      @subscription.update!(paypal_status: agreement.state)
+    if agreement.state == 'Cancelled'
       @subscription.cancel
+    elsif agreement.cancel(state_descriptor)
+      @subscription.update!(paypal_status: agreement.state)
+      @subscription.cancel unless subscription.cancelled?
     else
       Rails.logger.error "DEBUG: Subscription#cancel_immediately Failure to cancel BillingAgreement for Subscription: ##{@subscription.id} - Error: #{agreement.inspect}"
       raise Learnsignal::SubscriptionError.new('Sorry! Something went wrong cancelling the subscription with PayPal.')

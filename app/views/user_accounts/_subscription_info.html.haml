@@ -24,7 +24,6 @@
         %p
           =humanize_datetime_full(@user.created_at)
 
-
     -if @current_subscription.active_status?
       .col-sm-12.l-margin-top-big
         .col-md-6.col-sm-12
@@ -53,8 +52,6 @@
             %p
               =@current_subscription.subscription_plan.currency.format_number(@user.stripe_account_balance / 100)
 
-
-
     -elsif @current_subscription.canceled_pending_status?
       .col-sm-12.l-margin-top-big
         .col-md-6.col-sm-12
@@ -69,10 +66,6 @@
           %p
             -#TODO Ensure that next_renewal_date displays the date the sub will be canceled
             =humanize_stripe_date(@current_subscription.next_renewal_date)
-
-
-
-
 
     -elsif @current_subscription.canceled_status?
       .col-sm-12.l-margin-top-big
@@ -89,8 +82,6 @@
             -#TODO Ensure that next_renewal_date displays the date the sub was canceled
             =humanize_stripe_date(@current_subscription.next_renewal_date)
 
-
-
     -elsif @current_subscription.past_due_status?
       -#TODO Added info about recent charge failure - next attempt to charge - consequences of failure to charge - if card expired suggest adding new card
       .col-sm-12.l-margin-top-big
@@ -106,9 +97,6 @@
           %p
             -#TODO Ensure that next_renewal_date displays the date the sub was canceled
             =humanize_stripe_date(@current_subscription.next_renewal_date)
-
-
-
 
     -elsif @current_subscription.unpaid_status?
       -#TODO Add info that sub was set to unpaid due to repeated failed charges for one billing interval - user must create new subscription
@@ -134,11 +122,6 @@
 
         .col-md-6.col-sm-12
 
-
-
-
-
-
   .col-sm-6.col-md-4
     -if @current_subscription.active?
       -if !@current_subscription.paypal_token.present? && @user.default_card
@@ -154,18 +137,14 @@
       %h3=t('views.users.show.un_cancel_subscription.h3')
       =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_subscription_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
 
-
     -elsif @current_subscription.canceled_status?
 
       %h3=t('views.users.show.reactivate_subscription.h3')
       =link_to t('views.users.show.reactivate_subscription.button_call_to_action'), new_subscription_url, class: 'btn btn-primary full-width'
 
-
-
     -elsif @current_subscription.past_due_status?
       %a{data: {target: '#confirm-cancellation-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary full-width l-margin-bottom confirm-cancellation-modal'}
         =t('views.users.show.cancel_your_subscription_plan')
-
 
   -if @current_subscription && @invoices
     .col-sm-12.col-md-8.l-margin-top

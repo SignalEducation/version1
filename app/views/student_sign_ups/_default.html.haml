@@ -90,11 +90,6 @@
                         Cancel anytime
                     %p.h2.mb-0
                       =@preferred_plan.currency.format_number(@preferred_plan.price)
-                    -if @preferred_plan.monthly_percentage_off
-                      %p.h5.text-gray2
-                        Save over
-                        =@preferred_plan.monthly_percentage_off
-                        ='%'
                     .mt-auto
                       =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency_id)}', '#{@preferred_plan.exam_body.name}');" do
                         Choose this plan
@@ -265,23 +260,74 @@
 
   });
 
-  dataLayer = [];
-  function addToCart(currency, name, id, price, body) {
-    dataLayer.push({
-      'event': 'addToCart',
-      'ecommerce': {
-        'currencyCode': currency,
-        'add': {
-          'products': [{
-            'name': name,
-            'id': id,
-            'price': price,
-            'brand': body,
-            'category': 'Subscription',
-            'quantity': 1
-            }]
+
+-if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+
+  :javascript
+    let currencyIso = "#{@preferred_plan.currency.iso_code}";
+    let name = "#{@preferred_plan.name}";
+    let id = "#{@preferred_plan.id}";
+    let price = "#{@preferred_plan.price}";
+    let body = "#{@preferred_plan.exam_body.name}";
+    let type = "#{'Subscription'}";
+
+
+
+    function addToCart(currencyIso, name, id, price, body) {
+      dataLayer.push({
+        'event': 'addToCart',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'add': {
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': 'Subscription',
+              'quantity': 1
+              }]
+          }
         }
-      }
+      });
+    }
+
+    $(document).ready(function(){
+      addToCart(currencyIso, name, id, price, body);
     });
-  }
+
+    function selectTab(tab, currencyIso, name, id, price, body, type) {
+      dataLayer.push({ 'event': 'checkout',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'checkout': {
+            'actionField': {'step': 1, 'option':tab},
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': type,
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+
+    $(document).ready(function(){
+
+      if ($("#registration-login")[0]) {
+        selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+        })
+      } else if ($("#registration-option")[0]) {
+          selectTab('Register', currencyIso, name, id, price, body, type);
+      } else if ($("#login-option")[0]) {
+          selectTab('Login', currencyIso, name, id, price, body, type);
+      }
+
+    });
+
 

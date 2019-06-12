@@ -80,10 +80,10 @@ class SubscriptionsController < ApplicationController
             user_id: current_user.id,
             subscription_plan_id: @plans.where(payment_frequency_in_months: params[:prioritise_plan_frequency].to_i).first.id
           )
-        elsif params[:plan_guid].present?
+        elsif params[:plan_guid].present? && @plans.map(&:guid).include?(params[:plan_guid])
           @subscription = Subscription.new(
             user_id: current_user.id,
-            subscription_plan_id: @plans.map(&:guid).include?(params[:plan_guid]) ? @plans.where(guid: params[:plan_guid].to_s).first.id : @plans.last.id
+            subscription_plan_id: @plans.where(guid: params[:plan_guid].to_s).first.id
           )
         else
           @subscription = Subscription.new(
@@ -149,6 +149,12 @@ class SubscriptionsController < ApplicationController
 
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.last
+    if current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).any? && current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).where("cancelled_at >= ?", DateTime.now - 2.minutes).any?
+      @subscription_category = 'Change Subscription'
+    else
+      @subscription_category = 'Subscription'
+    end
+
     seo_title_maker('Thank You for Subscribing | LearnSignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
                     false)

@@ -34,17 +34,6 @@ describe FooterPagesController, type: :controller do
       end
     end
 
-    describe "Get 'welcome_video'" do
-      it 'should render with 200' do
-        get :welcome_video
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:welcome_video)
-
-      end
-    end
-
     describe "Get 'contact'" do
       it 'should render with 200' do
         get :acca_info
@@ -80,6 +69,7 @@ describe FooterPagesController, type: :controller do
 
     describe "Get 'media_library'" do
       it 'should render with 200' do
+        request.env['remote_ip'] = ''
         get :media_library
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -90,7 +80,7 @@ describe FooterPagesController, type: :controller do
 
     describe "Get 'profile'" do
       it 'should render with 200' do
-        get :profile, id: tutor_user_1.id
+        get :profile, params: { name_url: tutor_user_1.name_url }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)

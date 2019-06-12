@@ -12,6 +12,11 @@ class PaypalWebhookService
       event_type: paypal_body['event_type'], 
       payload: paypal_body
     )
+    if @webhook.id
+      @webhook
+    else
+      false
+    end
   end
 
   def process_webhook
@@ -40,7 +45,7 @@ class PaypalWebhookService
     when 'BILLING.SUBSCRIPTION.RE-ACTIVATED'
       # do stuff
     when 'BILLING.SUBSCRIPTION.SUSPENDED'
-      # do stuff
+      @webhook.process_subscription_suspended
     when 'BILLING.SUBSCRIPTION.UPDATED'
       # do stuff
     when 'PAYMENT.SALE.COMPLETED'

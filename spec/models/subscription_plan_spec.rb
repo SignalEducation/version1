@@ -23,6 +23,8 @@
 #  bullet_points_list            :string
 #  sub_heading_text              :string
 #  most_popular                  :boolean          default(FALSE), not null
+#  registration_form_heading     :string
+#  login_form_heading            :string
 #
 
 require 'rails_helper'

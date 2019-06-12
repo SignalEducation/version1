@@ -53,3 +53,26 @@
               .row.row-lg
                 .col-sm
                   =render partial: 'dashboard/purchase_products'
+
+-if flash[:success]
+  :javascript
+
+    dataLayer.push({
+      'ecommerce': {
+        'purchase': {
+          'actionField': {
+            'id': "#{@exercise.product.id}",
+            'revenue': "#{@exercise.product.price}"
+          },
+          'products': [{
+            'name': "#{@exercise.product.name}",
+            'id': "#{@exercise.product.id}",
+            'price': "#{@exercise.product.price}",
+            'brand': "#{@exercise.product.mock_exam.subject_course.exam_body.name}",
+            'category': 'Exam Papers',
+            'quantity': 1
+            }]
+        }
+      },
+    'event':'ecomSuccess'}
+    );

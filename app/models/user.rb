@@ -429,7 +429,7 @@ class User < ActiveRecord::Base
   end
 
   def subscriptions_for_exam_body(exam_body_id)
-    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id)
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).where(active: true).all_in_order
   end
 
   def active_subscriptions_for_exam_body(exam_body_id)
@@ -442,6 +442,20 @@ class User < ActiveRecord::Base
 
   def valid_subscription_for_exam_body?(exam_body_id)
     active_subscriptions_for_exam_body(exam_body_id).all_valid.any?
+  end
+
+  def analytics_exam_body_plan_data
+    user_plans = ''
+    plans_type = ''
+    plans_status = ''
+    ExamBody.all_active.each_with_index do |body, counter|
+      if subscriptions_for_exam_body(body.id).any?
+        user_plans << subscriptions_for_exam_body(body.id).last.subscription_plan.interval_name + (counter == 1 ? '' : ' - ')
+        plans_type << subscriptions_for_exam_body(body.id).last.subscription_plan.exam_body.name + (counter == 1 ? '' : ' - ')
+        plans_status << subscriptions_for_exam_body(body.id).last.state + (counter == 1 ? '' : ' - ')
+      end
+    end
+    return user_plans, plans_type, plans_status
   end
 
   def enrolled_course?(course_id)

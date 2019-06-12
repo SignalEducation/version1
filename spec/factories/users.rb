@@ -160,6 +160,7 @@ FactoryBot.define do
 
     factory :tutor_user do
       sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
+      sequence(:name_url)                  { |n| "tutor_#{n}" }
       active                            { true }
       stripe_customer_id                { nil }
     end

@@ -27,25 +27,3 @@
                   =link_to 'Download Response', @exercise.correction.url, class: 'btn btn-primary btn-sm', target: '_blank'
 
 
--if flash[:success]
-  :javascript
-    dataLayer = [];
-    dataLayer.push({
-      'ecommerce': {
-        'purchase': {
-          'actionField': {
-            'id': "#{@exercise.product.id}",
-            'revenue': "#{@exercise.product.price}"
-          },
-          'products': [{
-            'name': "#{@exercise.product.name}",
-            'id': "#{@exercise.product.id}",
-            'price': "#{@exercise.product.price}",
-            'brand': "#{@exercise.product.mock_exam.subject_course.exam_body.name}",
-            'category': 'Preparation',
-            'quantity': 1
-            }]
-        }
-      },
-    'event':'ecomSuccess'}
-    );

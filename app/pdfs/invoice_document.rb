@@ -1,6 +1,7 @@
 class InvoiceDocument < Prawn::Document
 
   def initialize(inv, view, description, vat_rate, invoice_date)
+    #super()
     super(top_margin: 70)
     @invoice = inv
     @view = view
@@ -11,12 +12,15 @@ class InvoiceDocument < Prawn::Document
     move_down 100
     render_headers
     render_details
+    move_up 25
+    render_username
     render_summary
     move_down 250
     stroke_horizontal_rule
     footer
 
   end
+
 
   def render_headers
     table([ ['Invoice Receipt'] ], width: 540, cell_style: {padding: 0}) do
@@ -25,19 +29,27 @@ class InvoiceDocument < Prawn::Document
     end
   end
 
+  def render_username
+    font(Rails.root.join("app/assets/fonts/oakes_grotesk_regular.ttf")) do
+      text(recipient_name)
+    end
+  end
+
+
   # Renders details about pdf. Shows recipient name, invoice date and id
   def render_details
+    #font(Rails.root.join("app/assets/fonts/oakes_grotesk_regular.ttf"))
     move_down 10
     stroke_horizontal_rule
     move_down 15
 
     billing_details =
-        make_table([ ['Billed to:'], [recipient_name] ],
+        make_table([ ['Billed to:'], [''] ],
                        width: 355, cell_style: {padding: 0}) do
           row(0..10).style(size: 9, borders: [])
           row(0).column(0).style(font_style: :bold)
         end
-
+    move_down 20
     invoice_date = @invoice_date.strftime('%e %b %Y')
     invoice_id   = @invoice.id.to_s
     invoice_details =

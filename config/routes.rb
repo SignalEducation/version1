@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :exercises, only: [:index, :show, :edit, :update]
+    post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -238,6 +239,7 @@ Rails.application.routes.draw do
     resources :vat_codes
     get '/visits/all_index', to: 'visits#all_index', as: :visits_all_index
     get '/visits/all_show/:id', to: 'visits#all_show', as: :visits_all_show
+    post '/search_visits', to: 'visits#all_index', as: :search_visits
     get '/referral', to: 'referral_codes#referral', as: :refer_a_friend
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do

@@ -39,7 +39,7 @@
 -if cme.course_module_element_video.vimeo_guid
 
   :javascript
-    dataLayer = [];
+
     let video_cme_id = "#{@course_module_element.id || ''}";
     let course_log_id = "#{@subject_course_user_log.try(:id) || ''}";
     let section_log_id = "#{@course_section_user_log.try(:id) || ''}";

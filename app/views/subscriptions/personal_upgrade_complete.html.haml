@@ -32,8 +32,6 @@
 
 :javascript
 
-  dataLayer = [];
-
   dataLayer.push({
     'ecommerce': {
       'purchase': {
@@ -46,7 +44,7 @@
           'id': "#{@subscription.subscription_plan.id}",
           'price': "#{@subscription.subscription_plan.price}",
           'brand': "#{@subscription.subscription_plan.exam_body.name}",
-          'category': 'Subscription',
+          'category': "#{@subscription_category}",
           'quantity': 1
           }]
       }

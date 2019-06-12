@@ -90,8 +90,6 @@
 
 :javascript
 
-  dataLayer = [];
-
   function addToCart(theThing) {
     let parentThing = $(theThing).parent().parent().parent().parent();
     dataLayer.push({
@@ -101,10 +99,10 @@
         'add': {
           'products': [{
             'name': parentThing.attr('data-name'),
-            'id': parentThing.attr('data-plan_id'),
+            'id': parentThing.attr('data-plan-id'),
             'price': parentThing.attr('data-price'),
             'brand': parentThing.attr('data-body'),
-            'category': 'Subscription',
+            'category': 'Change Subscription',
             'quantity': 1
             }]
         }

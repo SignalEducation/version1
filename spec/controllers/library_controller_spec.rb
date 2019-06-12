@@ -5,8 +5,8 @@ RSpec.describe LibraryController, type: :controller do
   let!(:gbp) { FactoryBot.create(:gbp) }
   let!(:uk) { FactoryBot.create(:uk, currency_id: gbp.id) }
   let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:group_1) { FactoryBot.create(:group) }
-  let!(:group_2) { FactoryBot.create(:group) }
+  let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
+  let!(:group_2) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
   let!(:subject_course_1)  { FactoryBot.create(:active_subject_course,
                                                group_id: group_1.id,
                                                exam_body_id: exam_body_1.id) }
@@ -15,7 +15,7 @@ RSpec.describe LibraryController, type: :controller do
                                                computer_based: true,
                                                exam_body_id: exam_body_1.id) }
 
-  let!(:mock_exam_1) { FactoryBot.create(:mock_exam) }
+  let!(:mock_exam_1) { FactoryBot.create(:mock_exam, subject_course_id: subject_course_1.id) }
   let!(:product_1) { FactoryBot.create(:product, mock_exam_id: mock_exam_1.id, currency_id: gbp.id) }
 
   context 'Not logged in: ' do
@@ -43,7 +43,7 @@ RSpec.describe LibraryController, type: :controller do
 
     describe 'GET group_show' do
       it 'returns http success' do
-        get :group_show, group_name_url: group_1.name_url
+        get :group_show, params: { group_name_url: group_1.name_url }
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
@@ -56,7 +56,7 @@ RSpec.describe LibraryController, type: :controller do
 
     describe 'GET course_show' do
       it 'returns http success' do
-        get :course_show, subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url
+        get :course_show, params: { subject_course_name_url: subject_course_1.name_url, group_name_url: group_1.name_url }
         expect(response).to have_http_status(:success)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil

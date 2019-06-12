@@ -78,49 +78,69 @@
 
 :javascript
 
-  $(document).on('ready', function() {
+  let currencyIso = "#{@product.currency.iso_code}";
+  let productName = "#{@product.name}";
+  let productId = "#{@product.id}";
+  let productPrice = "#{@product.price}";
+  let productBody = "#{@product.mock_exam.subject_course.exam_body.name}";
+  let searchParams = new URLSearchParams(window.location.search);
 
-    dataLayer = [];
-    let currencyIso = "#{@product.currency.iso_code}";
-    let productName = "#{@product.name}";
-    let productId = "#{@product.id}";
-    let productPrice = "#{@product.price}";
-    let productBody = "#{@product.mock_exam.subject_course.exam_body.name}";
-    dataLayer.push({
-      'event': 'addToCart',
+  function checkout1() {
+    dataLayer.push({ 'event': 'checkout',
       'ecommerce': {
-        'currencyCode': currencyIso,
-        'add': {
+        'checkout': {
+          'actionField': {'step': 1, 'option': 'Logged In'},
           'products': [{
             'name': productName,
             'id': productId,
             'price': productPrice,
             'brand': productBody,
-            'category': 'Preparation',
+            'category': 'Exam Papers',
             'quantity': 1
-            }]
+          }]
         }
       }
     });
-    function selectPayment(type) {
-      var selectedPlan = $("input[name='plans']:checked");
-      dataLayer.push({ 'event': 'checkout',
-        'ecommerce': {
-          'checkout': {
-            'actionField': {'step': 1, 'option':type},
-            'products': [{
-              'name': productName,
-              'id': productId,
-              'price': productPrice,
-              'brand': productBody,
-              'category': 'Preparation',
-              'quantity': 1
-            }]
-          }
-        }
-      });
-    }
+  }
 
+  function checkout2(type) {
+    let convertType = (type === "stripe") ? "Credit Card" : "PayPal";
+    dataLayer.push({ 'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': {'step': 2, 'option':convertType},
+          'products': [{
+            'name': productName,
+            'id': productId,
+            'price': productPrice,
+            'brand': productBody,
+            'category': 'Exam Papers',
+            'quantity': 1
+          }]
+        }
+      }
+    });
+  }
+
+  function checkoutOption(type) {
+    dataLayer.push({
+      'event': 'checkoutOption',
+      'ecommerce': {
+        'checkout_option': {
+          'actionField': {'step': 1, 'option': type}
+        }
+      }
+    });
+  }
+
+  $(document).on('ready', function() {
+    if (searchParams.has('login') === true) {
+      checkoutOption('Log In');
+    } else if (searchParams.has('registered') === true) {
+      checkoutOption('Registration');
+    } else {
+      checkout1();
+    }
 
     $('.form-group-expandable').on('change', '.custom-control-input[type="radio"][name="payment-options"]', function() {
       $(this).closest('.card').find('.custom-control-input[type="radio"]').closest('.custom-control').siblings('.payment-details').slideUp();
@@ -134,7 +154,7 @@
     //$('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
 
     function selectPaymentMethod(paymentType) {
-      selectPayment(paymentType);
+      checkout2(paymentType);
       switch(paymentType) {
         case 'paypal':
           $('#order_use_paypal').val(true);
@@ -244,4 +264,6 @@
         }
       });
     };
+
   });
+

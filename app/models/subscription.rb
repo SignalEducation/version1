@@ -170,6 +170,10 @@ class Subscription < ActiveRecord::Base
       # The user has reached the max_failed_payments limit or has been manually
       # cancelled and reached the end of the last billing period.
     end
+
+    after_transition all => :cancelled do |subscription, _transition|
+      subscription.update(cancelled_at: Time.zone.now)
+    end
   end
 
   # CLASS METHODS ==============================================================
@@ -321,6 +325,11 @@ class Subscription < ActiveRecord::Base
     subscription_plan.try(:amount)
   end
 
+  def paypal_suspended
+    PaypalService.new.update_billing_agreement(subscription)
+    self.record_error
+  end
+
   def reactivation_options
     SubscriptionPlan
       .where(
@@ -389,6 +398,8 @@ class Subscription < ActiveRecord::Base
         'Subscription Pending Cancellation'
       when 'paused'
         'Subscription Paused'
+      when 'past_due'
+        'Subscription Past Due'
       when 'cancelled'
         'Canceled Subscription'
       else

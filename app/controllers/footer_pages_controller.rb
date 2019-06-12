@@ -40,7 +40,7 @@ class FooterPagesController < ApplicationController
       currency = current_user.get_currency(country)
       @currency_id = currency.id
     else
-      country = IpAddress.get_country(request.remote_ip)
+      country = IpAddress.get_country(request.remote_ip) || Country.find_by_name('United Kingdom')
       @currency_id = country.currency_id
     end
 

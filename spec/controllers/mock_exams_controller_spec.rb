@@ -25,12 +25,16 @@ describe MockExamsController, type: :controller do
 
   let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
   let(:content_management_user) { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
-  let!(:content_management_user_student_access) { FactoryBot.create(:complimentary_student_access, user_id: content_management_user.id) }
+  let!(:exam_body) { FactoryBot.create(:exam_body) }
+  let!(:group) { FactoryBot.create(:group) }
+  let!(:subject_course)  { FactoryBot.create(:active_subject_course,
+                                               group_id: group.id,
+                                               exam_body_id: exam_body.id) }
 
-  let!(:mock_exam_1) { FactoryBot.create(:mock_exam) }
-  let!(:mock_exam_2) { FactoryBot.create(:mock_exam) }
+  let!(:mock_exam_1) { FactoryBot.create(:mock_exam, name: 'Mock ABC', subject_course: subject_course) }
+  let!(:mock_exam_2) { FactoryBot.create(:mock_exam, subject_course: subject_course) }
   let!(:order_1) {FactoryBot.create(:order, mock_exam_id: mock_exam_1.id)}
-  let!(:valid_params) { FactoryBot.attributes_for(:mock_exam) }
+  let!(:valid_params) { FactoryBot.attributes_for(:mock_exam, subject_course_id: subject_course.id) }
 
   context 'Logged in as a content_management_user: ' do
 
@@ -42,7 +46,7 @@ describe MockExamsController, type: :controller do
     describe "GET 'index'" do
       it 'should respond OK' do
         get :index
-        expect_index_success_with_model('mock_exams', 2)
+        expect_index_success_with_model('mock_exams', 3)
       end
     end
 
@@ -55,44 +59,44 @@ describe MockExamsController, type: :controller do
 
     describe "GET 'edit/1'" do
       it 'should respond OK with mock_exam_1' do
-        get :edit, id: mock_exam_1.id
+        get :edit, params: { id: mock_exam_1.id }
         expect_edit_success_with_model('mock_exam', mock_exam_1.id)
       end
 
       # optional
       it 'should respond OK with mock_exam_2' do
-        get :edit, id: mock_exam_2.id
+        get :edit, params: { id: mock_exam_2.id }
         expect_edit_success_with_model('mock_exam', mock_exam_2.id)
       end
     end
 
     describe "POST 'create'" do
       it 'should report OK for valid params' do
-        post :create, mock_exam: valid_params
+        post :create, params: { mock_exam: valid_params }
         expect_create_success_with_model('mock_exam', mock_exams_url)
       end
 
       it 'should report error for invalid params' do
-        post :create, mock_exam: {valid_params.keys.first => ''}
+        post :create, params: { mock_exam: {valid_params.keys.first => ''} }
         expect_create_error_with_model('mock_exam')
       end
     end
 
     describe "PUT 'update/1'" do
       it 'should respond OK to valid params for mock_exam_1' do
-        put :update, id: mock_exam_1.id, mock_exam: valid_params
+        put :update, params: { id: mock_exam_1.id, mock_exam: valid_params }
         expect_update_success_with_model('mock_exam', mock_exams_url)
       end
 
       # optional
       it 'should respond OK to valid params for mock_exam_2' do
-        put :update, id: mock_exam_2.id, mock_exam: valid_params
+        put :update, params: { id: mock_exam_2.id, mock_exam: valid_params }
         expect_update_success_with_model('mock_exam', mock_exams_url)
         expect(assigns(:mock_exam).id).to eq(mock_exam_2.id)
       end
 
       it 'should reject invalid params' do
-        put :update, id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''}
+        put :update, params: { id: mock_exam_1.id, mock_exam: {valid_params.keys.first => ''} }
         expect_update_error_with_model('mock_exam')
         expect(assigns(:mock_exam).id).to eq(mock_exam_1.id)
       end
@@ -100,19 +104,19 @@ describe MockExamsController, type: :controller do
 
     describe "POST 'reorder'" do
       it 'should be OK with valid_array' do
-        post :reorder, array_of_ids: [mock_exam_2.id, mock_exam_1.id]
+        post :reorder, params: { array_of_ids: [mock_exam_2.id, mock_exam_1.id] }
         expect_reorder_success
       end
     end
 
     describe "DELETE 'destroy'" do
       it 'should be ERROR as children exist' do
-        delete :destroy, id: mock_exam_1.id
+        delete :destroy, params: { id: mock_exam_1.id }
         expect_delete_error_with_model('mock_exam', mock_exams_url)
       end
 
       it 'should be OK as no dependencies exist' do
-        delete :destroy, id: mock_exam_2.id
+        delete :destroy, params: { id: mock_exam_2.id }
         expect_delete_success_with_model('mock_exam', mock_exams_url)
       end
     end

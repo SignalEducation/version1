@@ -100,17 +100,17 @@
     -unless controller_name == 'courses'
       =render partial: 'layouts/intercom'
 
-    -if current_user && flash[:datalayer_verify]
+    -if current_user
       :javascript
-        dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+        dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
 
-    -if current_user && flash[:just_signed_in]
-      :javascript
-        dataLayer.push({'event':'login', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+      -if flash[:datalayer_verify]
+        :javascript
+          dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+
 
     %noscript
-      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S',
-    height: 0, width: 0, style: 'display:none;visibility:hidden'}
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
     -unless Rails.env.development?
       =render partial: 'layouts/google_tag_manager'
