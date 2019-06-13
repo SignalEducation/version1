@@ -71,6 +71,7 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = %w(created user_group name email)
 
   belongs_to :country, optional: true
+  belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
