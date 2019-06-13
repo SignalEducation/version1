@@ -84,6 +84,7 @@ class StudentSignUpsController < ApplicationController
     @navbar = false
     @footer = false
     user_country = IpAddress.get_country(request.remote_ip, true)
+    Rails.logger.info "Country IP Checker: #{user_country.name}"
     user_currency = user_country.currency || Currency.find_by(iso_code: 'GBP')
 
     @user = User.new(
