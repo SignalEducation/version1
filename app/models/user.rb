@@ -54,6 +54,7 @@
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
 #  preferred_exam_body_id          :bigint(8)
+#  currency_id                     :bigint(8)
 #
 
 class User < ActiveRecord::Base
@@ -70,6 +71,7 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = %w(created user_group name email)
 
   belongs_to :country, optional: true
+  belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
@@ -583,7 +585,9 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if existing_sub = subscriptions.all_stripe.not_pending.first
+    if currency_id.present?
+      return currency
+    elsif existing_sub = subscriptions.all_stripe.not_pending.first
       existing_sub.subscription_plan&.currency || country.currency
     elsif existing_order = orders.all_stripe.first
       existing_order.product&.currency || country.currency

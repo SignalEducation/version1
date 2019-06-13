@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_06_143543) do
+ActiveRecord::Schema.define(version: 2019_06_10_084107) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -1305,8 +1305,10 @@ ActiveRecord::Schema.define(version: 2019_06_06_143543) do
     t.boolean "communication_approval", default: false
     t.datetime "communication_approval_datetime"
     t.bigint "preferred_exam_body_id"
+    t.bigint "currency_id"
     t.index ["account_activation_code"], name: "index_users_on_account_activation_code"
     t.index ["country_id"], name: "index_users_on_country_id"
+    t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token"
     t.index ["persistence_token"], name: "index_users_on_persistence_token"
@@ -1414,5 +1416,6 @@ ActiveRecord::Schema.define(version: 2019_06_06_143543) do
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "subscription_plans", "exam_bodies"
+  add_foreign_key "users", "currencies"
   add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"
 end
