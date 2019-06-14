@@ -24,6 +24,7 @@ gem 'coffee-rails', '~> 4.2' # enables CoffeeScript (abbreviated javascript)
 gem 'dynamic_sitemaps' # Sitemap generation grm
 gem 'faraday', '~> 0.15.4'
 gem 'geocoder', '~> 1.3', '>= 1.3.7'#  a public API for geo-locating IP addresses
+gem 'gibbon'
 gem 'haml-rails' # a replacement system for HTML
 gem 'intercom-rails' # communicate with Intercom.io
 gem 'intercom', '~> 3.5.23' # Intercom API

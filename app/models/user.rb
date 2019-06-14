@@ -126,8 +126,8 @@ class User < ApplicationRecord
   before_validation { squish_fields(:email, :first_name, :last_name) }
   before_create :add_guid
   before_create :set_additional_user_attributes
-  after_create :create_referral_code_record, :create_or_update_intercom_user
-  after_update :update_stripe_customer
+  after_create :create_referral_code_record, :create_or_update_intercom_user, :create_or_update_mailchimp_user
+  after_update :update_stripe_customer, :create_or_update_mailchimp_user
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -715,6 +715,10 @@ class User < ApplicationRecord
 
   def create_or_update_intercom_user
     IntercomCreateUserWorker.perform_async(self.try(:id)) unless Rails.env.test?
+  end
+
+  def create_or_update_mailchimp_user
+    MailchimpCreateUserWorker.perform_async('bd7836f107', self.id, true)
   end
 
   def update_stripe_customer
