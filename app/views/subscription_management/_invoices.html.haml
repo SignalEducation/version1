@@ -20,10 +20,9 @@
           =invoice.status
         %td
           .pull-right
-
-            =link_to subscription_management_pdf_invoice_url(invoice.subscription.id, invoice.id, format: 'pdf'), target: '_blank' do
+            =link_to pdf_invoice_path(invoice.id, format: 'pdf'), target: '_blank' do
               .btn.btn-primary.btn-xs
                 PDF
-            =link_to subscription_management_invoice_url(invoice.subscription, invoice.id), style: 'padding-left: 5px;' do
+            =link_to invoice_path(invoice.id), style: 'padding-left: 5px;' do
               .btn.btn-secondary.btn-xs
                 View

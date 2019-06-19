@@ -24,20 +24,21 @@ require 'rails_helper'
 describe MockExamsController, type: :controller do
 
   let(:content_management_user_group) { FactoryBot.create(:content_management_user_group) }
-  let(:content_management_user) { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
-  let!(:exam_body) { FactoryBot.create(:exam_body) }
-  let!(:group) { FactoryBot.create(:group) }
-  let!(:subject_course)  { FactoryBot.create(:active_subject_course,
-                                               group_id: group.id,
-                                               exam_body_id: exam_body.id) }
+  let(:content_management_user)       { FactoryBot.create(:content_management_user, user_group_id: content_management_user_group.id) }
+  let!(:exam_body)                    { FactoryBot.create(:exam_body) }
+  let!(:group)                        { FactoryBot.create(:group) }
+  let!(:subject_course)               { FactoryBot.create(:active_subject_course,
+                                                          group_id: group.id,
+                                                          exam_body_id: exam_body.id) }
 
-  let!(:mock_exam_1) { FactoryBot.create(:mock_exam, name: 'Mock ABC', subject_course: subject_course) }
-  let!(:mock_exam_2) { FactoryBot.create(:mock_exam, subject_course: subject_course) }
-  let!(:order_1) {FactoryBot.create(:order, mock_exam_id: mock_exam_1.id)}
-  let!(:valid_params) { FactoryBot.attributes_for(:mock_exam, subject_course_id: subject_course.id) }
+  let(:currency)                      { FactoryBot.create(:currency) }
+  let!(:mock_exam_1)                  { FactoryBot.create(:mock_exam, name: 'Mock ABC', subject_course: subject_course) }
+  let!(:mock_exam_2)                  { FactoryBot.create(:mock_exam, subject_course: subject_course) }
+
+  let!(:order_1)                      { FactoryBot.create(:order, mock_exam_id: mock_exam_1.id, stripe_order_payment_data: { currency: currency.iso_code} ) }
+  let!(:valid_params)                 { FactoryBot.attributes_for(:mock_exam, subject_course_id: subject_course.id) }
 
   context 'Logged in as a content_management_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(content_management_user)

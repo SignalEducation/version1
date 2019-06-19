@@ -18,16 +18,16 @@
                           %th Reference N.
                           %th Date Created
                           %th Amount Charged
-                          %th Subscription
+                          %th Type
                           %th Status
                           %th PDF
                       %tbody
                         -@invoices.each do |invoice|
                           %tr
                             %td=invoice.id
-                            %td=humanize_datetime(invoice.issued_at)
+                            %td=humanize_datetime(invoice.created_at)
                             %td=number_in_local_currency(invoice.total, invoice.currency_id)
-                            %td=invoice.subscription&.user_readable_name || 'Unknown Subscription'
+                            %td=invoice_type(invoice)
                             %td
                               %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
                                 =invoice.status

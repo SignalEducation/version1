@@ -19,13 +19,13 @@
 
 FactoryBot.define do
   factory :course_section_user_log do
-    user_id 1
-    latest_course_module_element_id 1
-    course_section_id 1
-    percentage_complete 1.5
-    count_of_cmes_completed 1
-    subject_course_user_log_id 1
-    count_of_quizzes_taken 1
-    count_of_videos_taken 1
+    user_id { 1 }
+    latest_course_module_element_id { 1 }
+    course_section_id { 1 }
+    percentage_complete { 1.5 }
+    count_of_cmes_completed { 1 }
+    subject_course_user_log_id { 1 }
+    count_of_quizzes_taken { 1 }
+    count_of_videos_taken { 1 }
   end
 end

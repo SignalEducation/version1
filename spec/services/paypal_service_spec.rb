@@ -4,10 +4,10 @@ describe PaypalService, type: :service do
 
   describe '#create_purchase' do
     let(:order) { build_stubbed(:order) }
-    let(:payment_dbl) { 
+    let(:payment_dbl) {
       double(
-        'Payment', 
-        id: 'payment_FDAF343DFDA', 
+        'Payment',
+        id: 'payment_FDAF343DFDA',
         links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
         state: 'PENDING'
       )
@@ -60,7 +60,8 @@ describe PaypalService, type: :service do
   end
 
   describe '#execute_payment' do
-    let(:payment_dbl) { 
+    let(:gbp)   { create(:gbp) }
+    let(:payment_dbl) {
       double(
         'Payment',
         id: 'payment_FDAF343DFDA',
@@ -68,12 +69,13 @@ describe PaypalService, type: :service do
         state: 'COMPLETED'
       )
     }
-    let(:order) { 
+    let(:order) {
       create(
         :order,
         paypal_guid: payment_dbl.id,
         paypal_status: 'PENDING',
-        paypal_approval_url: 'https://example.com/approval'
+        paypal_approval_url: 'https://example.com/approval',
+        stripe_order_payment_data: { currency: gbp.iso_code }
       )
     }
 
@@ -138,7 +140,8 @@ describe PaypalService, type: :service do
   # PRIVATE METHODS ############################################################
 
   describe '#payment_attributes' do
-    let(:new_order) { create(:order) }
+    let(:gbp)       { create(:gbp) }
+    let(:new_order) { create(:order, stripe_order_payment_data: { currency: gbp.iso_code }) }
 
     it 'returns the correct hash' do
       expect(subject.send(:payment_attributes, new_order))
@@ -160,7 +163,7 @@ describe PaypalService, type: :service do
                       name: new_order.product.name,
                       price: new_order.product.price.to_s,
                       currency: new_order.product.currency.iso_code,
-                      quantity: 1 
+                      quantity: 1
                     }
                   ]
                 },
@@ -168,7 +171,7 @@ describe PaypalService, type: :service do
                   total: new_order.product.price.to_s,
                   currency: new_order.product.currency.iso_code
                 },
-                description: "Mock exam purchase - #{new_order.product.name}" 
+                description: "Mock exam purchase - #{new_order.product.name}"
               }
             ]
           }

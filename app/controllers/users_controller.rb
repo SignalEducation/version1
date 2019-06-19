@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -56,7 +58,6 @@
 #
 
 class UsersController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(user_management_access))
@@ -71,25 +72,26 @@ class UsersController < ApplicationController
 
 
   def index
-    if params[:search_term].to_s.blank?
-      @users = @users = User.sort_by_most_recent.paginate(per_page: 50, page: params[:page])
-    else
-      @users = User.sort_by_most_recent.search_for(params[:search_term].to_s).paginate(per_page: 50, page: params[:page])
-    end
+    @users =
+      if params[:search_term].to_s.blank?
+        User.sort_by_most_recent.paginate(per_page: 50, page: params[:page])
+      else
+        User.sort_by_most_recent.search_for(params[:search_term].to_s).paginate(per_page: 50, page: params[:page])
+      end
   end
 
   def show
-    @user_sessions_count = @user.login_count
-    @enrollments = @user.enrollments.all_in_order
-    @subscriptions = @user.subscriptions
+    @user_sessions_count        = @user.login_count
+    @enrollments                = @user.enrollments.all_in_order
+    @subscriptions              = @user.subscriptions
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-    @default_card = @subscription_payment_cards.all_default_cards.last
-    @invoices = @user.invoices
+    @default_card               = @subscription_payment_cards.all_default_cards.last
+    @invoices                   = @user.invoices
+
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end
 
-  def edit
-  end
+  def edit; end
 
   def new
     @user = User.new
@@ -98,9 +100,9 @@ class UsersController < ApplicationController
 
   def create
     password = SecureRandom.hex(5)
-    @user = User.new(allowed_params.merge({password: password,
-                                           password_confirmation: password,
-                                           password_change_required: true}))
+    @user    = User.new(allowed_params.merge(password: password,
+                                             password_confirmation: password,
+                                             password_change_required: true))
 
     @user.activate_user
     @user.generate_email_verification_code
@@ -134,6 +136,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.users.destroy.flash.error')
     end
+
     redirect_to users_url
   end
 
@@ -157,15 +160,13 @@ class UsersController < ApplicationController
     end
   end
 
-  def user_personal_details
-  end
+  def user_personal_details; end
 
   def user_subscription_status
-    @subscriptions = @user.subscriptions.in_reverse_created_order
-
+    @subscriptions              = @user.subscriptions.in_reverse_created_order
     @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: @user.id).all_in_order
-    @default_card = @subscription_payment_cards.all_default_cards.last
-    @invoices = @user.invoices
+    @default_card               = @subscription_payment_cards.all_default_cards.last
+    @invoices                   = @user.invoices.subscriptions.all_in_order
   end
 
   def user_activity_details
@@ -173,12 +174,13 @@ class UsersController < ApplicationController
   end
 
   def subject_course_user_log_details
-    @scul = SubjectCourseUserLog.find(params[:scul_id])
+    @scul         = SubjectCourseUserLog.find(params[:scul_id])
     @latest_cmeul = @scul.course_module_element_user_logs.includes(:course_module_element).order(:created_at).first
   end
 
   def user_purchases_details
-    @orders = @user.orders
+    @orders   = @user.orders
+    @invoices = @user.invoices.orders.all_in_order
   end
 
   def user_referral_details
@@ -186,15 +188,16 @@ class UsersController < ApplicationController
   end
 
   def user_courses_status
-    #This is for seeing a tutors courses
+    # This is for seeing a tutors courses
     @subject_courses = SubjectCourse.all_active.all_in_order
-    all_courses = @subject_courses.each_slice( (@subject_courses.size/2.0).round ).to_a
-    @first_courses = all_courses.first
-    @second_courses = all_courses.last
+    all_courses      = @subject_courses.each_slice((@subject_courses.size / 2.0).round).to_a
+    @first_courses   = all_courses.first
+    @second_courses  = all_courses.last
   end
 
   def update_courses
     @user = User.find(params[:user_id]) rescue nil
+
     if params[:user]
       @user.subject_course_ids = params[:user][:subject_course_ids]
     else
@@ -216,9 +219,10 @@ class UsersController < ApplicationController
 
 
   def get_variables
-    @user = User.where(id: params[:id]).first
+    @user        = User.where(id: params[:id]).first
     @user_groups = UserGroup.all_not_admin
-    @countries = Country.all_in_order
+    @countries   = Country.all_in_order
+
     seo_title_maker('Users Management', '', true)
   end
 
@@ -228,7 +232,7 @@ class UsersController < ApplicationController
 
   def get_user_variables
     @user = User.where(id: params[:user_id]).first
+
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end
-
 end

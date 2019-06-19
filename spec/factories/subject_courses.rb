@@ -53,8 +53,8 @@ FactoryBot.define do
     group
     survey_url { 'SurveyURL' }
     exam_body
-    category_label 'Category'
-    icon_label 'Icon'
+    category_label { 'Category' }
+    icon_label { 'Icon' }
 
     factory :active_subject_course do
       active                       { true }

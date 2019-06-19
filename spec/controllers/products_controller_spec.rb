@@ -29,7 +29,7 @@ RSpec.describe ProductsController, type: :controller do
   let!(:product_1) { FactoryBot.create(:product, currency_id: gbp.id) }
   let!(:product_2) { FactoryBot.create(:product, currency_id: gbp.id) }
   let!(:mock_exam) { FactoryBot.create(:mock_exam, name: 'Mock 001') }
-  let!(:order) { FactoryBot.create(:order, product_id: product_1.id) }
+  let!(:order) { FactoryBot.create(:order, product_id: product_1.id, stripe_order_payment_data: { currency: gbp.iso_code }) }
   let!(:valid_params) { FactoryBot.attributes_for(:product, active: false, currency_id: gbp.id, mock_exam_id: mock_exam.id, correction_pack_count: 1) }
 
 
