@@ -5,6 +5,9 @@ class Subscriptions::PlanChangesController < ApplicationController
   end
   before_action :get_subscription
 
+  def show    
+  end
+
   def new
   end
 
