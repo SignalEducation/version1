@@ -431,7 +431,7 @@ class User < ActiveRecord::Base
   end
 
   def subscriptions_for_exam_body(exam_body_id)
-    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).where(active: true).all_in_order
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).all_in_order
   end
 
   def active_subscriptions_for_exam_body(exam_body_id)
