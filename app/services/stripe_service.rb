@@ -87,6 +87,7 @@ class StripeService
           active: true,
           livemode: (stripe_subscription[:plan][:livemode]),
           stripe_status: stripe_subscription[:status],
+          changed_from: old_sub
         )
         # mass-assign-protected attributes
 
