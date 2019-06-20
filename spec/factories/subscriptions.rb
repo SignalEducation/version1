@@ -24,6 +24,7 @@
 #  cancelled_at             :datetime
 #  cancellation_reason      :string
 #  cancellation_note        :text
+#  changed_from_id          :bigint(8)
 #
 
 FactoryBot.define do

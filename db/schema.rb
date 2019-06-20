@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_10_084107) do
+ActiveRecord::Schema.define(version: 2019_06_19_124644) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -761,7 +761,6 @@ ActiveRecord::Schema.define(version: 2019_06_10_084107) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -771,13 +770,13 @@ ActiveRecord::Schema.define(version: 2019_06_10_084107) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
-    t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
@@ -1197,6 +1196,8 @@ ActiveRecord::Schema.define(version: 2019_06_10_084107) do
     t.datetime "cancelled_at"
     t.string "cancellation_reason"
     t.text "cancellation_note"
+    t.bigint "changed_from_id"
+    t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
     t.index ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date"
     t.index ["stripe_status"], name: "index_subscriptions_on_stripe_status"
     t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
@@ -1353,6 +1354,7 @@ ActiveRecord::Schema.define(version: 2019_06_10_084107) do
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "subscription_plans", "exam_bodies"
+  add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
   add_foreign_key "users", "currencies"
   add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"
 end

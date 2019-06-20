@@ -5,7 +5,7 @@
     .container
       %header.hero-section
         %h1.h2-hero.mb-2
-          =t('views.subscriptions.upgrade_complete.h1')
+          =t('views.subscriptions.plan_change_complete.h1')
 
       %section.pb-md-6.pb-5
         .row.justify-content-center
@@ -44,7 +44,7 @@
           'id': "#{@subscription.subscription_plan.id}",
           'price': "#{@subscription.subscription_plan.price}",
           'brand': "#{@subscription.subscription_plan.exam_body.name}",
-          'category': "Subscription",
+          'category': 'Change Subscription',
           'quantity': 1
           }]
       }
