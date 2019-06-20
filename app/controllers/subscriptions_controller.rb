@@ -153,7 +153,6 @@ class SubscriptionsController < ApplicationController
 
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.last
-    @subscription_category = 'Subscription'
 
     seo_title_maker('Thank You for Subscribing | LearnSignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
