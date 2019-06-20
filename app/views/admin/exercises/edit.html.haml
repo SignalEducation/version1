@@ -22,8 +22,11 @@
                       =f.label :correction, t('views.white_papers.form.file_replacement'), class: 'control-label'
                   -else
                     =f.label :correction, t('views.exercises.admin.form.correction'), class: 'control-label'
-                  .input-group.input-group-lg
-                    =f.file_field :correction, class: 'form-control'
+                    .input-group.input-group-lg
+                      =f.file_field :correction, class: 'form-control'
+                =f.label :corrector_id, 'Corrector', class: 'control-label'
+                .input-group.input-group-lg.mb-4
+                  =f.select :corrector_id, UserGroup.where(exercise_corrections_access: true).first.users.map{|u| [u.name, u.id]}, class: 'form-control'
 
         .row
           .col-sm-12
