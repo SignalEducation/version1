@@ -24,6 +24,7 @@
 #  cancelled_at             :datetime
 #  cancellation_reason      :string
 #  cancellation_note        :text
+#  changed_from_id          :bigint(8)
 #
 
 class Subscription < ActiveRecord::Base
@@ -42,6 +43,7 @@ class Subscription < ActiveRecord::Base
   belongs_to :user, inverse_of: :subscriptions
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
+  belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
   has_one :student_access
 
   has_many :invoices
