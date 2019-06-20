@@ -77,7 +77,7 @@ class Invoice < ActiveRecord::Base
     #This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
       user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
-      subscription = Subscription.where(stripe_guid: stripe_data_hash[:subscription], active: true).first
+      subscription = Subscription.where(stripe_guid: stripe_data_hash[:subscription]).last
       currency = Currency.find_by_iso_code(stripe_data_hash[:currency].upcase)
 
       if user && subscription && currency

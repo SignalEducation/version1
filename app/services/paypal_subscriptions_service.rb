@@ -25,7 +25,6 @@ class PaypalSubscriptionsService
       @subscription.update!(
         paypal_status: agreement.state,
         complimentary: false,
-        active: agreement.state != 'Cancelled',
         paypal_subscription_guid: agreement.id
       )
       agreement.state != 'Cancelled'
