@@ -167,7 +167,7 @@ class PaypalSubscriptionsService
   end
 
   def cancel_url(subscription)
-    if subscription.changed_from
+    if subscription.changed_from_id
       new_subscriptions_plan_change_url(id: subscription.changed_from_id, host: learnsignal_host, payment_processor: 'paypal')
     else
       new_subscription_url(host: learnsignal_host, flash: 'It seems you cancelled your subscription on Paypal. Still want to upgrade?')

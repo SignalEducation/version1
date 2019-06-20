@@ -131,7 +131,11 @@ class SubscriptionsController < ApplicationController
       if PaypalSubscriptionsService.new(@subscription).execute_billing_agreement(params[:token])
         @subscription.start!
         SubscriptionService.new(@subscription).validate_referral
-        redirect_to personal_upgrade_complete_url
+        if @subscription.changed_from_id
+          redirect_to subscriptions_plan_change_url, notice: 'Your new plan is confirmed!'
+        else
+          redirect_to personal_upgrade_complete_url
+        end
       else
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
         flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
