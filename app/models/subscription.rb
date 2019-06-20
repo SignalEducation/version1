@@ -268,8 +268,7 @@ class Subscription < ActiveRecord::Base
             stripe_status: stripe_subscription.status,
             stripe_guid: stripe_subscription.id,
             next_renewal_date: Time.at(stripe_subscription.current_period_end),
-            stripe_customer_data: stripe_customer.to_hash.deep_dup,
-            active: true
+            stripe_customer_data: stripe_customer.to_hash.deep_dup
         )
         self.start
       end
@@ -357,7 +356,7 @@ class Subscription < ActiveRecord::Base
           begin
             stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
 
-            subscription = Subscription.where(stripe_guid: stripe_subscription.id, active: true).first
+            subscription = Subscription.where(stripe_guid: stripe_subscription.id).last
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
             subscription.stripe_status = stripe_subscription.status
             subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
@@ -381,7 +380,7 @@ class Subscription < ActiveRecord::Base
     latest_subscription.plan = self.subscription_plan.stripe_guid
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attributes(stripe_status: 'active', active: true, terms_and_conditions: true)
+      self.update_attributes(stripe_status: 'active', terms_and_conditions: true)
       self.restart
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
