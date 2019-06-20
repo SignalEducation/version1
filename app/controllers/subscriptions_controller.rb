@@ -131,7 +131,11 @@ class SubscriptionsController < ApplicationController
       if PaypalSubscriptionsService.new(@subscription).execute_billing_agreement(params[:token])
         @subscription.start!
         SubscriptionService.new(@subscription).validate_referral
-        redirect_to personal_upgrade_complete_url
+        if @subscription.changed_from_id
+          redirect_to subscriptions_plan_change_url, notice: 'Your new plan is confirmed!'
+        else
+          redirect_to personal_upgrade_complete_url
+        end
       else
         Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
         flash[:error] = 'Your PayPal request was declined. Please contact us for assistance!'
@@ -149,11 +153,7 @@ class SubscriptionsController < ApplicationController
 
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.last
-    if current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).any? && current_user.subscriptions_for_exam_body(@subscription.subscription_plan.exam_body_id).where("cancelled_at >= ?", DateTime.now - 2.minutes).any?
-      @subscription_category = 'Change Subscription'
-    else
-      @subscription_category = 'Subscription'
-    end
+    @subscription_category = 'Subscription'
 
     seo_title_maker('Thank You for Subscribing | LearnSignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
