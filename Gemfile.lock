@@ -58,6 +58,7 @@ GEM
       airbrake-ruby (~> 4.4)
     airbrake-ruby (4.4.0)
       rbtree3 (~> 0.5)
+    analytics-ruby (2.2.7)
     annotate (2.7.4)
       activerecord (>= 3.2, < 6.0)
       rake (>= 10.4, < 13.0)
@@ -556,6 +557,7 @@ PLATFORMS
 DEPENDENCIES
   ahoy_matey
   airbrake (~> 9.2)
+  analytics-ruby
   annotate
   authlogic (~> 5.0.0)
   aws-sdk-s3 (~> 1)

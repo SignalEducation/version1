@@ -43,7 +43,7 @@ class Enrollment < ApplicationRecord
   before_destroy :check_dependencies
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
   before_create :set_percentage_complete, if: :subject_course_user_log_id
-  after_create :create_expiration_worker, :deactivate_siblings
+  after_create :create_expiration_worker, :deactivate_siblings, :create_or_update_analytics_enrollment
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
@@ -184,6 +184,10 @@ class Enrollment < ApplicationRecord
 
   def set_percentage_complete
     self.percentage_complete = subject_course_user_log.percentage_complete
+  end
+
+  def create_or_update_analytics_enrollment
+    SegmentService.new.analytics_identify_enrollment('bd7836f107', self.user_id, self.id)
   end
 
   def create_expiration_worker
