@@ -153,7 +153,7 @@ class SubscriptionsController < ApplicationController
 
   def personal_upgrade_complete
     @subscription = current_user.subscriptions.last
-
+    Rails.logger.info "DataLayer Event: Subscription#personal_upgrade_complete - Subscription: #{@subscription.id}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}"
     seo_title_maker('Thank You for Subscribing | LearnSignal',
                     'Thank you for subscribing to learnsignal you can now access professional course materials, expert notes and corrected questions anytime, anywhere.',
                     false)
