@@ -38,9 +38,11 @@
                 %svg{:fill => "none", :viewbox => "0 0 312 312", :xmlns => "http://www.w3.org/2000/svg"}
                   %path.yellow-oval{:d => "M156 312C242.156 312 312 242.156 312 156C312 69.8436 242.156 1.52588e-05 156 1.52588e-05C69.8436 1.52588e-05 0 69.8436 0 156C0 242.156 69.8436 312 156 312Z", :fill => "#F0CA28", :opacity => "0.1"}
 
-              .laptop-wrapper
-                %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/342696072", frameborder: '0', allowfullscreen: true}
-              -#=image_tag('laptop-with-lms-2.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
+              -if @home_page && @home_page.video_guid && !@home_page.video_guid.blank?
+                .laptop-wrapper
+                  %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true}
+              -else
+                =image_tag('laptop-with-lms-2.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
 
 
       .home-hero-cta-section.pt-4.pt-sm-5.py-xl-0

@@ -905,6 +905,8 @@ en:
         registration_form_heading_placeholder: Reg Form Heading Text
         login_form_heading: Login Form Heading
         login_form_heading_placeholder: Login Form Header text
+        video_guid: Video Guid
+        video_guid_placeholder: Vimeo Video File Id
 
       index:
         h1: Landing Pages
