@@ -4306,9 +4306,18 @@ a.card:hover .card-title .card-explanation {
     left: 0
   }
 }
-@media screen and (min-width:1472px) {
+@media (min-width:1200px) {
   .home-hero-cta-section {
-    bottom: 4rem
+    position: absolute;
+    bottom: 0.1rem;
+    left: 3rem;
+  }
+}
+@media screen and (min-width:1321px) {
+  .home-hero-cta-section {
+    position: absolute;
+    bottom: 4rem;
+    left: 0;
   }
 }
 .home-hero-alt-bg {
