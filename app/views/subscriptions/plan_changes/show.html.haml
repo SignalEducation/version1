@@ -36,14 +36,14 @@
     'ecommerce': {
       'purchase': {
         'actionField': {
-          'id': "#{@subscription.id}",
-          'revenue': "#{@subscription.subscription_plan.price}"
+          'id': #{@subscription.id},
+          'revenue': #{@subscription.subscription_plan.price}
         },
         'products': [{
-          'name': "#{@subscription.subscription_plan.name}",
-          'id': "#{@subscription.subscription_plan.id}",
-          'price': "#{@subscription.subscription_plan.price}",
-          'brand': "#{@subscription.subscription_plan.exam_body.name}",
+          'name': #{@subscription.subscription_plan.name},
+          'id': #{@subscription.subscription_plan.id},
+          'price': #{@subscription.subscription_plan.price},
+          'brand': #{@subscription.subscription_plan.exam_body.name},
           'category': 'Change Subscription',
           'quantity': 1
           }]
