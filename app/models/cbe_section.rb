@@ -1,0 +1,2 @@
+class CbeSection < ApplicationRecord
+end
