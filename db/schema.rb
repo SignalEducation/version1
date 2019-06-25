@@ -89,6 +89,13 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
   end
 
+  create_table "cbe_agreements", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cbe_introduction_pages", force: :cascade do |t|
     t.integer "number"
     t.text "content"
