@@ -105,6 +105,13 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cbe_questions", force: :cascade do |t|
+    t.string "label"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cbe_section_types", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
