@@ -89,6 +89,20 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
   end
 
+  create_table "cbes", force: :cascade do |t|
+    t.string "name"
+    t.string "title"
+    t.text "desciption"
+    t.float "exam_time"
+    t.float "hard_time_limit"
+    t.integer "number_of_pauses_allowed"
+    t.bigint "exam_body_id"
+    t.integer "length_of_pauses"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_body_id"], name: "index_cbes_on_exam_body_id"
+  end
+
   create_table "charges", id: :serial, force: :cascade do |t|
     t.integer "subscription_id"
     t.integer "invoice_id"
