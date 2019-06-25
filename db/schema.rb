@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_25_162329) do
+ActiveRecord::Schema.define(version: 2019_06_25_165521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -87,6 +87,21 @@ ActiveRecord::Schema.define(version: 2019_06_25_162329) do
     t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
+  end
+
+  create_table "cbe_introduction_pages", force: :cascade do |t|
+    t.integer "number"
+    t.text "content"
+    t.string "title"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "cbe_section_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "cbe_sections", force: :cascade do |t|
