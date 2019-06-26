@@ -36,7 +36,7 @@ FactoryBot.define do
     available_from                  { 14.days.ago }
     available_to                    { 7.days.from_now }
     #stripe_guid                     'plan_ABC123123123'
-    livemode                        false
+    livemode                        { false }
     exam_body
 
 

@@ -77,7 +77,7 @@ class StripeService
     user = old_sub.user
     new_subscription_plan = SubscriptionPlan.find_by_id(new_plan_id)
     validate_plan_changable(old_sub, new_subscription_plan, user)
-    
+
     if stripe_subscription = get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
       ActiveRecord::Base.transaction do
         new_sub = Subscription.new(
@@ -130,6 +130,7 @@ class StripeService
       coupon_id: coupon.try(:id),
       stripe_customer_data: stripe_customer.to_hash.deep_dup
     )
+
     subscription
   end
 
@@ -243,7 +244,7 @@ class StripeService
     subscription_plan.update(
       stripe_guid: stripe_plan.id,
       livemode: stripe_plan[:livemode]
-    )    
+    )
   end
 
   def stripe_plan_id

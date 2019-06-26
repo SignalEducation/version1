@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubscriptionService
   attr_reader :subscription, :coupon
 
@@ -73,7 +75,6 @@ class SubscriptionService
   end
 
   private
-
   def valid_paypal_subscription?(params)
     params[:subscription][:use_paypal].present? &&
       @subscription &&

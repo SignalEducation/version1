@@ -36,6 +36,7 @@ class Order < ActiveRecord::Base
   belongs_to :mock_exam, optional: true
   belongs_to :user
   has_one :order_transaction
+  has_one :invoice, autosave: true
 
   # validation
   validates :reference_guid, uniqueness: true, allow_blank: true
@@ -43,6 +44,7 @@ class Order < ActiveRecord::Base
 
   # callbacks
   before_create :assign_random_guid
+  before_create :generate_invoice
   before_destroy :check_dependencies
   after_create :create_order_transaction
 
@@ -108,6 +110,21 @@ class Order < ActiveRecord::Base
     stripe_token.present? || stripe_guid.present?
   end
 
+  def generate_invoice
+    # Invoice
+    self.build_invoice(user_id: self.user_id,
+                        order: self,
+                        currency: order_currency,
+                        sub_total: self.product.price,
+                        total: self.product.price,
+                        object_type: 'invoice',
+                        paid: true,
+                        amount_due: self.product.price)
+
+    # InvoiceLineItem
+    self.invoice.invoice_line_items.build(amount: invoice.total, currency_id: invoice.currency_id)
+  end
+
   protected
 
   def assign_random_guid
@@ -123,5 +140,9 @@ class Order < ActiveRecord::Base
 
   def create_order_transaction
     OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
+  end
+
+  def order_currency
+    Currency.get_by_iso_code(self.stripe_order_payment_data['currency'].upcase)
   end
 end

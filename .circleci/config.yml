@@ -11,6 +11,7 @@ jobs:
           PGHOST: 127.0.0.1
           PGUSER: circleci-demo-ruby
           RAILS_ENV: test
+          CC_TEST_REPORTER_ID: 1802bdcb3406ff0d9ecbaaefb286213d6fbe92da0673d35ad3c972a3750e3cea
       - image: circleci/postgres:9.6-alpine
         environment:
           POSTGRES_USER: circleci-demo-ruby
@@ -60,6 +61,13 @@ jobs:
           name: Database setup
           command: bin/rails db:schema:load --trace
 
+      # download test reporter as a static binary
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl  -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
       - run:
           name: Run rspec in parallel
           command: |
@@ -69,5 +77,18 @@ jobs:
                               --format progress \
                               $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
 
+      # upload test coverage reporter
+      - run:
+          name: Code Climate Test Coverage
+          command: |
+            ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+
+      # collect reports
       - store_test_results:
-          path: test_results
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+      - deploy:
+          command: |
+            ./cc-test-reporter sum-coverage --output - --parts $CIRCLE_NODE_TOTAL coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input - -r 1802bdcb3406ff0d9ecbaaefb286213d6fbe92da0673d35ad3c972a3750e3cea

@@ -1,0 +1,29 @@
+AllCops:
+  Exclude:
+    - db/**/*
+    - Gemfile
+    - vendor/**/*
+    - config/environments/*
+    - bin/**/*
+
+Rails:
+  Enabled: true
+
+Layout/EndOfLine:
+  Enabled: false
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Naming/FileName:
+    Enabled: false
+
+# Disables "Missing top-level class documentation comment" warning
+Documentation:
+  Enabled: false

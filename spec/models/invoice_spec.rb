@@ -51,20 +51,17 @@ describe Invoice do
 
   # validation
   it { should validate_presence_of(:user_id) }
-
-  it { should validate_presence_of(:subscription_id) }
-
-  it { should validate_presence_of(:number_of_users) }
-
   it { should validate_presence_of(:currency_id) }
-
   it { should validate_presence_of(:total) }
-
   it { should validate_length_of(:stripe_guid).is_at_most(255) }
   it { should validate_length_of(:stripe_customer_guid).is_at_most(255) }
   it { should validate_length_of(:object_type).is_at_most(255) }
   it { should validate_length_of(:charge_guid).is_at_most(255) }
   it { should validate_length_of(:subscription_guid).is_at_most(255) }
+  ## validation of strip_invoice
+  before { allow(subject).to receive(:strip_invoice?).and_return(true) }
+  it { should validate_presence_of(:subscription_id) }
+  it { should validate_presence_of(:number_of_users) }
 
 
   # callbacks
@@ -73,6 +70,8 @@ describe Invoice do
 
   # scopes
   it { expect(Invoice).to respond_to(:all_in_order) }
+  it { expect(Invoice).to respond_to(:subscriptions) }
+  it { expect(Invoice).to respond_to(:orders) }
 
   # class methods
   it { expect(Invoice).to respond_to(:build_from_stripe_data) }

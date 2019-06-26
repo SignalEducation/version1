@@ -43,3 +43,11 @@
                       =link_to order.product.mock_exam.file.url, target: '_blank' do
                         .btn.btn-secondary.btn-xs
                           View
+    .row
+      .col-md-12
+        .box-item.table-box#invoices-panel
+          .col-sm-12
+            %h2
+              =t('views.users.user_subscription_status.subscription_info.invoices')
+            .table-responsive
+              =render partial: 'subscription_management/invoices'

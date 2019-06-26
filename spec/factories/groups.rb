@@ -34,8 +34,8 @@ FactoryBot.define do
     exam_body
     active { true }
     sorting_order { 1 }
-    short_description 'A short description'
-    seo_description 'The SEO description'
+    short_description { 'A short description' }
+    seo_description { 'The SEO description' }
     sequence(:seo_title)           { |n| "Group #{n}" }
   end
 end
