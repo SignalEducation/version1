@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_25_170734) do
+ActiveRecord::Schema.define(version: 2019_06_26_163040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -94,6 +94,8 @@ ActiveRecord::Schema.define(version: 2019_06_25_170734) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cbe_agreement_id"
+    t.index ["cbe_agreement_id"], name: "index_cbe_agreements_on_cbe_agreement_id"
   end
 
   create_table "cbe_introduction_pages", force: :cascade do |t|
@@ -101,6 +103,14 @@ ActiveRecord::Schema.define(version: 2019_06_25_170734) do
     t.text "content"
     t.string "title"
     t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_introduction_page_id"
+    t.index ["cbe_introduction_page_id"], name: "index_cbe_introduction_pages_on_cbe_introduction_page_id"
+  end
+
+  create_table "cbe_question_types", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -127,6 +137,10 @@ ActiveRecord::Schema.define(version: 2019_06_25_170734) do
     t.string "question_label"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cbe_id"
+    t.bigint "cbe_section_id"
+    t.index ["cbe_id"], name: "index_cbe_sections_on_cbe_id"
+    t.index ["cbe_section_id"], name: "index_cbe_sections_on_cbe_section_id"
     t.index ["cbes_id"], name: "index_cbe_sections_on_cbes_id"
   end
 
@@ -1320,6 +1334,10 @@ ActiveRecord::Schema.define(version: 2019_06_25_170734) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  add_foreign_key "cbe_agreements", "cbe_agreements"
+  add_foreign_key "cbe_introduction_pages", "cbe_introduction_pages"
+  add_foreign_key "cbe_sections", "cbe_sections"
+  add_foreign_key "cbe_sections", "cbes"
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
