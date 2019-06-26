@@ -150,7 +150,7 @@ describe PaypalService, type: :service do
             },
             redirect_urls: {
               return_url: "https://staging.learnsignal.com/en/orders/#{new_order.id}/execute?payment_processor=paypal",
-              cancel_url: "https://staging.learnsignal.com/en/order/new/#{new_order.id}?flash=It+seems+you+cancelled+your+order+on+Paypal.+Still+want+to+purchase%3F"
+              cancel_url: "https://staging.learnsignal.com/en/order/new/#{new_order.product_id}?flash=It+seems+you+cancelled+your+order+on+Paypal.+Still+want+to+purchase%3F"
             },
             transactions: [
               {

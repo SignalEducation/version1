@@ -102,7 +102,7 @@ class HomePagesController < ApplicationController
                                       :login_form, :preferred_payment_frequency,
                                       :header_h1, :header_paragraph,
                                       :registration_form_heading, :login_form_heading,
-                                      :footer_option,
+                                      :footer_option, :video_guid,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,

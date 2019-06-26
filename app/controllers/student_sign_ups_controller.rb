@@ -83,11 +83,15 @@ class StudentSignUpsController < ApplicationController
   def create
     @navbar = false
     @footer = false
+    user_country = IpAddress.get_country(request.remote_ip, true)
+    Rails.logger.info "Country IP Checker: #{user_country.name}"
+    user_currency = user_country.currency || Currency.find_by(iso_code: 'GBP')
 
     @user = User.new(
       student_allowed_params.merge(
         user_group: UserGroup.student_group,
-        country: IpAddress.get_country(request.remote_ip, true)
+        country: IpAddress.get_country(request.remote_ip, true),
+        currency: user_currency
       )
     )
     @user.pre_creation_setup

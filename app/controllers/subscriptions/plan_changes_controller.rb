@@ -5,6 +5,10 @@ class Subscriptions::PlanChangesController < ApplicationController
   end
   before_action :get_subscription
 
+  def show
+    Rails.logger.info "DataLayer Event: PlanChanges#show - Subscription: #{@subscription.id}, Revenue: #{@subscription.subscription_plan.price}, PlanName: #{@subscription.subscription_plan.name}, Brand: #{@subscription.subscription_plan.exam_body.name}" if @subscription
+  end
+
   def new
   end
 
@@ -14,7 +18,7 @@ class Subscriptions::PlanChangesController < ApplicationController
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral
-        redirect_to personal_upgrade_complete_url, notice: 'Your new plan is confirmed!'
+        redirect_to subscriptions_plan_change_url(@subscription), notice: 'Your new plan is confirmed!'
       elsif subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
       end
