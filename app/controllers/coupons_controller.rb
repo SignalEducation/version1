@@ -28,10 +28,6 @@ class CouponsController < ApplicationController
   end
   before_action :get_variables
 
-  def index
-    @coupons = Coupon.paginate(per_page: 50, page: params[:page]).all_in_order
-  end
-
   def show
   end
 

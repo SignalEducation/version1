@@ -31,8 +31,8 @@ class CourseSectionsController < ApplicationController
 
   def new
     @subject_course = SubjectCourse.where(id: params[:id]).first
-    if @subject_course && @subject_course.course_sections.count > 0
-      @course_section = CourseSection.new(sorting_order: ((@subject_course.course_sections.any? && @subject_course.course_sections.all_in_order.last.sorting_order) ? @subject_course.course_sections.all_in_order.last.sorting_order + 1 : 1), subject_course_id: @subject_course.id)
+    if @subject_course&.course_sections.positive?
+      @course_section = CourseSection.new(sorting_order: (@subject_course.course_sections.any? && @subject_course.course_sections.all_in_order.last.sorting_order ? @subject_course.course_sections.all_in_order.last.sorting_order + 1 : 1), subject_course_id: @subject_course.id)
     elsif @subject_course
       @course_section = CourseSection.new(sorting_order: 1, subject_course_id: @subject_course.id)
     else
@@ -50,8 +50,7 @@ class CourseSectionsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @course_section.update_attributes(allowed_params)
@@ -82,21 +81,4 @@ class CourseSectionsController < ApplicationController
     end
     redirect_to course_module_special_link(@course_section)
   end
-
-  protected
-
-  def get_variables
-    if params[:id].to_i > 0
-      @course_section = CourseSection.where(id: params[:id]).first
-    end
-    @subject_courses = SubjectCourse.all_in_order
-    @tutors = User.all_tutors.all_in_order
-    @layout = 'management'
-  end
-
-  def allowed_params
-    params.require(:course_section).permit(:name, :name_url, :sorting_order, :active, :subject_course_id,
-                                          :counts_towards_completion, :assumed_knowledge)
-  end
-
 end
