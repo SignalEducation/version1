@@ -432,6 +432,7 @@ ActiveRecord::Schema.define(version: 2019_07_06_190510) do
     t.string "logo_image"
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "audience_guid"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 

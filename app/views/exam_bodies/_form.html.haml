@@ -37,6 +37,7 @@
               =f.select :preferred_payment_frequency, options_for_select([1, 3, 12,], selected: f.object.preferred_payment_frequency),
                {include_blank: t('views.general.select')}, class: 'form-control custom-select'
 
+
         .row.mt-5
           .col-sm-6
             .form-group
@@ -55,6 +56,11 @@
             =f.label :logo_image, t('views.exam_bodies.form.logo_image')
             .input-group.input-group-lg
               =f.select :logo_image, ExamBody::LOGO_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+
+          .col-sm-6
+            =f.label :audience_guid, t('views.exam_bodies.form.audience_guid')
+            .input-group.input-group-lg
+              =f.text_field :audience_guid, placeholder: t('views.exam_bodies.form.audience_guid'), class: 'form-control', disabled: true
 
         .row.mt-4
           .col-sm-12

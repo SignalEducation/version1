@@ -712,6 +712,7 @@ en:
         login_form_heading: Login Form Heading
         login_form_heading_placeholder: Login Form Heading
         logo_image: Logo Image
+        audience_guid: MailChimp Audience
 
       index:
         h1: Exam Bodies

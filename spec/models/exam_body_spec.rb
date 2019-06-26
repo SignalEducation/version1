@@ -16,6 +16,7 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
+#  audience_guid                      :string
 #
 
 require 'rails_helper'

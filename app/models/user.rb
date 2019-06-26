@@ -696,6 +696,10 @@ class User < ApplicationRecord
     cmeuls.any?
   end
 
+  def last_studied_date
+    self.course_module_element_user_logs.any? ? humanize_datetime(self.course_module_element_user_logs.last.created_at) : 'Never'
+  end
+
   private
 
   def add_guid
@@ -718,7 +722,11 @@ class User < ApplicationRecord
   end
 
   def create_or_update_analytics_user
-    SegmentService.new.analytics_identify_user('bd7836f107', self.id, self.preferred_exam_body_id)
+    #MailchimpCreateUserWorker.perform_async('bd7836f107', self.id, true)
+    ExamBody.all_active.each do |body|
+      #MailchimpService.new.add_subscriber(body.id, self.id, (self.preferred_exam_body == body && self.communication_approval)) if body.audience_guid
+    end
+
   end
 
   def update_stripe_customer

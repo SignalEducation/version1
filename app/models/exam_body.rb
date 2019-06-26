@@ -16,6 +16,7 @@
 #  logo_image                         :string
 #  registration_form_heading          :string
 #  login_form_heading                 :string
+#  audience_guid                      :string
 #
 
 class ExamBody < ApplicationRecord
@@ -35,6 +36,7 @@ class ExamBody < ApplicationRecord
   #validates :constructed_response_intro_text, presence: true
 
   before_destroy :check_dependencies
+  after_create :create_audience
 
   # scopes
   scope :all_in_order, -> { order(:name) }
@@ -58,4 +60,9 @@ class ExamBody < ApplicationRecord
       throw :abort
     end
   end
+
+  def create_audience
+    MailchimpService.new.create_audience(self.id)
+  end
+
 end
