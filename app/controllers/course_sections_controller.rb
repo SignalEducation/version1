@@ -81,21 +81,4 @@ class CourseSectionsController < ApplicationController
     end
     redirect_to course_module_special_link(@course_section)
   end
-
-  protected
-
-  def get_variables
-    if params[:id].to_i > 0
-      @course_section = CourseSection.where(id: params[:id]).first
-    end
-    @subject_courses = SubjectCourse.all_in_order
-    @tutors = User.all_tutors.all_in_order
-    @layout = 'management'
-  end
-
-  def allowed_params
-    params.require(:course_section).permit(:name, :name_url, :sorting_order, :active, :subject_course_id,
-                                          :counts_towards_completion, :assumed_knowledge)
-  end
-
 end

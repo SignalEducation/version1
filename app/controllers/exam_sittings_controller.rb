@@ -28,12 +28,9 @@ class ExamSittingsController < ApplicationController
       @exam_sittings = ExamSitting.paginate(per_page: 50, page: params[:page]).all_in_order
     when 'not-active'
       @exam_sittings = ExamSitting.all_not_active.paginate(per_page: 50, page: params[:page]).all_in_order
-    else 
+    else
       @exam_sittings = ExamSitting.all_active.paginate(per_page: 50, page: params[:page]).all_in_order
     end
-  end
-
-  def show
   end
 
   def new

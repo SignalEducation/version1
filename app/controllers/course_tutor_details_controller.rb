@@ -1,16 +1,3 @@
-# == Schema Information
-#
-# Table name: course_tutor_details
-#
-#  id                :integer          not null, primary key
-#  subject_course_id :integer
-#  user_id           :integer
-#  sorting_order     :integer
-#  title             :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#
-
 class CourseTutorDetailsController < ApplicationController
 
   before_action :logged_in_required
