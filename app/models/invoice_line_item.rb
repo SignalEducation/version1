@@ -17,7 +17,6 @@
 #
 
 class InvoiceLineItem < ActiveRecord::Base
-
   serialize :original_stripe_data, Hash
 
   # Constants
@@ -25,14 +24,13 @@ class InvoiceLineItem < ActiveRecord::Base
   # relationships
   belongs_to :invoice
   belongs_to :currency
-  belongs_to :subscription
-  belongs_to :subscription_plan
+  belongs_to :subscription, optional: true
+  belongs_to :subscription_plan, optional: true
 
   # validation
-  validates :invoice_id, :amount, :currency_id, :subscription_id, 
-            :subscription_plan_id, presence: true
-  # validates :period_start_at, presence: true
-  # validates :period_end_at, presence: true
+  validates :invoice_id, :amount, :currency_id, presence: true
+  validates :subscription_id, :subscription_plan_id, :period_start_at,
+            :period_end_at, presence: true, if: :subscription_invoice?
 
   # callbacks
   before_destroy :check_dependencies
@@ -83,4 +81,7 @@ class InvoiceLineItem < ActiveRecord::Base
     end
   end
 
+  def subscription_invoice?
+    subscription.present?
+  end
 end

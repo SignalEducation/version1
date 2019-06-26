@@ -12,8 +12,8 @@
 
 FactoryBot.define do
   factory :exam_body_user_detail do
-    user_id 1
-    exam_body_id 1
-    student_number "MyString"
+    user_id { 1 }
+    exam_body_id { 1 }
+    student_number { "MyString" }
   end
 end

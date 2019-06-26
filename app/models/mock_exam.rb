@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: mock_exams
@@ -20,9 +22,6 @@
 #
 
 class MockExam < ActiveRecord::Base
-
-  #TODO product_id field should be removed since relationship has changed
-
   include LearnSignalModelExtras
 
   # Constants
@@ -36,7 +35,7 @@ class MockExam < ActiveRecord::Base
 
   # validation
   validates :name, presence: true
-  validates_attachment_content_type :file, :content_type => ['application/pdf']
+  validates_attachment_content_type :file, content_type: ['application/pdf']
 
   # callbacks
   before_destroy :check_dependencies
@@ -52,12 +51,10 @@ class MockExam < ActiveRecord::Base
   end
 
   protected
-
   def check_dependencies
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       throw :abort
     end
   end
-
 end

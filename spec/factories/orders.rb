@@ -29,6 +29,6 @@ FactoryBot.define do
     user
     live_mode { false }
     terms_and_conditions { true }
-    sequence(:reference_guid)      { |n| "Order_#{ApplicationController.generate_random_number(10)}#{n}" }
+    sequence(:reference_guid) { |n| "Order_#{ApplicationController.generate_random_number(10)}#{n}" }
   end
 end

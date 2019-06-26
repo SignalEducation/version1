@@ -93,7 +93,6 @@
             %h2
               =t('views.users.user_subscription_status.subscription_info.invoices')
             .table-responsive
-              -@invoices = @user.invoices.all_in_order
               =render partial: 'subscription_management/invoices'
 
 

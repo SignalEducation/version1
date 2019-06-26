@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: products
@@ -20,7 +22,6 @@
 #
 
 class Product < ActiveRecord::Base
-
   include ActionView::Helpers::NumberHelper
   include LearnSignalModelExtras
   enum product_type: { mock_exam: 0, correction_pack: 1 }
@@ -36,15 +37,15 @@ class Product < ActiveRecord::Base
   # validation
   validates :name, presence: true
   validates :mock_exam_id, presence: true,
-            numericality: {only_integer: true, greater_than: 0}
+            numericality: { only_integer: true, greater_than: 0 }
   validates :currency_id, presence: true
   validates :price, presence: true
   validates :stripe_guid, presence: true, uniqueness: true, on: :update
   validates :stripe_sku_guid, presence: true, uniqueness: true, on: :update
-  validates :correction_pack_count, 
-              presence: true, 
-              numericality: { 
-                only_integer: true, greater_than: 0 
+  validates :correction_pack_count,
+              presence: true,
+              numericality: {
+                only_integer: true, greater_than: 0
               }, if: Proc.new { |prod| prod.correction_pack? }
 
   # callbacks
@@ -54,7 +55,7 @@ class Product < ActiveRecord::Base
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
-  scope :all_active, -> { where(active: true).includes(:mock_exam => :subject_course) }
+  scope :all_active, -> { where(active: true).includes(mock_exam: :subject_course) }
   scope :in_currency, lambda { |ccy_id| where(currency_id: ccy_id) }
 
   # class methods
@@ -65,11 +66,9 @@ class Product < ActiveRecord::Base
   end
 
   def self.search(search)
-    if search
-      where('name ILIKE ?', "%#{search}%")
-    else
-      Product.all_active.all_in_order
-    end
+    return where('name ILIKE ?', "%#{search}%") if search.present?
+
+    Product.all_active.all_in_order
   end
 
   ## Creates product object on stripe and updates attributes here with response data ##
@@ -81,15 +80,11 @@ class Product < ActiveRecord::Base
       self.live_mode = stripe_product.livemode
       self.stripe_guid = stripe_product.id
 
-      stripe_sku = Stripe::SKU.create(
-          product: stripe_product.id,
-          currency: self.currency.iso_code,
-          price: (self.price.to_f * 100).to_i,
-          active: true,
-          inventory: {
-              type: 'infinite'
-          }
-      )
+      stripe_sku = Stripe::SKU.create(product: stripe_product.id,
+                                      currency: self.currency.iso_code,
+                                      price: (self.price.to_f * 100).to_i,
+                                      active: true,
+                                      inventory: { type: 'infinite' })
       self.stripe_sku_guid = stripe_sku.id
       self.save!
     end
@@ -109,7 +104,6 @@ class Product < ActiveRecord::Base
   end
 
   protected
-
   def check_dependencies
     unless self.destroyable?
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
@@ -117,5 +111,4 @@ class Product < ActiveRecord::Base
       throw :abort
     end
   end
-
 end
