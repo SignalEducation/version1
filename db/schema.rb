@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_22_171627) do
+ActiveRecord::Schema.define(version: 2019_06_06_143543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -549,8 +549,8 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.string "background_colour"
     t.bigint "exam_body_id"
+    t.string "background_colour"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -590,7 +590,6 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.string "registration_form_heading"
     t.string "login_form_heading"
     t.string "footer_option", default: "white"
-    t.string "video_guid"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
@@ -1197,12 +1196,21 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.datetime "cancelled_at"
     t.string "cancellation_reason"
     t.text "cancellation_note"
-    t.bigint "changed_from_id"
-    t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
     t.index ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date"
     t.index ["stripe_status"], name: "index_subscriptions_on_stripe_status"
     t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
+  create_table "system_defaults", id: :serial, force: :cascade do |t|
+    t.integer "individual_student_user_group_id"
+    t.integer "corporate_student_user_group_id"
+    t.integer "corporate_customer_user_group_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["corporate_customer_user_group_id"], name: "index_system_defaults_on_corporate_customer_user_group_id"
+    t.index ["corporate_student_user_group_id"], name: "index_system_defaults_on_corporate_student_user_group_id"
+    t.index ["individual_student_user_group_id"], name: "index_system_defaults_on_individual_student_user_group_id"
   end
 
   create_table "user_groups", id: :serial, force: :cascade do |t|
@@ -1223,6 +1231,26 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.boolean "blocked_user", default: false
     t.boolean "marketing_resources_access", default: false
     t.boolean "exercise_corrections_access", default: false
+  end
+
+  create_table "user_notifications", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "subject_line"
+    t.text "content"
+    t.boolean "email_required", default: false, null: false
+    t.datetime "email_sent_at"
+    t.boolean "unread", default: true, null: false
+    t.datetime "destroyed_at"
+    t.string "message_type"
+    t.integer "tutor_id"
+    t.boolean "falling_behind", null: false
+    t.integer "blog_post_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["blog_post_id"], name: "index_user_notifications_on_blog_post_id"
+    t.index ["message_type"], name: "index_user_notifications_on_message_type"
+    t.index ["tutor_id"], name: "index_user_notifications_on_tutor_id"
+    t.index ["user_id"], name: "index_user_notifications_on_user_id"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -1277,10 +1305,8 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.boolean "communication_approval", default: false
     t.datetime "communication_approval_datetime"
     t.bigint "preferred_exam_body_id"
-    t.bigint "currency_id"
     t.index ["account_activation_code"], name: "index_users_on_account_activation_code"
     t.index ["country_id"], name: "index_users_on_country_id"
-    t.index ["currency_id"], name: "index_users_on_currency_id"
     t.index ["email"], name: "index_users_on_email"
     t.index ["password_reset_token"], name: "index_users_on_password_reset_token"
     t.index ["persistence_token"], name: "index_users_on_persistence_token"
@@ -1350,12 +1376,43 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  create_table "white_paper_requests", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "number"
+    t.string "company_name"
+    t.integer "white_paper_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_name"], name: "index_white_paper_requests_on_company_name"
+    t.index ["email"], name: "index_white_paper_requests_on_email"
+    t.index ["name"], name: "index_white_paper_requests_on_name"
+    t.index ["number"], name: "index_white_paper_requests_on_number"
+    t.index ["white_paper_id"], name: "index_white_paper_requests_on_white_paper_id"
+  end
+
+  create_table "white_papers", id: :serial, force: :cascade do |t|
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "file_file_name"
+    t.string "file_content_type"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at"
+    t.integer "sorting_order"
+    t.string "cover_image_file_name"
+    t.string "cover_image_content_type"
+    t.integer "cover_image_file_size"
+    t.datetime "cover_image_updated_at"
+    t.string "name_url"
+    t.string "name"
+    t.integer "subject_course_id"
+  end
+
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "subscription_plans", "exam_bodies"
-  add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
-  add_foreign_key "users", "currencies"
   add_foreign_key "users", "exam_bodies", column: "preferred_exam_body_id"
 end

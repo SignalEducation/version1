@@ -42,6 +42,7 @@ describe PaypalSubscriptionsService, type: :service do
       expect {
         subject.execute_billing_agreement('dummy_token')
       }.to change { subscription.paypal_status }.from(nil).to('Active')
+       .and change { subscription.active }.from(false).to(true)
        .and change { subscription.paypal_subscription_guid }.from(nil).to('AGREEMENT_ID')
     end
   end

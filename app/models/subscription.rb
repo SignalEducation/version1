@@ -24,7 +24,6 @@
 #  cancelled_at             :datetime
 #  cancellation_reason      :string
 #  cancellation_note        :text
-#  changed_from_id          :bigint(8)
 #
 
 class Subscription < ActiveRecord::Base
@@ -43,7 +42,6 @@ class Subscription < ActiveRecord::Base
   belongs_to :user, inverse_of: :subscriptions
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
-  belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
   has_one :student_access
 
   has_many :invoices
@@ -82,7 +80,6 @@ class Subscription < ActiveRecord::Base
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_token: nil) }
   scope :all_paypal, -> { where.not(paypal_token: nil).where(stripe_guid: nil) }
-  scope :for_exam_body, -> (body_id) { joins(:subscription_plan).where(subscription_plans: { exam_body_id: body_id}) }
 
   # STATE MACHINE ==============================================================
 
@@ -270,7 +267,8 @@ class Subscription < ActiveRecord::Base
             stripe_status: stripe_subscription.status,
             stripe_guid: stripe_subscription.id,
             next_renewal_date: Time.at(stripe_subscription.current_period_end),
-            stripe_customer_data: stripe_customer.to_hash.deep_dup
+            stripe_customer_data: stripe_customer.to_hash.deep_dup,
+            active: true
         )
         self.start
       end
@@ -358,7 +356,7 @@ class Subscription < ActiveRecord::Base
           begin
             stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
 
-            subscription = Subscription.where(stripe_guid: stripe_subscription.id).last
+            subscription = Subscription.where(stripe_guid: stripe_subscription.id, active: true).first
             subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
             subscription.stripe_status = stripe_subscription.status
             subscription.stripe_customer_data = stripe_customer.to_hash.deep_dup
@@ -382,7 +380,7 @@ class Subscription < ActiveRecord::Base
     latest_subscription.plan = self.subscription_plan.stripe_guid
     response = latest_subscription.save
     if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
-      self.update_attributes(stripe_status: 'active', terms_and_conditions: true)
+      self.update_attributes(stripe_status: 'active', active: true, terms_and_conditions: true)
       self.restart
     else
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))

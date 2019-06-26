@@ -84,9 +84,9 @@ class StripeService
           user_id: user.id,
           subscription_plan_id: new_plan_id,
           complimentary: false,
+          active: true,
           livemode: (stripe_subscription[:plan][:livemode]),
           stripe_status: stripe_subscription[:status],
-          changed_from: old_sub
         )
         # mass-assign-protected attributes
 
@@ -102,7 +102,7 @@ class StripeService
         user.student_access.update_attributes(subscription_id: new_sub.id, account_type: 'Subscription', content_access: true)
 
         #Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
-        old_sub.update_attributes(stripe_status: 'canceled')
+        old_sub.update_attributes(stripe_status: 'canceled', active: false)
         old_sub.cancel
 
         return new_sub
@@ -122,6 +122,7 @@ class StripeService
     stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
     subscription.assign_attributes(
       complimentary: false,
+      active: true,
       livemode: stripe_subscription[:plan][:livemode],
       stripe_status: stripe_subscription.status,
       stripe_guid: stripe_subscription.id,
