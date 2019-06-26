@@ -27,7 +27,6 @@
 #  registration_form_heading     :string
 #  login_form_heading            :string
 #  footer_option                 :string           default("white")
-#  video_guid                    :string
 #
 
 FactoryBot.define do

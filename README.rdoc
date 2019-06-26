@@ -1,4 +1,4 @@
-== README Version 1
+== README
 
 This section documents the necessary steps to install the SignalEducation/version1 codebase.
 

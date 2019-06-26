@@ -8,18 +8,16 @@ class Admin::ExercisesController < ApplicationController
   layout 'management'
 
   def index
-    states = params[:state].present? ? [params[:state]] : %w(submitted)
+    states = params[:state].present? ? [params[:state]] : %w(submitted correcting)
     exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page]) unless params[:state] == 'all' || params[:search_term].present?
     if params[:search_term].present?
-      @exercises = Exercise.search(params[:search_term]).live.paginate(per_page: 50, page: params[:page])
-    elsif %w(submitted correcting).include?(params[:state])
-      @exercises = exercises.all_in_order
+      @exercises = Exercise.search(params[:search_term]).with_states(%w(submitted correcting returned)).paginate(per_page: 50, page: params[:page])
     elsif params[:state] == 'returned'
       @exercises = exercises.order(created_at: :desc)
     elsif params[:state] == 'all'
-      @exercises = Exercise.live.order(created_at: :desc).paginate(per_page: 50, page: params[:page])
+      @exercises = Exercise.with_states(%w(submitted correcting returned)).paginate(per_page: 50, page: params[:page])
     else
-      @exercises = exercises.all_in_order
+      @exercises = exercises.order(created_at: :asc)
     end
   end
 

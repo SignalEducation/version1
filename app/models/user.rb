@@ -54,7 +54,6 @@
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
 #  preferred_exam_body_id          :bigint(8)
-#  currency_id                     :bigint(8)
 #
 
 class User < ActiveRecord::Base
@@ -71,7 +70,6 @@ class User < ActiveRecord::Base
   SORT_OPTIONS = %w(created user_group name email)
 
   belongs_to :country, optional: true
-  belongs_to :currency, optional: true
   belongs_to :preferred_exam_body, class_name: 'ExamBody', optional: true
   belongs_to :subscription_plan_category, optional: true
   belongs_to :user_group
@@ -431,26 +429,11 @@ class User < ActiveRecord::Base
   end
 
   def subscriptions_for_exam_body(exam_body_id)
-    subscriptions.for_exam_body(exam_body_id).all_in_order
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).where(active: true).all_in_order
   end
 
   def active_subscriptions_for_exam_body(exam_body_id)
-    subscriptions.for_exam_body(exam_body_id).all_active
-  end
-
-  def viewable_subscriptions
-    subs = []
-    ExamBody.where(active: true).each do |body|
-      compliant_subs = subscriptions.for_exam_body(body.id)
-                                    .with_states(
-                                      :active, :paused, :errored, 
-                                      :pending_cancellation
-                                    ).order(created_at: :desc)
-      if compliant_subs.any?
-        subs << compliant_subs.first
-      end
-    end
-    subs
+    subscriptions.joins(:subscription_plan).where("subscription_plans.exam_body_id = ?", exam_body_id).all_active
   end
 
   def active_subscription_for_exam_body?(exam_body_id)
@@ -600,9 +583,7 @@ class User < ActiveRecord::Base
   end
 
   def get_currency(country)
-    if currency_id.present?
-      return currency
-    elsif existing_sub = subscriptions.all_stripe.not_pending.first
+    if existing_sub = subscriptions.all_stripe.not_pending.first
       existing_sub.subscription_plan&.currency || country.currency
     elsif existing_order = orders.all_stripe.first
       existing_order.product&.currency || country.currency

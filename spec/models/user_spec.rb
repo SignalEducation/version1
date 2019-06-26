@@ -54,7 +54,6 @@
 #  communication_approval          :boolean          default(FALSE)
 #  communication_approval_datetime :datetime
 #  preferred_exam_body_id          :bigint(8)
-#  currency_id                     :bigint(8)
 #
 
 require 'rails_helper'
