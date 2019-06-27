@@ -28,7 +28,7 @@
 #  constructed_response_count :integer          default(0)
 #
 
-class CourseModule < ActiveRecord::Base
+class CourseModule < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable
@@ -53,7 +53,7 @@ class CourseModule < ActiveRecord::Base
     scope: :course_section_id,
     message: "must be unique within the course section"
   }
-  validates :name_url, presence: true, uniqueness: { 
+  validates :name_url, presence: true, uniqueness: {
     scope: :course_section_id,
     message: "must be unique within the course section"
   }

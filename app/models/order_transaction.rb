@@ -13,7 +13,7 @@
 #  updated_at       :datetime         not null
 #
 
-class OrderTransaction < ActiveRecord::Base
+class OrderTransaction < ApplicationRecord
   # Constants
 
   # relationships

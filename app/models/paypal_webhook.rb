@@ -12,7 +12,7 @@
 #  verified     :boolean          default(TRUE)
 #
 
-class PaypalWebhook < ActiveRecord::Base
+class PaypalWebhook < ApplicationRecord
   serialize :payload, Hash
 
   validates :guid, presence: true, uniqueness: true, length: { maximum: 255 }
@@ -66,7 +66,7 @@ class PaypalWebhook < ActiveRecord::Base
   end
 
   def reprocess
-    PaypalWebhookReprocessWorker.perform_async(id)    
+    PaypalWebhookReprocessWorker.perform_async(id)
   end
 
   private

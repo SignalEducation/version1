@@ -6,19 +6,21 @@ class PurchaseService
   end
 
   def create_purchase
-    if self.stripe?
-      @order = StripeService.new.complete_purchase(@order)
-    elsif self.paypal?
-      @order.save!
-      @order = PaypalService.new.create_purchase(@order)
+    if stripe?
+      StripeService.new.complete_purchase(order)
+    elsif paypal?
+      order.save!
+      PaypalService.new.create_purchase(order)
     end
+
+    order
   end
 
   def paypal?
-    (@order.use_paypal.present? && @order.use_paypal == 'true') || @order.paypal_guid.present?
+    (order.use_paypal.present? && order.use_paypal == 'true') || order.paypal_guid.present?
   end
 
   def stripe?
-    @order.stripe_token.present? || @order.stripe_guid.present?
+    order.stripe_token.present? || order.stripe_guid.present?
   end
 end

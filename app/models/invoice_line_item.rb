@@ -16,7 +16,7 @@
 #  updated_at           :datetime
 #
 
-class InvoiceLineItem < ActiveRecord::Base
+class InvoiceLineItem < ApplicationRecord
   serialize :original_stripe_data, Hash
 
   # Constants

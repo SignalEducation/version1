@@ -30,7 +30,7 @@
 #  started_at       :datetime
 #
 
-class Visit < ActiveRecord::Base
+class Visit < ApplicationRecord
   has_many :events, class_name: "Ahoy::Event"
   belongs_to :user, optional: true
 

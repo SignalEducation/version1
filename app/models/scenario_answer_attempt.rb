@@ -14,7 +14,7 @@
 #  sorting_order                    :integer
 #
 
-class ScenarioAnswerAttempt < ActiveRecord::Base
+class ScenarioAnswerAttempt < ApplicationRecord
 
   # Constants
 

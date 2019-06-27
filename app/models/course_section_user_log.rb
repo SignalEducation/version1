@@ -17,7 +17,7 @@
 #  count_of_constructed_responses_taken :integer
 #
 
-class CourseSectionUserLog < ActiveRecord::Base
+class CourseSectionUserLog < ApplicationRecord
 
 
   include LearnSignalModelExtras

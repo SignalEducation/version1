@@ -13,7 +13,7 @@
 #  computer_based    :boolean          default(FALSE)
 #
 
-class ExamSitting < ActiveRecord::Base
+class ExamSitting < ApplicationRecord
 
   # Constants
   SORT_OPTIONS = %w(active not-active all)

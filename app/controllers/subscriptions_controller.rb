@@ -31,20 +31,19 @@
 class SubscriptionsController < ApplicationController
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(student_user))
+    ensure_user_has_access_rights(%w[student_user])
   end
-  before_action :get_subscription, except: [:new, :create]
+  before_action :set_subscription, except: %i[new create personal_upgrade_complete]
   before_action :set_flash, only: :new
 
   def show
-    @subscription = Subscription.find(params[:id])
     redirect_to dashboard_path unless @subscription.user_id == current_user.id
   end
 
   def new
-    # check if exambody exist and if user has a preferred exam body saved.
-    # redirect if not
-    unless ExamBody.find(params[:exam_body_id]).present? && current_user.preferred_exam_body.present?
+    # redirect if exam_body doesn't exists and user doesn't have a preferred exam body saved.
+    unless ExamBody.exists?(params[:exam_body_id].to_i) &&
+           current_user.preferred_exam_body.present?
       redirect_to edit_preferred_exam_body_path && return
     end
 
@@ -66,7 +65,7 @@ class SubscriptionsController < ApplicationController
     # redirect to root if current user is not a standard student user
     redirect_to root_url && return unless current_user.standard_student_user?
 
-    @plans, _country     = get_relevant_subscription_plans
+    @plans               = get_relevant_subscription_plans
     @yearly_plan         = @plans.yearly.first
     subscription_plan_id =
       if params[:prioritise_plan_frequency].present?
@@ -94,7 +93,7 @@ class SubscriptionsController < ApplicationController
     subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
     @subscription = subscription_object.create_and_return_subscription(params)
 
-    if @subscription && @subscription.save
+    if @subscription&.save
       if subscription_object.stripe?
         @subscription.start
         subscription_object.validate_referral
@@ -147,7 +146,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def un_cancel_subscription
-    if @subscription && @subscription.stripe_status == 'canceled-pending'
+    if @subscription&.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
       if @subscription && @subscription.errors.count == 0
@@ -184,31 +183,27 @@ class SubscriptionsController < ApplicationController
   end
 
   private
+
   def get_relevant_subscription_plans
     country  = IpAddress.get_country(request.remote_ip) || current_user.country
     currency = current_user.get_currency(country)
 
     if params[:plan_guid]
-      plans = SubscriptionPlan.get_related_plans(
-        current_user,
-        currency,
-        params[:exam_body_id],
-        params[:plan_guid]
-      )
+      SubscriptionPlan.get_related_plans(current_user,
+                                         currency,
+                                         params[:exam_body_id],
+                                         params[:plan_guid])
     else
-      plans = SubscriptionPlan.get_relevant(
-        current_user,
-        currency,
-        params[:exam_body_id]
-      )
+      SubscriptionPlan.get_relevant(current_user,
+                                    currency,
+                                    params[:exam_body_id])
     end
-    return plans, country
   end
 
   def set_flash
-    if params[:flash].present?
-      flash[:error] = params[:flash]
-    end
+    return if params[:flash].blank?
+
+    flash[:error] = params[:flash]
   end
 
   def subscription_params
@@ -216,7 +211,7 @@ class SubscriptionsController < ApplicationController
                                          :hidden_coupon_code, :use_paypal)
   end
 
-  def get_subscription
-    @subscription = Subscription.find_by_id(params[:id])
+  def set_subscription
+    @subscription = Subscription.find(params[:id])
   end
 end

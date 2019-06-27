@@ -32,7 +32,7 @@
 #  address_country     :string
 #
 
-class SubscriptionPaymentCard < ActiveRecord::Base
+class SubscriptionPaymentCard < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants

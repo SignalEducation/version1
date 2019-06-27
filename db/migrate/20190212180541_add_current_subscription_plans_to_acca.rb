@@ -1,8 +1,8 @@
 class AddCurrentSubscriptionPlansToAcca < ActiveRecord::Migration[5.2]
-  class SubscriptionPlan < ActiveRecord::Base
+  class SubscriptionPlan < ApplicationRecord
   end
 
-  class Organisation < ActiveRecord::Base
+  class Organisation < ApplicationRecord
   end
 
   def up
@@ -16,6 +16,6 @@ class AddCurrentSubscriptionPlansToAcca < ActiveRecord::Migration[5.2]
     end
   end
 
-  def down    
+  def down
   end
 end

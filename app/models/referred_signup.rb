@@ -13,7 +13,7 @@
 #  updated_at       :datetime         not null
 #
 
-class ReferredSignup < ActiveRecord::Base
+class ReferredSignup < ApplicationRecord
 
   # Constants
 

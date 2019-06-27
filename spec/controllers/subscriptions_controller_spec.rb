@@ -341,7 +341,6 @@ describe SubscriptionsController, type: :controller do
   end
 
   context 'Logged in as a valid_subscription_student: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(valid_subscription_student)
@@ -357,8 +356,5 @@ describe SubscriptionsController, type: :controller do
         expect(response).to render_template(:personal_upgrade_complete)
       end
     end
-
   end
-
-
 end

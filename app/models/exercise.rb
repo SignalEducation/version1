@@ -92,7 +92,7 @@ class Exercise < ApplicationRecord
     MandrillWorker.perform_async(
       self.user_id,
       'send_correction_returned_email',
-      Rails.application.routes.url_helpers.user_exercises_url(
+      UrlHelper.instance.user_exercises_url(
         user_id: self.user_id,
         host: 'https://learnsignal.com'
       ),
@@ -112,9 +112,9 @@ class Exercise < ApplicationRecord
 
   def send_submitted_slack_message
     attachments = [{
-      fallback: "#{user.name} uploaded an exercise. - #{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}",
-      title: "<#{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}|#{user.name}> - uploaded an exercise.",
-      title_link: "#{Rails.application.routes.url_helpers.admin_exercises_url(host: 'https://learnsignal.com')}",
+      fallback: "#{user.name} uploaded an exercise. - #{UrlHelper.instance.admin_exercises_url(host: 'https://learnsignal.com')}",
+      title: "<#{UrlHelper.instance.admin_exercises_url(host: 'https://learnsignal.com')}|#{user.name}> - uploaded an exercise.",
+      title_link: UrlHelper.instance.admin_exercises_url(host: 'https://learnsignal.com').to_s,
       color: '#7CD197',
       fields: [
         {
@@ -129,14 +129,14 @@ class Exercise < ApplicationRecord
 
   def send_submitted_email
     MandrillWorker.perform_async(
-      self.user_id, 
-      'send_exercise_submitted_email', 
-      Rails.application.routes.url_helpers.account_url(
+      self.user_id,
+      'send_exercise_submitted_email',
+      UrlHelper.instance.account_url(
         host: 'https://learnsignal.com'
-      ), 
-      product.mock_exam.name, 
-      product.mock_exam.file, 
+      ),
+      product.mock_exam.name,
+      product.mock_exam.file,
       self.reference_guid
-    )    
+    )
   end
 end

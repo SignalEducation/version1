@@ -22,7 +22,7 @@
 #  exercise_corrections_access  :boolean          default(FALSE)
 #
 
-class UserGroup < ActiveRecord::Base
+class UserGroup < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants
