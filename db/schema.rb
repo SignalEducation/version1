@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_163830) do
+ActiveRecord::Schema.define(version: 2019_06_27_132039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -109,6 +109,12 @@ ActiveRecord::Schema.define(version: 2019_06_26_163830) do
     t.index ["cbe_introduction_page_id"], name: "index_cbe_introduction_pages_on_cbe_introduction_page_id"
   end
 
+  create_table "cbe_question_statuses", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "cbe_question_types", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -120,6 +126,8 @@ ActiveRecord::Schema.define(version: 2019_06_26_163830) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cbe_question_id"
+    t.index ["cbe_question_id"], name: "index_cbe_questions_on_cbe_question_id"
   end
 
   create_table "cbe_section_types", force: :cascade do |t|
@@ -1336,6 +1344,7 @@ ActiveRecord::Schema.define(version: 2019_06_26_163830) do
 
   add_foreign_key "cbe_agreements", "cbe_agreements"
   add_foreign_key "cbe_introduction_pages", "cbe_introduction_pages"
+  add_foreign_key "cbe_questions", "cbe_questions"
   add_foreign_key "cbe_sections", "cbe_sections"
   add_foreign_key "cbe_sections", "cbes"
   add_foreign_key "exercises", "products"
