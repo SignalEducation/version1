@@ -119,6 +119,8 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "cbe_question_id"
+    t.index ["cbe_question_id"], name: "index_cbe_question_types_on_cbe_question_id"
   end
 
   create_table "cbe_questions", force: :cascade do |t|
@@ -1378,6 +1380,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
 
   add_foreign_key "cbe_agreements", "cbe_agreements"
   add_foreign_key "cbe_introduction_pages", "cbe_introduction_pages"
+  add_foreign_key "cbe_question_types", "cbe_questions"
   add_foreign_key "cbe_questions", "cbe_questions"
   add_foreign_key "cbe_sections", "cbe_sections"
   add_foreign_key "cbe_sections", "cbes"
