@@ -1,5 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Cbe, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  context "When testing the CBE Model" do
+    it 'validates presence' do
+      cbe = Cbe.new
+      expect(cbe.name).to eq nil
+    end
+  end
 end
