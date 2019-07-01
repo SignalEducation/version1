@@ -92,7 +92,7 @@
         errorElement.textContent = result.error.message;
         $('#card_submit').prop('disabled',false);
         $('#card_submit').show();
-        $(".sk-circle").show();
+        $(".sk-circle").hide();
       } else {
         // Send the token to your server
         stripeTokenHandler(result.token);
