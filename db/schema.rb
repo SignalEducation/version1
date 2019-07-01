@@ -762,7 +762,6 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -772,6 +771,7 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"

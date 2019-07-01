@@ -40,6 +40,9 @@ class Exercise < ApplicationRecord
 
   scope :all_in_order, -> { order(created_at: :asc) }
   scope :live, -> { with_states(%w(submitted correcting returned)) }
+  scope :state, ->(state) { state == 'all' ? where.not(state: 'pending') : where(state: state) }
+  scope :product, ->(product_id) { where product_id: product_id }
+  scope :corrector, ->(corrector_id) { where corrector_id: corrector_id }
 
   # STATE MACHINE ==============================================================
 
@@ -80,7 +83,7 @@ class Exercise < ApplicationRecord
   def self.search(term)
     self.joins(:user).where(
       "users.email ILIKE :t OR users.first_name ILIKE :t OR users.last_name ILIKE :t OR textcat(users.first_name, textcat(text(' '), users.last_name)) ILIKE :t", t: "%#{term}%"
-    ).order(created_at: :desc)
+    )
   end
 
   # INSTANCE METHODS ===========================================================
