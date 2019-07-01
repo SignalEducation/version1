@@ -34,8 +34,9 @@
                           %li="Topic-by-topic lectures"
                           %li="24/7 tutor support"
 
-                        %li{style: 'font-style: italic;'}
-                          Cancel anytime
+                        -unless plan.exam_body.name == "CPD"
+                          %li{style: 'font-style: italic;'}
+                            Cancel anytime
 
                       %p.h2.mb-0
                         =plan.currency.format_number(plan.price)
