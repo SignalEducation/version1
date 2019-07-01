@@ -122,6 +122,8 @@ class Order < ApplicationRecord
     self.invoice = Invoice.new(invoice_params)
     invoice.invoice_line_items << InvoiceLineItem.new(amount: invoice.total,
                                                       currency_id: invoice.currency_id)
+  rescue => e
+    Rails.logger.error "ERROR: Order#generate_invoice failed to create. Error:#{e.inspect}"
   end
 
   protected
