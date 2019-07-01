@@ -105,11 +105,11 @@ class SubscriptionsController < ApplicationController
     else
       Rails.logger.info "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
       flash[:error] = 'Your request was declined. Please contact us for assistance!'
-      redirect_to new_subscription_url(subscription_plan_id: @subscription.subscription_plan_id)
+      redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
     end
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
-    redirect_to new_subscription_url(subscription_plan_id: @subscription.subscription_plan_id)
+    redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
   end
 
   def execute
