@@ -28,7 +28,7 @@
 #  original_event_data          :text
 #
 
-class Charge < ActiveRecord::Base
+class Charge < ApplicationRecord
   # Constants
 
   # relationships

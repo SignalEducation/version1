@@ -21,7 +21,7 @@
 #  correction_pack_count :integer
 #
 
-class Product < ActiveRecord::Base
+class Product < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include LearnSignalModelExtras
   enum product_type: { mock_exam: 0, correction_pack: 1 }

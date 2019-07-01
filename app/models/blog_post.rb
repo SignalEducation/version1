@@ -16,7 +16,7 @@
 #  image_updated_at   :datetime
 #
 
-class BlogPost < ActiveRecord::Base
+class BlogPost < ApplicationRecord
   # Constants
 
   # relationships

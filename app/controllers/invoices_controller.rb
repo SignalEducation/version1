@@ -2,9 +2,9 @@
 
 class InvoicesController < ApplicationController
   before_action :logged_in_required
-  before_action -> { ensure_user_has_access_rights(%w(user_management_access)) }, only: :show
-  before_action -> { ensure_user_has_access_rights(%w(student_user user_management_access)) }, only: :pdf
-  before_action :set_invoice, only: [:show, :pdf]
+  before_action -> { ensure_user_has_access_rights(%w[user_management_access]) }, only: :show
+  before_action -> { ensure_user_has_access_rights(%w[student_user user_management_access]) }, only: :pdf
+  before_action :set_invoice, only: %i[show pdf]
 
   def show
     @user   = @invoice.user
@@ -19,7 +19,7 @@ class InvoicesController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime('%d/%m/%Y')}.pdf",
+        send_data pdf.render, filename: "invoice_#{@invoice.issued_at.strftime('%d/%m/%Y')}.pdf",
                               type: 'application/pdf',
                               disposition: 'inline'
       end

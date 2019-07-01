@@ -14,7 +14,7 @@
 #  answer_array                      :string
 #
 
-class QuizAttempt < ActiveRecord::Base
+class QuizAttempt < ApplicationRecord
 
   include LearnSignalModelExtras
 

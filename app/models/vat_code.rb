@@ -11,7 +11,7 @@
 #  updated_at :datetime
 #
 
-class VatCode < ActiveRecord::Base
+class VatCode < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants

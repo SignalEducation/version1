@@ -20,7 +20,7 @@
 #  count_of_constructed_responses_taken :integer
 #
 
-class SubjectCourseUserLog < ActiveRecord::Base
+class SubjectCourseUserLog < ApplicationRecord
 
   # Constants
 

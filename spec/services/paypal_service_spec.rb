@@ -20,9 +20,7 @@ describe PaypalService, type: :service do
     end
 
     it 'calls CREATE on an instance of Payment and returns the order object' do
-      expect(payment_dbl).to(
-        receive(:create).and_return(true)
-      )
+      expect(payment_dbl).to(receive(:create).and_return(true))
 
       expect(subject.create_purchase(order)).to be_instance_of(Order)
     end
@@ -180,17 +178,23 @@ describe PaypalService, type: :service do
   end
 
   describe '#learnsignal_host' do
-    describe 'non-production ENVs' do
+    describe 'development env' do
+      before { allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development')) }
+
       it 'returns the correct host' do
-        expect(subject.send(:learnsignal_host))
-          .to eq 'https://staging.learnsignal.com'
+        expect(subject.send(:learnsignal_host)).to eq 'http://localhost:3000'
+      end
+    end
+    describe 'staging env' do
+      before { allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('staging')) }
+
+      it 'returns the correct host' do
+        expect(subject.send(:learnsignal_host)).to eq 'https://staging.learnsignal.com'
       end
     end
 
     describe 'production ENV' do
-      before :each do
-        Rails.env.stub(:production? => true)
-      end
+      before { allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production')) }
 
       it 'returns the correct host' do
         expect(subject.send(:learnsignal_host)).to eq 'https://learnsignal.com'

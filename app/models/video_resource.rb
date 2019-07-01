@@ -13,7 +13,7 @@
 #  transcript               :text
 #
 
-class VideoResource < ActiveRecord::Base
+class VideoResource < ApplicationRecord
   include LearnSignalModelExtras
   include Archivable
 

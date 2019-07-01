@@ -17,7 +17,7 @@
 #  active          :boolean          default(FALSE)
 #
 
-class ContentPage < ActiveRecord::Base
+class ContentPage < ApplicationRecord
 
   # Constants
 

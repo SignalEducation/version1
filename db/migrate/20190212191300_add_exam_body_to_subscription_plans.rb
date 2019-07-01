@@ -1,9 +1,9 @@
 class AddExamBodyToSubscriptionPlans < ActiveRecord::Migration[5.2]
 
-  class SubscriptionPlan < ActiveRecord::Base
+  class SubscriptionPlan < ApplicationRecord
   end
 
-  class ExamBody < ActiveRecord::Base
+  class ExamBody < ApplicationRecord
   end
 
   def up

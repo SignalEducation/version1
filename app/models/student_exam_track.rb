@@ -23,7 +23,7 @@
 #
 
 #This should have been called CourseModuleUserLog
-class StudentExamTrack < ActiveRecord::Base
+class StudentExamTrack < ApplicationRecord
 
   include LearnSignalModelExtras
 

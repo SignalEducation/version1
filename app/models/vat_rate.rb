@@ -10,7 +10,7 @@
 #  updated_at      :datetime
 #
 
-class VatRate < ActiveRecord::Base
+class VatRate < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants

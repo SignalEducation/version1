@@ -25,7 +25,7 @@
 #  related_course_module_element_id :integer
 #
 
-class CourseModuleElement < ActiveRecord::Base
+class CourseModuleElement < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable
