@@ -108,17 +108,5 @@ describe UserAccountsController, type: :controller do
         expect(Subscription.count).to eq(2)
       end
     end
-
-    describe "Get 'subscription_invoice'" do
-      it 'should render pdf' do
-        get :subscription_invoice, params: { id: invoice.id, format: :pdf }
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-      end
-    end
-
   end
-
-
 end

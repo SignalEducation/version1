@@ -69,12 +69,12 @@ class PaypalPlansService
     subscription_plan.update(
       paypal_guid: paypal_plan.id,
       paypal_state: paypal_plan.state
-    )    
+    )
   end
 
   def update_subscription_plan_state(subscription_plan, state)
     subscription_plan.update(
       paypal_state: state
-    ) 
+    )
   end
 end

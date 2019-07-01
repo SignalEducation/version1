@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   concern :supports_reordering do
     post :reorder, on: :collection
   end
@@ -7,7 +6,7 @@ Rails.application.routes.draw do
   # Enable /sidekiq for admin users only
   require 'admin_constraint'
   mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
-  mount Blazer::Engine, at: "blazer"
+  mount Blazer::Engine, at: 'blazer'
 
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
@@ -34,13 +33,12 @@ Rails.application.routes.draw do
     end
 
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
-    get 'already_subscribed', to: 'subscriptions#already_subscribed', as: :already_subscribed
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
 
     resources :subscriptions, only: :show
     resource :preferred_exam_body, only: [:edit, :update]
 
-    #User Account Verification
+    # User Account Verification
     get 'user_verification/:email_verification_code', to: 'user_verifications#update',
         as: :user_verification
     get 'account_verified', to: 'user_verifications#account_verified',
@@ -81,9 +79,12 @@ Rails.application.routes.draw do
       get  '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
       get  '/orders', action: :user_purchases_details, as: :orders
       get  '/referrals', action: :user_referral_details, as: :referrals
-      patch  '/update_courses', action: :update_courses, as: :update_courses
+      patch '/update_courses', action: :update_courses, as: :update_courses
       resources :exercises, only: [:index, :show, :edit, :update], shallow: true
-      resources :invoices, only: [:index, :show], shallow: true
+      resources :invoices, only: :index, shallow: true
+    end
+    resources :invoices, only: :show do
+      get '/pdf', action: :pdf, on: :member
     end
     resources :user_passwords, only: [:new, :edit, :create, :update]
     get 'forgot_password', to: 'user_passwords#new', as: :forgot_password
@@ -148,7 +149,7 @@ Rails.application.routes.draw do
     resources :faq_sections, concerns: :supports_reordering
     resources :groups, concerns: :supports_reordering
 
-    #Sign Up Actions
+    # Sign Up Actions
     get '/basic_registration', to: 'student_sign_ups#new', as: :new_student
     get '/student_new', to: 'student_sign_ups#new'
     post '/student_create', to: 'student_sign_ups#create', as: :create_student
@@ -243,7 +244,7 @@ Rails.application.routes.draw do
     get '/referral', to: 'referral_codes#referral', as: :refer_a_friend
     resources :referral_codes, except: [:new, :edit, :update]
     resources :referred_signups, only: [:index, :edit, :update] do
-      get  '/filter/:payed', on: :collection, action: :index, as: :filtered
+      get '/filter/:payed', on: :collection, action: :index, as: :filtered
     end
     resources :refunds
 
@@ -268,5 +269,4 @@ Rails.application.routes.draw do
 
   # Catch-all
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
-
 end

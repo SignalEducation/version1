@@ -27,7 +27,7 @@
 #  login_form_heading            :string
 #
 
-class SubscriptionPlan < ActiveRecord::Base
+class SubscriptionPlan < ApplicationRecord
   include ActionView::Helpers::TextHelper
   include LearnSignalModelExtras
 
@@ -185,7 +185,12 @@ class SubscriptionPlan < ActiveRecord::Base
   end
 
   def delete_remote_plans
-    SubscriptionPlanService.new(self).queue_async(:delete)
+    SubscriptionPlanWorker.perform_async(
+      self.id,
+      :delete,
+      self.stripe_guid,
+      self.paypal_guid
+    )
   end
 
   def update_remote_plans

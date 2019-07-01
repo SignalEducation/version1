@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: orders
@@ -23,53 +25,57 @@
 #
 
 class OrdersController < ApplicationController
-
-  #TODO Review this controller split student and admin actions
+  # TODO, Review this controller split student and admin actions
 
   before_action :logged_in_required
-  before_action except: [:new, :create, :order_complete, :execute] do
-    ensure_user_has_access_rights(%w(user_management_access stripe_management_access))
+  before_action only: %i[index show] do
+    ensure_user_has_access_rights(%w[user_management_access stripe_management_access])
   end
-  before_action :get_variables
+  before_action :set_order, only: %i[show execute]
 
   def index
     @orders = Order.paginate(per_page: 50, page: params[:page]).all_in_order
     @layout = 'management'
+
     seo_title_maker('Orders', '', true)
   end
 
   def show
     @layout = 'management'
+
     seo_title_maker('Orders', '', true)
   end
 
   def new
-    @product = Product.where(id: params[:product_id]).first
-    @mock_exam = @product.mock_exam
-    @course = @mock_exam.subject_course
-    @order = Order.new
-    @layout = 'standard'
-    seo_title_maker("#{@mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
+    @order     = Order.new
+    @product   = Product.find(params[:product_id])
+    @layout    = 'standard'
+
+    seo_title_maker("#{@product.mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create
-    @order = current_user.orders.build(allowed_params)
-    order_object = PurchaseService.new(@order)
-    @order = order_object.create_purchase
-    if @order && @order.save
-      if order_object.stripe? && @order.complete
-        flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-        redirect_to user_exercises_path(current_user)
-      elsif order_object.paypal?
-        redirect_to @order.paypal_approval_url
+    order        = current_user.orders.build(allowed_params)
+    order_object = PurchaseService.new(order)
+    @order       = order_object.create_purchase
+
+    @order.transaction do
+      if @order.save # an order invoice will be created by order model callback
+        if order_object.stripe? && @order.complete
+          flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+          redirect_to user_exercises_path(current_user)
+        elsif order_object.paypal?
+          redirect_to @order.paypal_approval_url
+        else
+          flash[:error] = 'Something went wrong. Please try again.'
+          redirect_to new_order_url(product_id: @order.product_id)
+        end
       else
-        flash[:error] = 'Something went wrong. Please try again.'
+        flash[:error] = 'Something went wrong. Please try again. Or contact us for assistance'
         redirect_to new_order_url(product_id: @order.product_id)
       end
-    else
-      flash[:error] = 'Something went wrong. Please try again. Or contact us for assistance'
-      redirect_to new_order_url(product_id: @order.product_id)
     end
+
     @navbar = false
   rescue Learnsignal::PaymentError => e
     flash[:error] = e.message
@@ -91,29 +97,25 @@ class OrdersController < ApplicationController
     redirect_to new_order_path(product_id: @order.product_id)
   end
 
-  def order_complete
-    @order = Order.where(reference_guid: params[:reference_guid]).first
-    unless @order
-      redirect_to root_url
-      flash[:error] = 'Sorry something went wrong. Please try again or contact us for assistance.'
-    end
+  def complete
+    @order = Order.find_by(reference_guid: params[:reference_guid])
+
+    return if @order.present?
+
+    redirect_to root_url
+    flash[:error] = 'Sorry something went wrong. Please try again or contact us for assistance.'
   end
 
   protected
 
-  def get_variables
-    if params[:id].to_i > 0
-      @order = Order.where(id: params[:id]).first
-    end
-    @products = Product.all_in_order
-    @currencies = Currency.all_in_order
+  def set_order
+    @order = Order.find(params[:id]) if params[:id].to_i.positive?
   end
 
   def allowed_params
     params.require(:order).permit(
-      :subject_course_id, :product_id, :user_id, :stripe_token,
-      :use_paypal, :paypal_approval_url
+      :subject_course_id, :product_id, :user_id,
+      :stripe_token, :use_paypal, :paypal_approval_url
     )
   end
-
 end

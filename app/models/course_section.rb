@@ -19,7 +19,7 @@
 #  constructed_response_count :integer          default(0)
 #
 
-class CourseSection < ActiveRecord::Base
+class CourseSection < ApplicationRecord
 
   include LearnSignalModelExtras
   #include Archivable

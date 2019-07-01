@@ -13,7 +13,7 @@
 #  updated_at      :datetime
 #
 
-class Currency < ActiveRecord::Base
+class Currency < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include LearnSignalModelExtras
 

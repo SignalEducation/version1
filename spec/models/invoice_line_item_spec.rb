@@ -28,17 +28,13 @@ describe InvoiceLineItem do
 
   # validation
   it { should validate_presence_of(:invoice_id) }
-
   it { should validate_presence_of(:amount) }
-
   it { should validate_presence_of(:currency_id) }
-
-  xit { should validate_presence_of(:period_start_at) }
-
-  xit { should validate_presence_of(:period_end_at) }
-
+  ## validation of subscription invoice
+  before { allow(subject).to receive(:subscription_invoice?).and_return(true) }
+  it { should validate_presence_of(:period_start_at) }
+  it { should validate_presence_of(:period_end_at) }
   it { should validate_presence_of(:subscription_id) }
-
   it { should validate_presence_of(:subscription_plan_id) }
 
   # callbacks
@@ -51,5 +47,4 @@ describe InvoiceLineItem do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
 end

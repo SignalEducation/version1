@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: invoices
@@ -35,8 +37,7 @@
 #  paypal_payment_guid         :string
 #
 
-class Invoice < ActiveRecord::Base
-
+class Invoice < ApplicationRecord
   include LearnSignalModelExtras
 
   serialize :original_stripe_data, Hash
@@ -46,17 +47,19 @@ class Invoice < ActiveRecord::Base
 
   # relationships
   belongs_to :currency
-  has_many :invoice_line_items
+  has_many :invoice_line_items, autosave: true
   has_many :charges
   has_many :refunds
   belongs_to :subscription_transaction, optional: true
-  belongs_to :subscription
+  belongs_to :subscription, optional: true
+  belongs_to :order, optional: true
   belongs_to :user
   belongs_to :vat_rate, optional: true
 
   # validation
-  validates :user_id, :subscription_id, :number_of_users, :currency_id, :total, presence: true
-  validates :livemode, inclusion: {in: [STRIPE_LIVE_MODE]}, if: :strip_invoice?
+  validates :user_id, :currency_id, :total, presence: true
+  validates :subscription_id, :number_of_users, presence: true, if: :strip_invoice?
+  validates :livemode, inclusion: { in: [STRIPE_LIVE_MODE] }, if: :strip_invoice?
   validates_length_of :stripe_guid, maximum: 255, allow_blank: true
   validates_length_of :stripe_customer_guid, maximum: 255, allow_blank: true
   validates_length_of :charge_guid, maximum: 255, allow_blank: true
@@ -65,16 +68,19 @@ class Invoice < ActiveRecord::Base
 
   # callbacks
   after_create :set_vat_rate
+  after_create :set_issued_at
 
   # scopes
-  scope :all_in_order, -> { order(user_id: :asc, id: :desc) }
+  scope :all_in_order,  -> { order(user_id: :asc, id: :desc) }
+  scope :subscriptions, -> { where.not(subscription_id: nil) }
+  scope :orders,        -> { where.not(order_id: nil) }
 
   # class methods
 
   ## Creates the Invoice from stripe data sent to a StripeApiEvent ##
   def self.build_from_stripe_data(stripe_data_hash)
     inv = nil
-    #This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
+    # This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
       user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
       subscription = Subscription.where(stripe_guid: stripe_data_hash[:subscription], active: true).first
@@ -113,7 +119,7 @@ class Invoice < ActiveRecord::Base
             stripe_data_hash[:lines][:data].each do |line_item|
               InvoiceLineItem.build_from_stripe_data(inv.id, line_item, inv.subscription_id)
             end
-          rescue NoMethodError => err
+          rescue NoMethodError
             Rails.logger.error "ERROR: Invoice with id #{inv.id} was be rolledback due to the error in creating invoice line items."
             inv = nil
             raise ActiveRecord::Rollback
@@ -146,7 +152,7 @@ class Invoice < ActiveRecord::Base
         if inv.save
           begin
             InvoiceLineItem.build_from_paypal_data(inv)
-          rescue NoMethodError => err
+          rescue NoMethodError
             Rails.logger.error "ERROR: Invoice with id #{inv.id} was be rolledback due to the error in creating invoice line items."
             inv = nil
             raise ActiveRecord::Rollback
@@ -158,6 +164,7 @@ class Invoice < ActiveRecord::Base
         Rails.logger.error "ERROR: Invoice#build_from_paypal_data find Billing Agreement-#{paypal_body['resource']['billing_agreement_id']}}"
       end
     end
+
     inv
   end
 
@@ -168,19 +175,19 @@ class Invoice < ActiveRecord::Base
       invoice = Invoice.find_by_stripe_guid(stripe_invoice[:id])
       if invoice
         invoice.update_attributes(
-            sub_total: stripe_invoice[:subtotal].to_i / 100.0,
-            total: stripe_invoice[:total].to_i / 100.0,
-            total_tax: stripe_invoice[:tax].to_i / 100.0,
-            payment_attempted: stripe_invoice[:attempted],
-            payment_closed: stripe_invoice[:closed],
-            forgiven: stripe_invoice[:forgiven],
-            paid: stripe_invoice[:paid],
-            livemode: stripe_invoice[:livemode],
-            attempt_count: stripe_invoice[:attempt_count],
-            amount_due: stripe_invoice[:amount_due],
-            next_payment_attempt_at: (stripe_invoice[:next_payment_attempt] ? Time.at(stripe_invoice[:next_payment_attempt]) : nil),
-            webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
-            charge_guid: stripe_invoice[:charge]
+          sub_total: stripe_invoice[:subtotal].to_i / 100.0,
+          total: stripe_invoice[:total].to_i / 100.0,
+          total_tax: stripe_invoice[:tax].to_i / 100.0,
+          payment_attempted: stripe_invoice[:attempted],
+          payment_closed: stripe_invoice[:closed],
+          forgiven: stripe_invoice[:forgiven],
+          paid: stripe_invoice[:paid],
+          livemode: stripe_invoice[:livemode],
+          attempt_count: stripe_invoice[:attempt_count],
+          amount_due: stripe_invoice[:amount_due],
+          next_payment_attempt_at: (stripe_invoice[:next_payment_attempt] ? Time.at(stripe_invoice[:next_payment_attempt]) : nil),
+          webhooks_delivered_at: (stripe_invoice[:webhooks_delivered_at] ? Time.at(stripe_invoice[:webhooks_delivered_at]) : nil),
+          charge_guid: stripe_invoice[:charge]
         )
       else
         Rails.logger.debug "Error: Invoice#update_from_stripe failed to find an Invoice #{stripe_invoice[:id]}"
@@ -188,7 +195,6 @@ class Invoice < ActiveRecord::Base
     else
       Rails.logger.debug "Error: Invoice#update_from_stripe failed to find a Stripe Invoice-#{invoice_guid}."
     end
-
   end
 
   # instance methods
@@ -218,11 +224,18 @@ class Invoice < ActiveRecord::Base
 
   def set_vat_rate
     country = user.country
+
     if country && country.vat_codes.any?
       vat_code = country.vat_codes.first
       vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).try(:id)
       self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
     end
+  end
+
+  def set_issued_at
+    return if self.issued_at.present?
+
+    self.update(issued_at: Time.zone.now)
   end
 
   def strip_invoice?

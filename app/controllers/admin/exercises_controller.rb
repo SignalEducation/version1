@@ -8,16 +8,28 @@ class Admin::ExercisesController < ApplicationController
   layout 'management'
 
   def index
-    states = params[:state].present? ? [params[:state]] : %w(submitted correcting)
-    exercises = Exercise.with_states(states).paginate(per_page: 50, page: params[:page]) unless params[:state] == 'all' || params[:search_term].present?
-    if params[:search_term].present?
-      @exercises = Exercise.search(params[:search_term]).with_states(%w(submitted correcting returned)).paginate(per_page: 50, page: params[:page])
-    elsif params[:state] == 'returned'
-      @exercises = exercises.order(created_at: :desc)
-    elsif params[:state] == 'all'
-      @exercises = Exercise.with_states(%w(submitted correcting returned)).paginate(per_page: 50, page: params[:page])
+
+    @filters = { state: 'submitted', product: '', corrector: '', search: '' }
+
+    if request.post?
+      @exercises = Exercise.where(nil)
+
+      filtering_params(params).each do |key, value|
+        @exercises = @exercises.public_send(key, value) if value.present?
+        @filters[key] = value
+      end
+
+      case params[:state]
+      when 'returned', 'all'
+        @exercises = @exercises.order(created_at: :desc)
+      else
+        @exercises = @exercises.order(created_at: :asc)
+      end
+      @exercises = @exercises.paginate(per_page: 50, page: params[:page])
     else
-      @exercises = exercises.order(created_at: :asc)
+      @exercises = Exercise.with_state(:submitted).
+                            order(created_at: :asc).
+                            paginate(per_page: 50, page: params[:page])
     end
   end
 
@@ -37,6 +49,10 @@ class Admin::ExercisesController < ApplicationController
   end
 
   private
+
+  def filtering_params(params)
+    params.slice(:state, :product, :corrector, :search)
+  end
 
   def set_exercise
     @exercise = Exercise.find(params[:id])

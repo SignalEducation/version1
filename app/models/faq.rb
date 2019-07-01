@@ -15,7 +15,7 @@
 #  pre_answer_text :text
 #
 
-class Faq < ActiveRecord::Base
+class Faq < ApplicationRecord
 
   # Constants
 

@@ -26,7 +26,7 @@
 #  short_description             :string
 #
 
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable

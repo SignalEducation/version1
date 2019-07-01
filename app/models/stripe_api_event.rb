@@ -14,7 +14,7 @@
 #  updated_at    :datetime
 #
 
-class StripeApiEvent < ActiveRecord::Base
+class StripeApiEvent < ApplicationRecord
   # Since we shouldn't access routes in models and we need profile URL
   # for sending email through Mandrill we are defining non-DB attribute
   # here which will use value passed by Stripe API controller.
@@ -144,7 +144,7 @@ class StripeApiEvent < ActiveRecord::Base
 
       #The subscription charge was successful so send successful payment email
       url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
-      invoice_url = Rails.application.routes.url_helpers.subscription_invoices_url(invoice.id, locale: 'en',
+      invoice_url = UrlHelper.instance.subscription_invoices_url(invoice.id, locale: 'en',
                                                                                    format: 'pdf', host: url_host)
       MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
       Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"

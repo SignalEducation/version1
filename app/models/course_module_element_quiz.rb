@@ -11,7 +11,7 @@
 #  destroyed_at                :datetime
 #
 
-class CourseModuleElementQuiz < ActiveRecord::Base
+class CourseModuleElementQuiz < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable

@@ -76,7 +76,7 @@ class PaypalSubscriptionsService
     agreement = Agreement.find(@subscription.paypal_subscription_guid)
     @subscription.update(paypal_status: agreement.state)
     if agreement.agreement_details.last_payment_date
-      future = agreement.agreement_details.last_payment_date.to_time + 
+      future = agreement.agreement_details.last_payment_date.to_time +
         @subscription.subscription_plan.payment_frequency_in_months.months
       SubscriptionCancellationWorker.perform_at(future, @subscription.id)
     end

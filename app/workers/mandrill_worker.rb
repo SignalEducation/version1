@@ -11,5 +11,4 @@ class MandrillWorker
       mc.send(method_name, *template_args)
     end
   end
-
 end

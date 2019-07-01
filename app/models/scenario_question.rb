@@ -11,7 +11,7 @@
 #  destroyed_at  :datetime
 #
 
-class ScenarioQuestion < ActiveRecord::Base
+class ScenarioQuestion < ApplicationRecord
 
   # Constants
 

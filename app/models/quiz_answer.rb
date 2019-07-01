@@ -11,7 +11,7 @@
 #  destroyed_at        :datetime
 #
 
-class QuizAnswer < ActiveRecord::Base
+class QuizAnswer < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable

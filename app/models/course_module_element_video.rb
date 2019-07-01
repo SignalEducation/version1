@@ -12,7 +12,7 @@
 #  vimeo_guid               :string
 #
 
-class CourseModuleElementVideo < ActiveRecord::Base
+class CourseModuleElementVideo < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable

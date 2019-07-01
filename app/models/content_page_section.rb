@@ -12,7 +12,7 @@
 #  sorting_order     :integer
 #
 
-class ContentPageSection < ActiveRecord::Base
+class ContentPageSection < ApplicationRecord
   # Constants
 
   # relationships

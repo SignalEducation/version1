@@ -14,7 +14,7 @@
 #  custom_styles                 :boolean          default(FALSE)
 #
 
-class QuizQuestion < ActiveRecord::Base
+class QuizQuestion < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable

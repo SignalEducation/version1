@@ -35,7 +35,7 @@
 #  seo_description                         :string
 #
 
-class SubjectCourse < ActiveRecord::Base
+class SubjectCourse < ApplicationRecord
 
   include LearnSignalModelExtras
   include Archivable

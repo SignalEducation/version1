@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-class ReferralCode < ActiveRecord::Base
+class ReferralCode < ApplicationRecord
 
   # Constants
 

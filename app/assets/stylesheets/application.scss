@@ -779,6 +779,11 @@ textarea.form-control {
   background-color: #f5f8fa
 }
 
+.custom-select.filter {
+  height: calc(2.75rem + 2px);
+  padding: .375rem 1.75rem .375rem .75rem !important;
+}
+
 
 
 .custom-control {

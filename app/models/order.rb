@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: orders
@@ -22,13 +24,13 @@
 #  state                     :string
 #
 
-class Order < ActiveRecord::Base
+class Order < ApplicationRecord
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
   attr_accessor :use_paypal, :paypal_approval_url, :stripe_token
 
   # Constants
-  ORDER_STATUS = %w(created paid canceled)
+  ORDER_STATUS = %w[created paid canceled].freeze
 
   # relationships
   belongs_to :product
@@ -36,6 +38,10 @@ class Order < ActiveRecord::Base
   belongs_to :mock_exam, optional: true
   belongs_to :user
   has_one :order_transaction
+  has_one :invoice, autosave: true
+
+  # delegates
+  delegate :mock_exam, to: :product
 
   # validation
   validates :reference_guid, uniqueness: true, allow_blank: true
@@ -43,15 +49,16 @@ class Order < ActiveRecord::Base
 
   # callbacks
   before_create :assign_random_guid
+  before_create :generate_invoice
   before_destroy :check_dependencies
   after_create :create_order_transaction
 
   # scopes
-  scope :all_in_order, -> { order(:product_id) }
-  scope :all_for_course, lambda { |course_id| where(subject_course_id: course_id) }
-  scope :all_for_product, lambda { |product_id| where(product_id: product_id) }
-  scope :all_for_user, lambda { |user_id| where(user_id: user_id) }
-  scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
+  scope :all_in_order,    -> { order(:product_id) }
+  scope :all_stripe,      -> { where.not(stripe_guid: nil).where(paypal_guid: nil) }
+  scope :all_for_course,  ->(course_id)  { where(subject_course_id: course_id) }
+  scope :all_for_product, ->(product_id) { where(product_id: product_id) }
+  scope :all_for_user,    ->(user_id)    { where(user_id: user_id) }
 
   # INSTANCE METHODS ===========================================================
 
@@ -59,7 +66,7 @@ class Order < ActiveRecord::Base
 
   state_machine initial: :pending do
     event :complete do
-      transition [:pending, :errored] => :completed
+      transition %i[pending errored] => :completed
     end
 
     event :record_error do
@@ -81,31 +88,42 @@ class Order < ActiveRecord::Base
   end
 
   def execute_order_completion
-    MandrillWorker.perform_async(
-      self.user_id,
-      'send_mock_exam_email',
-      Rails.application.routes.url_helpers.user_exercises_url(
-        user_id: self.user_id,
-        host: 'https://learnsignal.com'
-      ),
-      product.mock_exam.name,
-      self.reference_guid
-    ) unless Rails.env.test?
+    return if Rails.env.test?
+
+    MandrillWorker.perform_async(user_id,
+                                 'send_mock_exam_email',
+                                 user_exercise_url(user_id),
+                                 product.mock_exam.name,
+                                 reference_guid)
+
+    invoice.update(paid: true, payment_closed: true)
   end
 
   def generate_exercises
     count = product.correction_pack_count || 1
-    (1..count).each do |ex|
-      user.exercises.create(product_id: product_id)
-    end
-  end
 
-  def mock_exam
-    self.product.mock_exam
+    (1..count).each { user.exercises.create(product_id: product_id) }
   end
 
   def stripe?
     stripe_token.present? || stripe_guid.present?
+  end
+
+  def generate_invoice
+    invoice_params = { user_id: user_id,
+                       currency_id: product.currency_id,
+                       sub_total: product.price,
+                       total: product.price,
+                       issued_at: updated_at,
+                       object_type: 'invoice',
+                       amount_due: product.price }
+    invoice_params.merge!(paid: true, payment_closed: true) if stripe? && stripe_status == 'paid'
+
+    self.invoice = Invoice.new(invoice_params)
+    invoice.invoice_line_items << InvoiceLineItem.new(amount: invoice.total,
+                                                      currency_id: invoice.currency_id)
+  rescue => e
+    Rails.logger.error "ERROR: Order#generate_invoice failed to create. Error:#{e.inspect}"
   end
 
   protected
@@ -115,13 +133,19 @@ class Order < ActiveRecord::Base
   end
 
   def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
+    return if destroyable?
+
+    errors.add(:base, I18n.t('models.general.dependencies_exist'))
+    false
   end
 
   def create_order_transaction
-    OrderTransaction.create_from_stripe_data(self.stripe_order_payment_data, self.user_id, self.id, self.product_id)
+    OrderTransaction.
+      create_from_stripe_data(stripe_order_payment_data, user_id, id, product_id)
+  end
+
+  def user_exercise_url(user_id)
+    UrlHelper.instance.user_exercises_url(user_id: user_id,
+                                          host: 'https://learnsignal.com')
   end
 end

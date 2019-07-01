@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
- 
+
 ruby '2.5.3'
 gem 'rails', '5.2.2'
 
@@ -51,7 +51,6 @@ gem 'sass-rails', '~> 5.0' # Use SCSS for stylesheets
 gem 'sidekiq', require: %w(sidekiq sidekiq/web)
         # background processor for tasks that can be run 'later' or take too long
         # Requires Redis NoSQL datastore
-gem 'sinatra' # needed for sidekiq's web UI
 gem 'state_machines-activerecord'
 gem 'stripe', '~> 4.5.0' #, git: 'https://github.com/stripe/stripe-ruby'
 gem 'paypal-sdk-rest'
@@ -91,13 +90,14 @@ group :development do
 end
 
 group :development, :test do
-  #gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry', '~> 0.12.2'
-  #gem 'pry-remote'
+  gem 'pry-byebug'
   gem 'hirb'
   gem 'pry-stack_explorer'
   gem 'factory_bot_rails' #A library for setting up Ruby objects as test data
   gem 'rspec-rails' # our core testing environment
+  gem 'rubocop-performance' # rubocop lint
+  gem 'rubocop-rails' # rubocop lint
   gem 'ultrahook' # allows incoming webhooks from stripe
   gem 'faker'
 end
