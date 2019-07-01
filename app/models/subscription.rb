@@ -27,7 +27,7 @@
 #  changed_from_id          :bigint(8)
 #
 
-class Subscription < ActiveRecord::Base
+class Subscription < ApplicationRecord
   include LearnSignalModelExtras
   serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription
@@ -147,7 +147,7 @@ class Subscription < ActiveRecord::Base
     end
 
     after_transition errored: :cancelled do |subscription, _transition|
-      # De-activate the user's account and email them to tell them that their 
+      # De-activate the user's account and email them to tell them that their
       # account has been temporarily cancelled with insturctions on how to unlock
       # along with the number of remaining payments due
       # Update card details (how-to)
@@ -226,7 +226,7 @@ class Subscription < ActiveRecord::Base
       # return true or false - if everything went well
       errors.messages.count == 0
     elsif self.paypal?
-      # 
+      #
     else
       Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
     end

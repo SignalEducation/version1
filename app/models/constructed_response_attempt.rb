@@ -19,7 +19,7 @@
 #  scratch_pad_text                  :text
 #
 
-class ConstructedResponseAttempt < ActiveRecord::Base
+class ConstructedResponseAttempt < ApplicationRecord
 
   # Constants
   STATUS = %w(Incomplete Completed)

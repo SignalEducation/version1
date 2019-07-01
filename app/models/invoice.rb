@@ -37,7 +37,7 @@
 #  paypal_payment_guid         :string
 #
 
-class Invoice < ActiveRecord::Base
+class Invoice < ApplicationRecord
   include LearnSignalModelExtras
 
   serialize :original_stripe_data, Hash
@@ -47,7 +47,7 @@ class Invoice < ActiveRecord::Base
 
   # relationships
   belongs_to :currency
-  has_many :invoice_line_items
+  has_many :invoice_line_items, autosave: true
   has_many :charges
   has_many :refunds
   belongs_to :subscription_transaction, optional: true

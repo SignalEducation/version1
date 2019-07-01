@@ -20,7 +20,7 @@
 #  stripe_coupon_data :text
 #
 
-class Coupon < ActiveRecord::Base
+class Coupon < ApplicationRecord
 
   # Constants
   DURATIONS = %w(forever once repeating)

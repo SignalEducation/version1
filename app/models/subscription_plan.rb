@@ -27,7 +27,7 @@
 #  login_form_heading            :string
 #
 
-class SubscriptionPlan < ActiveRecord::Base
+class SubscriptionPlan < ApplicationRecord
   include ActionView::Helpers::TextHelper
   include LearnSignalModelExtras
 

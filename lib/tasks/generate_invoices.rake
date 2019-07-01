@@ -17,7 +17,6 @@ namespace :invoices do
             orders_group.each do |order|
               order.generate_invoice
               order.save
-              Rails.logger.info "Order #{order.id} updated....."
             rescue ActiveRecord::ActiveRecordError => e
               Rails.logger.error "update error in order #{order.id}"
               Rails.logger.error e.message
@@ -28,13 +27,13 @@ namespace :invoices do
 
         Rails.logger.info '============ Batch time execution ==============='
         Rails.logger.info batch_time.real
-        Rails.logger.info '============ Batch time execution ==============='
+        Rails.logger.info '================================================='
       end
-
-      Rails.logger.info '============ Total time execution ==============='
-      Rails.logger.info total_time.real
-      Rails.logger.info '============ Total time execution ==============='
     end
+    Rails.logger.info '============ Total time execution ==============='
+    Rails.logger.info total_time.real
+    Rails.logger.info '================================================='
+
     Rails.logger.error "Attention, these orders didn't create invoices: #{orders_not_processed}!!!" if orders_not_processed.present?
   end
 end

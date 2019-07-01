@@ -1,6 +1,6 @@
 class AddGuidToSubscriptionPlans < ActiveRecord::Migration[5.2]
 
-  class SubscriptionPlan < ActiveRecord::Base
+  class SubscriptionPlan < ApplicationRecord
   end
 
   def up

@@ -10,7 +10,7 @@
 #  destroyed_at             :datetime
 #
 
-class ConstructedResponse < ActiveRecord::Base
+class ConstructedResponse < ApplicationRecord
   # Constants
 
   # relationships

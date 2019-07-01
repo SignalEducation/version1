@@ -17,7 +17,7 @@
 #  updated_at               :datetime         not null
 #
 
-class StudentAccess < ActiveRecord::Base
+class StudentAccess < ApplicationRecord
 
   # Constants
   ACCOUNT_TYPES = %w(Trial Subscription Complimentary)

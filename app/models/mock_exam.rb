@@ -21,7 +21,7 @@
 #  cover_image_updated_at   :datetime
 #
 
-class MockExam < ActiveRecord::Base
+class MockExam < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants

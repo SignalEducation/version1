@@ -15,7 +15,7 @@
 #  sorting_order                      :integer
 #
 
-class ScenarioQuestionAttempt < ActiveRecord::Base
+class ScenarioQuestionAttempt < ApplicationRecord
 
   # Constants
   STATUS = %w(Unseen Seen)
