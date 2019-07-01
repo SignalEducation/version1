@@ -351,7 +351,11 @@ class User < ActiveRecord::Base
 
   end
 
-  ### instance methods
+  ### INSTANCE METHODS =========================================================
+
+  def check_country(ip_address)
+    UserCountryWorker.perform_async(self.id, ip_address)
+  end
 
   ## UserGroup Access methods
   def student_user?
