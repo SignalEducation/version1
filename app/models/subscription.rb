@@ -80,6 +80,7 @@ class Subscription < ApplicationRecord
   scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :all_stripe, -> { where.not(stripe_guid: nil).where(paypal_token: nil) }
   scope :all_paypal, -> { where.not(paypal_token: nil).where(stripe_guid: nil) }
+  scope :for_exam_body, -> (body_id) { joins(:subscription_plan).where(subscription_plans: { exam_body_id: body_id}) }
 
   # STATE MACHINE ==============================================================
 
