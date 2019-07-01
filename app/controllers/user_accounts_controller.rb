@@ -62,28 +62,8 @@ class UserAccountsController < ApplicationController
   end
 
   def subscription_invoice
-    invoice = Invoice.where(id: params[:id]).first
-    if invoice && invoice.user_id == current_user.id
-      @invoice = invoice
-      @invoice_date = invoice.issued_at
-      description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
-      if @invoice.vat_rate
-        vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
-      else
-        vat_rate = '0%'
-      end
-      respond_to do |format|
-        format.html
-        format.pdf do
-          pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate, @invoice_date)
-          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: "inline"
-        end
-      end
-    else
-      redirect_to account_url
-    end
+    redirect_to pdf_invoice_path(format: :pdf), params
   end
-
 
   protected
 

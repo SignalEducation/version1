@@ -7,7 +7,7 @@
       %section.pb-md-6.pt-4
         .row.row-md
           .col-sm-12
-            -if @invoices.any?
+            -if @invoices.present?
               %article.card
                 .card-body
                   %h2 All Your Invoices
