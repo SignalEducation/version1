@@ -41,7 +41,9 @@ def get_currency(user)
     existing_sub.subscription_plan&.currency || user.country.currency
   elsif existing_order = user.orders.all_stripe.first
     existing_order.product&.currency || user.country.currency
+  elsif user.country&.currency
+    user.country.currency
   else
-    user.country&.currency
+    Currency.find_by(iso_code: 'GBP')
   end
 end
