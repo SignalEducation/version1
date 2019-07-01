@@ -739,7 +739,9 @@ ActiveRecord::Schema.define(version: 2019_06_27_132559) do
     t.decimal "tax"
     t.text "original_stripe_data"
     t.string "paypal_payment_guid"
+    t.bigint "order_id"
     t.index ["currency_id"], name: "index_invoices_on_currency_id"
+    t.index ["order_id"], name: "index_invoices_on_order_id"
     t.index ["subscription_id"], name: "index_invoices_on_subscription_id"
     t.index ["subscription_transaction_id"], name: "index_invoices_on_subscription_transaction_id"
     t.index ["user_id"], name: "index_invoices_on_user_id"
@@ -762,7 +764,6 @@ ActiveRecord::Schema.define(version: 2019_06_27_132559) do
 
   create_table "mock_exams", id: :serial, force: :cascade do |t|
     t.integer "subject_course_id"
-    t.integer "product_id"
     t.string "name"
     t.integer "sorting_order"
     t.datetime "created_at", null: false
@@ -776,7 +777,6 @@ ActiveRecord::Schema.define(version: 2019_06_27_132559) do
     t.bigint "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
-    t.index ["product_id"], name: "index_mock_exams_on_product_id"
     t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
   end
 
@@ -1437,6 +1437,7 @@ ActiveRecord::Schema.define(version: 2019_06_27_132559) do
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
+  add_foreign_key "invoices", "orders"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
   add_foreign_key "users", "currencies"

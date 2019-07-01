@@ -1,12 +1,104 @@
-%main
-  %article.dashboard.bg-gray5
-    .container
-      %header
-        %h1.h1-hero.pt-5
-          =@exercise.product.name
+.l-section-small.is-bg-asphalt
+  .l-wrap
+    .container-fluid
+      .row.l-margin-bottom
+        .col-md-12.text-center
+          %h1.l-margin-bottom.text-center.h-separator.h-separator-center{style: 'letter-spacing:1.5px;'}
+            =@invoice.user.full_name
+          %p
+            ='Invoice ID: '
+            =@invoice.id
 
-      %section.pb-md-6.pt-4
-        .row.row-md
-          .card
-            =@exercise.state
-            =link_to 'Download Submission', @exercise.submission.url, class: 'btn btn-primary', target: '_blank'
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          =render partial: 'users/user_tabs'
+
+      .row.l-margin-top.l-margin-bottom
+        .col-md-12
+          .box-item
+            .col-sm-12.col-xs-12
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Invoice ID
+                .h6
+                  =@invoice.id
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Stripe ID
+                .h6
+                  =@invoice.stripe_guid
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Subscription ID
+                .h6
+                  =@invoice.subscription_id
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Payment Attempt
+                .h6
+                  =@invoice.payment_attempted
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Payment Closed
+                .h6
+                  =@invoice.payment_closed
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Paid
+                .h6
+                  =@invoice.paid
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Attempt Count
+                .h6
+                  =@invoice.attempt_count
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Next Attempt At
+                .h6
+                  =humanize_stripe_date(@invoice.next_payment_attempt_at) if @invoice.next_payment_attempt_at
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Last Charge ID
+                .h6
+                  =@invoice.charge_guid || '----'
+
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Sub Total
+                .h6
+                  =@invoice.sub_total
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Total
+                .h6
+                  =@invoice.total
+
+              .col-sm-4.l-margin-bottom
+                .h3
+                  Amount Due
+                .h6
+                  =@invoice.amount_due
+
+              -if @invoice.invoice_line_items.where(prorated: true).any?
+                .col-sm-4.l-margin-bottom
+                  .h3
+                    Proration
+                  .h6
+                    =@invoice.invoice_line_items.where(prorated: true).any?
+
+                .col-sm-4.l-margin-bottom
+                  .h3
+                    Proration Adjustment
+                  .h6
+                    =@invoice.invoice_line_items.where(prorated: true).first.amount

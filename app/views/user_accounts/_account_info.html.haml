@@ -64,7 +64,7 @@
                               %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
                                 =invoice.status
                             %td
-                              =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+                              =link_to pdf_invoice_path(invoice.id, format: 'pdf'), target: '_blank' do
                                 .btn.btn-link.btn-xs
                                   View
 

@@ -18,7 +18,7 @@
 #  login_form_heading                 :string
 #
 
-class ExamBody < ActiveRecord::Base
+class ExamBody < ApplicationRecord
 
   LOGO_IMAGES = %w(learning-partner-badge.png acca_approved_white.png acca_approved_red.png ALP_LOGO_(GOLD).png ALP_LOGO_GOLD_REVERSED.png)
 

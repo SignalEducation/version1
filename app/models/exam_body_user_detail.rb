@@ -10,7 +10,7 @@
 #  updated_at     :datetime         not null
 #
 
-class ExamBodyUserDetail < ActiveRecord::Base
+class ExamBodyUserDetail < ApplicationRecord
 
   # Constants
 

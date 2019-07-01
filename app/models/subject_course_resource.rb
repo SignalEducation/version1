@@ -18,7 +18,7 @@
 #  available_on_trial       :boolean          default(FALSE)
 #
 
-class SubjectCourseResource < ActiveRecord::Base
+class SubjectCourseResource < ApplicationRecord
 
   # Constants
 

@@ -15,6 +15,7 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(user_session_params.to_h)
     if @user_session.save
+      @user_session.user.check_country(request.remote_ip)
       @user_session.user.update_attribute(:session_key, session[:session_id])
       @user_session.user.update_attribute(:analytics_guid, cookies[:_ga]) if cookies[:_ga]
       @user_session.user.update_attributes(password_reset_token: nil, password_reset_requested_at: nil) if @user_session.user.password_reset_token

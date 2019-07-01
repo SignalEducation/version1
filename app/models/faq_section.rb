@@ -12,7 +12,7 @@
 #  updated_at    :datetime         not null
 #
 
-class FaqSection < ActiveRecord::Base
+class FaqSection < ApplicationRecord
 
   # Constants
 

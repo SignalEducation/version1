@@ -27,12 +27,6 @@ describe SubscriptionPlanService, type: :service do
       sub_plan_service.async_action(:update)
     end
 
-    it 'calls #delete_remote_plans when :delete is passed in' do
-      expect(sub_plan_service).to receive(:delete_remote_plans)
-
-      sub_plan_service.async_action(:delete)
-    end
-
     it 'can handle a string being passed in as a string' do
       expect(sub_plan_service).to receive(:create_remote_plans)
 
@@ -77,25 +71,6 @@ describe SubscriptionPlanService, type: :service do
       expect_any_instance_of(PaypalPlansService).to receive(:update_plan)
 
       sub_plan_service.send(:update_remote_plans)
-    end
-  end
-
-  describe '#delete_remote_plans' do
-    before :each do
-      allow_any_instance_of(StripeService).to receive(:delete_plan)
-      allow_any_instance_of(PaypalPlansService).to receive(:delete_plan)
-    end
-
-    it 'calls #delete_plan on an instance of StripeService' do
-      expect_any_instance_of(StripeService).to receive(:delete_plan)
-
-      sub_plan_service.send(:delete_remote_plans)
-    end
-
-    it 'calls #delete_plan on an instance of PaypalPlansService' do
-      expect_any_instance_of(PaypalPlansService).to receive(:delete_plan)
-
-      sub_plan_service.send(:delete_remote_plans)
     end
   end
 end

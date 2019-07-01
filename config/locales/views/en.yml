@@ -167,14 +167,15 @@ en:
         h1: New Category
 
     exercises:
-      show: 
+      show:
       admin:
         index:
           h1: Student Exercises
           name: Name
           email: Email
+          product: Product
           state: Current State
-          submitted_on: Submitted On
+          due_on: Submitted On
           corrected_on: Corrected On
           returned_on: Returned On
         form:
@@ -966,6 +967,8 @@ en:
         tax_percent: "Tax %"
         tax: "Tax"
         original_stripe_data: "Original Stripe data"
+        pdf: PDF
+        invoice: Invoice
 
       edit:
         h1: Edit Invoice

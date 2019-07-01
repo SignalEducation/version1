@@ -12,7 +12,7 @@
 #  sub_heading_text :string
 #
 
-class SubscriptionPlanCategory < ActiveRecord::Base
+class SubscriptionPlanCategory < ApplicationRecord
   include LearnSignalModelExtras
 
   # Constants

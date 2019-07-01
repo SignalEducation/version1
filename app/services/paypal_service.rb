@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'paypal-sdk-rest'
 
 class PaypalService
@@ -11,7 +13,7 @@ class PaypalService
     if payment.create
       order.assign_attributes(
         paypal_guid: payment.id,
-        paypal_approval_url: payment.links.find{|v| v.rel == "approval_url" }.href,
+        paypal_approval_url: payment.links.find{ |v| v.rel == 'approval_url' }.href,
         paypal_status: payment.state
       )
       order
@@ -26,11 +28,11 @@ class PaypalService
 
   def execute_payment(order, payment_id, payer_id)
     payment = Payment.find(order.paypal_guid)
+
     if payment_id == order.paypal_guid && payment.execute(payer_id: payer_id)
       payment = Payment.find(order.paypal_guid)
-      order.update!(
-        paypal_status: payment.state,
-      )
+      order.update!(paypal_status: payment.state)
+      order.invoice.update!(paid: true, payment_closed:true)
       order.complete
     else
       order.record_error!
@@ -62,7 +64,7 @@ class PaypalService
                 name: order.product.name,
                 price: order.product.price.to_s,
                 currency: order.product.currency.iso_code,
-                quantity: 1 
+                quantity: 1
               }
             ]
           },
@@ -70,13 +72,20 @@ class PaypalService
             total: order.product.price.to_s,
             currency: order.product.currency.iso_code
           },
-          description: "Mock exam purchase - #{order.product.name}" 
+          description: "Mock exam purchase - #{order.product.name}"
         }
       ]
     }
   end
 
   def learnsignal_host
-    Rails.env.production? ? 'https://learnsignal.com' : 'https://staging.learnsignal.com'
+    case Rails.env
+    when 'development'
+      'http://localhost:3000'
+    when 'staging', 'test'
+      'https://staging.learnsignal.com'
+    when 'production'
+      'https://learnsignal.com'
+    end
   end
 end

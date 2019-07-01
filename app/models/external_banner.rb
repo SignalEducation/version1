@@ -19,7 +19,7 @@
 #  content_page_id    :integer
 #
 
-class ExternalBanner < ActiveRecord::Base
+class ExternalBanner < ApplicationRecord
 
   # Constants
   BANNER_CONTROLLERS = %w(user_sessions library subscription_plans footer_pages student_sign_ups)

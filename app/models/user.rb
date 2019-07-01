@@ -57,7 +57,7 @@
 #  currency_id                     :bigint(8)
 #
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include LearnSignalModelExtras
 
   acts_as_authentic do |c|
@@ -351,7 +351,11 @@ class User < ActiveRecord::Base
 
   end
 
-  ### instance methods
+  ### INSTANCE METHODS =========================================================
+
+  def check_country(ip_address)
+    UserCountryWorker.perform_async(self.id, ip_address)
+  end
 
   ## UserGroup Access methods
   def student_user?
@@ -443,7 +447,7 @@ class User < ActiveRecord::Base
     ExamBody.where(active: true).each do |body|
       compliant_subs = subscriptions.for_exam_body(body.id)
                                     .with_states(
-                                      :active, :paused, :errored, 
+                                      :active, :paused, :errored,
                                       :pending_cancellation
                                     ).order(created_at: :desc)
       if compliant_subs.any?

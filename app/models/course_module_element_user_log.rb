@@ -28,7 +28,7 @@
 #  course_section_user_log_id :integer
 #
 
-class CourseModuleElementUserLog < ActiveRecord::Base
+class CourseModuleElementUserLog < ApplicationRecord
 
   include LearnSignalModelExtras
 

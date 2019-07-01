@@ -19,7 +19,7 @@
 #  percentage_complete        :integer          default(0)
 #
 
-class Enrollment < ActiveRecord::Base
+class Enrollment < ApplicationRecord
 
   # Constants
 

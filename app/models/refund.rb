@@ -19,7 +19,7 @@
 #  updated_at         :datetime         not null
 #
 
-class Refund < ActiveRecord::Base
+class Refund < ApplicationRecord
 
   # Constants
   REASONS = %w(duplicate fraudulent requested_by_customer)

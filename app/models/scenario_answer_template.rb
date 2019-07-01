@@ -13,7 +13,7 @@
 #  spreadsheet_editor_content :text
 #
 
-class ScenarioAnswerTemplate < ActiveRecord::Base
+class ScenarioAnswerTemplate < ApplicationRecord
 
   # Constants
   FORMAT_TYPES = %w(text_editor spreadsheet_editor)

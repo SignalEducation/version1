@@ -17,7 +17,7 @@
 #  subscription_payment_card_id :integer
 #
 
-class SubscriptionTransaction < ActiveRecord::Base
+class SubscriptionTransaction < ApplicationRecord
   include LearnSignalModelExtras
   serialize :original_data, Hash
 
