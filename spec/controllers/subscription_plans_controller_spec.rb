@@ -148,6 +148,9 @@ describe SubscriptionPlansController, type: :controller do
       end
 
       it 'should be OK as no dependencies exist' do
+        allow_any_instance_of(SubscriptionPlan).to(
+          receive(:delete_remote_plans).and_return(true)
+        )
         delete :destroy, params: { id: subscription_plan_gbp_q.id }
         expect_delete_success_with_model('subscription_plan', subscription_plans_url)
       end

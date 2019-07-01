@@ -87,6 +87,29 @@ describe SubscriptionPlan do
     it { expect(SubscriptionPlan).to respond_to(:in_currency) }
   end
 
+  describe 'deletion' do
+    let(:test_plan) { create(:subscription_plan) }
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to(
+        receive(:queue_async)
+      )
+    end
+
+    it 'calls the SubscriptionPlanWorker with the correct attributes' do
+      expect(SubscriptionPlanWorker).to(
+        receive(:perform_async).with(
+          test_plan.id,
+          :delete,
+          test_plan.stripe_guid,
+          test_plan.paypal_guid
+        )
+      )
+
+      test_plan.destroy
+    end
+  end
+
   describe 'instance methods' do
     let(:subscription_plan) { build_stubbed(:subscription_plan) }
     it { should respond_to(:destroyable?) }
