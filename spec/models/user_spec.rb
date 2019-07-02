@@ -218,4 +218,100 @@ describe User do
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }
 
+  describe '#viewable_subscriptions' do
+
+    before :each do
+      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+    end
+
+    let(:user) { create(:user) }
+
+    context 'for in-active exam bodies' do
+      let(:bad_exam_body) { create(:exam_body, active: false) }
+      let(:sub_plan) { create(:subscription_plan, exam_body_id: bad_exam_body.id) }
+      let(:subscription) { 
+        create(
+          :subscription,
+          state: :active,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+      }
+
+      it 'does not return active subscriptions' do
+        expect(user.viewable_subscriptions.count).to eq 0
+      end
+    end
+
+    context 'for active exam bodies' do
+      let(:good_exam_body) { create(:exam_body) }
+      let(:sub_plan) { create(:subscription_plan, exam_body_id: good_exam_body.id) }
+
+      it 'returns active subscriptions' do
+        subscription = create(
+          :subscription,
+          state: :active,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+
+        expect(user.viewable_subscriptions.count).to eq 1
+      end
+
+      it 'returns paused subscriptions' do
+        subscription = create(
+          :subscription,
+          state: :paused,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+
+        expect(user.viewable_subscriptions.count).to eq 1
+      end
+
+      it 'returns errored subscriptions' do
+        subscription = create(
+          :subscription,
+          state: :errored,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+
+        expect(user.viewable_subscriptions.count).to eq 1
+      end
+
+      it 'returns pending_cancellation subscriptions' do
+        subscription = create(
+          :subscription,
+          state: :pending_cancellation,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+
+        expect(user.viewable_subscriptions.count).to eq 1
+      end
+
+      it 'returns cancelled subscriptions' do
+        subscription = create(
+          :subscription,
+          state: :cancelled,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+
+        expect(user.viewable_subscriptions.count).to eq 1
+      end
+
+      it 'does not return pending subscriptions' do
+        subscription = create(
+          :subscription,
+          state: :pending,
+          user_id: user.id,
+          subscription_plan_id: sub_plan.id
+        )
+
+        expect(user.viewable_subscriptions.count).to eq 0
+      end
+    end
+  end
 end

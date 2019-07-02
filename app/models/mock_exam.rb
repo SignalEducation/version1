@@ -1,12 +1,10 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: mock_exams
 #
 #  id                       :integer          not null, primary key
 #  subject_course_id        :integer
-#  product_id               :integer
 #  name                     :string
 #  sorting_order            :integer
 #  created_at               :datetime         not null

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: invoices
@@ -35,6 +34,7 @@
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
 #  paypal_payment_guid         :string
+#  order_id                    :bigint(8)
 #
 
 class Invoice < ApplicationRecord
