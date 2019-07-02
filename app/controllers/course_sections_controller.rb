@@ -9,6 +9,7 @@ class CourseSectionsController < ApplicationController
 
   def new
     @subject_course = SubjectCourse.where(id: params[:id]).first
+
     if @subject_course && @subject_course.course_sections.count > 0
       @course_section = CourseSection.new(sorting_order: ((@subject_course.course_sections.any? && @subject_course.course_sections.all_in_order.last.sorting_order) ? @subject_course.course_sections.all_in_order.last.sorting_order + 1 : 1), subject_course_id: @subject_course.id)
     elsif @subject_course
@@ -20,6 +21,7 @@ class CourseSectionsController < ApplicationController
 
   def create
     @course_section = CourseSection.new(allowed_params)
+
     if @course_section.save
       flash[:success] = I18n.t('controllers.course_sections.create.flash.success')
       redirect_to course_module_special_link(@course_section)
@@ -48,6 +50,7 @@ class CourseSectionsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       CourseSection.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
     end
+
     render json: {}, status: :ok
   end
 
@@ -57,6 +60,7 @@ class CourseSectionsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.course_sections.destroy.flash.error')
     end
+
     redirect_to course_module_special_link(@course_section)
   end
 

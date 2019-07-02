@@ -1,10 +1,9 @@
-# for
+# frozen_string_literal: true
 
 class ContentPagesController < ApplicationController
-
   before_action :logged_in_required, except: [:show]
   before_action except: [:show] do
-    ensure_user_has_access_rights(%w(system_requirements_access marketing_resources_access))
+    ensure_user_has_access_rights(%w[system_requirements_access marketing_resources_access])
   end
   before_action :get_variables, except: [:show]
 
@@ -14,7 +13,7 @@ class ContentPagesController < ApplicationController
 
   def show
     @content_page = ContentPage.where(public_url: params[:content_public_url]).first
-    if @content_page && @content_page.active
+    if @content_page&.active
       seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
       @navbar = true
       @top_margin = true
@@ -44,7 +43,6 @@ class ContentPagesController < ApplicationController
     else
       @content_page = ContentPage.new
     end
-
   end
 
   def edit
@@ -53,6 +51,7 @@ class ContentPagesController < ApplicationController
 
   def create
     @content_page = ContentPage.new(allowed_params)
+
     if @content_page.save
       flash[:success] = I18n.t('controllers.content_pages.create.flash.success')
       redirect_to content_pages_url
@@ -70,22 +69,20 @@ class ContentPagesController < ApplicationController
     end
   end
 
-
   def destroy
     if @content_page.destroy
       flash[:success] = I18n.t('controllers.content_pages.destroy.flash.success')
     else
       flash[:error] = I18n.t('controllers.content_pages.destroy.flash.error')
     end
+
     redirect_to content_pages_url
   end
 
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @content_page = ContentPage.where(id: params[:id]).first
-    end
+    @content_page = ContentPage.where(id: params[:id]).first if params[:id].to_i > 0
     @layout = 'management'
   end
 
@@ -97,5 +94,4 @@ class ContentPagesController < ApplicationController
                                                                             :sorting_order,
                                                                             :subject_course_id, :_destroy])
   end
-
 end

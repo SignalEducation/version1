@@ -25,6 +25,7 @@ class CourseModulesController < ApplicationController
 
   def create
     @course_module = CourseModule.new(allowed_params)
+
     if @course_module.save
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
       redirect_to subject_course_url(@course_module.subject_course_id)
@@ -39,6 +40,7 @@ class CourseModulesController < ApplicationController
 
   def update
     @course_module = CourseModule.where(id: params[:id]).first
+
     if @course_module.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
       redirect_to subject_course_url(@course_module.subject_course_id)
@@ -57,6 +59,7 @@ class CourseModulesController < ApplicationController
 
   def destroy
     @course_module = CourseModule.find(params[:id])
+
     if @course_module.destroy
       flash[:success] = I18n.t('controllers.course_modules.destroy.flash.success')
     else

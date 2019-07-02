@@ -131,7 +131,6 @@ class User < ApplicationRecord
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
-  scope :search_for, lambda { |search_term| where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR stripe_customer_id ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: '%' + search_term + '%') }
   scope :sort_by_email, -> { order(:email) }
   scope :sort_by_name, -> { order(:last_name, :first_name) }
   scope :sort_by_most_recent, -> { order(created_at: :desc) }
@@ -143,6 +142,10 @@ class User < ApplicationRecord
 
 
   ### class methods
+  def self.search(term)
+    where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR stripe_customer_id ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: "%#{term}%")
+  end
+
   def self.all_students
     includes(:user_group).references(:user_groups).where('user_groups.student_user = ?', true)
   end

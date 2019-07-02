@@ -5,16 +5,13 @@ class EnrollmentManagementController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[user_management_access])
   end
-  before_action :get_variables
+  before_action :set_layout
 
   def index
-    @enrollments = Enrollment.paginate(per_page: 50, page: params[:page]).all_in_order
-
-    if params[:search].present?
-      @enrollments = Enrollment.search(params[:search]).all_in_recent_order
-    elsif params[:exam_sitting] && params[:exam_sitting][:id]
-      @enrollments = Enrollment.by_sitting(params[:exam_sitting][:id]).all_in_recent_order
-    end
+    @enrollments = Enrollment.page(params[:page]).
+                     search(params[:search]).
+                     by_sitting(params[:exam_sitting]).
+                     all_in_recent_order
   end
 
   def edit
@@ -60,7 +57,7 @@ class EnrollmentManagementController < ApplicationController
   end
 
   def export_enrollment_log_data
-    # TODO - Flagged for removal
+    # TODO, Flagged for removal
     @enrollment = Enrollment.find(params[:id])
     @scul = @enrollment.subject_course_user_log
     @course_module_element_user_logs = @scul.course_module_element_user_logs
@@ -74,7 +71,7 @@ class EnrollmentManagementController < ApplicationController
 
   protected
 
-  def get_variables
+  def set_layout
     @layout = 'management'
   end
 
@@ -85,5 +82,4 @@ class EnrollmentManagementController < ApplicationController
   def create_course_user_log(course_id, user_id)
     SubjectCourseUserLog.create!(user_id: user_id, subject_course_id: course_id)
   end
-
 end

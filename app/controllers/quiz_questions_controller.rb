@@ -1,30 +1,13 @@
-# == Schema Information
-#
-# Table name: quiz_questions
-#
-#  id                            :integer          not null, primary key
-#  course_module_element_quiz_id :integer
-#  course_module_element_id      :integer
-#  difficulty_level              :string
-#  created_at                    :datetime
-#  updated_at                    :datetime
-#  destroyed_at                  :datetime
-#  subject_course_id             :integer
-#  sorting_order                 :integer
-#  custom_styles                 :boolean          default(FALSE)
-#
+# frozen_string_literal: true
 
 class QuizQuestionsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(content_management_access))
   end
   before_action :get_variables, except: :reorder
 
-  def show
-
-  end
+  def show; end
 
   def new
     @quiz_question.quiz_contents.build
@@ -62,7 +45,8 @@ class QuizQuestionsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       QuizQuestion.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -71,6 +55,7 @@ class QuizQuestionsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.quiz_questions.destroy.flash.error')
     end
+
     redirect_to edit_course_module_element_url(@quiz_question.course_module_element_id)
   end
 
@@ -78,14 +63,16 @@ class QuizQuestionsController < ApplicationController
 
   def get_variables
     @mathjax_required = true
-    if params[:id].to_i > 0
-      ## Finds the qq record ##
-      @quiz_question = QuizQuestion.find(params[:id])
-    elsif params[:cme_quiz_id].to_i > 0
-      @quiz_question = QuizQuestion.new(course_module_element_quiz_id: params[:cme_quiz_id])
-    else
-      @quiz_question = QuizQuestion.new(allowed_params)
-    end
+    @quiz_question =
+      if params[:id].to_i > 0
+        ## Finds the qq record ##
+        QuizQuestion.find(params[:id])
+      elsif params[:cme_quiz_id].to_i > 0
+        QuizQuestion.new(course_module_element_quiz_id: params[:cme_quiz_id])
+      else
+        QuizQuestion.new(allowed_params)
+      end
+
     @quiz_questions = QuizQuestion.all_in_order
     seo_title_maker("Quiz Questions #{@quiz_question.try(:id)}", '', true)
     @layout = 'management'
@@ -93,44 +80,43 @@ class QuizQuestionsController < ApplicationController
 
   def allowed_params
     params.require(:quiz_question).permit(
-        :course_module_element_quiz_id,
-        :difficulty_level,
+      :course_module_element_quiz_id,
+      :difficulty_level,
+      :sorting_order,
+      quiz_solutions_attributes: [
+        :id,
+        :quiz_question_id,
+        :quiz_answer_id,
+        :quiz_solution_id,
+        :text_content,
         :sorting_order,
-        quiz_solutions_attributes: [
-            :id,
-            :quiz_question_id,
-            :quiz_answer_id,
-            :quiz_solution_id,
-            :text_content,
-            :sorting_order,
-            :_destroy,
-            :image
-        ],
-        quiz_answers_attributes: [
-            :id,
-            :quiz_question_id,
-            :correct,
-            :degree_of_wrongness,
-            quiz_contents_attributes: [
-                :id,
-                :quiz_question_id,
-                :quiz_answer_id,
-                :text_content,
-                :sorting_order,
-                :_destroy,
-                :image
-            ]
-        ],
+        :_destroy,
+        :image
+      ],
+      quiz_answers_attributes: [
+        :id,
+        :quiz_question_id,
+        :correct,
+        :degree_of_wrongness,
         quiz_contents_attributes: [
-            :id,
-            :quiz_question_id,
-            :quiz_answer_id,
-            :text_content,
-            :sorting_order,
-            :_destroy,
-            :image
+          :id,
+          :quiz_question_id,
+          :quiz_answer_id,
+          :text_content,
+          :sorting_order,
+          :_destroy,
+          :image
         ]
+      ],
+      quiz_contents_attributes: [
+        :id,
+        :quiz_question_id,
+        :quiz_answer_id,
+        :text_content,
+        :sorting_order,
+        :_destroy,
+        :image
+      ]
     )
   end
-
 end

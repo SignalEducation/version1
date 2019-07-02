@@ -52,9 +52,7 @@ class CouponsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @coupon = Coupon.where(id: params[:id]).first
-    end
+    @coupon = Coupon.where(id: params[:id]).first if params[:id].to_i > 0
     @currencies = Currency.all_in_order.all_active
     @layout = 'management'
   end

@@ -1,83 +1,22 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: users
-#
-#  id                              :integer          not null, primary key
-#  email                           :string
-#  first_name                      :string
-#  last_name                       :string
-#  address                         :text
-#  country_id                      :integer
-#  crypted_password                :string(128)      default(""), not null
-#  password_salt                   :string(128)      default(""), not null
-#  persistence_token               :string
-#  perishable_token                :string(128)
-#  single_access_token             :string
-#  login_count                     :integer          default(0)
-#  failed_login_count              :integer          default(0)
-#  last_request_at                 :datetime
-#  current_login_at                :datetime
-#  last_login_at                   :datetime
-#  current_login_ip                :string
-#  last_login_ip                   :string
-#  account_activation_code         :string
-#  account_activated_at            :datetime
-#  active                          :boolean          default(FALSE), not null
-#  user_group_id                   :integer
-#  password_reset_requested_at     :datetime
-#  password_reset_token            :string
-#  password_reset_at               :datetime
-#  stripe_customer_id              :string
-#  created_at                      :datetime
-#  updated_at                      :datetime
-#  locale                          :string
-#  guid                            :string
-#  subscription_plan_category_id   :integer
-#  password_change_required        :boolean
-#  session_key                     :string
-#  name_url                        :string
-#  profile_image_file_name         :string
-#  profile_image_content_type      :string
-#  profile_image_file_size         :integer
-#  profile_image_updated_at        :datetime
-#  email_verification_code         :string
-#  email_verified_at               :datetime
-#  email_verified                  :boolean          default(FALSE), not null
-#  stripe_account_balance          :integer          default(0)
-#  free_trial                      :boolean          default(FALSE)
-#  terms_and_conditions            :boolean          default(FALSE)
-#  date_of_birth                   :date
-#  description                     :text
-#  analytics_guid                  :string
-#  student_number                  :string
-#  unsubscribed_from_emails        :boolean          default(FALSE)
-#  communication_approval          :boolean          default(FALSE)
-#  communication_approval_datetime :datetime
-#
-
 class UsersController < ApplicationController
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(user_management_access))
+    ensure_user_has_access_rights(%w[user_management_access])
   end
   before_action :layout_variables
-  before_action :get_variables, except: [:user_personal_details, :user_subscription_status,
-                                         :user_activity_details, :user_purchases_details,
-                                         :user_courses_status, :user_referral_details]
-  before_action :get_user_variables, only: [:user_personal_details, :user_subscription_status,
-                                            :user_activity_details, :user_purchases_details,
-                                            :user_courses_status, :user_referral_details]
-
+  before_action :get_variables, except: %i[user_personal_details user_subscription_status
+                                           user_activity_details user_purchases_details
+                                           user_courses_status user_referral_details]
+  before_action :get_user_variables, only: %i[user_personal_details user_subscription_status
+                                              user_activity_details user_purchases_details
+                                              user_courses_status user_referral_details]
 
   def index
-    @users =
-      if params[:search_term].to_s.blank?
-        User.sort_by_most_recent.paginate(per_page: 50, page: params[:page])
-      else
-        User.sort_by_most_recent.search_for(params[:search_term].to_s).paginate(per_page: 50, page: params[:page])
-      end
+    @users = User.page(params[:page]).
+               search(params[:search_term]).
+               sort_by_most_recent
   end
 
   def show
@@ -142,7 +81,7 @@ class UsersController < ApplicationController
 
   def preview_csv_upload
     @user_groups = UserGroup.all_in_order
-    if params[:upload] && params[:upload].respond_to?(:read)
+    if params[:upload]&.respond_to?(:read)
       @csv_data, @has_errors = User.parse_csv(params[:upload].read)
     else
       flash[:error] = t('controllers.dashboard.preview_csv.flash.error')
@@ -197,12 +136,7 @@ class UsersController < ApplicationController
 
   def update_courses
     @user = User.find(params[:user_id]) rescue nil
-
-    if params[:user]
-      @user.subject_course_ids = params[:user][:subject_course_ids]
-    else
-      @user.subject_course_ids = []
-    end
+    @user.subject_course_ids = params[:user] ? params[:user][:subject_course_ids] : []
 
     flash[:success] = I18n.t('controllers.users.update_subjects.flash.success')
     redirect_to users_url
@@ -217,9 +151,8 @@ class UsersController < ApplicationController
     )
   end
 
-
   def get_variables
-    @user        = User.where(id: params[:id]).first
+    @user        = User.find_by(id: params[:id])
     @user_groups = UserGroup.all_not_admin
     @countries   = Country.all_in_order
 
@@ -231,7 +164,7 @@ class UsersController < ApplicationController
   end
 
   def get_user_variables
-    @user = User.where(id: params[:user_id]).first
+    @user = User.find_by(id: params[:user_id])
 
     seo_title_maker("#{@user.full_name} - Details", '', true)
   end

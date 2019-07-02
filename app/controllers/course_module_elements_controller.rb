@@ -33,6 +33,7 @@ class CourseModuleElementsController < ApplicationController
         @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
       end
     end
+
     @demo_mode = true
   end
 
@@ -155,9 +156,7 @@ class CourseModuleElementsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @course_module_element = CourseModuleElement.where(id: params[:id]).first
-    end
+    @course_module_element = CourseModuleElement.where(id: params[:id]).first if params[:id].to_i > 0
     @tutors = User.all_tutors.all_in_order
     @letters = ('A'..'Z').to_a
     @mathjax_required = true

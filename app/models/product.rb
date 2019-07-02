@@ -66,9 +66,7 @@ class Product < ApplicationRecord
   end
 
   def self.search(search)
-    return where('name ILIKE ?', "%#{search}%") if search.present?
-
-    Product.all_active.all_in_order
+    search.present? ? where('name ILIKE ?', "%#{search}%") : all
   end
 
   ## Creates product object on stripe and updates attributes here with response data ##

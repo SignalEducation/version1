@@ -1,40 +1,35 @@
-class SubscriptionManagementController < ApplicationController
+# frozen_string_literal: true
 
+class SubscriptionManagementController < ApplicationController
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(user_management_access))
+    ensure_user_has_access_rights(%w[user_management_access])
   end
-  before_action :get_variables
-
+  before_action :set_layout
+  before_action :set_subscrition, except: %i[show pdf_invoice]
+  before_action :set_invoice, only: %i[invoice pdf_invoice charge]
 
   def show
-    @subscription = Subscription.where(id: params[:id]).first
-    @user = @subscription.user
+    @subscription = Subscription.find_by(id: params[:id])
+    @user         = @subscription.user
   end
 
   def invoice
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    @invoice = Invoice.where(id: params[:invoice_id]).first
-    @user = @invoice.user
+    @user    = @invoice.user
     @charges = @invoice.charges
   end
 
   def pdf_invoice
-    invoice = Invoice.where(id: params[:invoice_id]).first
-    if invoice
-      @invoice = invoice
-      @invoice_date = invoice.issued_at
-      description = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
-      if @invoice.vat_rate
-        vat_rate = @invoice.vat_rate.percentage_rate.to_s + '%'
-      else
-        vat_rate = '0%'
-      end
+    if @invoice
+      @invoice_date = @invoice.issued_at
+      description   = t("views.general.subscription_in_months.a#{@invoice.subscription.subscription_plan.payment_frequency_in_months}")
+      vat_rate      = @invoice.vat_rate ? @invoice.vat_rate.percentage_rate.to_s + '%' : '0%'
+
       respond_to do |format|
         format.html
         format.pdf do
           pdf = InvoiceDocument.new(@invoice, view_context, description, vat_rate, @invoice_date)
-          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime("%d/%m/%Y")}.pdf", type: "application/pdf", disposition: "inline"
+          send_data pdf.render, filename: "invoice_#{@invoice.created_at.strftime('%d/%m/%Y')}.pdf", type: 'application/pdf', disposition: 'inline'
         end
       end
     else
@@ -43,40 +38,37 @@ class SubscriptionManagementController < ApplicationController
   end
 
   def charge
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    @invoice = Invoice.where(id: params[:invoice_id]).first
-    @charge = Charge.where(id: params[:id]).first
+    @charge       = Charge.find_by(id: params[:id])
     @subscription = @invoice.subscription
-    @user = @invoice.user
-    @charges = @invoice.charges
+    @user         = @invoice.user
+    @charges      = @invoice.charges
   end
 
   def un_cancel_subscription
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    if @subscription && @subscription.stripe_status == 'canceled-pending'
+    if @subscription&.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
-      if @subscription && @subscription.errors.count == 0
+      if @subscription&.errors&.count&.zero?
         flash[:success] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.success')
       else
         Rails.logger.error "ERROR: SubscriptionManagement#un_cancel_subscription - something went wrong. Errors:#{@subscription.errors.inspect}"
         flash[:error] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.error')
       end
-      redirect_to subscription_management_url(@subscription)
     else
       flash[:error] = I18n.t('controllers.subscription_management.un_cancel_subscription.flash.not_pending_sub')
-      redirect_to subscription_management_url(@subscription)
     end
+
+    redirect_to subscription_management_url(@subscription)
   end
 
   def cancel
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
     if SubscriptionService.new(@subscription).cancel
       flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscription_management.cancel.flash.error')
     end
+
     redirect_to subscription_management_url(@subscription)
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
@@ -84,13 +76,13 @@ class SubscriptionManagementController < ApplicationController
   end
 
   def immediate_cancel
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
     if SubscriptionService.new(@subscription).cancel_subscription_immediately
       flash[:success] = I18n.t('controllers.subscription_management.immediately_cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#immediately_cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscription_management.immediately_cancel.flash.error')
     end
+
     redirect_to subscription_management_url(@subscription)
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
@@ -98,22 +90,27 @@ class SubscriptionManagementController < ApplicationController
   end
 
   def reactivate_subscription
-    @subscription = Subscription.where(id: params[:subscription_management_id]).first
     if @subscription.reactivate_canceled
       flash[:success] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#reactivate_canceled failed to reactivate a subscription. Errors:#{@subscription.errors.inspect}"
       flash[:error] = I18n.t('controllers.subscription_management.reactivate_canceled.flash.error') << @subscription.errors[:base].to_s
     end
+
     redirect_to subscription_management_url(@subscription)
   end
 
-
   protected
 
-  def get_variables
-    @layout = 'management'
-
+  def set_subscrition
+    @subscription = Subscription.find_by(id: params[:subscription_management_id])
   end
 
+  def set_invoice
+    @invoice = Invoice.find_by(id: params[:invoice_id])
+  end
+
+  def set_layout
+    @layout = 'management'
+  end
 end

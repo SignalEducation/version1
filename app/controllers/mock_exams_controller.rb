@@ -1,29 +1,9 @@
-# == Schema Information
-#
-# Table name: mock_exams
-#
-#  id                       :integer          not null, primary key
-#  subject_course_id        :integer
-#  product_id               :integer
-#  name                     :string
-#  sorting_order            :integer
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  file_file_name           :string
-#  file_content_type        :string
-#  file_file_size           :integer
-#  file_updated_at          :datetime
-#  cover_image_file_name    :string
-#  cover_image_content_type :string
-#  cover_image_file_size    :integer
-#  cover_image_updated_at   :datetime
-#
+# frozen_string_literal: true
 
 class MockExamsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
+    ensure_user_has_access_rights(%w[content_management_access])
   end
   before_action :get_variables
 
@@ -64,7 +44,8 @@ class MockExamsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       MockExam.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -79,9 +60,7 @@ class MockExamsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @mock_exam = MockExam.where(id: params[:id]).first
-    end
+    @mock_exam = MockExam.where(id: params[:id]).first if params[:id].to_i > 0
     @subject_courses = SubjectCourse.all_active.all_in_order
     @products = Product.all_in_order
     @currencies = Currency.all_in_order
@@ -91,5 +70,4 @@ class MockExamsController < ApplicationController
   def allowed_params
     params.require(:mock_exam).permit(:subject_course_id, :name, :sorting_order, :file, :cover_image)
   end
-
 end

@@ -8,8 +8,9 @@ class ProductsController < ApplicationController
   before_action :set_product, only:   %i[show edit update destroy]
 
   def index
-    @products = Product.includes(:currency, :mock_exam, :orders).all_in_order
-    # @products = params[:search].to_s.blank? ? Product.all_in_order : Product.search(params[:search])
+    @products = Product.includes(:currency, :mock_exam, :orders).
+                  search(params[:search]).
+                  all_in_order
   end
 
   def show; end
@@ -25,6 +26,7 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(allowed_params)
+
     if @product.save
       flash[:success] = I18n.t('controllers.products.create.flash.success')
       redirect_to products_url

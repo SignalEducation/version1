@@ -51,10 +51,7 @@ class CourseModuleElementResourcesController < ApplicationController
 
   def get_variables
     @course_module_element = CourseModuleElement.where(id: params[:course_module_element_id]).first
-    if params[:id].to_i > 0
-      @course_module_element_resource = CourseModuleElementResource.where(id: params[:id]).first
-    end
-
+    @course_module_element_resource = CourseModuleElementResource.where(id: params[:id]).first if params[:id].to_i > 0
     @mathjax_required = true
     @layout = 'management'
   end

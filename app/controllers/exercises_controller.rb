@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExercisesController < ApplicationController
   before_action :logged_in_required
   before_action :set_exercise, except: :index
@@ -7,8 +9,7 @@ class ExercisesController < ApplicationController
     @exercise = @exercises.last
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @exercise.update(exercise_params)
@@ -33,8 +34,9 @@ class ExercisesController < ApplicationController
 
   def set_exercise
     @exercise = Exercise.find(params[:id])
-    unless @exercise.user_id == current_user.id
-      redirect_to user_exercises_path(current_user)
-    end
+
+    return if @exercise.user_id == current_user.id
+
+    redirect_to user_exercises_path(current_user)
   end
 end
