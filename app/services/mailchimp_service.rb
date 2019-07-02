@@ -42,14 +42,16 @@ class MailchimpService
     @mailchimp.lists(body.audience_guid).merge_fields.create(body: {name: "Account Status", tag: "STATUS", type: "text"})
     @mailchimp.lists(body.audience_guid).merge_fields.create(body: {name: "Login Count", tag: "LCOUNT", type: "number"})
     @mailchimp.lists(body.audience_guid).merge_fields.create(body: {name: "Last Login", tag: "LASTLOGIN", type: "date"})
-    @mailchimp.lists(body.audience_guid).merge_fields.create(body: {name: "Last Lesson", tag: "LASTLESSON", type: "date"})
+    @mailchimp.lists(body.audience_guid).merge_fields.create(body: {name: "Last Lesson Name", tag: "LESSONNAME", type: "text"})
+    @mailchimp.lists(body.audience_guid).merge_fields.create(body: {name: "Last Lesson Date", tag: "LESSONDATE", type: "date"})
   end
 
   def add_subscriber(exam_body_id, user_id, subscribe)
     status = (subscribe ? 'subscribed' : 'unsubscribed')
     exam_body = ExamBody.find(exam_body_id)
     user = User.find(user_id)
-    #student_number = user.exam_body_user_details.for_exam_body(exam_body_id).first.student_number if user.exam_body_user_details.for_exam_body(exam_body_id).first
+    account_status = user.active_subscription_for_exam_body?(exam_body_id) ? subscriptions_for_exam_body(exam_body_id).first.state : 'Basic'
+    student_number = user.exam_body_user_details.for_exam_body(exam_body_id).first.student_number if user.exam_body_user_details.for_exam_body(exam_body_id).first.present?
     member = list(exam_body.audience_guid, user).upsert(
         body: {
             email_address: user.email,
@@ -58,19 +60,20 @@ class MailchimpService
                 FNAME:  user.first_name.to_s,
                 LNAME: user.last_name.to_s,
                 COUNTRY: user.country.name.to_s,
-                VERIFIED: user.email_verified,
-                DOB: user.date_of_birth,
-                SNUM: student_number,
-                STATUS: student_number,
+                VERIFIED: user.email_verified.to_s,
+                DOB: user.date_of_birth ? user.date_of_birth.to_date : '',
+                SNUM: student_number.to_s,
+                STATUS: account_status.to_s,
                 LCOUNT: user.login_count,
-                LASTLOGIN: user.current_login_at,
-                LASTLESSON: user.last_studied_date
+                LASTLOGIN: user.current_login_at ? user.current_login_at.to_date : user.created_at.to_date,
+                LESSONNAME: user.course_module_element_user_logs.last.course_module_element.name.to_s,
+                LESSONDATE: user.last_studied_date
             }
         }
     )
     Rails.logger.debug "DEBUG: MailChimp#add_subscriber - Response: #{member.body}"
   rescue Gibbon::MailChimpError => e
-    raise e
+    Rails.logger.debug "Error: MailChimp#add_subscriber - Response: #{member.body}"
   end
 
 

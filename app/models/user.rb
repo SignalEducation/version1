@@ -697,7 +697,7 @@ class User < ApplicationRecord
   end
 
   def last_studied_date
-    self.course_module_element_user_logs.any? ? humanize_datetime(self.course_module_element_user_logs.last.created_at) : 'Never'
+    course_module_element_user_logs.any? ? course_module_element_user_logs.last.created_at : ''
   end
 
   private
@@ -722,9 +722,14 @@ class User < ApplicationRecord
   end
 
   def create_or_update_analytics_user
-    #MailchimpCreateUserWorker.perform_async('bd7836f107', self.id, true)
-    ExamBody.all_active.each do |body|
-      #MailchimpService.new.add_subscriber(body.id, self.id, (self.preferred_exam_body == body && self.communication_approval)) if body.audience_guid
+
+    if saved_changes? && (!saved_changes.include? "last_request_at") && standard_student_user?
+
+      ExamBody.all_active.each do |body|
+        #MailchimpCreateUserWorker.perform_async('bd7836f107', self.id, true)
+        MailchimpService.new.add_subscriber(body.id, self.id, (self.preferred_exam_body == body && self.communication_approval)) if body.audience_guid
+      end
+
     end
 
   end

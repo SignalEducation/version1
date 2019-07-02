@@ -60,7 +60,7 @@ class CourseModuleElementUserLog < ApplicationRecord
   before_validation :create_student_exam_track, unless: :student_exam_track_id
   before_create :set_latest_attempt, :set_booleans
   after_create :calculate_score, if: :is_quiz
-  after_create :update_previous_attempts
+  after_create :update_previous_attempts, :update_audience_member
   after_save :update_student_exam_track
 
   # scopes
@@ -174,6 +174,11 @@ class CourseModuleElementUserLog < ApplicationRecord
   # Before Create
   def update_previous_attempts
     UpdatePreviousAttemptsWorker.perform_async(self.user_id, self.course_module_element_id, self.id)
+  end
+
+  # After Create
+  def update_audience_member
+    MailchimpService.new.add_subscriber(self.subject_course.exam_body_id, self.user_id, true) if self.subject_course.exam_body.audience_guid
   end
 
   # After Create

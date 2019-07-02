@@ -187,7 +187,7 @@ class Enrollment < ApplicationRecord
   end
 
   def create_or_update_analytics_enrollment
-    SegmentService.new.analytics_identify_enrollment('bd7836f107', self.user_id, self.id)
+
   end
 
   def create_expiration_worker
