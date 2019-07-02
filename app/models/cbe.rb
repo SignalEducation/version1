@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+# CBES are created by calling the create method for example:
+# name, title, description, and exam_body_id are required
+# current_cbe = Cbe.create(name: 'BCCA EXAM', title: 'exam 1', description: 'test desc', exam_body_id: 1)
+# current_cbe.initialize_settings will setup default settings for the CBE
+
 class Cbe < ApplicationRecord
   has_many :cbe_sections, dependent: :destroy
   has_many :cbe_questions, dependent: :destroy
@@ -13,7 +18,7 @@ class Cbe < ApplicationRecord
     self.number_of_pauses_allowed = number_of_pauses_allowed
     self.length_of_pauses = length_of_pauses
     self.hard_time_limit = exam_time * 2
-    save
+    self.save
   end
 
 end
