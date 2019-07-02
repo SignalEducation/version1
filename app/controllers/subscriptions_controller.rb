@@ -44,7 +44,7 @@ class SubscriptionsController < ApplicationController
     # redirect if exam_body doesn't exists and user doesn't have a preferred exam body saved.
     unless ExamBody.exists?(params[:exam_body_id].to_i) &&
            current_user.preferred_exam_body.present?
-      redirect_to edit_preferred_exam_body_path && return
+      redirect_to edit_preferred_exam_body_path and return
     end
 
     active_subscriptions = current_user.active_subscriptions_for_exam_body(params[:exam_body_id])
