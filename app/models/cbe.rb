@@ -13,7 +13,7 @@ class Cbe < ApplicationRecord
 
   validates :name, :title, :description, :exam_body_id, presence: true
 
-  def initialize_settings(exam_time = 120, number_of_pauses_allowed = 3, length_of_pauses = 15)
+  def initialize_settings(exam_time = 120, number_of_pauses_allowed = 32, length_of_pauses = 15)
     self.exam_time = exam_time
     self.number_of_pauses_allowed = number_of_pauses_allowed
     self.length_of_pauses = length_of_pauses
