@@ -1,33 +1,11 @@
-# == Schema Information
-#
-# Table name: course_sections
-#
-#  id                         :integer          not null, primary key
-#  subject_course_id          :integer
-#  name                       :string
-#  name_url                   :string
-#  sorting_order              :integer
-#  active                     :boolean          default(FALSE)
-#  counts_towards_completion  :boolean          default(FALSE)
-#  assumed_knowledge          :boolean          default(FALSE)
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  cme_count                  :integer          default(0)
-#  video_count                :integer          default(0)
-#  quiz_count                 :integer          default(0)
-#  destroyed_at               :datetime
-#  constructed_response_count :integer          default(0)
-#
+# frozen_string_literal: true
 
 class CourseSectionsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
+    ensure_user_has_access_rights(%w[content_management_access])
   end
   before_action :get_variables
-
-  # Standard Actions #
 
   def new
     @subject_course = SubjectCourse.where(id: params[:id]).first
@@ -50,8 +28,7 @@ class CourseSectionsController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @course_section.update_attributes(allowed_params)
@@ -71,7 +48,7 @@ class CourseSectionsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       CourseSection.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -86,9 +63,7 @@ class CourseSectionsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @course_section = CourseSection.where(id: params[:id]).first
-    end
+    @course_section = CourseSection.where(id: params[:id]).first if params[:id].to_i > 0
     @subject_courses = SubjectCourse.all_in_order
     @tutors = User.all_tutors.all_in_order
     @layout = 'management'
@@ -96,7 +71,6 @@ class CourseSectionsController < ApplicationController
 
   def allowed_params
     params.require(:course_section).permit(:name, :name_url, :sorting_order, :active, :subject_course_id,
-                                          :counts_towards_completion, :assumed_knowledge)
+                                           :counts_towards_completion, :assumed_knowledge)
   end
-
 end

@@ -1,8 +1,8 @@
-class DashboardController < ApplicationController
+# frozen_string_literal: true
 
+class DashboardController < ApplicationController
   before_action :logged_in_required
   before_action :get_variables
-
 
   def show
     @default_group = current_user&.preferred_exam_body&.group || Group.all_active.all_active.first
@@ -10,13 +10,10 @@ class DashboardController < ApplicationController
     @sculs = current_user.subject_course_user_logs.includes(:enrollments).where(enrollments: { id: nil })
   end
 
-
-
   protected
 
   def get_variables
     @courses = SubjectCourse.all_active.all_in_order
     seo_title_maker('Dashboard', 'Progress through all your courses will be recorded here.', false)
   end
-
 end

@@ -1,25 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: products
-#
-#  id                :integer          not null, primary key
-#  name              :string
-#  mock_exam_id      :integer
-#  stripe_guid       :string
-#  live_mode         :boolean          default(FALSE)
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  active            :boolean          default(FALSE)
-#  currency_id       :integer
-#  price             :decimal(, )
-#  stripe_sku_guid   :string
-#  subject_course_id :integer
-#  sorting_order     :integer
-#  product_type      :integer          default(0)
-#
-
 class ProductsController < ApplicationController
   before_action :logged_in_required
   before_action { ensure_user_has_access_rights(%w[stripe_management_access]) }
@@ -27,10 +7,9 @@ class ProductsController < ApplicationController
   before_action :set_layout,  except: %i[reorder]
   before_action :set_product, only:   %i[show edit update destroy]
 
-  ## Standard Actions ##
   def index
-    @all_products = Product.all
-    @products = params[:search].to_s.blank? ? @all_products.all_in_order : @all_products.search(params[:search])
+    @products = Product.includes(:currency, :mock_exam, :orders).all_in_order
+    # @products = params[:search].to_s.blank? ? Product.all_in_order : Product.search(params[:search])
   end
 
   def show; end

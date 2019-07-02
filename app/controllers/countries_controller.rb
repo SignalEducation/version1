@@ -1,21 +1,6 @@
-# == Schema Information
-#
-# Table name: countries
-#
-#  id            :integer          not null, primary key
-#  name          :string
-#  iso_code      :string
-#  country_tld   :string
-#  sorting_order :integer
-#  in_the_eu     :boolean          default(FALSE), not null
-#  currency_id   :integer
-#  created_at    :datetime
-#  updated_at    :datetime
-#  continent     :string
-#
+# frozen_string_literal: true
 
 class CountriesController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(system_requirements_access))
@@ -29,8 +14,7 @@ class CountriesController < ApplicationController
                                   :currency).paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @country = Country.new(sorting_order: 1)
@@ -46,8 +30,7 @@ class CountriesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @country.update_attributes(allowed_params)
@@ -63,7 +46,7 @@ class CountriesController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       Country.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -72,6 +55,7 @@ class CountriesController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.countries.destroy.flash.error')
     end
+
     redirect_to countries_url
   end
 
@@ -90,5 +74,4 @@ class CountriesController < ApplicationController
   def allowed_params
     params.require(:country).permit(:name, :iso_code, :country_tld, :sorting_order, :in_the_eu, :currency_id, :continent)
   end
-
 end
