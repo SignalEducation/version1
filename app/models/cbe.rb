@@ -5,4 +5,10 @@ class Cbe < ApplicationRecord
   has_one :cbe_agreement
 
 
+  def initialize(name, title, description)
+    @name = name
+    @title = title
+    @description = description
+  end
+
 end
