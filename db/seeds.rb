@@ -29,6 +29,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
 
   print ">> CBE DATA "
   load "db/seed_data/cbe_section_type.rb"
+  load "db/seed_data/cbe_question_status.rb"
 
   print "* " * 100
   puts "\n Completed the db/seed process"
