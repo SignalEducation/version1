@@ -4,7 +4,7 @@
       %h4.m-0
         Total:
         %span.value#paypal-total-value
-          =number_in_local_currency(@product.price, @product.currency_id)
+          =number_in_local_currency(@product.price, @product.currency)
 
     .col-sm-6.mb-2.mt-sm-4.text-center
       = f.button :submit, class: 'btn btn-img mb-4', id: 'paypal_submit' do

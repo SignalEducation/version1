@@ -21,14 +21,21 @@
 
 FactoryBot.define do
   factory :product do
-    sequence(:name)                  { |n| "Product-00#{n}" }
-    mock_exam
-    active { true }
-    sequence(:stripe_guid)           { |n| "stripe-guid-#{n}" }
-    live_mode { false }
-    price { '999' }
+    sequence(:name)            { |n| "Product-00#{n}" }
+    active                     { true }
+    sequence(:stripe_guid)     { |n| "stripe-guid-#{n}" }
+    live_mode                  { false }
+    price                      { '999' }
+    sequence(:stripe_sku_guid) { |n| "stripe-sku-guid-#{n}" }
     currency
-    sequence(:stripe_sku_guid)           { |n| "stripe-sku-guid-#{n}" }
+    mock_exam
   end
 
+  trait :inactive do
+    active { false }
+  end
+
+  trait :with_order do
+    orders { build_list :order, 2 }
+  end
 end

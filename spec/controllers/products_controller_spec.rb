@@ -21,7 +21,6 @@
 require 'rails_helper'
 
 RSpec.describe ProductsController, type: :controller do
-
   let(:stripe_management_user_group) { FactoryBot.create(:stripe_management_user_group) }
   let(:stripe_management_user) { FactoryBot.create(:stripe_management_user, user_group_id: stripe_management_user_group.id) }
 
@@ -32,9 +31,7 @@ RSpec.describe ProductsController, type: :controller do
   let!(:order) { FactoryBot.create(:order, product_id: product_1.id, stripe_order_payment_data: { currency: gbp.iso_code }) }
   let!(:valid_params) { FactoryBot.attributes_for(:product, active: false, currency_id: gbp.id, mock_exam_id: mock_exam.id, correction_pack_count: 1) }
 
-
   context 'Logged in as a stripe_management_user: ' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(stripe_management_user)
@@ -76,6 +73,38 @@ RSpec.describe ProductsController, type: :controller do
       it 'should report error for invalid params' do
         post :create, params: { product: {valid_params.keys.first => ''} }
         expect_create_error_with_model('product')
+      end
+    end
+
+    describe "POST 'reorder'" do
+      context 'keep order' do
+        before do
+          post :reorder, params: { array_of_ids: Product.all.pluck(:id) }
+        end
+
+        it 'returns HTTP status 200' do
+          expect(response).to have_http_status 200
+          expect(response.body).to eq('{}')
+        end
+
+        it 'return a same product list' do
+          expect(Product.all.pluck(:sorting_order)).to eq([1, 2])
+        end
+      end
+
+      context 'reverse order' do
+        before do
+          post :reorder, params: { array_of_ids: Product.all.pluck(:id).reverse }
+        end
+
+        it 'returns HTTP status 200' do
+          expect(response).to have_http_status 200
+          expect(response.body).to eq('{}')
+        end
+
+        it 'return a reorder product list' do
+          expect(Product.all.order(:id).pluck(:sorting_order)).to eq([2, 1])
+        end
       end
     end
 

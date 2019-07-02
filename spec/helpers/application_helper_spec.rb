@@ -1,8 +1,6 @@
 require 'rails_helper'
 
-
 RSpec.describe ApplicationHelper, type: :helper do
-
   describe '#humanize_stripe_date_full' do
     context 'with a date passed in' do
       it 'returns the correctly formatted date' do

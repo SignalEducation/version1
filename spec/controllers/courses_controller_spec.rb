@@ -197,17 +197,18 @@ RSpec.describe CoursesController, type: :controller do
     end
 
     describe 'Get submit_constructed_response_user_log with CMEUL data for CR for final submit' do
-
       it 'should respond ok and redirect to ' do
         get :submit_constructed_response_user_log, params: { cmeul_id: cr_cmeul.id }
+        course_url = course_url(cr_cmeul.course_module_element.course_module.course_section.subject_course.name_url,
+                                cr_cmeul.course_module_element.course_module.course_section.name_url,
+                                cr_cmeul.course_module_element.course_module.name_url,
+                                cr_cmeul.course_module_element.name_url)
+
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(course_url(cr_cmeul.course_module_element.course_module.course_section.subject_course.name_url, cr_cmeul.course_module_element.course_module.course_section.name_url, cr_cmeul.course_module_element.course_module.name_url, cr_cmeul.course_module_element.name_url))
+        expect(response).to redirect_to(course_url)
       end
-
     end
-
   end
-
 end

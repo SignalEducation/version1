@@ -18,7 +18,7 @@
                 -if order.product && order.product.mock_exam
                   =order.product.mock_exam.name.to_s.truncate(20)
               %td=order.stripe_status.to_s.capitalize
-              %td=number_in_local_currency(order.product.price, order.product.currency_id)
+              %td=number_in_local_currency(order.product.price, order.product.currency)
               %td
                 -if order.product && order.product.mock_exam
                   =link_to pdf_invoice_path(order.invoice.id, format: 'pdf'), target: '_blank' do

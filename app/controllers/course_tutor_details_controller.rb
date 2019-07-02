@@ -1,21 +1,9 @@
-# == Schema Information
-#
-# Table name: course_tutor_details
-#
-#  id                :integer          not null, primary key
-#  subject_course_id :integer
-#  user_id           :integer
-#  sorting_order     :integer
-#  title             :string
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#
+# frozen_string_literal: true
 
 class CourseTutorDetailsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(system_requirements_access content_management_access user_management_access))
+    ensure_user_has_access_rights(%w[system_requirements_access content_management_access user_management_access])
   end
   before_action :get_variables
 
@@ -27,11 +15,11 @@ class CourseTutorDetailsController < ApplicationController
     @course_tutor_detail = CourseTutorDetail.new(subject_course_id: @subject_course.id, sorting_order: 1)
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @course_tutor_detail = CourseTutorDetail.new(allowed_params)
+
     if @course_tutor_detail.save
       flash[:success] = I18n.t('controllers.course_tutor_details.create.flash.success')
       redirect_to subject_course_course_tutor_details_url(@subject_course)
@@ -54,7 +42,8 @@ class CourseTutorDetailsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       CourseTutorDetail.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -63,18 +52,15 @@ class CourseTutorDetailsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.course_tutor_details.destroy.flash.error')
     end
+
     redirect_to subject_course_course_tutor_details_url(@subject_course)
   end
 
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @course_tutor_detail = CourseTutorDetail.where(id: params[:id]).first
-    end
-    if params[:subject_course_id].to_i > 0
-      @subject_course = SubjectCourse.where(id: params[:subject_course_id]).first
-    end
+    @course_tutor_detail = CourseTutorDetail.where(id: params[:id]).first if params[:id].to_i > 0
+    @subject_course = SubjectCourse.where(id: params[:subject_course_id]).first if params[:subject_course_id].to_i > 0
     @layout = 'management'
     @tutor_users = User.all_tutors.all_in_order
   end
@@ -82,5 +68,4 @@ class CourseTutorDetailsController < ApplicationController
   def allowed_params
     params.require(:course_tutor_detail).permit(:subject_course_id, :user_id, :sorting_order, :title)
   end
-
 end

@@ -1,37 +1,9 @@
-# == Schema Information
-#
-# Table name: home_pages
-#
-#  id                            :integer          not null, primary key
-#  seo_title                     :string
-#  seo_description               :string
-#  subscription_plan_category_id :integer
-#  public_url                    :string
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  subject_course_id             :integer
-#  custom_file_name              :string
-#  group_id                      :integer
-#  name                          :string
-#  home                          :boolean          default(FALSE)
-#  header_heading                :string
-#  header_paragraph              :text
-#  header_button_text            :string
-#  background_image              :string
-#  header_button_link            :string
-#  header_button_subtext         :string
-#  footer_link                   :boolean          default(FALSE)
-#  mailchimp_list_guid           :string
-#  mailchimp_section_heading     :string
-#  mailchimp_section_subheading  :string
-#  mailchimp_subscribe_section   :boolean          default(FALSE)
-#
+# frozen_string_literal: true
 
 class HomePagesController < ApplicationController
-
   before_action :logged_in_required
   before_action  do
-    ensure_user_has_access_rights(%w(system_requirements_access marketing_resources_access))
+    ensure_user_has_access_rights(%w[system_requirements_access marketing_resources_access])
   end
   before_action :get_variables
 
@@ -52,6 +24,7 @@ class HomePagesController < ApplicationController
 
   def create
     @home_page = HomePage.new(allowed_params)
+
     if @home_page.save
       flash[:success] = I18n.t('controllers.home_pages.create.flash.success')
       redirect_to home_pages_url
@@ -76,15 +49,14 @@ class HomePagesController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.home_pages.destroy.flash.error')
     end
+
     redirect_to home_pages_url
   end
 
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @home_page = HomePage.where(id: params[:id]).first
-    end
+    @home_page = HomePage.where(id: params[:id]).first if params[:id].to_i > 0
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
     @groups = Group.all_active.all_in_order
@@ -113,9 +85,6 @@ class HomePagesController < ApplicationController
                                       ],
                                       external_banners_attributes: [:id, :name, :background_colour,
                                                                     :text_content, :sorting_order,
-                                                                    :_destroy]
-    )
-
+                                                                    :_destroy])
   end
-
 end

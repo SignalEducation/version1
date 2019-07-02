@@ -1,68 +1,29 @@
-# == Schema Information
-#
-# Table name: subject_courses
-#
-#  id                                      :integer          not null, primary key
-#  name                                    :string
-#  name_url                                :string
-#  sorting_order                           :integer
-#  active                                  :boolean          default(FALSE), not null
-#  cme_count                               :integer
-#  video_count                             :integer
-#  quiz_count                              :integer
-#  question_count                          :integer
-#  description                             :text
-#  short_description                       :string
-#  created_at                              :datetime         not null
-#  updated_at                              :datetime         not null
-#  best_possible_first_attempt_score       :float
-#  default_number_of_possible_exam_answers :integer
-#  total_video_duration                    :float            default(0.0)
-#  destroyed_at                            :datetime
-#  email_content                           :text
-#  external_url_name                       :string
-#  external_url                            :string
-#  exam_body_id                            :integer
-#  survey_url                              :string
-#  group_id                                :integer
-#  quiz_pass_rate                          :integer
-#  total_estimated_time_in_seconds         :integer
-#  background_image_file_name              :string
-#  background_image_content_type           :string
-#  background_image_file_size              :integer
-#  background_image_updated_at             :datetime
-#  preview                                 :boolean          default(FALSE)
-#  computer_based                          :boolean          default(FALSE)
-#  highlight_colour                        :string           default("#ef475d")
-#  category_label                          :string
-#  additional_text_label                   :string
-#  constructed_response_count              :integer          default(0)
-#
+# frozen_string_literal: true
 
 class SubjectCoursesController < ApplicationController
-
-  # Before Actions #
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
+    ensure_user_has_access_rights(%w[content_management_access])
   end
   before_action :get_variables
 
-
-  # Standard Actions #
   def index
-    if params[:group_id]
-      @subject_courses = SubjectCourse.where(group_id: params[:group_id]).all_in_order
-    else
-      @subject_courses = SubjectCourse.all_in_order
-    end
-    @subject_courses = params[:search].to_s.blank? ?
-                           @subject_courses = @subject_courses.all_in_order :
-                           @subject_courses = @subject_courses.search(params[:search])
+    @subject_courses =
+      if params[:group_id]
+        SubjectCourse.where(group_id: params[:group_id]).all_in_order
+      else
+        SubjectCourse.all_in_order
+      end
+
+    @subject_courses =
+      if params[:search].to_s.blank?
+        @subject_courses.all_in_order
+      else
+        @subject_courses.search(params[:search])
+      end
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @subject_course = SubjectCourse.new(sorting_order: 1)
@@ -70,6 +31,7 @@ class SubjectCoursesController < ApplicationController
 
   def create
     @subject_course = SubjectCourse.new(allowed_params)
+
     if @subject_course.save
       flash[:success] = I18n.t('controllers.subject_courses.create.flash.success')
       redirect_to subject_courses_url
@@ -78,8 +40,7 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @subject_course.update_attributes(allowed_params)
@@ -92,10 +53,11 @@ class SubjectCoursesController < ApplicationController
 
   def reorder
     array_of_ids = params[:array_of_ids]
-    array_of_ids.each_with_index do |the_id, counter|
-      SubjectCourse.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
+    array_of_ids.each_with_index do |id, counter|
+      SubjectCourse.find_by(id: id).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -104,12 +66,11 @@ class SubjectCoursesController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subject_courses.destroy.flash.error')
     end
+
     redirect_to subject_courses_url
   end
 
-
   # Non-standard Actions #
-
   ## Index, New & Create Actions for SubjectCourseResources that belong_to this SubjectCourse ##
   def subject_course_resources
     @subject_course = SubjectCourse.find(params[:id])
@@ -133,9 +94,7 @@ class SubjectCoursesController < ApplicationController
     end
   end
 
-
   ## Misc Actions ##
-
   ### Creates list of the Course's CourseModules for Drag&Drop reordering (posted to CourseModules#reorder) ###
   def course_modules_order
     @course_modules = @subject_course.children
@@ -145,11 +104,11 @@ class SubjectCoursesController < ApplicationController
   def update_student_exam_tracks
     subject_course = SubjectCourse.where(id: params[:id]).first
     subject_course.update_all_course_logs
+
     redirect_to subject_course_url(subject_course)
   end
 
-  def trial_content
-  end
+  def trial_content; end
 
   def update_trial_content
     if @subject_course.update_attributes(nested_trial_params)
@@ -158,7 +117,6 @@ class SubjectCoursesController < ApplicationController
     else
       render action: :trial_content
     end
-
   end
 
   def export_course_user_logs
@@ -170,15 +128,12 @@ class SubjectCoursesController < ApplicationController
       format.csv { send_data @sculs.to_csv() }
       format.xls { send_data @sculs.to_csv(col_sep: "\t", headers: true), filename: "#{@course.name}-user-logs-#{Date.today}.xls" }
     end
-
   end
 
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @subject_course = SubjectCourse.where(id: params[:id]).first
-    end
+    @subject_course = SubjectCourse.find_by(id: params[:id]) if params[:id].to_i > 0
     @groups = Group.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
@@ -186,33 +141,32 @@ class SubjectCoursesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:subject_course).permit(:name, :name_url, :sorting_order,
-                                           :active, :description, :release_date,
-                                           :short_description, :exam_body_id,
-                                           :default_number_of_possible_exam_answers,
-                                           :background_image, :survey_url,
-                                           :quiz_pass_rate, :group_id, :preview,
-                                           :computer_based, :highlight_colour,
-                                           :category_label, :icon_label,
-                                           :seo_title, :seo_description,
-                                           course_sections_attributes: [
-                                             course_modules_attributes: [
-                                                 course_module_elements_attributes: [
-                                                     :available_on_trial
-                                                 ]
-                                             ]
-                                           ]
+    params.require(:subject_course).permit(
+      :name, :name_url, :sorting_order, :active, :description, :release_date,
+      :short_description, :exam_body_id, :default_number_of_possible_exam_answers,
+      :background_image, :survey_url, :quiz_pass_rate, :group_id, :preview,
+      :computer_based, :highlight_colour, :category_label, :icon_label,
+      :seo_title, :seo_description,
+      course_sections_attributes: [
+        course_modules_attributes: [
+          course_module_elements_attributes: [
+            :available_on_trial
+          ]
+        ]
+      ]
     )
   end
 
   def nested_trial_params
-    params.require(:subject_course).permit(subject_course_resources_attributes: [:id, :available_on_trial],
-                                           course_sections_attributes: [
-                                               :id, course_modules_attributes: [
-                                                 :id, course_module_elements_attributes:
-                                                                             [:id, :available_on_trial]
-                                               ]
-                                           ]
+    params.require(:subject_course).permit(
+      subject_course_resources_attributes: [:id, :available_on_trial],
+      course_sections_attributes: [
+        :id,
+        course_modules_attributes: [
+          :id,
+          course_module_elements_attributes: [:id, :available_on_trial]
+        ]
+      ]
     )
 
   end
@@ -222,5 +176,4 @@ class SubjectCoursesController < ApplicationController
                                                     :description, :file_upload,
                                                     :external_url)
   end
-
 end

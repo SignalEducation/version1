@@ -26,7 +26,7 @@
                           %tr
                             %td=invoice.id
                             %td=humanize_datetime(invoice.issued_at)
-                            %td=number_in_local_currency(invoice.total, invoice.currency_id)
+                            %td=number_in_local_currency(invoice.total, invoice.currency)
                             %td=invoice_type(invoice)
                             %td
                               %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}

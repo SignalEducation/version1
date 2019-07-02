@@ -42,7 +42,7 @@
                         .pt-2
                           %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                         %p.h6.text-ellipsis.pt-4
-                          =number_in_local_currency(product.price, product.currency_id)
+                          =number_in_local_currency(product.price, product.currency)
                         .pt-2
                           %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
 
@@ -61,7 +61,7 @@
                       .pt-2
                         %i.budicon-files-tick{"aria-label" => "", :role => "img"}
                       %p.h6.text-ellipsis.pt-4
-                        =number_in_local_currency(question.price, question.currency_id)
+                        =number_in_local_currency(question.price, question.currency)
                       .pt-2
                         %span.btn.btn-secondary.btn-sm.btn-sm-arrow-right Buy Now
 

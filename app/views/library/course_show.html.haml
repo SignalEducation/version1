@@ -108,7 +108,7 @@
 
                               - if current_user #Logged In User
                                 -if @valid_subscription
-                                  =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                  =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
                                     .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                                       %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
                                         =cme.icon_label
@@ -136,7 +136,7 @@
 
                                   - if permission[:view]
 
-                                    =link_to course_special_link(cme, @group.exam_body_id, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
+                                    =link_to course_special_link(cme, @subject_course_user_log), class: 'btn btn-text py-3 w-100 text-left' do
                                       .lesson-item.lesson-item-inner.w-100{class: @cmeuls && @cmeuls_ids.include?(cme.id) ? (@completed_cmeuls_cme_ids.include?(cme.id) ? 'completed' : 'failed') : ''}
                                         %i.material-icons.icon-bg-round{"aria-label" => "failed", :role => "img"}
                                           =cme.icon_label
