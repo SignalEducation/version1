@@ -37,6 +37,7 @@ class InvoiceLineItem < ApplicationRecord
 
   # scopes
   scope :all_in_order, -> { order(:invoice_id) }
+  scope :all_prorated, -> { where(prorated: true) }
 
   # class methods
   def self.build_from_stripe_data(invoice_id, stripe_hash, subscription_id)
