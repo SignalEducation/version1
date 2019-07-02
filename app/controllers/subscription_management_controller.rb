@@ -71,7 +71,7 @@ class SubscriptionManagementController < ApplicationController
 
   def cancel
     @subscription = Subscription.where(id: params[:subscription_management_id]).first
-    if SubscriptionService.new(@subscription).cancel
+    if SubscriptionService.new(@subscription).cancel_subscription
       flash[:success] = I18n.t('controllers.subscription_management.cancel.flash.success')
     else
       Rails.logger.warn "WARN: SubscriptionManagement#cancel failed to cancel a subscription. Errors:#{@subscription.errors.inspect}"
