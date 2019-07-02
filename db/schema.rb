@@ -110,9 +110,10 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "cbe_question_statuses", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["name"], name: "index_cbe_question_statuses_on_name", unique: true
   end
 
   create_table "cbe_question_types", force: :cascade do |t|
@@ -133,9 +134,10 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "cbe_section_types", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["name"], name: "index_cbe_section_types_on_name", unique: true
   end
 
   create_table "cbe_sections", force: :cascade do |t|
