@@ -14,7 +14,7 @@
 #  continent     :string
 #
 
-class Country < ApplicationRecord
+class Country < ActiveRecord::Base
 
   include LearnSignalModelExtras
 

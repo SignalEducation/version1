@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: products
@@ -19,30 +21,28 @@
 #
 
 class ProductsController < ApplicationController
-
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w(stripe_management_access))
-  end
-  before_action :get_variables
+  before_action { ensure_user_has_access_rights(%w[stripe_management_access]) }
+  before_action :seo_title,   except: %i[reorder]
+  before_action :set_layout,  except: %i[reorder]
+  before_action :set_product, only:   %i[show edit update destroy]
 
   ## Standard Actions ##
   def index
     @all_products = Product.all
-    @products = params[:search].to_s.blank? ?
-        @products = @all_products.all_in_order :
-        @products = @all_products.search(params[:search])
+    @products = params[:search].to_s.blank? ? @all_products.all_in_order : @all_products.search(params[:search])
   end
 
-  def show
-  end
+  def show; end
 
   def new
-    @product = Product.new
+    @product         = Product.new
+    @currencies      = Currency.all_in_order
+    @mock_exams      = MockExam.all_in_order
+    @subject_courses = SubjectCourse.all_active.all_in_order
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @product = Product.new(allowed_params)
@@ -55,15 +55,17 @@ class ProductsController < ApplicationController
   end
 
   def reorder
-    array_of_ids = params[:array_of_ids]
-    array_of_ids.each_with_index do |the_id, counter|
-      Product.find(the_id.to_i).update_columns(sorting_order: (counter + 1))
+    ids = params[:array_of_ids]
+
+    ids.each_with_index do |id, counter|
+      Product.find(id).update(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+
+    render json: {}, status: :ok
   end
 
   def update
-    if @product.update_attributes(allowed_params)
+    if @product.update(allowed_params)
       flash[:success] = I18n.t('controllers.products.update.flash.success')
       redirect_to products_url
     else
@@ -77,27 +79,27 @@ class ProductsController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.products.destroy.flash.error')
     end
+
     redirect_to products_url
   end
 
   protected
 
-  def get_variables
-    if params[:id].to_i > 0
-      @product = Product.where(id: params[:id]).first
-    end
-    @currencies = Currency.all_in_order
-    @mock_exams = MockExam.all_in_order
-    @subject_courses = SubjectCourse.all_active.all_in_order
-    seo_title_maker(@product.try(:name) || 'Products', '', true)
+  def set_product
+    @product = Product.find(id: params[:id])
+  end
+
+  def set_layout
     @layout = 'management'
   end
 
-  def allowed_params
-    params.require(:product).permit(
-      :name, :active, :price, :currency_id, :livemode, :mock_exam_id,
-      :sorting_order, :product_type, :correction_pack_count
-    )
+  def seo_title
+    seo_title_maker(@product.try(:name) || 'Products', '', true)
   end
 
+  def allowed_params
+    params.require(:product).permit(:name, :active, :price, :currency_id, :livemode,
+                                    :mock_exam_id, :sorting_order, :product_type,
+                                    :correction_pack_count)
+  end
 end
