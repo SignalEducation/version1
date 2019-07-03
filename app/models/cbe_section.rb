@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CbeSection < ApplicationRecord
 
   belongs_to :cbe, dependent: :destroy
