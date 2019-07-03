@@ -10,7 +10,6 @@ RSpec.describe CbeMultipleChoiceQuestion, type: :model do
                                       scenario_description: 'S Desc',
                                       cbe: cbe)
       cbe_question_grouping = CbeQuestionGrouping.create(cbe_section_id: cbe_section.id, cbe_id: cbe.id)
-      cbe_question_grouping.id
       cbe_question1 = CbeMultipleChoiceQuestion.create(label: 'Choice 1',
                                                        is_correct_answer: false,
                                                        order: 1,
