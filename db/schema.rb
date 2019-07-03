@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_131017) do
+ActiveRecord::Schema.define(version: 2019_07_03_131218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -838,6 +838,13 @@ ActiveRecord::Schema.define(version: 2019_07_03_131017) do
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
     t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
+  end
+
+  create_table "question_types", force: :cascade do |t|
+    t.string "name"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
