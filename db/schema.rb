@@ -141,17 +141,13 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "cbe_sections", force: :cascade do |t|
-    t.string "name"
-    t.bigint "cbes_id"
     t.text "scenario_description"
     t.text "question_description"
     t.string "scenario_label"
     t.string "question_label"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "cbe_section_id"
-    t.index ["cbe_section_id"], name: "index_cbe_sections_on_cbe_section_id"
-    t.index ["cbes_id"], name: "index_cbe_sections_on_cbes_id"
+    t.string "name"
   end
 
   create_table "cbes", force: :cascade do |t|
@@ -1382,7 +1378,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   add_foreign_key "cbe_introduction_pages", "cbe_introduction_pages"
   add_foreign_key "cbe_question_types", "cbe_questions"
   add_foreign_key "cbe_questions", "cbe_questions"
-  add_foreign_key "cbe_sections", "cbe_sections"
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
