@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_131218) do
+ActiveRecord::Schema.define(version: 2019_07_03_132151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -137,10 +137,9 @@ ActiveRecord::Schema.define(version: 2019_07_03_131218) do
 
   create_table "cbe_question_types", force: :cascade do |t|
     t.string "name"
+    t.integer "order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "cbe_question_id"
-    t.index ["cbe_question_id"], name: "index_cbe_question_types_on_cbe_question_id"
   end
 
   create_table "cbe_questions", force: :cascade do |t|
@@ -1373,7 +1372,6 @@ ActiveRecord::Schema.define(version: 2019_07_03_131218) do
   add_foreign_key "cbe_multiple_choice_questions", "cbe_question_groupings"
   add_foreign_key "cbe_question_groupings", "cbe_sections"
   add_foreign_key "cbe_question_groupings", "cbes"
-  add_foreign_key "cbe_question_types", "cbe_questions"
   add_foreign_key "cbe_questions", "cbe_questions"
   add_foreign_key "cbe_sections", "cbes"
   add_foreign_key "exercises", "products"
