@@ -43,8 +43,9 @@ class Enrollment < ApplicationRecord
   before_destroy :check_dependencies
   before_validation :create_subject_course_user_log, unless: :subject_course_user_log_id
   before_create :set_percentage_complete, if: :subject_course_user_log_id
-  after_create :create_expiration_worker, :deactivate_siblings, :create_or_update_analytics_enrollment
+  after_create :create_expiration_worker, :deactivate_siblings
   after_update :create_expiration_worker, if: :exam_date_changed?
+  after_save :update_mailchimp_tag
 
   # scopes
   scope :all_in_order, -> { order(:active, :created_at) }
@@ -186,8 +187,8 @@ class Enrollment < ApplicationRecord
     self.percentage_complete = subject_course_user_log.percentage_complete
   end
 
-  def create_or_update_analytics_enrollment
-
+  def update_mailchimp_tag
+    MailchimpService.new.audience_enrollment_tag(self.id, self.expired ? 'inactive' : 'active') if self.exam_body_id
   end
 
   def create_expiration_worker

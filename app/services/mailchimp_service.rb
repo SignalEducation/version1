@@ -76,6 +76,21 @@ class MailchimpService
     Rails.logger.debug "Error: MailChimp#add_subscriber - Response: #{member.body}"
   end
 
+  def audience_enrollment_tag(enrollment_id, state)
+    enrollment = Enrollment.find(enrollment_id)
+    exam_body = enrollment.exam_body
+    user = enrollment.user
+
+    member = list(exam_body.audience_guid, user).tags.create(
+        body: {
+            tags: [{name: enrollment.exam_sitting.name.to_s, status: state}]
+        }
+    )
+    Rails.logger.debug "Error: MailChimp#add_enrollment_tag - Response: #{member}"
+  rescue Gibbon::MailChimpError => e
+    Rails.logger.error "Error: MailChimp#add_enrollment_tag - Error: #{e}"
+  end
+
 
   def list(list_id, user)
     @mailchimp.lists(list_id).members(
