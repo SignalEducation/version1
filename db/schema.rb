@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_132151) do
+ActiveRecord::Schema.define(version: 2019_07_03_132823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 2019_07_03_132151) do
     t.bigint "cbe_section_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cbe_id", "cbe_section_id"], name: "index_cbe_question_groupings_on_cbe_id_and_cbe_section_id", unique: true
     t.index ["cbe_id"], name: "index_cbe_question_groupings_on_cbe_id"
     t.index ["cbe_section_id"], name: "index_cbe_question_groupings_on_cbe_section_id"
   end
