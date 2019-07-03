@@ -6,3 +6,4 @@ class CbeSection < ApplicationRecord
   validates :name, :scenario_label, :scenario_description, :cbe, presence: true
 
 end
+/
