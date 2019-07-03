@@ -846,6 +846,13 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
+  create_table "question_types", force: :cascade do |t|
+    t.string "name"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
     t.integer "quiz_question_id"
     t.boolean "correct", default: false, null: false
