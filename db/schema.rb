@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.bigint "cbe_section_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cbe_id", "cbe_section_id"], name: "index_cbe_question_groupings_on_cbe_id_and_cbe_section_id", unique: true
     t.index ["cbe_id"], name: "index_cbe_question_groupings_on_cbe_id"
     t.index ["cbe_section_id"], name: "index_cbe_question_groupings_on_cbe_section_id"
   end
