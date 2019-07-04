@@ -4354,6 +4354,19 @@ a.card:hover .card-title .card-explanation {
   background-size: cover;
   min-height: 1400px
 }
+.home-hero-alt-bg.bg-1 {
+  background-image: asset-url('hero-bg-1.jpg');
+  background-position: 40% 70%;
+}
+.home-hero-alt-bg.bg-2 {
+  background-image: asset-url('hero-bg-2.jpg');
+}
+.home-hero-alt-bg.bg-3 {
+  background-image: asset-url('hero-bg-3.jpg');
+}
+.home-hero-alt-bg.bg-4 {
+  background-image: asset-url('hero-bg-4.jpg');
+}
 @media (min-width:768px) {
   .home-hero-alt-bg {
     min-height: auto
