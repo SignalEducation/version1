@@ -1,4 +1,6 @@
 class CbesController < ApplicationController
+
+
   def index
 
   end
@@ -7,4 +9,7 @@ class CbesController < ApplicationController
     render json: Cbe.last
   end
 
+  def new
+    Cbe.new (params)
+  end
 end
