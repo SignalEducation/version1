@@ -243,7 +243,7 @@ Rails.application.routes.draw do
 
     # HomePages Structure
     get 'home', to: 'routes#root', as: :home
-    get 'group/:public_url', to: 'student_sign_ups#landing', as: :group_landing
+    get 'course/:name_url', to: 'student_sign_ups#group', as: :group_landing
 
     root 'student_sign_ups#home'
 

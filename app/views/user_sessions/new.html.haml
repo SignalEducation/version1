@@ -5,8 +5,11 @@
         %h1.h2-hero.mb-2
           =t('views.user_sessions.new.h1')
         %p.p-hero.px-lg-6
-          ="Don't have an account?"
-          =link_to 'Register today.', new_student_url
+          ="Welcome Back. Login to continue your learning."
+          %p
+            ="Don't have an account?"
+            =link_to 'Register today.', new_student_url
+
       %section.pb-md-6.pb-5
         .login-section
           #sign-in.form-box

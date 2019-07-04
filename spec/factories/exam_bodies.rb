@@ -25,5 +25,7 @@ FactoryBot.define do
     active                    { true }
     constructed_response_intro_heading {'Intro Heading'}
     constructed_response_intro_text {'Intro Text'}
+    landing_page_h1 {'Header H1'}
+    landing_page_paragraph {'Header P Text'}
   end
 end

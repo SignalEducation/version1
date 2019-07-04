@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :check_logged_in_status, except: %i[landing subscribe]
+
+  skip_after_action :intercom_rails_auto_include, only: [:landing, :new, :sign_in_or_register]
+  before_action :check_logged_in_status, except: %i[landing subscribe group]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register landing]
@@ -75,6 +77,26 @@ class StudentSignUpsController < ApplicationController
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
     flash[:product_id] = @product.id if @product
+  end
+
+  def group
+    @group = Group.find_by(name_url: params[:name_url])
+    @exam_body = @group.exam_body
+    seo_title_maker(@group.seo_title, @group.seo_description, nil)
+
+    ip_country = IpAddress.get_country(request.remote_ip)
+    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
+
+    if country && @currency_id
+      @subscription_plans = SubscriptionPlan.where(
+          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+      ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+    end
+
+    @navbar = false
+    @top_margin = false
+    @footer = true
   end
 
   def new

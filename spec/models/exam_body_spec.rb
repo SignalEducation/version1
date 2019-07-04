@@ -37,6 +37,10 @@ describe ExamBody do
 
   it { should validate_presence_of(:url) }
 
+  it { should validate_presence_of(:landing_page_h1) }
+
+  it { should validate_presence_of(:landing_page_paragraph) }
+
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }

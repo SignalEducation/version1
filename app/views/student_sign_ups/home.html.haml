@@ -1,25 +1,4 @@
-%header.header.sticky-top
-  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
-    .container.animate.fade-in-up
-      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
-        %span.navbar-toggler-bar.frst
-        %span.navbar-toggler-bar.scnd
-
-      =link_to home_url, class: 'navbar-brand logo' do
-        =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
-
-      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
-        %ul.navbar-nav.align-items-lg-center
-          %li.nav-item
-            =link_to library_url, class: 'nav-link' do
-              %span Courses
-          %li.nav-item
-            =link_to new_student_url, class: 'nav-link' do
-              %span Register
-          %li.nav-item
-            =link_to sign_in_url, class: 'nav-link navbar-login' do
-              %span Login
-
+=render partial: 'layouts/external_navbar'
 %main
   .container.home-hero-container
     %article.home-hero
@@ -27,7 +6,7 @@
         .col-xl-4
           %header.home-hero-header.pb-2
             <h1 class="h1-hero">the smarter<br>way to study<span class="text-mint">.</span></h1>
-            %p.p-hero Designed by experts and delivered online so that you can study on a schedule that suits your needs.
+            %p.p-hero Get everything you need to pass your ACCA exam in one place! See why over 100,000 students have saved money and time by switching to studying online with learnsignal.
         .col-xl-8
           %aside.home-hero-aside.py-2.py-sm-0
             .home-hero-img-wrap
@@ -54,85 +33,69 @@
 
         %small No credit card required. Set-up takes one minute
 
-  .container
-    %article.py-5
-      %header.text-center.pb-sm-4.pb-md-5
-        %h2.h1-mega Explore our courses
-        %p.p-hero.px-lg-6
-          Discover our professional courses designed by experts and delivered online so that you can study on a schedule that suits your needs.
-      .row.row-lg
-        -@groups.each do |group|
-          .col-lg
-            %article.card.card-primary.card-pink
-              =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
-              .card-body.text-center
-                %h2.h1.card-title
-                  =group.name
-                %p
-                  =group.description
-                .mt-auto
-                  =link_to 'Browse Courses', library_special_link(group), class: 'btn btn-secondary btn-sm'
+  =render partial: 'usage_numbers_section'
 
-  .container-bg.bg-navy
-    .container
-      %article.text-gray3.text-center.py-6.py-sm-7
-        %header.pb-3
-          %h2.h1-mega.text-white.px-5.px-sm-6 Discover the smarter way to study
-          %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
-        .px-4.px-lg-8
-          .row.row-lg
-            .col-md-3
-              .pb-4.d-flex.flex-md-column.align-items-center
-                .mr-4.mb-md-4.mx-md-0
-                  %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Access anytime, anywhere
-            .col-md-3
-              .pb-4.d-flex.flex-md-column.align-items-center
-                .mr-4.mb-md-4.mx-md-0
-                  %i.budicon-card-slides{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Topic-by-topic online lectures
-            .col-md-3
-              .pb-4.d-flex.flex-md-column.align-items-center
-                .mr-4.mb-md-4.mx-md-0
-                  %i.budicon-doc-marker{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Expert notes and corrected questions
-            .col-md-3
-              .pb-4.d-flex.flex-md-column.align-items-center
-                .mr-4.mb-md-4.mx-md-0
-                  %i.budicon-happy-chat{"aria-hidden" => "true"}
-                %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
-
-  .container
-    %article.py-3.py-6.text-center.text-lg-left
-      %header.sr-only
-        %h2 Testimonial
-      .row.row-lg
-        .col-lg-5
-          =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
-        .col-lg-7
-          .d-flex.h-100.align-items-center
-            %blockquote.mb-0.ml-lg-6.mr-lg-6
-              %p.text-gray2
-                "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
-              %footer
-                %cite.font-weight-semi-bold.text-gray2
-                  Rebecca Nagujja, Ireland
   .container-bg.bg-gray5
-    .container-sm
-      %article.text-center.py-6.py-lg-7
-        %header
-          %h2.h1.mb-4.px-4 We're here to guide you through.
-          %p.px-4.px-sm-0 We are 100% dedicated to helping you achieve your study goals. Get in touch if you have any questions about our courses.
-        .py-4.d-flex.justify-content-center
-          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
-            =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+    .container
+      %article.py-5
+        %header.text-center.pb-sm-4.pb-md-5
+          %h2.h1-mega Explore our courses
+          %p.p-hero.px-lg-6
+            Make learning simple and affordable by studying online in a way that suits your professional and personal life.
+        .row.row-lg
+          -@groups.each do |group|
+            .col-lg
+              %article.card.card-primary.card-pink
+                =image_tag(group.image.url, class: 'card-img-top', alt: 'People in front of the blackboard', style: "border-bottom-color: #{group.background_colour};")
+                .card-body.text-center
+                  %h2.h1.card-title
+                    =group.name
+                  %p
+                    =group.description
+                  .mt-auto
+                    =link_to 'Browse Courses', group_landing_url(group.name_url), class: 'btn btn-secondary btn-sm'
 
-        .py-3
-          %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
-            Chat with our experts
+  =render partial: 'usp_section'
+
+  .container-bg.bg-gray5
+    .container
+      %article.py-5
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-lg-6
+              .text-center
+                =image_tag('learning-partner-badge.png', alt: 'Logo')
+            .col-12.col-lg-6
+              .py-6
+                %h2.h1-mega.text-center
+                  A gold approved ACCA partner
+                %p.text-gray2.pt-5.text-center
+                  Learnsignal became a gold approved ACCA partner in April 2017. Since then, we have continued to challenge the traditional way of learning and grown our student base across 130 countries to over 100,000.
 
 
-=render partial: 'footer_pages/contact_us_form_modal'
+  -if @home_page.student_testimonials.any?
+    =render partial: 'student_testimonials', locals: {home_page: @home_page}
+  -else
+    .container
+      %article.py-3.py-6.text-center.text-lg-left
+        %header.sr-only
+          %h2 Testimonial
+        .row.row-lg
+          .col-lg-5
+            =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+          .col-lg-7
+            .d-flex.h-100.align-items-center
+              %blockquote.mb-0.ml-lg-6.mr-lg-6
+                %p.text-gray2
+                  "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                %footer
+                  %cite.font-weight-semi-bold.text-gray2
+                    Rebecca Nagujja, Ireland
+
+  -if @home_page.blog_posts.any?
+    =render partial: 'blog_posts_section', locals: {home_page: @home_page}
+
+  =render partial: 'customer_support_section'
 
 :javascript
 
@@ -146,3 +109,7 @@
       $(".header").removeClass("sticky-nav-border");
     }
   });
+
+  $('.carousel').carousel({
+    interval: 2500
+  })
