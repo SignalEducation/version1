@@ -110,6 +110,28 @@ Rails.application.routes.draw do
     resources :content_activations, only: [:new, :create]
     resource :preferred_exam_body, only: [:edit, :update]
 
+    resources :user_groups
+    resources :subscription_management do
+      get '/invoice/:invoice_id', action: :invoice, as: :invoice
+      get '/pdf_invoice/:invoice_id', action: :pdf_invoice, as: :pdf_invoice
+      get '/invoice/:invoice_id/charge/:id', action: :charge, as: :invoice_charge
+      put '/cancel', action: :cancel, as: :cancel
+      put '/un_cancel', action: :un_cancel_subscription, as: :un_cancel_subscription
+      put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
+      put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
+    end
+    resources :users do
+      get '/personal', action: :user_personal_details, as: :personal
+      get '/subscription', action: :user_subscription_status, as: :subscription
+      get '/courses', action: :user_courses_status, as: :courses
+      get '/enrollments', action: :user_activity_details, as: :activity
+      get '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
+      get '/orders', action: :user_purchases_details, as: :orders
+      get '/referrals', action: :user_referral_details, as: :referrals
+      patch '/update_courses', action: :update_courses, as: :update_courses
+      resources :exercises, only: [:index, :show, :edit, :update], shallow: true
+      resources :invoices, only: :index, shallow: true
+    end
     resources :invoices, only: :show do
       get 'pdf', action: :pdf, on: :member
     end
@@ -250,9 +272,18 @@ Rails.application.routes.draw do
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
+
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
+
+
   end
+
 
   # Catch-all
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
+
+
+  # CBE Routes
+
+
 end
