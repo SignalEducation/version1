@@ -44,9 +44,11 @@ class HomePage < ApplicationRecord
   belongs_to :subject_course, optional: true
   has_many :blog_posts
   has_many :external_banners
+  has_many :student_testimonials
 
   accepts_nested_attributes_for :blog_posts, reject_if: lambda { |attributes| blog_nested_resource_is_blank?(attributes) }, allow_destroy: true
   accepts_nested_attributes_for :external_banners, reject_if: lambda { |attributes| banner_nested_resource_is_blank?(attributes) }, allow_destroy: true
+  accepts_nested_attributes_for :student_testimonials, reject_if: lambda { |attributes| student_testimonial_nested_resource_is_blank?(attributes) }, allow_destroy: true
 
   # validation
   validates :name, presence: true, length: {maximum: 255}, uniqueness: true
@@ -95,6 +97,12 @@ class HomePage < ApplicationRecord
     attributes['name'].blank? &&
         attributes['background_colour'].blank? &&
         attributes['text_content'].blank? &&
+        attributes['sorting_order'].blank?
+  end
+
+  def self.student_testimonial_nested_resource_is_blank?(attributes)
+    attributes['text'].blank? &&
+        attributes['signature'].blank? &&
         attributes['sorting_order'].blank?
   end
 

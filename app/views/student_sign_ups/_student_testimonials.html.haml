@@ -1,0 +1,33 @@
+.container-bg
+  .carousel.slide{'data-ride': 'carousel', id: 'carouselIndicators'}
+    %article.py-3.py-6.text-center.text-lg-left
+      %ol.carousel-indicators
+        -home_page.student_testimonials.each_with_index do |testimonial, count|
+          %li{class: "#{count == 0 ? 'active' : ''}", 'data-target': "#carouselIndicators", 'data-slide-to': count, style: 'background-color: transparent;'}
+
+      .carousel-inner
+        -home_page.student_testimonials.all_in_order.each_with_index do |testimonial, count|
+          .carousel-item{class: "#{count == 0 ? 'active' : ''}"}
+            .container
+              .row.row-lg
+                .col-lg-5
+                  =image_tag(testimonial.image.url, class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+                .col-lg-7
+                  .d-flex.h-100.align-items-center
+                    %blockquote.mb-0.ml-lg-6.mr-lg-6
+                      %p.text-gray2
+                        "
+                        =testimonial.text
+                        "
+                      %footer
+                        %cite.font-weight-semi-bold.text-gray2
+                          =testimonial.signature
+
+      %a.carousel-control-prev{href: "#carouselIndicators", role: 'button', 'data-slide': 'prev'}
+        -#%span.carousel-control-prev-icon{'aria-hidden': 'true'}
+        %span.sr-only
+          Previous
+      %a.carousel-control-next{href: "#carouselIndicators", role: 'button', 'data-slide': 'next'}
+        -#%span.carousel-control-next-icon{'aria-hidden': 'true'}
+        %span.sr-only
+          Next

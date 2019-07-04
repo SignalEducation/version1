@@ -240,7 +240,8 @@
         selectPaymentMethod($(this).val())
       }
     });
-    //$('.form-group-expandable .custom-control-input[type="radio"]:checked').closest('.custom-control').siblings('.payment-details').show();
+
+    $('#pay-with-card').click(); // To open the stripe card section on page load
 
 
     $('#all-plans').collapse({

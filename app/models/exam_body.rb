@@ -31,6 +31,8 @@ class ExamBody < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :url, presence: true
+  validates :landing_page_h1, presence: true
+  validates :landing_page_paragraph, presence: true
   #validates :constructed_response_intro_heading, presence: true
   #validates :constructed_response_intro_text, presence: true
 

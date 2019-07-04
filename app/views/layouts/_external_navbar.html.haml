@@ -1,0 +1,44 @@
+%header.header.sticky-top
+  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
+    .container.animate.fade-in-up
+      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+        %span.navbar-toggler-bar.frst
+        %span.navbar-toggler-bar.scnd
+
+      =link_to home_url, class: 'navbar-brand logo' do
+        =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
+
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -@navbar_landing_pages.each do |navbar_landing_page|
+            %li.nav-item
+              =link_to footer_landing_page_url(navbar_landing_page.public_url), class: 'nav-link' do
+                %span=navbar_landing_page.name
+          %li.nav-item.dropdown.course-dropdown
+            %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+              %span Courses
+            .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+              -@groups.each do |group|
+                =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
+
+
+          -if current_user
+            %li.nav-item.dropdown
+              %a#navbarDropdown.nav-link.navbar-login.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                %span
+                  =t('views.general.user_name') + current_user.first_name.to_s
+              .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
+                -if current_user.non_student_user?
+                  =link_to 'Console', management_consoles_url, class: 'nav-link dropdown-item'
+                =link_to 'Dashboard', student_dashboard_url, class: 'nav-link dropdown-item'
+                =link_to 'Library', library_url, class: 'nav-link dropdown-item'
+                =link_to t('views.users.show.h1'), account_url, class: 'nav-link dropdown-item'
+                =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
+
+          -else
+            %li.nav-item
+              =link_to new_student_url, class: 'nav-link' do
+                %span Register
+            %li.nav-item
+              =link_to sign_in_url, class: 'nav-link navbar-login' do
+                %span Login

@@ -24,50 +24,7 @@
 
 
   -unless current_user
-
-    .container-bg.bg-navy
-      .container
-        %article.text-gray3.text-center.py-6.py-sm-7
-          %header.pb-3
-            %h2.h1.text-white.px-5.px-sm-6 Discover the smarter way to study
-            %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
-          .px-4.px-lg-8
-            .row.row-lg
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
-                  %p.m-0.text-left.text-md-center Access anytime, anywhere
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-card-slides{"aria-hidden" => "true"}
-                  %p.m-0.text-left.text-md-center Topic-by-topic online lectures
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-doc-marker{"aria-hidden" => "true"}
-                  %p.m-0.text-left.text-md-center Expert notes and corrected questions
-              .col-md-3
-                .pb-4.d-flex.flex-md-column.align-items-center
-                  .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-happy-chat{"aria-hidden" => "true"}
-                  %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
-
-
-    %article.library.bg-white
-      .container
-        %article.py-3.py-6.text-center.text-lg-left
-          %header.sr-only
-            %h2 Testimonial
-          .row.row-lg
-            .col-lg-5
-              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
-            .col-lg-7
-              .d-flex.h-100.align-items-center
-                %blockquote.mb-0.ml-lg-6.mr-lg-6
-                  %p.text-gray2
-                    "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
-                  %footer
-                    %cite.font-weight-semi-bold.text-gray2
-                      Rebecca Nagujja, Ireland
+    =render partial: 'student_sign_ups/usp_section'
+    -if @home_page&.student_testimonials.any?
+      .bg-gray5
+        =render partial: 'student_sign_ups/student_testimonials', locals: {home_page: @home_page}
