@@ -1,3 +1,8 @@
 #cbes-new-view
   %cbes-new-view
 = javascript_pack_tag 'cbes/new'
+
+.container
+  #app
+    %p {{message}}
+    %input{"v-model" => "message"}/

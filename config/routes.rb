@@ -72,13 +72,13 @@ Rails.application.routes.draw do
       put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
     end
     resources :users do
-      get  '/personal', action: :user_personal_details, as: :personal
-      get  '/subscription', action: :user_subscription_status, as: :subscription
-      get  '/courses', action: :user_courses_status, as: :courses
-      get  '/enrollments', action: :user_activity_details, as: :activity
-      get  '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
-      get  '/orders', action: :user_purchases_details, as: :orders
-      get  '/referrals', action: :user_referral_details, as: :referrals
+      get '/personal', action: :user_personal_details, as: :personal
+      get '/subscription', action: :user_subscription_status, as: :subscription
+      get '/courses', action: :user_courses_status, as: :courses
+      get '/enrollments', action: :user_activity_details, as: :activity
+      get '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
+      get '/orders', action: :user_purchases_details, as: :orders
+      get '/referrals', action: :user_referral_details, as: :referrals
       patch '/update_courses', action: :update_courses, as: :update_courses
       resources :exercises, only: [:index, :show, :edit, :update], shallow: true
       resources :invoices, only: :index, shallow: true
@@ -251,6 +251,8 @@ Rails.application.routes.draw do
     get 'mock_exams', to: 'footer_pages#media_library', as: :media_library
     get 'prep_products', to: 'footer_pages#media_library', as: :prep_products
 
+    resources :cbes
+    
     resources :home_pages
 
     # HomePages Structure
@@ -264,9 +266,18 @@ Rails.application.routes.draw do
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
+
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
+
+
   end
+
 
   # Catch-all
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
+
+
+  # CBE Routes
+
+
 end
