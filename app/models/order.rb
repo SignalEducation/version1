@@ -51,7 +51,7 @@ class Order < ApplicationRecord
   before_create :assign_random_guid
   before_create :generate_invoice
   before_destroy :check_dependencies
-  after_create :create_order_transaction
+  after_create :create_order_transaction, :remove_audience_tag
 
   # scopes
   scope :all_in_order,    -> { order(:product_id) }
@@ -142,6 +142,10 @@ class Order < ApplicationRecord
   def create_order_transaction
     OrderTransaction.
       create_from_stripe_data(stripe_order_payment_data, user_id, id, product_id)
+  end
+
+  def remove_audience_tag
+    MailchimpService.new.audience_checkout_tag(user_id, product.mock_exam.subject_course.exam_body_id, 'Prod', 'inactive')
   end
 
   def user_exercise_url(user_id)

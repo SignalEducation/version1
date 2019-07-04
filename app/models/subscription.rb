@@ -69,7 +69,7 @@ class Subscription < ApplicationRecord
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
-  after_create :update_coupon_count
+  after_create :update_coupon_count, :remove_checkout_tag
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -433,6 +433,10 @@ class Subscription < ApplicationRecord
     if self.coupon_id
       self.coupon.update_redeems
     end
+  end
+
+  def remove_checkout_tag
+    MailchimpService.new.audience_checkout_tag(user_id, subscription_plan.exam_body_id, 'Sub', 'inactive')
   end
 
   def prefix

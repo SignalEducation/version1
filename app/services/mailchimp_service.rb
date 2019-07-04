@@ -91,6 +91,20 @@ class MailchimpService
     Rails.logger.error "Error: MailChimp#add_enrollment_tag - Error: #{e}"
   end
 
+  def audience_checkout_tag(user_id, exam_body_id, type, state)
+    exam_body = ExamBody.find(exam_body_id)
+    user = User.find(user_id)
+
+    member = list(exam_body.audience_guid, user).tags.create(
+        body: {
+            tags: [{name: "#{type} - Checkout Load", status: state}]
+        }
+    )
+    Rails.logger.debug "Error: MailChimp#add_checkout_tag - Response: #{member}"
+  rescue Gibbon::MailChimpError => e
+    Rails.logger.error "Error: MailChimp#add_checkout_tag  - Error: #{e}"
+  end
+
 
   def list(list_id, user)
     @mailchimp.lists(list_id).members(

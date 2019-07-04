@@ -35,6 +35,7 @@ class SubscriptionsController < ApplicationController
   end
   before_action :set_subscription, except: %i[new create personal_upgrade_complete]
   before_action :set_flash, only: :new
+  before_action :set_mailchimp_tag, only: :new
 
   def show
     redirect_to dashboard_path unless @subscription.user_id == current_user.id
@@ -198,6 +199,10 @@ class SubscriptionsController < ApplicationController
                                     currency,
                                     params[:exam_body_id])
     end
+  end
+
+  def set_mailchimp_tag
+    MailchimpService.new.audience_checkout_tag(current_user.id, params[:exam_body_id].to_i, 'Sub', 'active')
   end
 
   def set_flash

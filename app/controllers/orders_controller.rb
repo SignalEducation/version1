@@ -50,7 +50,7 @@ class OrdersController < ApplicationController
     @order     = Order.new
     @product   = Product.find(params[:product_id])
     @layout    = 'standard'
-
+    MailchimpService.new.audience_checkout_tag(current_user.id, @product.mock_exam.subject_course.exam_body_id, 'Prod', 'active')
     seo_title_maker("#{@product.mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
