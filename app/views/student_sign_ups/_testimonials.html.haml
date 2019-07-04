@@ -1,0 +1,69 @@
+=render partial: 'layouts/external_navbar'
+%main
+  .container-bg.home-hero-alt-bg.bg-testimonial
+    .container-md
+      %article.home-hero
+        %header.home-hero-header
+          .row
+            .col-xl-12.text-center
+              %h1.h1-mega.text-white
+                What our students say
+
+
+
+
+  .container
+    %article.py-5
+      -@home_page.student_testimonials.each_with_index do |testimonial, counter|
+        %header.pb-sm-4.pb-md-7
+          .row.row-lg
+
+            -if counter.even?
+              .col-12.col-lg-6
+                %blockquote.ml-lg-3.mr-lg-3
+                  %p.text-gray2
+                    "
+                    =testimonial.text
+                    "
+                  %footer
+                    %cite.font-weight-semi-bold.text-gray2
+                      =testimonial.signature
+
+              .col-12.col-lg-6
+                .testimonial-image
+                  =image_tag(testimonial.image.url, class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+
+            -else
+              .col-12.col-lg-6
+                .testimonial-image
+                  =image_tag(testimonial.image.url, class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+
+              .col-12.col-lg-6
+                %blockquote.ml-lg-3.mr-lg-3
+                  %p.text-gray2
+                    "
+                    =testimonial.text
+                    "
+                  %footer
+                    %cite.font-weight-semi-bold.text-gray2
+                      =testimonial.signature
+
+
+
+
+
+
+
+
+:javascript
+
+  $(window).scroll(function() {
+    var scroll = $(window).scrollTop();
+
+    if (scroll >= 1) {
+        //clearHeader, not clearheader - caps H
+        $(".header").addClass("sticky-nav-border");
+    } else if (scroll <= 1) {
+      $(".header").removeClass("sticky-nav-border");
+    }
+  });

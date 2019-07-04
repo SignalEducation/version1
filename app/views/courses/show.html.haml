@@ -9,7 +9,7 @@
 
           -if @course_module_element && @course_module_element.is_video?
             .mw-0
-              =link_to course_special_link(@course_module_element.next_element, @group.exam_body_id, @subject_course_user_log) do
+              =link_to course_url(@course.name_url, @course_module.course_section.name_url, @course_module.name_url, @course_module_element.next_element.name_url) do
                 .btn.btn-primary.btn-sm.btn-sm-arrow-right
                   =t('views.course_module_elements.show.next_step')
 

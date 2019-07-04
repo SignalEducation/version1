@@ -222,6 +222,19 @@ en:
         image_updated_at: Image updated at
         replace: Replace Image
 
+    student_testimonials:
+      form:
+        home_page_id: Landing page
+        text: Text
+        text_placeholder: Testimonial text
+        signature: Signature
+        signature_placeholder: Testimonial Signature
+        image: Image
+        iamge_file_name: Image file name
+        image_content_type: Image content type
+        image_file_size: Image file size
+        image_updated_at: Image updated at
+        replace: Replace Image
 
     content_pages:
       form:
@@ -711,6 +724,10 @@ en:
         registration_form_heading_placeholder: Basic Registration Form Heading
         login_form_heading: Login Form Heading
         login_form_heading_placeholder: Login Form Heading
+        landing_page_h1: Landing Page H1
+        landing_page_h1_placeholder: Landing Page H1
+        landing_page_paragraph: Landing Page Paragraph
+        landing_page_paragraph_placeholder: Landing Page Sub-heading
         logo_image: Logo Image
 
       index:
@@ -904,6 +921,8 @@ en:
         header_h1_placeholder: Header H1
         header_paragraph: Header Paragraph
         header_paragraph_placeholder: Header Paragraph
+        header_h3: Header H3
+        header_h3_placeholder: Header H3
         registration_form_heading: Reg Form Heading
         registration_form_heading_placeholder: Reg Form Heading Text
         login_form_heading: Login Form Heading

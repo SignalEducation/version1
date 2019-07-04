@@ -43,11 +43,13 @@ class HomePagesController < ApplicationController
     @home_page = HomePage.new
     @home_page.blog_posts.build
     @home_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF')
+    @home_page.student_testimonials.build(sorting_order: 1)
   end
 
   def edit
     @home_page.blog_posts.build
     @home_page.external_banners.build(sorting_order: 1, active: true, background_colour: '#FFFFFF') unless @home_page.external_banners.any?
+    @home_page.student_testimonials.build(sorting_order: 1)
   end
 
   def create
@@ -102,7 +104,7 @@ class HomePagesController < ApplicationController
                                       :login_form, :preferred_payment_frequency,
                                       :header_h1, :header_paragraph,
                                       :registration_form_heading, :login_form_heading,
-                                      :footer_option, :video_guid,
+                                      :footer_option, :video_guid, :header_h3,
                                       blog_posts_attributes: [:id, :home_page_id,
                                                               :title, :description,
                                                               :url, :_destroy,
@@ -113,7 +115,14 @@ class HomePagesController < ApplicationController
                                       ],
                                       external_banners_attributes: [:id, :name, :background_colour,
                                                                     :text_content, :sorting_order,
-                                                                    :_destroy]
+                                                                    :_destroy],
+                                      student_testimonials_attributes: [:id, :text, :signature,
+                                                                    :sorting_order,
+                                                                        :image, :image_file_name,
+                                                                        :image_content_type,
+                                                                        :image_file_size,
+                                                                        :image_updated_at,
+                                                                        :_destroy]
     )
 
   end
