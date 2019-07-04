@@ -50,7 +50,7 @@ class MailchimpService
     status = (subscribe ? 'subscribed' : 'unsubscribed')
     exam_body = ExamBody.find(exam_body_id)
     user = User.find(user_id)
-    account_status = user.active_subscription_for_exam_body?(exam_body_id) ? subscriptions_for_exam_body(exam_body_id).first.state : 'Basic'
+    account_status = user.active_subscription_for_exam_body?(exam_body_id) ? user.subscriptions_for_exam_body(exam_body_id).first.state : 'Basic'
     student_number = user.exam_body_user_details.for_exam_body(exam_body_id).first.student_number if user.exam_body_user_details.for_exam_body(exam_body_id).first.present?
     member = list(exam_body.audience_guid, user).upsert(
         body: {
@@ -74,6 +74,22 @@ class MailchimpService
     Rails.logger.debug "DEBUG: MailChimp#add_subscriber - Response: #{member.body}"
   rescue Gibbon::MailChimpError => e
     Rails.logger.debug "Error: MailChimp#add_subscriber - Response: #{member.body}"
+  end
+
+  def update_latest_lesson(exam_body_id, user_id)
+    exam_body = ExamBody.find(exam_body_id)
+    user = User.find(user_id)
+    member = list(exam_body.audience_guid, user).upsert(
+        body: {
+            merge_fields: {
+                LESSONNAME: user.course_module_element_user_logs.last.course_module_element.name.to_s,
+                LESSONDATE: user.last_studied_date
+            }
+        }
+    )
+    Rails.logger.debug "DEBUG: MailChimp#update_latest_lesson - Response: #{member.body}"
+  rescue Gibbon::MailChimpError => e
+    Rails.logger.debug "Error: MailChimp#update_latest_lesson - Response: #{member.body}"
   end
 
   def audience_enrollment_tag(enrollment_id, state)

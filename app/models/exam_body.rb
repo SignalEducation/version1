@@ -32,11 +32,10 @@ class ExamBody < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :url, presence: true
-  #validates :constructed_response_intro_heading, presence: true
-  #validates :constructed_response_intro_text, presence: true
 
   before_destroy :check_dependencies
   after_create :create_audience
+  after_update :create_audience, unless: :audience_guid
 
   # scopes
   scope :all_in_order, -> { order(:name) }

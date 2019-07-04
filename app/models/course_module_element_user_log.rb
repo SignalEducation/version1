@@ -178,7 +178,7 @@ class CourseModuleElementUserLog < ApplicationRecord
 
   # After Create
   def update_audience_member
-    MailchimpService.new.add_subscriber(self.subject_course.exam_body_id, self.user_id, true) if self.subject_course.exam_body.audience_guid
+    MailchimpService.new.update_latest_lesson(self.subject_course.exam_body_id, self.user_id)
   end
 
   # After Create
