@@ -99,27 +99,6 @@ describe FooterPagesController, type: :controller do
       end
     end
 
-    describe "Post 'info_subscribe'" do
-      #TODO - fix this post to mailchimp
-      xit 'should render with 200' do
-        post :info_subscribe
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:profile_index)
-
-      end
-
-      xit 'should reject with invalid params' do
-        post :info_subscribe
-        expect(flash[:success]).to be_nil
-        expect(flash[:error]).to be_nil
-        expect(response.status).to eq(200)
-        expect(response).to render_template(:profile_index)
-
-      end
-    end
-
     describe "Post 'complaints_intercom'" do
       #TODO - fix this post to intercom
       xit 'should render with 200' do
