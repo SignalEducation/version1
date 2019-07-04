@@ -97,7 +97,7 @@ class MailchimpService
 
     member = list(exam_body.audience_guid, user).tags.create(
         body: {
-            tags: [{name: "#{type} - Checkout Load", status: state}]
+            tags: [{name: "#{type} Checkout", status: state}]
         }
     )
     Rails.logger.debug "Error: MailChimp#add_checkout_tag - Response: #{member}"
