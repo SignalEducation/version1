@@ -52,7 +52,7 @@ class VatCodesController < ApplicationController
   protected
 
   def get_variables
-    @vat_code = VatCode.find_by(id: params[:id]).first if params[:id].to_i.positive?
+    @vat_code = VatCode.find_by(id: params[:id]) if params[:id].to_i.positive?
     @countries = Country.all_in_order
     seo_title_maker(@vat_code.try(:name) || 'VAT Codes', '', true)
     @layout = 'management'

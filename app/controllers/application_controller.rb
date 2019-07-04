@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'mailchimp'
 require 'prawn'
 require 'mandrill'
@@ -150,12 +148,12 @@ class ApplicationController < ActionController::Base
   helper_method :current_session_guid
 
   def set_session_stuff
-    cookies.encrypted[:session_guid] ||= {value: ApplicationController.generate_random_code(64), httponly: true}
+    cookies.encrypted[:session_guid] ||= { value: ApplicationController.generate_random_code(64), httponly: true }
 
     # TODO, These are being filled with ConstructedResponse JSON in courses_controller tests (L125)
-    #cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
-    #cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
-    #cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
+    # cookies.encrypted[:first_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    # cookies.encrypted[:latest_session_landing_url] ||= {value: request.filtered_path, httponly: true}
+    # cookies.encrypted[:post_sign_up_redirect_path] ||= {value: nil, httponly: true}
   end
 
   def reset_latest_session_landing_url
@@ -205,17 +203,16 @@ class ApplicationController < ActionController::Base
   # content management links (non-student)
   def course_module_special_link(the_thing)
     # used for tutor-facing links
-    if the_thing.class == CourseModuleElement && !the_thing.id.nil?
-      edit_course_module_element_url(the_thing.id)
-    elsif the_thing.class == CourseModule
+    case the_thing
+    when CourseModule, CourseSection
       subject_course_url(the_thing.subject_course)
-    elsif the_thing.class == CourseSection
-      subject_course_url(the_thing.subject_course)
-    elsif the_thing.class == SubjectCourse
+    when SubjectCourse
       new_course_modules_for_subject_course_and_name_url(the_thing.name_url)
-    elsif the_thing.class == ContentPage
+    when ContentPage
       content_pages_url
-    else # default route
+    when CourseModuleElement
+      the_thing.id.present? ? edit_course_module_element_url(the_thing.id) : subject_course_url
+    else
       subject_course_url
     end
   end
@@ -223,7 +220,7 @@ class ApplicationController < ActionController::Base
   helper_method :course_module_special_link
 
   def content_activation_special_link(the_thing)
-    case the_thing.class
+    case the_thing
     when CourseModuleElement, CourseModule
       subject_course_url(the_thing.course_module.subject_course)
     when SubjectCourse
@@ -241,7 +238,7 @@ class ApplicationController < ActionController::Base
 
   # Library Navigation Links
   def library_special_link(the_thing)
-    case the_thing.class
+    case the_thing
     when Group
       library_group_url(the_thing.name_url)
     when SubjectCourse
@@ -281,7 +278,7 @@ class ApplicationController < ActionController::Base
   helper_method :navigation_special_link
 
   def course_special_link(the_thing, _exam_body_id, _scul = nil)
-    case the_thing.class
+    case the_thing
     when SubjectCourse
       library_course_url(the_thing.parent.name_url, the_thing.name_url)
     when CourseSection
@@ -294,7 +291,7 @@ class ApplicationController < ActionController::Base
                          the_thing.course_section.name_url,
                          anchor: the_thing.name_url)
     when CourseModuleElement
-      user_course_url(the_thing)
+      user_course_correct_url(the_thing)
     else
       library_special_link(the_thing)
     end
@@ -302,13 +299,14 @@ class ApplicationController < ActionController::Base
 
   helper_method :course_special_link
 
-  def user_course_url(the_thing)
+  def user_course_correct_url(the_thing)
     return new_student_url unless current_user
 
-    if current_user.non_verified_user?
+    if current_user.non_verified_user? # current_user.non_verified_user?
       library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
                          the_thing.course_module.course_section.subject_course.name_url,
                          anchor: 'verification-required')
+
     elsif the_thing.related_course_module_element_id && the_thing.previous_cme_restriction(scul)
       library_course_url(the_thing.course_module.course_section.subject_course.group.name_url,
                          the_thing.course_module.course_section.subject_course.name_url,
@@ -341,7 +339,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :subscription_checkout_special_link
 
-  def product_checkout_special_link(exam_body_id, product_id=nil)
+  def product_checkout_special_link(exam_body_id, product_id = nil)
     if current_user
       new_order_url(product_id)
     else

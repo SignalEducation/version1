@@ -5,7 +5,7 @@ class UserVerificationsController < ApplicationController
 
   def update
     ip_country = IpAddress.get_country(request.remote_ip)
-    country    = ip_country || country.find_by(name: 'United Kingdom')
+    country    = ip_country || Country.find_by(name: 'United Kingdom')
     @user      = User.get_and_verify(params[:email_verification_code], country.id)
 
     if @user&.password_change_required?

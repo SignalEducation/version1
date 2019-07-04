@@ -140,7 +140,6 @@ class User < ApplicationRecord
   scope :active_this_week, -> { where(last_request_at: Time.now.beginning_of_week..Time.now.end_of_week) }
   scope :with_course_tutor_details, -> { joins(:course_tutor_details) }
 
-
   ### class methods
   def self.search(term)
     where("email ILIKE :t OR first_name ILIKE :t OR last_name ILIKE :t OR stripe_customer_id ILIKE :t OR textcat(first_name, textcat(text(' '), last_name)) ILIKE :t", t: "%#{term}%")

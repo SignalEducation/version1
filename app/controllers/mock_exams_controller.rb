@@ -60,7 +60,7 @@ class MockExamsController < ApplicationController
   protected
 
   def get_variables
-    @mock_exam = MockExam.where(id: params[:id]).first if params[:id].to_i > 0
+    @mock_exam = MockExam.find_by(id: params[:id]) if params[:id].to_i > 0
     @subject_courses = SubjectCourse.all_active.all_in_order
     @products = Product.all_in_order
     @currencies = Currency.all_in_order

@@ -67,7 +67,7 @@ class ProductsController < ApplicationController
   protected
 
   def set_product
-    @product = Product.find(id: params[:id])
+    @product = Product.find(params[:id])
   end
 
   def set_layout

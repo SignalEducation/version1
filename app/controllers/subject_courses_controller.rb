@@ -3,7 +3,7 @@
 class SubjectCoursesController < ApplicationController
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w[content_management_access)])
+    ensure_user_has_access_rights(%w[content_management_access])
   end
   before_action :get_variables
 
@@ -133,7 +133,7 @@ class SubjectCoursesController < ApplicationController
   protected
 
   def get_variables
-    @subject_course = SubjectCourse.where(id: params[:id]).first if params[:id].to_i > 0
+    @subject_course = SubjectCourse.find_by(id: params[:id]) if params[:id].to_i > 0
     @groups = Group.all_in_order
     @tutors = User.all_tutors.all_in_order
     @exam_bodies = ExamBody.all_in_order
