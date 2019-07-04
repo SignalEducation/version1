@@ -1,0 +1,281 @@
+%header.header.sticky-top
+  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
+    .container.animate.fade-in-up
+      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
+        %span.navbar-toggler-bar.frst
+        %span.navbar-toggler-bar.scnd
+
+      =link_to home_url, class: 'navbar-brand logo' do
+        =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
+
+      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
+        %ul.navbar-nav.align-items-lg-center
+          -if current_user
+            %li.nav-item
+            =link_to student_dashboard_url, class: 'nav-link' do
+              %span Dashboard
+          %li.nav-item
+            =link_to library_url, class: 'nav-link' do
+              %span Courses
+          %li.nav-item
+            =link_to new_student_url, class: 'nav-link' do
+              %span Register
+          %li.nav-item
+            =link_to sign_in_url, class: 'nav-link navbar-login' do
+              %span Login
+
+%main
+  .container-bg.home-hero-alt-1
+    .container
+      %article.home-hero.home-hero-open-week
+        .row.justify-content-between
+          .col-sm-12.col-xl-5
+            %header.home-hero-header
+
+              -if @home_page.header_h1 && !@home_page.header_h1.empty?
+                %h1.h1-hero.text-white.mb-5
+                  =@home_page.header_h1
+              -else
+                %h1.h1-hero.text-white.mb-5
+                  Open Week Special - Bonus ACCA Content
+
+              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+                %p.text-white.mb-5.pr-xl-4
+                  =@home_page.header_paragraph
+              -else
+                %p.text-white.mb-5.pr-xl-4
+                  For one-week only, we are hosting an exclusive learnsignal Open Week offering you access to bonus free ACCA content. Register to explore extra videos, webinars, lectures and quizzes that will help you pass your exams!
+
+              %h3.text-white.pr-xl-4
+                No credit card required.
+
+
+          .col-xl-6
+            =render partial: 'basic_registration_form'
+
+
+  .container
+    %article.py-5
+      %header.pb-sm-4.pb-md-5
+        .row.row-lg
+          .col-12.col-lg-6
+            %blockquote.ml-lg-3.mr-lg-3
+              %p.text-gray2
+                "I passed my final exam advanced performance management. I found the learnsignal system and content very useful and more up-to-date than previous providers. I would recommend you to anyone studying ACCA."
+              %footer
+                %cite.font-weight-semi-bold.text-gray2
+                  Peter Curtis, United Kingdom
+
+          .col-12.col-lg-6
+            -if @home_page.video_guid && !@home_page.video_guid.empty?
+              .video-iframe-wrap
+                %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
+            -else
+              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+
+
+
+
+  .container-bg.bg-navy
+    .container
+      %article.text-gray3.text-center.py-6.py-sm-7
+        %header.pb-3
+          %h2.h1-mega.text-white.px-5.px-sm-6 Discover the smarter way to study
+          %p.p-hero Learnsignal uses a unique method of learning to provide an easier, more enjoyable and more effective way to learn.
+        .px-4.px-lg-8
+          .row.row-lg
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Access anytime, anywhere
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-card-slides{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Topic-by-topic online lectures
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-doc-marker{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Expert notes and corrected questions
+            .col-md-3
+              .pb-4.d-flex.flex-md-column.align-items-center
+                .mr-4.mb-md-4.mx-md-0
+                  %i.budicon-happy-chat{"aria-hidden" => "true"}
+                %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
+
+  -if @home_page.pricing_section && @subscription_plans.any?
+    .container-bg.bg-gray5
+      .container#plans
+        %article.py-6
+          %header.text-center.pb-5.pb-md-6
+            %h2.h1-mega
+              ="#{@group.name} Payment Plans"
+            %p.p-hero.px-lg-8
+              -if @group.exam_body.subscription_page_subheading_text
+                =@group.exam_body.subscription_page_subheading_text
+              -else
+                ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+
+          .row.row-lg.justify-content-center
+            -@subscription_plans.each do |plan|
+              .col-lg-4
+                %article.card.card-primary.card-primary-alt.medium-gap
+                  -if plan.most_popular
+                    .card-banner.bg-mint
+                      %large.text-white
+                        Most popular payment plan
+                  .card-body.text-center.py-4.py-sm-5
+                    %h2.card-title
+                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                    %ul.list-centered
+                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                          %li=bullet
+                      -else
+                        %li="Access all #{@group.name} courses"
+                        %li="Topic-by-topic lectures"
+                        %li="24/7 tutor support"
+
+                      -unless plan.exam_body.name == "CPD"
+                        %li{style: 'font-style: italic;'}
+                          Cancel anytime
+
+                    %p.h2.mb-0
+                      =plan.currency.format_number(plan.price)
+
+                    -if plan.monthly_percentage_off
+                      %p.h5.text-gray2
+                        Save over
+                        =plan.monthly_percentage_off
+                        ='%'
+                    -else
+                      -if plan.previous_plan_price && !plan.previous_plan_price.blank?
+                        %p.h5.text-gray2
+                          was
+                          %span.strikethrough-diagonal
+                            %span{style: 'color:#647786'}
+                              =plan.currency.format_number(plan.previous_plan_price)
+
+                    .mt-auto
+                      =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                        Choose this plan
+
+  .container
+    %article.py-3.py-6.text-center.text-lg-left
+      %header.sr-only
+        %h2 Testimonial
+      .row.row-lg
+        .col-lg-5
+          =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+        .col-lg-7
+          .d-flex.h-100.align-items-center
+            %blockquote.mb-0.ml-lg-6.mr-lg-6
+              %p.text-gray2
+                "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+              %footer
+                %cite.font-weight-semi-bold.text-gray2
+                  Rebecca Nagujja, Ireland
+
+  .container-bg.bg-gray5
+    .container-sm
+      %article.text-center.py-6.py-lg-7
+        %header
+          %h2.h1.mb-4.px-4 We're here to guide you through.
+          %p.px-4.px-sm-0 If you have any questions of concerns about enrolling in our online learning programme then we're here for you and we'd love to help
+        .py-4.d-flex.justify-content-center
+          - %w(Conor_CHD_5350.jpg Alan_CHD_5507.jpg Cliodhna_CHD_5369.jpg Philip_CHD_5494.jpg Kate_CHD_5387.jpg).sample(3).each do |image|
+            =image_tag(image, class: 'img-thumbnail img-thumbnail-sm m-1 m-sm-2', alt: "Contact person profile image")
+        .py-3
+          %a.btn.btn-primary.btn-lg{"data-target" => "#contact-us-modal", "data-toggle" => "modal", :href => "#"}
+            Chat with our experts
+
+
+=render partial: 'footer_pages/contact_us_form_modal'
+
+
+-if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+
+  :javascript
+    let currencyIso = "#{@preferred_plan.currency.iso_code}";
+    let name = "#{@preferred_plan.name}";
+    let id = "#{@preferred_plan.id}";
+    let price = "#{@preferred_plan.price}";
+    let body = "#{@preferred_plan.exam_body.name}";
+    let type = "#{'Subscription'}";
+
+
+
+    function addToCart(currencyIso, name, id, price, body) {
+      dataLayer.push({
+        'event': 'addToCart',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'add': {
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': 'Subscription',
+              'quantity': 1
+              }]
+          }
+        }
+      });
+    }
+
+    $(document).ready(function(){
+      addToCart(currencyIso, name, id, price, body);
+    });
+
+    function selectTab(tab, currencyIso, name, id, price, body, type) {
+      dataLayer.push({ 'event': 'checkout',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'checkout': {
+            'actionField': {'step': 1, 'option':tab},
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': type,
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+
+    $(document).ready(function(){
+
+      if ($("#registration-login")[0]) {
+        selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+        })
+      } else if ($("#registration-option")[0]) {
+          selectTab('Register', currencyIso, name, id, price, body, type);
+      } else if ($("#login-option")[0]) {
+          selectTab('Login', currencyIso, name, id, price, body, type);
+      }
+
+    });
+
+
+
+:javascript
+
+  $(window).scroll(function() {
+    var scroll = $(window).scrollTop();
+
+    if (scroll >= 1) {
+        //clearHeader, not clearheader - caps H
+        $(".header").addClass("sticky-nav-border");
+    } else if (scroll <= 1) {
+      $(".header").removeClass("sticky-nav-border");
+    }
+  });
