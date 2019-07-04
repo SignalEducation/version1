@@ -163,22 +163,6 @@
                       =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
                         Choose this plan
 
-  .container
-    %article.py-3.py-6.text-center.text-lg-left
-      %header.sr-only
-        %h2 Testimonial
-      .row.row-lg
-        .col-lg-5
-          =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
-        .col-lg-7
-          .d-flex.h-100.align-items-center
-            %blockquote.mb-0.ml-lg-6.mr-lg-6
-              %p.text-gray2
-                "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
-              %footer
-                %cite.font-weight-semi-bold.text-gray2
-                  Rebecca Nagujja, Ireland
-
   .container-bg.bg-gray5
     .container-sm
       %article.text-center.py-6.py-lg-7
@@ -194,7 +178,6 @@
 
 
 =render partial: 'footer_pages/contact_us_form_modal'
-
 
 -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
 
