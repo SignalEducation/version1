@@ -3,9 +3,11 @@
     <p>{{ message }}</p>
     <button v-on:click="createCBE">Create CBE</button>
     <br/><br/>
-    <button v-on:click="creatSection">Create Section</button>
+    <button v-on:click="createSection">Create Section</button>
     <br/><br/>
-    <button v-on:click="creatQuestion">Create Question</button>
+    <button v-on:click="createQuestion">Create Question</button>
+    <br/><br/>
+    <button v-on:click="getCBEs">Get CBEs</button>
   </div>
 </template>
 
@@ -20,6 +22,15 @@ export default {
    methods: {
           createCBE: function(page, index) {
               console.log("this is working. Page:", page, '. Index:', index)
+          },
+          getCBEs: function(page, index) {
+                        axios.get('localhost:3000/cbes/fetch')
+                          .then(response => {
+                           .this.contacts = response.data
+                          })
+                         .catch(e => {
+                          this.error.push(e)
+                          })
           }
       }
 }
