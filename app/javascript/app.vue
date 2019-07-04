@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data: function () {
     return {
@@ -24,9 +25,9 @@ export default {
               console.log("this is working. Page:", page, '. Index:', index)
           },
           getCBEs: function(page, index) {
-                        axios.get('localhost:3000/cbes/fetch')
+                        axios.get('localhost:3000/cbes/show')
                           .then(response => {
-                           .this.contacts = response.data
+                           console.log(this.cbe_data)
                           })
                          .catch(e => {
                           this.error.push(e)
