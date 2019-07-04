@@ -10,6 +10,7 @@ class ProductsController < ApplicationController
   def index
     @products = Product.includes(:currency, :mock_exam, :orders).
                   search(params[:search]).
+                  filter_by_state(params[:state]).
                   all_in_order
   end
 
@@ -36,6 +37,7 @@ class ProductsController < ApplicationController
   end
 
   def reorder
+    # binding.pry
     ids = params[:array_of_ids]
 
     ids.each_with_index do |id, counter|
