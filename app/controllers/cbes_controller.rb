@@ -1,5 +1,6 @@
 class CbesController < ApplicationController
 
+  skip_before_action :verify_authenticity_token
 
   def index
 
@@ -12,4 +13,11 @@ class CbesController < ApplicationController
   def create
     Cbe.new (params)
   end
+
+  def create_it
+
+    puts '**** Create'
+    #Cbe.new (params)
+  end
+
 end

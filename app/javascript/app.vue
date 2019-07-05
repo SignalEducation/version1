@@ -39,8 +39,7 @@ export default {
           },
           createCBE: function(page, index) {
                           console.log('cbeName: ' + this.cbeName)
-                          axios.post('http://localhost:3000/en/cbes/create', {locale: 'en'
-                          },)
+                          axios.post('http://localhost:3000/cbes/1/create_it', {locale: 'en'})
                           .then(response => { console.log(response.status)})
                           .catch(error => {console.log(error)})
                     }
