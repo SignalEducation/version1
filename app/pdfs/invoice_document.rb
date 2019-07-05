@@ -13,13 +13,12 @@ class InvoiceDocument < Prawn::Document
     logo
     render_headers
     render_details
-    render_username
     render_summary
     footer
   end
 
   def logo
-    logopath   = "#{Rails.root}/app/assets/images/learnsignal_mark_RGB.png"
+    logopath   = Rails.root.join('app', 'assets', 'images', 'learnsignal_mark_RGB.png')
     y_position = cursor
 
     image logopath, width: 40, height: 40, at: [0, y_position]
@@ -27,7 +26,7 @@ class InvoiceDocument < Prawn::Document
 
   def render_headers
     move_down 100
-    table([ ['Invoice Receipt'] ], width: 540, cell_style: { padding: 0 }) do
+    table([['Invoice Receipt']], width: 540, cell_style: { padding: 0 }) do
       row(0..10).borders = []
       cells.column(0).style(size: 20, font_style: :bold, valign: :center)
     end
@@ -40,7 +39,7 @@ class InvoiceDocument < Prawn::Document
     move_down 35
 
     billing_details =
-      make_table([ ['Billed to:'], [''] ], width: 355, cell_style: { padding: 0 }) do
+      make_table([['Billed to:'], [recipient_name]], width: 355, cell_style: { padding: 0 }) do
         row(0..10).style(size: 9, borders: [])
         row(0).column(0).style(font_style: :bold)
       end
@@ -48,20 +47,13 @@ class InvoiceDocument < Prawn::Document
     invoice_date    = invoice.issued_at.strftime('%e %b %Y')
     invoice_id      = invoice.id.to_s
     invoice_details =
-      make_table([ ['Invoice Date:', invoice_date], ['Invoice No:', invoice_id] ], width: 185, cell_style: { padding: 5, border_width: 0.5 }) do
+      make_table([['Invoice Date:', invoice_date], ['Invoice No:', invoice_id]], width: 185, cell_style: { padding: 5, border_width: 0.5 }) do
         row(0..10).style(size: 9)
         row(0..10).column(0).style(font_style: :bold)
       end
 
-    table([ [billing_details, invoice_details] ], cell_style: { padding: 0 }) do
+    table([[billing_details, invoice_details]], cell_style: { padding: 0 }) do
       row(0..10).style(borders: [])
-    end
-  end
-
-  def render_username
-    move_up 25
-    font(Rails.root.join('app/assets/fonts/oakes_grotesk_regular.ttf')) do
-      text(recipient_name)
     end
   end
 
@@ -73,7 +65,7 @@ class InvoiceDocument < Prawn::Document
     text 'Invoice Summary', size: 12, style: :bold
     stroke_horizontal_rule
 
-    table_details = [ ['No.', 'Description', 'VAT', 'Total Price'] ]
+    table_details = [['No.', 'Description', 'VAT', 'Total Price']]
     invoice.invoice_line_items.each_with_index do |line_item, index|
       table_details << [index + 1,
                         pdf_description(invoice, line_item),
@@ -93,9 +85,9 @@ class InvoiceDocument < Prawn::Document
     end
 
     summary_details = [
-        ['Subtotal', invoice.currency.format_number(invoice.sub_total)],
-        ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.total))],
-        ['Total',    invoice.currency.format_number(invoice.total)]
+      ['Subtotal', invoice.currency.format_number(invoice.sub_total)],
+      ['Discount', invoice.currency.format_number((invoice.sub_total - invoice.total))],
+      ['Total',    invoice.currency.format_number(invoice.total)]
     ]
 
     table(summary_details, column_widths: [480, 60], header: true,
@@ -119,6 +111,6 @@ class InvoiceDocument < Prawn::Document
   end
 
   def recipient_name
-    invoice.user.full_name
+    I18n.transliterate(invoice.user.full_name)
   end
 end
