@@ -3,11 +3,15 @@ class CbesController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def new
-    render json: SubjectCourse.all.pluck(:id, :name)
+    SubjectCourse.all.pluck(:id, :name)
   end
 
   def index
 
+  end
+
+  def get_subjects
+    render json: SubjectCourse.all.to_json(only: [:id, :name])
   end
 
   def show
