@@ -178,11 +178,9 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.float "exam_time"
     t.float "hard_time_limit"
     t.integer "number_of_pauses_allowed"
-    t.bigint "exam_body_id"
     t.integer "length_of_pauses"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["exam_body_id"], name: "index_cbes_on_exam_body_id"
   end
 
   create_table "charges", id: :serial, force: :cascade do |t|
