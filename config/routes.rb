@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')

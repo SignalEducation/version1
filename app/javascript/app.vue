@@ -9,7 +9,7 @@
     <br/><br/>
     <button v-on:click="getCBEs">Get CBEs</button>
     <br/><br/>
-    <button v-on:click="getCBEs">Create CBE</button>
+
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
     }
   },
    methods: {
-          createCBE: function(page, index) {
+          createCBBE: function(page, index) {
               console.log("this is working. Page:", page, '. Index:', index)
           },
           getCBEs: function(page, index) {
@@ -31,18 +31,17 @@ export default {
                         axios.get('http://localhost:3000/cbes/show')
                           .then(response => {
                           this.cbe_data = response.data
-                           console.log(this.cbe_data)
+                           console.log(response.status)
                           })
                          .catch(e => {
                           console.log(e)
                           })
           },
           createCBE: function(page, index) {
-                          console.log('TEST 1')
-                          axios.post('http://localhost:3000/cbes/new',
-                            cbeName: 'Test'
-                          )
-                            .then(response => { console.log(response)})
+                          console.log('cbeName: ' + this.cbeName)
+                          axios.post('http://localhost:3000/en/cbes/create', {locale: 'en'
+                          },)
+                          .then(response => { console.log(response.status)})
                           .catch(error => {console.log(error)})
                     }
       }
