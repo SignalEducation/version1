@@ -33,6 +33,7 @@
 #  tax                         :decimal(, )
 #  original_stripe_data        :text
 #  paypal_payment_guid         :string
+#  order_id                    :bigint(8)
 #
 
 require 'rails_helper'

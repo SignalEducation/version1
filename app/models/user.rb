@@ -445,11 +445,10 @@ class User < ApplicationRecord
   def viewable_subscriptions
     subs = []
     ExamBody.where(active: true).each do |body|
-      compliant_subs = subscriptions.for_exam_body(body.id)
-                                    .with_states(
-                                      :active, :paused, :errored,
-                                      :pending_cancellation
-                                    ).order(created_at: :desc)
+      compliant_subs = subscriptions.
+                       for_exam_body(body.id).
+                       where.not(state: :pending).
+                       order(created_at: :desc)
       if compliant_subs.any?
         subs << compliant_subs.first
       end
