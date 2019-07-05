@@ -79,7 +79,7 @@ class OrdersController < ApplicationController
     @navbar = false
   rescue Learnsignal::PaymentError => e
     flash[:error] = e.message
-    redirect_to new_order_url(product_id: @order.product_id)
+    redirect_to new_order_url(product_id: allowed_params['product_id'])
   end
 
   def execute
