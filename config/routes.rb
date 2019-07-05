@@ -22,6 +22,10 @@ Rails.application.routes.draw do
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
+  resources :cbes do
+    post 'create_it', to: 'cbes#create_it'
+    get 'new', to: 'cbes#new', as: :new_cbe
+  end
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
@@ -284,7 +288,7 @@ Rails.application.routes.draw do
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
 
 
-  # CBE Routes
+# CBE Routes
 
 
 end
