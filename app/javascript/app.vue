@@ -5,7 +5,7 @@
     <br/><br/>
     <button v-on:click="">Create Section</button> <input v-model="sectionName" placeholder="Section Name">
     <br/><br/>
-    <button v-on:click="">Create Question</button> <input v-model="questionTitle" placeholder="Question Title">
+
     <br/><br/>
     <button v-on:click="getCBEs">Get CBEs</button>
     <br/><br/>
@@ -28,11 +28,10 @@ export default {
                                                 axios.get('http://localhost:3000/cbes/new')
                                                   .then(response => {
                                                   this.subjects = response.data
-                                                   console.log(response.status)
-                                                   console.log(this.subjects)
+                                                  console.log(response)
                                                   })
                                                  .catch(e => {
-                                                  console.log(e)
+                                                  console.log('Error')
                                                   })
                                   },
           getCBEs: function(page, index) {
@@ -40,7 +39,7 @@ export default {
                         axios.get('http://localhost:3000/cbes/show')
                           .then(response => {
                           this.cbe_data = response.data
-                           console.log(response.status)
+                           console.log(this.cbe_data)
                           })
                          .catch(e => {
                           console.log(e)

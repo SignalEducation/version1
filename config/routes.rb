@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   resources :cbes do
     post 'create_it', to: 'cbes#create_it'
     get 'new', to: 'cbes#new', as: :new_cbe
+    get 'show', to: 'cbes#show', as: :show_cbe
   end
 
   # all standard, user-facing "resources" go inside this scope
