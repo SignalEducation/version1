@@ -9,7 +9,7 @@ class CbesController < ApplicationController
     render json: Cbe.last
   end
 
-  def new
+  def create
     Cbe.new (params)
   end
 end

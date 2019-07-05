@@ -1,5 +1,4 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors, :debug => true, :logger => (-> {Rails.logger}) do
-  puts '**************'
   allow do
     origins '*'
 
