@@ -11,7 +11,7 @@ class Cbe < ApplicationRecord
   has_many :cbe_introduction_pages, dependent: :destroy
   has_one :cbe_agreement, dependent: :destroy
 
-  validates :name, :title, :description, :exam_body_id, presence: true
+  validates :name, :title, :description, presence: true
 
   def initialize_settings(exam_time = 120, number_of_pauses_allowed = 32, length_of_pauses = 15)
     self.exam_time = exam_time
