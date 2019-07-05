@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_03_132823) do
+ActiveRecord::Schema.define(version: 2019_07_05_141912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -178,11 +178,9 @@ ActiveRecord::Schema.define(version: 2019_07_03_132823) do
     t.float "exam_time"
     t.float "hard_time_limit"
     t.integer "number_of_pauses_allowed"
-    t.bigint "exam_body_id"
     t.integer "length_of_pauses"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["exam_body_id"], name: "index_cbes_on_exam_body_id"
   end
 
   create_table "charges", id: :serial, force: :cascade do |t|

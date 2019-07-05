@@ -16,7 +16,7 @@ class CbesController < ApplicationController
 
   def create_it
 
-    puts '**** Create'
+    puts "**** Create #{params[:cbeName]}"
     #Cbe.new (params)
   end
 
