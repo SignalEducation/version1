@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <p>{{ message }}</p>
+    <p><button v-on:click="showSubjects">Show Subjects</button></p>
     <button v-on:click="createCBE">Create CBE</button> <input v-model="cbeName" placeholder="CBE Name">
     <br/><br/>
     <button v-on:click="">Create Section</button> <input v-model="sectionName" placeholder="Section Name">
@@ -19,13 +19,22 @@ export default {
   data: function () {
     return {
       message: "Create A CBE",
-      cbe_data: []
+      subjects: []
     }
   },
    methods: {
-          createCBBE: function(page, index) {
-              console.log("this is working. Page:", page, '. Index:', index)
-          },
+          showSubjects: function(page, index) {
+                                                console.log('TEST 1')
+                                                axios.get('http://localhost:3000/cbes/new')
+                                                  .then(response => {
+                                                  this.subjects = response.data
+                                                   console.log(response.status)
+                                                   console.log(this.subjects)
+                                                  })
+                                                 .catch(e => {
+                                                  console.log(e)
+                                                  })
+                                  },
           getCBEs: function(page, index) {
                         console.log('TEST 1')
                         axios.get('http://localhost:3000/cbes/show')
