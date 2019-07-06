@@ -115,7 +115,8 @@
                                             =cme.name
                                           %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                             -if cme.temporary_label && !cme.temporary_label.empty?
-                                              %span=cme.temporary_label
+                                              %span{style: 'color: #fd7e14;'}
+                                                =cme.temporary_label
                                             -else
                                               %span
                                                 -if cme.is_video && cme.estimated_time_in_seconds
@@ -143,7 +144,8 @@
                                               =cme.name
                                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                               -if cme.temporary_label && !cme.temporary_label.empty?
-                                                %span=cme.temporary_label
+                                                %span{style: 'color: #fd7e14;'}
+                                                  =cme.temporary_label
                                               -else
                                                 %span
                                                   -if cme.is_video && cme.estimated_time_in_seconds
@@ -166,7 +168,8 @@
                                               =cme.name
                                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                               -if cme.temporary_label && !cme.temporary_label.empty?
-                                                %span=cme.temporary_label
+                                                %span{style: 'color: #fd7e14;'}
+                                                  =cme.temporary_label
                                               -else
                                                 %span
                                                   -if cme.is_video && cme.estimated_time_in_seconds
