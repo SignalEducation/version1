@@ -15,7 +15,7 @@ class ManagementConsolesController < ApplicationController
   end
 
   def system_requirements
-    @home_pages = HomePage.paginate(per_page: 10, page: params[:page]).all_in_order
+    @home_pages = HomePage.paginate(per_page: 40, page: params[:page]).all_in_order
   end
 
   def public_resources

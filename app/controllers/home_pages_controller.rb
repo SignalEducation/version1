@@ -36,7 +36,7 @@ class HomePagesController < ApplicationController
   before_action :get_variables
 
   def index
-    @home_pages = HomePage.paginate(per_page: 20, page: params[:page]).all_in_order
+    @home_pages = HomePage.paginate(per_page: 40, page: params[:page]).all_in_order
   end
 
   def new
