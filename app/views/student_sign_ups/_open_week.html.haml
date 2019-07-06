@@ -56,6 +56,23 @@
 
   .container
     %article.py-5
+      %header.pb-sm-4.pb-md-5
+        .row.row-lg
+          .col-sm-6
+            .d-flex.h-100.align-items-center
+              %blockquote.mb-0.ml-lg-6.mr-lg-6
+                %p.text-gray2
+                  "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                %footer
+                  %cite.font-weight-semi-bold.text-gray2
+                    Rebecca Nagujja, Ireland
+
+          .col-sm-6
+            %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true}
+
+
+  -#.container
+    %article.py-5
       %header.text-center.pb-sm-4.pb-md-5
         %h2.h1-mega
           ="Explore our #{@group.name} courses"
