@@ -109,7 +109,11 @@ class CourseModulesController < ApplicationController
   end
 
   def allowed_params
-    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order, :estimated_time_in_seconds, :active, :seo_description, :seo_no_index, :number_of_questions, :subject_course_id, :highlight_colour, :tuition, :test, :revision, :course_section_id)
+    params.require(:course_module).permit(:name, :name_url, :description, :sorting_order,
+                                          :estimated_time_in_seconds, :active, :seo_description,
+                                          :seo_no_index, :number_of_questions, :subject_course_id,
+                                          :highlight_colour, :tuition, :test, :revision, :course_section_id,
+                                          :temporary_label)
   end
 
 end
