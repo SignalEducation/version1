@@ -1,18 +1,2 @@
-// Home Page Video Wrapper
-
-div.laptop-wrapper {
-  position: relative;
-  padding-bottom: 52.5%;
-  height: 0;
-}
-div.laptop-wrapper iframe {
-  box-sizing: border-box;
-  background: asset-url('laptop-for-video-1.png') center no-repeat;
-  background-size: contain;
-  padding: 5% 17% 8%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
+@import "home-page";
+@import "open-week";

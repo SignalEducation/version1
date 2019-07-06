@@ -25,7 +25,7 @@
               %span Login
 
 %main
-  .container-bg.home-hero-alt-bg.bg-1
+  .container-bg.home-hero-alt-1
     .container
       %article.home-hero.home-hero-open-week
         .row.justify-content-between
@@ -47,51 +47,33 @@
                   For one-week only, we are hosting an exclusive learnsignal Open Week offering you access to bonus free ACCA content. Register to explore extra videos, webinars, lectures and quizzes that will help you pass your exams!
 
               %h3.text-white.pr-xl-4
-                No credit card required. Set-up takes one minute.
+                No credit card required.
 
 
-          .col-xl-6.mt-4.mt-xl-6
-            =render partial: 'registration_login_form'
+          .col-xl-6
+            =render partial: 'basic_registration_form'
 
 
   .container
     %article.py-5
       %header.pb-sm-4.pb-md-5
         .row.row-lg
-          .col-sm-6
-            .d-flex.h-100.align-items-center
-              %blockquote.mb-0.ml-lg-6.mr-lg-6
-                %p.text-gray2
-                  "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
-                %footer
-                  %cite.font-weight-semi-bold.text-gray2
-                    Rebecca Nagujja, Ireland
+          .col-12.col-lg-6
+            %blockquote.ml-lg-3.mr-lg-3
+              %p.text-gray2
+                "I passed my final exam advanced performance management. I found the learnsignal system and content very useful and more up-to-date than previous providers. I would recommend you to anyone studying ACCA."
+              %footer
+                %cite.font-weight-semi-bold.text-gray2
+                  Peter Curtis, United Kingdom
 
-          .col-sm-6
-            %iframe{width: '560', height: '315', src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true}
+          .col-12.col-lg-6
+            -if @home_page.video_guid && !@home_page.video_guid.empty?
+              .video-iframe-wrap
+                %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
+            -else
+              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
 
 
-  -#.container
-    %article.py-5
-      %header.text-center.pb-sm-4.pb-md-5
-        %h2.h1-mega
-          ="Explore our #{@group.name} courses"
-        %p.p-hero.px-lg-6
-          =@group.description
-
-      .row.row-lg
-        -@group.subject_courses.all_active.all_in_order.each do |course|
-          .col-sm
-            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
-              .card-header.d-flex.justify-content-center.align-items-center
-                %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
-
-              .card-body.d-flex.flex-column.justify-content-center
-                %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
-                  =course.category_label
-                %h5.card-title.mb-1
-                  %span.mr-1
-                    =course.name
 
 
   .container-bg.bg-navy
@@ -181,8 +163,6 @@
                       =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
                         Choose this plan
 
-
-
   .container
     %article.py-3.py-6.text-center.text-lg-left
       %header.sr-only
@@ -198,6 +178,7 @@
               %footer
                 %cite.font-weight-semi-bold.text-gray2
                   Rebecca Nagujja, Ireland
+
   .container-bg.bg-gray5
     .container-sm
       %article.text-center.py-6.py-lg-7
@@ -213,29 +194,6 @@
 
 
 =render partial: 'footer_pages/contact_us_form_modal'
-
-:javascript
-
-  $(document).ready(function(){
-    let hash = window.location.hash;
-    let elements = $('a[href="' + hash + '"]');
-
-    if (elements.length > 0) {
-      elements.click();
-      setTimeout(function() {
-          window.scrollTo(0, 0);
-      }, 1);
-    } else if (hash === '#contact-us-modal') {
-      $('#contact-us-modal').modal('show');
-    }
-
-    if ($(".notice.error")[0]){
-      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
-      let tabLink = $('#' + tabId + '-tab');
-      tabLink.tab('show');
-    }
-
-  });
 
 
 -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
