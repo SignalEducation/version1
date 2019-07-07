@@ -444,6 +444,8 @@ en:
         test: Test
         revision: Revision
         question_bank: Question Bank
+        temporary_label: Label
+        temporary_label_placeholder: Temp Label
 
       edit:
         h1: Edit Course Module

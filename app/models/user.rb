@@ -545,11 +545,6 @@ class User < ApplicationRecord
     ) unless Rails.env.test?
   end
 
-  def send_custom_verification_email
-    url = UrlHelper.instance.user_verification_url(email_verification_code: email_verification_code)
-    MandrillWorker.perform_async(id, 'send_custom_verification_email', url)
-  end
-
   def create_stripe_customer
     StripeCustomerCreationWorker.perform_async(id)
   end

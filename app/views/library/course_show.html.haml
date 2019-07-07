@@ -88,11 +88,15 @@
                             %p.lesson-item-text.text-truncate.w-100
                               =course_module.name
                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
-                              %span
-                                -if course_module.cme_count.to_i > 1
-                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
-                                -else
-                                  =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
+                              -if course_module.temporary_label && !course_module.temporary_label.empty?
+                                %span{style: 'color: #fd7e14;'}
+                                  =course_module.temporary_label
+                              -else
+                                %span
+                                  -if course_module.cme_count.to_i > 1
+                                    =course_module.cme_count.to_s + ' ' + t('views.library.show.lessons')
+                                  -else
+                                    =course_module.cme_count.to_s + ' ' + t('views.library.show.lesson')
 
 
                     .collapse{id: "collapse_#{course_module.name_url}_#{counter}"}
@@ -115,7 +119,8 @@
                                             =cme.name
                                           %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                             -if cme.temporary_label && !cme.temporary_label.empty?
-                                              %span=cme.temporary_label
+                                              %span{style: 'color: #fd7e14;'}
+                                                =cme.temporary_label
                                             -else
                                               %span
                                                 -if cme.is_video && cme.estimated_time_in_seconds
@@ -143,7 +148,8 @@
                                               =cme.name
                                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                               -if cme.temporary_label && !cme.temporary_label.empty?
-                                                %span=cme.temporary_label
+                                                %span{style: 'color: #fd7e14;'}
+                                                  =cme.temporary_label
                                               -else
                                                 %span
                                                   -if cme.is_video && cme.estimated_time_in_seconds
@@ -166,7 +172,8 @@
                                               =cme.name
                                             %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                               -if cme.temporary_label && !cme.temporary_label.empty?
-                                                %span=cme.temporary_label
+                                                %span{style: 'color: #fd7e14;'}
+                                                  =cme.temporary_label
                                               -else
                                                 %span
                                                   -if cme.is_video && cme.estimated_time_in_seconds
@@ -189,7 +196,8 @@
                                           =cme.name
                                         %small.lesson-item-tag.ml-sm-auto.text-sm-right
                                           -if cme.temporary_label && !cme.temporary_label.empty?
-                                            %span=cme.temporary_label
+                                            %span{style: 'color: #fd7e14;'}
+                                              =cme.temporary_label
                                           -else
                                             %span
                                               -if cme.is_video && cme.estimated_time_in_seconds
