@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_22_171627) do
+ActiveRecord::Schema.define(version: 2019_07_06_190510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -334,6 +334,7 @@ ActiveRecord::Schema.define(version: 2019_06_22_171627) do
     t.boolean "revision", default: false
     t.integer "course_section_id"
     t.integer "constructed_response_count", default: 0
+    t.string "temporary_label"
     t.index ["name_url"], name: "index_course_modules_on_name_url"
     t.index ["sorting_order"], name: "index_course_modules_on_sorting_order"
   end
