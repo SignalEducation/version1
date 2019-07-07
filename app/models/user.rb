@@ -93,7 +93,7 @@ class User < ApplicationRecord
   has_many :invoices
   has_many :quiz_attempts
   has_many :orders
-  has_many :subscriptions, -> { order(:id) }, inverse_of: :user
+  has_many :subscriptions, inverse_of: :user
   has_many :subscription_payment_cards
   has_many :subscription_transactions
   has_many :student_exam_tracks
