@@ -2,14 +2,28 @@
   <div id="app">
     <p><button v-on:click="showSubjects">Show Subjects</button>
     <select v-model="selectedSubject">
-          <option v-for="subject in subjects" v-bind:value="subject.id">
+          <li v-for="subject in testSubjects" :value="subject.id">
             {{ subject.name }}
-          </option>
+          </li>
         </select>
-        <span>Selected: {{ selectedSubject }}</span>
 
+      <div id="selector">
+          <span>Seleczvzcxvted XXX: </span>
+          <select v-model="selectedSubject">
+            <option v-for="(id, name) in selectedSubjects" :value="id">{{ name }}</option>
+          </select>
+          <span>Selected: {{ selectedSubject }}</span>
+        </div>
 
     </p>
+    <p>
+      <select v-model="selected">
+      <option v-for="option in options" v-bind:value="value" v-bind:key="option.value">
+        {{ value }}
+      </option>
+</select>
+<span>Selected: {{ selected }}</span>
+      </p>
     <button v-on:click="createCBE">Create CBE</button> <input v-model="cbeName" placeholder="CBE Name">
     <br/><br/>
     <button v-on:click="">Create Section</button> <input v-model="sectionName" placeholder="Section Name">
@@ -18,7 +32,6 @@
     <br/><br/>
     <button v-on:click="getCBEs">Get CBEs</button>
     <br/><br/>
-
 
   </div>
 </template>
@@ -32,11 +45,17 @@ el: 'app',
       message: "Create A CBE",
       cbeName,
       sectionName,
-      selectedSubject,
-      subjects: []
-
-      ,
-    }
+      selectedSubject: null,
+      testSubjects: [{id: 1, name: 'Number 1'},{id: 2, name: 'Number 2'}],
+      subjects: [],
+      selected,
+      options: [
+                { text: 'One', value: 'A' },
+                { text: 'Two', value: 'B' },
+                { text: 'Three', value: 'C' }
+               ]
+              }
+    
   },
    methods: {
           showSubjects: function(page, index) {
