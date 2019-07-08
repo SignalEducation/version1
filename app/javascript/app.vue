@@ -33,15 +33,7 @@ el: 'app',
       cbeName,
       sectionName,
       selectedSubject,
-      subjects: [
-                {
-                "id": 22,
-                "name": "P3 - Business Analysis"
-                },
-                {
-                "id": 91,
-                "name": "Indirect Tax"
-                }]
+      subjects: []
 
       ,
     }
@@ -60,7 +52,7 @@ el: 'app',
                                   },
           getCBEs: function(page, index) {
                         console.log('TEST 1')
-                        axios.get('http://localhost:3000/cbes/show')
+                        axios.get('http://localhost:3000/cbes/1/get_subjects')
                           .then(response => {
                           this.cbe_data = response.data
                            console.log(this.cbe_data)
