@@ -42,7 +42,7 @@ class SubjectCourseUserLog < ApplicationRecord
 
   # callbacks
   before_destroy :check_dependencies
-  after_save :update_enrollment, :subscribe_to_audience
+  after_save :update_enrollment
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :created_at) }
@@ -144,15 +144,5 @@ class SubjectCourseUserLog < ApplicationRecord
       self.update_attribute(:completed_at, Proc.new{Time.now}.call) if self.completed && !self.completed_at
     end
   end
-
-  def subscribe_to_audience
-    # TODO - ?????????????
-    # TODO - This will not be accurate enough.
-    # TODO - ?????????????
-    if self.count_of_cmes_completed == 3
-      MailchimpService.new.add_subscriber(self.subject_course.exam_body_id, self.user_id, true) if self.user.communication_approval
-    end
-  end
-
 
 end
