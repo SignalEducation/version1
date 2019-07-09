@@ -10,8 +10,6 @@
         %p.mb-4
           =@course_module_element.description.html_safe
 
-
-
   .col-xl-4
     -if @course_module_element.course_module_element_resources.any?
       %h4.text-gray1.mb-2.mb-sm-3.mt-sm-4.mt-md-0
@@ -33,13 +31,9 @@
               %h5.m-0.text-truncate.text-gray2
                 =resource.name
 
-
-
-
--if cme.course_module_element_video.vimeo_guid
+-if cme.course_module_element_video.vimeo_guid && current_user.country&.iso_code != 'CN'
 
   :javascript
-
     let video_cme_id = "#{@course_module_element.id || ''}";
     let course_log_id = "#{@subject_course_user_log.try(:id) || ''}";
     let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
@@ -53,7 +47,13 @@
       allowFullScreen: true
     };
 
-    let player = new Vimeo.Player('vimeo-player-window', options);
+    try {
+      let player = new Vimeo.Player('vimeo-player-window', options);
+    } catch (e) {
+      if (e instanceof ReferenceError) {
+        $('.vimeo-player-window').html('#{j render partial: 'courses/video_player'}');
+      }
+    }
 
     let timeUpdate = function(data) {
       if (data.percent >= 0.90) {
@@ -91,9 +91,13 @@
       dataLayer.push({'event':'videoAction', 'video_name':"#{@course_module_element.name}", 'course_name':"#{@course.name}", 'video_action':'Play'});
     };
 
+    player.unload().then(function() {
+    }).catch(function(error) {
+        alert('second codition')
+        $('.vimeo-player-window').html('#{j render partial: 'courses/video_player'}');
+    });
+
     player.on('play', onPlay);
     player.on('timeupdate', timeUpdate);
-
-
-
-
+-elsif cme.course_module_element_video.voo_player_id
+  $('.vimeo-player-window').html('#{j render partial: 'courses/video_player'}');
