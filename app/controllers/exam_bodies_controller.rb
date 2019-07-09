@@ -78,7 +78,7 @@ class ExamBodiesController < ApplicationController
                                       :constructed_response_intro_heading,
                                       :constructed_response_intro_text,
                                       :logo_image, :registration_form_heading,
-                                      :login_form_heading)
+                                      :login_form_heading, :audience_guid)
   end
 
 end

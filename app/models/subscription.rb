@@ -177,6 +177,10 @@ class Subscription < ApplicationRecord
     after_transition all => :cancelled do |subscription, _transition|
       subscription.update(cancelled_at: Time.zone.now)
     end
+
+    after_transition all => all do |subscription, _transition|
+      subscription.update_audience_member
+    end
   end
 
   # CLASS METHODS ==============================================================
@@ -421,6 +425,10 @@ class Subscription < ApplicationRecord
     stripe_guid.present?
   end
 
+  def update_audience_member
+    MailchimpUpdateAccountStatusWorker.perform_async(user_id)
+  end
+
   protected
 
   def create_subscription_payment_card
@@ -436,7 +444,7 @@ class Subscription < ApplicationRecord
   end
 
   def remove_checkout_tag
-    MailchimpService.new.audience_checkout_tag(user_id, subscription_plan.exam_body_id, 'Sub', 'inactive')
+    MailchimpAddCheckoutTagWorker.perform_async(user_id, 'Sub', 'inactive')
   end
 
   def prefix

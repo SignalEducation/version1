@@ -34,6 +34,7 @@ class UserSessionsController < ApplicationController
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
+      MailchimpService.new.add_subscriber(@user_session.user.id, @user_session.user.communication_approval)
     else
       if flash[:plan_guid] || flash[:product_id]
         set_session_errors(@user_session)

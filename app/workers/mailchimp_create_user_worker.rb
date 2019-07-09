@@ -3,8 +3,8 @@ class MailchimpCreateUserWorker
 
   sidekiq_options queue: 'high'
 
-  def perform(list_id, user_id, subscribe)
-    MailchimpService.new.add_subscriber(list_id, user_id, subscribe)
+  def perform(user_id, subscribe)
+    MailchimpService.new.add_subscriber(user_id, subscribe)
   end
 
 end

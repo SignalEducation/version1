@@ -178,7 +178,7 @@ class CourseModuleElementUserLog < ApplicationRecord
 
   # After Create
   def update_audience_member
-    MailchimpService.new.update_latest_lesson(self.subject_course.exam_body_id, self.user_id)
+    MailchimpUpdateLessonWorker.perform_async(user_id, course_module_element.name)
   end
 
   # After Create

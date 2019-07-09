@@ -188,7 +188,7 @@ class Enrollment < ApplicationRecord
   end
 
   def update_mailchimp_tag
-    MailchimpService.new.audience_enrollment_tag(self.id, self.expired ? 'inactive' : 'active') if self.exam_body_id
+    MailchimpAddEnrollmentTagWorker.perform_async(id, self.expired ? 'inactive' : 'active')
   end
 
   def create_expiration_worker

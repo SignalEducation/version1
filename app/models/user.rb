@@ -722,14 +722,8 @@ class User < ApplicationRecord
   end
 
   def create_or_update_analytics_user
-
     if saved_changes? && (!saved_changes.include? "last_request_at") && standard_student_user?
-
-      ExamBody.all_active.each do |body|
-        #MailchimpCreateUserWorker.perform_async('bd7836f107', self.id, true)
-        MailchimpService.new.add_subscriber(body.id, self.id, (self.preferred_exam_body == body && self.communication_approval)) if body.audience_guid
-      end
-
+      MailchimpCreateUserWorker.perform_async(id, communication_approval)
     end
 
   end

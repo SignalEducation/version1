@@ -202,7 +202,7 @@ class SubscriptionsController < ApplicationController
   end
 
   def set_mailchimp_tag
-    MailchimpService.new.audience_checkout_tag(current_user.id, params[:exam_body_id].to_i, 'Sub', 'active')
+    MailchimpAddCheckoutTagWorker.perform_async(current_user.id, 'Sub', 'active')
   end
 
   def set_flash

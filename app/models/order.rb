@@ -145,7 +145,7 @@ class Order < ApplicationRecord
   end
 
   def remove_audience_tag
-    MailchimpService.new.audience_checkout_tag(user_id, product.mock_exam.subject_course.exam_body_id, product.name, 'inactive')
+    MailchimpAddCheckoutTagWorker.perform_async(user_id, product.name, 'inactive')
   end
 
   def user_exercise_url(user_id)

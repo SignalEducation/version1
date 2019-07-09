@@ -34,8 +34,6 @@ class ExamBody < ApplicationRecord
   validates :url, presence: true
 
   before_destroy :check_dependencies
-  after_create :create_audience
-  after_update :create_audience, unless: :audience_guid
 
   # scopes
   scope :all_in_order, -> { order(:name) }
@@ -58,10 +56,6 @@ class ExamBody < ApplicationRecord
       errors.add(:base, I18n.t('models.general.dependencies_exist'))
       throw :abort
     end
-  end
-
-  def create_audience
-    MailchimpService.new.create_audience(self.id)
   end
 
 end
