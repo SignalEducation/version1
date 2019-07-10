@@ -24,7 +24,8 @@ class CbesController < ApplicationController
 
   def create_it
 
-    puts "**** Create #{params[:cbeName]}"
+    puts "**** Create #{params[:cbe_name]}"
+    puts "**** Subject #{params[:selected_subject]}"
     #Cbe.new (params)
   end
 

@@ -4,12 +4,24 @@
     <div>
        <button v-on:click="showSubjects">Show Subjects</button>
 
-    <select v-model="selected">
+    <select v-model="selectedSubject">
                 <option>Choose Option</option>
                 <option v-for="option in options" v-bind:value="option.id">
                     {{option.name}}
                 </option>
         </select>
+        {{selected}}
+        <br/><br/><br/>
+        <button v-on:click="createCBE">Create CBE</button> <input v-model="cbeName" placeholder="CBE Name">
+        <br/><br/><br/>
+        <button v-on:click="createSection">Create Section</button> <input v-model="sectionName" placeholder="Section Name">
+
+    </div>
+
+    <div>
+
+
+
     </div>
 
   </div>
@@ -21,12 +33,8 @@ export default {
 el: 'app',
   data: function () {
     return {
-       selected: "Choose Option",
-            options: [
-                { id: 1, name: 'A' },
-                { id: 2, name: 'B' },
-                { id: 3, name: 'C' }
-            ]
+       selectedSubject: "Subject",
+            options: []
 		}
 
 
@@ -43,6 +51,19 @@ el: 'app',
                                                      console.log('Error')
                                                      })
                                      },
+                                               createCBE: function(page, index) {
+                                                               console.log('cbeName: ' + this.cbeName)
+                                                               axios.post('http://localhost:3000/cbes/1/create_it', {cbe_name: this.cbeName, selected_subject: this.selectedSubject})
+                                                               .then(response => { console.log(response.status)})
+                                                               .catch(error => {console.log(error)})
+                                                         },
+                                               createSection: function(page, index) {
+                                                               console.log('cbeName: ' + this.cbeName)
+                                                               axios.post('http://localhost:3000/cbes/1/create_it', {cbeName: this.cbeName})
+                                                               .then(response => { console.log(response.status)})
+                                                               .catch(error => {console.log(error)})
+                                                         }
+
    },
 
 }
