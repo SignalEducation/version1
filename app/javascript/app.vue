@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-
+     <span><p>New CBE ID: {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} </p></span>
     <div>
        <button v-on:click="showSubjects">Show Subjects</button>
 
@@ -16,8 +16,8 @@
         <br/><br/><br/>
         <button v-on:click="createSection">Create Section</button> <input v-model="sectionName" placeholder="Section Name">
 
-        <span>New CBE ID: {{ createCBEId }}
-        <paragraph v-bind:data="createCBEId">{{ createCBEId }}</paragraph></span>
+
+
     </div>
 
     <div>
@@ -35,7 +35,7 @@ export default {
 el: 'app',
   data: function () {
     return {
-       createdCBEId: null,
+       createdCBE: [],
        selectedSubject: "Subject",
             options: []
 		}
@@ -60,7 +60,8 @@ el: 'app',
                                                                .then(response => {
                                                                console.log(response.status)
                                                                console.log(response.data)
-                                                               this.createdCBEId = response.data.cbeId
+                                                               this.createdCBE = response.data
+                                                               console.log(this.createdCBE.cbeId)
                                                                })
                                                                .catch(error => {console.log(error)})
                                                          },
