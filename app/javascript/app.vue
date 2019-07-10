@@ -16,6 +16,8 @@
         <br/><br/><br/>
         <button v-on:click="createSection">Create Section</button> <input v-model="sectionName" placeholder="Section Name">
 
+        <span>New CBE ID: {{ createCBEId }}
+        <paragraph v-bind:data="createCBEId">{{ createCBEId }}</paragraph></span>
     </div>
 
     <div>
@@ -33,6 +35,7 @@ export default {
 el: 'app',
   data: function () {
     return {
+       createdCBEId: null,
        selectedSubject: "Subject",
             options: []
 		}
@@ -54,7 +57,11 @@ el: 'app',
                                                createCBE: function(page, index) {
                                                                console.log('cbeName: ' + this.cbeName)
                                                                axios.post('http://localhost:3000/cbes/1/create_it', {cbe_name: this.cbeName, selected_subject: this.selectedSubject})
-                                                               .then(response => { console.log(response.status)})
+                                                               .then(response => {
+                                                               console.log(response.status)
+                                                               console.log(response.data)
+                                                               this.createdCBEId = response.data.cbeId
+                                                               })
                                                                .catch(error => {console.log(error)})
                                                          },
                                                createSection: function(page, index) {

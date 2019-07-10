@@ -19,8 +19,6 @@ class CbesController < ApplicationController
   end
 
   def create
-    Cbe.new (params)
-    cbe = Cbe.create(name: 'BCCA EXAM', title: 'exam 1', description: 'test desc', subject_course_id: 1)
   end
 
   def create_it
@@ -34,7 +32,9 @@ class CbesController < ApplicationController
     )
     #Cbe.new (params)
     #
-    Cbe.new()
+    puts "Is this the new id ? -- #{cbe.id}"
+    res = {:cbeId => cbe.id}
+    render json: (res.as_json)
   end
 
 end
