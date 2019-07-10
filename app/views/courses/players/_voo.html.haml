@@ -1,0 +1,15 @@
+=javascript_include_tag 'video_players/voo'
+
+%iframe.video-player-container.vooplayer{:allow => "autoplay",
+                                         :allowfullscreen => "true",
+                                         :allowtransparency => "true",
+                                         "data-playerid" => "#{cme.course_module_element_video.voo_player_id}",
+                                         :frameborder => "0",
+                                         :name => "vooplayerframe",
+                                         :scrolling => "no",
+                                         :style => "max-width:100%"}
+
+:css
+  .video-tutorial-player #theImg.vjs-customized-play-button, .video-skin-player #theImg.vjs-customized-play-button {
+      margin: 176px 0 0 -55px !important;
+  }

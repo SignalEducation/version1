@@ -48,7 +48,7 @@ describe CourseModuleElementsController, type: :controller do
 
   let!(:valid_params) { FactoryBot.attributes_for(:course_module_element_video, name: 'ABCDE', name_url: 'adcbw', vimeo_guid: '123abc123') }
 
-  let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video) }
+  let!(:cme_video_params) { FactoryBot.attributes_for(:course_module_element_video, :vimeo) }
   let!(:cme_quiz_params) { course_module_element_1.attributes.merge({name: 'Quiz 01', name_url: 'qz_01'}) }
   let!(:valid_video_params) { course_module_element_3.attributes.merge({name: 'Video 01', name_url: 'video_01', course_module_element_video_attributes: cme_video_params}) }
   let!(:constructed_response_params) { course_module_element_4.attributes.merge({name: 'CR 01', name_url: 'cr_01'}) }

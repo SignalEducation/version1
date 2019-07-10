@@ -38,22 +38,28 @@ FactoryBot.define do
     seo_no_index                { false }
     is_constructed_response     { false }
 
-    factory :cme_video do
-      is_video                    { true }
-      is_quiz                     { false }
+    trait :cme_video do
+      is_video { true }
+      is_quiz  { false }
     end
 
-    factory :cme_quiz do
-      is_quiz                     { true }
-      is_video                    { false }
+    trait :cme_quiz do
+      is_quiz  { true }
+      is_video { false }
     end
 
-    factory :cme_constructed_response do
-      is_quiz                     { false }
-      is_video                    { false }
-      is_constructed_response     { true }
+    trait :cme_constructed_response do
+      is_quiz                 { false }
+      is_video                { false }
+      is_constructed_response { true }
     end
 
+    trait :vimeo do
+      association :course_module_element_video, :vimeo
+    end
+
+    trait :voo do
+      association :course_module_element_video, :voo
+    end
   end
-
 end

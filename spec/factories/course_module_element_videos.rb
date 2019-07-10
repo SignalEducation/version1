@@ -14,9 +14,16 @@
 
 FactoryBot.define do
   factory :course_module_element_video do
-    course_module_element_id { 1 }
     duration { 10 }
-    sequence(:vimeo_guid)             { |n| "vimeo-#{n}" }
-  end
+    course_module_element
 
+    trait :vimeo do
+      sequence(:vimeo_guid) { |n| "vimeo-#{n}" }
+    end
+
+    trait :voo do
+      vimeo_guid { 'not empty' }
+      sequence(:voo_player_id) { |n| "voo-#{n}" }
+    end
+  end
 end

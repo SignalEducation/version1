@@ -1,8 +1,10 @@
-
-%script{:src => "https://learnsignal.cdn.vooplayer.com/assets/vooplayer.js"}
-%iframe.video-player-container.vooplayer{:allow => "autoplay", :allowfullscreen => "true", :allowtransparency => "true", "data-playerid" => "#{@course_module_element.course_module_element_video.voo_player_id}", :frameborder => "0", :name => "vooplayerframe", :scrolling => "no", :style => "max-width:100%"}
-
-:css
-  .video-tutorial-player #theImg.vjs-customized-play-button, .video-skin-player #theImg.vjs-customized-play-button {
-      margin: 176px 0 0 -55px !important;
-  }
+-if cme.course_module_element_video.vimeo_guid && current_user.country&.iso_code != 'CN'
+  =render partial: 'courses/players/vimeo', locals: { cme: cme }
+-elsif cme.course_module_element_video.voo_player_id
+  =render partial: 'courses/players/voo', locals: { cme: cme }
+-else
+  %h2 Sorry Unknown Content Requested
+  -error_message = "views/courses/_video_player - error to rendering video. CME: #{cme.inspect}.\n"
+  -error_message << "User: #{current_user.id}: #{current_user.name}"
+  -Rails.logger.error error_message
+  -Airbrake::AirbrakeLogger.new(logger).error error_message
