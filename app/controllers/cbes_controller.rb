@@ -33,7 +33,7 @@ class CbesController < ApplicationController
     #Cbe.new (params)
     #
     puts "Is this the new id ? -- #{cbe.id}"
-    res = {:cbeId => cbe.id}
+    res = {cbeId: cbe.id, cbeName: cbe.name}
     render json: (res.as_json)
   end
 
