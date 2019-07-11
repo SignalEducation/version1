@@ -30,7 +30,8 @@ RSpec.describe Cbe, type: :model do
 
   context 'When creating a CBE with default settings' do
     it 'Should create a new CBE record default settings' do
-      cbe = Cbe.create(name: 'BCCA EXAM', title: 'exam 1', description: 'test desc', exam_body_id: 1)
+      subject_course = SubjectCourse.first
+      cbe = Cbe.create(name: 'BCCA EXAM', title: 'exam 1', description: 'test desc', subject_course_id: subject_course.id)
       expect(cbe.hard_time_limit).to eq(nil)
       expect(cbe.exam_time).to eq nil
       expect(cbe.length_of_pauses).to eq nil

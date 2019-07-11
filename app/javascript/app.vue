@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-     <span><p>New CBE ID: {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} </p></span>
+     <span><p>CBE {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
     <div>
        <button v-on:click="showSubjects">Show Subjects</button>
 
@@ -67,7 +67,7 @@ el: 'app',
                                                          },
                                                createSection: function(page, index) {
                                                                console.log('cbeName: ' + this.cbeName)
-                                                               axios.post('http://localhost:3000/cbes/1/create_it', {cbeName: this.cbeName})
+                                                               axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
                                                                .then(response => { console.log(response.status)})
                                                                .catch(error => {console.log(error)})
                                                          }
