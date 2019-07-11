@@ -52,50 +52,48 @@ class CoursesController < ApplicationController
   end
 
   def video_watched_data
+    cme                = CourseModuleElement.find(params[:cme_id])
+    video_cme_user_log = CourseModuleElementUserLog.find(params[:video_log_id])
+
     respond_to do |format|
-      format.json {
-        video_cme_user_log = CourseModuleElementUserLog.find_by_id(params[:course][:videoLogId])
-        if video_cme_user_log
-          cme = video_cme_user_log.course_module_element
-          video_cme_user_log.element_completed = true
-          video_cme_user_log.time_taken_in_seconds = cme.duration.to_i if cme.duration
-          video_cme_user_log.save
-          #Triggers Update Callbacks
+      format.json do
+        if video_cme_user_log.update(element_completed: true,
+                                     time_taken_in_seconds: cme&.duration&.to_i)
+          render json: {}, status: :ok
+        else
+          render json: { video_log_id: video_cme_user_log.errors.messages }, status: :error
         end
-        render json: {}, status: :ok
-      }
+      end
     end
   end
 
   def create_video_user_log
+    course_module_element = CourseModuleElement.find(params[:course][:cmeId])
+    video_cme_user_log    = CourseModuleElementUserLog.new(
+      course_module_element_id: course_module_element.id,
+      user_id: current_user.try(:id),
+      session_guid: current_session_guid,
+      element_completed: false,
+      time_taken_in_seconds: 0,
+      is_video: true,
+      is_quiz: false,
+      course_module_id: course_module_element.course_module_id,
+      course_section_id: course_module_element.course_module.course_section_id,
+      subject_course_id: course_module_element.course_module.course_section.subject_course_id,
+      subject_course_user_log_id: params[:course][:scul_id].presence,
+      course_section_user_log_id: params[:course][:csul_id].presence,
+      student_exam_track_id: params[:course][:set_id].presence
+    )
 
-    #Create Video Log upon vimeo player play event sent by JSON, later updated by another JSON request to video_watched_data method
     respond_to do |format|
-      format.json {
-        course_module_element = CourseModuleElement.find(params[:course][:cmeId])
-
-        if course_module_element
-          @video_cme_user_log = CourseModuleElementUserLog.create!(
-              course_module_element_id: course_module_element.id,
-              user_id: current_user.try(:id),
-              session_guid: current_session_guid,
-              element_completed: false,
-              time_taken_in_seconds: 0,
-              is_video: true,
-              is_quiz: false,
-              course_module_id: course_module_element.course_module_id,
-              course_section_id: course_module_element.course_module.course_section_id,
-              subject_course_id: course_module_element.course_module.course_section.subject_course_id,
-              subject_course_user_log_id: params[:course][:scul_id].presence,
-              course_section_user_log_id: params[:course][:csul_id].presence,
-              student_exam_track_id: params[:course][:set_id].presence
-          )
+      format.json do
+        if video_cme_user_log.save
+          render json: { video_log_id: video_cme_user_log.id }, status: :ok
+        else
+          render json: { video_log_id: video_cme_user_log.errors.messages }, status: :error
         end
-        data = {video_log_id: @video_cme_user_log.id}
-        render json: data, status: :ok
-      }
+      end
     end
-
   end
 
   def show_constructed_response

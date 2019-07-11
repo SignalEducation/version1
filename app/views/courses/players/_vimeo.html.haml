@@ -15,7 +15,7 @@
   };
 
   let player = new Vimeo.Player('video-player-window', options);
-  player.ready().catch($('.video-player-window').html('#{j render partial: 'courses/players/voo', locals: { cme: cme }}'))
+  player.ready().catch($('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}'))
 
   let timeUpdate = function(data) {
     if (data.percent >= 0.90) {
@@ -23,7 +23,7 @@
         headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
         url: '#{video_watched_data_courses_path}',
         dataType: 'json',
-        data: JSON.stringify({'videoLogId': logId}),
+        data: JSON.stringify({ 'video_log_id': logId, 'cme_id': video_cme_id }),
         method: 'PATCH',
         contentType: "application/json; charset=utf-8"
       });

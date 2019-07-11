@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: course_module_element_videos
@@ -13,7 +15,6 @@
 #
 
 class CourseModuleElementVideo < ApplicationRecord
-
   include LearnSignalModelExtras
   include Archivable
 
@@ -24,7 +25,7 @@ class CourseModuleElementVideo < ApplicationRecord
 
   # validation
   validates :course_module_element_id, presence: true, on: :update
-  validates :vimeo_guid, presence: true, length: {maximum: 255}, on: :create
+  validates :vimeo_guid, presence: true, length: { maximum: 255 }, on: :create
   validates :duration, presence: true, numericality: true
 
   # callbacks
@@ -38,7 +39,7 @@ class CourseModuleElementVideo < ApplicationRecord
 
   ## Parent & Child associations ##
   def parent
-    self.course_module_element
+    course_module_element
   end
 
   #######################################################################
@@ -48,7 +49,4 @@ class CourseModuleElementVideo < ApplicationRecord
   def destroyable?
     true
   end
-
-  protected
-
 end

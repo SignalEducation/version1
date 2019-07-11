@@ -16,6 +16,7 @@
 require 'rails_helper'
 
 describe VideoResource do
+  let(:video) { build(:video_resource) }
   # relationships
   it { should belong_to :course_module_element }
 
@@ -39,5 +40,11 @@ describe VideoResource do
   # instance methods
   it { should respond_to(:destroyable?) }
 
-
+  describe 'Methods' do
+    context '#destroyable?' do
+      it 'always return true' do
+        expect(video).to be_destroyable
+      end
+    end
+  end
 end
