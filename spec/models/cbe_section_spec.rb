@@ -6,7 +6,9 @@ require 'rails_helper'
 RSpec.describe CbeSection, type: :model do
   context 'When creating an empty CBE Section' do
     it 'Should return an error as it needs to be attached to a CBE' do
-      cbe = Cbe.create(name: 'BCCA EXAM', title: 'exam 1', description: 'test desc', exam_body_id: 1)
+      subject_course = SubjectCourse.first
+      puts subject_course
+      cbe = Cbe.create(name: 'BCCA EXAM', title: 'exam 1', description: 'test desc', subject_course_id: subject_course.id)
       cbe_section = CbeSection.create(name: 'Intro',
                                       scenario_label: 'S Label',
                                       scenario_description: 'S Desc',

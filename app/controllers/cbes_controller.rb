@@ -21,20 +21,26 @@ class CbesController < ApplicationController
   def create
   end
 
-  def create_it
+  def create_section
+    cbe_section = CbeSection.create(name: 'Intro',
+                                    scenario_label: 'S Label',
+                                    scenario_description: 'S Desc',
+                                    cbe_id: params[:cbe_id])
 
-    puts "**** Create #{params[:cbe_name]}"
-    puts "**** Subject #{params[:selected_subject]}"
+    res = {cbeId: cbe.id, cbeName: cbe.name}
+    render json: (res.as_json)
+  end
+
+  def create_it
     cbe = Cbe.create(name: params[:cbe_name],
                      title: 'exam 1',
                      description: 'test desc',
                      subject_course_id: params[:selected_subject]
     )
-    #Cbe.new (params)
-    #
-    puts "Is this the new id ? -- #{cbe.id}"
+
     res = {cbeId: cbe.id, cbeName: cbe.name}
     render json: (res.as_json)
   end
+
 
 end
