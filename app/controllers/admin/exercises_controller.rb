@@ -8,16 +8,9 @@ class Admin::ExercisesController < ApplicationController
   layout 'management'
 
   def index
-    @filters = { state: 'submitted', product: '', corrector: '', search: '' }
-
     if request.post?
-      @exercises = Exercise.where(nil)
-
-      filtering_params(params).each do |key, value|
-        @exercises = @exercises.public_send(key, value) if value.present?
-        @filters[key] = value
-      end
-
+      @filters = params.slice(:state, :product, :corrector, :search)
+      @exercises = Exercise.filter(@filters)
       case params[:state]
       when 'returned', 'all'
         @exercises = @exercises.order(created_at: :desc)
@@ -26,6 +19,7 @@ class Admin::ExercisesController < ApplicationController
       end
       @exercises = @exercises.paginate(per_page: 50, page: params[:page])
     else
+      @filters = { state: 'submitted', product: '', corrector: '', search: '' }
       @exercises = Exercise.with_state(:submitted).
                             order(created_at: :asc).
                             paginate(per_page: 50, page: params[:page])
@@ -48,10 +42,6 @@ class Admin::ExercisesController < ApplicationController
   end
 
   private
-
-  def filtering_params(params)
-    params.slice(:state, :product, :corrector, :search)
-  end
 
   def set_exercise
     @exercise = Exercise.find(params[:id])

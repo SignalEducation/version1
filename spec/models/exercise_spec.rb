@@ -23,7 +23,16 @@
 #
 
 require 'rails_helper'
+require Rails.root.join "spec/concerns/filterable_spec.rb"
 
 RSpec.describe Exercise, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it_behaves_like "filterable"
+
+  describe '.search_scopes' do
+    it 'has the correct search_scopes' do
+      expect(Exercise.search_scopes).to eq(
+        [:state, :product, :corrector, :search]
+      )
+    end
+  end
 end

@@ -23,6 +23,7 @@
 #
 
 class Exercise < ApplicationRecord
+  include Filterable
   belongs_to :product
   belongs_to :user
   belongs_to :corrector, class_name: 'User', foreign_key: 'corrector_id', optional: true
@@ -38,11 +39,21 @@ class Exercise < ApplicationRecord
 
   # SCOPES =====================================================================
 
+  search_scope :state, lambda { |state|
+    state == 'all' ? where.not(state: 'pending') : where(state: state)
+  }
+  search_scope :product, ->(product_id) { where product_id: product_id }
+  search_scope :corrector, ->(corrector_id) { where(corrector_id: corrector_id) }
+  search_scope :search, lambda { |term|
+    joins(:user).where(
+      "users.email ILIKE :t OR users.first_name ILIKE :t OR users.last_name
+      ILIKE :t OR textcat(users.first_name, textcat(text(' '), users.last_name))
+      ILIKE :t", t: "%#{term}%"
+    )
+  }
+
   scope :all_in_order, -> { order(created_at: :asc) }
   scope :live, -> { with_states(%w(submitted correcting returned)) }
-  scope :state, ->(state) { state == 'all' ? where.not(state: 'pending') : where(state: state) }
-  scope :product, ->(product_id) { where product_id: product_id }
-  scope :corrector, ->(corrector_id) { where corrector_id: corrector_id }
 
   # STATE MACHINE ==============================================================
 
