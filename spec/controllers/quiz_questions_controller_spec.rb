@@ -31,7 +31,7 @@ describe QuizQuestionsController, type: :controller do
   let!(:course_module_1) { FactoryBot.create(:active_course_module,
                                              subject_course_id: subject_course_1.id,
                                              course_section: course_section_1) }
-  let!(:course_module_element_2_1) { FactoryBot.create(:cme_quiz,
+  let!(:course_module_element_2_1) { FactoryBot.create(:course_module_element, :cme_quiz,
                                                        course_module: course_module_1) }
   let!(:course_module_element_quiz_1_1) { FactoryBot.create(:course_module_element_quiz,
                                                               course_module_element: course_module_element_2_1) }

@@ -31,7 +31,7 @@ describe CourseModuleElementResourcesController, type: :controller do
   let!(:course_module) { FactoryBot.create(:active_course_module,
                                            course_section: course_section,
                                            subject_course: subject_course) }
-  let!(:course_module_element) { FactoryBot.create(:cme_video,
+  let!(:course_module_element) { FactoryBot.create(:course_module_element, :cme_video,
                                                    course_module: course_module) }
   let!(:course_module_element_resource_1) { FactoryBot.create(:course_module_element_resource, course_module_element_id: course_module_element.id) }
   let!(:course_module_element_resource_2) { FactoryBot.create(:course_module_element_resource, course_module_element_id: course_module_element.id) }
