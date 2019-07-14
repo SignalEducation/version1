@@ -191,9 +191,6 @@ Rails.application.routes.draw do
     get '/student_new',        to: 'student_sign_ups#new'
     post '/student_create',    to: 'student_sign_ups#create', as: :create_student
 
-    post '/subscribe',           to: 'library#subscribe'
-    post '/home_page_subscribe', to: 'student_sign_ups#subscribe'
-    post '/info_subscribe',      to: 'footer_pages#info_subscribe'
     post '/complaints_intercom', to: 'footer_pages#complaints_intercom'
     post '/contact_us_intercom', to: 'footer_pages#contact_us_intercom'
     post '/tutor_contact_form',  to: 'library#tutor_contact_form'

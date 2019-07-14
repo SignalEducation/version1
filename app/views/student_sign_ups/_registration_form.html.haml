@@ -9,14 +9,14 @@
     .py-3
       %p
         -if @home_page
-          -if @home_page.registration_form && @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
+          -if @home_page.registration_form && @home_page&.registration_form_heading.present?
             =@home_page.registration_form_heading
         -else
-          -if @plan && @plan.registration_form_heading && !@plan.registration_form_heading.empty?
+          -if @plan && @plan&.registration_form_heading.present?
             =@plan.registration_form_heading
           -elsif !@plan && @product
             =''
-          -elsif !@plan && !@product && @exam_body && @exam_body.registration_form_heading && !@exam_body.registration_form_heading.empty?
+          -elsif !@plan && !@product && @exam_body&.registration_form_heading.present?
             =@exam_body.registration_form_heading
           -else
             ='Get started with our free Basic Plan to explore our innovative learning platform and access selected course content.'
@@ -34,7 +34,7 @@
             %label.sr-only{:for => "last-name"} Last Name
             =f.text_field :last_name, placeholder: 'Enter your last name', class: 'form-control'
       .row
-        -if @home_page && @home_page.custom_file_name == 'bootcamp.html.haml'
+        -if @home_page&.custom_file_name == 'bootcamp.html.haml'
           .col-md-6
             .form-group
               %label.sr-only{:for => "email-address"} Your email address
@@ -112,9 +112,9 @@
 
       .logo-acca
         -if @home_page
-          -if @home_page.logo_image && @home_page.logo_image.present?
+          -if @home_page&.logo_image.present?
             =image_tag(@home_page.logo_image, alt: 'Logo')
-        -elsif @exam_body && @exam_body.logo_image && @exam_body.logo_image.present?
+        -elsif @exam_body&.logo_image.present?
           =image_tag(@exam_body.logo_image, alt: 'Logo')
 
 

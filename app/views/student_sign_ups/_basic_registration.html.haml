@@ -1,8 +1,8 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-2
+  .container-bg.home-hero-alt-4
     .container
-      %article.home-hero.home-hero-preferred-plan
+      %article.home-hero.home-hero-basic-registration
         .row.justify-content-between
           .col-sm-12.col-xl-5
             %header.home-hero-header
@@ -22,56 +22,18 @@
               -if @home_page&.header_h3.present?
                 %h3.text-white.pr-xl-4
                   =@home_page.header_h3
-              -elsif @home_page.preferred_payment_frequency && @preferred_plan
+              -else
                 %h3.text-white.pr-xl-4
-                  =@preferred_plan.currency.format_number(@preferred_plan.price)
-                  %span.h5.text-white
-                    -if @preferred_plan.monthly_percentage_off
-                      Save over
-                      =@preferred_plan.monthly_percentage_off
-                      ='%'
-                    -else
-                      -if @preferred_plan.previous_plan_price && !@preferred_plan.previous_plan_price.blank?
-                        was
-                        %span.strikethrough-diagonal
-                          %span.text-white
-                            =@preferred_plan.currency.format_number(@preferred_plan.previous_plan_price)
+                  No credit card required. Set-up takes one minute.
 
 
 
-          -if (@home_page.registration_form || @home_page.login_form) && !current_user
+          -if @home_page.registration_form || @home_page.login_form
             .col-xl-6
               =render partial: 'registration_login_form'
-          -elsif @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
-            .col-xl-6
-              .d-flex.flex-column.justify-content-center
-                .header-plan
-                  %article.card.card-primary.card-primary-alt.mb-0
-                    -if @preferred_plan.most_popular
-                      .card-banner.bg-mint
-                        %large.text-white
-                          Most popular payment plan
 
-                    .card-body.text-center.py-4.py-sm-5.border-gray3
-                      %h2.card-title
-                        =t("views.general.payment_frequency_in_months.a#{@preferred_plan.payment_frequency_in_months}")
-                      %ul.list-centered
-                        -if @preferred_plan.bullet_points_list && !@preferred_plan.bullet_points_list.empty?
-                          - @preferred_plan.bullet_points_list.split(/, ?/).each do |bullet|
-                            %li=bullet
-                        -else
-                          %li="Access all #{@group.name} courses"
-                          %li="Topic-by-topic lectures"
-                          %li="24/7 tutor support"
-                        -unless @preferred_plan&.exam_body.name == "CPD"
-                          %li{style: 'font-style: italic;'}
-                            Cancel anytime
-                      %p.h2.mb-0
-                        =@preferred_plan.currency.format_number(@preferred_plan.price)
-                      .mt-auto
-                        =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency_id)}', '#{@preferred_plan.exam_body.name}');" do
-                          Choose this plan
 
+  =render partial: 'usage_numbers_section'
 
   .container
     %article.py-5
@@ -143,7 +105,7 @@
                         =plan.monthly_percentage_off
                         ='%'
                     -else
-                      -if plan&.previous_plan_price.present?
+                      -if plan.previous_plan_price && !plan.previous_plan_price.blank?
                         %p.h5.text-gray2
                           was
                           %span.strikethrough-diagonal
@@ -157,26 +119,47 @@
 
 
   -if @home_page.student_testimonials.any?
-    =render partial: 'student_testimonials', locals: {home_page: @home_page}
+    .container-bg.bg-gray5
+      =render partial: 'student_testimonials', locals: {home_page: @home_page}
   -else
-    .container
-      %article.py-3.py-6.text-center.text-lg-left
-        %header.sr-only
-          %h2 Testimonial
-        .row.row-lg
-          .col-lg-5
-            =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
-          .col-lg-7
-            .d-flex.h-100.align-items-center
-              %blockquote.mb-0.ml-lg-6.mr-lg-6
-                %p.text-gray2
-                  "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
-                %footer
-                  %cite.font-weight-semi-bold.text-gray2
-                    Rebecca Nagujja, Ireland
+    .container-bg.bg-gray5
+      .container
+        %article.py-3.py-6.text-center.text-lg-left
+          %header.sr-only
+            %h2 Testimonial
+          .row.row-lg
+            .col-lg-5
+              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+            .col-lg-7
+              .d-flex.h-100.align-items-center
+                %blockquote.mb-0.ml-lg-6.mr-lg-6
+                  %p.text-gray2
+                    "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                  %footer
+                    %cite.font-weight-semi-bold.text-gray2
+                      Rebecca Nagujja, Ireland
 
-  -if @home_page.blog_posts.any?
-    =render partial: 'blog_posts_section', locals: {home_page: @home_page}
+  .container
+    %article.py-5
+      %header.text-center.pb-sm-4.pb-md-5
+        %h2.h1-mega
+          ="Explore our #{@group.name} courses"
+        %p.p-hero.px-lg-6
+          =@group.description
+
+      .row.row-lg
+        -@group.subject_courses.all_active.all_in_order.each do |course|
+          .col-sm
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+              .card-header.d-flex.justify-content-center.align-items-center
+                %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+              .card-body.d-flex.flex-column.justify-content-center
+                %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                  =course.category_label
+                %h5.card-title.mb-1
+                  %span.mr-1
+                    =course.name
 
   =render partial: 'customer_support_section'
 
@@ -273,4 +256,5 @@
       }
 
     });
+
 
