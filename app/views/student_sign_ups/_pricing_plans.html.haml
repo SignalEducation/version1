@@ -1,0 +1,292 @@
+=render partial: 'layouts/external_navbar'
+%main
+  .container-bg.home-hero-alt-3
+    .container
+      %article.home-hero.home-hero-pricing-plans
+        .row.justify-content-between
+          .col-sm-12.col-xl-5
+            %header.home-hero-header
+              -if @home_page.header_h1 && !@home_page.header_h1.empty?
+                %h1.h1-hero.text-white.mb-5
+                  =@home_page.header_h1
+              -else
+                %h1.h1-hero.text-white.mb-5
+                  ="The smarter way to study."
+              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+                %p.text-white.mb-5.pr-xl-4
+                  =@home_page.header_paragraph
+              -else
+                %p.text-white.mb-5.pr-xl-4
+                  Designed by experts and delivered online so that you can study on a schedule that suits your needs.
+
+              -if @home_page.header_h3 && !@home_page.header_h3.empty?
+                %h3.text-white.pr-xl-4
+                  =@home_page.header_h3
+              -elsif @home_page.preferred_payment_frequency && @preferred_plan
+                %h3.text-white.pr-xl-4
+                  =@preferred_plan.currency.format_number(@preferred_plan.price)
+                  %span.h5.text-white
+                    -if @preferred_plan.monthly_percentage_off
+                      Save over
+                      =@preferred_plan.monthly_percentage_off
+                      ='%'
+                    -else
+                      -if @preferred_plan.previous_plan_price && !@preferred_plan.previous_plan_price.blank?
+                        was
+                        %span.strikethrough-diagonal
+                          %span.text-white
+                            =@preferred_plan.currency.format_number(@preferred_plan.previous_plan_price)
+
+
+
+          -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+            .col-xl-6
+              .d-flex.flex-column.justify-content-center
+                .header-plan
+                  %article.card.card-primary.card-primary-alt.mb-0
+                    -if @preferred_plan.most_popular
+                      .card-banner.bg-mint
+                        %large.text-white
+                          Most popular payment plan
+
+                    .card-body.text-center.py-4.py-sm-5.border-gray3
+                      %h2.card-title
+                        =t("views.general.payment_frequency_in_months.a#{@preferred_plan.payment_frequency_in_months}")
+                      %ul.list-centered
+                        -if @preferred_plan.bullet_points_list && !@preferred_plan.bullet_points_list.empty?
+                          - @preferred_plan.bullet_points_list.split(/, ?/).each do |bullet|
+                            %li=bullet
+                        -else
+                          %li="Access all #{@group.name} courses"
+                          %li="Topic-by-topic lectures"
+                          %li="24/7 tutor support"
+                        -unless @preferred_plan && @preferred_plan.exam_body.name == "CPD"
+                          %li{style: 'font-style: italic;'}
+                            Cancel anytime
+                      %p.h2.mb-0
+                        =@preferred_plan.currency.format_number(@preferred_plan.price)
+                      .mt-auto
+                        =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency_id)}', '#{@preferred_plan.exam_body.name}');" do
+                          Choose this plan
+
+
+  -if @home_page.pricing_section && @subscription_plans.any?
+    .container-bg.bg-gray5
+      .container#plans
+        %article.py-6
+          %header.text-center.pb-5.pb-md-6
+            %h2.h1-mega
+              ="#{@group.name} Payment Plans"
+            %p.p-hero.px-lg-8
+              -if @group.exam_body.subscription_page_subheading_text
+                =@group.exam_body.subscription_page_subheading_text
+              -else
+                ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
+
+          .row.row-lg.justify-content-center
+            -@subscription_plans.each do |plan|
+              .col-lg-4
+                %article.card.card-primary.card-primary-alt.medium-gap
+                  -if plan.most_popular
+                    .card-banner.bg-mint
+                      %large.text-white
+                        Most popular payment plan
+                  .card-body.text-center.py-4.py-sm-5
+                    %h2.card-title
+                      =t("views.general.payment_frequency_in_months.a#{plan.payment_frequency_in_months}")
+
+                    %ul.list-centered
+                      -if plan.bullet_points_list && !plan.bullet_points_list.empty?
+                        - plan.bullet_points_list.split(/, ?/).each do |bullet|
+                          %li=bullet
+                      -else
+                        %li="Access all #{@group.name} courses"
+                        %li="Topic-by-topic lectures"
+                        %li="24/7 tutor support"
+
+                      -unless plan.exam_body.name == "CPD"
+                        %li{style: 'font-style: italic;'}
+                          Cancel anytime
+
+                    %p.h2.mb-0
+                      =plan.currency.format_number(plan.price)
+
+                    -if plan.monthly_percentage_off
+                      %p.h5.text-gray2
+                        Save over
+                        =plan.monthly_percentage_off
+                        ='%'
+                    -else
+                      -if plan.previous_plan_price && !plan.previous_plan_price.blank?
+                        %p.h5.text-gray2
+                          was
+                          %span.strikethrough-diagonal
+                            %span{style: 'color:#647786'}
+                              =plan.currency.format_number(plan.previous_plan_price)
+
+                    .mt-auto
+                      =link_to subscription_checkout_special_link(@group.exam_body_id, plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{plan.currency.iso_code}', '#{plan.name}', '#{plan.id}', '#{plan.price}', '#{plan.exam_body.name}');" do
+                        Choose this plan
+
+
+
+  =render partial: 'usp_section'
+
+  .container
+    %article.py-5
+      %header.text-center.pb-sm-4.pb-md-5
+        %h2.h1-mega
+          ="Explore our #{@group.name} courses"
+        %p.p-hero.px-lg-6
+          =@group.description
+
+      .row.row-lg
+        -@group.subject_courses.all_active.all_in_order.each do |course|
+          .col-sm
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+              .card-header.d-flex.justify-content-center.align-items-center
+                %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+              .card-body.d-flex.flex-column.justify-content-center
+                %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                  =course.category_label
+                %h5.card-title.mb-1
+                  %span.mr-1
+                    =course.name
+
+
+
+  -if @home_page.student_testimonials.any?
+    .container-bg.bg-gray5
+      =render partial: 'student_testimonials', locals: {home_page: @home_page}
+  -else
+    .container-bg.bg-gray5
+      .container
+        %article.py-3.py-6.text-center.text-lg-left
+          %header.sr-only
+            %h2 Testimonial
+          .row.row-lg
+            .col-lg-5
+              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+            .col-lg-7
+              .d-flex.h-100.align-items-center
+                %blockquote.mb-0.ml-lg-6.mr-lg-6
+                  %p.text-gray2
+                    "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                  %footer
+                    %cite.font-weight-semi-bold.text-gray2
+                      Rebecca Nagujja, Ireland
+
+  -if @home_page.blog_posts.any?
+    =render partial: 'blog_posts_section', locals: {home_page: @home_page}
+
+  =render partial: 'customer_support_section'
+
+
+:javascript
+
+  $(document).ready(function(){
+    let hash = window.location.hash;
+    let elements = $('a[href="' + hash + '"]');
+
+    if (elements.length > 0) {
+      elements.click();
+      setTimeout(function() {
+          window.scrollTo(0, 0);
+      }, 1);
+    } else if (hash === '#contact-us-modal') {
+      $('#contact-us-modal').modal('show');
+    }
+
+    if ($(".notice.error")[0]){
+      let tabId = $(".notice.error").parent().parent().parent().parent().attr('id');
+      let tabLink = $('#' + tabId + '-tab');
+      tabLink.tab('show');
+    }
+
+  });
+
+
+-if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+
+  :javascript
+    let currencyIso = "#{@preferred_plan.currency.iso_code}";
+    let name = "#{@preferred_plan.name}";
+    let id = "#{@preferred_plan.id}";
+    let price = "#{@preferred_plan.price}";
+    let body = "#{@preferred_plan.exam_body.name}";
+    let type = "#{'Subscription'}";
+
+
+
+    function addToCart(currencyIso, name, id, price, body) {
+      dataLayer.push({
+        'event': 'addToCart',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'add': {
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': 'Subscription',
+              'quantity': 1
+              }]
+          }
+        }
+      });
+    }
+
+    $(document).ready(function(){
+      addToCart(currencyIso, name, id, price, body);
+    });
+
+    function selectTab(tab, currencyIso, name, id, price, body, type) {
+      dataLayer.push({ 'event': 'checkout',
+        'ecommerce': {
+          'currencyCode': currencyIso,
+          'checkout': {
+            'actionField': {'step': 1, 'option':tab},
+            'products': [{
+              'name': name,
+              'id': id,
+              'price': price,
+              'brand': body,
+              'category': type,
+              'quantity': 1
+            }]
+          }
+        }
+      });
+    }
+
+    $(document).ready(function(){
+
+      if ($("#registration-login")[0]) {
+        selectTab(document.querySelector("#register-tab").innerText, currencyIso, name, id, price, body, type);
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+          selectTab(e.target.innerText, currencyIso, name, id, price, body, type);
+        })
+      } else if ($("#registration-option")[0]) {
+          selectTab('Register', currencyIso, name, id, price, body, type);
+      } else if ($("#login-option")[0]) {
+          selectTab('Login', currencyIso, name, id, price, body, type);
+      }
+
+    });
+
+
+
+:javascript
+
+  $(window).scroll(function() {
+    var scroll = $(window).scrollTop();
+
+    if (scroll >= 1) {
+        //clearHeader, not clearheader - caps H
+        $(".header").addClass("sticky-nav-border");
+    } else if (scroll <= 1) {
+      $(".header").removeClass("sticky-nav-border");
+    }
+  });

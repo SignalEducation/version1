@@ -47,7 +47,18 @@
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
     -ms-flex-pack: justify;
-    justify-content: space-between
+    justify-content: space-between;
+    max-width: 1200px;
+  }
+}
+@media (min-width:1200px) {
+  .navbar > .container,
+  .navbar > .container-fluid {
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    max-width: 1280px;
   }
 }
 .navbar-nav {
@@ -70,6 +81,12 @@
 }
 @media (min-width:992px) {
   .navbar-nav .nav-item {
+    margin-left: 1rem;
+    margin-right: 1rem
+  }
+}
+@media (min-width:1200px) {
+  .navbar-nav .nav-item {
     margin-left: 2rem;
     margin-right: 2rem
   }
@@ -77,6 +94,12 @@
 @media (min-width:992px) {
   .navbar-nav .nav-item.dropdown {
     margin-right: 0
+  }
+}
+@media (min-width:992px) {
+  .navbar-nav .nav-item.dropdown.course-dropdown {
+    margin-left: 1rem;
+    margin-right: 1rem
   }
 }
 .navbar-nav .nav-item.dropdown .dropdown-menu {
@@ -409,6 +432,67 @@
   .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus,
   .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus {
     color: #fff
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus:hover,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus:hover {
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:not(:disabled):not(.disabled).active:focus,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:not(:disabled):not(.disabled):active:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none
+  }
+}
+@media (min-width:992px) {
+  .navbar-light .navbar-nav .nav-item.dropdown.course-dropdown .nav-link.dropdown-toggle {
+    color: #00b67b;
+    background-color: #fff;
+    border-color: #fff
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown.course-dropdown .nav-link.dropdown-toggle:hover {
+    color: #000032;
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus {
+    -webkit-box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
+    box-shadow: 0 0 0 .2rem rgba(0,182,123,.5)
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus:hover,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus:hover {
+    -webkit-box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
+    box-shadow: 0 0 0 .2rem rgba(0,182,123,.5)
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.disabled,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:disabled {
+    color: #00b67b;
+    background-color: #fff;
+    border-color: #fff
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:not(:disabled):not(.disabled).active,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:not(:disabled):not(.disabled):active,
+  .show > .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.dropdown-toggle {
+    color: #00b67b;
+    background-color: #fff;
+    border-color: #fff
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:not(:disabled):not(.disabled).active:focus,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:not(:disabled):not(.disabled):active:focus,
+  .show > .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.dropdown-toggle:focus {
+    -webkit-box-shadow: 0 0 0 .2rem rgba(0,182,123,.5);
+    box-shadow: 0 0 0 .2rem rgba(0,182,123,.5)
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:hover {
+    color: #000032;
+  }
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus,
+  .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus {
+    color: #00b67b
   }
   .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle.focus,
   .navbar-light .navbar-nav .nav-item.dropdown .nav-link.dropdown-toggle:focus {

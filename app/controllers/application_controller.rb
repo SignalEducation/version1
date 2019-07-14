@@ -51,6 +51,8 @@ class ApplicationController < ActionController::Base
     @groups = Group.all_active.all_in_order
     @footer_content_pages = ContentPage.for_footer
     @footer_landing_pages = HomePage.for_footer
+    navbar_links = %w(about-us testimonials resources)
+    @navbar_landing_pages = HomePage.where(public_url: navbar_links)
 
     if ExternalBanner::BANNER_CONTROLLERS.include?(controller_name)
       @banner = ExternalBanner.all_without_parent.render_for(controller_name).all_in_order.first

@@ -1,0 +1,46 @@
+.box-item.form-box
+  =f.fields_for :student_testimonials do |testimonial|
+    -if testimonial.object.new_record?
+      %h4
+        New Student Testimonial
+    -else
+      %h4
+        Edit Student Testimonial
+
+    .row
+      .col-sm-6
+        .form-group
+          =testimonial.label :text, t('views.student_testimonials.form.text')
+          .input-group.input-group-lg
+            =testimonial.text_area :text, placeholder: t('views.student_testimonials.form.text_placeholder'), class: 'form-control'
+
+        .form-group
+          =testimonial.label :signature, t('views.student_testimonials.form.signature')
+          .input-group.input-group-lg
+            =testimonial.text_field :signature, placeholder: t('views.student_testimonials.form.signature_placeholder'), class: 'form-control'
+
+        -if !testimonial.object.new_record? && testimonial.object.destroyable?
+          %br/
+          %br/
+          .checkbox
+            %label
+              =testimonial.check_box :_destroy
+              Remove Testimonial
+
+
+
+      .col-sm-6
+        =testimonial.label :upload, t('views.student_testimonials.form.image')
+        -if testimonial.object.image.present?
+          .form-control-static{style: 'max-width: 40%;'}
+            =image_tag testimonial.object.image.url, class: 'md-image'
+
+          .input-group.input-group-lg
+            =testimonial.label :image, t('views.student_testimonials.form.replace')
+            =testimonial.file_field :image, class: 'form-control'
+
+        -else
+          .input-group.input-group-lg
+            =testimonial.file_field :image, class: 'form-control'
+
+    %hr/

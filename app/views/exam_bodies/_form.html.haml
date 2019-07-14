@@ -4,57 +4,60 @@
     .row
       .col-sm-12
         .row
-          .col-sm-6
+          .col-sm-6.form-group
             =f.label :name, t('views.exam_bodies.form.name')
             .input-group.input-group-lg
               =f.text_field :name, placeholder: t('views.exam_bodies.form.name_placeholder'), class: 'form-control', autofocus: true
 
-          .col-sm-6
+          .col-sm-6.form-group
             =f.label :url, t('views.exam_bodies.form.url')
             .input-group.input-group-lg
               =f.text_field :url, placeholder: t('views.exam_bodies.form.url_placeholder'), class: 'form-control'
 
-        .row.mt-4
-          .col-sm-6
+          .col-sm-6.form-group
+            =f.label :landing_page_h1, t('views.exam_bodies.form.landing_page_h1')
+            .input-group.input-group-lg
+              =f.text_field :landing_page_h1, placeholder: t('views.exam_bodies.form.landing_page_h1_placeholder'), class: 'form-control'
+          .col-sm-6.form-group
             =f.label :registration_form_heading, t('views.exam_bodies.form.registration_form_heading')
             .input-group.input-group-lg
               =f.text_field :registration_form_heading, placeholder: t('views.exam_bodies.form.registration_form_heading_placeholder'), class: 'form-control'
-          .col-sm-6
+          .col-sm-6.form-group
+            =f.label :landing_page_paragraph, t('views.exam_bodies.form.landing_page_paragraph')
+            .input-group.input-group-lg
+              =f.text_field :landing_page_paragraph, placeholder: t('views.exam_bodies.form.landing_page_paragraph_placeholder'), class: 'form-control'
+          .col-sm-6.form-group
+            =f.label :login_form_heading, t('views.exam_bodies.form.login_form_heading')
+            .input-group.input-group-lg
+              =f.text_field :login_form_heading, placeholder: t('views.exam_bodies.form.login_form_heading_placeholder'), class: 'form-control'
+          .col-sm-6.form-group
+            =f.label :logo_image, t('views.exam_bodies.form.logo_image')
+            .input-group.input-group-lg
+              =f.select :logo_image, ExamBody::LOGO_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+          .col-sm-6.form-group
             =f.label :subscription_page_subheading_text, t('views.exam_bodies.form.subscription_page_subheading_text')
             .input-group.input-group-lg
               =f.text_field :subscription_page_subheading_text, placeholder: t('views.exam_bodies.form.subscription_page_subheading_text_placeholder'), class: 'form-control'
 
+          .col-sm-6.form-group
+            .row.pt-4
+              .col-sm-6
+                .checkbox
+                  %label
+                    =f.check_box :active
+                    =t('views.exam_bodies.form.active')
+              .col-sm-6
+                .checkbox
+                  %label
+                    =f.check_box :has_sittings
+                    =t('views.exam_bodies.form.has_sittings')
 
-        .row.mt-4
-          .col-sm-6
-            =f.label :login_form_heading, t('views.exam_bodies.form.login_form_heading')
-            .input-group.input-group-lg
-              =f.text_field :login_form_heading, placeholder: t('views.exam_bodies.form.login_form_heading_placeholder'), class: 'form-control'
-
-          .col-sm-6
+          .col-sm-6.form-group
             =f.label :preferred_payment_frequency, t('views.exam_bodies.form.preferred_payment_frequency')
             .input-group.input-group-lg
               =f.select :preferred_payment_frequency, options_for_select([1, 3, 12,], selected: f.object.preferred_payment_frequency),
                {include_blank: t('views.general.select')}, class: 'form-control custom-select'
 
-        .row.mt-5
-          .col-sm-6
-            .form-group
-              .checkbox
-                %label
-                  =f.check_box :active
-                  =t('views.exam_bodies.form.active')
-
-            .form-group
-              .checkbox
-                %label
-                  =f.check_box :has_sittings
-                  =t('views.exam_bodies.form.has_sittings')
-
-          .col-sm-6
-            =f.label :logo_image, t('views.exam_bodies.form.logo_image')
-            .input-group.input-group-lg
-              =f.select :logo_image, ExamBody::LOGO_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
 
         .row.mt-4
           .col-sm-12
