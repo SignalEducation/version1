@@ -1,8 +1,8 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-2
+  .container-bg.home-hero-alt-3
     .container
-      %article.home-hero.home-hero-preferred-plan
+      %article.home-hero.home-hero-pricing-plans
         .row.justify-content-between
           .col-sm-12.col-xl-5
             %header.home-hero-header
@@ -39,10 +39,7 @@
 
 
 
-          -if (@home_page.registration_form || @home_page.login_form) && !current_user
-            .col-xl-6
-              =render partial: 'registration_login_form'
-          -elsif @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
+          -if @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
             .col-xl-6
               .d-flex.flex-column.justify-content-center
                 .header-plan
@@ -72,29 +69,6 @@
                         =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency_id)}', '#{@preferred_plan.exam_body.name}');" do
                           Choose this plan
 
-
-  .container
-    %article.py-5
-      %header.pb-sm-4.pb-md-5
-        .row.row-lg
-          .col-12.col-lg-6
-            %blockquote.ml-lg-3.mr-lg-3
-              %p.text-gray2
-                "I passed my final exam advanced performance management. I found the learnsignal system and content very useful and more up-to-date than previous providers. I would recommend learnsignal to anyone studying ACCA."
-              %footer
-                %cite.font-weight-semi-bold.text-gray2
-                  Peter Curtis, United Kingdom
-
-          .col-12.col-lg-6
-            -if @home_page&.video_guid.present?
-              .video-iframe-wrap
-                %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
-            -else
-              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
-
-
-
-  =render partial: 'usp_section'
 
   -if @home_page.pricing_section && @subscription_plans.any?
     .container-bg.bg-gray5
@@ -156,24 +130,52 @@
 
 
 
+  =render partial: 'usp_section'
+
+  .container
+    %article.py-5
+      %header.text-center.pb-sm-4.pb-md-5
+        %h2.h1-mega
+          ="Explore our #{@group.name} courses"
+        %p.p-hero.px-lg-6
+          =@group.description
+
+      .row.row-lg
+        -@group.subject_courses.all_active.all_in_order.each do |course|
+          .col-sm
+            =link_to library_special_link(course), class: 'card card-horizontal flex-row card-mint' do
+              .card-header.d-flex.justify-content-center.align-items-center
+                %i{"aria-label" => course.icon_label, :role => "img", class: course.icon_label ? course.icon_label : 'budicon-office-bag-c', style: "color: #{course.highlight_colour};"}
+
+              .card-body.d-flex.flex-column.justify-content-center
+                %small.card-category.mb-2{style: "color: #{course.highlight_colour};"}
+                  =course.category_label
+                %h5.card-title.mb-1
+                  %span.mr-1
+                    =course.name
+
+
+
   -if @home_page.student_testimonials.any?
-    =render partial: 'student_testimonials', locals: {home_page: @home_page}
+    .container-bg.bg-gray5
+      =render partial: 'student_testimonials', locals: {home_page: @home_page}
   -else
-    .container
-      %article.py-3.py-6.text-center.text-lg-left
-        %header.sr-only
-          %h2 Testimonial
-        .row.row-lg
-          .col-lg-5
-            =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
-          .col-lg-7
-            .d-flex.h-100.align-items-center
-              %blockquote.mb-0.ml-lg-6.mr-lg-6
-                %p.text-gray2
-                  "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
-                %footer
-                  %cite.font-weight-semi-bold.text-gray2
-                    Rebecca Nagujja, Ireland
+    .container-bg.bg-gray5
+      .container
+        %article.py-3.py-6.text-center.text-lg-left
+          %header.sr-only
+            %h2 Testimonial
+          .row.row-lg
+            .col-lg-5
+              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+            .col-lg-7
+              .d-flex.h-100.align-items-center
+                %blockquote.mb-0.ml-lg-6.mr-lg-6
+                  %p.text-gray2
+                    "The good thing about learnsignal was the way the lecturers went through question papers. It helped me so much with the technique that I had lacked in my previous paper."
+                  %footer
+                    %cite.font-weight-semi-bold.text-gray2
+                      Rebecca Nagujja, Ireland
 
   -if @home_page.blog_posts.any?
     =render partial: 'blog_posts_section', locals: {home_page: @home_page}
@@ -273,4 +275,5 @@
       }
 
     });
+
 

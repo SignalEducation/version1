@@ -1,0 +1,68 @@
+.home-hero-alt-3 {
+  margin-bottom: 0;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-image: asset-url('hero-bg-4-dark.jpg');
+  background-position: 30% 50%;
+}
+@media (min-width:992px) {
+  .home-hero-alt-3 {
+    background-position: 40% 50%;
+  }
+}
+
+
+.home-hero.home-hero-pricing-plans {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+.home-hero.home-hero-pricing-plans .home-hero-header {
+  padding-top: 0
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-pricing-plans .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 1rem
+  }
+}
+@media (min-width:992px) {
+  .home-hero.home-hero-pricing-plans .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 5rem
+  }
+}
+@media (min-width:1200px) {
+  .home-hero.home-hero-pricing-plans .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 5rem
+  }
+}
+
+.header-plan {
+  width: 80%;
+  margin: auto;
+}
+@media (min-width:992px) {
+  .header-plan {
+    width: 60%;
+    margin: auto;
+  }
+}
+
+// Video Iframe Wrapper for responsive
+.video-iframe-wrap {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+.video-iframe-wrap iframe, .video-iframe-wrap object, .video-iframe-wrap embed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+

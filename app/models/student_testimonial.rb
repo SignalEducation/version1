@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: student_testimonials
@@ -30,7 +32,6 @@ class StudentTestimonial < ApplicationRecord
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
 
   # callbacks
-  before_destroy :check_dependencies
 
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :home_page_id) }
@@ -40,15 +41,6 @@ class StudentTestimonial < ApplicationRecord
   # instance methods
   def destroyable?
     true
-  end
-
-  protected
-
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
   end
 
 end

@@ -6,12 +6,12 @@
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
           .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
             %header.home-hero-header
-              -if @home_page.header_h1 && !@home_page.header_h1.empty?
+              -if @home_page&.header_h1.present?
                 %h1.h1-hero.text-white.mb-5
                   =@home_page.header_h1
               -else
                 <h1 class="h1-hero text-white">the smarter<br>way to study<span class="text-mint">.</span></h1>
-              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+              -if @home_page&.header_paragraph.present?
                 %p.text-white.mb-5.pr-xl-4
                   =@home_page.header_paragraph
               -else
@@ -27,7 +27,7 @@
                       =@preferred_plan.monthly_percentage_off
                       ='%'
                     -else
-                      -if @preferred_plan.previous_plan_price && !@preferred_plan.previous_plan_price.blank?
+                      -if @preferred_plan&.previous_plan_price.present?
                         was
                         %span.strikethrough-diagonal
                           %span.text-white
@@ -35,7 +35,7 @@
 
 
               -else
-                -if @home_page.header_h3 && !@home_page.header_h3.empty?
+                -if @home_page&.header_h3.present?
                   %h3.text-white.pr-xl-4
                     =@home_page.header_h3
                 -else
@@ -147,7 +147,7 @@
                         =plan.monthly_percentage_off
                         ='%'
                     -else
-                      -if plan.previous_plan_price && !plan.previous_plan_price.blank?
+                      -if plan&.previous_plan_price.present?
                         %p.h5.text-gray2
                           was
                           %span.strikethrough-diagonal
@@ -278,17 +278,3 @@
 
     });
 
-
-
-:javascript
-
-  $(window).scroll(function() {
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 1) {
-        //clearHeader, not clearheader - caps H
-        $(".header").addClass("sticky-nav-border");
-    } else if (scroll <= 1) {
-      $(".header").removeClass("sticky-nav-border");
-    }
-  });

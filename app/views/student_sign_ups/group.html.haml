@@ -8,15 +8,15 @@
           .col-sm-12.col-md-6
             %header.home-hero-header.py-6
               %h1.h1-mega.text-white
-                -if @exam_body.landing_page_h1 && !@exam_body.landing_page_h1.empty?
+                -if @exam_body&.landing_page_h1.present?
                   =@exam_body.landing_page_h1
                 -else
                   ="Prepare for your #{@exam_body.name} exam"
               %p.p-hero.text-white.py-4
-                -if @exam_body.landing_page_paragraph && !@exam_body.landing_page_paragraph.empty?
+                -if @exam_body&.landing_page_paragraph.present?
                   =@exam_body.landing_page_paragraph
           .col-sm-12.col-md-6
-            -if @exam_body.logo_image && !@exam_body.logo_image.empty?
+            -if @exam_body&.logo_image.present?
               .exam-body-img-wrap
                 =image_tag(@exam_body.logo_image, class: 'px-md-5 px-xl-0', alt: "#{@exam_body.name} Logo")
 
@@ -52,7 +52,7 @@
             %h2.h1-mega
               ="#{@group.name} Subscription"
             %p.p-hero.px-lg-8
-              -if @exam_body.subscription_page_subheading_text && !@exam_body.subscription_page_subheading_text.blank?
+              -if @exam_body&.subscription_page_subheading_text.present?
                 =@exam_body.subscription_page_subheading_text
               -else
                 ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
@@ -97,16 +97,3 @@
 
   =render partial: 'customer_support_section'
 
-
-:javascript
-
-  $(window).scroll(function() {
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 1) {
-        //clearHeader, not clearheader - caps H
-        $(".header").addClass("sticky-nav-border");
-    } else if (scroll <= 1) {
-      $(".header").removeClass("sticky-nav-border");
-    }
-  });

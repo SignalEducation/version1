@@ -9,14 +9,14 @@
               %h1.h1-hero.text-white.mb-3
                 ="#{@home_page.group.name} Exam Bootcamp"
 
-                -if @home_page.header_h1 && !@home_page.header_h1.empty?
+                -if @home_page&.header_h1.present?
                   %h3.text-white.pr-xl-4
                     =@home_page.header_h1
                 -else
                   %h3.text-white.pr-xl-4
                     June 2019 Sitting
 
-              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+              -if @home_page&.header_paragraph.present?
                 %p.text-white.mb-5.pr-xl-4.pt-5
                   =@home_page.header_paragraph
               -else
@@ -105,16 +105,3 @@
   })
 
 
-
-:javascript
-
-  $(window).scroll(function() {
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 1) {
-        //clearHeader, not clearheader - caps H
-        $(".header").addClass("sticky-nav-border");
-    } else if (scroll <= 1) {
-      $(".header").removeClass("sticky-nav-border");
-    }
-  });
