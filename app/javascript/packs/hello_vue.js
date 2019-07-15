@@ -9,9 +9,11 @@ import Vue from 'vue'
 import App from '../app'
 
 document.addEventListener('DOMContentLoaded', () => {
-    const el = document.body.appendChild(document.createElement('app'))
+    const el = document.body.appendChild(document.createElement('vueapp'))
     const vue = new Vue({
-        el,
+        el: 'vueapp',
+        template: '<App/>',
+        components: {App},
         render: h => h(App)
     })
 
