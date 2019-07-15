@@ -29,8 +29,7 @@ class InvoiceLineItem < ApplicationRecord
 
   # validation
   validates :invoice_id, :amount, :currency_id, presence: true
-  validates :subscription_id, :subscription_plan_id, :period_start_at,
-            :period_end_at, presence: true, if: :subscription_invoice?
+  validates :subscription_id, :subscription_plan_id, presence: true, if: :subscription_invoice?
 
   # callbacks
   before_destroy :check_dependencies
