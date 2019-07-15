@@ -1,50 +1,50 @@
 <template>
-
     <main>
-        <article class="bg-gray5">
-            <div class="container">
-
-                <section class="pb-md-6 pb-5">
-                    <div id="">
-
-                        <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
-                        <div>
-                            <button v-on:click="showSubjects">Show Subjects</button>
-
-                            <select v-model="selectedSubject">
-                                <option>Choose Option</option>
-                                <option v-for="option in options" v-bind:value="option.id">
-                                    {{option.name}}
-                                </option>
-                            </select>
-                            {{selected}}
-                            <br/><br/><br/>
-                            <button v-on:click="createCBE">Create CBE</button>
-                            <input v-model="cbeName" placeholder="CBE Name">
-                            <br/><br/><br/>
-                            <button v-on:click="createSection">Create Section</button>
-                            <input v-model="sectionName" placeholder="Section Name">
-
-
-                        </div>
-
-                        <div>
-
-
-                        </div>
-
-                    </div>
-                </section>
-            </div>
-        </article>
+      <article class="bg-gray5">
+        <div class="container">
+          <header class="hero-section">
+          <section class="pb-md-6 pb-5">  
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body no-top-padding">
+                  <split-pane v-on:resize="resize" :min-percent='50' :default-percent='50' split="vertical">
+                    <template slot="paneL">
+                      <button v-on:click="showSubjects">Show Subjects</button>
+                      <select v-model="selectedSubject">
+                        <option>Choose Option</option>
+                        <option v-for="option in options" v-bind:value="option.id">
+                          {{option.name}}
+                        </option>
+                      </select>
+                          
+                      {{selected}}
+                      <br/><br/><br/>
+                      <button v-on:click="createCBE">Create CBE</button>
+                      <input v-model="cbeName" placeholder="CBE Name">
+                      <br/><br/><br/>
+                      <button v-on:click="createSection">Create Section</button>
+                      <input v-model="sectionName" placeholder="Section Name">
+                    </template>
+                    <template slot="paneR">
+                      <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
+                    </template>
+                  </split-pane>
+                </div>
+              </div>
+          </div>
+          </section>
+          </header> 
+        </div>
+      </article>
     </main>
-
 </template>
+
 
 <script>
     import axios from 'axios'
     import Admin from './components/Admin'
     import Exam from './components/Exam'
+    import splitPane from 'vue-splitpane'
 
 
     export default {
