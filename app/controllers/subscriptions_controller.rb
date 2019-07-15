@@ -117,14 +117,14 @@ class SubscriptionsController < ApplicationController
                     false)
   end
 
-  def un_cancel_subscription
+  def un_cancel
     if @subscription&.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
       if @subscription&.errors&.count&.zero?
         flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
       else
-        Rails.logger.error 'ERROR: SubscriptionsController#un_cancel_subscription - something went wrong.'
+        Rails.logger.error 'ERROR: SubscriptionsController#un_cancel - something went wrong.'
         flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
       end
     else

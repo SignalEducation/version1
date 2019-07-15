@@ -10,9 +10,9 @@ describe PaypalSubscriptionsService, type: :service do
   # INSTANCE METHODS ###########################################################
 
   describe '#execute_billing_agreement' do
-    let(:agreement_dbl) { 
+    let(:agreement_dbl) {
       double(
-        'Agreement', 
+        'Agreement',
         id: 'I-ERW92H1T8T1ST',
         state: 'Active'
       )
@@ -24,7 +24,7 @@ describe PaypalSubscriptionsService, type: :service do
 
     it 'must have a token' do
       expect { subject.execute_billing_agreement }.to raise_error ArgumentError
-      expect { subject.execute_billing_agreement('token') }.not_to raise_error ArgumentError   
+      expect { subject.execute_billing_agreement('token') }.not_to raise_error ArgumentError
     end
 
     it 'calls EXECUTE on an instance of PayPal Agreement' do
@@ -47,10 +47,10 @@ describe PaypalSubscriptionsService, type: :service do
   end
 
   describe '#create_and_return_subscription' do
-    let(:agreement_dbl) { 
+    let(:agreement_dbl) {
       double(
-        'Agreement', 
-        token: 'tok_FDAF343DFDA', 
+        'Agreement',
+        token: 'tok_FDAF343DFDA',
         links: [double( rel: 'approval_url', href: 'https://example.com/approval' )],
         state: 'Pending'
       )
@@ -144,7 +144,7 @@ describe PaypalSubscriptionsService, type: :service do
                 currency: subscription.subscription_plan.currency.iso_code
               },
               return_url: "https://staging.learnsignal.com/en/subscriptions/#{subscription.id}/execute?payment_processor=paypal",
-              cancel_url: "https://staging.learnsignal.com/en/new_subscription?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F"
+              cancel_url: "https://staging.learnsignal.com/en/subscriptions/new?flash=It+seems+you+cancelled+your+subscription+on+Paypal.+Still+want+to+upgrade%3F"
             },
             plan: {
               id: subscription.subscription_plan.paypal_guid

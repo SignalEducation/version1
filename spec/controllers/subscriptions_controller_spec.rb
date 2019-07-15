@@ -214,7 +214,7 @@ describe SubscriptionsController, type: :controller do
 
     end
 
-    describe "Post 'un_cancel_subscription'" do
+    describe "Post 'un_cancel'" do
       it 'should successfully change subscription to active' do
 
         sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
@@ -263,7 +263,7 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        put :un_cancel_subscription, params: { id: canceled_pending_subscription.id }
+        put :un_cancel, params: { id: canceled_pending_subscription.id }
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.un_cancel.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
@@ -275,7 +275,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should redirect to account page as subscription is not canceled-pending' do
-        put :un_cancel_subscription, params: { id: valid_subscription.id }
+        put :un_cancel, params: { id: valid_subscription.id }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
         expect(response.status).to eq(302)
