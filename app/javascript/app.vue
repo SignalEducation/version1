@@ -5,9 +5,9 @@
             <div class="container">
 
                 <section class="pb-md-6 pb-5">
-                    <div id="vueappafsdfa">
+                    <div id="">
 
-                        <span><p>CBE {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
+                        <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
                         <div>
                             <button v-on:click="showSubjects">Show Subjects</button>
 
@@ -48,7 +48,7 @@
 
 
     export default {
-        element: 'app',
+        el: 'vueapp',
         components: {
             'admin': Admin,
             'exam': Exam,

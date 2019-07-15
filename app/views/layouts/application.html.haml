@@ -15,7 +15,6 @@
     = javascript_pack_tag 'application'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
-    = javascript_pack_tag 'hello_vue'
 
 
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements'|| controller_name == 'content_activations'
@@ -47,15 +46,17 @@
       =render partial: 'layouts/cookie_banner'
 
 
+  = javascript_pack_tag 'hello_vue'
 
   -#%body.page-light
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/jszip.min.js'}
       %script{src: 'https://kendo.cdn.telerik.com/2018.2.516/js/kendo.all.min.js'}
+  - unless controller_name == 'cbes'
 
     :javascript
-      dataLayer = [];
+        dataLayer = [];
 
     -if @layout == 'standard'
       -if @navbar
@@ -97,18 +98,18 @@
       =render partial: 'layouts/footer'
 
 
-    -#General partials
+      -#General partials
     =render partial: 'layouts/misc_javascript'
     -unless controller_name == 'courses' || controller_name == 'student_sign_ups'
       =render partial: 'layouts/intercom'
 
     -if current_user
       :javascript
-        dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
+          dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
 
       -if flash[:datalayer_verify]
         :javascript
-          dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+            dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
 
 
     %noscript
