@@ -9,24 +9,36 @@
                 <div class="panel-body no-top-padding">
                   <split-pane v-on:resize="resize" :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
-                      <button v-on:click="showSubjects">Show Subjects</button>
+
+                     
                       <select v-model="selectedSubject">
                         <option>Choose Option</option>
                         <option v-for="option in options" v-bind:value="option.id">
                           {{option.name}}
                         </option>
                       </select>
+
+                       <button @click="cbeQuestions = true">Show CBE Questions</button>
                           
                       {{selected}}
                       <br/><br/><br/>
-                      <button v-on:click="createCBE">Create CBE</button>
-                      <input v-model="cbeName" placeholder="CBE Name">
+                      <div v-if="selectedSubject !== null">
+                        <button v-on:click="createCBE">Create CBE</button>
+                        <input v-model="cbeName" placeholder="CBE Name">
+                      </div>
+
                       <br/><br/><br/>
                       <button v-on:click="createSection">Create Section</button>
                       <input v-model="sectionName" placeholder="Section Name">
                     </template>
                     <template slot="paneR">
                       <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
+                        <div v-if="cbeQuestions">
+                          <Admin></Admin>
+                          <input v-model="cbeName" placeholder="CBE Title">
+                          <input v-model="cbeName" placeholder="Exam length">
+                        </div>
+                    
                     </template>
                   </split-pane>
                 </div>
@@ -49,15 +61,20 @@
 
     export default {
         el: 'vueapp',
+
         components: {
             'admin': Admin,
             'exam': Exam,
         },
+        mounted(){
+            this.showSubjects()
+        },
         data: function () {
             return {
                 createdCBE: [],
-                selectedSubject: "Subject",
+                selectedSubject: null,
                 message: 'Test',
+                cbeQuestions: false,
                 options: []
             }
 
