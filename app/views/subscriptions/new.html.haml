@@ -15,7 +15,7 @@
 
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription
-          =form_for @subscription, url: subscription_path(@subscription.user_id), html: { id: 'upgrade-form', role: 'form'} do |f|
+          =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form'} do |f|
             =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
             =f.hidden_field :user_id, value: current_user.id
             =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
