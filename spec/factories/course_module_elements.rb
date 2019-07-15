@@ -58,8 +58,8 @@ FactoryBot.define do
       association :course_module_element_video, :vimeo
     end
 
-    trait :voo do
-      association :course_module_element_video, :voo
+    trait :dacast do
+      association :course_module_element_video, :dacast
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_09_140628) do
+ActiveRecord::Schema.define(version: 2019_07_11_095010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -273,7 +273,7 @@ ActiveRecord::Schema.define(version: 2019_07_09_140628) do
     t.string "video_id"
     t.float "duration"
     t.string "vimeo_guid"
-    t.string "voo_player_id"
+    t.string "dacast_id"
   end
 
   create_table "course_module_elements", id: :serial, force: :cascade do |t|

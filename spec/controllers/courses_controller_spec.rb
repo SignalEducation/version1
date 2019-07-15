@@ -138,10 +138,9 @@ RSpec.describe CoursesController, type: :controller do
 
     describe 'Post to video_watched_data with CMEUL data for CMEQ' do
       it 'should respond to JSON with status 200' do
-        post :video_watched_data, params: {course: {videoLogId: video_log.id}, format: :json }
+        post :video_watched_data, params: { video_log_id: video_log.id, cme_id: course_module_element_2.id }, format: :json
         expect(response.status).to eq(200)
       end
-
     end
 
     describe 'Post to video_watched_data with CMEUL data for CMEQ' do

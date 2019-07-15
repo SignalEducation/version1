@@ -21,9 +21,9 @@ FactoryBot.define do
       sequence(:vimeo_guid) { |n| "vimeo-#{n}" }
     end
 
-    trait :voo do
+    trait :dacast do
       vimeo_guid { 'not empty' }
-      sequence(:voo_player_id) { |n| "voo-#{n}" }
+      sequence(:dacast_id) { |n| "dacast-#{n}" }
     end
   end
 end
