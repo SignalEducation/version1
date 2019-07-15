@@ -175,7 +175,7 @@ en:
           email: Email
           product: Product
           state: Current State
-          due_on: Submitted On
+          due_on: Due On
           corrected_on: Corrected On
           returned_on: Returned On
         form:
