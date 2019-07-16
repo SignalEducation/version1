@@ -11,8 +11,10 @@
                     <template slot="paneL">
 
                     
-                     
-                     <Subjects ref="subjects"></Subjects>
+                     <div>
+                       <component v-bind:is="currentView" v-on:change-view="updateView"></component>
+                      <Subjects ref="subjects"></Subjects>
+                     </div>
 
                        <button @click="cbeQuestionValid = true">Show CBE Questions</button>
                           
@@ -25,9 +27,9 @@
                       </div>
 
                       <br/><br/><br/>
-                      <button v-on:click="createSection">Create Section</button>
+                      <button v-on:click="createSection">Create CBE</button>
   
-                      <input v-model="sectionName" placeholder="Section Name">
+
                     </template>
                     <template slot="paneR">
 
