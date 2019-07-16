@@ -20,7 +20,6 @@
                 selectedSubject: null,
                 options: []
             }
-
         },
         methods: {
             showSubjects: function (page, index) {
