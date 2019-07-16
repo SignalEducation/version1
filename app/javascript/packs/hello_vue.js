@@ -6,14 +6,25 @@
 // All it does is render <div>Hello Vue</div> at the bottom of the page.
 
 import Vue from 'vue'
+import Vuex from 'vuex'
 import App from '../app'
 import splitPane from 'vue-splitpane'
 
+Vue.use(Vuex)
 Vue.component('split-pane', splitPane);
+
+export const store = new Vuex.Store({
+    state: {
+        currentCBEId: null,
+        currentSectionId: null,
+        currentSubjectId: null
+    }
+})
 
 document.addEventListener('DOMContentLoaded', () => {
     const el = document.body.appendChild(document.createElement('vueapp'))
     const vue = new Vue({
+        store: store,
         el: 'vueapp',
         template: '<App/>',
         components: {App},
