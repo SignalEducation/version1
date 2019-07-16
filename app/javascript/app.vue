@@ -1,6 +1,6 @@
 <template>
     <main>
-      <article class="bg-gray5">
+      <article class="">
         <div class="container">
           <header class="hero-section">
           <section class="pb-md-6 pb-5">  
@@ -10,15 +10,11 @@
                   <split-pane v-on:resize="resize" :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
 
+                    
                      
-                      <select v-model="selectedSubject">
-                        <option>Choose Option</option>
-                        <option v-for="option in options" v-bind:value="option.id">
-                          {{option.name}}
-                        </option>
-                      </select>
+                     <Subjects></Subjects>
 
-                       <button @click="cbeQuestions = true">Show CBE Questions</button>
+                       <button @click="cbeQuestionValid = true">Show CBE Questions</button>
                           
                       {{selected}}
                       <br/><br/><br/>
@@ -29,12 +25,15 @@
 
                       <br/><br/><br/>
                       <button v-on:click="createSection">Create Section</button>
+                      <p>Testing admin</p>
+                      <Admin></Admin>
                       <input v-model="sectionName" placeholder="Section Name">
                     </template>
                     <template slot="paneR">
                       <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
-                        <div v-if="cbeQuestions">
-                          <Admin></Admin>
+                        <div v-if="cbeQuestionValid">
+                          <p>fafdsa</p>
+                          <Admin>fdsfads</Admin>
                           <input v-model="cbeName" placeholder="CBE Title">
                           <input v-model="cbeName" placeholder="Exam length">
                         </div>
@@ -56,43 +55,32 @@
     import axios from 'axios'
     import Admin from './components/Admin'
     import Exam from './components/Exam'
+    import Subjects from './components/Subjects'
+    import CBESettings from './components/CBESettings'
     import splitPane from 'vue-splitpane'
 
 
     export default {
-        el: 'vueapp',
-
         components: {
-            'admin': Admin,
-            'exam': Exam,
+           Admin,
+           CBESettings,
+           Exam,
+           Subjects,
         },
-        mounted(){
-            this.showSubjects()
-        },
+
         data: function () {
             return {
                 createdCBE: [],
                 selectedSubject: null,
                 message: 'Test',
-                cbeQuestions: false,
+                cbeQuestionValid: false,
                 options: []
             }
 
 
         },
         methods: {
-            showSubjects: function (page, index) {
-                console.log('TEST 1')
-                axios.get('http://localhost:3000/cbes/1/get_subjects/')
-                    .then(response => {
-                        this.options = response.data
-                        console.log(this.subjects)
-                    })
-                    .catch(e => {
-                        console.log('Error')
-                    })
-
-            },
+            
             createCBE: function (page, index) {
                 console.log('cbeName: ' + this.cbeName)
                 axios.post('http://localhost:3000/cbes/1/create_it', {
@@ -124,6 +112,7 @@
 
     }
 </script>
+
 
 
 <style scoped>

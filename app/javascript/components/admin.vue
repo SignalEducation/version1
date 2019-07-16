@@ -1,10 +1,15 @@
 
 <template>
-        <p>Admin</p>
+        <p>{{message}}</p>
 </template>
 
 <script>
-    export default {
+    module.exports = {
+        data: function() {
+            return {
+                message: 'Hello From Admin'
+            }
+        }
 
     }
 </script>

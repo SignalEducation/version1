@@ -6685,6 +6685,13 @@ vue-loader@14.2.2:
     vue-style-loader "^4.0.1"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-resize-split-pane@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/vue-resize-split-pane/-/vue-resize-split-pane-0.1.5.tgz#9e318de784c2689b574cf45957ce7cf66c83d85a"
+  integrity sha512-eMpMsPbbvTcAcw5TlNUTiZ7T64zoeIALGNA+O2DeB5bhmkK4p06qqsDr4t+PzpOb811MF3DeYWb9rerroxzcaA==
+  dependencies:
+    vue "^2.3.3"
+
 vue-router@^3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.7.tgz#b36ca107b4acb8ff5bc4ff824584059c23fcb87b"
@@ -6716,7 +6723,7 @@ vue-template-es2015-compiler@^1.6.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.10:
+vue@^2.3.3, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
