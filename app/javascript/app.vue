@@ -12,12 +12,13 @@
 
                     
                      
-                     <Subjects></Subjects>
+                     <Subjects ref="subjects"></Subjects>
 
                        <button @click="cbeQuestionValid = true">Show CBE Questions</button>
                           
                       {{selected}}
                       <br/><br/><br/>
+
                       <div v-if="selectedSubject !== null">
                         <button v-on:click="createCBE">Create CBE</button>
                         <input v-model="cbeName" placeholder="CBE Name">
@@ -25,11 +26,11 @@
 
                       <br/><br/><br/>
                       <button v-on:click="createSection">Create Section</button>
-                      <p>Testing admin</p>
-                      <Admin></Admin>
+  
                       <input v-model="sectionName" placeholder="Section Name">
                     </template>
                     <template slot="paneR">
+
                       <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
                         <div v-if="cbeQuestionValid">
                           <p>fafdsa</p>
@@ -80,7 +81,6 @@
 
         },
         methods: {
-            
             createCBE: function (page, index) {
                 console.log('cbeName: ' + this.cbeName)
                 axios.post('http://localhost:3000/cbes/1/create_it', {
@@ -98,6 +98,7 @@
                     })
             },
             createSection: function (page, index) {
+                console.log('Subjects: ' + this.$refs.subjects.selectedSubject)
                 console.log('cbeName: ' + this.cbeName)
                 axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
                     .then(response => {
