@@ -16,17 +16,19 @@
                       <Subjects ref="subjects"></Subjects>
                      </div>
 
+                     <br/><br/><br/>
+                      <button v-on:click="createNewCBE">Create CBE</button>
+                    <br/><br/><br/>
                        <button @click="cbeQuestionValid = true">Show CBE Questions</button>
 
                       <br/><br/><br/>
 
                       <div v-if="selectedSubjectId !== null">
-                        <button v-on:click="createCBE">Create CBE</button>
+                        <button v-on:click="storeCBEName">Save CBE Name</button>
                         <input v-model="cbeName" placeholder="CBE Name">
                       </div>
 
-                      <br/><br/><br/>
-                      <button v-on:click="createNewCBE">Create CBE</button>
+                      
   
 
                     </template>
@@ -82,7 +84,7 @@
 
         },
         methods: {
-            createCBE: function (page, index) {
+            storeCBEName: function (page, index) {
                 console.log('cbeName: ' + this.cbeName + 'selectedSubjectId -- ' + this.selectedSubjectId)
                 axios.post('http://localhost:3000/cbes/1/create_it', {
                     cbe_name: this.cbeName,
