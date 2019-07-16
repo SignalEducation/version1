@@ -72,7 +72,7 @@
         data: function () {
             return {
                 createdCBE: [],
-                selectedSubject: null,
+                selectedSubjectId: null,
                 message: 'Test',
                 cbeQuestionValid: false,
                 options: []
@@ -98,7 +98,7 @@
                     })
             },
             createSection: function (page, index) {
-                console.log('Subjects: ' + this.$refs.subjects.selectedSubject)
+                this.selectedSubjectId = this.$refs.subjects.selectedSubject
                 console.log('cbeName: ' + this.cbeName)
                 axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
                     .then(response => {
