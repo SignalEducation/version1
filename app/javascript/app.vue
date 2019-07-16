@@ -17,8 +17,7 @@
                      </div>
 
                        <button @click="cbeQuestionValid = true">Show CBE Questions</button>
-                          
-                      {{selected}}
+
                       <br/><br/><br/>
 
                       <div v-if="selectedSubjectId !== null">
@@ -27,7 +26,7 @@
                       </div>
 
                       <br/><br/><br/>
-                      <button v-on:click="createSection">Create CBE</button>
+                      <button v-on:click="createNewCBE">Create CBE</button>
   
 
                     </template>
@@ -99,9 +98,11 @@
                         console.log(error)
                     })
             },
-            createSection: function (page, index) {
+            createNewCBE: function (page, index) {
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
+                this.$store.state.currentSubjectId = this.selectedSubjectId
                 console.log('cbeName: ' + this.cbeName)
+                console.log('TEST VUEX' + this.$store.state.currentSubjectId )
                 axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
                     .then(response => {
                         console.log(response.status)
