@@ -13,13 +13,13 @@
             .col-sm
               .form-group
 
-                =form_tag(enrollments_management_url, method: :get, role: 'form', class: 'form-horizontal') do
+                =form_tag(enrollment_management_index_url, method: :get, role: 'form', class: 'form-horizontal') do
                   .input-group.input-group-lg
                     =collection_select(:exam_sitting, :id, ExamSitting.all_active.all_in_order, :id, :name, {include_blank: 'Exam Sitting Filter'}, {class: 'form-control custom-select', onchange: 'this.form.submit(); return false;'})
 
             .col-sm
               .search-container
-                =form_tag(enrollments_management_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline') do
+                =form_tag(enrollment_management_index_url, method: :get, role: 'form', id: 'search-form', class: 'form-inline') do
                   =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
                   %button{type: "submit"}
                     %i{:role => "img", class: 'budicon-search-list'}
@@ -47,7 +47,7 @@
                     %td
                       =link_to t('views.general.view'), enrollment_management_url(enrollment), class: 'btn btn-xs btn-secondary'
                     %td
-                      =link_to 'CSV', export_enrollment_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-primary btn-xs'
+                      =link_to 'CSV', export_log_data_path(id: enrollment.id, format: :xls), class: 'btn btn-primary btn-xs'
             =will_paginate @enrollments, renderer: BootstrapPagination::Rails
 
 
