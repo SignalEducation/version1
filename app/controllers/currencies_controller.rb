@@ -1,33 +1,17 @@
-# == Schema Information
-#
-# Table name: currencies
-#
-#  id              :integer          not null, primary key
-#  iso_code        :string
-#  name            :string
-#  leading_symbol  :string
-#  trailing_symbol :string
-#  active          :boolean          default(FALSE), not null
-#  sorting_order   :integer
-#  created_at      :datetime
-#  updated_at      :datetime
-#
+# frozen_string_literal: true
 
 class CurrenciesController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(system_requirements_access stripe_management_access))
+    ensure_user_has_access_rights(%w[system_requirements_access stripe_management_access])
   end
   before_action :get_variables
 
-  # Standard Actions #
   def index
     @currencies = Currency.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @currency = Currency.new(sorting_order: 1)
@@ -43,8 +27,7 @@ class CurrenciesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @currency.update_attributes(allowed_params)
@@ -60,7 +43,7 @@ class CurrenciesController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       Currency.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -75,9 +58,7 @@ class CurrenciesController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @currency = Currency.where(id: params[:id]).first
-    end
+    @currency = Currency.where(id: params[:id]).first if params[:id].to_i > 0
     seo_title_maker(@currency.try(:name) || 'Currencies', '', true)
     @layout = 'management'
   end
@@ -85,5 +66,4 @@ class CurrenciesController < ApplicationController
   def allowed_params
     params.require(:currency).permit(:iso_code, :name, :leading_symbol, :trailing_symbol, :active, :sorting_order)
   end
-
 end

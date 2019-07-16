@@ -60,7 +60,6 @@
 require 'rails_helper'
 
 describe User do
-
   it 'should have a valid factory' do
     expect(build(:user)).to be_valid
   end
@@ -95,6 +94,7 @@ describe User do
   it { should have_one(:student_access) }
   it { should have_one(:referred_signup) }
   it { should belong_to(:subscription_plan_category) }
+  it { should belong_to(:currency) }
 
   # validation
   context 'test uniqueness validation' do
@@ -144,7 +144,6 @@ describe User do
 
   # scopes
   it { expect(User).to respond_to(:all_in_order) }
-  it { expect(User).to respond_to(:search_for) }
   it { expect(User).to respond_to(:sort_by_email) }
   it { expect(User).to respond_to(:sort_by_name) }
   it { expect(User).to respond_to(:sort_by_most_recent) }
@@ -155,6 +154,7 @@ describe User do
   it { expect(User).to respond_to(:with_course_tutor_details) }
 
   # class methods
+  it { expect(User).to respond_to(:search) }
   it { expect(User).to respond_to(:all_students) }
   it { expect(User).to respond_to(:all_trial_or_sub_students) }
   it { expect(User).to respond_to(:all_tutors) }

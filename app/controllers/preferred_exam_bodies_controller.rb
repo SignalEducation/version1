@@ -1,12 +1,13 @@
+# frozen_string_literal: true
+
 class PreferredExamBodiesController < ApplicationController
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(student_user))
+    ensure_user_has_access_rights(%w[student_user])
   end
   before_action :set_user
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @user.update(user_params)

@@ -15,12 +15,12 @@
               =link_to 'Mock Exams', mock_exams_url, class: 'btn btn-secondary btn-xs', title: t('views.general.new_tooltip')
 
             .col-sm
-              .search-container
+              .search-container.mb-3.float-right
                 =form_tag(products_url, method: :get, role: 'form', class: 'form-inline') do
+                  =select_tag :state, options_for_select(['Active', 'Inactive', 'All'], params[:state] || 'Active'), class: 'form-control custom-select filter mr-3'
                   =text_field_tag :search, params[:search], class: 'form-control', placeholder: t('views.general.search')
-                  %button{type: "submit"}
+                  %button{type: "submit", class: 'ml-3'}
                     %i{:role => "img", class: 'budicon-search-list'}
-
 
           .table-responsive.pt-4
             Please sort in blocks of the 3 currencies for each product
@@ -33,7 +33,7 @@
                   %th
                   %th
               %tbody
-                -@products.all_in_order.each do |product|
+                -@products.each do |product|
                   %tr{id: product.id}
                     %td
                       =product.name
@@ -41,7 +41,7 @@
                         -if product.mock_exam
                           =product.mock_exam.name
                     %td=tick_or_cross(product.active)
-                    %td=number_in_local_currency(product.price, product.currency_id)
+                    %td=number_in_local_currency(product.price, product.currency)
                     %td
                       =link_to 'Edit', edit_product_url(product), class: 'btn btn-primary btn-xs'
                       -if product.mock_exam

@@ -107,12 +107,16 @@ class SubscriptionPlan < ApplicationRecord
 
   end
 
+  def self.by_exam_body(exam_body_id)
+    exam_body_id ? where(exam_body_id: exam_body_id) : all
+  end
+
   def self.search(search)
     if search
       where('name ILIKE ? OR stripe_guid ILIKE ? OR paypal_guid ILIKE ? OR guid ILIKE ?',
             "%#{search}%", "%#{search}%", "%#{search}%", "%#{search}%")
     else
-      SubscriptionPlan.all_active.all_in_order
+      all
     end
   end
 

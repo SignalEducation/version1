@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 class UserSessionsController < ApplicationController
-  before_action :logged_out_required, only: [:new, :create]
+  before_action :logged_out_required, only: %i[new create]
   before_action :logged_in_required,  only: :destroy
-  before_action :set_variables
-  before_action :check_user_group, only: [:create]
+  before_action :check_user_group, only: :create
 
   def new
     @user_session = UserSession.new
     seo_title_maker('Log in to Start Studying Today | LearnSignal',
-                    "Log in to your ACCA or CPD courses to access topic-by-topic tuition modules, explore online learning resources and kick-start your study today.",
+                    'Log in to your ACCA or CPD courses to access topic-by-topic tuition modules, explore online learning resources and kick-start your study today.',
                     false)
     render 'user_sessions/new'
   end
@@ -34,18 +35,17 @@ class UserSessionsController < ApplicationController
       else
         redirect_to student_dashboard_url, flash: { just_signed_in: true }
       end
+    elsif flash[:plan_guid] || flash[:product_id]
+      set_session_errors(@user_session)
+      redirect_back(fallback_location: sign_in_url)
     else
-      if flash[:plan_guid] || flash[:product_id]
-        set_session_errors(@user_session)
-        redirect_back(fallback_location: sign_in_url)
-      else
-        render action: :new
-      end
+      render action: :new
     end
   end
 
   def destroy
     current_user_session.destroy
+
     redirect_to root_url
   end
 
@@ -61,20 +61,16 @@ class UserSessionsController < ApplicationController
 
   def set_session_errors(user_session)
     session[:login_errors] = user_session.errors unless user_session.errors.empty?
-    session[:valid_user_session_params] = [
-        user_session.email,
-        user_session.password
-    ] unless user_session.errors.empty?
+    return if user_session.errors.empty?
+
+    session[:valid_user_session_params] = [user_session.email,user_session.password]
   end
 
   def check_user_group
-    user = User.find_by_email(params[:user_session][:email])
-    if user && user.blocked_user?
-      flash[:error] = 'Sorry. That account is blocked. Please contact us for assistance.'
-      redirect_to sign_in_url
-    end
-  end
+    user = User.find_by(email: params[:user_session][:email])
+    return unless user&.blocked_user?
 
-  def set_variables
+    flash[:error] = 'Sorry. That account is blocked. Please contact us for assistance.'
+    redirect_to sign_in_url
   end
 end

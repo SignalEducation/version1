@@ -1,44 +1,13 @@
-# == Schema Information
-#
-# Table name: course_modules
-#
-#  id                         :integer          not null, primary key
-#  name                       :string
-#  name_url                   :string
-#  description                :text
-#  sorting_order              :integer
-#  estimated_time_in_seconds  :integer
-#  active                     :boolean          default(FALSE), not null
-#  created_at                 :datetime
-#  updated_at                 :datetime
-#  cme_count                  :integer          default(0)
-#  seo_description            :string
-#  seo_no_index               :boolean          default(FALSE)
-#  destroyed_at               :datetime
-#  number_of_questions        :integer          default(0)
-#  subject_course_id          :integer
-#  video_duration             :float            default(0.0)
-#  video_count                :integer          default(0)
-#  quiz_count                 :integer          default(0)
-#  highlight_colour           :string
-#  tuition                    :boolean          default(FALSE)
-#  test                       :boolean          default(FALSE)
-#  revision                   :boolean          default(FALSE)
-#  course_section_id          :integer
-#  constructed_response_count :integer          default(0)
-#
+# frozen_string_literal: true
 
 class CourseModulesController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
+    ensure_user_has_access_rights(%w[content_management_access])
   end
   before_action :get_variables
 
-  # Standard Actions #
-  def show
-  end
+  def show; end
 
   def new
     @course_sections = @subject_course.course_sections.all_in_order
@@ -56,6 +25,7 @@ class CourseModulesController < ApplicationController
 
   def create
     @course_module = CourseModule.new(allowed_params)
+
     if @course_module.save
       flash[:success] = I18n.t('controllers.course_modules.create.flash.success')
       redirect_to subject_course_url(@course_module.subject_course_id)
@@ -70,6 +40,7 @@ class CourseModulesController < ApplicationController
 
   def update
     @course_module = CourseModule.where(id: params[:id]).first
+
     if @course_module.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.course_modules.update.flash.success')
       redirect_to subject_course_url(@course_module.subject_course_id)
@@ -79,16 +50,16 @@ class CourseModulesController < ApplicationController
   end
 
   def reorder
-    
     array_of_ids = params[:array_of_ids]
     array_of_ids.each_with_index do |the_id, counter|
       CourseModule.find(the_id.to_i).update_attributes!(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
     @course_module = CourseModule.find(params[:id])
+
     if @course_module.destroy
       flash[:success] = I18n.t('controllers.course_modules.destroy.flash.success')
     else
@@ -115,5 +86,4 @@ class CourseModulesController < ApplicationController
                                           :highlight_colour, :tuition, :test, :revision, :course_section_id,
                                           :temporary_label)
   end
-
 end

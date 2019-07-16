@@ -1,41 +1,14 @@
-# == Schema Information
-#
-# Table name: course_module_elements
-#
-#  id                               :integer          not null, primary key
-#  name                             :string
-#  name_url                         :string
-#  description                      :text
-#  estimated_time_in_seconds        :integer
-#  course_module_id                 :integer
-#  sorting_order                    :integer
-#  created_at                       :datetime
-#  updated_at                       :datetime
-#  is_video                         :boolean          default(FALSE), not null
-#  is_quiz                          :boolean          default(FALSE), not null
-#  active                           :boolean          default(TRUE), not null
-#  seo_description                  :string
-#  seo_no_index                     :boolean          default(FALSE)
-#  destroyed_at                     :datetime
-#  number_of_questions              :integer          default(0)
-#  duration                         :float            default(0.0)
-#  temporary_label                  :string
-#  is_constructed_response          :boolean          default(FALSE), not null
-#  available_on_trial               :boolean          default(FALSE)
-#  related_course_module_element_id :integer
-#
+# frozen_string_literal: true
 
 class CourseModuleElementsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
+    ensure_user_has_access_rights(%w[content_management_access])
   end
   before_action :get_variables
 
-  # Standard Actions #
   def show
-    #Previewing a Quiz as Content Manager or Admin
+    # Previewing a Quiz as Content Manager or Admin
     @course_module_element = CourseModuleElement.find(params[:id])
     if @course_module_element.is_quiz
       @course_module_element_user_log = CourseModuleElementUserLog.new(
@@ -60,6 +33,7 @@ class CourseModuleElementsController < ApplicationController
         @quiz_questions = QuizQuestion.includes(:quiz_contents).find(@all_ids)
       end
     end
+
     @demo_mode = true
   end
 
@@ -114,7 +88,6 @@ class CourseModuleElementsController < ApplicationController
     set_related_cmes
     @course_modules = @course_module_element.try(:course_module).try(:parent).try(:active_children)
 
-
     if @course_module_element.save
       flash[:success] = I18n.t('controllers.course_module_elements.create.flash.success')
       if params[:commit] == I18n.t('views.course_module_elements.form.save_and_add_another')
@@ -150,9 +123,8 @@ class CourseModuleElementsController < ApplicationController
       else
         redirect_to course_module_special_link(@course_module_element.course_module)
       end
-      unless old_cm.id == cm.id
-        old_cm.update_video_and_quiz_counts
-      end
+
+      old_cm.update_video_and_quiz_counts unless old_cm.id == cm.id
     else
       Rails.logger.debug "DEBUG: course_module_elements_controller#update failed. Errors:#{@course_module_element.errors.inspect}."
       render action: :edit
@@ -164,7 +136,7 @@ class CourseModuleElementsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       CourseModuleElement.find(the_id.to_i).update_columns(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -184,9 +156,7 @@ class CourseModuleElementsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @course_module_element = CourseModuleElement.where(id: params[:id]).first
-    end
+    @course_module_element = CourseModuleElement.where(id: params[:id]).first if params[:id].to_i > 0
     @tutors = User.all_tutors.all_in_order
     @letters = ('A'..'Z').to_a
     @mathjax_required = true
@@ -207,140 +177,142 @@ class CourseModuleElementsController < ApplicationController
   end
 
   def set_related_cmes
-    if @course_module_element && @course_module_element.course_module
-      @related_cmes = @course_module_element.course_module.course_module_elements.all_in_order.where.not(id: @course_module_element.id)
-    else
-      @related_cmes = CourseModuleElement.none
-    end
+    @related_cmes =
+      if @course_module_element&.course_module
+        @course_module_element.course_module.course_module_elements.all_in_order.where.not(id: @course_module_element.id)
+      else
+        CourseModuleElement.none
+      end
   end
 
   def allowed_params
     params.require(:course_module_element).permit(
-        :name,
-        :name_url,
-        :description,
-        :estimated_time_in_seconds,
-        :course_module_id,
-        :sorting_order,
-        :active,
-        :is_video,
-        :is_quiz,
-        :is_constructed_response,
-        :seo_description,
-        :seo_no_index,
+      :name,
+      :name_url,
+      :description,
+      :estimated_time_in_seconds,
+      :course_module_id,
+      :sorting_order,
+      :active,
+      :is_video,
+      :is_quiz,
+      :is_constructed_response,
+      :seo_description,
+      :seo_no_index,
+      :number_of_questions,
+      :temporary_label,
+      :available_on_trial,
+      :related_course_module_element_id,
+      course_module_element_video_attributes: [
+        :course_module_element_id,
+        :id,
+        :duration,
+        :vimeo_guid,
+        :voo_player_id,
+        :video_id
+      ],
+      course_module_element_quiz_attributes: [
+        :id,
+        :course_module_element_id,
         :number_of_questions,
-        :temporary_label,
-        :available_on_trial,
-        :related_course_module_element_id,
-        course_module_element_video_attributes: [
-            :course_module_element_id,
+        :question_selection_strategy,
+        quiz_questions_attributes: [
+          :id,
+          :course_module_element_quiz_id,
+          :difficulty_level,
+          :custom_styles,
+          quiz_solutions_attributes: [
             :id,
-            :duration,
-            :vimeo_guid,
-            :dacast_id,
-            :video_id],
-        course_module_element_quiz_attributes: [
+            :quiz_question_id,
+            :quiz_answer_id,
+            :quiz_solution_id,
+            :text_content,
+            :image,
+            :image_file_name,
+            :image_content_type,
+            :image_file_size,
+            :image_updated_at,
+            :sorting_order
+          ],
+          quiz_answers_attributes: [
             :id,
-            :course_module_element_id,
-            :number_of_questions,
-            :question_selection_strategy,
-            quiz_questions_attributes: [
-                :id,
-                :course_module_element_quiz_id,
-                :difficulty_level,
-                :custom_styles,
-                quiz_solutions_attributes: [
-                    :id,
-                    :quiz_question_id,
-                    :quiz_answer_id,
-                    :quiz_solution_id,
-                    :text_content,
-                    :image,
-                    :image_file_name,
-                    :image_content_type,
-                    :image_file_size,
-                    :image_updated_at,
-                    :sorting_order
-                ],
-                quiz_answers_attributes: [
-                    :id,
-                    :quiz_question_id,
-                    :degree_of_wrongness,
-                    :_destroy,
-                    quiz_contents_attributes: [
-                        :id,
-                        :quiz_question_id,
-                        :quiz_answer_id,
-                        :text_content,
-                        :image,
-                        :image_file_name,
-                        :image_content_type,
-                        :image_file_size,
-                        :image_updated_at,
-                        :sorting_order]
-                ],
-                quiz_contents_attributes: [
-                    :id,
-                    :quiz_question_id,
-                    :quiz_answer_id,
-                    :text_content,
-                    :image,
-                    :image_file_name,
-                    :image_content_type,
-                    :image_file_size,
-                    :image_updated_at,
-                    :sorting_order]
+            :quiz_question_id,
+            :degree_of_wrongness,
+            :_destroy,
+            quiz_contents_attributes: [
+              :id,
+              :quiz_question_id,
+              :quiz_answer_id,
+              :text_content,
+              :image,
+              :image_file_name,
+              :image_content_type,
+              :image_file_size,
+              :image_updated_at,
+              :sorting_order
             ]
-        ],
-        course_module_element_resources_attributes: [
-                :id,
-                :course_module_element_id,
-                :name,
-                :description,
-                :web_url,
-                :upload,
-                :upload_file_name,
-                :upload_content_type,
-                :upload_file_size,
-                :upload_updated_at,
-                :_destroy
-        ],
-        video_resource_attributes:  [
+          ],
+          quiz_contents_attributes: [
             :id,
-            :course_module_element_id,
-            :question,
-            :answer,
-            :notes,
-            :transcript,
-        ],
-        constructed_response_attributes:  [
-            :id,
-            :course_module_element_id,
-            scenario_attributes: [
-                :id,
-                :constructed_response_id,
-                :sorting_order,
-                :text_content,
-                scenario_questions_attributes: [
-                    :id,
-                    :_destroy,
-                    :scenario_id,
-                    :sorting_order,
-                    :text_content,
-                    scenario_answer_templates_attributes: [
-                        :id,
-                        :_destroy,
-                        :scenario_question_id,
-                        :sorting_order,
-                        :editor_type,
-                        :text_editor_content,
-                        :spreadsheet_editor_content
-                    ]
-
-                ]
-            ]
+            :quiz_question_id,
+            :quiz_answer_id,
+            :text_content,
+            :image,
+            :image_file_name,
+            :image_content_type,
+            :image_file_size,
+            :image_updated_at,
+            :sorting_order
+          ]
         ]
+      ],
+      course_module_element_resources_attributes: [
+        :id,
+        :course_module_element_id,
+        :name,
+        :description,
+        :web_url,
+        :upload,
+        :upload_file_name,
+        :upload_content_type,
+        :upload_file_size,
+        :upload_updated_at,
+        :_destroy
+      ],
+      video_resource_attributes: [
+        :id,
+        :course_module_element_id,
+        :question,
+        :answer,
+        :notes,
+        :transcript
+      ],
+      constructed_response_attributes: [
+        :id,
+        :course_module_element_id,
+        scenario_attributes: [
+          :id,
+          :constructed_response_id,
+          :sorting_order,
+          :text_content,
+          scenario_questions_attributes: [
+            :id,
+            :_destroy,
+            :scenario_id,
+            :sorting_order,
+            :text_content,
+            scenario_answer_templates_attributes: [
+              :id,
+              :_destroy,
+              :scenario_question_id,
+              :sorting_order,
+              :editor_type,
+              :text_editor_content,
+              :spreadsheet_editor_content
+            ]
+          ]
+        ]
+      ]
     )
   end
-
 end

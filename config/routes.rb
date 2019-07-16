@@ -28,9 +28,6 @@ Rails.application.routes.draw do
     get '500' => redirect('500-page')
 
     # users and authentication
-    resources :users do
-      resources :visits, only: [:index, :show]
-    end
 
     get 'new_subscription', to: 'subscriptions#new', as: :new_subscription
     post 'create_subscription/:user_id', to: 'subscriptions#create', as: :create_subscription
@@ -80,8 +77,10 @@ Rails.application.routes.draw do
       get  '/orders', action: :user_purchases_details, as: :orders
       get  '/referrals', action: :user_referral_details, as: :referrals
       patch '/update_courses', action: :update_courses, as: :update_courses
+      get 'search', on: :collection
       resources :exercises, only: [:index, :show, :edit, :update], shallow: true
       resources :invoices, only: :index, shallow: true
+      resources :visits, only: [:index, :show]
     end
     resources :invoices, only: :show do
       get '/pdf', action: :pdf, on: :member
@@ -230,9 +229,6 @@ Rails.application.routes.draw do
     get 'terms_and_conditions', to: 'footer_pages#terms_and_conditions'
     get 'tutor/:name_url', to: 'footer_pages#profile', as: :profile
     get 'tutors', to: 'footer_pages#profile_index', as: :tutors
-
-    resources :users, only: [:new, :create]
-    post 'search_users', to: 'users#index', as: :search_users
 
     post :preview_csv_upload, to: 'users#preview_csv_upload'
     post :import_csv_upload, to: 'users#import_csv_upload'

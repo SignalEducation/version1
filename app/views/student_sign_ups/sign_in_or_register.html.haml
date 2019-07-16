@@ -59,7 +59,7 @@
                     %p.h4.mb-3.text-torquoise
                       Total:
                       %span
-                        =number_in_local_currency(@product.price, @product.currency_id)
+                        =number_in_local_currency(@product.price, @product.currency)
                   .pt-4.pt-md-5
                     %i.material-icons.icon-bg-round.text-mint.bg-mint-light{"aria-label" => "selected", :role => "img"} check
 

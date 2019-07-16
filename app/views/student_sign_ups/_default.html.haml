@@ -92,7 +92,7 @@
                     %p.h2.mb-0
                       =@preferred_plan.currency.format_number(@preferred_plan.price)
                     .mt-auto
-                      =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency_id)}', '#{@preferred_plan.exam_body.name}');" do
+                      =link_to subscription_checkout_special_link(@group.exam_body_id, @preferred_plan.guid), class: 'btn btn-secondary btn-sm', onclick: "addToCart('#{@preferred_plan.currency.iso_code}', '#{@preferred_plan.name}', '#{@preferred_plan.id}', '#{number_in_local_currency(@preferred_plan.price, @preferred_plan.currency)}', '#{@preferred_plan.exam_body.name}');" do
                         Choose this plan
 
 

@@ -14,7 +14,7 @@
           -if invoice.issued_at
             =humanize_datetime(invoice.issued_at)
         %td
-          =number_in_local_currency(invoice.total, invoice.currency_id)
+          =number_in_local_currency(invoice.total, invoice.currency)
         %td
           =invoice.status
         %td

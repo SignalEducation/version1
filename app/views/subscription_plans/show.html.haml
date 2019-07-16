@@ -23,7 +23,7 @@
                   %td.col-sm-8=link_to @subscription_plan.currency.name, @subscription_plan.currency
                 %tr
                   %td.col-sm-4=t('views.subscription_plans.form.price')
-                  %td.col-sm-8=number_in_local_currency(@subscription_plan.price, @subscription_plan.currency_id)
+                  %td.col-sm-8=number_in_local_currency(@subscription_plan.price, @subscription_plan.currency)
                 %tr
                   %td.col-sm-4=t('views.subscription_plans.form.available_from')
                   %td.col-sm-8=@subscription_plan.available_from.to_s(:standard)
