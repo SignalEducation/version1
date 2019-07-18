@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     post 'stripe_v01',      to: 'stripe_v01#create'
     post 'stripe_v02',      to: 'stripe_v02#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
+    post 'dacast_response', to: 'dacast_response#update'
   end
 
   namespace :admin do
