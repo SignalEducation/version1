@@ -21,7 +21,14 @@ export const store = new Vuex.Store({
     state: {
         currentCBEId: null,
         currentSectionId: null,
-        currentSubjectId: null
+        currentSubjectId: null,
+        cbeName: null,
+        cbeSection: null,
+        cbeTitle: null,
+        cbeDecsription: null,
+        cbeTimeLimit: null,
+        cbeNumberOfAllowablePauses: null,
+        cbeTimeLimit: null,
     }
 })
 

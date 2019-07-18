@@ -20,7 +20,7 @@
                      </div>
 
                      <br/><br/><br/>
-                      <button v-on:click="createNewCBE">Create CBE</button>                       
+                      <button v-on:click="createNewCBE">Create a news CBE</button>                       
 
                       <br/><br/><br/>
 
@@ -41,6 +41,7 @@
                       </div>
                     <br><br>
                      <div v-if="selectedSubjectId !== null"> 
+                       {{ $store.state.currentSubjectId}}
                       <button v-on:click="storeCBEName">Save</button>
                     </div>
 
