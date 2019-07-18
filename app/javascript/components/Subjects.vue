@@ -1,10 +1,12 @@
-<template>           
-    <select v-model="selectedSubject">
-        <option>Choose Option</option>
-        <option v-for="option in options" v-bind:value="option.id">
-         {{option.name}}
-        </option>
-    </select>      
+<template>
+    <fieldset>
+        <label>Choose a subject for the CBE</label>
+        <select v-model="selectedSubject">         
+            <option v-for="option in options" v-bind:value="option.id">
+                {{option.name}}
+            </option>   
+        </select>
+    </fieldset>     
 </template>
 
 
