@@ -19,13 +19,15 @@
                      <br/><br/><br/>
                       <button v-on:click="createNewCBE">Create CBE</button>
                     <br/><br/><br/>
-                       <button @click="cbeQuestionValid = true">Show CBE Questions</button>
+                       <button @click="cbeQuestionValid = true">Edit CBE Details</button>
 
                       <br/><br/><br/>
 
                       <div v-if="selectedSubjectId !== null">
-                        <button v-on:click="storeCBEName">Save CBE Name</button>
+                        <button v-on:click="storeCBEName">Save</button>
                         <input v-model="cbeName" placeholder="CBE Name">
+                        <br><br>
+                         <CBESection> </CBESection>
                       </div>
 
                       
@@ -37,9 +39,8 @@
                       <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
                         <div v-if="cbeQuestionValid">
                           <p>fafdsa</p>
-                          <Admin>fdsfads</Admin>
-                          <input v-model="cbeName" placeholder="CBE Title">
-                          <input v-model="cbeName" placeholder="Exam length">
+                         
+                          <CBEDetails> </CBEDetails>
                         </div>
                     
                     </template>
@@ -61,6 +62,8 @@
     import Exam from './components/Exam'
     import Subjects from './components/Subjects'
     import CBESettings from './components/CBESettings'
+    import CBEDetails from './components/CBEDetails'
+    import CBESection from './components/CBESection'
     import splitPane from 'vue-splitpane'
 
 
@@ -68,6 +71,8 @@
         components: {
            Admin,
            CBESettings,
+           CBEDetails,
+           CBESection,
            Exam,
            Subjects,
         },
