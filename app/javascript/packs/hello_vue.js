@@ -9,9 +9,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import App from '../app'
 import splitPane from 'vue-splitpane'
+import VeeValidate from 'vee-validate';
+
 
 Vue.use(Vuex)
 Vue.component('split-pane', splitPane);
+Vue.use(VeeValidate);
+
 
 export const store = new Vuex.Store({
     state: {

@@ -14,32 +14,42 @@
                      <div>
                        <component v-bind:is="currentView" v-on:change-view="updateView"></component>
                       <Subjects ref="subjects"></Subjects>
+                      
+                      <span>{{ errors.first('email') }}</span>
+
                      </div>
 
                      <br/><br/><br/>
-                      <button v-on:click="createNewCBE">Create CBE</button>
-                    <br/><br/><br/>
-                       <button @click="cbeQuestionValid = true">Edit CBE Details</button>
+                      <button v-on:click="createNewCBE">Create CBE</button>                       
 
                       <br/><br/><br/>
 
                       <div v-if="selectedSubjectId !== null">
-                        <button v-on:click="storeCBEName">Save</button>
-                        <input v-model="cbeName" placeholder="CBE Name">
+                        
+                        <fieldset>
+                          <label for="">Name of CBE</label>
+                          
+                          <input v-model="cbeName" v-validate="'required:true'"  name='cbeName' type="text" placeholder="CBE Name">
+                          <span>{{ errors.first('cbeName') }}</span>
+                        </fieldset>
+                        
                         <br><br>
                          <CBESection> </CBESection>
+                         <br><br>
+                         
+                         
                       </div>
-
-                      
-  
+                    <br><br>
+                     <div v-if="selectedSubjectId !== null"> 
+                      <button v-on:click="storeCBEName">Save</button>
+                    </div>
 
                     </template>
                     <template slot="paneR">
 
                       <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
-                        <div v-if="cbeQuestionValid">
-                          <p>fafdsa</p>
-                         
+                        
+                        <div v-if="selectedSubjectId !== null">
                           <CBEDetails> </CBEDetails>
                         </div>
                     
