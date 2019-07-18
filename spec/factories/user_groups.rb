@@ -99,6 +99,7 @@ FactoryBot.define do
       user_management_access                { true }
       developer_access                      { false }
       user_group_management_access          { true }
+      site_admin                            { true }
     end
 
     factory :blocked_user_group do
