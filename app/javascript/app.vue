@@ -19,40 +19,33 @@
 
                      </div>
 
-                     <br/><br/><br/>
-                      <button v-on:click="createNewCBE">Create a news CBE</button>                       
 
-                      <br/><br/><br/>
+
+                    <div class="form-group row">
+                      
+                      <div class="col-md-10">
+                        <button v-on:click="createNewCBE">Create a new CBE</button>  
+                      </div>
+                     </div>
+                     
 
                       <div v-if="selectedSubjectId !== null">
-                        
-                        <fieldset>
-                          <label for="">Name of CBE</label>
-                          
-                          <input v-model="cbeName" v-validate="'required:true'"  name='cbeName' type="text" placeholder="CBE Name">
-                          <span>{{ errors.first('cbeName') }}</span>
-                        </fieldset>
-                        
-                        <br><br>
-                         <CBESection> </CBESection>
-                         <br><br>
-                         
-                         
+                        <CBESection> </CBESection>
                       </div>
-                    <br><br>
-                     <div v-if="selectedSubjectId !== null"> 
-                       {{ $store.state.currentSubjectId}}
+                     <div v-if="selectedSubjectId !== null">          
                       <button v-on:click="storeCBEName">Save</button>
                     </div>
 
                     </template>
                     <template slot="paneR">
 
-                      <span><p>CBE DB Index >> {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
+                      
                         
                         <div v-if="selectedSubjectId !== null">
                           <CBEDetails> </CBEDetails>
                         </div>
+
+                        <span><p>CBE ID : {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p></span>
                     
                     </template>
                   </split-pane>
