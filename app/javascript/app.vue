@@ -7,11 +7,12 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="panel-body no-top-padding">
-                  <split-pane v-on:resize="resize" :min-percent='50' :default-percent='50' split="vertical">
+                  <split-pane  :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
 
                     
                      <div>
+            
                        <component v-bind:is="currentView" v-on:change-view="updateView"></component>
                       <Subjects ref="subjects"></Subjects>
                       
@@ -24,6 +25,7 @@
                     <div class="form-group row">
                       
                       <div class="col-md-10">
+                        <p>{{currentCBEId}}</p>
                         <button v-on:click="createNewCBE">Create a new CBE</button>  
                       </div>
                      </div>
@@ -33,14 +35,11 @@
                         <CBESection> </CBESection>
                       </div>
                      <div v-if="selectedSubjectId !== null">          
-                      <button v-on:click="storeCBEName">Save</button>
+                      <button v-on:click="createNewCBE">Save</button>
                     </div>
 
                     </template>
                     <template slot="paneR">
-
-                      
-                        
                         <div v-if="selectedSubjectId !== null">
                           <CBEDetails> </CBEDetails>
                         </div>
@@ -90,6 +89,11 @@
             }
 
 
+        },
+        computed: {
+            currentCBEId (){
+              return this.$store.state.currentCBEId
+            }
         },
         methods: {
             storeCBEName: function (page, index) {

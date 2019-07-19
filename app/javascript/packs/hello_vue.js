@@ -22,7 +22,7 @@ export const store = new Vuex.Store({
         currentCBEId: null,
         currentSectionId: null,
         currentSubjectId: null,
-        cbeName: null,
+        cbeName: '666',
         cbeSection: null,
         cbeTitle: null,
         cbeDecsription: null,
@@ -32,15 +32,19 @@ export const store = new Vuex.Store({
     },
 
     getters: {
-
+        getCBEName(state, name) {
+            // For now we allow Jenny just to remove 
+            // one TV at a time.
+            return cbeName
+          }
     },
 
     mutations: {
-
-    },
-
-    action: {
-        
+        setCBEName(state, name) {
+            // For now we allow Jenny just to remove 
+            // one TV at a time.
+            state.cbeName  = name
+          }
     }
 
 })

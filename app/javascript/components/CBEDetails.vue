@@ -49,7 +49,19 @@
 
 <script>
     export default {
-        
+                data: function () {
+                    return {
+                        cbeName: null
+                    }
+                },
+                watch: {
+                    cbeName: function (val) {
+                        this.$store.commit('setCBEName', this.cbeName)
+                        console.log(this.$store.state.cbeName)
+                        //this.$store.state.currentSubjectId = 1111
+                        //this.$store.commit('setCBEId', this.cbeName)
+                    }
+                },
     }
 </script>
 
