@@ -29,7 +29,20 @@ export const store = new Vuex.Store({
         cbeTimeLimit: null,
         cbeNumberOfAllowablePauses: null,
         cbeTimeLimit: null,
+    },
+
+    getters: {
+
+    },
+
+    mutations: {
+
+    },
+
+    action: {
+        
     }
+
 })
 
 document.addEventListener('DOMContentLoaded', () => {
