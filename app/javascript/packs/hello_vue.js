@@ -19,16 +19,18 @@ Vue.use(VeeValidate);
 
 export const store = new Vuex.Store({
     state: {
-        currentCBEId: null,
+        currentCbeId: null,
         currentSectionId: null,
         currentSubjectId: null,
-        cbeName: '666',
-        cbeSection: null,
+        cbeName: null,
+        cbeSectionName: null,
         cbeTitle: null,
-        cbeDecsription: null,
+        cbeDescription: null,
         cbeTimeLimit: null,
         cbeNumberOfAllowablePauses: null,
-        cbeTimeLimit: null,
+        cbeNumberOfPauses: null,
+        cbeLengthOfPauses: null,
+
     },
 
     getters: {
@@ -40,11 +42,37 @@ export const store = new Vuex.Store({
     },
 
     mutations: {
-        setCBEName(state, name) {
-            // For now we allow Jenny just to remove 
-            // one TV at a time.
-            state.cbeName  = name
-          }
+        setCBEName(state, value) {
+            state.cbeName  = value
+          },
+        setCurrentCbeId(state, value) {
+            state.currentCbeId  = value
+        },
+        setCurrentSectionId(state, value) {
+            state.currentSectionId  = value
+        },
+        setCbeName(state, value) {
+            state.cbeName  = value
+        },
+        setCbeSectionName(state, value) {
+            state.cbeSectionName  = value
+        },
+        setCbeTitle(state, value) {
+            state.cbeTitle  = value
+        },
+        setCbeDescription(state, value) {
+            state.cbeDescription  = value
+        },
+        setCbeTimeLimit(state, value) {
+            state.cbeTimeLimit  = value
+        },
+        setCbeNumberOfPauses(state, value) {
+            state.cbeNumberOfPauses  = value
+        },
+        setCbeLengthOfPauses(state, value) {
+            state.cbeLengthOfPauses  = value
+        },          
+          
     }
 
 })
