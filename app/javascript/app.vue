@@ -44,9 +44,8 @@
                         <div v-if="selectedSubjectId !== null">
                           <CBEDetails> </CBEDetails>
                         </div>
-
-                        <p class="text-info">CBE ID : {{createdCBE.cbeId}} --- New CBE Name: {{createdCBE.cbeName}} ---  {{selectedSubject}}</p>
-                    
+                        <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeName}}</span>
+                        <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
                     </template>
                   </split-pane>
                 </div>
