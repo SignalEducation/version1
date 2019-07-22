@@ -159,6 +159,9 @@
                         console.log(response.status)
                         this.createdCBE = response.data
                         console.log("******** " + JSON.stringify(response.data.cbeId))
+                        this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
+                        console.log(" From store ******** " + this.createdCBE.cbeId )
+ 
                     })
                     .catch(error => {
                         console.log(error)
