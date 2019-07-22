@@ -43,8 +43,10 @@
                         <div v-if="selectedSubjectId !== null">
                           <CBEDetails> </CBEDetails>
                         </div>
-                        <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeName}}</span>
-                        <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
+                        <div v-if="selectedSubjectId !== null">
+                          <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeId}}</span>
+                          <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
+                        </div>
                     </template>
                   </split-pane>
                 </div>
@@ -155,6 +157,11 @@
                 axios.post('http://localhost:3000/cbes/1/create_it', {cbe: this.cbeDetails})
                     .then(response => {
                         console.log(response.status)
+                        this.createdCBE = response.data
+                        console.log("******** " + JSON.stringify(response.data.cbeId))
+                        this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
+                        console.log(" From store ******** " + this.createdCBE.cbeId )
+ 
                     })
                     .catch(error => {
                         console.log(error)
