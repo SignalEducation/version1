@@ -85,6 +85,7 @@
                 selectedSubjectId: null,
                 message: 'Test',
                 cbeQuestionValid: false,
+                cbeDetails: [],
                 options: []
             }
 
@@ -98,6 +99,7 @@
         methods: {
             storeCBEName: function (page, index) {
                 console.log('cbeName: ' + this.cbeName + 'selectedSubjectId -- ' + this.selectedSubjectId)
+
                 axios.post('http://localhost:3000/cbes/1/create_it', {
                     cbe_name: this.cbeName,
                     selected_subject: this.selectedSubjectId,
@@ -113,8 +115,17 @@
                     })
             },
             createNewCBE: function (page, index) {
+                this.cbeDetails.push({cbe_name: this.$store.state.cbeName})
+                this.cbeDetails.push({cbe_title: this.$store.state.cbeSectionName})
+                this.cbeDetails.push({cbe_Description: this.$store.state.cbeTitle })
+                this.cbeDetails.push({cbe_time: this.$store.state.cbeTimeLimit})
+                this.cbeDetails.push({cbe_time: this.$store.state.cbeNumberOfPauses})
+                this.cbeDetails.push({cbe_time: this.$store.state.cbeLengthOfPauses})
+
+
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
                 this.$store.state.currentSubjectId = this.selectedSubjectId
+                console.log(JSON.stringify(this.cbeDetails))
                 console.log('cbeName: ' + this.$store.state.cbeName)
                 console.log('TEST VUEX' + this.$store.state.currentSubjectId )
                 axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
