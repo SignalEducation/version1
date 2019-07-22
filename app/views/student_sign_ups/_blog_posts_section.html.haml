@@ -1,0 +1,19 @@
+%section#blog-posts
+  .container-bg.bg-gray5
+    .container
+      %article.py-5
+        %header.text-center.pt-3.pb-4.pb-md-5
+          %h2.h1-mega Explore our blog
+          %p.p-hero.px-lg-6
+            ACCA, accounting and financial industry blog articles with top tips and insights to help you pass your ACCA exams and build a rewarding career in finance.
+        .row.row-lg
+          -home_page.blog_posts.each do |blog_post|
+            .col-6.col-sm-4
+              %article
+                =link_to blog_post.url, class: 'card card-blog-article', target: '_blank' do
+                  =image_tag(blog_post.image.url, class: 'card-img-top', alt: blog_post.title)
+                  .card-body
+                    %h2.h5.card-title
+                      =blog_post.title
+                    %p
+                      =blog_post.description

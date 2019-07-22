@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class StudentSignUpsController < ApplicationController
-  before_action :check_logged_in_status, except: %i[landing subscribe]
+
+  skip_after_action :intercom_rails_auto_include, only: [:landing, :new, :sign_in_or_register]
+  before_action :check_logged_in_status, except: %i[landing subscribe group]
   before_action :get_variables
   before_action :create_user_object, only: %i[new sign_in_or_register landing]
   before_action :create_user_session_object, only: %i[sign_in_or_register landing]
@@ -37,11 +39,14 @@ class StudentSignUpsController < ApplicationController
       @group = @home_page.group
       @exam_body = @group.exam_body
 
-      if current_user
-        ip_country = IpAddress.get_country(request.remote_ip)
-        country = ip_country || Country.find_by_name('United Kingdom')
-        @currency_id = country.currency_id
-      end
+      @currency_id =
+        if current_user
+          current_user.country_id
+        else
+          ip_country = IpAddress.get_country(request.remote_ip)
+          country = ip_country || Country.find_by(name: 'United Kingdom')
+          country.currency_id
+        end
 
       @subscription_plans =
         if @home_page&.subscription_plan_category&.current
@@ -75,6 +80,31 @@ class StudentSignUpsController < ApplicationController
     flash[:plan_guid] = @plan.guid if @plan
     flash[:exam_body] = @exam_body.id if @exam_body
     flash[:product_id] = @product.id if @product
+  end
+
+  def group
+    @group = Group.find_by(name_url: params[:name_url])
+    @exam_body = @group.exam_body
+    seo_title_maker(@group.seo_title, @group.seo_description, nil)
+
+    @currency_id =
+      if current_user
+        current_user.country_id
+      else
+        ip_country = IpAddress.get_country(request.remote_ip)
+        country = ip_country || Country.find_by(name: 'United Kingdom')
+        country.currency_id
+      end
+
+    if @currency_id
+      @subscription_plans = SubscriptionPlan.where(
+          subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
+      ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+    end
+
+    @navbar = false
+    @top_margin = false
+    @footer = true
   end
 
   def new
@@ -132,59 +162,6 @@ class StudentSignUpsController < ApplicationController
                     false)
   end
 
-  def subscribe
-    list_id = params[:mailchimp_list_guid].presence || 'a716c282e2' # Newsletter List
-    email = params[:email][:address]
-    full_name = params[:full_name][:address] if params[:full_name]
-    first_name = params[:first_name][:address] if params[:first_name]
-    last_name = params[:last_name][:address] if params[:last_name]
-    student_number = params[:student_number][:address] if params[:student_number]
-    course_name = params[:course]
-    date_of_birth = params[:date_of_birth][:address] if params[:date_of_birth]
-
-    if email.present?
-      begin
-        # Bootcamp Guarantee List has Student Number Field other do not
-        if params[:student_number]
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => full_name,
-                                                            'snumber' => student_number,
-                                                            'dob' => date_of_birth,
-                                                            'coursename' => course_name})
-        else
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => first_name,
-                                                            'lname' => last_name,
-                                                            'coursename' => course_name})
-        end
-
-        respond_to do |format|
-          format.json { render json: { message: 'Success! Check your email to confirm your subscription.' } }
-        end
-      rescue Mailchimp::ListAlreadySubscribedError
-        respond_to do |format|
-          format.json { render json: { message: "#{email} is already subscribed to the list" } }
-        end
-      rescue Mailchimp::ListDoesNotExistError
-        respond_to do |format|
-          format.json { render json: { message: 'The list could not be found.' } }
-        end
-      rescue Mailchimp::Error => e
-        if e.message
-          respond_to do |format|
-            format.json { render json: { message: 'There was an error. Please enter valid email.' } }
-          end
-          Rails.logger.error "ERROR: Mailchimp#error - Returned #{e.message}"
-        else
-          respond_to do |format|
-            format.json { render json: { message: 'An unknown error occurred.' } }
-          end
-        end
-      end
-    else
-      respond_to do |format|
-        format.json { render json: { message: 'Email Address Cannot be blank. Please enter valid email.' } }
-      end
-    end
-  end
 
   private
 

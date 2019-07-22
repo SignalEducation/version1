@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_11_095010) do
+ActiveRecord::Schema.define(version: 2019_07_14_093157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -416,6 +416,8 @@ ActiveRecord::Schema.define(version: 2019_07_11_095010) do
     t.string "logo_image"
     t.string "registration_form_heading"
     t.string "login_form_heading"
+    t.string "landing_page_h1"
+    t.text "landing_page_paragraph"
     t.index ["name"], name: "index_exam_bodies_on_name"
   end
 
@@ -576,6 +578,7 @@ ActiveRecord::Schema.define(version: 2019_07_11_095010) do
     t.string "login_form_heading"
     t.string "footer_option", default: "white"
     t.string "video_guid"
+    t.string "header_h3"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
@@ -949,6 +952,20 @@ ActiveRecord::Schema.define(version: 2019_07_11_095010) do
     t.integer "count_of_constructed_responses_taken"
     t.integer "course_section_id"
     t.integer "course_section_user_log_id"
+  end
+
+  create_table "student_testimonials", force: :cascade do |t|
+    t.integer "home_page_id"
+    t.integer "sorting_order"
+    t.text "text"
+    t.string "signature"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.bigint "image_file_size"
+    t.datetime "image_updated_at"
+    t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
   end
 
   create_table "subject_course_resources", id: :serial, force: :cascade do |t|

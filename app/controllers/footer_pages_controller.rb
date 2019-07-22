@@ -98,44 +98,6 @@ class FooterPagesController < ApplicationController
       but don't worry. We're working on fixing this link.", nil)
   end
 
-  def info_subscribe
-    email = params[:email][:address]
-    name  = params[:first_name][:address]
-    # list_id = '866fa91d62' # Dev List
-    list_id = 'a716c282e2' # Production List
-
-    if email.present?
-      begin
-        @mc.lists.subscribe(list_id, { 'email' => email }, { 'fname' => name })
-
-        respond_to do |format|
-          format.json { render json: { message: 'Success! Check your email to confirm your subscription.' } }
-        end
-      rescue Mailchimp::ListAlreadySubscribedError
-        respond_to do |format|
-          format.json { render json: { message: "#{email} is already subscribed to the list" } }
-        end
-      rescue Mailchimp::ListDoesNotExistError
-        respond_to do |format|
-          format.json { render json: { message: 'The list could not be found.' } }
-        end
-      rescue Mailchimp::Error => e
-        if e.message
-          respond_to do |format|
-            format.json { render json: { message: 'There is an error. Please enter valid email id.' } }
-          end
-        else
-          respond_to do |format|
-            format.json { render json: { message: 'An unknown error occurred.' } }
-          end
-        end
-      end
-    else
-      respond_to do |format|
-        format.json{ render json: { message: 'Email Address Cannot be blank. Please enter valid email id.' } }
-      end
-    end
-  end
 
   def complaints_intercom
     user_id = current_user ? current_user.id : nil

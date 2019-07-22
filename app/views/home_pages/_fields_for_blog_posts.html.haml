@@ -1,5 +1,5 @@
-=f.fields_for :blog_posts do |blog_post|
-  .box-item.form-box
+.box-item.form-box
+  =f.fields_for :blog_posts do |blog_post|
     -if blog_post.object.new_record?
       %h4
         New Blog Post
@@ -48,3 +48,4 @@
           .input-group.input-group-lg
             =blog_post.file_field :image, class: 'form-control'
 
+    %hr/

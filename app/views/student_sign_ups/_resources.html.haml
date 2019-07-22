@@ -1,0 +1,136 @@
+=render partial: 'layouts/external_navbar'
+%main
+  -#.container-bg.home-hero-alt-bg.bg-4
+  .container-bg.home-hero-alt-bg.bg-resources
+    .container.home-hero-container
+      %article.home-hero
+
+        .row.no-gutters
+          .col-sm-12.col-lg-4.col-xl-4
+            %header.home-hero-header.py-6
+              %h1.h1-mega.text-white
+                Everything you need to pass in one place!
+              %p.p-hero.text-white.py-4
+                Preparation is the difference between passing and failing your ACCA exams. Make sure you are exam-ready to guarantee career success.
+          .col-sm-12.col-lg-8.col-xl-8.d-none.d-sm-block
+            .resources-img-wrap
+              =image_tag('floating-icons-bg.png', class: 'px-md-5 px-xl-0', alt: 'Laptop with Learn Signal page open')
+
+
+
+  .container-bg
+    .container
+      %article.py-4
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-sm-6
+              .pt-3.pt-lg-6
+                %h2.h1-mega.text-center
+                  Weekly Webinars
+                %p.text-gray2.pt-5.text-center
+                  Watch our weekly webinars to get access to tips and tricks that will help you prepare for and pass your ACCA exam.
+                .pt-2.text-center
+                  =link_to 'https://www.crowdcast.io/learnsignal', class: 'btn btn-primary btn-lg', target: '_blank' do
+                    Learn More!
+
+
+            .col-12.col-sm-6
+              .py-3
+                .webinar-img
+                  =image_tag('webinar-image-2.png', alt: 'Logo')
+
+
+
+  .container-bg.bg-gray5
+    .container
+      %article.pt-5
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-8.offset-2
+              %h2.h1-mega.text-center
+                Weekly Podcasts
+              %p.text-gray2.pt-2.text-center
+                Tune in to our weekly podcast show to get advice, motivation and the tools you need to succeed in your exam or career goals.
+            .col-10.offset-1
+              .pt-4
+                .podcast-img
+                  %script{src: 'https://www.buzzsprout.com/172305.js?player=large&artist=LearnSignal', type: 'text/javascript', charset: 'utf-8'}
+
+                %p.text-gray2.pt-2.text-center
+                  =link_to 'https://podcasts.apple.com/ie/podcast/forget-the-numbers-the-student-accounting-show/id1406751620', target: '_blank' do
+                    Apple Podcast
+                  =' and'
+                  =link_to 'https://open.spotify.com/show/72hR3tuWmntqQjQLhSloDz?si=EdDsSh_mSQCwyCw3f6qHog', target: '_blank' do
+                    Spotify
+
+
+
+  .container-bg
+    .container
+      %article.py-4
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-sm-6
+              .webinar-img
+                =image_tag('mock-exams-image.png', alt: 'Logo')
+
+
+            .col-12.col-sm-6
+              .pt-3.pt-lg-6
+                %h2.h1-mega.text-center
+                  Mock Exams
+                %p.text-gray2.pt-5.text-center
+                  Complete your mock ACCA exam and submit it to receive personalized feedback and study recommendations in just 3 days.
+                .pt-2.text-center
+                  =link_to prep_products_url, class: 'btn btn-primary btn-lg' do
+                    Learn More!
+
+
+
+  .container-bg.bg-gray5
+    .container
+      %article.py-4
+        %header.pb-sm-4.pb-md-5
+          .row.row-lg
+            .col-12.col-sm-6
+              .pt-3.pt-lg-6
+                %h2.h1-mega.text-center
+                  Correction Packs
+                %p.text-gray2.pt-5.text-center
+                  Select and complete any ACCA question from one of our resources. Then submit your work to receive corrections and feedback in just 3 days.
+                .pt-2.text-center
+                  =link_to prep_products_url, class: 'btn btn-primary btn-lg' do
+                    Learn More!
+            .col-12.col-sm-6
+              .pt-5
+                .webinar-img
+                  =image_tag('correction-packs-image.png', alt: 'Logo')
+
+
+
+
+  -if @home_page.blog_posts.any?
+    %section#blog-posts
+      .container-bg
+        .container
+          %article.py-5
+            %header.text-center.pt-3.pb-4.pb-md-5
+              %h2.h1-mega Explore our blog
+              %p.p-hero.px-lg-6
+                ACCA, accounting and financial industry blog articles with top tips and insights to help you pass your ACCA exams and build a rewarding career in finance.
+            .row.row-lg
+              -@home_page.blog_posts.each do |blog_post|
+                .col-6.col-sm-4
+                  %article
+                    =link_to blog_post.url, class: 'card card-blog-article', target: '_blank' do
+                      =image_tag(blog_post.image.url, class: 'card-img-top', alt: blog_post.title)
+                      .card-body
+                        %h2.h5.card-title
+                          =blog_post.title
+                        %p
+                          =blog_post.description
+
+
+  =render partial: 'customer_support_section'
+
+

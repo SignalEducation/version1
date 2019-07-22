@@ -1,0 +1,42 @@
+.home-hero-alt-4 {
+  margin-bottom: 0;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-image: asset-url('hero-bg-1-dark.jpg');
+  background-position: 30% 50%;
+}
+@media (min-width:992px) {
+  .home-hero-alt-4 {
+    background-position: 40% 50%;
+  }
+}
+
+
+.home-hero.home-hero-basic-registration {
+  padding-top: 4rem;
+  padding-bottom: 1rem;
+}
+.home-hero.home-hero-basic-registration .home-hero-header {
+  padding-top: 0
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-basic-registration .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 1rem
+  }
+}
+@media (min-width:992px) {
+  .home-hero.home-hero-basic-registration .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 5rem
+  }
+}
+@media (min-width:1200px) {
+  .home-hero.home-hero-basic-registration .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 5rem
+  }
+}
+
+
+

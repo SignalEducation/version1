@@ -94,7 +94,7 @@
 
     -#General partials
     =render partial: 'layouts/misc_javascript'
-    -unless controller_name == 'courses'
+    -unless controller_name == 'courses' || controller_name == 'student_sign_ups'
       =render partial: 'layouts/intercom'
 
     -if current_user

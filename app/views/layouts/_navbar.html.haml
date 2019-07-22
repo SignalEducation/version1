@@ -21,7 +21,7 @@
                 %span Dashboard
             %li.nav-item
               =link_to library_url, class: 'nav-link' do
-                %span Courses
+                %span Library
 
             -if current_user.non_student_user?
               %li.nav-item
@@ -38,9 +38,17 @@
                 =link_to t('views.general.log_out'), sign_out_url, class: 'nav-link dropdown-item'
 
           -else
-            %li.nav-item
-              =link_to library_url, class: 'nav-link' do
+            -@navbar_landing_pages.each do |navbar_landing_page|
+              %li.nav-item
+                =link_to footer_landing_page_url(navbar_landing_page.public_url), class: 'nav-link' do
+                  %span=navbar_landing_page.name
+
+            %li.nav-item.dropdown.course-dropdown
+              %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                 %span Courses
+              .dropdown-menu.dropdown-menu-right.dropdown-menu-course{"aria-labelledby" => "navbarDropdown"}
+                -@groups.each do |group|
+                  =link_to group.name, group_landing_url(group.name_url), class: 'nav-link dropdown-item'
             %li.nav-item
               =link_to new_student_url, class: 'nav-link' do
                 %span Register

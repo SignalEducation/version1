@@ -1,29 +1,4 @@
-%header.header.sticky-top
-  %nav.navbar.navbar-light.navbar-expand-lg.navbar-lg
-    .container.animate.fade-in-up
-      %button.navbar-toggler{"aria-controls" => "navbarNavDropdown", "aria-expanded" => "false", "aria-haspopup" => "true", "aria-label" => "Toggle navigation", "data-target" => "#navbarNavDropdown", "data-toggle" => "collapse", :type => "button"}
-        %span.navbar-toggler-bar.frst
-        %span.navbar-toggler-bar.scnd
-
-      =link_to home_url, class: 'navbar-brand logo' do
-        =image_tag('Learnsignal-Logo.svg', class: 'logo-img')
-
-      #navbarNavDropdown.collapse.navbar-collapse.justify-content-end
-        %ul.navbar-nav.align-items-lg-center
-          -if current_user
-            %li.nav-item
-            =link_to student_dashboard_url, class: 'nav-link' do
-              %span Dashboard
-          %li.nav-item
-            =link_to library_url, class: 'nav-link' do
-              %span Courses
-          %li.nav-item
-            =link_to new_student_url, class: 'nav-link' do
-              %span Register
-          %li.nav-item
-            =link_to sign_in_url, class: 'nav-link navbar-login' do
-              %span Login
-
+=render partial: 'layouts/external_navbar'
 %main
   .container-bg.home-hero-alt-bg.podcast{style: 'min-height: 0;'}
     .container
@@ -50,27 +25,8 @@
         %script{src: 'https://www.buzzsprout.com/172305.js?player=large&artist=LearnSignal', type: 'text/javascript', charset: 'utf-8'}
 
 
-  %section#blog-posts
-    .container-bg.bg-gray5
-      .container
-        %article.py-5
-          %header.text-center.pb-sm-4.pb-md-5
-            %h2.h1-mega Explore our blog
-            %p.p-hero.px-lg-6
-              ACCA, accounting and financial industry blog articles with top tips and insights to help you pass your ACCA exams and build a rewarding career in finance.
-          .row.row-lg
-            -colours = %w[#fd5c63 #30aabc #f0ca28 #775ead #00b67b]
-            -@home_page.blog_posts.each_with_index do |blog_post, count|
-              .col-lg-4
-                %article
-                  =link_to blog_post.url, class: 'card card-primary card-pink blog-article', target: '_blank' do
-
-                    =image_tag(blog_post.image.url, class: 'card-img-top', alt: blog_post.title, style: "border-bottom-color: #{colours[count]};")
-                    .card-body.text-center.condense
-                      %h2.h5.card-title
-                        =blog_post.title
-                      %p
-                        =blog_post.description
+  -if @home_page.blog_posts.any?
+    =render partial: 'blog_posts_section', locals: {home_page: @home_page}
 
 
 :javascript
