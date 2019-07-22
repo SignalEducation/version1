@@ -133,21 +133,26 @@
 
             saveNewCBE: function (page, index) {
 
-                
-                this.cbeDetails.push({cbe_name: this.$store.state.cbeName})
-                this.cbeDetails.push({cbe_title: this.$store.state.cbeTitle })
-                this.cbeDetails.push({cbe_Description: this.$store.state.cbeDescription })
-                this.cbeDetails.push({cbe_time: this.$store.state.cbeTimeLimit })
-                this.cbeDetails.push({cbe_number_of_pauses: this.$store.state.cbeNumberOfPauses })
-                this.cbeDetails.push({cbe_length_of_pauses: this.$store.state.cbeLengthOfPauses })
-                this.cbeDetails.push({cbe_name_it: this.$store.cbeDescription })
+                this.cbeDetails = {}
 
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
+               
+                this.selectedSubjectId = this.$refs.subjects.selectedSubject
+                this.cbeDetails['name'] = this.$store.state.cbeName 
+                this.cbeDetails['description'] =this.$store.state.cbeDescription 
+                this.cbeDetails['time'] = this.$store.state.cbeTimeLimit 
+                this.cbeDetails['number_of_pauses'] =this.$store.state.cbeNumberOfPauses 
+                this.cbeDetails['length_of_pauses'] = this.$store.state.cbeLengthOfPauses 
+                this.cbeDetails['subject_course_id'] = this.selectedSubjectId 
+                this.cbeDetails['title'] = this.$store.state.cbeTitle
+
+                
                 this.$store.state.currentSubjectId = this.selectedSubjectId
                 console.log(JSON.stringify(this.cbeDetails))
                 console.log('cbeName: ' + JSON.stringify(this.testName))
+                console.log({cbe: this.cbeDetails})
                 
-                axios.post('http://localhost:3000/cbes/1/create_it', {cbeDetails: this.cbeDetails})
+                axios.post('http://localhost:3000/cbes/1/create_it', {cbe: this.cbeDetails})
                     .then(response => {
                         console.log(response.status)
                     })

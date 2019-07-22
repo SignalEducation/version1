@@ -37,14 +37,22 @@ class CbesController < ApplicationController
   end
 
   def create_it
-    cbe = Cbe.create(name: params[:cbe_name],
-                     title: 'exam 1',
-                     description: 'test desc',
-                     subject_course_id: params[:selected_subject]
-    )
 
+    # params = params['cbe_details'].to_unsafe_hash
+    #puts "TITLE --- #{params['cbe_title']}"
+   
+    cbe = Cbe.create(cbe_params)
+
+    puts cbe.errors.messages
     res = {cbeId: cbe.id, cbeName: cbe.name}
     render json: (res.as_json)
+  end
+
+
+  private
+
+  def cbe_params
+    params.require(:cbe).permit(:name, :title, :description, :subject_course_id, :time, :number_of_pauses, :length_of_pauses)
   end
 
   protected
