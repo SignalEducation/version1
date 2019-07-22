@@ -32,6 +32,13 @@ export const store = new Vuex.Store({
         cbeLengthOfPauses: null,
     },
 
+    getters: {
+        // ...
+        currentCbeId: (state, getters) => {
+          return getters.currentCbeId
+        }
+      },
+
     mutations: {
         setCurrentCbeId(state, value) {
             state.currentCbeId  = value

@@ -27,12 +27,12 @@ class CbesController < ApplicationController
   end
 
   def create_section
-    cbe_section = CbeSection.create(name: 'Intro',
-                                    scenario_label: 'S Label',
-                                    scenario_description: 'S Desc',
-                                    cbe_id: params[:cbe_id])
-
-    res = {cbeId: cbe.id, cbeName: cbe.name}
+    puts "**** IN SECTION CREATE ****"
+    cbe_section = CbeSection.create(section_params)
+    puts cbe_section.errors.messages
+    
+    res = {cbeSectionId: cbe_section.id, cbeSectionName: cbe_section.name}
+    puts "**** RES --- #{res}"
     render json: (res.as_json)
   end
 
@@ -47,6 +47,11 @@ class CbesController < ApplicationController
 
   def cbe_params
     params.require(:cbe).permit(:name, :title, :description, :subject_course_id, :time, :number_of_pauses, :length_of_pauses)
+  end
+
+
+  def section_params
+    params.require(:cbe_section).permit(:name, :scenario_label, :scenario_description, :cbe_id)
   end
 
   protected
