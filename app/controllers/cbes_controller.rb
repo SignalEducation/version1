@@ -37,13 +37,7 @@ class CbesController < ApplicationController
   end
 
   def create_it
-
-    # params = params['cbe_details'].to_unsafe_hash
-    #puts "TITLE --- #{params['cbe_title']}"
-   
     cbe = Cbe.create(cbe_params)
-
-    puts cbe.errors.messages
     res = {cbeId: cbe.id, cbeName: cbe.name}
     render json: (res.as_json)
   end

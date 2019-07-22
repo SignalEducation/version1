@@ -13,7 +13,7 @@
                     
                      <div>
             
-                       <component v-bind:is="currentView" v-on:change-view="updateView"></component>
+                      
                       <Subjects ref="subjects"></Subjects>
                       
                       <span>{{ errors.first('email') }}</span>
