@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
   resources :cbes do
     post 'create_it', to: 'cbes#create_it'
+    post 'create_section', to: 'cbes#create_section'
     get 'new', to: 'cbes#new', as: :new_cbe
     get 'show', to: 'cbes#show', as: :show_cbe
     get 'get_subjects', to: 'cbes:get_subjects', as: :get_subjects
