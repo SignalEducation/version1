@@ -6,6 +6,12 @@
 # current_cbe.initialize_settings will setup default settings for the CBE
 
 class Cbe < ApplicationRecord
+
+  alias_attribute :time, :hard_time_limit
+  alias_attribute :number_of_pauses, :number_of_pauses_allowed
+  alias_attribute :cbe_length_of_pauses, :length_of_pauses
+
+
   has_many :cbe_sections, dependent: :destroy
   has_many :cbe_questions, dependent: :destroy
   has_many :cbe_introduction_pages, dependent: :destroy

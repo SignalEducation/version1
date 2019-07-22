@@ -172,7 +172,6 @@ ActiveRecord::Schema.define(version: 2019_07_05_142410) do
   end
 
   create_table "cbes", force: :cascade do |t|
-    t.string "name"
     t.string "title"
     t.text "description"
     t.float "exam_time"
@@ -182,6 +181,7 @@ ActiveRecord::Schema.define(version: 2019_07_05_142410) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "subject_course_id"
+    t.string "name"
     t.index ["subject_course_id"], name: "index_cbes_on_subject_course_id"
   end
 
