@@ -62,8 +62,8 @@
 
 <script>
     import axios from 'axios'
-    import Admin from './components/Admin'
-    import Exam from './components/Exam'
+    import Admin from './components/admin'
+    import Exam from './components/exam'
     import Subjects from './components/Subjects'
     import CBESettings from './components/CBESettings'
     import CBEDetails from './components/CBEDetails'
