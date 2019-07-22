@@ -62,7 +62,7 @@
                 },
                 watch: {
                     cbeName: function (val) {
-                        this.$store.commit('setCBEName', this.cbeName)
+                        this.$store.commit('setCbeName', this.cbeName)
                         console.log(this.$store.state.cbeName)
                     },
                     cbeTitle: function (val) {
