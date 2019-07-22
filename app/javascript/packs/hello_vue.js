@@ -30,21 +30,9 @@ export const store = new Vuex.Store({
         cbeNumberOfAllowablePauses: null,
         cbeNumberOfPauses: null,
         cbeLengthOfPauses: null,
-
-    },
-
-    getters: {
-        getCBEName(state, name) {
-            // For now we allow Jenny just to remove 
-            // one TV at a time.
-            return cbeName
-          }
     },
 
     mutations: {
-        setCBEName(state, value) {
-            state.cbeName  = value
-          },
         setCurrentCbeId(state, value) {
             state.currentCbeId  = value
         },

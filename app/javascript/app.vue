@@ -35,7 +35,7 @@
                         <CBESection> </CBESection>
                       </div>
                      <div v-if="selectedSubjectId !== null">          
-                      <button v-on:click="createNewCBE">Save</button>
+                      <button v-on:click="saveNewCBE">Save</button>
                     </div>
 
                     </template>
@@ -86,6 +86,7 @@
                 message: 'Test',
                 cbeQuestionValid: false,
                 cbeDetails: [],
+                testName: [],
                 options: []
             }
 
@@ -115,20 +116,38 @@
                     })
             },
             createNewCBE: function (page, index) {
-                this.cbeDetails.push({cbe_name: this.$store.state.cbeName})
-                this.cbeDetails.push({cbe_title: this.$store.state.cbeSectionName})
-                this.cbeDetails.push({cbe_Description: this.$store.state.cbeTitle })
-                this.cbeDetails.push({cbe_time: this.$store.state.cbeTimeLimit})
-                this.cbeDetails.push({cbe_time: this.$store.state.cbeNumberOfPauses})
-                this.cbeDetails.push({cbe_time: this.$store.state.cbeLengthOfPauses})
+              
 
+                this.selectedSubjectId = this.$refs.subjects.selectedSubject
+                this.$store.state.currentSubjectId = this.selectedSubjectId
+                
+              
+                axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
+                    .then(response => {
+                        console.log(response.status)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+            },
+
+            saveNewCBE: function (page, index) {
+
+                
+                this.cbeDetails.push({cbe_name: this.$store.state.cbeName})
+                this.cbeDetails.push({cbe_title: this.$store.state.cbeTitle })
+                this.cbeDetails.push({cbe_Description: this.$store.state.cbeDescription })
+                this.cbeDetails.push({cbe_time: this.$store.state.cbeTimeLimit })
+                this.cbeDetails.push({cbe_number_of_pauses: this.$store.state.cbeNumberOfPauses })
+                this.cbeDetails.push({cbe_length_of_pauses: this.$store.state.cbeLengthOfPauses })
+                this.cbeDetails.push({cbe_name_it: this.$store.cbeDescription })
 
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
                 this.$store.state.currentSubjectId = this.selectedSubjectId
                 console.log(JSON.stringify(this.cbeDetails))
-                console.log('cbeName: ' + this.$store.state.cbeName)
-                console.log('TEST VUEX' + this.$store.state.currentSubjectId )
-                axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
+                console.log('cbeName: ' + JSON.stringify(this.testName))
+                
+                axios.post('http://localhost:3000/cbes/1/create_it', {cbeDetails: this.cbeDetails})
                     .then(response => {
                         console.log(response.status)
                     })
