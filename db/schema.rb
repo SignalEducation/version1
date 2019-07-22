@@ -968,6 +968,20 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
   end
 
+  create_table "student_testimonials", force: :cascade do |t|
+    t.integer "home_page_id"
+    t.integer "sorting_order"
+    t.text "text"
+    t.string "signature"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.bigint "image_file_size"
+    t.datetime "image_updated_at"
+    t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
+  end
+
   create_table "subject_course_resources", id: :serial, force: :cascade do |t|
     t.string "name"
     t.integer "subject_course_id"
