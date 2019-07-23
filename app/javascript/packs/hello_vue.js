@@ -30,13 +30,27 @@ export const store = new Vuex.Store({
         cbeNumberOfAllowablePauses: null,
         cbeNumberOfPauses: null,
         cbeLengthOfPauses: null,
+        cbeQuestionTypes: [],
+        cbeQuestionStatuses: [],
+        cbeSectionTypes: [],
+        cbeQuestionTypes: [],
+        cbeQuestionStatuses: []
     },
 
     getters: {
         // ...
         currentCbeId: (state, getters) => {
           return getters.currentCbeId
-        }
+        },
+        questionTypes: (state, getters) => {
+            return getters.questionTypes
+        },
+        questionStatuses: (state, getters) => {
+            return getters.questionStatuses
+        },
+        sectionTypes: (state, getters) => {
+            return getters.sectionTypes
+        },
       },
 
     mutations: {
@@ -66,8 +80,16 @@ export const store = new Vuex.Store({
         },
         setCbeLengthOfPauses(state, value) {
             state.cbeLengthOfPauses  = value
-        },          
-          
+        },
+        setQuestionTypes(state, value) {
+            state.questionTypes  = value
+        },
+        setQuestionStatuses(state, value) {
+            state.questionStatuses  = value
+        },
+        setSectionTypes(state, value) {
+            state.sectionTypes  = value
+        },
     }
 
 })

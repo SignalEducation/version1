@@ -18,6 +18,9 @@
     export default {
         mounted(){
             this.showSubjects()
+            this.fetchQuestionTypes()
+            this.fetchQuestionStatuses()
+            this.fetchSectionTypes()
         },
         data: function () {
             return {
@@ -30,15 +33,62 @@
                 console.log('TEST 1')
                 axios.get('http://localhost:3000/cbes/1/get_subjects/')
                     .then(response => {
-                        console.log('** Subjects loaded')
                         this.options = response.data
-                        console.log(this.subjects)
                     })
                     .catch(e => {
                         console.log('Error')
                     })
 
             },
+            fetchQuestionTypes: function (page, index) {
+                console.log('Question Types >>')
+                axios.get('http://localhost:3000/cbes/1/question_types/')
+                    .then(response => {
+                        console.log("**** Question Types")
+                        console.log(response)
+                        console.log(response.data)
+                        console.log("**** Question Types")
+                        this.$store.questionTypes = response.data
+
+                    })
+                    .catch(e => {
+                        console.log('Error' + e)
+                    })
+
+            },
+            fetchQuestionStatuses: function (page, index) {
+                console.log('Question Types >>')
+                axios.get('http://localhost:3000/cbes/1/question_statuses/')
+                    .then(response => {
+                        console.log("**** Question Statuses")
+                        console.log(response)
+                        console.log(response.data)
+                        console.log("**** Question Statuses")
+                        this.$store.questionTypes = response.data
+
+                    })
+                    .catch(e => {
+                        console.log('Error' + e)
+                    })
+
+            },
+            fetchSectionTypes: function (page, index) {
+                console.log('Question Types >>')
+                axios.get('http://localhost:3000/cbes/1/section_types/')
+                    .then(response => {
+                        console.log("**** Section Types")
+                        console.log(response)
+                        console.log(response.data)
+                        console.log("**** Section Types")
+                        this.$store.SectionTypes = response.data
+
+                    })
+                    .catch(e => {
+                        console.log('Error' + e)
+                    })
+
+            }
+           
         }
     }
 </script>

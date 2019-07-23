@@ -20,19 +20,15 @@ class CbesController < ApplicationController
   end
 
   def show
-    render json: Cbe.last
+   # render json: Cbe.first
   end
 
   def create
   end
 
   def create_section
-    puts "**** IN SECTION CREATE ****"
-    cbe_section = CbeSection.create(section_params)
-    puts cbe_section.errors.messages
-    
+    cbe_section = CbeSection.create(section_params)  
     res = {cbeSectionId: cbe_section.id, cbeSectionName: cbe_section.name}
-    puts "**** RES --- #{res}"
     render json: (res.as_json)
   end
 
@@ -40,6 +36,21 @@ class CbesController < ApplicationController
     cbe = Cbe.create(cbe_params)
     res = {cbeId: cbe.id, cbeName: cbe.name}
     render json: (res.as_json)
+  end
+
+  def question_types
+    res = CbeQuestionType.all.to_json(only: [:id, :name, :order])
+    render json: (res)
+  end
+
+  def question_statuses
+    res = CbeQuestionStatus.all.to_json(only: [:id, :name])
+    render json: (res)
+  end
+
+  def section_types
+    res = CbeSectionType.all.to_json(only: [:id, :name])
+    render json: (res)
   end
 
 
