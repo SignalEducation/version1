@@ -161,7 +161,7 @@ FactoryBot.define do
 
     factory :tutor_user do
       sequence(:email)                  { |n| "tutor.user-#{n}@example.com" }
-      sequence(:name_url)                  { |n| "tutor_#{n}" }
+      sequence(:name_url)               { |n| "tutor_#{n}" }
       active                            { true }
       stripe_customer_id                { nil }
     end
@@ -212,6 +212,7 @@ FactoryBot.define do
       sequence(:email)                  { |n| "admin.user-#{n}@example.com" }
       active                            { true }
       stripe_customer_id                { nil }
+      association :user_group, factory: :admin_user_group
     end
 
     factory :blocked_user do
