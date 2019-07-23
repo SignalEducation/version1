@@ -1,8 +1,8 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-bg
+  .container-bg.home-hero-default-bg{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
-      %article.home-hero.home-hero-alt
+      %article.home-hero.home-hero-default
         .row{class: "#{(@home_page.registration_form || @home_page.login_form) ? 'justify-content-between' : ''}"}
           .col-10.offset-1.col-md-8.offset-md-2.col-lg-6.offset-lg-0.col-xl-4
             %header.home-hero-header
@@ -43,7 +43,7 @@
                     No credit card required. Set-up takes one minute.
 
           -if (@home_page.registration_form || @home_page.login_form) && !current_user
-            .col-xl-6.mt-6
+            .col-xl-6
               =render partial: 'registration_login_form'
           -elsif @home_page.pricing_section && @home_page.preferred_payment_frequency && @preferred_plan
             .col-lg-5.offset-lg-1.offset-xl-3.col-xl-4
@@ -169,7 +169,7 @@
           %h2 Testimonial
         .row.row-lg
           .col-lg-5
-            =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+            =image_tag('testimonial-img.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
           .col-lg-7
             .d-flex.h-100.align-items-center
               %blockquote.mb-0.ml-lg-6.mr-lg-6
