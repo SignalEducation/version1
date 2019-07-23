@@ -651,6 +651,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "alert_level"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "rechecked_on"
   end
 
   create_table "mock_exams", id: :serial, force: :cascade do |t|

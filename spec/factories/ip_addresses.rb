@@ -2,14 +2,15 @@
 #
 # Table name: ip_addresses
 #
-#  id          :integer          not null, primary key
-#  ip_address  :string
-#  latitude    :float
-#  longitude   :float
-#  country_id  :integer
-#  alert_level :integer
-#  created_at  :datetime
-#  updated_at  :datetime
+#  id           :integer          not null, primary key
+#  ip_address   :string
+#  latitude     :float
+#  longitude    :float
+#  country_id   :integer
+#  alert_level  :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#  rechecked_on :datetime
 #
 
 FactoryBot.define do
