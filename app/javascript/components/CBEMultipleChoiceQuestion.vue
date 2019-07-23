@@ -1,11 +1,34 @@
 <template>
     <div>
         <div class="form-group row">
-            <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Section Title</label>
+
+        <div class="col-md-10">
+            <select  v-model="selectedSelectQuestion" class="form-control form-control-sm">         
+                <option class="col-md-8" v-for="option in this.$store.questionTypes" v-bind:value="option.name">
+                    {{option.name}}
+                </option>   
+            </select>
+        </div>
+
+            <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Multiple Choice Question</label>
             <div class="col-md-10">
                 <input class="col-md-12" v-model="questionName" placeholder="Question Name">
                 <input class="col-md-12" v-model="questionDescription" placeholder="Question Description">
                 <input class="col-md-12" v-model="correctAnswer" placeholder="Correct Answer">
+            
+            
+            <button @click="showChoices = true">Edit Multiple Question Choices</button>
+            
+            <div v-if="selectedSelectQuestion === 'Multiple Choice'">
+                {{selectedSelectQuestion}}
+                <input class="col-md-12" v-model="choiceOne" placeholder="Choice 1">
+                <input class="col-md-12" v-model="choice2" placeholder="Choice 2">
+                <input class="col-md-12" v-model="choice3" placeholder="Choice 3">
+                <input class="col-md-12" v-model="choice4" placeholder="Choice 4">
+            </div>
+
+
+
                 <button v-on:click="addSection">Save Question</button>
             </div>
         </div>
@@ -20,6 +43,9 @@ export default {
             questionName: null,
             questionDescription: null,
             correctAnswer: null,
+            selectedSelectQuestion: null,
+            showChoices: false,
+
         }},
         methods: {
             addSection: function (page, index) {

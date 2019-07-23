@@ -33,6 +33,7 @@
 
                       <div v-if="selectedSubjectId !== null">
                         <CBESection> </CBESection>
+                        <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
                       </div>
                      <div v-if="selectedSubjectId !== null">          
                       <button v-on:click="saveNewCBE">Save</button>
@@ -68,6 +69,7 @@
     import CBESettings from './components/CBESettings'
     import CBEDetails from './components/CBEDetails'
     import CBESection from './components/CBESection'
+    import CBEMultipleChoiceQuestion from './components/CBEMultipleChoiceQuestion'
     import splitPane from 'vue-splitpane'
 
 
@@ -79,6 +81,7 @@
            CBESection,
            Exam,
            Subjects,
+           CBEMultipleChoiceQuestion,
         },
 
         data: function () {

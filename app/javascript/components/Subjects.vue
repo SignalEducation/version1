@@ -64,7 +64,7 @@
                         console.log(response)
                         console.log(response.data)
                         console.log("**** Question Statuses")
-                        this.$store.questionTypes = response.data
+                        this.$store.questionStatuses = response.data
 
                     })
                     .catch(e => {
