@@ -39,7 +39,7 @@ class CbesController < ApplicationController
   end
 
   def question_types
-    res = CbeQuestionType.all.to_json(only: [:id, :name, :order])
+    res = CbeQuestionType.all.to_json(only: [:id, :name])
     render json: (res)
   end
 
