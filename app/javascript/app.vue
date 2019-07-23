@@ -103,7 +103,7 @@
             storeCBEName: function (page, index) {
                 console.log('cbeName: ' + this.cbeName + 'selectedSubjectId -- ' + this.selectedSubjectId)
 
-                axios.post('http://localhost:3000/cbes/1/create_it', {
+                axios.post('http://localhost:3000/api/cbes', {
                     cbe_name: this.cbeName,
                     selected_subject: this.selectedSubjectId,
                 })
@@ -124,7 +124,7 @@
                 this.$store.state.currentSubjectId = this.selectedSubjectId
                 
               
-                axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
+                axios.post('http://localhost:3000/api/cbes', {cbe_id: this.createdCBE.cbeId})
                     .then(response => {
                         console.log(response.status)
                     })
@@ -154,7 +154,7 @@
                 console.log('cbeName: ' + JSON.stringify(this.testName))
                 console.log({cbe: this.cbeDetails})
                 
-                axios.post('http://localhost:3000/cbes/1/create_it', {cbe: this.cbeDetails})
+                axios.post('http://localhost:3000/api/cbes', {cbe: this.cbeDetails})
                     .then(response => {
                         console.log(response.status)
                         this.createdCBE = response.data

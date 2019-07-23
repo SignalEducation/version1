@@ -34,7 +34,7 @@ export default {
                 this.sectionDetails['cbe_id'] = this.$store.state.currentCbeId
                 console.log("fadfasdfdas")
                 console.log(JSON.stringify(this.sectionDetails))
-                axios.post('http://localhost:3000/cbes/1/create_section', {cbe_section: this.sectionDetails})
+                axios.post('http://localhost:3000/api/cbes/1/sections', {cbe_section: this.sectionDetails})
                     .then(response => {
                         console.log(response.status)
                        

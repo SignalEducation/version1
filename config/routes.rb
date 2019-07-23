@@ -11,23 +11,28 @@ Rails.application.routes.draw do
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
 
-  namespace :api do
-    post 'stripe_v01',      to: 'stripe_v01#create'
-    post 'stripe_v02',      to: 'stripe_v02#create'
+  namespace :api, :defaults => { :format => :json } do
+    post 'stripe_v01', to: 'stripe_v01#create'
+    post 'stripe_v02', to: 'stripe_v02#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
+
+    scope module: :v1, constraints: ApiConstraint.new(version: 1) do
+
+      resources :cbes, only: :create do
+        resources :sections, only: :create
+        # post 'create_it', to: 'cbes#create_it'
+        # post 'create_section', to: 'cbes#create_section'
+        # get 'new', to: 'cbes#new', as: :new_cbe
+        # get 'show', to: 'cbes#show', as: :show_cbe
+      end
+      resources :subjects, only: :index
+    end
   end
 
   namespace :admin do
     resources :exercises, only: [:index, :show, :edit, :update]
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
-  end
-
-  resources :cbes do
-    post 'create_it', to: 'cbes#create_it'
-    post 'create_section', to: 'cbes#create_section'
-    get 'new', to: 'cbes#new', as: :new_cbe
-    get 'show', to: 'cbes#show', as: :show_cbe
-    get 'get_subjects', to: 'cbes:get_subjects', as: :get_subjects
+    resources :cbes, only: :new
   end
 
   # all standard, user-facing "resources" go inside this scope

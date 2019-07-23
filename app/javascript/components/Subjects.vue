@@ -28,7 +28,7 @@
         methods: {
             showSubjects: function (page, index) {
                 console.log('TEST 1')
-                axios.get('http://localhost:3000/cbes/1/get_subjects/')
+                axios.get('http://localhost:3000/api/subjects')
                     .then(response => {
                         console.log('** Subjects loaded')
                         this.options = response.data
