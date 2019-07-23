@@ -910,6 +910,7 @@ en:
         public_url_placeholder: Public URL Placeholder
         custom_file_name: View File Name
         custom_file_name_placeholder: Custom View File Name - optional - ask Dev Team
+        background_image: Custom Background Image
         blog_posts: Blog Posts
         mailchimp_list_guid: MailChimp List ID
         mailchimp_list_guid_placeholder: MailChimp List ID

@@ -1,6 +1,6 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-5
+  .container-bg.home-hero-alt-5{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
       %article.home-hero.home-hero-basic-login
         .row.justify-content-between
@@ -29,9 +29,33 @@
                   No credit card required.
 
 
-          -if @home_page.registration_form || @home_page.login_form
-            .col-xl-6
-              =render partial: 'registration_login_form'
+          .col-xl-6.my-5
+            =form_for(@user_session) do |f|
+
+              .bg-white.p-3.px-sm-5.pt-sm-4
+                .py-3
+                  %p
+                    -if @home_page
+                      -if @home_page&.login_form_heading.present?
+                        =@home_page.login_form_heading
+
+                  =render partial: '/layouts/error_messages', locals: {thing: @user_session, message: t('views.user_sessions.form.error_message')}
+
+                  %fieldset.py-2
+                    %legend.sr-only
+                      Log in Details
+                    .row
+                      .col-sm-12
+                        .form-group
+                          =f.label :email, t('views.user_sessions.form.email')
+                          =f.email_field :email, placeholder: 'Enter your email', class: 'form-control'
+                      .col-sm-12
+                        .form-group
+                          =f.label :password, t('views.user_sessions.form.password')
+                          =f.password_field :password, placeholder: 'Enter your password', class: 'form-control'
+                  .d-flex.justify-content-between.align-items-center.pt-3
+                    =f.submit t('views.general.sign_in'), class: 'btn btn-primary btn-sm mb-4'
+                    =link_to t('views.user_sessions.form.forgot_password'), forgot_password_url, id: '#forgot-password', class: ''
 
 
   =render partial: 'usage_numbers_section'
@@ -53,7 +77,7 @@
               .video-iframe-wrap
                 %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
             -else
-              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+              =image_tag('testimonial-img-3.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
 
 
 
