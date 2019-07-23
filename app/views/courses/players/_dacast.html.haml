@@ -1,13 +1,13 @@
 =javascript_include_tag 'video_players/dacast'
 
 :javascript
-  var log_id         = ''
-  var video_cme_id   = "#{cme.id}"
-  var course_log_id  = "#{@subject_course_user_log.try(:id) || ''}";
-  var section_log_id = "#{@course_section_user_log.try(:id) || ''}";
-  var exam_track_id  = "#{@student_exam_track.try(:id) || ''}";
-  var video_id       = "#{cme.course_module_element_video.dacast_id}"
-  var myPlayer       = dacast(video_id, 'video-player-window');
+  let log_id         = ''
+  let video_cme_id   = "#{cme.id}"
+  let course_log_id  = "#{@subject_course_user_log.try(:id) || ''}";
+  let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
+  let exam_track_id  = "#{@student_exam_track.try(:id) || ''}";
+  let video_id       = "#{cme.course_module_element_video.dacast_id}"
+  let myPlayer       = dacast(video_id, 'video-player-window');
 
   // Create a log when video start
   myPlayer.onPlay(function(){
