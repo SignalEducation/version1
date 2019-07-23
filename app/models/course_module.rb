@@ -26,6 +26,7 @@
 #  revision                   :boolean          default(FALSE)
 #  course_section_id          :integer
 #  constructed_response_count :integer          default(0)
+#  temporary_label            :string
 #
 
 class CourseModule < ApplicationRecord
