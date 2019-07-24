@@ -153,7 +153,9 @@
                         console.log(response.status)
                         this.createdCBE = response.data
                         console.log("******** " + JSON.stringify(response.data.cbeId))
-                        this.$store.commit('setCurrentCbe', this.createdCBE)
+                        console.log("******** CBE --- " + JSON.stringify(this.createdCBE))
+                        console.log("******** ID --- " + this.createdCBE.cbeId)
+                        this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
                         if(this.createdCBE.cbeId > 0){
                           console.log("Show Section")
                           this.cbeSectionButton = true
