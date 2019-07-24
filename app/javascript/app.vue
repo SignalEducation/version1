@@ -13,8 +13,6 @@
                      <div v-if="showSubjects = true">
                         <Subjects ref="subjects"></Subjects> 
                       </div>
-
-
                    
                     <div class="form-group row">
                         <div class="col-md-10">
@@ -22,18 +20,18 @@
                         </div>
                     </div>
 
-                    <div v-if="showCBESection == true">
+                    <div v-if="showCBESection === true">
                       <button v-on:click="addSection">Add Section</button>
                     </div>
 
                     </template>
                     <template slot="paneR">
-                      <div v-if="selectedSubjectId !== null || showCBEDetails == true">
+                      <div v-show="showCBEDetails">
                         <CBEDetails> </CBEDetails>
                         <button v-on:click="saveNewCBE">Save</button>
                       </div>
 
-                        <div v-if="showCBESection == true">
+                        <div v-show="showCBESection">
                         <CBESection> </CBESection>
                       </div>
                         <div v-if="selectedSubjectId !== null">
@@ -118,7 +116,7 @@
             createNewCBE: function (page, index) {
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
                 this.$store.state.currentSubjectId = this.selectedSubjectId
-                showCBEDetails = true
+                this.showCBEDetails = true
             },
 
             saveNewCBE: function (page, index) {
@@ -149,8 +147,10 @@
                         this.createdCBE = response.data
                         console.log("******** " + JSON.stringify(response.data.cbeId))
                         this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
-                        if(this.setCurrentCbeId > 0){
+                        if(this.createdCBE.cbeId > 0){
+                          console.log("Show Section")
                           this.showCBESection = true
+                          this.showCBEDetails = false
                         }
 
                       
