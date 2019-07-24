@@ -176,29 +176,5 @@ describe PaypalService, type: :service do
         )
     end
   end
-
-  describe '#learnsignal_host' do
-    describe 'development env' do
-      before { allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development')) }
-
-      it 'returns the correct host' do
-        expect(subject.send(:learnsignal_host)).to eq 'http://localhost:3000'
-      end
-    end
-    describe 'staging env' do
-      before { allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('staging')) }
-
-      it 'returns the correct host' do
-        expect(subject.send(:learnsignal_host)).to eq 'https://staging.learnsignal.com'
-      end
-    end
-
-    describe 'production ENV' do
-      before { allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production')) }
-
-      it 'returns the correct host' do
-        expect(subject.send(:learnsignal_host)).to eq 'https://learnsignal.com'
-      end
-    end
-  end
 end
+
