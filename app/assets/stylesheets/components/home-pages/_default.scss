@@ -1,0 +1,30 @@
+.home-hero-default-bg {
+  margin-bottom: 0;
+  -webkit-background-size: cover;
+  background-size: cover;
+  background-image: asset-url('hero-bg.jpg');
+  background-position: 30% 50%;
+}
+@media (min-width:992px) {
+  .home-hero-default-bg {
+    background-position: 40% 10%;
+  }
+}
+
+
+.home-hero.home-hero-default {
+  padding-top: 4rem;
+  padding-bottom: 1rem;
+}
+.home-hero.home-hero-default .home-hero-header {
+  padding-top: 0
+}
+@media (min-width:576px) {
+  .home-hero.home-hero-default .home-hero-header {
+    padding-top: 0;
+    padding-bottom: 1rem
+  }
+}
+
+
+

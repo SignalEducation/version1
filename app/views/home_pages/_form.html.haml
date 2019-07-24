@@ -67,7 +67,11 @@
               .form-group
                 =f.label :custom_file_name, t('views.home_pages.form.custom_file_name')
                 .input-group.input-group-lg
-                  =f.text_field :custom_file_name, placeholder: t('views.home_pages.form.custom_file_name_placeholder'), class: 'form-control'
+                  =f.select :custom_file_name, HomePage::TEMPLATES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
+              .form-group
+                =f.label :background_image, t('views.home_pages.form.background_image')
+                .input-group.input-group-lg
+                  =f.select :background_image, HomePage::BG_IMAGES, {include_blank: t('views.general.select')}, {class: 'form-control custom-select'}
 
             .form-group
               =f.label :group_id, t('views.home_pages.form.group_id')
