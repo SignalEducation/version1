@@ -10,40 +10,32 @@
                   <split-pane  :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
 
-                    
-                     <div>
-            
-                      
-                      <Subjects ref="subjects"></Subjects>
-                      
-                      <span>{{ errors.first('email') }}</span>
-
-                     </div>
+                     <div v-if="showSubjects = true">
+                        <Subjects ref="subjects"></Subjects> 
+                      </div>
 
 
-
+                   
                     <div class="form-group row">
-                      
-                      <div class="col-md-10">
-                        <p>{{currentCBEId}}</p>
-                        <button v-on:click="createNewCBE">Create a new CBE</button>  
-                      </div>
-                     </div>
-                     
+                        <div class="col-md-10">
+                          <button v-on:click="createNewCBE">Create a new CBE</button>  
+                        </div>
+                    </div>
 
-                      <div v-if="selectedSubjectId !== null">
-                        <CBESection> </CBESection>
-                        <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
-                      </div>
-                     <div v-if="selectedSubjectId !== null">          
-                      <button v-on:click="saveNewCBE">Save</button>
+                    <div v-if="showCBESection == true">
+                      <button v-on:click="addSection">Add Section</button>
                     </div>
 
                     </template>
                     <template slot="paneR">
-                        <div v-if="selectedSubjectId !== null">
-                          <CBEDetails> </CBEDetails>
-                        </div>
+                      <div v-if="selectedSubjectId !== null || showCBEDetails == true">
+                        <CBEDetails> </CBEDetails>
+                        <button v-on:click="saveNewCBE">Save</button>
+                      </div>
+
+                        <div v-if="showCBESection == true">
+                        <CBESection> </CBESection>
+                      </div>
                         <div v-if="selectedSubjectId !== null">
                           <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeId}}</span>
                           <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
@@ -92,7 +84,10 @@
                 cbeQuestionValid: false,
                 cbeDetails: [],
                 testName: [],
-                options: []
+                options: [],
+                showCBESection: false,
+                showCBEDetails: false,
+                showSubjects: true
             }
 
 
@@ -121,19 +116,9 @@
                     })
             },
             createNewCBE: function (page, index) {
-              
-
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
                 this.$store.state.currentSubjectId = this.selectedSubjectId
-                
-              
-                axios.post('http://localhost:3000/cbes/1/create_it', {cbe_id: this.createdCBE.cbeId})
-                    .then(response => {
-                        console.log(response.status)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+                showCBEDetails = true
             },
 
             saveNewCBE: function (page, index) {
@@ -156,6 +141,7 @@
                 console.log(JSON.stringify(this.cbeDetails))
                 console.log('cbeName: ' + JSON.stringify(this.testName))
                 console.log({cbe: this.cbeDetails})
+                this.showSubjects = false
                 
                 axios.post('http://localhost:3000/cbes/1/create_it', {cbe: this.cbeDetails})
                     .then(response => {
@@ -163,6 +149,11 @@
                         this.createdCBE = response.data
                         console.log("******** " + JSON.stringify(response.data.cbeId))
                         this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
+                        if(this.setCurrentCbeId > 0){
+                          this.showCBESection = true
+                        }
+
+                      
                         console.log(" From store ******** " + this.createdCBE.cbeId )
  
                     })
