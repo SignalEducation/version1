@@ -15,7 +15,10 @@
   };
 
   let player = new Vimeo.Player('video-player-window', options);
-  player.ready().catch($('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}'))
+
+  player.ready().catch(function(error) {
+    $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}')
+  });
 
   let timeUpdate = function(data) {
     if (data.percent >= 0.90) {
