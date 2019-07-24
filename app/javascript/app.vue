@@ -9,7 +9,7 @@
                 <div class="panel-body no-top-padding">
                   <split-pane  :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
-
+                    
                       
                      <div v-if="showSubjects = true">
                         <Subjects ref="subjects"></Subjects> 
@@ -28,10 +28,10 @@
 
 
                       <div v-show="this.$store.state.showQuestions">
-                        <button v-on:click="saveNewCBE">Add Question</button>
+                        <button v-on:click="makeQuestionDetailsVisible">Add Question</button>
                       </div>
 
-                        <div v-show="this.$store.state.showQuestions">
+                        <div v-show="showQuestionDetails">
 
                           <QuestionsList> </QuestionsList>
                     
@@ -49,14 +49,11 @@
                         <button v-on:click="saveSection">Save</button>
                       </div>
 
-                      <div v-show="this.$store.state.showQuestions">
-                        <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
-                        <button>Save Question</button>
-                      </div>
+                    <div v-show="showQuestionDetails">
 
-                      
-
-
+                          <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
+                    
+                    </div>
 
                         <div v-if="selectedSubjectId !== null">
                           <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeId}}</span>
@@ -117,7 +114,8 @@
                 sectionName: null,
                 sectionLabel: null,
                 sectionDescription: null,
-                createdSection: null
+                createdSection: null,
+                showQuestionDetails: false
             }
 
 
@@ -150,6 +148,9 @@
               this.$store.state.showSections = true
               this.showCBEDetails = false
 
+            },
+            makeQuestionDetailsVisible: function(page, index) {
+              this.showQuestionDetails = true
             },
             createNewCBE: function (page, index) {
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject

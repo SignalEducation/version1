@@ -45,10 +45,13 @@
                 axios.get('http://localhost:3000/cbes/1/question_types/')
                     .then(response => {
                         console.log("**** Question Types")
-                        console.log(response)
+                        console.log(response.status)
                         console.log(response.data)
                         console.log("**** Question Types")
                         this.$store.questionTypes = response.data
+                        console.log("**** Store")
+                        console.log(this.$store.questionTypes)
+                        return response.data
 
                     })
                     .catch(e => {
