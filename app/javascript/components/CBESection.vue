@@ -12,6 +12,9 @@
             <div>
                 <div>
                     <button v-on:click="saveSection">Save</button>
+                      <div v-show="this.$emit.showQuestions">
+                          <span class="badge badge-pill badge-primary">Section ID {{this.$store.state.currentSectionId}}</span>
+                       </div>
                 </div>       
             </div>
         </div>
@@ -31,6 +34,7 @@ export default {
             sectionDescription: null,
             createdSection: null
         }},
+        props: ['showQuestions', 'showCBESection'],
         methods: {
             saveSection: function (page, index) {
                 console.log("&1")
@@ -47,10 +51,17 @@ export default {
                         this.createdSection = response.data
                         console.log("******** ")
                         console.log(JSON.stringify(response.data))
-                        console.log("******** " + JSON.stringify(this.createdSection))
-                        /* his.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
-                        console.log(" From store ******** " + this.createdCBE.cbeId )
-                        */
+                        console.log("******** SEction ID " + JSON.stringify(this.createdSection.cbeSectionId))
+
+       
+                        this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
+                        if (this.$store.state.currentSectionId > 0 ) {
+                            this.$emit.showQuestions = true
+                            this.$emit.showCBESection = false
+                        }
+                        
+                        console.log("******** SEction ID " + this.$store.state.currentSectionId)
+                        console.log("******** SEction ID " + this.$emit.showQuestions)
                        
                     })
                     .catch(error => {

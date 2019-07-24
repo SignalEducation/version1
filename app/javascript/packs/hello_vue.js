@@ -51,6 +51,9 @@ export const store = new Vuex.Store({
         sectionTypes: (state, getters) => {
             return getters.sectionTypes
         },
+        currentSectionId: (state, getters) => {
+            return getters.currentSectionId
+        },
       },
 
     mutations: {

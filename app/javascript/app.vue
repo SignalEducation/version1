@@ -24,6 +24,11 @@
                       <button v-on:click="makeCBESectionVisible">Add Section</button>
                     </div>
 
+
+                      <div v-show="showQuestions">
+                        <button v-on:click="saveNewCBE">Add Question</button>
+                      </div>
+
                     </template>
                     <template slot="paneR">
                       <div v-show="showCBEDetails">
@@ -34,6 +39,9 @@
                         <div v-show="showCBESection">
                         <CBESection> </CBESection>
                       </div>
+
+
+
                         <div v-if="selectedSubjectId !== null">
                           <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeId}}</span>
                           <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
@@ -86,7 +94,8 @@
                 showCBESection: false,
                 showCBEDetails: false,
                 showSubjects: true,
-                cbeSectionButton: false
+                cbeSectionButton: false,
+                showQuestions: false
             }
 
 
