@@ -10,7 +10,7 @@ class OrdersController < ApplicationController
   before_action :set_order, only: %i[show execute]
 
   def index
-    @orders = Order.paginate(per_page: 50, page: params[:page]).all_in_order
+    @orders = Order.includes(:user, :product).paginate(per_page: 50, page: params[:page]).all_in_order
     @layout = 'management'
 
     seo_title_maker('Orders', '', true)
