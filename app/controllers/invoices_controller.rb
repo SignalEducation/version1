@@ -6,6 +6,10 @@ class InvoicesController < ApplicationController
   before_action -> { ensure_user_has_access_rights(%w[student_user user_management_access]) }, only: :pdf
   before_action :set_invoice, only: %i[show pdf]
 
+  def index
+    @invoices = current_user.invoices.order(created_at: :desc)
+  end
+
   def show
     @user   = @invoice.user
     @layout = 'management'
