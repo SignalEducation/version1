@@ -19,7 +19,7 @@ Vue.use(VeeValidate);
 
 export const store = new Vuex.Store({
     state: {
-        currentCbeId: null,
+        currentCbe: {},
         currentSectionId: null,
         currentSubjectId: null,
         cbeName: null,
@@ -54,7 +54,7 @@ export const store = new Vuex.Store({
       },
 
     mutations: {
-        setCurrentCbeId(state, value) {
+        setCurrentCbe(state, value) {
             state.currentCbeId  = value
         },
         setCurrentSectionId(state, value) {

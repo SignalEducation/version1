@@ -20,8 +20,8 @@
                         </div>
                     </div>
 
-                    <div v-if="showCBESection === true">
-                      <button v-on:click="addSection">Add Section</button>
+                    <div v-if="cbeSectionButton === true">
+                      <button v-on:click="makeCBESectionVisible">Add Section</button>
                     </div>
 
                     </template>
@@ -85,7 +85,8 @@
                 options: [],
                 showCBESection: false,
                 showCBEDetails: false,
-                showSubjects: true
+                showSubjects: true,
+                cbeSectionButton: false
             }
 
 
@@ -112,6 +113,12 @@
                     .catch(error => {
                         console.log(error)
                     })
+            },
+            makeCBESectionVisible: function(page, index) {
+              console.log("showCBESection")
+              this.showCBESection = true
+              this.showCBEDetails = false
+
             },
             createNewCBE: function (page, index) {
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
@@ -146,11 +153,11 @@
                         console.log(response.status)
                         this.createdCBE = response.data
                         console.log("******** " + JSON.stringify(response.data.cbeId))
-                        this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
+                        this.$store.commit('setCurrentCbe', this.createdCBE)
                         if(this.createdCBE.cbeId > 0){
                           console.log("Show Section")
-                          this.showCBESection = true
-                          this.showCBEDetails = false
+                          this.cbeSectionButton = true
+                        
                         }
 
                       
