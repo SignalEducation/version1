@@ -2,13 +2,6 @@
     <div>
         <div class="form-group row">
 
-        <div class="col-md-10">
-            <select  v-model="selectedSelectQuestion" class="form-control form-control-sm">         
-                <option class="col-md-8" v-for="option in this.$store.questionTypes" v-bind:value="option.name">
-                    {{option.name}}
-                </option>   
-            </select>
-        </div>
 
             <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Multiple Choice Question</label>
             <div class="col-md-10">
@@ -19,7 +12,7 @@
             
             <button @click="showChoices = true">Edit Multiple Question Choices</button>
             
-            <div v-if="selectedSelectQuestion === 'Multiple Choice'">
+            <div v-if="this.$store.state.selectedSelectQuestion === 'Multiple Choice'">
                 {{selectedSelectQuestion}}
                 <input class="col-md-12" v-model="choiceOne" placeholder="Choice 1">
                 <input class="col-md-12" v-model="choice2" placeholder="Choice 2">
@@ -29,7 +22,7 @@
 
 
 
-                <button v-on:click="addSection">Save Question</button>
+                
             </div>
         </div>
     </div>

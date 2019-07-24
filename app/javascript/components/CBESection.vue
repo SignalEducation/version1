@@ -34,7 +34,7 @@ export default {
             sectionDescription: null,
             createdSection: null
         }},
-        props: ['showQuestions', 'showCBESection'],
+        props: ['showQuestions'],
         methods: {
             saveSection: function (page, index) {
                 console.log("&1")
@@ -56,12 +56,12 @@ export default {
        
                         this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
                         if (this.$store.state.currentSectionId > 0 ) {
-                            this.$emit.showQuestions = true
-                            this.$emit.showCBESection = false
+                            this.$store.state.showQuestions = true
+                            this.$store.state.showSections = false
                         }
                         
                         console.log("******** SEction ID " + this.$store.state.currentSectionId)
-                        console.log("******** SEction ID " + this.$emit.showQuestions)
+                        console.log("******** SEction ID " + this.$store.state.showQuestions )
                        
                     })
                     .catch(error => {

@@ -10,6 +10,7 @@
                   <split-pane  :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
 
+                      
                      <div v-if="showSubjects = true">
                         <Subjects ref="subjects"></Subjects> 
                       </div>
@@ -17,6 +18,7 @@
                     <div class="form-group row">
                         <div class="col-md-10">
                           <button v-on:click="createNewCBE">Create a new CBE</button>  
+                           {{this.$store.state.showQuestions}}
                         </div>
                     </div>
 
@@ -25,9 +27,15 @@
                     </div>
 
 
-                      <div v-show="showQuestions">
+                      <div v-show="this.$store.state.showQuestions">
                         <button v-on:click="saveNewCBE">Add Question</button>
                       </div>
+
+                        <div v-show="this.$store.state.showQuestions">
+
+                          <QuestionsList> </QuestionsList>
+                    
+                        </div>
 
                     </template>
                     <template slot="paneR">
@@ -36,9 +44,17 @@
                         <button v-on:click="saveNewCBE">Save</button>
                       </div>
 
-                        <div v-show="showCBESection">
+                        <div v-show="this.$store.state.showSections ">
                         <CBESection> </CBESection>
+                        <button v-on:click="saveSection">Save</button>
                       </div>
+
+                      <div v-show="this.$store.state.showQuestions">
+                        <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
+                        <button>Save Question</button>
+                      </div>
+
+                      
 
 
 
@@ -68,6 +84,7 @@
     import CBEDetails from './components/CBEDetails'
     import CBESection from './components/CBESection'
     import CBEMultipleChoiceQuestion from './components/CBEMultipleChoiceQuestion'
+    import QuestionsList from './components/QuestionsList'
     import splitPane from 'vue-splitpane'
 
 
@@ -80,6 +97,7 @@
            Exam,
            Subjects,
            CBEMultipleChoiceQuestion,
+           QuestionsList,
         },
 
         data: function () {
@@ -95,7 +113,11 @@
                 showCBEDetails: false,
                 showSubjects: true,
                 cbeSectionButton: false,
-                showQuestions: false
+                sectionDetails: {},
+                sectionName: null,
+                sectionLabel: null,
+                sectionDescription: null,
+                createdSection: null
             }
 
 
@@ -125,7 +147,7 @@
             },
             makeCBESectionVisible: function(page, index) {
               console.log("showCBESection")
-              this.showCBESection = true
+              this.$store.state.showSections = true
               this.showCBEDetails = false
 
             },
@@ -178,7 +200,40 @@
                     .catch(error => {
                         console.log(error)
                     })
-            }
+            },
+
+             saveSection: function (page, index) {
+                console.log("&1")
+                this.sectionDetails['sectionName'] = this.sectionName
+                this.sectionDetails['sectionLabel'] = this.sectionLabel
+                this.sectionDetails['sectionDescription'] = this.sectionDescription
+                this.sectionDetails['cbe_id'] = this.$store.state.currentCbeId
+                console.log("Section -- CBE ID -- " +  JSON.stringify(this.$store.state.currentCbeId))
+                console.log(JSON.stringify(this.sectionDetails))
+                axios.post('http://localhost:3000/cbes/1/create_section', {cbe_section: this.sectionDetails})
+                    .then(response => {
+                        console.log(response.status)
+                       
+                        this.createdSection = response.data
+                        console.log("******** ")
+                        console.log(JSON.stringify(response.data))
+                        console.log("******** SEction ID " + JSON.stringify(this.createdSection.cbeSectionId))
+
+       
+                        this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
+                        if (this.$store.state.currentSectionId > 0 ) {
+                            this.showQuestions = true
+                            this.showCBESection = false
+                        }
+                        
+                        console.log("******** SEction ID " + this.$store.state.currentSectionId)
+                        console.log("******** QUESTION " + this.showQuestions)
+                       
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+        },
 
         },
 

@@ -34,7 +34,10 @@ export const store = new Vuex.Store({
         cbeQuestionStatuses: [],
         cbeSectionTypes: [],
         cbeQuestionTypes: [],
-        cbeQuestionStatuses: []
+        cbeQuestionStatuses: [],
+        showQuestions: false,
+        showSections: false,
+        selectedSelectQuestion: null,
     },
 
     getters: {
@@ -53,6 +56,15 @@ export const store = new Vuex.Store({
         },
         currentSectionId: (state, getters) => {
             return getters.currentSectionId
+        },
+        showQuestions: (state, getters) => {
+            return getters.showQuestions
+        },
+        showSections: (state, getters) => {
+            return getters.showSections
+        },
+        selectedSelectQuestion: (state, getters) => {
+            return getters.selectedSelectQuestion
         },
       },
 
@@ -92,6 +104,12 @@ export const store = new Vuex.Store({
         },
         setSectionTypes(state, value) {
             state.sectionTypes  = value
+        },
+        setShowQuestions: (state, getters) => {
+            state.showQuestions  = value
+        },
+        setShowSections: (state, getters) => {
+            state.showSections  = value
         },
     }
 
