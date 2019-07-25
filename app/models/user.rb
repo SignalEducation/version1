@@ -699,7 +699,7 @@ class User < ApplicationRecord
   end
 
   def current_subscription?
-    (subscriptions.map(&:state) & %w[active past_due pending_cancelation]).present?
+    (subscriptions.map(&:state) & %w[active past_due pending_cancellation]).present?
   end
 
   private
