@@ -698,6 +698,10 @@ class User < ApplicationRecord
     cmeuls.any?
   end
 
+  def current_subscription?
+    (subscriptions.map(&:state) & %w[active past_due pending_cancelation]).present?
+  end
+
   private
 
   def add_guid
