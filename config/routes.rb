@@ -11,40 +11,24 @@ Rails.application.routes.draw do
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
 
-  namespace :api, :defaults => { :format => :json } do
+  namespace :api, defaults: { format: :json } do
     post 'stripe_v01', to: 'stripe_v01#create'
     post 'stripe_v02', to: 'stripe_v02#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
 
     scope module: :v1, constraints: ApiConstraint.new(version: 1) do
-
       resources :cbes, only: :create do
         resources :sections, only: :create
-        # post 'create_it', to: 'cbes#create_it'
-        # post 'create_section', to: 'cbes#create_section'
-        # get 'new', to: 'cbes#new', as: :new_cbe
-        # get 'show', to: 'cbes#show', as: :show_cbe
       end
+
       resources :subjects, only: :index
     end
   end
 
   namespace :admin do
     resources :exercises, only: [:index, :show, :edit, :update]
-    post 'search_exercises', to: 'exercises#index', as: :search_exercises
     resources :cbes, only: :new
-  end
-
-  resources :cbes do
-    post 'create_it', to: 'cbes#create_it'
-    post 'create_section', to: 'cbes#create_section'
-    post 'create_question', to: 'cbes#create_question'
-    get 'new', to: 'cbes#new', as: :new_cbe
-    #get 'show', to: 'cbes#show', as: :show_cbe
-    get 'question_types', to: 'cbes:question_types', as: :question_types
-    get 'question_statuses', to: 'cbes:question_statuses', as: :question_statuses
-    get 'section_types', to: 'cbes:section_types', as: :section_types
-    get 'get_subjects', to: 'cbes:get_subjects', as: :get_subjects
+    post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -64,6 +48,16 @@ Rails.application.routes.draw do
     namespace :subscriptions do
       resources :cancellations, only: [:new, :create]
       resources :plan_changes, only: [:show, :new, :create]
+    end
+
+    resources :subscription_management do
+      get '/invoice/:invoice_id',            action: :invoice,                 as: :invoice
+      get '/pdf_invoice/:invoice_id',        action: :pdf_invoice,             as: :pdf_invoice
+      get '/invoice/:invoice_id/charge/:id', action: :charge,                  as: :invoice_charge
+      put '/cancel',                         action: :cancel,                  as: :cancel
+      put '/un_cancel',                      action: :un_cancel_subscription,  as: :un_cancel_subscription
+      put '/immediate_cancel',               action: :immediate_cancel,        as: :immediate_cancel
+      put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
     end
 
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
@@ -124,18 +118,6 @@ Rails.application.routes.draw do
     resources :content_pages, except: [:show]
     resources :content_activations, only: [:new, :create]
     resource :preferred_exam_body, only: [:edit, :update]
-
-    resources :user_groups
-    resources :subscription_management do
-      get '/invoice/:invoice_id', action: :invoice, as: :invoice
-      get '/pdf_invoice/:invoice_id', action: :pdf_invoice, as: :pdf_invoice
-      get '/invoice/:invoice_id/charge/:id', action: :charge, as: :invoice_charge
-      put '/cancel', action: :cancel, as: :cancel
-      put '/un_cancel', action: :un_cancel_subscription, as: :un_cancel_subscription
-      put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
-      put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
-    end
-
     resources :invoices, only: :show do
       get 'pdf', action: :pdf, on: :member
     end
@@ -276,18 +258,9 @@ Rails.application.routes.draw do
     get '/:public_url', to: 'student_sign_ups#landing', as: :footer_landing_page
     get 'content/:content_public_url', to: 'content_pages#show', as: :footer_content_page
 
-
     get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
-
-
   end
-
 
   # Catch-all
   get '(:first_element(/:second_element))', to: 'footer_pages#missing_page'
-
-
-# CBE Routes
-
-
 end
