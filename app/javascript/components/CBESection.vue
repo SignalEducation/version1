@@ -41,8 +41,9 @@ export default {
                 this.sectionDetails['scenario_label'] = this.sectionLabel
                 this.sectionDetails['scenario_description'] = this.sectionDescription
                 this.sectionDetails['cbe_id'] = this.$store.state.currentCbeId
-                axios.post('http://localhost:3000/cbes/' + this.$store.state.currentCbeId + '/create_section', {cbe_section: this.sectionDetails})
+                axios.post('http://localhost:3000/api/cbes/' + this.$store.state.currentCbeId + '/cbe_sections', {cbe_section: this.sectionDetails})
                     .then(response => {
+                    console.log(response.data )
                      this.createdSection = response.data       
                         this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
                         if (this.$store.state.currentSectionId > 0 ) {

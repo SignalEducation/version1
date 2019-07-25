@@ -155,6 +155,8 @@
                 this.$store.state.currentSubjectId = this.selectedSubjectId
                 this.showSubjects = false
                 
+
+               
                 axios.post('http://localhost:3000/api/cbes/', {cbe: this.cbeDetails})
                     .then(response => {
                         console.log(response.status)

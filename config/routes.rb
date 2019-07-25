@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
     scope module: :v1, constraints: ApiConstraint.new(version: 1) do
       resources :cbes, only: :create do
-        resources :sections, only: :create
+        resources :cbe_sections, only: :create
       end
 
       resources :subjects, only: :index
@@ -34,11 +34,7 @@ Rails.application.routes.draw do
   end
 
   resources :cbes do
-    post 'create_it', to: 'cbes#create_it'
-    post 'create_section', to: 'cbes#create_section'
-    post 'create_question', to: 'cbes#create_question'
     get 'new', to: 'cbes#new', as: :new_cbe
-    post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
   # all standard, user-facing "resources" go inside this scope
