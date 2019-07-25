@@ -130,9 +130,9 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "cbe_question_statuses", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index ["name"], name: "index_cbe_question_statuses_on_name", unique: true
   end
 
@@ -155,9 +155,9 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "cbe_section_types", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index ["name"], name: "index_cbe_section_types_on_name", unique: true
   end
 
@@ -848,6 +848,13 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.index ["subject_course_id"], name: "index_products_on_subject_course_id"
   end
 
+  create_table "question_types", force: :cascade do |t|
+    t.string "name"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
     t.integer "quiz_question_id"
     t.boolean "correct", default: false, null: false
@@ -1051,20 +1058,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "count_of_constructed_responses_taken"
     t.integer "course_section_id"
     t.integer "course_section_user_log_id"
-  end
-
-  create_table "student_testimonials", force: :cascade do |t|
-    t.integer "home_page_id"
-    t.integer "sorting_order"
-    t.text "text"
-    t.string "signature"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
-    t.datetime "image_updated_at"
-    t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
   end
 
   create_table "student_testimonials", force: :cascade do |t|

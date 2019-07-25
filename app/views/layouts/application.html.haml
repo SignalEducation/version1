@@ -91,48 +91,47 @@
     =render partial: 'layouts/misc_javascript'
     -unless controller_name == 'courses' || controller_name == 'student_sign_ups'
       =render partial: 'layouts/intercom'
+    -else
+      =render partial: 'layouts/navbar'
+      -if @top_margin
+        .margin-top
+      -if flash[:success] || flash[:error] || flash[:warning]
+        =render partial: 'layouts/flash_messages'
+      =yield
+      =render partial: 'layouts/footer'
 
-      -else
-        =render partial: 'layouts/navbar'
-        -if @top_margin
-          .margin-top
-        -if flash[:success] || flash[:error] || flash[:warning]
-          =render partial: 'layouts/flash_messages'
-        =yield
-        =render partial: 'layouts/footer'
 
+      -#General partials
+    =render partial: 'layouts/misc_javascript'
+    -unless controller_name == 'courses'
+      =render partial: 'layouts/intercom'
 
-        -#General partials
-      =render partial: 'layouts/misc_javascript'
-      -unless controller_name == 'courses'
-        =render partial: 'layouts/intercom'
+    -if current_user
+      :javascript
+          dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
 
-      -if current_user
+      -if flash[:datalayer_verify]
         :javascript
-            dataLayer.push({'user_id':"#{current_user.id}", 'user_plan':"#{current_user.analytics_exam_body_plan_data[0]}", 'plan_type':"#{current_user.analytics_exam_body_plan_data[1]}", 'plan_status':"#{current_user.analytics_exam_body_plan_data[2]}"});
-
-        -if flash[:datalayer_verify]
-          :javascript
-              dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
+            dataLayer.push({'event':'registrationEmailConfirmed', 'user_id':"#{current_user.id}", 'user_plan':"#{current_user.subscriptions.all_valid.any? ? 'Subscription Plan' : 'Basic Plan'}", 'plan_type':"#{current_user.try(:preferred_exam_body).try(:name)}"});
 
 
-      %noscript
-        %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
+    %noscript
+      %iframe{src: '//www.googletagmanager.com/ns.html?id=GTM-5SC76S', height: 0, width: 0, style: 'display:none;visibility:hidden'}
 
-      -unless Rails.env.development?
-        =render partial: 'layouts/google_tag_manager'
+    -unless Rails.env.development?
+      =render partial: 'layouts/google_tag_manager'
 
-      <!-- Mathjax -->
+    <!-- Mathjax -->
 
-      -if @mathjax_required && !controller_name == 'home_pages'
-        %script{type: 'text/x-mathjax-config'}
-          MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
-        -if Rails.env.production? || Rails.env.staging?
-          %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
-        -else
-          %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+    -if @mathjax_required && !controller_name == 'home_pages'
+      %script{type: 'text/x-mathjax-config'}
+        MathJax.Hub.Config({"HTML-CSS": { linebreaks: { automatic: true } }, tex2jax: {inlineMath: [["(math)","(/math)"]]}});
+      -if Rails.env.production? || Rails.env.staging?
+        %script{type: 'text/javascript', src: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
+      -else
+        %script{type: 'text/javascript', src: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'}
 
-      -unless controller_name == 'home_pages'
-        %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
+    -unless controller_name == 'home_pages'
+      %script{type: 'text/javascript'} try{Typekit.load();}catch(e){}
       
 

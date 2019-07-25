@@ -60,6 +60,8 @@
                         cbeLengthOfPauses: null,
                     }
                 },
+                props: ['showCBEDetails', 'selectedSubject'],
+
                 watch: {
                     cbeName: function (val) {
                         this.$store.commit('setCbeName', this.cbeName)

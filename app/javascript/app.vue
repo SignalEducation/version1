@@ -9,40 +9,52 @@
                 <div class="panel-body no-top-padding">
                   <split-pane  :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
-
                     
-                     <div>
-            
                       
-                      <Subjects ref="subjects"></Subjects>
-                      
-                      <span>{{ errors.first('email') }}</span>
-
-                     </div>
-
-
-
+                     <div v-if="showSubjects = true">
+                        <Subjects ref="subjects"></Subjects> 
+                      </div>
+                   
                     <div class="form-group row">
-                      
-                      <div class="col-md-10">
-                        <p>{{currentCBEId}}</p>
-                        <button v-on:click="createNewCBE">Create a new CBE</button>  
-                      </div>
-                     </div>
-                     
-
-                      <div v-if="selectedSubjectId !== null">
-                        <CBESection> </CBESection>
-                      </div>
-                     <div v-if="selectedSubjectId !== null">          
-                      <button v-on:click="saveNewCBE">Save</button>
+                        <div class="col-md-10">
+                          <button v-on:click="createNewCBE">Create a new CBE</button>  
+                           {{this.$store.state.showQuestions}}
+                        </div>
                     </div>
+
+                    <div v-if="cbeSectionButton === true">
+                      <button v-on:click="makeCBESectionVisible">Add Section</button>
+                    </div>
+
+
+                      <div v-show="this.$store.state.showQuestions">
+                        <button v-on:click="makeQuestionDetailsVisible">Add Question</button>
+                      </div>
+
+                        <div v-show="showQuestionDetails">
+
+                          <QuestionsList> </QuestionsList>
+                    
+                        </div>
 
                     </template>
                     <template slot="paneR">
-                        <div v-if="selectedSubjectId !== null">
-                          <CBEDetails> </CBEDetails>
-                        </div>
+                      <div v-show="showCBEDetails">
+                        <CBEDetails> </CBEDetails>
+                        <button v-on:click="saveNewCBE">Save</button>
+                      </div>
+
+                        <div v-show="this.$store.state.showSections ">
+                        <CBESection> </CBESection>
+                        <button v-on:click="saveSection">Save</button>
+                      </div>
+
+                    <div v-show="showQuestionDetails">
+
+                          <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
+                    
+                    </div>
+
                         <div v-if="selectedSubjectId !== null">
                           <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeId}}</span>
                           <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
@@ -62,12 +74,14 @@
 
 <script>
     import axios from 'axios'
-    import Admin from './components/admin'
-    import Exam from './components/exam'
+    import Admin from './components/Admin'
+    import Exam from './components/Exam'
     import Subjects from './components/Subjects'
     import CBESettings from './components/CBESettings'
     import CBEDetails from './components/CBEDetails'
     import CBESection from './components/CBESection'
+    import CBEMultipleChoiceQuestion from './components/CBEMultipleChoiceQuestion'
+    import QuestionsList from './components/QuestionsList'
     import splitPane from 'vue-splitpane'
 
 
@@ -79,6 +93,8 @@
            CBESection,
            Exam,
            Subjects,
+           CBEMultipleChoiceQuestion,
+           QuestionsList,
         },
 
         data: function () {
@@ -89,7 +105,17 @@
                 cbeQuestionValid: false,
                 cbeDetails: [],
                 testName: [],
-                options: []
+                options: [],
+                showCBESection: false,
+                showCBEDetails: false,
+                showSubjects: true,
+                cbeSectionButton: false,
+                sectionDetails: {},
+                sectionName: null,
+                sectionLabel: null,
+                sectionDescription: null,
+                createdSection: null,
+                showQuestionDetails: false
             }
 
 
@@ -117,20 +143,19 @@
                         console.log(error)
                     })
             },
-            createNewCBE: function (page, index) {
-              
+            makeCBESectionVisible: function(page, index) {
+              console.log("showCBESection")
+              this.$store.state.showSections = true
+              this.showCBEDetails = false
 
+            },
+            makeQuestionDetailsVisible: function(page, index) {
+              this.showQuestionDetails = true
+            },
+            createNewCBE: function (page, index) {
                 this.selectedSubjectId = this.$refs.subjects.selectedSubject
                 this.$store.state.currentSubjectId = this.selectedSubjectId
-                
-              
-                axios.post('http://localhost:3000/api/cbes', {cbe_id: this.createdCBE.cbeId})
-                    .then(response => {
-                        console.log(response.status)
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
+                this.showCBEDetails = true
             },
 
             saveNewCBE: function (page, index) {
@@ -154,19 +179,63 @@
                 console.log('cbeName: ' + JSON.stringify(this.testName))
                 console.log({cbe: this.cbeDetails})
                 
-                axios.post('http://localhost:3000/api/cbes', {cbe: this.cbeDetails})
+                this.showSubjects = false
+                
+                axios.post('http://localhost:3000/api/cbes/', {cbe: this.cbeDetails})
                     .then(response => {
                         console.log(response.status)
                         this.createdCBE = response.data
                         console.log("******** " + JSON.stringify(response.data.cbeId))
+                        console.log("******** CBE --- " + JSON.stringify(this.createdCBE))
+                        console.log("******** ID --- " + this.createdCBE.cbeId)
                         this.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
+                        if(this.createdCBE.cbeId > 0){
+                          console.log("Show Section")
+                          this.cbeSectionButton = true
+                        
+                        }
+
+                      
                         console.log(" From store ******** " + this.createdCBE.cbeId )
  
                     })
                     .catch(error => {
                         console.log(error)
                     })
-            }
+            },
+
+             saveSection: function (page, index) {
+                console.log("&1")
+                this.sectionDetails['sectionName'] = this.sectionName
+                this.sectionDetails['sectionLabel'] = this.sectionLabel
+                this.sectionDetails['sectionDescription'] = this.sectionDescription
+                this.sectionDetails['cbe_id'] = this.$store.state.currentCbeId
+                console.log("Section -- CBE ID -- " +  JSON.stringify(this.$store.state.currentCbeId))
+                console.log(JSON.stringify(this.sectionDetails))
+                axios.post('http://localhost:3000/cbes/1/create_section', {cbe_section: this.sectionDetails})
+                    .then(response => {
+                        console.log(response.status)
+                       
+                        this.createdSection = response.data
+                        console.log("******** ")
+                        console.log(JSON.stringify(response.data))
+                        console.log("******** SEction ID " + JSON.stringify(this.createdSection.cbeSectionId))
+
+       
+                        this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
+                        if (this.$store.state.currentSectionId > 0 ) {
+                            this.showQuestions = true
+                            this.showCBESection = false
+                        }
+                        
+                        console.log("******** SEction ID " + this.$store.state.currentSectionId)
+                        console.log("******** QUESTION " + this.showQuestions)
+                       
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+        },
 
         },
 

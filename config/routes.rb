@@ -35,6 +35,18 @@ Rails.application.routes.draw do
     resources :cbes, only: :new
   end
 
+  resources :cbes do
+    post 'create_it', to: 'cbes#create_it'
+    post 'create_section', to: 'cbes#create_section'
+    post 'create_question', to: 'cbes#create_question'
+    get 'new', to: 'cbes#new', as: :new_cbe
+    #get 'show', to: 'cbes#show', as: :show_cbe
+    get 'question_types', to: 'cbes:question_types', as: :question_types
+    get 'question_statuses', to: 'cbes:question_statuses', as: :question_statuses
+    get 'section_types', to: 'cbes:section_types', as: :section_types
+    get 'get_subjects', to: 'cbes:get_subjects', as: :get_subjects
+  end
+
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
     get '404' => redirect('404-page')
@@ -52,16 +64,6 @@ Rails.application.routes.draw do
     namespace :subscriptions do
       resources :cancellations, only: [:new, :create]
       resources :plan_changes, only: [:show, :new, :create]
-    end
-
-    resources :subscription_management do
-      get '/invoice/:invoice_id',            action: :invoice,                 as: :invoice
-      get '/pdf_invoice/:invoice_id',        action: :pdf_invoice,             as: :pdf_invoice
-      get '/invoice/:invoice_id/charge/:id', action: :charge,                  as: :invoice_charge
-      put '/cancel',                         action: :cancel,                  as: :cancel
-      put '/un_cancel',                      action: :un_cancel_subscription,  as: :un_cancel_subscription
-      put '/immediate_cancel',               action: :immediate_cancel,        as: :immediate_cancel
-      put '/reactivate',                     action: :reactivate_subscription, as: :reactivate_subscription
     end
 
     resources :subscription_payment_cards, only: [:create, :update, :destroy]
@@ -133,18 +135,7 @@ Rails.application.routes.draw do
       put '/immediate_cancel', action: :immediate_cancel, as: :immediate_cancel
       put '/reactivate', action: :reactivate_subscription, as: :reactivate_subscription
     end
-    resources :users do
-      get '/personal', action: :user_personal_details, as: :personal
-      get '/subscription', action: :user_subscription_status, as: :subscription
-      get '/courses', action: :user_courses_status, as: :courses
-      get '/enrollments', action: :user_activity_details, as: :activity
-      get '/subject_course_user_log_details/:scul_id', action: :subject_course_user_log_details, as: :scul_activity
-      get '/orders', action: :user_purchases_details, as: :orders
-      get '/referrals', action: :user_referral_details, as: :referrals
-      patch '/update_courses', action: :update_courses, as: :update_courses
-      resources :exercises, only: [:index, :show, :edit, :update], shallow: true
-      resources :invoices, only: :index, shallow: true
-    end
+
     resources :invoices, only: :show do
       get 'pdf', action: :pdf, on: :member
     end
