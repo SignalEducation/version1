@@ -6,7 +6,7 @@
   let course_log_id  = "#{@subject_course_user_log.try(:id) || ''}";
   let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
   let exam_track_id  = "#{@student_exam_track.try(:id) || ''}";
-  let video_id       = "#{cme.course_module_element_video.dacast_id}"
+  let video_id       = "#{ENV['DACAST_PLAYER_KEY']}#{cme.course_module_element_video.dacast_id}"
   let myPlayer       = dacast(video_id, 'video-player-window');
 
   // Create a log when video start
