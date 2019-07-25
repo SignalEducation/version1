@@ -43,7 +43,6 @@ export default {
                 this.sectionDetails['cbe_id'] = this.$store.state.currentCbeId
                 axios.post('http://localhost:3000/api/cbes/' + this.$store.state.currentCbeId + '/cbe_sections', {cbe_section: this.sectionDetails})
                     .then(response => {
-                    console.log(response.data )
                      this.createdSection = response.data       
                         this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
                         if (this.$store.state.currentSectionId > 0 ) {
