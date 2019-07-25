@@ -1,33 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: subscriptions
-#
-#  id                       :integer          not null, primary key
-#  user_id                  :integer
-#  subscription_plan_id     :integer
-#  stripe_guid              :string
-#  next_renewal_date        :date
-#  complimentary            :boolean          default(FALSE), not null
-#  stripe_status            :string
-#  created_at               :datetime
-#  updated_at               :datetime
-#  stripe_customer_id       :string
-#  stripe_customer_data     :text
-#  livemode                 :boolean          default(FALSE)
-#  active                   :boolean          default(FALSE)
-#  terms_and_conditions     :boolean          default(FALSE)
-#  coupon_id                :integer
-#  paypal_subscription_guid :string
-#  paypal_token             :string
-#  paypal_status            :string
-#  state                    :string
-#  cancelled_at             :datetime
-#  cancellation_reason      :string
-#  cancellation_note        :text
-#
-
 class SubscriptionsController < ApplicationController
   before_action :logged_in_required
   before_action do
@@ -145,21 +117,21 @@ class SubscriptionsController < ApplicationController
                     false)
   end
 
-  def un_cancel_subscription
+  def un_cancel
     if @subscription&.stripe_status == 'canceled-pending'
       @subscription.un_cancel
 
-      if @subscription && @subscription.errors.count == 0
+      if @subscription&.errors&.count&.zero?
         flash[:success] = I18n.t('controllers.subscriptions.un_cancel.flash.success')
       else
-        Rails.logger.error 'ERROR: SubscriptionsController#un_cancel_subscription - something went wrong.'
+        Rails.logger.error 'ERROR: SubscriptionsController#un_cancel - something went wrong.'
         flash[:error] = I18n.t('controllers.subscriptions.un_cancel.flash.error')
       end
-      redirect_to account_url(anchor: 'subscriptions')
     else
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
-      redirect_to account_url(anchor: 'subscriptions')
     end
+
+    redirect_to account_url(anchor: 'subscriptions')
   end
 
   # Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record

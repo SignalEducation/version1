@@ -1,62 +1,32 @@
-# == Schema Information
-#
-# Table name: subscription_plans
-#
-#  id                            :integer          not null, primary key
-#  available_to_students         :boolean          default(FALSE), not null
-#  all_you_can_eat               :boolean          default(TRUE), not null
-#  payment_frequency_in_months   :integer          default(1)
-#  currency_id                   :integer
-#  price                         :decimal(, )
-#  available_from                :date
-#  available_to                  :date
-#  stripe_guid                   :string
-#  trial_period_in_days          :integer          default(0)
-#  created_at                    :datetime
-#  updated_at                    :datetime
-#  name                          :string
-#  subscription_plan_category_id :integer
-#  livemode                      :boolean          default(FALSE)
-#  paypal_guid                   :string
-#  paypal_state                  :string
-#  monthly_percentage_off        :integer
-#  previous_plan_price           :float
-#
+# frozen_string_literal: true
 
 class SubscriptionPlansController < ApplicationController
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(stripe_management_access))
+    ensure_user_has_access_rights(%w[stripe_management_access])
   end
   before_action :get_variables
 
   def index
-    if params[:exam_body_id] && !params[:exam_body_id].blank?
-      @subscription_plans = SubscriptionPlan.where(exam_body_id: params[:exam_body_id]).all_in_order
-    elsif params[:exam_body_id] && params[:exam_body_id].blank?
-      @subscription_plans = SubscriptionPlan.all_in_order
-    else
-      @subscription_plans = SubscriptionPlan.all_in_order
-    end
-    @subscription_plans = params[:search].to_s.blank? ?
-                              @subscription_plans = @subscription_plans.all_in_order :
-                              @subscription_plans = @subscription_plans.search(params[:search])
+    @subscription_plans = SubscriptionPlan.includes(:subscriptions, :currency, :exam_body).
+                            search(params[:search]).
+                            by_exam_body(params[:exam_body_id]).
+                            all_in_order
 
     seo_title_maker('Subscription Plans', '', true)
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @subscription_plan = SubscriptionPlan.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @subscription_plan = SubscriptionPlan.new(create_params)
+
     if @subscription_plan.save
       flash[:success] = I18n.t('controllers.subscription_plans.create.flash.success')
       redirect_to subscription_plans_url
@@ -80,9 +50,9 @@ class SubscriptionPlansController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.subscription_plans.destroy.flash.error')
     end
+
     redirect_to subscription_plans_url
   end
-
 
   def all_subscriptions
     @subscriptions = Subscription.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -95,9 +65,7 @@ class SubscriptionPlansController < ApplicationController
   private
 
   def get_variables
-    if params[:id].to_i > 0
-      @subscription_plan = SubscriptionPlan.where(id: params[:id]).first
-    end
+    @subscription_plan = SubscriptionPlan.find_by(id: params[:id]) if params[:id].to_i > 0
     @currencies = Currency.all_active.all_in_order
     @payment_frequencies = SubscriptionPlan::PAYMENT_FREQUENCIES
     seo_title_maker(@subscription_plan.try(:id).to_s, '', true)

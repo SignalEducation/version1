@@ -1,25 +1,25 @@
 =render partial: 'layouts/external_navbar'
 %main
-  .container-bg.home-hero-alt-4
+  .container-bg.home-hero-alt-4{style: @home_page&.background_image.present? ? "background-image: url(#{image_url(@home_page.background_image)});" : ''}
     .container
       %article.home-hero.home-hero-basic-registration
         .row.justify-content-between
           .col-sm-12.col-xl-5
             %header.home-hero-header
-              -if @home_page.header_h1 && !@home_page.header_h1.empty?
+              -if @home_page&.header_h1.present?
                 %h1.h1-hero.text-white.mb-5
                   =@home_page.header_h1
               -else
                 %h1.h1-hero.text-white.mb-5
                   ="The smarter way to study."
-              -if @home_page.header_paragraph && !@home_page.header_paragraph.empty?
+              -if @home_page&.header_paragraph.present?
                 %p.text-white.mb-5.pr-xl-4
                   =@home_page.header_paragraph
               -else
                 %p.text-white.mb-5.pr-xl-4
                   Designed by experts and delivered online so that you can study on a schedule that suits your needs.
 
-              -if @home_page.header_h3 && !@home_page.header_h3.empty?
+              -if @home_page&.header_h3.present?
                 %h3.text-white.pr-xl-4
                   =@home_page.header_h3
               -else
@@ -28,9 +28,8 @@
 
 
 
-          -if @home_page.registration_form || @home_page.login_form
-            .col-xl-6
-              =render partial: 'registration_login_form'
+          .col-xl-6
+            =render partial: 'registration_form'
 
 
   =render partial: 'usage_numbers_section'
@@ -48,11 +47,11 @@
                   Peter Curtis, United Kingdom
 
           .col-12.col-lg-6
-            -if @home_page.video_guid && !@home_page.video_guid.empty?
+            -if @home_page&.video_guid.present?
               .video-iframe-wrap
                 %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
             -else
-              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+              =image_tag('testimonial-img-3.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
 
 
 
@@ -129,7 +128,7 @@
             %h2 Testimonial
           .row.row-lg
             .col-lg-5
-              =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+              =image_tag('testimonial-img.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
             .col-lg-7
               .d-flex.h-100.align-items-center
                 %blockquote.mb-0.ml-lg-6.mr-lg-6
@@ -258,16 +257,3 @@
     });
 
 
-
-:javascript
-
-  $(window).scroll(function() {
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 1) {
-        //clearHeader, not clearheader - caps H
-        $(".header").addClass("sticky-nav-border");
-    } else if (scroll <= 1) {
-      $(".header").removeClass("sticky-nav-border");
-    }
-  });

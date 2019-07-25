@@ -36,7 +36,7 @@
                             .h6.text-ellipsis
                               Total:
                               %span
-                                =number_in_local_currency(@product.price, @product.currency_id)
+                                =number_in_local_currency(@product.price, @product.currency)
                   .px-4
                     %p.text-left
                       -if @product.mock_exam?
@@ -258,5 +258,6 @@
       });
     };
 
+    $('#pay-with-card').click(); // To open the stripe card section on page load
   });
 

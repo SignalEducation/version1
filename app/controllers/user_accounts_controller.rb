@@ -1,8 +1,8 @@
-class UserAccountsController < ApplicationController
+# frozen_string_literal: true
 
+class UserAccountsController < ApplicationController
   before_action :logged_in_required
   before_action :get_variables
-
 
   def account_show
     @orders = @user.orders
@@ -25,7 +25,6 @@ class UserAccountsController < ApplicationController
                     'Log in to view your learnsignal account details including personal information, account information, orders, enrolments and referral program.',
                     false)
 
-
     #Restoring errors that could arise for user updating personal details in modal
     if session[:user_update_errors] && session[:valid_params]
       session[:user_update_errors].each do |k, v|
@@ -41,7 +40,7 @@ class UserAccountsController < ApplicationController
   end
 
   def update_user
-    if @user && @user.update_attributes(allowed_params)
+    if @user&.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
       redirect_to account_url
     else
@@ -54,11 +53,11 @@ class UserAccountsController < ApplicationController
   def change_password
     if @user.change_the_password(change_password_params)
       flash[:success] = I18n.t('controllers.users.change_password.flash.success')
-      redirect_to account_url
     else
       flash[:error] = I18n.t('controllers.users.change_password.flash.error')
-      redirect_to account_url
     end
+
+    redirect_to account_url
   end
 
   def subscription_invoice
@@ -72,17 +71,16 @@ class UserAccountsController < ApplicationController
   end
 
   def allowed_params
-    params.require(:user).permit(:email, :first_name, :last_name, :address, :date_of_birth,
-                                 :unsubscribed_from_emails, exam_body_user_details_attributes: [
-                                                                              :id,
-                                                                              :exam_body_id,
-                                                                              :student_number]
-    )
+    params.require(:user).permit(:email, :first_name, :last_name,
+                                 :address, :date_of_birth,
+                                 :unsubscribed_from_emails,
+                                 exam_body_user_details_attributes: [:id,
+                                                                     :exam_body_id,
+                                                                     :student_number])
   end
 
   def get_variables
     @user = current_user
     seo_title_maker('Account Details', '', true)
   end
-
 end

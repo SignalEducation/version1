@@ -1,0 +1,22 @@
+%table.table{style: 'font-size: 18px;'}
+  %thead
+    %tr
+      %th=t('views.users.form.full_name')
+      %th=t('views.users.form.email')
+      %th=t('views.users.form.email_verified')
+      %th
+      %th
+  %tbody
+    -@users.each do |user|
+      %tr
+        %td=user.full_name
+        %td=user.email
+        %td=tick_or_cross(user.email_verified)
+        %td
+          =link_to t('views.general.view'), user_url(user), class: 'btn btn-secondary btn-xs'
+        %td
+          =link_to t('views.general.edit'), edit_user_url(user), class: 'btn btn-primary btn-xs'
+
+  .col-sm-10.user-pagination
+    =will_paginate @users, renderer: RemoteLinkPaginationHelper::LinkRenderer,
+                      params: { controller: :users, search_term: params[:search_term] }

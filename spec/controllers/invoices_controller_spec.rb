@@ -38,13 +38,13 @@ describe InvoicesController, type: :controller do
   let!(:invoice) { create(:invoice, user: basic_student,
                            subscription_id: valid_subscription.id, issued_at: Time.now, vat_rate: uk_vat_rate) }
 
-  context 'Logged in as a valid_subscription_student' do
+  context 'Logged in as an admin' do
     before(:each) do
       activate_authlogic
       UserSession.create!(admin_user)
     end
 
-    describe "show" do
+    describe 'show' do
       it 'should render pdf' do
         get :show, params: { id: invoice.id }
         expect(flash[:success]).to be_nil
@@ -53,7 +53,7 @@ describe InvoicesController, type: :controller do
       end
     end
 
-    describe "pdf" do
+    describe 'pdf' do
       it 'should render pdf' do
         get :pdf, params: { id: invoice.id, format: :pdf }
         expect(flash[:success]).to be_nil
@@ -69,7 +69,16 @@ describe InvoicesController, type: :controller do
       UserSession.create!(basic_student)
     end
 
-    describe "pdf" do
+    describe 'index' do
+      it 'should render index' do
+        get :index, params: { user_id: invoice.user.id }
+        expect(flash[:success]).to be_nil
+        expect(flash[:error]).to be_nil
+        expect(response.status).to eq(200)
+      end
+    end
+
+    describe 'pdf' do
       it 'should render pdf' do
         get :pdf, params: { id: invoice.id, format: :pdf }
         expect(flash[:success]).to be_nil

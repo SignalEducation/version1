@@ -1,0 +1,60 @@
+=javascript_include_tag 'video_players/vimeo'
+
+:javascript
+  let video_cme_id = "#{cme.id || ''}";
+  let course_log_id = "#{@subject_course_user_log.try(:id) || ''}";
+  let section_log_id = "#{@course_section_user_log.try(:id) || ''}";
+  let exam_track_id = "#{@student_exam_track.try(:id) || ''}";
+  let logId = '';
+  let options = {
+    id: "#{cme.course_module_element_video.vimeo_guid}",
+    frameborder: 0,
+    webkitAllowFullScreen: true,
+    mozallowfullscreen: true,
+    allowFullScreen: true
+  };
+
+  let player = new Vimeo.Player('video-player-window', options);
+
+  player.ready().catch(function(error) {
+    $('.video-player-window').html('#{j render partial: 'courses/players/dacast', locals: { cme: cme }}')
+  });
+
+  let timeUpdate = function(data) {
+    if (data.percent >= 0.90) {
+      $.ajax({
+        headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        url: '#{video_watched_data_courses_path}',
+        dataType: 'json',
+        data: JSON.stringify({ 'video_log_id': logId, 'cme_id': video_cme_id }),
+        method: 'PATCH',
+        contentType: "application/json; charset=utf-8"
+      });
+      player.off('timeupdate', timeUpdate);
+    }
+  };
+
+  //When the player starts send JSON request to create CMEUL
+  let onPlay = function(data) {
+    if (logId === '') {
+      $.ajax({
+        headers: { 'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        url: '#{create_video_user_log_courses_path}',
+        dataType: 'json',
+        data: JSON.stringify({'cmeId': video_cme_id, 'scul_id': course_log_id, 'csul_id': section_log_id, 'set_id': exam_track_id }),
+        method: 'POST',
+        contentType: "application/json; charset=utf-8",
+        success: function(data,status,xhr){
+          logId = data.video_log_id;
+        },
+        error: function(xhr,status,error){
+          console.log(xhr);
+          alert(error);
+        }
+      });
+    }
+    dataLayer.push({'event':'videoAction', 'video_name':"#{cme.name}", 'course_name':"#{@course.name}", 'video_action':'Play'});
+  };
+
+  player.on('play', onPlay);
+  player.on('timeupdate', timeUpdate);

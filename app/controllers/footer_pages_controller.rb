@@ -1,6 +1,7 @@
-class FooterPagesController < ApplicationController
+# frozen_string_literal: true
 
-  before_action :get_variables, except: [:missing_page]
+class FooterPagesController < ApplicationController
+  before_action :get_variables, except: :missing_page
 
   def privacy_policy
     seo_title_maker('Read Our Privacy Policy | LearnSignal', 'Read the Privacy Policy for learnsignal.com. Find out about our privacy and cookies policy here including how your data is used.', nil)
@@ -19,6 +20,7 @@ class FooterPagesController < ApplicationController
 
   def terms_and_conditions
     @content_page = ContentPage.where(public_url: 'terms_and_conditions').all_active.first
+
     if @content_page
       seo_title_maker(@content_page.seo_title, @content_page.seo_description, nil)
       render 'content_pages/show'
@@ -34,43 +36,43 @@ class FooterPagesController < ApplicationController
   end
 
   def media_library
-    seo_title_maker('ACCA Correction Packs and Mock Exams | LearnSignal', "Get access to ACCA question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.", nil)
+    seo_title_maker('ACCA Correction Packs and Mock Exams | LearnSignal', 'Get access to ACCA question and solution correction packs and mock exams designed by experts to help you pass your exams the first time.', nil)
+
     if current_user
       country = IpAddress.get_country(request.remote_ip) || current_user.country
       currency = current_user.get_currency(country)
       @currency_id = currency.id
     else
-      country = IpAddress.get_country(request.remote_ip) || Country.find_by_name('United Kingdom')
+      country = IpAddress.get_country(request.remote_ip) || Country.find_by(name: 'United Kingdom')
       @currency_id = country.currency_id
     end
 
-    @products = Product.in_currency(@currency_id)
-                       .all_active
-                       .all_in_order
-                       .where("mock_exam_id IS NOT NULL")
-                       .where("product_type = ?", Product.product_types[:mock_exam])
-    @questions = Product.in_currency(@currency_id)
-                       .all_active
-                       .all_in_order
-                       .where("mock_exam_id IS NOT NULL")
-                       .where("product_type = ?", Product.product_types[:correction_pack])
+    @products = Product.in_currency(@currency_id).
+                        all_active.
+                        all_in_order.
+                        where('mock_exam_id IS NOT NULL').
+                        where('product_type = ?', Product.product_types[:mock_exam])
+    @questions = Product.in_currency(@currency_id).
+                         all_active.
+                         all_in_order.
+                         where('mock_exam_id IS NOT NULL').
+                         where('product_type = ?', Product.product_types[:correction_pack])
   end
 
-
   def profile
-
     @tutor = User.all_tutors.where(name_url: params[:name_url]).first
-    if @tutor && @tutor.course_tutor_details.any?
+
+    if @tutor&.course_tutor_details&.any?
       @course_ids = []
       @tutor.course_tutor_details.each do |course_tutor|
         @course_ids << course_tutor.subject_course if course_tutor.subject_course
       end
       @courses = SubjectCourse.where(id: @course_ids)
       seo_title_maker("#{@tutor.full_name} Tutor | LearnSignal", @tutor.description, nil)
-
     else
       redirect_to tutors_url
     end
+
     @navbar = true
     @top_margin = true
   end
@@ -87,52 +89,15 @@ class FooterPagesController < ApplicationController
     if params[:first_element].to_s == '' && current_user
       redirect_to student_dashboard_url
     elsif params[:first_element].to_s == '500-page'
-      render file: 'public/500.html', layout: nil, status: 500
+      render file: 'public/500.html', layout: nil, status: :internal_server_error
     else
       @top_margin = true
-      render 'footer_pages/404_page.html.haml', status: 404
+      render 'footer_pages/404_page.html.haml', status: :not_found
     end
     seo_title_maker('404 Page', "Sorry, we couldn't find what you are looking for. We missed the mark!
       but don't worry. We're working on fixing this link.", nil)
   end
 
-  def info_subscribe
-    email = params[:email][:address]
-    name = params[:first_name][:address]
-    #list_id = '866fa91d62' # Dev List
-    list_id = 'a716c282e2' # Production List
-    if !email.blank?
-      begin
-        @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => name})
-
-        respond_to do |format|
-          format.json{render json: {message: "Success! Check your email to confirm your subscription."}}
-        end
-      rescue Mailchimp::ListAlreadySubscribedError
-        respond_to do |format|
-          format.json{render json: {message: "#{email} is already subscribed to the list"}}
-        end
-      rescue Mailchimp::ListDoesNotExistError
-        respond_to do |format|
-          format.json{render json: {message: "The list could not be found."}}
-        end
-      rescue Mailchimp::Error => ex
-        if ex.message
-          respond_to do |format|
-            format.json{render json: {message: "There is an error. Please enter valid email id."}}
-          end
-        else
-          respond_to do |format|
-            format.json{render json: {message: "An unknown error occurred."}}
-          end
-        end
-      end
-    else
-      respond_to do |format|
-        format.json{render json: {message: "Email Address Cannot be blank. Please enter valid email id."}}
-      end
-    end
-  end
 
   def complaints_intercom
     user_id = current_user ? current_user.id : nil
@@ -151,9 +116,8 @@ class FooterPagesController < ApplicationController
   protected
 
   def get_variables
-    @navbar = 'standard'
+    @navbar     = 'standard'
     @top_margin = true
-    @footer = true
+    @footer     = true
   end
-
 end

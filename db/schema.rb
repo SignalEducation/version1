@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_14_093157) do
+ActiveRecord::Schema.define(version: 2019_07_23_121552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "updated_at", null: false
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
   end
@@ -185,19 +185,15 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "countries", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "iso_code"
-    t.string "country_tld"
+    t.string "name", limit: 255
+    t.string "iso_code", limit: 255
+    t.string "country_tld", limit: 255
     t.integer "sorting_order"
     t.boolean "in_the_eu", default: false, null: false
     t.integer "currency_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "continent"
-    t.index ["currency_id"], name: "index_countries_on_currency_id"
-    t.index ["in_the_eu"], name: "index_countries_on_in_the_eu"
-    t.index ["name"], name: "index_countries_on_name"
-    t.index ["sorting_order"], name: "index_countries_on_sorting_order"
+    t.string "continent", limit: 255
   end
 
   create_table "coupons", id: :serial, force: :cascade do |t|
@@ -224,31 +220,29 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   create_table "course_module_element_quizzes", id: :serial, force: :cascade do |t|
     t.integer "course_module_element_id"
     t.integer "number_of_questions"
-    t.string "question_selection_strategy"
+    t.string "question_selection_strategy", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
-    t.index ["course_module_element_id"], name: "cme_quiz_cme_id"
   end
 
   create_table "course_module_element_resources", id: :serial, force: :cascade do |t|
     t.integer "course_module_element_id"
-    t.string "name"
-    t.string "web_url"
+    t.string "name", limit: 255
+    t.string "web_url", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "upload_file_name"
-    t.string "upload_content_type"
-    t.bigint "upload_file_size"
+    t.string "upload_file_name", limit: 255
+    t.string "upload_content_type", limit: 255
+    t.integer "upload_file_size"
     t.datetime "upload_updated_at"
     t.datetime "destroyed_at"
-    t.index ["course_module_element_id"], name: "cme_resources_cme_id"
   end
 
   create_table "course_module_element_user_logs", id: :serial, force: :cascade do |t|
     t.integer "course_module_element_id"
     t.integer "user_id"
-    t.string "session_guid"
+    t.string "session_guid", limit: 255
     t.boolean "element_completed", default: false, null: false
     t.integer "time_taken_in_seconds"
     t.integer "quiz_score_actual"
@@ -269,9 +263,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.boolean "preview_mode", default: false
     t.integer "course_section_id"
     t.integer "course_section_user_log_id"
-    t.index ["course_module_element_id"], name: "cme_user_logs_cme_id"
-    t.index ["course_module_id"], name: "index_course_module_element_user_logs_on_course_module_id"
-    t.index ["user_id"], name: "index_course_module_element_user_logs_on_user_id"
   end
 
   create_table "course_module_element_videos", id: :serial, force: :cascade do |t|
@@ -282,12 +273,12 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.string "video_id"
     t.float "duration"
     t.string "vimeo_guid"
-    t.index ["course_module_element_id"], name: "index_course_module_element_videos_on_course_module_element_id"
+    t.string "dacast_id"
   end
 
   create_table "course_module_elements", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "name_url"
+    t.string "name", limit: 255
+    t.string "name_url", limit: 255
     t.text "description"
     t.integer "estimated_time_in_seconds"
     t.integer "course_module_id"
@@ -297,7 +288,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.boolean "is_video", default: false, null: false
     t.boolean "is_quiz", default: false, null: false
     t.boolean "active", default: true, null: false
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
@@ -306,13 +297,11 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.boolean "is_constructed_response", default: false, null: false
     t.boolean "available_on_trial", default: false
     t.integer "related_course_module_element_id"
-    t.index ["course_module_id"], name: "index_course_module_elements_on_course_module_id"
-    t.index ["name_url"], name: "index_course_module_elements_on_name_url"
   end
 
   create_table "course_modules", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "name_url"
+    t.string "name", limit: 255
+    t.string "name_url", limit: 255
     t.text "description"
     t.integer "sorting_order"
     t.integer "estimated_time_in_seconds"
@@ -320,7 +309,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "cme_count", default: 0
-    t.string "seo_description"
+    t.string "seo_description", limit: 255
     t.boolean "seo_no_index", default: false
     t.datetime "destroyed_at"
     t.integer "number_of_questions", default: 0
@@ -335,8 +324,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "course_section_id"
     t.integer "constructed_response_count", default: 0
     t.string "temporary_label"
-    t.index ["name_url"], name: "index_course_modules_on_name_url"
-    t.index ["sorting_order"], name: "index_course_modules_on_sorting_order"
   end
 
   create_table "course_section_user_logs", id: :serial, force: :cascade do |t|
@@ -388,17 +375,14 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "currencies", id: :serial, force: :cascade do |t|
-    t.string "iso_code"
-    t.string "name"
-    t.string "leading_symbol"
-    t.string "trailing_symbol"
+    t.string "iso_code", limit: 255
+    t.string "name", limit: 255
+    t.string "leading_symbol", limit: 255
+    t.string "trailing_symbol", limit: 255
     t.boolean "active", default: false, null: false
     t.integer "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["active"], name: "index_currencies_on_active"
-    t.index ["iso_code"], name: "index_currencies_on_iso_code"
-    t.index ["sorting_order"], name: "index_currencies_on_sorting_order"
   end
 
   create_table "enrollments", id: :serial, force: :cascade do |t|
@@ -546,11 +530,11 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "destroyed_at"
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.string "background_image_file_name"
     t.string "background_image_content_type"
-    t.bigint "background_image_file_size"
+    t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
     t.bigint "exam_body_id"
     t.string "background_colour"
@@ -595,24 +579,20 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.string "footer_option", default: "white"
     t.string "video_guid"
     t.string "header_h3"
+    t.string "background_image"
     t.index ["public_url"], name: "index_home_pages_on_public_url"
     t.index ["subscription_plan_category_id"], name: "index_home_pages_on_subscription_plan_category_id"
   end
 
   create_table "import_trackers", id: :serial, force: :cascade do |t|
-    t.string "old_model_name"
+    t.string "old_model_name", limit: 255
     t.integer "old_model_id"
-    t.string "new_model_name"
+    t.string "new_model_name", limit: 255
     t.integer "new_model_id"
     t.datetime "imported_at"
     t.text "original_data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["imported_at"], name: "index_import_trackers_on_imported_at"
-    t.index ["new_model_id"], name: "index_import_trackers_on_new_model_id"
-    t.index ["new_model_name"], name: "index_import_trackers_on_new_model_name"
-    t.index ["old_model_id"], name: "index_import_trackers_on_old_model_id"
-    t.index ["old_model_name"], name: "index_import_trackers_on_old_model_name"
   end
 
   create_table "invoice_line_items", id: :serial, force: :cascade do |t|
@@ -627,12 +607,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.text "original_stripe_data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["currency_id"], name: "index_invoice_line_items_on_currency_id"
-    t.index ["invoice_id"], name: "index_invoice_line_items_on_invoice_id"
-    t.index ["period_end_at"], name: "index_invoice_line_items_on_period_end_at"
-    t.index ["period_start_at"], name: "index_invoice_line_items_on_period_start_at"
-    t.index ["subscription_id"], name: "index_invoice_line_items_on_subscription_id"
-    t.index ["subscription_plan_id"], name: "index_invoice_line_items_on_subscription_plan_id"
   end
 
   create_table "invoices", id: :serial, force: :cascade do |t|
@@ -645,12 +619,12 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "issued_at"
-    t.string "stripe_guid"
+    t.string "stripe_guid", limit: 255
     t.decimal "sub_total", default: "0.0"
     t.decimal "total", default: "0.0"
     t.decimal "total_tax", default: "0.0"
-    t.string "stripe_customer_guid"
-    t.string "object_type", default: "invoice"
+    t.string "stripe_customer_guid", limit: 255
+    t.string "object_type", limit: 255, default: "invoice"
     t.boolean "payment_attempted", default: false
     t.boolean "payment_closed", default: false
     t.boolean "forgiven", default: false
@@ -660,33 +634,25 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.decimal "amount_due", default: "0.0"
     t.datetime "next_payment_attempt_at"
     t.datetime "webhooks_delivered_at"
-    t.string "charge_guid"
-    t.string "subscription_guid"
+    t.string "charge_guid", limit: 255
+    t.string "subscription_guid", limit: 255
     t.decimal "tax_percent"
     t.decimal "tax"
     t.text "original_stripe_data"
     t.string "paypal_payment_guid"
     t.bigint "order_id"
-    t.index ["currency_id"], name: "index_invoices_on_currency_id"
     t.index ["order_id"], name: "index_invoices_on_order_id"
-    t.index ["subscription_id"], name: "index_invoices_on_subscription_id"
-    t.index ["subscription_transaction_id"], name: "index_invoices_on_subscription_transaction_id"
-    t.index ["user_id"], name: "index_invoices_on_user_id"
-    t.index ["vat_rate_id"], name: "index_invoices_on_vat_rate_id"
   end
 
   create_table "ip_addresses", id: :serial, force: :cascade do |t|
-    t.string "ip_address"
+    t.string "ip_address", limit: 255
     t.float "latitude"
     t.float "longitude"
     t.integer "country_id"
     t.integer "alert_level"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["country_id"], name: "index_ip_addresses_on_country_id"
-    t.index ["ip_address"], name: "index_ip_addresses_on_ip_address"
-    t.index ["latitude"], name: "index_ip_addresses_on_latitude"
-    t.index ["longitude"], name: "index_ip_addresses_on_longitude"
+    t.datetime "rechecked_on"
   end
 
   create_table "mock_exams", id: :serial, force: :cascade do |t|
@@ -697,11 +663,11 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "updated_at", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
+    t.integer "file_file_size"
     t.datetime "file_updated_at"
     t.string "cover_image_file_name"
     t.string "cover_image_content_type"
-    t.bigint "cover_image_file_size"
+    t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
     t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
@@ -766,6 +732,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
+    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -775,7 +742,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
-    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -788,12 +754,10 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   create_table "quiz_answers", id: :serial, force: :cascade do |t|
     t.integer "quiz_question_id"
     t.boolean "correct", default: false, null: false
-    t.string "degree_of_wrongness"
+    t.string "degree_of_wrongness", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
-    t.index ["degree_of_wrongness"], name: "index_quiz_answers_on_degree_of_wrongness"
-    t.index ["quiz_question_id"], name: "index_quiz_answers_on_quiz_question_id"
   end
 
   create_table "quiz_attempts", id: :serial, force: :cascade do |t|
@@ -805,11 +769,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "score", default: 0
-    t.string "answer_array"
-    t.index ["course_module_element_user_log_id"], name: "index_quiz_attempts_on_course_module_element_user_log_id"
-    t.index ["quiz_answer_id"], name: "index_quiz_attempts_on_quiz_answer_id"
-    t.index ["quiz_question_id"], name: "index_quiz_attempts_on_quiz_question_id"
-    t.index ["user_id"], name: "index_quiz_attempts_on_user_id"
+    t.string "answer_array", limit: 255
   end
 
   create_table "quiz_contents", id: :serial, force: :cascade do |t|
@@ -819,29 +779,24 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "sorting_order"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.string "image_file_name", limit: 255
+    t.string "image_content_type", limit: 255
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
     t.integer "quiz_solution_id"
     t.datetime "destroyed_at"
-    t.index ["quiz_answer_id"], name: "index_quiz_contents_on_quiz_answer_id"
-    t.index ["quiz_question_id"], name: "index_quiz_contents_on_quiz_question_id"
   end
 
   create_table "quiz_questions", id: :serial, force: :cascade do |t|
     t.integer "course_module_element_quiz_id"
     t.integer "course_module_element_id"
-    t.string "difficulty_level"
+    t.string "difficulty_level", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "destroyed_at"
     t.integer "subject_course_id"
     t.integer "sorting_order"
-    t.boolean "custom_styles", default: true
-    t.index ["course_module_element_id"], name: "index_quiz_questions_on_course_module_element_id"
-    t.index ["course_module_element_quiz_id"], name: "index_quiz_questions_on_course_module_element_quiz_id"
-    t.index ["difficulty_level"], name: "index_quiz_questions_on_difficulty_level"
+    t.boolean "custom_styles", default: false
   end
 
   create_table "referral_codes", id: :serial, force: :cascade do |t|
@@ -949,20 +904,15 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "stripe_api_events", id: :serial, force: :cascade do |t|
-    t.string "guid"
-    t.string "api_version"
+    t.string "guid", limit: 255
+    t.string "api_version", limit: 255
     t.text "payload"
     t.boolean "processed", default: false, null: false
     t.datetime "processed_at"
     t.boolean "error", default: false, null: false
-    t.string "error_message"
+    t.string "error_message", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["api_version"], name: "index_stripe_api_events_on_api_version"
-    t.index ["error"], name: "index_stripe_api_events_on_error"
-    t.index ["guid"], name: "index_stripe_api_events_on_guid"
-    t.index ["processed"], name: "index_stripe_api_events_on_processed"
-    t.index ["processed_at"], name: "index_stripe_api_events_on_processed_at"
   end
 
   create_table "student_accesses", id: :serial, force: :cascade do |t|
@@ -991,7 +941,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "latest_course_module_element_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "session_guid"
+    t.string "session_guid", limit: 255
     t.integer "course_module_id"
     t.float "percentage_complete", default: 0.0
     t.integer "count_of_cmes_completed", default: 0
@@ -1004,8 +954,20 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "count_of_constructed_responses_taken"
     t.integer "course_section_id"
     t.integer "course_section_user_log_id"
-    t.index ["latest_course_module_element_id"], name: "index_student_exam_tracks_on_latest_course_module_element_id"
-    t.index ["user_id"], name: "index_student_exam_tracks_on_user_id"
+  end
+
+  create_table "student_testimonials", force: :cascade do |t|
+    t.integer "home_page_id"
+    t.integer "sorting_order"
+    t.text "text"
+    t.string "signature"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.bigint "image_file_size"
+    t.datetime "image_updated_at"
+    t.index ["home_page_id"], name: "index_student_testimonials_on_home_page_id"
   end
 
   create_table "student_testimonials", force: :cascade do |t|
@@ -1030,7 +992,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "updated_at", null: false
     t.string "file_upload_file_name"
     t.string "file_upload_content_type"
-    t.bigint "file_upload_file_size"
+    t.integer "file_upload_file_size"
     t.datetime "file_upload_updated_at"
     t.string "external_url"
     t.boolean "active", default: false
@@ -1080,7 +1042,7 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.integer "quiz_pass_rate"
     t.string "background_image_file_name"
     t.string "background_image_content_type"
-    t.bigint "background_image_file_size"
+    t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
     t.boolean "preview", default: false
     t.boolean "computer_based", default: false
@@ -1097,49 +1059,42 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
 
   create_table "subscription_payment_cards", id: :serial, force: :cascade do |t|
     t.integer "user_id"
-    t.string "stripe_card_guid"
-    t.string "status"
-    t.string "brand"
-    t.string "last_4"
+    t.string "stripe_card_guid", limit: 255
+    t.string "status", limit: 255
+    t.string "brand", limit: 255
+    t.string "last_4", limit: 255
     t.integer "expiry_month"
     t.integer "expiry_year"
-    t.string "address_line1"
-    t.string "account_country"
+    t.string "address_line1", limit: 255
+    t.string "account_country", limit: 255
     t.integer "account_country_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "stripe_object_name"
-    t.string "funding"
-    t.string "cardholder_name"
-    t.string "fingerprint"
-    t.string "cvc_checked"
-    t.string "address_line1_check"
-    t.string "address_zip_check"
-    t.string "dynamic_last4"
-    t.string "customer_guid"
+    t.string "stripe_object_name", limit: 255
+    t.string "funding", limit: 255
+    t.string "cardholder_name", limit: 255
+    t.string "fingerprint", limit: 255
+    t.string "cvc_checked", limit: 255
+    t.string "address_line1_check", limit: 255
+    t.string "address_zip_check", limit: 255
+    t.string "dynamic_last4", limit: 255
+    t.string "customer_guid", limit: 255
     t.boolean "is_default_card", default: false
-    t.string "address_line2"
-    t.string "address_city"
-    t.string "address_state"
-    t.string "address_zip"
-    t.string "address_country"
-    t.index ["account_country_id"], name: "index_subscription_payment_cards_on_account_country_id"
-    t.index ["stripe_card_guid"], name: "index_subscription_payment_cards_on_stripe_card_guid"
-    t.index ["user_id"], name: "index_subscription_payment_cards_on_user_id"
+    t.string "address_line2", limit: 255
+    t.string "address_city", limit: 255
+    t.string "address_state", limit: 255
+    t.string "address_zip", limit: 255
+    t.string "address_country", limit: 255
   end
 
   create_table "subscription_plan_categories", id: :serial, force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 255
     t.datetime "available_from"
     t.datetime "available_to"
-    t.string "guid"
+    t.string "guid", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "sub_heading_text"
-    t.index ["available_from"], name: "index_subscription_plan_categories_on_available_from"
-    t.index ["available_to"], name: "index_subscription_plan_categories_on_available_to"
-    t.index ["guid"], name: "index_subscription_plan_categories_on_guid"
-    t.index ["name"], name: "index_subscription_plan_categories_on_name"
   end
 
   create_table "subscription_plans", id: :serial, force: :cascade do |t|
@@ -1148,10 +1103,10 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.decimal "price"
     t.date "available_from"
     t.date "available_to"
-    t.string "stripe_guid"
+    t.string "stripe_guid", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "name"
+    t.string "name", limit: 255
     t.integer "subscription_plan_category_id"
     t.boolean "livemode", default: false
     t.string "paypal_guid"
@@ -1165,18 +1120,14 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.boolean "most_popular", default: false, null: false
     t.string "registration_form_heading"
     t.string "login_form_heading"
-    t.index ["available_from"], name: "index_subscription_plans_on_available_from"
-    t.index ["available_to"], name: "index_subscription_plans_on_available_to"
-    t.index ["currency_id"], name: "index_subscription_plans_on_currency_id"
     t.index ["exam_body_id"], name: "index_subscription_plans_on_exam_body_id"
-    t.index ["payment_frequency_in_months"], name: "index_subscription_plans_on_payment_frequency_in_months"
   end
 
   create_table "subscription_transactions", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "subscription_id"
-    t.string "stripe_transaction_guid"
-    t.string "transaction_type"
+    t.string "stripe_transaction_guid", limit: 255
+    t.string "transaction_type", limit: 255
     t.decimal "amount"
     t.integer "currency_id"
     t.boolean "alarm", default: false, null: false
@@ -1185,25 +1136,18 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer "subscription_payment_card_id"
-    t.index ["alarm"], name: "index_subscription_transactions_on_alarm"
-    t.index ["currency_id"], name: "index_subscription_transactions_on_currency_id"
-    t.index ["live_mode"], name: "index_subscription_transactions_on_live_mode"
-    t.index ["stripe_transaction_guid"], name: "index_subscription_transactions_on_stripe_transaction_guid"
-    t.index ["subscription_id"], name: "index_subscription_transactions_on_subscription_id"
-    t.index ["transaction_type"], name: "index_subscription_transactions_on_transaction_type"
-    t.index ["user_id"], name: "index_subscription_transactions_on_user_id"
   end
 
   create_table "subscriptions", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "subscription_plan_id"
-    t.string "stripe_guid"
+    t.string "stripe_guid", limit: 255
     t.date "next_renewal_date"
     t.boolean "complimentary", default: false, null: false
-    t.string "stripe_status"
+    t.string "stripe_status", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "stripe_customer_id"
+    t.string "stripe_customer_id", limit: 255
     t.text "stripe_customer_data"
     t.boolean "livemode", default: false
     t.boolean "active", default: false
@@ -1218,14 +1162,10 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.text "cancellation_note"
     t.bigint "changed_from_id"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
-    t.index ["next_renewal_date"], name: "index_subscriptions_on_next_renewal_date"
-    t.index ["stripe_status"], name: "index_subscriptions_on_stripe_status"
-    t.index ["subscription_plan_id"], name: "index_subscriptions_on_subscription_plan_id"
-    t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
   create_table "user_groups", id: :serial, force: :cascade do |t|
-    t.string "name"
+    t.string "name", limit: 255
     t.text "description"
     t.boolean "tutor", default: false, null: false
     t.boolean "site_admin", default: false, null: false
@@ -1245,42 +1185,42 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.string "email"
-    t.string "first_name"
-    t.string "last_name"
+    t.string "email", limit: 255
+    t.string "first_name", limit: 255
+    t.string "last_name", limit: 255
     t.text "address"
     t.integer "country_id"
     t.string "crypted_password", limit: 128, default: "", null: false
     t.string "password_salt", limit: 128, default: "", null: false
-    t.string "persistence_token"
+    t.string "persistence_token", limit: 255
     t.string "perishable_token", limit: 128
-    t.string "single_access_token"
+    t.string "single_access_token", limit: 255
     t.integer "login_count", default: 0
     t.integer "failed_login_count", default: 0
     t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
-    t.string "current_login_ip"
-    t.string "last_login_ip"
-    t.string "account_activation_code"
+    t.string "current_login_ip", limit: 255
+    t.string "last_login_ip", limit: 255
+    t.string "account_activation_code", limit: 255
     t.datetime "account_activated_at"
     t.boolean "active", default: false, null: false
     t.integer "user_group_id"
     t.datetime "password_reset_requested_at"
-    t.string "password_reset_token"
+    t.string "password_reset_token", limit: 255
     t.datetime "password_reset_at"
-    t.string "stripe_customer_id"
+    t.string "stripe_customer_id", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "locale"
-    t.string "guid"
+    t.string "locale", limit: 255
+    t.string "guid", limit: 255
     t.integer "subscription_plan_category_id"
     t.boolean "password_change_required"
     t.string "session_key"
     t.string "name_url"
     t.string "profile_image_file_name"
     t.string "profile_image_content_type"
-    t.bigint "profile_image_file_size"
+    t.integer "profile_image_file_size"
     t.datetime "profile_image_updated_at"
     t.string "email_verification_code"
     t.datetime "email_verified_at"
@@ -1297,26 +1237,18 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.datetime "communication_approval_datetime"
     t.bigint "preferred_exam_body_id"
     t.bigint "currency_id"
-    t.index ["account_activation_code"], name: "index_users_on_account_activation_code"
-    t.index ["country_id"], name: "index_users_on_country_id"
     t.index ["currency_id"], name: "index_users_on_currency_id"
-    t.index ["email"], name: "index_users_on_email"
-    t.index ["password_reset_token"], name: "index_users_on_password_reset_token"
-    t.index ["persistence_token"], name: "index_users_on_persistence_token"
     t.index ["preferred_exam_body_id"], name: "index_users_on_preferred_exam_body_id"
-    t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id"
     t.index ["subscription_plan_category_id"], name: "index_users_on_subscription_plan_category_id"
-    t.index ["user_group_id"], name: "index_users_on_user_group_id"
   end
 
   create_table "vat_codes", id: :serial, force: :cascade do |t|
     t.integer "country_id"
-    t.string "name"
-    t.string "label"
-    t.string "wiki_url"
+    t.string "name", limit: 255
+    t.string "label", limit: 255
+    t.string "wiki_url", limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["country_id"], name: "index_vat_codes_on_country_id"
   end
 
   create_table "vat_rates", id: :serial, force: :cascade do |t|
@@ -1325,7 +1257,6 @@ ActiveRecord::Schema.define(version: 2019_07_14_093157) do
     t.date "effective_from"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["vat_code_id"], name: "index_vat_rates_on_vat_code_id"
   end
 
   create_table "video_resources", id: :serial, force: :cascade do |t|

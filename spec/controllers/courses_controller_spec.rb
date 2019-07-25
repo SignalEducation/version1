@@ -138,10 +138,9 @@ RSpec.describe CoursesController, type: :controller do
 
     describe 'Post to video_watched_data with CMEUL data for CMEQ' do
       it 'should respond to JSON with status 200' do
-        post :video_watched_data, params: {course: {videoLogId: video_log.id}, format: :json }
+        post :video_watched_data, params: { video_log_id: video_log.id, cme_id: course_module_element_2.id }, format: :json
         expect(response.status).to eq(200)
       end
-
     end
 
     describe 'Post to video_watched_data with CMEUL data for CMEQ' do
@@ -198,17 +197,18 @@ RSpec.describe CoursesController, type: :controller do
     end
 
     describe 'Get submit_constructed_response_user_log with CMEUL data for CR for final submit' do
-
       it 'should respond ok and redirect to ' do
         get :submit_constructed_response_user_log, params: { cmeul_id: cr_cmeul.id }
+        course_url = course_url(cr_cmeul.course_module_element.course_module.course_section.subject_course.name_url,
+                                cr_cmeul.course_module_element.course_module.course_section.name_url,
+                                cr_cmeul.course_module_element.course_module.name_url,
+                                cr_cmeul.course_module_element.name_url)
+
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(course_url(cr_cmeul.course_module_element.course_module.course_section.subject_course.name_url, cr_cmeul.course_module_element.course_module.course_section.name_url, cr_cmeul.course_module_element.course_module.name_url, cr_cmeul.course_module_element.name_url))
+        expect(response).to redirect_to(course_url)
       end
-
     end
-
   end
-
 end

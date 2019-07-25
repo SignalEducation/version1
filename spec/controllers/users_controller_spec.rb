@@ -63,38 +63,30 @@ describe UsersController, type: :controller do
     allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
   end
 
-  let!(:student_user_group ) { FactoryBot.create(:student_user_group ) }
-  let!(:basic_student) { FactoryBot.create(:basic_student, user_group_id: student_user_group.id) }
+  let!(:student_user_group)        { create(:student_user_group) }
+  let!(:basic_student)             { create(:basic_student, user_group_id: student_user_group.id) }
+  let(:user_management_user_group) { create(:user_management_user_group) }
+  let(:user_management_user)       { create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let(:unverified_student_user)    { create(:unverified_user, user_group_id: student_user_group.id) }
+  let!(:exam_body_1)               { create(:exam_body) }
+  let!(:group_1)                   { create(:group, exam_body_id: exam_body_1.id) }
+  let!(:gbp)                       { create(:gbp) }
+  let!(:uk)                        { create(:uk, currency: gbp) }
+  let!(:uk_vat_code)               { create(:vat_code, country: uk) }
+  let!(:uk_vat_rate)               { create(:vat_rate, vat_code: uk_vat_code) }
 
-  let(:user_management_user_group) { FactoryBot.create(:user_management_user_group) }
-  let(:user_management_user) { FactoryBot.create(:user_management_user, user_group_id: user_management_user_group.id) }
+  let!(:subscription_plan_gbp_m) do
+    create(:student_subscription_plan_m, currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m', payment_frequency_in_months: 3)
+  end
 
-  let(:unverified_student_user) { FactoryBot.create(:unverified_user, user_group_id: student_user_group.id) }
+  let!(:valid_subscription) do
+    create(:valid_subscription, user: basic_student, subscription_plan: subscription_plan_gbp_m, stripe_customer_id: basic_student.stripe_customer_id )
+  end
 
-  let!(:exam_body_1) { FactoryBot.create(:exam_body) }
-  let!(:group_1) { FactoryBot.create(:group, exam_body_id: exam_body_1.id) }
-
-  let!(:gbp) { create(:gbp) }
-  let!(:uk) { create(:uk, currency: gbp) }
-  let!(:uk_vat_code) { create(:vat_code, country: uk) }
-  let!(:uk_vat_rate) { create(:vat_rate, vat_code: uk_vat_code) }
-  let!(:subscription_plan_gbp_m) {
-    create(
-        :student_subscription_plan_m,
-        currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
-        payment_frequency_in_months: 3
-    )
-  }
-  let!(:valid_subscription) { create(:valid_subscription, user: basic_student,
-                                     subscription_plan: subscription_plan_gbp_m,
-                                     stripe_customer_id: basic_student.stripe_customer_id ) }
-
-  let!(:valid_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
-  let!(:update_params) { FactoryBot.attributes_for(:student_user, user_group_id: student_user_group.id) }
-
+  let!(:valid_params)              { attributes_for(:student_user, user_group_id: student_user_group.id) }
+  let!(:update_params)             { attributes_for(:student_user, user_group_id: student_user_group.id) }
 
   context 'Logged in as a user_management_user' do
-
     before(:each) do
       activate_authlogic
       UserSession.create!(user_management_user)
@@ -163,6 +155,17 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe "GET 'search'" do
+      it 'should successfully render a list of users' do
+        get :search, xhr: true, params: { search_term: basic_student.email }
+        users = assigns(:users)
+
+        expect(response.successful?).to be_truthy
+        expect(users).to include(basic_student)
+        expect(users).not_to include(user_management_user)
+      end
+    end
+
     describe "GET 'preview_csv_upload'" do
       #TODO Test CSV Files Upload
       xit 'should redirect to root' do
@@ -218,7 +221,5 @@ describe UsersController, type: :controller do
         expect(response).to render_template(:user_purchases_details)
       end
     end
-
   end
-
 end

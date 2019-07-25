@@ -31,11 +31,11 @@
                   Learnsignal’s origins came from personal experience of studying for the ACCA exams using a traditional provider. During that process, it became clear that the approach was ineffective, expensive and time-consuming. So, we looked at creating a modern and simpler way to support people while they studied and the best way to achieve that was online.
 
             .col-12.col-lg-6
-              -if @home_page.video_guid && !@home_page.video_guid.empty?
+              -if @home_page&.video_guid.present?
                 .video-iframe-wrap
                   %iframe{src: "https://player.vimeo.com/video/#{@home_page.video_guid}", frameborder: '0', allowfullscreen: true, mozallowfullscreen: true, webkitallowfullscreen: true}
               -else
-                =image_tag('testimonial-img.jpg', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
+                =image_tag('testimonial-img.png', class: 'mb-5 mb-lg-0', alt: 'Girl at the laptop')
 
 
 
@@ -76,16 +76,3 @@
 
   =render partial: 'footer_pages/contact_us_form_modal'
 
-
-:javascript
-
-  $(window).scroll(function() {
-    var scroll = $(window).scrollTop();
-
-    if (scroll >= 1) {
-        //clearHeader, not clearheader - caps H
-        $(".header").addClass("sticky-nav-border");
-    } else if (scroll <= 1) {
-      $(".header").removeClass("sticky-nav-border");
-    }
-  });

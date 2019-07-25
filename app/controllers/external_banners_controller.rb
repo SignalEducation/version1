@@ -1,29 +1,9 @@
-# == Schema Information
-#
-# Table name: external_banners
-#
-#  id                 :integer          not null, primary key
-#  name               :string
-#  sorting_order      :integer
-#  active             :boolean          default(FALSE)
-#  background_colour  :string
-#  text_content       :text
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  user_sessions      :boolean          default(FALSE)
-#  library            :boolean          default(FALSE)
-#  subscription_plans :boolean          default(FALSE)
-#  footer_pages       :boolean          default(FALSE)
-#  student_sign_ups   :boolean          default(FALSE)
-#  home_page_id       :integer
-#  content_page_id    :integer
-#
+# frozen_string_literal: true
 
 class ExternalBannersController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access marketing_resources_access))
+    ensure_user_has_access_rights(%w[content_management_access marketing_resources_access])
   end
   before_action :get_variables
 
@@ -32,7 +12,7 @@ class ExternalBannersController < ApplicationController
   end
 
   def show
-    #Preview for managers
+    # Preview for managers
     @banner = @external_banner
   end
 
@@ -40,11 +20,11 @@ class ExternalBannersController < ApplicationController
     @external_banner = ExternalBanner.new(sorting_order: 1, active: true, background_colour: '#FFFFFF')
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @external_banner = ExternalBanner.new(allowed_params)
+
     if @external_banner.save
       flash[:success] = I18n.t('controllers.external_banners.create.flash.success')
       redirect_to external_banners_url
@@ -67,7 +47,7 @@ class ExternalBannersController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       ExternalBanner.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -76,15 +56,14 @@ class ExternalBannersController < ApplicationController
     else
       flash[:error] = I18n.t('controllers.external_banners.destroy.flash.error')
     end
+
     redirect_to external_banners_url
   end
 
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @external_banner = ExternalBanner.where(id: params[:id]).first
-    end
+    @external_banner = ExternalBanner.where(id: params[:id]).first if params[:id].to_i > 0
     @layout = 'management'
   end
 
@@ -92,5 +71,4 @@ class ExternalBannersController < ApplicationController
     params.require(:external_banner).permit(:name, :sorting_order, :active, :background_colour, :text_content,
                                             :user_sessions, :library, :subscription_plans, :footer_pages, :student_sign_ups)
   end
-
 end

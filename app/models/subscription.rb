@@ -234,19 +234,19 @@ class Subscription < ApplicationRecord
 
   def reactivate_canceled
     # make sure sub plan is active
-    unless self.subscription_plan.active?
+    unless subscription_plan.active?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.plan_is_inactive'))
     end
     # ensure user is student user
-    unless self.user.trial_or_sub_user?
+    unless user.standard_student_user?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.not_student_user'))
     end
     # Make sure there is a default credit card in place
-    unless self.user.subscription_payment_cards.all_default_cards.length > 0
+    unless user.subscription_payment_cards.all_default_cards.length.positive?
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.no_default_payment_card'))
     end
     # Ensure this sub is canceled
-    unless self.stripe_status == 'canceled'
+    unless stripe_status == 'canceled'
       errors.add(:base, I18n.t('models.subscriptions.reactivate_canceled.sub_is_not_canceled'))
     end
 

@@ -135,7 +135,7 @@
     -elsif @current_subscription.canceled_pending_status?
 
       %h3=t('views.users.show.un_cancel_subscription.h3')
-      =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_subscription_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
+      =link_to t('views.users.show.un_cancel_subscription.button_call_to_action'), un_cancel_url(id: @current_subscription.id), method: :put, class: 'btn btn-red l-margin-top'
 
     -elsif @current_subscription.canceled_status?
 

@@ -10,11 +10,13 @@
 #  video_id                 :string
 #  duration                 :float
 #  vimeo_guid               :string
+#  voo_player_id            :string
 #
 
 require 'rails_helper'
 
 describe CourseModuleElementVideo do
+  let(:cme) { build_stubbed(:course_module_element_video) }
 
   describe 'relationships' do
     it { should belong_to(:course_module_element) }
@@ -41,4 +43,17 @@ describe CourseModuleElementVideo do
     it { should respond_to(:destroyable?) }
   end
 
+  describe 'Methods' do
+    context '#destroyable?' do
+      it 'always return true' do
+        expect(cme).to be_destroyable
+      end
+    end
+
+    context '#parent' do
+      it 'return course_module_element association' do
+        expect(cme.parent).to eq(cme.course_module_element)
+      end
+    end
+  end
 end

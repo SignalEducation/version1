@@ -1,25 +1,9 @@
-# == Schema Information
-#
-# Table name: faqs
-#
-#  id              :integer          not null, primary key
-#  name            :string
-#  name_url        :string
-#  active          :boolean          default(TRUE)
-#  sorting_order   :integer
-#  faq_section_id  :integer
-#  question_text   :text
-#  answer_text     :text
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  pre_answer_text :text
-#
+# frozen_string_literal: true
 
 class FaqsController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(content_management_access marketing_resources_access))
+    ensure_user_has_access_rights(%w[content_management_access marketing_resources_access])
   end
   before_action :get_variables
 
@@ -27,11 +11,11 @@ class FaqsController < ApplicationController
     @faq = Faq.new(sorting_order: 1, faq_section_id: params[:faq_section_id])
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @faq = Faq.new(allowed_params)
+
     if @faq.save
       flash[:success] = I18n.t('controllers.faqs.create.flash.success')
       redirect_to public_resources_url
@@ -54,7 +38,7 @@ class FaqsController < ApplicationController
     array_of_ids.each_with_index do |the_id, counter|
       Faq.find(the_id.to_i).update_attributes(sorting_order: (counter + 1))
     end
-    render json: {}, status: 200
+    render json: {}, status: :ok
   end
 
   def destroy
@@ -69,9 +53,7 @@ class FaqsController < ApplicationController
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @faq = Faq.where(id: params[:id]).first
-    end
+    @faq = Faq.where(id: params[:id]).first if params[:id].to_i > 0
     @faq_sections = FaqSection.all_in_order
     @layout = 'management'
   end
@@ -80,5 +62,4 @@ class FaqsController < ApplicationController
     params.require(:faq).permit(:name, :name_url, :active, :sorting_order, :faq_section_id,
                                 :question_text, :answer_text, :pre_answer_text)
   end
-
 end

@@ -10,13 +10,21 @@
 #  video_id                 :string
 #  duration                 :float
 #  vimeo_guid               :string
+#  voo_player_id            :string
 #
 
 FactoryBot.define do
   factory :course_module_element_video do
-    course_module_element_id { 1 }
     duration { 10 }
-    sequence(:vimeo_guid)             { |n| "vimeo-#{n}" }
-  end
+    course_module_element
 
+    trait :vimeo do
+      sequence(:vimeo_guid) { |n| "vimeo-#{n}" }
+    end
+
+    trait :dacast do
+      vimeo_guid { 'not empty' }
+      sequence(:dacast_id) { |n| "dacast-#{n}" }
+    end
+  end
 end

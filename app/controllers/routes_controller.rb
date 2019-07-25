@@ -1,5 +1,6 @@
-class RoutesController < ApplicationController
+# frozen_string_literal: true
 
+class RoutesController < ApplicationController
   def root
     if current_user
       redirect_to student_dashboard_url

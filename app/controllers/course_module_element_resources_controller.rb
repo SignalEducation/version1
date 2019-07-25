@@ -1,22 +1,6 @@
-# == Schema Information
-#
-# Table name: course_module_element_resources
-#
-#  id                       :integer          not null, primary key
-#  course_module_element_id :integer
-#  name                     :string
-#  web_url                  :string
-#  created_at               :datetime
-#  updated_at               :datetime
-#  upload_file_name         :string
-#  upload_content_type      :string
-#  upload_file_size         :integer
-#  upload_updated_at        :datetime
-#  destroyed_at             :datetime
-#
+# frozen_string_literal: true
 
 class CourseModuleElementResourcesController < ApplicationController
-
   before_action :logged_in_required
   before_action do
     ensure_user_has_access_rights(%w(content_management_access))
@@ -32,7 +16,6 @@ class CourseModuleElementResourcesController < ApplicationController
   end
 
   def create
-
     @course_module_element_resource = CourseModuleElementResource.new(allowed_params)
 
     if @course_module_element_resource.save
@@ -44,8 +27,7 @@ class CourseModuleElementResourcesController < ApplicationController
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @course_module_element_resource.update_attributes(allowed_params)
@@ -55,7 +37,6 @@ class CourseModuleElementResourcesController < ApplicationController
       render action: :edit
     end
   end
-
 
   def destroy
     if @course_module_element_resource.destroy
@@ -70,10 +51,7 @@ class CourseModuleElementResourcesController < ApplicationController
 
   def get_variables
     @course_module_element = CourseModuleElement.where(id: params[:course_module_element_id]).first
-    if params[:id].to_i > 0
-      @course_module_element_resource = CourseModuleElementResource.where(id: params[:id]).first
-    end
-
+    @course_module_element_resource = CourseModuleElementResource.where(id: params[:id]).first if params[:id].to_i > 0
     @mathjax_required = true
     @layout = 'management'
   end
@@ -83,5 +61,4 @@ class CourseModuleElementResourcesController < ApplicationController
                                                   :web_url, :upload, :upload_file_name, :upload_content_type,
                                                   :upload_file_size, :upload_updated_at, :_destroy)
   end
-
 end

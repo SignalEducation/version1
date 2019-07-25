@@ -37,7 +37,7 @@
                   %td
                     =order.stripe? ? 'Stripe' : 'PayPal'
                   %td
-                    =number_in_local_currency(order.product.price, order.product.currency_id)
+                    =number_in_local_currency(order.product.price, order.product.currency)
                   %td
                     -if order.product && order.product.mock_exam
                       =link_to order.product.mock_exam.file.url, target: '_blank' do

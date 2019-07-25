@@ -1,22 +1,9 @@
-# == Schema Information
-#
-# Table name: subscription_plan_categories
-#
-#  id                   :integer          not null, primary key
-#  name                 :string
-#  available_from       :datetime
-#  available_to         :datetime
-#  guid                 :string
-#  created_at           :datetime
-#  updated_at           :datetime
-#  trial_period_in_days :integer
-#
+# frozen_string_literal: true
 
 class SubscriptionPlanCategoriesController < ApplicationController
-
   before_action :logged_in_required
   before_action do
-    ensure_user_has_access_rights(%w(stripe_management_access))
+    ensure_user_has_access_rights(%w[stripe_management_access])
   end
   before_action :get_variables
 
@@ -24,18 +11,17 @@ class SubscriptionPlanCategoriesController < ApplicationController
     @subscription_plan_categories = SubscriptionPlanCategory.paginate(per_page: 50, page: params[:page]).all_in_order
   end
 
-  def show
-  end
+  def show; end
 
   def new
     @subscription_plan_category = SubscriptionPlanCategory.new
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @subscription_plan_category = SubscriptionPlanCategory.new(allowed_params)
+
     if @subscription_plan_category.save
       flash[:success] = I18n.t('controllers.subscription_plan_categories.create.flash.success')
       redirect_to subscription_plan_categories_url
@@ -53,27 +39,24 @@ class SubscriptionPlanCategoriesController < ApplicationController
     end
   end
 
-
   def destroy
     if @subscription_plan_category.destroy
       flash[:success] = I18n.t('controllers.subscription_plan_categories.destroy.flash.success')
     else
       flash[:error] = I18n.t('controllers.subscription_plan_categories.destroy.flash.error')
     end
+
     redirect_to subscription_plan_categories_url
   end
 
   protected
 
   def get_variables
-    if params[:id].to_i > 0
-      @subscription_plan_category = SubscriptionPlanCategory.where(id: params[:id]).first
-    end
-    @layout = 'management'
+    @layout                     = 'management'
+    @subscription_plan_category = SubscriptionPlanCategory.where(id: params[:id]).first if params[:id].to_i > 0
   end
 
   def allowed_params
     params.require(:subscription_plan_category).permit(:name, :available_from, :available_to, :sub_heading_text)
   end
-
 end

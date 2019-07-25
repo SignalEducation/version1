@@ -20,7 +20,6 @@
 #
 
 class Enrollment < ApplicationRecord
-
   # Constants
 
   # relationships
@@ -36,7 +35,7 @@ class Enrollment < ApplicationRecord
   validates :subject_course_user_log_id, presence: true
   validates :exam_body_id, presence: true
   validates :exam_date, allow_nil: true, inclusion:
-      {in: Date.today..Date.today + 2.years, message: "%{value} is not a valid date" }
+      { in: Date.today..Date.today + 2.years, message: '%{value} is not a valid date' }
 
 
   # callbacks
@@ -47,35 +46,45 @@ class Enrollment < ApplicationRecord
   after_update :create_expiration_worker, if: :exam_date_changed?
 
   # scopes
-  scope :all_in_order, -> { order(:active, :created_at) }
-  scope :all_in_admin_order, -> { order(:subject_course_id, :created_at) }
+  scope :all_in_order,              -> { order(:active, :created_at) }
+  scope :all_in_admin_order,        -> { order(:subject_course_id, :created_at) }
   scope :all_in_exam_sitting_order, -> { order(:exam_sitting_id) }
-  scope :all_reverse_order, -> { order(:created_at).reverse }
-  scope :all_in_exam_order, -> { order(:exam_sitting_id) }
-  scope :by_sitting_date, -> { order('exam_sittings.date').includes(:exam_sitting).reverse }
-  scope :all_in_recent_order, -> { order(:updated_at).reverse }
-  scope :all_active, -> { includes(:subject_course).where(active: true) }
-  scope :all_not_active, -> { includes(:subject_course).where(active: false) }
-  scope :all_expired, -> { where(expired: true) }
-  scope :all_valid, -> { where(active: true, expired: false) }
-  scope :all_not_expired, -> { where(expired: false) }
-  scope :for_subject_course, lambda { |course_id| where(subject_course_id: course_id) }
-  scope :for_active_course, -> { where(active: true, expired: false).includes(:subject_course).references(:subject_courses).where('subject_courses.active = ?', true) }
-  scope :for_user, lambda { |user_id| where(user_id: user_id) }
-  scope :for_course_and_user, lambda { |course_id, user_id| where(subject_course_id: course_id, user_id: user_id) }
-  scope :this_week, -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
-  scope :by_sitting, lambda { |sitting_id| where(exam_sitting_id: sitting_id) }
+  scope :all_reverse_order,         -> { order(created_at: :desc) }
+  scope :all_in_exam_order,         -> { order(:exam_sitting_id) }
+  scope :all_in_recent_order,       -> { order(updated_at: :desc) }
+  scope :all_active,                -> { includes(:subject_course).where(active: true) }
+  scope :all_not_active,            -> { includes(:subject_course).where(active: false) }
+  scope :all_expired,               -> { where(expired: true) }
+  scope :all_valid,                 -> { where(active: true, expired: false) }
+  scope :all_not_expired,           -> { where(expired: false) }
+  scope :for_subject_course,        ->(course_id) { where(subject_course_id: course_id) }
+  scope :for_user,                  ->(user_id) { where(user_id: user_id) }
+  scope :for_course_and_user,       ->(course_id, user_id) { where(subject_course_id: course_id, user_id: user_id) }
+  scope :by_sitting_date,           -> { includes(:exam_sitting).order('exam_sittings.date desc') }
+  scope :this_week,                 -> { where(created_at: Time.now.beginning_of_week..Time.now.end_of_week) }
 
-  scope :all_completed, ->() {
-    joins(:subject_course_user_log).where('subject_course_user_logs.percentage_complete > 99')
+  scope :all_completed, lambda {
+    joins(:subject_course_user_log).
+      where('subject_course_user_logs.percentage_complete > 99')
+  }
+
+  scope :for_active_course, lambda {
+    includes(:subject_course).
+      where(active: true, expired: false).
+      references(:subject_courses).
+      where('subject_courses.active = ?', true)
   }
 
   # class methods
   def self.search(search)
-    if search
-      Enrollment.joins(:user).where('users.email ILIKE ? ', "%#{search}%")
+    search.present? ? joins(:user).where('users.email ILIKE ? ', "%#{search}%") : all
+  end
+
+  def self.by_sitting(exam_sitting)
+    if exam_sitting && exam_sitting[:id]
+      where(exam_sitting_id: exam_sitting[:id])
     else
-      Enrollment.paginate(per_page: 50, page: params[:page])
+      all
     end
   end
 

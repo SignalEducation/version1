@@ -105,8 +105,8 @@ class InvoiceDocument < Prawn::Document
     stroke_horizontal_rule
     stroke_horizontal_rule
     move_down 25
-    text 'Signal Education Limited t/a LearnSignal, 18-20 Merrion Street Upper Dublin 2, Ireland', size: 10, align: :center
-    text 'email: info@learnsignal.com   phone: +353 1 4428581', size: 10, align: :center
+    text "Signal Education Limited t/a LearnSignal, Fleming Court, Fleming's Place, Dublin, D04 N4X9, Ireland", size: 10, align: :center
+    text 'email: info@learnsignal.com   phone: +353 1 443 4575', size: 10, align: :center
     text 'VAT Number: IE3313351FH', size: 10, align: :center
   end
 

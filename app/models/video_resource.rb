@@ -41,18 +41,9 @@ class VideoResource < ApplicationRecord
 
   protected
 
-  def check_dependencies
-    unless self.destroyable?
-      errors.add(:base, I18n.t('models.general.dependencies_exist'))
-      false
-    end
-  end
-
   def one_field_set
-    if self.question.blank? && self.answer.blank? && self.notes.blank?
-      errors.add(:base, I18n.t('models.video_resources.must_populate_one'))
-    end
+    return unless question.blank? && answer.blank? && notes.blank?
+
+    errors.add(:base, I18n.t('models.video_resources.must_populate_one'))
   end
-
-
 end

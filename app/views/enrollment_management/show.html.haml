@@ -46,7 +46,7 @@
                     =@enrollment.exam_body.name
 
             .col-sm-2
-              =link_to 'CSV - Excel', export_enrollment_log_data_path(id: @enrollment.id, format: :xls), class: 'btn btn-secondary-reverse'
+              =link_to 'CSV - Excel', export_log_data_path(id: @enrollment.id, format: :xls), class: 'btn btn-secondary-reverse'
 
 
 

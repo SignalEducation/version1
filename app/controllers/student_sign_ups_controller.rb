@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 class StudentSignUpsController < ApplicationController
 
   skip_after_action :intercom_rails_auto_include, only: [:landing, :new, :sign_in_or_register]
-  before_action :check_logged_in_status, except: [:landing, :subscribe, :group]
+  before_action :check_logged_in_status, except: %i[landing subscribe group]
   before_action :get_variables
-  before_action :create_user_object, only: [:new, :sign_in_or_register, :landing]
-  before_action :create_user_session_object, only: [:sign_in_or_register, :landing]
-  before_action :layout_variables, only: [:home, :landing]
+  before_action :create_user_object, only: %i[new sign_in_or_register landing]
+  before_action :create_user_session_object, only: %i[sign_in_or_register landing]
+  before_action :layout_variables, only: %i[home landing]
 
   def home
     @home_page = HomePage.where(home: true).where(public_url: '/').first
+
     if @home_page
       seo_title_maker(@home_page.seo_title, @home_page.seo_description, @home_page.seo_no_index)
       @footer = @home_page.footer_option
@@ -18,10 +21,10 @@ class StudentSignUpsController < ApplicationController
                       false)
       @footer = 'white'
     end
-    #TODO - Is this call to get subscription plans needed ??
+    # TODO, Is this call to get subscription plans needed ??
     @subscription_plans = SubscriptionPlan.where(subscription_plan_category_id: nil).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
     @form_type = 'Home Page Contact'
-    #Added respond block to stop the missing template errors with image, text, json types
+    # Added respond block to stop the missing template errors with image, text, json types
     respond_to do |format|
       format.html
       format.all { redirect_to(missing_page_url) }
@@ -29,30 +32,35 @@ class StudentSignUpsController < ApplicationController
   end
 
   def landing
-    @home_page = HomePage.find_by_public_url(params[:public_url])
+    @home_page = HomePage.find_by(public_url: params[:public_url])
+
     if @home_page
       @public_url = params[:public_url]
       @group = @home_page.group
       @exam_body = @group.exam_body
 
-      if current_user
-        ip_country = IpAddress.get_country(request.remote_ip)
-        country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-        @currency_id = country.currency_id
-      end
+      @currency_id =
+        if current_user
+          current_user.country_id
+        else
+          ip_country = IpAddress.get_country(request.remote_ip)
+          country = ip_country || Country.find_by(name: 'United Kingdom')
+          country.currency_id
+        end
 
-      if @home_page.subscription_plan_category && @home_page.subscription_plan_category.current
-        @subscription_plans = @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
-      else
-        @subscription_plans = SubscriptionPlan.where(
-            subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
-        ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
-      end
+      @subscription_plans =
+        if @home_page&.subscription_plan_category&.current
+          @home_page.subscription_plan_category.subscription_plans.for_exam_body(@group.exam_body_id).in_currency(@currency_id).all_active.all_in_order
+        else
+          SubscriptionPlan.where(subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id).
+            includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
+        end
+
       @preferred_plan = @subscription_plans.where(payment_frequency_in_months: @home_page.preferred_payment_frequency).first
       flash[:plan_guid] = @preferred_plan.guid if @preferred_plan
       flash[:exam_body] = @exam_body.id if @exam_body
 
-      referral_code = ReferralCode.find_by_code(request.params[:ref_code]) if params[:ref_code]
+      referral_code = ReferralCode.find_by(code: request.params[:ref_code]) if params[:ref_code]
       drop_referral_code_cookie(referral_code) if params[:ref_code] && referral_code
       # This is for sticky sub plans
 
@@ -60,6 +68,7 @@ class StudentSignUpsController < ApplicationController
     else
       redirect_to root_url
     end
+
     @footer = @home_page ? @home_page.footer_option : 'white'
     @form_type = 'Landing Page Contact'
   end
@@ -76,14 +85,18 @@ class StudentSignUpsController < ApplicationController
   def group
     @group = Group.find_by(name_url: params[:name_url])
     @exam_body = @group.exam_body
-    #seo_title_maker(@exam_body.seo_title, @exam_body.seo_description, nil)
     seo_title_maker(@group.seo_title, @group.seo_description, nil)
 
-    ip_country = IpAddress.get_country(request.remote_ip)
-    country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
-    @currency_id = current_user ? current_user.get_currency(country).id : country.try(:currency_id)
+    @currency_id =
+      if current_user
+        current_user.country_id
+      else
+        ip_country = IpAddress.get_country(request.remote_ip)
+        country = ip_country || Country.find_by(name: 'United Kingdom')
+        country.currency_id
+      end
 
-    if country && @currency_id
+    if @currency_id
       @subscription_plans = SubscriptionPlan.where(
           subscription_plan_category_id: nil, exam_body_id: @group.exam_body_id
       ).includes(:currency).in_currency(@currency_id).all_active.all_in_order.limit(3)
@@ -99,7 +112,6 @@ class StudentSignUpsController < ApplicationController
     seo_title_maker('Free Basic Plan Registration | LearnSignal',
                     'Register for our basic membership plan to access your essential course materials and discover the smarter way to study with learnsignal.',
                     false)
-
   end
 
   def create
@@ -115,6 +127,7 @@ class StudentSignUpsController < ApplicationController
         currency: user_currency
       )
     )
+
     @user.pre_creation_setup
 
     if @user.valid? && @user.save
@@ -134,8 +147,7 @@ class StudentSignUpsController < ApplicationController
         flash[:datalayer_body] = @user.try(:preferred_exam_body).try(:name)
         redirect_to personal_sign_up_complete_url
       end
-
-    elsif request && request.referrer
+    elsif request&.referrer
       set_session_errors(@user)
       redirect_to request.referrer
     else
@@ -146,75 +158,16 @@ class StudentSignUpsController < ApplicationController
   def show
     @banner = nil
     seo_title_maker('Thank You for Registering | LearnSignal',
-                    "Thank you for registering to our basic membership plan you can now explore our course content and discover the smarter way to study with learnsignal.",
+                    'Thank you for registering to our basic membership plan you can now explore our course content and discover the smarter way to study with learnsignal.',
                     false)
   end
 
-  def subscribe
-    if params[:mailchimp_list_guid] && !params[:mailchimp_list_guid].empty?
-      list_id = params[:mailchimp_list_guid]
-    else
-      list_id = 'a716c282e2' # Newsletter List
-    end
-
-    email = params[:email][:address]
-    full_name = params[:full_name][:address] if params[:full_name]
-    first_name = params[:first_name][:address] if params[:first_name]
-    last_name = params[:last_name][:address] if params[:last_name]
-    student_number = params[:student_number][:address] if params[:student_number]
-    course_name = params[:course]
-    date_of_birth = params[:date_of_birth][:address] if params[:date_of_birth]
-
-    if !email.blank?
-      begin
-        # Bootcamp Guarantee List has Student Number Field other do not
-        if params[:student_number]
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => full_name,
-                                                            'snumber' => student_number,
-                                                            'dob' => date_of_birth,
-                                                            'coursename' => course_name})
-        else
-          @mc.lists.subscribe(list_id, {'email' => email}, {'fname' => first_name,
-                                                            'lname' => last_name,
-                                                            'coursename' => course_name})
-        end
-
-        respond_to do |format|
-          format.json{render json: {message: 'Success! Check your email to confirm your subscription.'}}
-        end
-      rescue Mailchimp::ListAlreadySubscribedError
-        respond_to do |format|
-          format.json{render json: {message: "#{email} is already subscribed to the list"}}
-        end
-      rescue Mailchimp::ListDoesNotExistError
-        respond_to do |format|
-          format.json{render json: {message: 'The list could not be found.'}}
-        end
-      rescue Mailchimp::Error => ex
-        if ex.message
-          respond_to do |format|
-            format.json{render json: {message: 'There was an error. Please enter valid email.'}}
-          end
-          Rails.logger.error "ERROR: Mailchimp#error - Returned #{ex.message}"
-        else
-          respond_to do |format|
-            format.json{render json: {message: 'An unknown error occurred.'}}
-          end
-        end
-      end
-    else
-      respond_to do |format|
-        format.json{render json: {message: 'Email Address Cannot be blank. Please enter valid email.'}}
-      end
-
-    end
-  end
 
   private
 
   def student_allowed_params
     params.require(:user).permit(
-      :email, :first_name, :last_name, :preferred_exam_body_id, :country_id, 
+      :email, :first_name, :last_name, :preferred_exam_body_id, :country_id,
       :locale, :password, :password_confirmation, :terms_and_conditions,
       :communication_approval
     )
@@ -224,43 +177,44 @@ class StudentSignUpsController < ApplicationController
     @user = User.new
     # Setting the country and currency by the IP look-up, if it fails both values are set for primary marketing audience (currently GB). This also insures values are set for test environment.
     ip_country = IpAddress.get_country(request.remote_ip)
-    @country = ip_country ? ip_country : Country.find_by_name('United Kingdom')
+    @country = ip_country || Country.find_by(name: 'United Kingdom')
     if @country
       @user.country_id = @country.id
       @currency_id = @country.currency_id
     end
-    #To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home or landing actions
-    if session[:sign_up_errors] && session[:valid_params]
-      session[:sign_up_errors].each do |k, v|
-        v.each { |err| @user.errors.add(k, err) }
-      end
-      @user.first_name = session[:valid_params][0]
-      @user.last_name = session[:valid_params][1]
-      @user.email = session[:valid_params][2]
-      @user.terms_and_conditions = session[:valid_params][3]
-      @user.preferred_exam_body_id = session[:valid_params][4]
-      session.delete(:sign_up_errors)
-      session.delete(:valid_params)
+
+    # To allow displaying of sign_up_errors and valid params since a redirect is used at the end of student_create because it might have to redirect to home or landing actions
+    return unless session[:sign_up_errors] && session[:valid_params]
+
+    session[:sign_up_errors].each do |k, v|
+      v.each { |err| @user.errors.add(k, err) }
     end
+    @user.first_name = session[:valid_params][0]
+    @user.last_name = session[:valid_params][1]
+    @user.email = session[:valid_params][2]
+    @user.terms_and_conditions = session[:valid_params][3]
+    @user.preferred_exam_body_id = session[:valid_params][4]
+    session.delete(:sign_up_errors)
+    session.delete(:valid_params)
   end
 
   def create_user_session_object
     @user_session = UserSession.new
-    #To allow displaying of user_session_errors
-    if session[:login_errors] && session[:valid_user_session_params]
-      session[:login_errors].each do |k, v|
-        v.each { |err| @user_session.errors.add(k, err) }
-      end
-      @user_session.email = session[:valid_user_session_params][0]
-      @user_session.password = session[:valid_user_session_params][1]
-      session.delete(:login_errors)
-      session.delete(:valid_user_session_params)
+    # To allow displaying of user_session_errors
+    return unless session[:login_errors] && session[:valid_user_session_params]
+
+    session[:login_errors].each do |k, v|
+      v.each { |err| @user_session.errors.add(k, err) }
     end
+    @user_session.email = session[:valid_user_session_params][0]
+    @user_session.password = session[:valid_user_session_params][1]
+    session.delete(:login_errors)
+    session.delete(:valid_user_session_params)
   end
 
   def check_logged_in_status
     if params[:home_pages_public_url].to_s == '500-page'
-      render file: 'public/500.html', layout: nil, status: 500
+      render file: 'public/500.html', layout: nil, status: :internal_server_error
     elsif current_user
       redirect_to student_dashboard_url
     end
@@ -292,13 +246,13 @@ class StudentSignUpsController < ApplicationController
   end
 
   def set_session_errors(user)
-    session[:sign_up_errors] = user.errors unless user.errors.empty?
-    session[:valid_params] = [
-      user.first_name,
-      user.last_name,
-      user.email,
-      user.terms_and_conditions,
-      user.preferred_exam_body_id
-    ] unless user.errors.empty?
+    return if user.errors.empty?
+
+    session[:sign_up_errors] = user.errors
+    session[:valid_params] = [user.first_name,
+                              user.last_name,
+                              user.email,
+                              user.terms_and_conditions,
+                              user.preferred_exam_body_id]
   end
 end

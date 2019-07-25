@@ -8,7 +8,7 @@
   .bg-white.p-3.px-sm-5.pt-sm-4
     .py-3
       %p.h5
-        -if @home_page.registration_form_heading && !@home_page.registration_form_heading.empty?
+        -if @home_page&.registration_form_heading.present?
           =@home_page.registration_form_heading
 
     =render partial: 'layouts/error_messages', locals: {thing: @user, message: t('views.home_pages.sign_up_form.error_panel_caption')}
@@ -72,7 +72,7 @@
         .sk-circle12.sk-child
 
       .logo-acca
-        -if @home_page.logo_image && @home_page.logo_image.present?
+        -if @home_page&.logo_image.present?
           =image_tag(@home_page.logo_image, alt: 'Logo')
 
 
