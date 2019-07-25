@@ -33,18 +33,11 @@ export default {
     },
 
     methods: {
-
             fetchQuestionTypes: function (page, index) {
-                console.log('Question Types >>')
-                axios.get('http://localhost:3000/cbes/1/question_types/')
+                axios.get('http://localhost:3000/api/cbe_question_types/')
                     .then(response => {
-                        console.log("**** Question Types")
-                        console.log(response)
-                        console.log(response.data)
-                        console.log("**** Question Types")
                         this.$store.questionTypes = response.data
                         this.isLoaded = true
-
                     })
                     .catch(e => {
                         console.log('Error' + e)

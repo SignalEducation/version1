@@ -42,24 +42,14 @@ export default {
         }},
         methods: {
             addSection: function (page, index) {
-                console.log("&1")
                 this.questionDetails['name'] = this.sectionName
                 this.questionDetails['scenario_label'] = this.sectionLabel
                 this.questionDetails['scenario_description'] = this.sectionDescription
                 this.questionDetails['cbe_id'] = this.$store.state.currentCbeId
-                console.log("fadfasdfdas")
-                console.log(JSON.stringify(this.sectionDetails))
-                axios.post('http://localhost:3000/cbes/1/create_section', {cbe_section: this.sectionDetails})
+                
+                axios.post('http://localhost:3000/api/cbes/' + this.$store.state.currentCbeId + 'create_section', {cbe_section: this.sectionDetails})
                     .then(response => {
-                        console.log(response.status)
-                       
-                        this.createdSection = response.data
-                        console.log(JSON.stringify(response.data))
-                        console.log("******** " + JSON.stringify(this.createdSection))
-                        /* his.$store.commit('setCurrentCbeId', this.createdCBE.cbeId)
-                        console.log(" From store ******** " + this.createdCBE.cbeId )
-                        */
-                       
+                      this.createdSection = response.data
                     })
                     .catch(error => {
                         console.log(error)

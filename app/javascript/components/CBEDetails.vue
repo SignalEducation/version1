@@ -65,31 +65,24 @@
                 watch: {
                     cbeName: function (val) {
                         this.$store.commit('setCbeName', this.cbeName)
-                        console.log(this.$store.state.cbeName)
                     },
                     cbeTitle: function (val) {
                         this.$store.commit('setCbeTitle', this.cbeTitle)
-                        console.log(this.$store.state.cbeTitle)
                     },
                     cbeDescription: function (val) {
                         this.$store.commit('setCbeDescription', this.cbeDescription)
-                        console.log(this.$store.state.cbeDescription)
                     },
                     setCbeSectionName: function (val) {
                         this.$store.commit('setCbeSectionName', this.cbeSectionName)
-                        console.log(this.$store.state.setCbeSectionName)
                     },
                     cbeTimeLimit: function (val) {
                         this.$store.commit('setCbeTimeLimit', this.cbeTimeLimit)
-                        console.log(this.$store.state.cbeTimeLimit)
                     },
                     cbeNumberOfPauses: function (val) {
                         this.$store.commit('setCbeNumberOfPauses', this.cbeNumberOfPauses)
-                        console.log(this.$store.state.cbeNumberOfPauses)
                     },                    
                     cbeLengthOfPauses: function (val) {
                         this.$store.commit('setCbeLengthOfPauses', this.cbeLengthOfPauses)
-                        console.log(this.$store.state.cbeLengthOfPauses)
                     },                    
                 },
     }

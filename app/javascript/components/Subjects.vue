@@ -30,7 +30,6 @@
         },
         methods: {
             showSubjects: function (page, index) {
-                console.log('TEST 1')
                 axios.get('http://localhost:3000/api/subjects/')
                     .then(response => {
                         this.options = response.data
@@ -41,18 +40,10 @@
 
             },
             fetchQuestionTypes: function (page, index) {
-                console.log('Question Types >>')
-                axios.get('http://localhost:3000/api/question_types/')
+                axios.get('http://localhost:3000/api/cbe_question_types/')
                     .then(response => {
-                        console.log("**** Question Types")
-                        console.log(response.status)
-                        console.log(response.data)
-                        console.log("**** Question Types")
                         this.$store.questionTypes = response.data
-                        console.log("**** Store")
-                        console.log(this.$store.questionTypes)
                         return response.data
-
                     })
                     .catch(e => {
                         console.log('Error' + e)
@@ -60,15 +51,9 @@
 
             },
             fetchQuestionStatuses: function (page, index) {
-                console.log('Question Types >>')
-                axios.get('http://localhost:3000/api/question_statuses/')
+                axios.get('http://localhost:3000/api/cbe_question_statuses/')
                     .then(response => {
-                        console.log("**** Question Statuses")
-                        console.log(response)
-                        console.log(response.data)
-                        console.log("**** Question Statuses")
-                        this.$store.questionStatuses = response.data
-
+                        this.$store.questionStatuses = response.datax
                     })
                     .catch(e => {
                         console.log('Error' + e)
@@ -76,13 +61,8 @@
 
             },
             fetchSectionTypes: function (page, index) {
-                console.log('Question Types >>')
-                axios.get('http://localhost:3000/api/section_types/')
+                axios.get('http://localhost:3000/api/cbe_section_types/')
                     .then(response => {
-                        console.log("**** Section Types")
-                        console.log(response)
-                        console.log(response.data)
-                        console.log("**** Section Types")
                         this.$store.SectionTypes = response.data
 
                     })

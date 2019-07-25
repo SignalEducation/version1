@@ -37,32 +37,18 @@ export default {
         props: ['showQuestions'],
         methods: {
             saveSection: function (page, index) {
-                console.log("&1")
                 this.sectionDetails['name'] = this.sectionName
                 this.sectionDetails['scenario_label'] = this.sectionLabel
                 this.sectionDetails['scenario_description'] = this.sectionDescription
                 this.sectionDetails['cbe_id'] = this.$store.state.currentCbeId
-                console.log("Section -- CBE ID -- " +  JSON.stringify(this.$store.state.currentCbeId))
-                console.log(JSON.stringify(this.sectionDetails))
                 axios.post('http://localhost:3000/cbes/' + this.$store.state.currentCbeId + '/create_section', {cbe_section: this.sectionDetails})
                     .then(response => {
-                        console.log(response.status)
-                       
-                        this.createdSection = response.data
-                        console.log("******** ")
-                        console.log(JSON.stringify(response.data))
-                        console.log("******** SEction ID " + JSON.stringify(this.createdSection.cbeSectionId))
-
-       
+                     this.createdSection = response.data       
                         this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
                         if (this.$store.state.currentSectionId > 0 ) {
                             this.$store.state.showQuestions = true
                             this.$store.state.showSections = false
                         }
-                        
-                        console.log("******** SEction ID " + this.$store.state.currentSectionId)
-                        console.log("******** SEction ID " + this.$store.state.showQuestions )
-                       
                     })
                     .catch(error => {
                         console.log(error)
