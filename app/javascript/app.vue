@@ -10,6 +10,7 @@
                   <split-pane  :min-percent='50' :default-percent='50' split="vertical">
                     <template slot="paneL">
   
+                      <QuestionsList> </QuestionsList>
                      <div v-if="showSubjects = true">
                         <Subjects ref="subjects"></Subjects> 
                       </div>
