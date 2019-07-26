@@ -208,7 +208,7 @@ class CourseModuleElementsController < ApplicationController
         :id,
         :duration,
         :vimeo_guid,
-        :voo_player_id,
+        :dacast_id,
         :video_id
       ],
       course_module_element_quiz_attributes: [
