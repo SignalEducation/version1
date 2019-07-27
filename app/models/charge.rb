@@ -76,7 +76,7 @@ class Charge < ApplicationRecord
     invoice = Invoice.where(stripe_guid: event[:invoice]).first
     subscription = invoice.subscription
     user = User.where(stripe_customer_id: event[:customer]).first
-    card = SubscriptionPaymentCard.where(stripe_card_guid: event[:source][:id]).first
+    card = SubscriptionPaymentCard.find_by(stripe_card_guid: event[:source][:three_d_secure][:card])
 
     Charge.create!(
       subscription_id: subscription.id,

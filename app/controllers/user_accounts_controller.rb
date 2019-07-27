@@ -59,11 +59,32 @@ class UserAccountsController < ApplicationController
     redirect_to account_url
   end
 
+  def sca_successful
+    @invoice = Invoice.find(params[:id])
+    if @invoice.mark_payment_action_successful
+      render json: {}, status: :ok
+    else
+      render json: {}, status: :internal_server_error
+    end
+  end
+
   def subscription_invoice
     redirect_to pdf_invoice_path(format: :pdf), params
   end
 
+  def show_invoice
+    email_sca_guid = params['guid']
+    @invoice = Invoice.find_by(sca_verification_guid: email_sca_guid)
+    stripe_guid = @invoice.stripe_guid
+    stripe_client_secret(stripe_guid) unless Rails.env.test?
+  end
+
   protected
+
+  def stripe_client_secret(stripe_guid)
+    stripe_invoice = StripeService.new.get_invoice(stripe_guid)
+    @client_secret = stripe_invoice.payment_intent.client_secret
+  end
 
   def change_password_params
     params.require(:user).permit(:current_password, :password, :password_confirmation)

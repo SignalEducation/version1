@@ -112,14 +112,17 @@ describe Invoice do
         invoice_2.mark_payment_action_required
       end
 
-      it 'calls #send_3d_secure_email' do
-        allow(invoice_2.subscription).to receive(:mark_payment_action_required!)
-        expect(invoice_2).to receive(:send_3d_secure_email)
+      describe 'calls #send_3d_secure_email' do
+        it 'calls the Mandrill worker with the receipt email' do
+          allow(Rails.env).to receive(:test?).and_return(false)
+          expect(MandrillWorker).to receive(:perform_async)
 
-        invoice_2.mark_payment_action_required
+          invoice.send_receipt('')
+        end
       end
+      
     end
-
+    
     describe '#send_receipt' do
       describe 'for Rails.env.test?' do
         it 'does nothing' do

@@ -10,11 +10,11 @@
 #  updated_at               :datetime         not null
 #  file_file_name           :string
 #  file_content_type        :string
-#  file_file_size           :integer
+#  file_file_size           :bigint(8)
 #  file_updated_at          :datetime
 #  cover_image_file_name    :string
 #  cover_image_content_type :string
-#  cover_image_file_size    :integer
+#  cover_image_file_size    :bigint(8)
 #  cover_image_updated_at   :datetime
 #
 

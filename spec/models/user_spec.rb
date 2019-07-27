@@ -38,7 +38,7 @@
 #  name_url                        :string
 #  profile_image_file_name         :string
 #  profile_image_content_type      :string
-#  profile_image_file_size         :integer
+#  profile_image_file_size         :bigint(8)
 #  profile_image_updated_at        :datetime
 #  email_verification_code         :string
 #  email_verified_at               :datetime

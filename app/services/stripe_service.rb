@@ -20,7 +20,7 @@ class StripeService
     stripe_plan = Stripe::Plan.create(
       amount: (subscription_plan.price.to_f * 100).to_i,
       currency: subscription_plan.currency.iso_code.downcase,
-      interval: 'month',
+      interval: Rails.env.staging? ? 'day' : 'month',
       interval_count: subscription_plan.payment_frequency_in_months,
       product: {
         name: "LearnSignal #{subscription_plan.name}",
@@ -28,7 +28,6 @@ class StripeService
       },
       id: stripe_plan_id
     )
-
     update_subscription_plan(subscription_plan, stripe_plan)
   end
 
@@ -66,7 +65,7 @@ class StripeService
     end
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
     Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::PaymentError, "Sorry! Your request was declined because - #{err[:message]}"
   rescue => e
@@ -87,14 +86,12 @@ class StripeService
 
     if stripe_subscription = get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
       ActiveRecord::Base.transaction do
-        new_sub = Subscription.new(
-          user_id: user.id,
-          subscription_plan_id: new_plan_id,
-          complimentary: false,
-          livemode: (stripe_subscription[:plan][:livemode]),
-          stripe_status: stripe_subscription[:status],
-          changed_from: old_sub
-        )
+        new_sub = Subscription.new(user_id: user.id,
+                                   subscription_plan_id: new_plan_id,
+                                   complimentary: false,
+                                   livemode: (stripe_subscription[:plan][:livemode]),
+                                   stripe_status: stripe_subscription[:status],
+                                   changed_from: old_sub)
         # mass-assign-protected attributes
 
         ## This means it will have the same stripe_guid as the old Subscription ##
@@ -212,7 +209,7 @@ class StripeService
     )
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
     Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::PaymentError, "Sorry! Your request was declined because - #{err[:message]}"
   rescue => e
@@ -230,7 +227,7 @@ class StripeService
     stripe_subscription.save
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
     Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   end
@@ -245,12 +242,11 @@ class StripeService
       expand: ['latest_invoice.payment_intent']
     )
   rescue Stripe::CardError => e
-    body = e.json_body
-    err  = body[:error]
+    err = e
     Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   rescue => e
-    Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
+    Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect} --- #{e} ---- "
     raise Learnsignal::SubscriptionError, 'Sorry Something went wrong! Please contact us for assistance.'
   end
 
