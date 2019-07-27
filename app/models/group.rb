@@ -57,6 +57,7 @@ class Group < ApplicationRecord
   # scopes
   scope :all_in_order, -> { order(:sorting_order, :name) }
   scope :all_active, -> { where(active: true) }
+  scope :with_active_body, -> { joins(:exam_body).where(exam_bodies: { active: true }) }
 
   # class methods
 

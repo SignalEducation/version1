@@ -27,15 +27,17 @@ describe ExamBody do
   # Constants
 
   # relationships
+  it { should have_one(:group) }
+
   it { should have_many(:enrollments) }
   it { should have_many(:exam_sittings) }
   it { should have_many(:subject_courses) }
+  it { should have_many(:exam_body_user_details) }
+  it { should have_many(:subscription_plans) }
 
   # validation
   it { should validate_presence_of(:name) }
   it { should validate_uniqueness_of(:name) }
-
-  it { should validate_presence_of(:url) }
 
   it { should validate_presence_of(:landing_page_h1) }
 
@@ -47,6 +49,8 @@ describe ExamBody do
 
   # scopes
   it { expect(ExamBody).to respond_to(:all_in_order) }
+  it { expect(ExamBody).to respond_to(:all_active) }
+  it { expect(ExamBody).to respond_to(:all_with_sittings) }
 
   # class methods
 

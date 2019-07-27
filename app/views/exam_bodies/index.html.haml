@@ -18,16 +18,17 @@
               %thead
                 %tr
                   %th=t('views.exam_bodies.form.name')
-                  %th=t('views.exam_bodies.form.url')
+                  %th='Exam Sittings'
+                  %th=t('views.general.active')
                   %th
                   %th
               %tbody
                 -@exam_bodies.each do |exam_body|
                   %tr{id: exam_body.id}
                     %td=exam_body.name
-                    %td=exam_body.url
+                    %td=tick_or_cross(exam_body.has_sittings)
+                    %td=tick_or_cross(exam_body.active)
                     %td
-                      =link_to t('views.general.view'), exam_body_url(exam_body), class: 'btn btn-secondary btn-xs'
                       =link_to t('views.general.edit'), edit_exam_body_url(exam_body), class: 'btn btn-primary btn-xs'
                       -if exam_body.destroyable?
                         =link_to t('views.general.delete'), exam_body, method: :delete, data: { confirm: t('views.general.delete_confirmation') }, class: 'btn btn-secondary btn-xs'

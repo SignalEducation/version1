@@ -5,7 +5,7 @@ class LibraryController < ApplicationController
                 only: %i[course_show course_preview]
 
   def index
-    @groups = Group.all_active.all_in_order
+    @groups = Group.all_active.with_active_body.all_in_order
     @home_page = HomePage.where(home: true).first
     redirect_to library_group_url(@groups.first.name_url) unless @groups.count > 1
 

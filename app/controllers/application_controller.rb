@@ -50,10 +50,10 @@ class ApplicationController < ActionController::Base
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'
-    @groups = Group.all_active.all_in_order
+    @groups = Group.all_active.with_active_body.all_in_order
     @footer_content_pages = ContentPage.for_footer
     @footer_landing_pages = HomePage.for_footer
-    navbar_links = %w(about-us testimonials resources)
+    navbar_links = %w[about-us testimonials resources]
     @navbar_landing_pages = HomePage.where(public_url: navbar_links)
 
     return if ExternalBanner::BANNER_CONTROLLERS.exclude?(controller_name)
