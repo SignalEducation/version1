@@ -84,6 +84,7 @@ class StudentSignUpsController < ApplicationController
 
   def group
     @group = Group.find_by(name_url: params[:name_url])
+    redirect_to root_url and return unless @group&.active && @group&.exam_body&.active
     @exam_body = @group.exam_body
     seo_title_maker(@group.seo_title, @group.seo_description, nil)
 
