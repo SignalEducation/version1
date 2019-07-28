@@ -52,6 +52,16 @@
 
   - if controller_name == 'cbes' 
     %body.page-light
+      #console-wrapper
+        .d-none.d-sm-block
+          =render partial: 'layouts/management_side_navbar'
+
+        .main-content
+          -if flash[:success] || flash[:error] || flash[:warning]
+            =render partial: 'layouts/flash_messages'
+
+          =yield
+
 
   - else
     %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
@@ -87,23 +97,24 @@
           .d-none.d-sm-block
             =render partial: 'layouts/management_side_navbar'
 
-      -#General partials
+          .main-content
+            -if flash[:success] || flash[:error] || flash[:warning]
+              =render partial: 'layouts/flash_messages'
+            =yield
+
+      -else
+        =render partial: 'layouts/navbar'
+        -if @top_margin
+          .margin-top
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
+        =yield
+        =render partial: 'layouts/footer'
+
+
+    -#General partials
     =render partial: 'layouts/misc_javascript'
     -unless controller_name == 'courses' || controller_name == 'student_sign_ups'
-      =render partial: 'layouts/intercom'
-    -else
-      =render partial: 'layouts/navbar'
-      -if @top_margin
-        .margin-top
-      -if flash[:success] || flash[:error] || flash[:warning]
-        =render partial: 'layouts/flash_messages'
-      =yield
-      =render partial: 'layouts/footer'
-
-
-      -#General partials
-    =render partial: 'layouts/misc_javascript'
-    -unless controller_name == 'courses'
       =render partial: 'layouts/intercom'
 
     -if current_user
