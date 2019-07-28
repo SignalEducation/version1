@@ -12,6 +12,7 @@ class Cbe < ApplicationRecord
   alias_attribute :cbe_length_of_pauses, :length_of_pauses
 
 
+  belongs_to :subject_course
   has_many :cbe_sections, dependent: :destroy
   has_many :cbe_questions, dependent: :destroy
   has_many :cbe_introduction_pages, dependent: :destroy
