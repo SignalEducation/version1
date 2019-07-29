@@ -55,24 +55,32 @@ class StripeApiEvent < ApplicationRecord
     if self.payload && self.payload.class == Hash && self.payload[:type]
       Rails.logger.debug "DEBUG: Processing Stripe event #{self.payload[:type]}"
       if Invoice::STRIPE_LIVE_MODE == self.payload[:livemode]
-        #If the payload livemode matches the environment variable livemode
+        webhook_object = payload[:data][:object]
         case self.payload[:type]
           when 'invoice.created'
             process_invoice_created(self.payload)
           when 'invoice.payment_succeeded'
-            process_invoice_payment_success(self.payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:subscription])
+            process_invoice_payment_success(
+              webhook_object[:customer], webhook_object[:id],
+              webhook_object[:subscription]
+            )
           when 'invoice.payment_failed'
-            process_invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription], self.payload[:data][:object][:id])
+            process_invoice_payment_failed(
+              webhook_object[:customer], webhook_object[:next_payment_attempt],
+              webhook_object[:subscription], webhook_object[:id]
+            )
           when 'customer.subscription.deleted'
-            process_customer_subscription_deleted(self.payload[:data][:object][:customer], self.payload[:data][:object][:id])
+            process_customer_subscription_deleted(
+              webhook_object[:customer], webhook_object[:id]
+            )
           when 'charge.succeeded'
-            process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+            process_charge_event(webhook_object[:invoice], webhook_object)
           when 'charge.failed'
-            process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+            process_charge_event(webhook_object[:invoice], webhook_object)
           when 'charge.refunded'
-            process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+            process_charge_refunded(webhook_object[:invoice], webhook_object)
           when 'coupon.updated'
-            process_coupon_updated(self.payload[:data][:object][:id])
+            process_coupon_updated(webhook_object[:id])
           else
             set_process_error "Unknown event type - #{self.payload[:type]}"
         end
@@ -143,19 +151,30 @@ class StripeApiEvent < ApplicationRecord
       self.error_message = nil
 
       #The subscription charge was successful so send successful payment email
-      invoice_url = UrlHelper.instance.subscription_invoices_url(invoice.id, locale: 'en',
-                                                                 format: 'pdf', host: LEARNSIGNAL_HOST)
-      MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
-      Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
+      invoice_url = UrlHelper.instance.subscription_invoices_url(
+        invoice.id, locale: 'en', format: 'pdf', host: LEARNSIGNAL_HOST
+      )
+      unless Rails.env.test?
+        MandrillWorker.perform_async(
+          user.id, 'send_successful_payment_email', self.account_url, invoice_url
+        )
+      end
+      Rails.logger.debug(
+        "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
+      )
 
       #Update the subscription from fresh stripe object
 
       begin
         stripe_subscription = Stripe::Subscription.retrieve(stripe_subscription_guid)
         if stripe_subscription
-          status = stripe_subscription.cancel_at_period_end ? 'canceled-pending' : stripe_subscription.status
+          subscription.stripe_status =
+            if stripe_subscription.cancel_at_period_end
+              'canceled-pending'
+            else
+              stripe_subscription.status
+            end
           subscription.next_renewal_date = Time.at(stripe_subscription.current_period_end)
-          subscription.stripe_status = status
           subscription.livemode = stripe_subscription[:plan][:livemode]
           subscription.save(validate: false)
         end

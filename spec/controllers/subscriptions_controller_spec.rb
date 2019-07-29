@@ -27,7 +27,6 @@
 #
 
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 describe SubscriptionsController, type: :controller do
   before :each do
@@ -139,8 +138,14 @@ describe SubscriptionsController, type: :controller do
         }
         stub_customer_get_request(get_url, get_response_body)
 
+        update_url = "https://api.stripe.com/v1/customers/#{basic_student.stripe_customer_id}"
+        update_request_body = {"source"=>"stripe_token_123"}
+        update_response_body = {'id': basic_student.stripe_customer_id, 'object': 'customer' }.to_json
+
+        stub_customer_update_request(update_url, update_request_body, update_response_body)
+
         post_url = 'https://api.stripe.com/v1/subscriptions'
-        post_request_body = {"customer"=>basic_student.stripe_customer_id, "items": [{"plan"=>"stripe_plan_guid_m", "quantity"=>"1"}], "source"=>"stripe_token_123", "trial_end"=>"now"}
+        post_request_body = {"customer"=>basic_student.stripe_customer_id, "items": [{"plan"=>"stripe_plan_guid_m", "quantity"=>"1"}], "trial_end"=>"now"}
 
         post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
                               "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
@@ -190,9 +195,15 @@ describe SubscriptionsController, type: :controller do
         }
         stub_customer_get_request(get_url, get_response_body)
 
+        update_url = "https://api.stripe.com/v1/customers/#{basic_student.stripe_customer_id}"
+        update_request_body = {"source"=>"stripe_token_123"}
+        update_response_body = {'id': basic_student.stripe_customer_id, 'object': 'customer' }.to_json
+
+        stub_customer_update_request(update_url, update_request_body, update_response_body)
+
         post_url = 'https://api.stripe.com/v1/subscriptions'
         post_request_body = {"customer"=>basic_student.stripe_customer_id, items: [{"plan"=>"stripe_plan_guid_m", quantity: 1}],
-                             "source"=>"stripe_token_123", "trial_end"=>"now"}
+                             "trial_end"=>"now"}
 
         post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
                               "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
@@ -211,7 +222,6 @@ describe SubscriptionsController, type: :controller do
         expect(a_request(:post, post_url).with(body: post_request_body)).to have_been_made.once
 
       end
-
     end
 
     describe "Post 'un_cancel'" do
@@ -242,17 +252,17 @@ describe SubscriptionsController, type: :controller do
         stub_customer_get_request(get_url, get_response_body)
 
         get_sub_url = "https://api.stripe.com/v1/customers/#{canceled_pending_student.stripe_customer_id}/subscriptions/#{canceled_pending_subscription.stripe_guid}"
-        subscription = {      "id": canceled_pending_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": canceled_pending_student.stripe_customer_id}
+        subscription = { "id": canceled_pending_subscription.stripe_guid, "object": "subscription",
+                         "billing": "charge_automatically",
+                         "billing_cycle_anchor": 1540455078, "cancel_at_period_end": false,
+                         "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
+                         "customer": canceled_pending_student.stripe_customer_id }
 
         stub_subscription_get_request(get_sub_url, subscription)
 
 
         post_url = "https://api.stripe.com/v1/subscriptions/#{canceled_pending_subscription.stripe_guid}"
-        post_request_body = {"plan"=>subscription_plan_gbp_m.stripe_guid}
+        post_request_body = {"cancel_at_period_end"=>"false"}
 
         post_response_body = {"id": canceled_pending_subscription.stripe_guid, "object": "subscription", "livemode": false,
                               "cancel_at_period_end": false, "canceled_at": nil,
@@ -320,14 +330,13 @@ describe SubscriptionsController, type: :controller do
         stub_subscription_get_request(get_sub_url, subscription)
 
 
-        url = "https://api.stripe.com/v1/subscriptions/#{valid_subscription.stripe_guid}?at_period_end=true"
-        subscription = {      "id": valid_subscription.stripe_guid, "object": "subscription",
-                              "billing": "charge_automatically", "status": "active",
-                              "billing_cycle_anchor": 1540455078, "cancel_at_period_end": true,
-                              "created": 1539850278, "current_period_end": 1540455078, "current_period_start": 1539850278,
-                              "customer": valid_subscription.stripe_customer_id}
+        url = "https://api.stripe.com/v1/subscriptions/#{valid_subscription.stripe_guid}"
+        request_body = {"cancel_at_period_end"=>"true"}
+        response_body = {
+          "status": "active", "cancel_at_period_end": true
+        }
 
-        stub_subscription_delete_request(url, subscription)
+        stub_subscription_post_request(url, request_body, response_body)
 
         delete :destroy, params: { id: valid_subscription.id }
         valid_subscription.reload

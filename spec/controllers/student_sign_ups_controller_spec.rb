@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 require 'support/mandrill_web_mock_helpers'
 
 RSpec.describe StudentSignUpsController, type: :controller do

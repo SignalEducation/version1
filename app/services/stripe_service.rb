@@ -22,8 +22,10 @@ class StripeService
       currency: subscription_plan.currency.iso_code.downcase,
       interval: 'month',
       interval_count: subscription_plan.payment_frequency_in_months,
-      name: "LearnSignal #{subscription_plan.name}",
-      statement_descriptor: 'LearnSignal',
+      product: {
+        name: "LearnSignal #{subscription_plan.name}",
+        statement_descriptor: 'LearnSignal'
+      },
       id: stripe_plan_id
     )
 
@@ -31,13 +33,13 @@ class StripeService
   end
 
   def get_plan(stripe_plan_id)
-    Stripe::Plan.retrieve(id: stripe_plan_id)
+    Stripe::Plan.retrieve(id: stripe_plan_id, expand: ['product'])
   end
 
   def update_plan(subscription_plan)
-    plan      = get_plan(subscription_plan.stripe_guid)
-    plan.name = "LearnSignal #{subscription_plan.name}"
-    plan.save
+    stripe_plan              = get_plan(subscription_plan.stripe_guid)
+    stripe_plan.product.name = "LearnSignal #{subscription_plan.name}"
+    stripe_plan.product.save
   end
 
   def delete_plan(stripe_plan_id)
@@ -118,8 +120,10 @@ class StripeService
   end
 
   def create_and_return_subscription(subscription, stripe_token, coupon)
-    stripe_subscription = create_subscription(subscription, stripe_token, coupon)
     stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
+    stripe_customer.source = stripe_token
+    stripe_customer.save
+    stripe_subscription = create_subscription(subscription, stripe_customer.id, coupon)
     subscription.assign_attributes(
       complimentary: false,
       livemode: stripe_subscription[:plan][:livemode],
@@ -136,9 +140,10 @@ class StripeService
 
   def cancel_subscription(subscription)
     if subscription.stripe_customer_id && subscription.stripe_guid
-      stripe_customer     = Stripe::Customer.retrieve(subscription.stripe_customer_id)
-      stripe_subscription = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
-      response            = stripe_subscription.delete(at_period_end: true).to_hash
+      stripe_customer                          = Stripe::Customer.retrieve(subscription.stripe_customer_id)
+      stripe_subscription                      = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
+      stripe_subscription.cancel_at_period_end = true
+      response                                 = stripe_subscription.save.to_hash
 
       if response[:status] == 'canceled'
         subscription.update(stripe_status: 'canceled-pending')
@@ -160,7 +165,7 @@ class StripeService
     if subscription.stripe_customer_id && subscription.stripe_guid
       stripe_customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
-      response = stripe_subscription.delete(at_period_end: false).to_hash
+      response = stripe_subscription.delete.to_hash
       if response[:status] == 'canceled'
         subscription.update(stripe_status: 'canceled')
         subscription.cancel
@@ -202,7 +207,7 @@ class StripeService
   def get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
     stripe_customer = get_customer(old_sub.stripe_customer_id)
     stripe_subscription = stripe_customer.subscriptions.retrieve(old_sub.stripe_guid)
-    stripe_subscription.plan = new_subscription_plan.stripe_guid
+    stripe_subscription.items.first.plan = new_subscription_plan.stripe_guid
     stripe_subscription.prorate = true
     stripe_subscription.trial_end = 'now'
 
@@ -214,12 +219,11 @@ class StripeService
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   end
 
-  def create_subscription(subscription, stripe_token, coupon)
+  def create_subscription(subscription, stripe_customer_id, coupon)
     Stripe::Subscription.create(
-      customer: subscription.user.stripe_customer_id,
+      customer: stripe_customer_id,
       items: [{ plan: subscription.subscription_plan.stripe_guid,
                 quantity: 1 }],
-      source: stripe_token,
       coupon: coupon.try(:code),
       trial_end: 'now'
     )

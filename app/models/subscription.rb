@@ -189,7 +189,8 @@ class Subscription < ApplicationRecord
       # call stripe and cancel the subscription
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-      response = stripe_subscription.delete(at_period_end: true).to_hash
+      stripe_subscription.cancel_at_period_end = true
+      response = stripe_subscription.save.to_hash
       if response[:status] == 'active' && response[:cancel_at_period_end] == true
         self.update_attribute(:stripe_status, 'canceled-pending')
         self.cancel_pending
@@ -216,7 +217,7 @@ class Subscription < ApplicationRecord
       # call stripe and cancel the subscription
       stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
       stripe_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-      response = stripe_subscription.delete(at_period_end: false).to_hash
+      response = stripe_subscription.delete.to_hash
       if response[:status] == 'canceled'
         self.update_attribute(:stripe_status, 'canceled')
         self.cancel
@@ -259,28 +260,26 @@ class Subscription < ApplicationRecord
 
     if errors.messages.count == 0
       stripe_subscription = Stripe::Subscription.create(
-          customer: self.user.stripe_customer_id,
-          plan: self.subscription_plan.stripe_guid,
-          trial_end: 'now'
+        customer: self.user.stripe_customer_id,
+        items: [{ plan: self.subscription_plan.stripe_guid,
+                  quantity: 1 }],
+        trial_end: 'now'
       )
       stripe_customer = Stripe::Customer.retrieve(user.stripe_customer_id) #Reload the stripe_customer to get new Subscription details
 
       if stripe_subscription && stripe_customer && stripe_subscription.status == 'active'
-
         self.update_attributes(
-            stripe_status: stripe_subscription.status,
-            stripe_guid: stripe_subscription.id,
-            next_renewal_date: Time.at(stripe_subscription.current_period_end),
-            stripe_customer_data: stripe_customer.to_hash.deep_dup
+          stripe_status: stripe_subscription.status,
+          stripe_guid: stripe_subscription.id,
+          next_renewal_date: Time.at(stripe_subscription.current_period_end),
+          stripe_customer_data: stripe_customer.to_hash.deep_dup
         )
         self.start
       end
-
     end
 
     # return true or false - if everything went well
     errors.messages.count == 0
-
   end
 
   def destroyable?
@@ -380,9 +379,9 @@ class Subscription < ApplicationRecord
   def un_cancel
     stripe_customer = Stripe::Customer.retrieve(self.stripe_customer_id)
     latest_subscription = stripe_customer.subscriptions.retrieve(self.stripe_guid)
-    latest_subscription.plan = self.subscription_plan.stripe_guid
+    latest_subscription.cancel_at_period_end = false
     response = latest_subscription.save
-    if response[:cancel_at_period_end] == false && response[:canceled_at] == nil
+    if !response.cancel_at_period_end && response.canceled_at.nil?
       self.update_attributes(stripe_status: 'active', terms_and_conditions: true)
       self.restart
     else

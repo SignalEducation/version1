@@ -1,6 +1,4 @@
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
-
 
 describe Api::StripeV02Controller, type: :controller do
 

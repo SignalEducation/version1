@@ -54,7 +54,7 @@ describe StripeService, type: :service do
 
   describe '#get_plan' do
     it 'calls #retrieve on Stripe::Plan with the correct args' do
-      expect(Stripe::Plan).to receive(:retrieve).with({id: 'test_id'})
+      expect(Stripe::Plan).to receive(:retrieve).with({id: 'test_id', expand: ['product']})
 
       subject.get_plan('test_id')
     end
@@ -66,24 +66,26 @@ describe StripeService, type: :service do
     before :each do
       @dbl = double
       allow(subject).to receive(:get_plan).with('test_id').and_return(@dbl)
-      allow(@dbl).to receive(:name=)
-      allow(@dbl).to receive(:save)
+      allow(@dbl).to receive_message_chain('product.name=')
+      allow(@dbl).to receive_message_chain('product.save')
     end
 
     it 'calls #get_plan with the correct args' do
-      expect(subject).to receive(:get_plan).with('test_id').and_return(@dbl)
+      expect(subject).to(
+        receive(:get_plan).with('test_id').and_return(@dbl)
+      )
 
       subject.update_plan(plan)
     end
 
     it 'calls #name= on the Plan with the correct args' do
-      expect(@dbl).to receive(:name=).with("LearnSignal #{plan.name}")
+      expect(@dbl).to receive_message_chain('product.name=').with("LearnSignal #{plan.name}")
 
       subject.update_plan(plan)
     end
 
     it 'calls #save on the Plan' do
-      expect(@dbl).to receive(:save)
+      expect(@dbl).to receive_message_chain('product.save')
 
       subject.update_plan(plan)
     end
