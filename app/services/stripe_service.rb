@@ -37,9 +37,15 @@ class StripeService
   end
 
   def update_plan(subscription_plan)
+<<<<<<< HEAD
     stripe_plan              = get_plan(subscription_plan.stripe_guid)
     stripe_plan.product.name = "LearnSignal #{subscription_plan.name}"
     stripe_plan.product.save
+=======
+    plan              = get_plan(subscription_plan.stripe_guid)
+    plan.product.name = "LearnSignal #{subscription_plan.name}"
+    plan.product.save
+>>>>>>> Update Stripe API to latest version
   end
 
   def delete_plan(stripe_plan_id)

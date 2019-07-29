@@ -186,7 +186,7 @@ class Invoice < ApplicationRecord
           total: stripe_invoice[:total].to_i / 100.0,
           total_tax: stripe_invoice[:tax].to_i / 100.0,
           payment_attempted: stripe_invoice[:attempted],
-          payment_closed: stripe_data_hash[:status_transitions][:finalized_at].present?,
+          payment_closed: !stripe_invoice[:status_transitions][:finalized_at].nil?,
           forgiven: stripe_invoice[:status] == 'uncollectible',
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
