@@ -48,7 +48,7 @@ class Charge < ApplicationRecord
             numericality: {only_integer: true, greater_than: 0}
   validates :user_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
-  validates :subscription_payment_card_id, presence: true,
+  validates :subscription_payment_card_id, allow_nil: true,
             numericality: {only_integer: true, greater_than: 0}
   validates :currency_id, presence: true,
             numericality: {only_integer: true, greater_than: 0}
