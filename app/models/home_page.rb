@@ -28,6 +28,8 @@
 #  login_form_heading            :string
 #  footer_option                 :string           default("white")
 #  video_guid                    :string
+#  header_h3                     :string
+#  background_image              :string
 #
 
 class HomePage < ApplicationRecord
