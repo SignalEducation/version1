@@ -76,6 +76,10 @@ class StripeService
 
   # SUBSCRIPTIONS ==============================================================
 
+  def get_subscription(sub_id)
+    Stripe::Subscription.retrieve(id: sub_id)
+  end
+
   def change_plan(old_sub, new_plan_id)
     user = old_sub.user
     new_subscription_plan = SubscriptionPlan.find(new_plan_id)
@@ -181,6 +185,14 @@ class StripeService
     Rails.logger.error "DEBUG: Subscription#cancel_immediately got an error on Stripe #{e.inspect}"
     raise Learnsignal::SubscriptionError, 'Sorry! There was an error cancelling the subscription.'
   end
+
+  # INVOICES ===================================================================
+
+  def get_invoice(invoice_id)
+    Stripe::Invoice.retrieve(id: invoice_id, expand: ['payment_intent'])
+  end
+
+  # PRIVATE ====================================================================
 
   private
 

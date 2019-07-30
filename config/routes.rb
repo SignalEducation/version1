@@ -12,8 +12,8 @@ Rails.application.routes.draw do
   get '500' => redirect('500-page')
 
   namespace :api do
-    post 'stripe_v01',      to: 'stripe_v01#create'
-    post 'stripe_v02',      to: 'stripe_v02#create'
+    post 'stripe_webhooks', to: 'stripe_webhooks#create'
+    post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
   end
 

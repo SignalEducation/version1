@@ -144,6 +144,54 @@ describe Subscription do
       end
     end
 
+    describe '#update_invoice_payment_success' do
+      let(:subscription) { create(:subscription) }
+
+      before :each do
+        stripe_sub = double({
+          status: 'canceled', current_period_end: Time.zone.now
+        })
+        allow_any_instance_of(StripeService).to(
+          receive(:get_subscription)
+        ).and_return(stripe_sub)
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      it 'updates the subscription stripe_status' do
+        expect{ subscription.update_invoice_payment_success }.to(
+          change{ subscription.stripe_status }
+        )
+      end
+
+      it 'updates the subscription next_renewal_date' do
+        expect{ subscription.update_invoice_payment_success }.to(
+          change{ subscription.next_renewal_date }
+        )
+      end
+
+      it 'starts a pending subscription' do
+        expect(subscription).to receive(:start!)
+
+        subscription.update_invoice_payment_success
+      end
+
+      it 'restarts an inactive subscription' do
+        subscription.update(state: 'errored')
+        expect(subscription).to receive(:restart!)
+
+        subscription.update_invoice_payment_success
+      end
+
+      it 'does nothing with the state of an active subscription' do
+        subscription.update(state: 'active')
+
+        subscription.update_invoice_payment_success
+        subscription.reload
+
+        expect(subscription.state).to eq 'active'
+      end
+    end
+
     describe '.update_hub_spot_data' do
       let(:user)   { build(:user) }
       let(:worker) { HubSpotContactWorker }

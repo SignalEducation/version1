@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::StripeV02Controller, type: :controller do
+describe Api::StripeWebhooksController, type: :controller do
 
   before :each do
     allow_any_instance_of(StripeService).to receive(:create_plan)

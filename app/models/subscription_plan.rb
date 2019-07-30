@@ -122,7 +122,7 @@ class SubscriptionPlan < ApplicationRecord
 
   # instance methods
   def active?
-    self.available_from <= Proc.new{ Time.now.gmtime.to_date }.call && self.available_to >= Proc.new{ Time.now.gmtime.to_date }.call
+    self.available_from <= Proc.new{ Time.zone.now.to_date }.call && self.available_to >= Proc.new{ Time.zone.now.to_date }.call
   end
 
   def description
