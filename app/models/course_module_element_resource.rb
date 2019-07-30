@@ -10,7 +10,7 @@
 #  updated_at               :datetime
 #  upload_file_name         :string
 #  upload_content_type      :string
-#  upload_file_size         :integer
+#  upload_file_size         :bigint(8)
 #  upload_updated_at        :datetime
 #  destroyed_at             :datetime
 #
