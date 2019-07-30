@@ -55,7 +55,6 @@ class StripeService
                             stripe_guid: stripe_order.id,
                             live_mode: stripe_order.livemode,
                             stripe_status: stripe_order.status)
-    binding.pry
     if order.valid?
       pay_order = stripe_order.pay(source: order.stripe_token)
       order.stripe_status = pay_order.status
