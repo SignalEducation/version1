@@ -7,8 +7,11 @@ module HubSpot
         data(user)
       end
 
-      def batch_properties(users, data_array = [])
-        users.each { |u| data_array << { email: u.email, properties: data(u) } }
+      def batch_properties(users, custom_data, data_array = [])
+        users.each do |user|
+          parsed = data(user) << custom_data
+          data_array << { email: user.email, properties: parsed }
+        end
 
         data_array
       end
