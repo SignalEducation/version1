@@ -10,10 +10,10 @@ module HubSpot
       service(path, 'post', properties: user_properties)
     end
 
-    def batch_create(users_ids)
+    def batch_create(users_ids, custom_data = {})
       users            = User.where(id: users_ids)
       path             = '/contacts/v1/contact/batch/'
-      users_properties = Parsers::Contact.new.batch_properties(users)
+      users_properties = Parsers::Contact.new.batch_properties(users, custom_data)
 
       service(path, 'post', users_properties)
     end

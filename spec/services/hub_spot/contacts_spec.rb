@@ -51,5 +51,18 @@ RSpec.describe HubSpot::Contacts do
       expect(response.body).to    eq('')
       expect(response.code).to    eq('202')
     end
+
+    it 'save parsed data with custom data in hubspot' do
+      subject
+
+      stub_request(:post, "#{uri}/contacts/v1/contact/batch/?hapikey=#{key}").
+        with(body: '[]').
+        to_return(status: 202, body: '', headers: {})
+
+      response = contacts.batch_create(users, custom_data: 'any_data_here')
+
+      expect(response.body).to    eq('')
+      expect(response.code).to    eq('202')
+    end
   end
 end
