@@ -9,7 +9,8 @@ module HubSpot
 
       def batch_properties(users, custom_data, data_array = [])
         users.each do |user|
-          parsed = data(user) << custom_data
+          parsed = data(user)
+          parsed << custom_data if custom_data.present?
           data_array << { email: user.email, properties: parsed }
         end
 
