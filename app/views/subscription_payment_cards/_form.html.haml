@@ -11,7 +11,7 @@
       %p.billing-summary Billed every month
 
     .col-sm-6.mb-2.mt-sm-4
-      = f.button :submit, class: 'btn btn-primary w-100 mb-3', id: 'card_submit' do
+      = f.button :submit, class: 'btn btn-primary w-100 mb-3', id: 'card_submit', 'data-secret' => @intent.client_secret do
         Subscribe Now
 
       .sk-circle.text-center
@@ -25,5 +25,5 @@
         .sk-circle8.sk-child
         .sk-circle9.sk-child
         .sk-circle10.sk-child
-        .sk-circle11.sk-child
+        .sk-circle11.sk-child 
         .sk-circle12.sk-child

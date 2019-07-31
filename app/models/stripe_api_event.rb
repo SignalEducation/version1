@@ -144,6 +144,11 @@ class StripeApiEvent < ApplicationRecord
     end
   end
 
+
+  def process_payment_action_required
+    puts ">>>> ****** process_payment_action_required "
+  end
+
   def process_invoice_created(payload)
     invoice = Invoice.build_from_stripe_data(payload[:data][:object])
     if invoice && invoice.errors.count == 0

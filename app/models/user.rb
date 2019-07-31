@@ -105,6 +105,7 @@ class User < ApplicationRecord
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
   has_many :exercises
   has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
+  has_many :payment_intents
 
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
