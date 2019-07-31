@@ -291,28 +291,42 @@
 
     var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
     var elements = stripe.elements();
+    var cardElement = elements.create('card', {hidePostalCode: true, style: style});
+    cardElement.mount('#card-element');
 
-    var card = elements.create('card', {hidePostalCode: true, style: style});
-    card.mount('#card-element');
+    var cardButton = document.getElementById('card_submit');
+    var clientSecret = cardButton.dataset.secret;
 
-    // Create a token when the form is submitted.
-    var form = document.getElementById('upgrade-form');
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      //Replace submit button with spinning JS
-      $('#card_submit').prop('disabled',true);
-      $('#card_submit').hide();
-      $('#paypal_submit').prop('disabled',true);
-      $('#paypal_submit').hide();
-      $(".sk-circle").show();
-      if ($('#subscription_use_paypal').val() === 'true') {
-        document.getElementById('upgrade-form').submit();
-      } else {
-        createToken();
-      }
+    cardButton.addEventListener('click', function(ev) {
+      stripe.handleCardPayment(
+        clientSecret, cardElement
+      ).then(function(result) {
+        if (result.error) {
+          // Display error.message in your UI.
+        } else {
+          // The payment has succeeded. Display a success message.
+        }
+      });
     });
 
-    card.addEventListener('change', function(event) {
+    // Create a token when the form is submitted.
+    //var form = document.getElementById('upgrade-form');
+    //form.addEventListener('submit', function(e) {
+      //e.preventDefault();
+      ////Replace submit button with spinning JS
+      //$('#card_submit').prop('disabled',true);
+      //$('#card_submit').hide();
+      //$('#paypal_submit').prop('disabled',true);
+      //$('#paypal_submit').hide();
+      //$(".sk-circle").show();
+      //if ($('#subscription_use_paypal').val() === 'true') {
+        //document.getElementById('upgrade-form').submit();
+      //} else {
+        //createToken();
+      //}
+    //});
+
+    cardElement.addEventListener('change', function(event) {
       var displayError = document.getElementById('card-errors');
       if (event.error) {
         $('#card_submit').show();

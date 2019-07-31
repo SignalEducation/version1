@@ -52,12 +52,17 @@ class SubscriptionsController < ApplicationController
       user_id: current_user.id,
       subscription_plan_id: subscription_plan_id
     )
+    @intent = Stripe::PaymentIntent.create({
+                                               amount: (@subscription.subscription_plan.price.to_f * 100).to_i,
+                                               currency: @subscription.subscription_plan.currency.iso_code
+                                           })
 
     # IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
   end
 
   def create
+    binding.pry
     @subscription = Subscription.new(subscription_params)
 
     subscription_object = SubscriptionService.new(@subscription)
