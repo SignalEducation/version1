@@ -30,7 +30,7 @@ Rails.application.routes.draw do
     # Subscriptions
     resources :subscriptions, only: [:show, :new, :create, :update, :destroy] do
       member do
-        put 'un_cancel', action: :un_cancel
+        put 'un_cancel'
         get 'execute'
         get 'unapproved'
       end
@@ -39,6 +39,7 @@ Rails.application.routes.draw do
     namespace :subscriptions do
       resources :cancellations, only: [:new, :create]
       resources :plan_changes, only: [:show, :new, :create]
+      post 'status_from_stripe'
     end
 
     resources :subscription_management do

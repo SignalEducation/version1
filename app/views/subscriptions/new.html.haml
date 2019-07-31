@@ -9,14 +9,14 @@
             =@plans.first.checkout_sub_heading
         -else
           %h1.h1-hero.mb-2
-            = "Exam Tuition Payment"
+            = 'Exam Tuition Payment'
           %p.p-hero.px-lg-6
             ='Achieve your learning goals with a learnsignal subscription plan and enjoy professional courses delivered online so that you can study on a schedule that suits you.'
 
       %section.pb-md-6.pb-5#wrapper
         #upgrade-subscription
-          =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form'} do |f|
-            =render partial: 'layouts/error_messages', locals: {thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption')}
+          =form_for @subscription, url: subscriptions_path, html: { id: 'upgrade-form', role: 'form' } do |f|
+            =render partial: 'layouts/error_messages', locals: { thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption') }
             =f.hidden_field :user_id, value: current_user.id
             =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
             =f.hidden_field :stripe_token
@@ -29,48 +29,41 @@
                     .col-xs-12
                       =render partial: 'layouts/flash_messages'
 
-
               .container.payment
                 .row
                   .col-lg-6.mb-5.mb-xl-0
                     %fieldset
                       %legend.sr-only Select a Plan
                       - if params[:prioritise_plan_frequency].present? || (params[:plan_guid].present?  && @plans.map(&:guid).include?(params[:plan_guid]))
-                        =render partial: 'single_plan_checkout', locals: {subscription: @subscription, plans: @plans}
+                        =render partial: 'single_plan_checkout', locals: { subscription: @subscription, plans: @plans }
                       - else
-                        =render partial: 'multi_plans', locals: {subscription: @subscription, plans: @plans}
-
+                        =render partial: 'multi_plans', locals: { subscription: @subscription, plans: @plans }
                   .col-lg-6
                     %fieldset.card.card-payments
                       %p.h2.mb-1 Choose a way to pay
                       %p.mb-4 Select your preferred method of payment
                       .form-group.form-group-expandable
                         .custom-control.custom-radio
-                          %input#pay-with-card.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'stripe'}
-                          %label.custom-control-label{:for => "pay-with-card"}
+                          %input#pay-with-card.custom-control-input.style-radio{ name: 'payment-options', type: 'radio', value: 'stripe' }
+                          %label.custom-control-label{ for: 'pay-with-card' }
                             %span.custom-label-info
                               %span.h3.m-0
-                                =image_tag('ico-card.svg', :alt => "Credit Card Icon", :class => 'logo-icon.mr-2.mr-sm-3')
+                                =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon.mr-2.mr-sm-3')
                                 %span Credit / Debit Card
                             %span.custom-check
                               / custom checkbox
                         =render partial: 'subscription_payment_cards/form', locals: {f: f}
                       .form-group.form-group-expandable
                         .custom-control.custom-radio
-                          %input#pay-with-paypal.custom-control-input.style-radio{:name => "payment-options", :type => "radio", :value => 'paypal'}
-                          %label.custom-control-label{:for => "pay-with-paypal"}
+                          %input#pay-with-paypal.custom-control-input.style-radio{name: 'payment-options', type: 'radio', value: 'paypal'}
+                          %label.custom-control-label{for: 'pay-with-paypal'}
                             %span.custom-label-info
                               %span.h3.m-0
-                                =image_tag('ico-paypal.svg', :alt => "PayPal Logo", :class => 'logo-icon.mr-2.mr-sm-3')
+                                =image_tag('ico-paypal.svg', alt: 'PayPal Logo', class: 'logo-icon.mr-2.mr-sm-3')
                                 %span PayPal
                             %span.custom-check
                               / custom checkbox
                         =render partial: 'subscription_payment_cards/paypal_form', locals: {f: f}
-
-
-
-
-
 
     .container-bg.bg-white
       .container
@@ -83,25 +76,23 @@
               .col-md-3
                 .pb-4.d-flex.flex-md-column.align-items-center
                   .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-desktop-smartphone{"aria-hidden" => "true"}
+                    %i.budicon-desktop-smartphone{'ariahidden': 'true'}
                   %p.m-0.text-left.text-md-center Access anytime, anywhere
               .col-md-3
                 .pb-4.d-flex.flex-md-column.align-items-center
                   .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-card-slides{"aria-hidden" => "true"}
+                    %i.budicon-card-slides{'ariahidden': 'true'}
                   %p.m-0.text-left.text-md-center Topic-by-topic online lectures
               .col-md-3
                 .pb-4.d-flex.flex-md-column.align-items-center
                   .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-doc-marker{"aria-hidden" => "true"}
+                    %i.budicon-doc-marker{'ariahidden': 'true'}
                   %p.m-0.text-left.text-md-center Expert notes and corrected questions
               .col-md-3
                 .pb-4.d-flex.flex-md-column.align-items-center
                   .mr-4.mb-md-4.mx-md-0
-                    %i.budicon-happy-chat{"aria-hidden" => "true"}
+                    %i.budicon-happy-chat{'ariahidden': 'true'}
                   %p.m-0.text-left.text-md-center Tutor support 24 hours a day, 7 days a week
-
-
 
 :javascript
 
@@ -289,83 +280,98 @@
       }
     };
 
-    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
-    var elements = stripe.elements();
-    var cardElement = elements.create('card', {hidePostalCode: true, style: style});
+    var stripe      = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements    = stripe.elements();
+    var displayError = document.getElementById('card-errors');
+    var cardElement = elements.create('card', { hidePostalCode: true, style: style });
+
     cardElement.mount('#card-element');
 
-    var cardButton = document.getElementById('card_submit');
-    var clientSecret = cardButton.dataset.secret;
-
-    cardButton.addEventListener('click', function(ev) {
-      stripe.handleCardPayment(
-        clientSecret, cardElement
-      ).then(function(result) {
-        if (result.error) {
-          // Display error.message in your UI.
-        } else {
-          // The payment has succeeded. Display a success message.
-        }
-      });
-    });
-
-    // Create a token when the form is submitted.
-    //var form = document.getElementById('upgrade-form');
-    //form.addEventListener('submit', function(e) {
-      //e.preventDefault();
-      ////Replace submit button with spinning JS
-      //$('#card_submit').prop('disabled',true);
-      //$('#card_submit').hide();
-      //$('#paypal_submit').prop('disabled',true);
-      //$('#paypal_submit').hide();
-      //$(".sk-circle").show();
-      //if ($('#subscription_use_paypal').val() === 'true') {
-        //document.getElementById('upgrade-form').submit();
-      //} else {
-        //createToken();
-      //}
-    //});
-
     cardElement.addEventListener('change', function(event) {
-      var displayError = document.getElementById('card-errors');
+
       if (event.error) {
-        $('#card_submit').show();
-        $('#card_submit').prop('disabled',false);
-        $('#paypal_submit').show();
-        $('#paypal_submit').prop('disabled',false);
-        displayError.textContent = event.error.message;
+        resetForm(event.error);
       } else {
         displayError.textContent = '';
       }
     });
 
-    function stripeTokenHandler(token) {
-      // Insert the token ID into the form so it gets submitted to the server
-      var form = document.getElementById('upgrade-form');
+    var cardButton = document.getElementById('card_submit');
+
+    cardButton.addEventListener('click', function(ev) {
+      event.preventDefault();
+
+      //Replace submit button with spinning JS
+      $('#card_submit').prop('disabled',true);
+      $('#card_submit').hide();
+      $('#paypal_submit').prop('disabled',true);
+      $('#paypal_submit').hide();
+      $(".sk-circle").show();
+
+      if ($('#subscription_use_paypal').val() === 'true') {
+        document.getElementById('upgrade-form').submit();
+      } else {
+        stripe.createToken(cardElement).then(function(result) {
+          if (result.error) {
+            resetForm(result.error);
+          } else {
+            createSubscription(result.token);
+          }
+        });
+      }
+    });
+
+    function createSubscription(token){
       $('#subscription_stripe_token').val(token.id);
+      var form = $('#upgrade-form');
 
-      // Submit the form
-      form.submit();
-    }
-
-    function createToken() {
-      stripe.createToken(card).then(function(result) {
-        if (result.error) {
-          // Inform the user if there was an error
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = result.error.message;
-          //Replace spinning JS with Submit button
-          $('#card_submit').prop('disabled',false);
-          $('#card_submit').show();
-          $(".sk-circle").hide();
-
-        } else {
-          // Send the token to your server
-          stripeTokenHandler(result.token);
+      $.ajax({
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        data: $(form).serialize(),
+        dataType: 'json',
+        success: function(data,status,xhr){
+          if(data.status == 'incomplete'){
+            handlePayment(data.client_secret, data.subscription_id)
+          }else if(data.status == 'active'){
+            window.location.replace("#{personal_upgrade_complete_url}");
+          }
+        },
+        error: function(xhr,status,error){
+          resetForm(error);
         }
       });
-    };
+    }
+
+    function handlePayment(client_secret, subscription_id){
+      stripe.handleCardPayment(client_secret, cardElement).then(function(result) {
+          if (result.error) {
+            resetForm(result.error);
+          } else {
+            $.ajax({
+              type: 'post',
+              url: "#{subscriptions_status_from_stripe_path}",
+              data: { ...result['paymentIntent'], id: subscription_id },
+              dataType: 'json',
+              success: function(data,status,xhr){
+                console.log(data);
+                window.location.replace("#{personal_upgrade_complete_url}");
+              },
+              error: function(xhr,status,error){
+                resetForm(error);
+              }
+          });
+        }
+      });
+    }
+
+    function resetForm(error){
+      $('#card_submit').show();
+      $('#card_submit').prop('disabled',false);
+      $('#paypal_submit').show();
+      $('#paypal_submit').prop('disabled',false);
+      $(".sk-circle").hide();
+
+      displayError.textContent = error.message;
+    }
   })
-
-
-
