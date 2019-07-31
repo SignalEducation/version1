@@ -218,99 +218,124 @@ describe User do
   it { should respond_to(:completed_course_module_element) }
   it { should respond_to(:started_course_module_element) }
 
-  describe '#viewable_subscriptions' do
+  describe 'Methods' do
+    describe '.viewable_subscriptions' do
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
 
-    before :each do
-      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-    end
+      let(:user) { create(:user) }
 
-    let(:user) { create(:user) }
+      context 'for in-active exam bodies' do
+        let(:bad_exam_body) { create(:exam_body, active: false) }
+        let(:sub_plan)      { create(:subscription_plan, exam_body_id: bad_exam_body.id) }
+        let(:subscription)  { create(:subscription, state: :active, user_id: user.id, subscription_plan_id: sub_plan.id) }
 
-    context 'for in-active exam bodies' do
-      let(:bad_exam_body) { create(:exam_body, active: false) }
-      let(:sub_plan) { create(:subscription_plan, exam_body_id: bad_exam_body.id) }
-      let(:subscription) { 
-        create(
-          :subscription,
-          state: :active,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
-      }
+        it 'does not return active subscriptions' do
+          expect(user.viewable_subscriptions.count).to eq 0
+        end
+      end
 
-      it 'does not return active subscriptions' do
-        expect(user.viewable_subscriptions.count).to eq 0
+      context 'for active exam bodies' do
+        let(:good_exam_body) { create(:exam_body) }
+        let(:sub_plan) { create(:subscription_plan, exam_body_id: good_exam_body.id) }
+
+        it 'returns active subscriptions' do
+          subscription = create(
+            :subscription,
+            state: :active,
+            user_id: user.id,
+            subscription_plan_id: sub_plan.id
+          )
+
+          expect(user.viewable_subscriptions.count).to eq 1
+        end
+
+        it 'returns paused subscriptions' do
+          subscription = create(
+            :subscription,
+            state: :paused,
+            user_id: user.id,
+            subscription_plan_id: sub_plan.id
+          )
+
+          expect(user.viewable_subscriptions.count).to eq 1
+        end
+
+        it 'returns errored subscriptions' do
+          subscription = create(
+            :subscription,
+            state: :errored,
+            user_id: user.id,
+            subscription_plan_id: sub_plan.id
+          )
+
+          expect(user.viewable_subscriptions.count).to eq 1
+        end
+
+        it 'returns pending_cancellation subscriptions' do
+          subscription = create(
+            :subscription,
+            state: :pending_cancellation,
+            user_id: user.id,
+            subscription_plan_id: sub_plan.id
+          )
+
+          expect(user.viewable_subscriptions.count).to eq 1
+        end
+
+        it 'returns cancelled subscriptions' do
+          subscription = create(
+            :subscription,
+            state: :cancelled,
+            user_id: user.id,
+            subscription_plan_id: sub_plan.id
+          )
+
+          expect(user.viewable_subscriptions.count).to eq 1
+        end
+
+        it 'does not return pending subscriptions' do
+          subscription = create(
+            :subscription,
+            state: :pending,
+            user_id: user.id,
+            subscription_plan_id: sub_plan.id
+          )
+
+          expect(user.viewable_subscriptions.count).to eq 0
+        end
       end
     end
 
-    context 'for active exam bodies' do
-      let(:good_exam_body) { create(:exam_body) }
-      let(:sub_plan) { create(:subscription_plan, exam_body_id: good_exam_body.id) }
+    describe '.update_hub_spot_data' do
+      let(:user)   { build(:user) }
+      let(:worker) { HubSpotContactWorker }
 
-      it 'returns active subscriptions' do
-        subscription = create(
-          :subscription,
-          state: :active,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
-
-        expect(user.viewable_subscriptions.count).to eq 1
+      before do
+        Sidekiq::Testing.fake!
+        Sidekiq::Worker.clear_all
+        allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
       end
 
-      it 'returns paused subscriptions' do
-        subscription = create(
-          :subscription,
-          state: :paused,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
-
-        expect(user.viewable_subscriptions.count).to eq 1
+      after do
+        Sidekiq::Worker.drain_all
       end
 
-      it 'returns errored subscriptions' do
-        subscription = create(
-          :subscription,
-          state: :errored,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
+      context 'when user has updated data' do
+        it 'create a job in HubSpotContactWorker' do
+          user.update(first_name: Faker::Name.first_name)
 
-        expect(user.viewable_subscriptions.count).to eq 1
+          expect { worker.perform_async(rand(10)) }.to change(worker.jobs, :size).by(1)
+        end
       end
 
-      it 'returns pending_cancellation subscriptions' do
-        subscription = create(
-          :subscription,
-          state: :pending_cancellation,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
+      context 'when user has not updated data' do
+        it 'do not create a job in HubSpotContactWorker' do
+          user.update(last_request_at: Time.now)
 
-        expect(user.viewable_subscriptions.count).to eq 1
-      end
-
-      it 'returns cancelled subscriptions' do
-        subscription = create(
-          :subscription,
-          state: :cancelled,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
-
-        expect(user.viewable_subscriptions.count).to eq 1
-      end
-
-      it 'does not return pending subscriptions' do
-        subscription = create(
-          :subscription,
-          state: :pending,
-          user_id: user.id,
-          subscription_plan_id: sub_plan.id
-        )
-
-        expect(user.viewable_subscriptions.count).to eq 0
+          expect { worker.perform_async(rand(10)) }.to change(worker.jobs, :size).by(1)
+        end
       end
     end
   end

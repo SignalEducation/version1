@@ -128,6 +128,7 @@ class User < ApplicationRecord
   before_create :set_additional_user_attributes
   after_create :create_referral_code_record, :create_or_update_intercom_user
   after_update :update_stripe_customer
+  after_save :update_hub_spot_data
 
   # scopes
   scope :all_in_order, -> { order(:user_group_id, :last_name, :first_name, :email) }
@@ -423,9 +424,7 @@ class User < ApplicationRecord
   ## StudentAccess methods
 
   def make_student_access
-    build_student_access(
-      account_type: 'Trial'
-    )
+    build_student_access(account_type: 'Trial')
   end
 
   def name
@@ -433,7 +432,7 @@ class User < ApplicationRecord
   end
 
   def default_card
-    self.subscription_payment_cards.where(is_default_card: true, status: 'card-live').first
+    subscription_payment_cards.where(is_default_card: true, status: 'card-live').first
   end
 
   def subscriptions_for_exam_body(exam_body_id)
@@ -448,12 +447,11 @@ class User < ApplicationRecord
     subs = []
     ExamBody.where(active: true).each do |body|
       compliant_subs = subscriptions.
-                       for_exam_body(body.id).
-                       where.not(state: :pending).
-                       order(created_at: :desc)
-      if compliant_subs.any?
-        subs << compliant_subs.first
-      end
+                         for_exam_body(body.id).
+                         where.not(state: :pending).
+                         order(created_at: :desc)
+
+      subs << compliant_subs.first if compliant_subs.any?
     end
     subs
   end
@@ -732,5 +730,11 @@ class User < ApplicationRecord
         stripe_customer.save
       end
     end
+  end
+
+  def update_hub_spot_data
+    return if saved_changes.include?(:last_request_at) || Rails.env.test?
+
+    HubSpotContactWorker.perform_async(id)
   end
 end

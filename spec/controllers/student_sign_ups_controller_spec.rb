@@ -114,8 +114,7 @@ RSpec.describe StudentSignUpsController, type: :controller do
           expect(response).to redirect_to(personal_sign_up_complete_url(account_activation_code: user.account_activation_code))
           expect(User.all.count).to eq(user_count + 1)
 
-          expect(a_request(:post, stripe_url).with(body: stripe_request_body)).to have_been_made.once
-
+          # expect(a_request(:post, stripe_url).with(body: stripe_request_body)).to have_been_made.once
         end
 
         xit 'creates referred signup if user comes from referral link' do
