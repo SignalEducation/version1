@@ -64,6 +64,8 @@ class CoursesController < ApplicationController
         end
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'Invalid video_log_id' }, status: :ok
   end
 
   def create_video_user_log
