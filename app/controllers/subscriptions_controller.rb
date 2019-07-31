@@ -48,10 +48,10 @@ class SubscriptionsController < ApplicationController
         params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
       end
 
-    @subscription = Subscription.new(
-      user_id: current_user.id,
-      subscription_plan_id: subscription_plan_id
-    )
+    @subscription =
+      Subscription.includes(:exam_body).
+        new(user_id: current_user.id,
+            subscription_plan_id: subscription_plan_id)
 
     # IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
@@ -63,15 +63,15 @@ class SubscriptionsController < ApplicationController
     subscription_object = SubscriptionService.new(@subscription)
     subscription_object.check_valid_subscription?(params)
     subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
-    @subscription = subscription_object.create_and_return_subscription(params)
 
+    @subscription, client_secret = subscription_object.create_and_return_subscription(params)
     if @subscription&.save
-      if subscription_object.stripe?
-        @subscription.start
-        subscription_object.validate_referral
-        redirect_to personal_upgrade_complete_url, notice: 'Your subscription is confirmed!'
-      elsif subscription_object.paypal?
+      if subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
+      elsif subscription_object.stripe?
+        render json: { subscription_id: @subscription.id,
+                       status: @subscription.stripe_status,
+                       client_secret: client_secret }, status: :ok
       end
     else
       Rails.logger.info "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
@@ -103,7 +103,6 @@ class SubscriptionsController < ApplicationController
       flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
       redirect_to new_subscription_url
     end
-
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
     redirect_to new_subscription_url
@@ -154,6 +153,12 @@ class SubscriptionsController < ApplicationController
     end
   end
 
+  def status_from_stripe
+    update_status(params[:status])
+
+    flash[:notice] = 'Your subscription is confirmed!'
+  end
+
   private
 
   def get_relevant_subscription_plans
@@ -161,14 +166,20 @@ class SubscriptionsController < ApplicationController
     currency = current_user.get_currency(country)
 
     if params[:plan_guid]
-      SubscriptionPlan.get_related_plans(current_user,
-                                         currency,
-                                         params[:exam_body_id],
-                                         params[:plan_guid])
+      SubscriptionPlan.includes(:exam_body, :currency).
+        get_related_plans(current_user, currency, params[:exam_body_id], params[:plan_guid])
     else
-      SubscriptionPlan.get_relevant(current_user,
-                                    currency,
-                                    params[:exam_body_id])
+      SubscriptionPlan.includes(:exam_body, :currency).
+        get_relevant(current_user, currency, params[:exam_body_id])
+    end
+  end
+
+  def update_status(status)
+    case status
+    when 'active', 'succeeded'
+      @subscription.start
+    when 'payment_action_required'
+      @subscription.mark_payment_action_required
     end
   end
 
