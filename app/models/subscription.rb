@@ -44,15 +44,15 @@ class Subscription < ApplicationRecord
   belongs_to :subscription_plan
   belongs_to :coupon, optional: true
   belongs_to :changed_from, class_name: 'Subscription', foreign_key: :changed_from_id, optional: true
+
   has_one :student_access
+  has_one :exam_body, through: :subscription_plan
 
   has_many :invoices
   has_many :invoice_line_items
   has_many :subscription_transactions
   has_many :charges
   has_many :refunds
-
-  delegate :exam_body, to: :subscription_plan, allow_nil: false
 
   # validation
   validates :user_id, presence: true,
@@ -70,6 +70,7 @@ class Subscription < ApplicationRecord
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
   after_create :update_coupon_count
+  after_save :update_hub_spot_data
 
   # scopes
   scope :all_in_order, -> { order(:user_id, :id) }
@@ -447,4 +448,9 @@ class Subscription < ApplicationRecord
     end
   end
 
+  def update_hub_spot_data
+    return if Rails.env.test?
+
+    HubSpotContactWorker.perform_async(id)
+  end
 end

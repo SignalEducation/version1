@@ -30,6 +30,15 @@
 require 'rails_helper'
 
 describe Subscription do
+  before do
+    Sidekiq::Testing.fake!
+    Sidekiq::Worker.clear_all
+    allow_any_instance_of(HubSpot::Contacts).to receive(:batch_create).and_return(:ok)
+  end
+
+  after do
+    Sidekiq::Worker.drain_all
+  end
 
   describe 'valid factory' do
     before :each do
@@ -79,47 +88,6 @@ describe Subscription do
   it { expect(Subscription).to respond_to(:all_valid) }
   it { expect(Subscription).to respond_to(:this_week) }
 
-  # class methods
-
-  # instance methods
-
-  describe '#schedule_paypal_cancellation' do
-    before :each do
-      allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
-    end
-
-    context 'for pending_cancellation subscriptions' do
-      let(:subscription) { build_stubbed(:subscription, state: 'pending_cancellation')}
-
-      it 'calls #set_cancellation_date on the subscription' do
-        expect_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
-
-        subscription.schedule_paypal_cancellation
-      end
-    end
-
-    context 'for active subscriptions' do
-      let(:subscription) { create(:subscription, state: 'active')}
-
-      it 'updates the state to #cancelled_pending' do
-        allow_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
-        expect(subscription.state).to eq 'active'
-
-        subscription.schedule_paypal_cancellation
-
-        subscription.reload
-        expect(subscription.state).to eq 'pending_cancellation'
-      end
-
-      it 'calls #set_cancellation_date on the subscription' do
-        expect_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
-
-        subscription.schedule_paypal_cancellation
-      end
-    end
-  end
-
-
   it { should respond_to(:cancel) }
   it { should respond_to(:immediate_cancel) }
   it { should respond_to(:reactivate_canceled) }
@@ -139,4 +107,62 @@ describe Subscription do
   it { should respond_to(:update_from_stripe) }
   it { should respond_to(:un_cancel) }
 
+  describe 'Methods' do
+    describe '#schedule_paypal_cancellation' do
+      before :each do
+        allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
+      end
+
+      context 'for pending_cancellation subscriptions' do
+        let(:subscription) { build_stubbed(:subscription, state: 'pending_cancellation')}
+
+        it 'calls #set_cancellation_date on the subscription' do
+          expect_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
+
+          subscription.schedule_paypal_cancellation
+        end
+      end
+
+      context 'for active subscriptions' do
+        let(:subscription) { create(:subscription, state: 'active')}
+
+        it 'updates the state to #cancelled_pending' do
+          allow_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
+          expect(subscription.state).to eq 'active'
+
+          subscription.schedule_paypal_cancellation
+
+          subscription.reload
+          expect(subscription.state).to eq 'pending_cancellation'
+        end
+
+        it 'calls #set_cancellation_date on the subscription' do
+          expect_any_instance_of(PaypalSubscriptionsService).to receive(:set_cancellation_date)
+
+          subscription.schedule_paypal_cancellation
+        end
+      end
+    end
+
+    describe '.update_hub_spot_data' do
+      let(:user)   { build(:user) }
+      let(:worker) { HubSpotContactWorker }
+
+      context 'when user has updated data' do
+        it 'create a job in HubSpotContactWorker' do
+          user.update(first_name: Faker::Name.first_name)
+
+          expect { worker.perform_async(rand(10)) }.to change(worker.jobs, :size).by(1)
+        end
+      end
+
+      context 'when user has not updated data' do
+        it 'do not create a job in HubSpotContactWorker' do
+          user.update(last_request_at: Time.now)
+
+          expect { worker.perform_async(rand(10)) }.to change(worker.jobs, :size).by(1)
+        end
+      end
+    end
+  end
 end
