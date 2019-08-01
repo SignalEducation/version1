@@ -15,6 +15,7 @@ require 'spec_helper'
 require 'support/database_cleaner' # configuration of database_cleaner
 require 'support/dry_specs'       # our handy way of doing lots of repetitive tests
 require 'support/feature_specs'   # shortcuts for our feature tests
+require 'support/stripe_mock_helpers'
 require 'webmock/rspec'
 include Authlogic::TestCase       # required for Authlogic
 
@@ -85,6 +86,7 @@ RSpec.configure do |config|
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   config.include FactoryBot::Syntax::Methods
+  config.include StripeMockHelpers, type: :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

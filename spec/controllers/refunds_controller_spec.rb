@@ -20,7 +20,6 @@
 #
 
 require 'rails_helper'
-require 'support/stripe_web_mock_helpers'
 
 describe RefundsController, type: :controller do
   before :each do
