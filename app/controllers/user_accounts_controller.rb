@@ -64,7 +64,12 @@ class UserAccountsController < ApplicationController
     redirect_to pdf_invoice_path(format: :pdf), params
   end
 
-  protected
+
+  def show_invoice
+      @invoice = Invoice.find 54857
+  end
+
+  protected 
 
   def change_password_params
     params.require(:user).permit(:current_password, :password, :password_confirmation)

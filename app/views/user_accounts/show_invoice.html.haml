@@ -1,0 +1,46 @@
+%article.account.bg-white
+  .container
+    %header
+      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-5.py-md-6
+        .mw-0
+          %h1.mb-0.h1-hero.mr-2 Invoice Payment Required
+        .mw-0
+          %h5.mb-0.text-gray2
+            =@user.full_name
+    
+    %h4.text-gray2 Latest Invoice
+    .table-responsive
+    %table.table
+    %thead
+      %tr
+        %th Reference N.
+        %th Date Created
+        %th Amount Charged
+        %th Status
+    %tbody
+      %tr
+      %td=@invoice.id
+      %td=humanize_datetime(@invoice.issued_at)
+      %td=number_in_local_currency(@invoice.total, @invoice.currency)
+      %td=@invoice.status
+        
+        
+
+:javascript
+
+    // WARNING: What are the implications of 
+
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+
+    function ReAuth() { /* do stuff on page load */
+        
+        stripe.handleCardPayment(
+        'pi_0F2KybCU7JSVN1HWgssTrHAM_secret_58EYH0yEBLyGNafkdqHTbatrr',
+            ).then(function(result) {
+            // Handle result.error or result.paymentIntent
+                console.log(result.paymentIntent.status);
+            });
+        
+    }
+
+    window.onload = ReAuth;
