@@ -58,6 +58,8 @@ Rails.application.routes.draw do
     get '/all_subscriptions', to: 'subscription_plans#all_subscriptions', as: :all_subscriptions
     get '/subscription_show/:id', to: 'subscription_plans#subscription_show', as: :subscription_show
 
+
+ 
     # User
     resources :users do
       get  '/personal',                                 action: :user_personal_details,           as: :personal
@@ -69,7 +71,7 @@ Rails.application.routes.draw do
       get  '/referrals',                                action: :user_referral_details,           as: :referrals
       patch '/update_courses',                          action: :update_courses,                  as: :update_courses
       get 'search', on: :collection
-      resources :invoices,  only: :index, shallow: true
+      resources :invoices,  only: [:index], shallow: true
       resources :visits,    only: [:index, :show]
       resources :exercises, only: [:index, :show, :edit, :update], shallow: true
     end
@@ -100,6 +102,7 @@ Rails.application.routes.draw do
     patch 'update_user_details',           to: 'user_accounts#update_user',                 as: :update_personal_details
     patch 'update_exam_body_user_details', to: 'enrollments#update_exam_body_user_details', as: :update_exam_body_user_details
     get 'subscription_invoice/:id',        to: 'user_accounts#subscription_invoice',        as: :subscription_invoices
+    get 'show_invoice/:guid',                    to: 'user_accounts#show_invoice',                as: :show_invoice
 
     # User Account Verification
     get 'user_verification/:email_verification_code',         to: 'user_verifications#update',                   as: :user_verification
