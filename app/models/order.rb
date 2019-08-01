@@ -146,6 +146,6 @@ class Order < ApplicationRecord
 
   def user_exercise_url(user_id)
     UrlHelper.instance.user_exercises_url(user_id: user_id,
-                                          host: 'https://learnsignal.com')
+                                          host: LEARNSIGNAL_HOST)
   end
 end

@@ -105,7 +105,7 @@ class Exercise < ApplicationRecord
       'send_correction_returned_email',
       UrlHelper.instance.user_exercises_url(
         user_id: self.user_id,
-        host: 'https://learnsignal.com'
+        host: LEARNSIGNAL_HOST
       ),
       product.mock_exam.name
     )
@@ -123,9 +123,9 @@ class Exercise < ApplicationRecord
 
   def send_submitted_slack_message
     attachments = [{
-      fallback: "#{user.name} uploaded an exercise. - #{UrlHelper.instance.admin_exercises_url(host: 'https://learnsignal.com')}",
-      title: "<#{UrlHelper.instance.admin_exercises_url(host: 'https://learnsignal.com')}|#{user.name}> - uploaded an exercise.",
-      title_link: UrlHelper.instance.admin_exercises_url(host: 'https://learnsignal.com').to_s,
+      fallback: "#{user.name} uploaded an exercise. - #{UrlHelper.instance.admin_exercises_url(host: LEARNSIGNAL_HOST)}",
+      title: "<#{UrlHelper.instance.admin_exercises_url(host: LEARNSIGNAL_HOST)}|#{user.name}> - uploaded an exercise.",
+      title_link: UrlHelper.instance.admin_exercises_url(host: LEARNSIGNAL_HOST).to_s,
       color: '#7CD197',
       fields: [
         {
@@ -143,7 +143,7 @@ class Exercise < ApplicationRecord
       self.user_id,
       'send_exercise_submitted_email',
       UrlHelper.instance.account_url(
-        host: 'https://learnsignal.com'
+        host: LEARNSIGNAL_HOST
       ),
       product.mock_exam.name,
       product.mock_exam.file,

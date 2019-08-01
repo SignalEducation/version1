@@ -53,8 +53,8 @@ class PaypalService
         payment_method: 'paypal'
       },
       redirect_urls: {
-        return_url: execute_order_url(id: order.id, host: learnsignal_host, payment_processor: 'paypal'),
-        cancel_url: new_order_url(product_id: order.product_id, host: learnsignal_host, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
+        return_url: execute_order_url(id: order.id, host: LEARNSIGNAL_HOST, payment_processor: 'paypal'),
+        cancel_url: new_order_url(product_id: order.product_id, host: LEARNSIGNAL_HOST, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
       },
       transactions: [
         {
@@ -76,16 +76,5 @@ class PaypalService
         }
       ]
     }
-  end
-
-  def learnsignal_host
-    case Rails.env
-    when 'development'
-      'http://localhost:3000'
-    when 'staging', 'test'
-      'https://staging.learnsignal.com'
-    when 'production'
-      'https://learnsignal.com'
-    end
   end
 end

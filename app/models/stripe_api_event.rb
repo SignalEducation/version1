@@ -143,9 +143,8 @@ class StripeApiEvent < ApplicationRecord
       self.error_message = nil
 
       #The subscription charge was successful so send successful payment email
-      url_host =  Rails.env.production? ? 'learnsignal.com' : 'staging.learnsignal.com'
       invoice_url = UrlHelper.instance.subscription_invoices_url(invoice.id, locale: 'en',
-                                                                                   format: 'pdf', host: url_host)
+                                                                 format: 'pdf', host: LEARNSIGNAL_HOST)
       MandrillWorker.perform_async(user.id, 'send_successful_payment_email', self.account_url, invoice_url) unless Rails.env.test?
       Rails.logger.debug "DEBUG: Invoice being updated due to successful payment webhook. Invoice id - #{invoice.id}"
 
