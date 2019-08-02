@@ -11,18 +11,18 @@
     %h4.text-gray2 Latest Invoice
     .table-responsive
     %table.table
-    %thead
+      %thead
       %tr
         %th Reference N.
         %th Date Created
         %th Amount Charged
         %th Status
-    %tbody
-      %tr
-      %td=@invoice.id
-      %td=humanize_datetime(@invoice.issued_at)
-      %td=number_in_local_currency(@invoice.total, @invoice.currency)
-      %td=@invoice.status
+      %tbody
+        %tr
+          %td=@invoice.id
+          %td=humanize_datetime(@invoice.issued_at)
+          %td=number_in_local_currency(@invoice.total, @invoice.currency)
+          %td=@invoice.status
         
         
 
