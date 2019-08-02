@@ -721,6 +721,7 @@ ActiveRecord::Schema.define(version: 2019_08_01_154759) do
     t.string "paypal_payment_guid"
     t.bigint "order_id"
     t.boolean "requires_3d_secure", default: false
+    t.string "sca_verification_guid"
     t.index ["order_id"], name: "index_invoices_on_order_id"
   end
 
