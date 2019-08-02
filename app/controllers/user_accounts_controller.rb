@@ -85,7 +85,7 @@ class UserAccountsController < ApplicationController
       
       @invoice = Invoice.find 54856
 
-      stripe_invoice = Stripe::Invoice.retrieve("in_FXPn0x4r7p89H1")
+      stripe_invoice = Stripe::Invoice.retrieve(@invoice.stripe_guid)
       @the_secret = stripe_invoice.payment_intent.client_secret
   end
 
