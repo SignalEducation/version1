@@ -100,6 +100,11 @@ class MandrillClient
     send_template('course-completion-survey-190605', msg)
   end
 
+    # Send SCA confirmation email
+    def send_sca_confirmation_email(email_guid)
+
+    end
+
   private
 
   def send_template(template_slug, msg)
