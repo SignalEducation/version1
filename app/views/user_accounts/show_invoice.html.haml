@@ -35,7 +35,7 @@
     function ReAuth() { /* do stuff on page load */
         
         stripe.handleCardPayment(
-        'pi_0F2KybCU7JSVN1HWgssTrHAM_secret_58EYH0yEBLyGNafkdqHTbatrr',
+        '<%= @the_secret %>',
             ).then(function(result) {
             // Handle result.error or result.paymentIntent
                 console.log(result.paymentIntent.status);

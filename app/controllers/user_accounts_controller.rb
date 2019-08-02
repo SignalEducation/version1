@@ -77,12 +77,16 @@ class UserAccountsController < ApplicationController
       # Then call process with Stripe's call
       
       #sca_verification_guid = generate_sca_guid
-      email_guid = params['guid']
+      email_sca_guid = params['guid']
+      
+      #Check the guid belongs to this user
 
-      guid = send_sca_email
-      binding.pry
-      #stripe_invoice = StripeService.new.get_invoice(stripe_guid)
-      #the_secret = stripe_invoice.payment_intent.client_secret
+      #If it is then call stripe's payment intent
+      
+      @invoice = Invoice.find 54856
+
+      stripe_invoice = Stripe::Invoice.retrieve("in_FXPn0x4r7p89H1")
+      @the_secret = stripe_invoice.payment_intent.client_secret
   end
 
   def send_sca_email
