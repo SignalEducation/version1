@@ -53,6 +53,7 @@ class SubjectCourse < ApplicationRecord
   has_many :exam_sittings
   has_many :enrollments
   has_many :subject_course_user_logs
+  has_many :cbes
   has_many :course_sections
   has_many :course_section_user_logs
   has_many :course_modules

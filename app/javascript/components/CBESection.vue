@@ -1,21 +1,28 @@
 <template>
-    <div>
-        <div class="form-group row">
-            <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Section Title</label>
-            <div class="col-md-10">
-                <input class="col-md-12" v-model="sectionName" placeholder="Section Name">
-                <input class="col-md-12" v-model="sectionDescription" placeholder="Section Description">
-                <input class="col-md-12" v-model="sectionLabel" placeholder="Section Label">
-                
+    <div class="col-sm-12">
+        <div class="form-group">
+            <label for="colFormLabelSm">Section Title</label>
+            <div class="input-group input-group-lg">
+                <input v-model="sectionName" placeholder="Section Name" class="form-control">
             </div>
+        </div>
+        <div class="form-group">
+            <label for="colFormLabelSm">Section Description</label>
+            <div class="input-group input-group-lg">
+                <input v-model="sectionDescription" placeholder="Section Description" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="colFormLabelSm">Section Label</label>
+            <div class="input-group input-group-lg">
+                <input v-model="sectionLabel" placeholder="Section Label" class="form-control">
+            </div>
+        </div>
 
-            <div>
-                <div>
-                    <button v-on:click="saveSection">Save Section</button>
-                      <div v-show="this.$emit.showQuestions">
-                          <span class="badge badge-pill badge-primary">Section ID {{this.$store.state.currentSectionId}}</span>
-                       </div>
-                </div>       
+        <div>
+            <button v-on:click="saveSection" class='btn btn-primary'>Save Section</button>
+            <div v-show="this.$emit.showQuestions">
+                <span class="badge badge-pill badge-primary">Section ID {{this.$store.state.currentSectionId}}</span>
             </div>
         </div>
     </div>

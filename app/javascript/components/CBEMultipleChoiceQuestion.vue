@@ -1,30 +1,34 @@
 <template>
     <div>
-        <div class="form-group row">
-
-
-            <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Multiple Choice Question</label>
-            <div class="col-md-10">
-                <input class="col-md-12" v-model="questionName" placeholder="Question Name">
-                <input class="col-md-12" v-model="questionDescription" placeholder="Question Description">
-                <input class="col-md-12" v-model="correctAnswer" placeholder="Correct Answer">
-            
-            
-            <button @click="showChoices = true">Edit Multiple Question Choices</button>
-            
-            <div v-if="this.$store.state.selectedSelectQuestion === 'Multiple Choice'">
-                {{selectedSelectQuestion}}
-                <input class="col-md-12" v-model="choiceOne" placeholder="Choice 1">
-                <input class="col-md-12" v-model="choice2" placeholder="Choice 2">
-                <input class="col-md-12" v-model="choice3" placeholder="Choice 3">
-                <input class="col-md-12" v-model="choice4" placeholder="Choice 4">
-            </div>
-
-
-
-                
+        <div class="form-group">
+            <label for="colFormLabelSm" >Question Name</label>
+            <div class="input-group input-group-lg">
+                <input v-model="questionName" placeholder="Question Name" class="form-control">
             </div>
         </div>
+        <div class="form-group">
+            <label for="colFormLabelSm" >Question Description</label>
+            <div class="input-group input-group-lg">
+                <input v-model="questionDescription" placeholder="Question Description" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="colFormLabelSm" >Correct Answer</label>
+            <div class="input-group input-group-lg">
+                <input v-model="correctAnswer" placeholder="Correct Answer" class="form-control">
+            </div>
+        </div>
+
+        <button @click="showChoices = true" class='btn btn-primary'>Edit Multiple Question Choices</button>
+            
+        <div v-if="this.$store.state.selectedSelectQuestion === 'Multiple Choice'">
+            {{selectedSelectQuestion}}
+            <input class="col-md-12" v-model="choiceOne" placeholder="Choice 1">
+            <input class="col-md-12" v-model="choice2" placeholder="Choice 2">
+            <input class="col-md-12" v-model="choice3" placeholder="Choice 3">
+            <input class="col-md-12" v-model="choice4" placeholder="Choice 4">
+        </div>
+
     </div>
 </template>
 

@@ -1,16 +1,19 @@
 <template>
-    <div class="form-group row">
-        <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Subject</label>
-        <div class="col-md-10">
-            <select  v-model="selectedSubject" class="form-control form-control-sm">         
-                <option class="col-md-8" v-for="option in options" v-bind:value="option.id">
-                    {{option.name}}
-                </option>   
-            </select>
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="form-group">
+                <label for="colFormLabelSm">Subject</label>
+                <div class="input-group input-group-lg">
+                    <select  v-model="selectedSubject" class="form-control custom-select">
+                        <option class="col-md-8" v-for="option in options" v-bind:value="option.id">
+                            {{option.name}}
+                        </option>
+                    </select>
+                </div>
+            </div>
         </div>
     </div>
 </template>
-
 
 <script>
     import axios from 'axios'

@@ -2,27 +2,25 @@
     <div class="panel-body no-top-padding">
       <split-pane  :min-percent='50' :default-percent='50' split="vertical">
         <template slot="paneL">
-
-          <QuestionsList> </QuestionsList>
-         <div v-if="showSubjects = true">
-            <Subjects ref="subjects"></Subjects>
-          </div>
-
-        <div class="form-group row">
-            <div class="col-md-10">
-              <button v-on:click="createNewCBE">Create a new CBE</button>
-               {{this.$store.state.showQuestions}}
+            <div v-if="showSubjects = true">
+                <Subjects ref="subjects"></Subjects>
             </div>
-        </div>
 
-        <div v-if="cbeSectionButton === true">
-          <button v-on:click="makeCBESectionVisible">Add Section</button>
-        </div>
+            <div class="form-group row">
+                <div class="col-md-10">
+                  <button v-on:click="createNewCBE" class='btn btn-secondary'>Create a new CBE</button>
+                   {{this.$store.state.showQuestions}}
+                </div>
+            </div>
+
+            <div v-if="cbeSectionButton === true">
+              <button v-on:click="makeCBESectionVisible" class='btn btn-secondary'>Add Section</button>
+            </div>
 
 
-          <div v-show="this.$store.state.showQuestions">
-            <button v-on:click="makeQuestionDetailsVisible">Add Question</button>
-          </div>
+            <div v-show="this.$store.state.showQuestions">
+                <button v-on:click="makeQuestionDetailsVisible"class='btn btn-secondary'>Add Question</button>
+            </div>
 
             <div v-show="showQuestionDetails">
               <QuestionsList> </QuestionsList>
@@ -30,26 +28,24 @@
 
         </template>
         <template slot="paneR">
-          <div v-show="showCBEDetails">
-            <CBEDetails> </CBEDetails>
-            <button v-on:click="saveNewCBE">Save</button>
-          </div>
-
+            <div v-show="showCBEDetails">
+                <CBEDetails> </CBEDetails>
+                <button v-on:click="saveNewCBE" class='btn btn-primary'>Save</button>
+            </div>
             <div v-show="this.$store.state.showSections ">
-            <CBESection> </CBESection>
-            <button v-on:click="saveSection">Save</button>
-          </div>
+                <CBESection> </CBESection>
+                <button v-on:click="saveSection" class='btn btn-primary'>Save</button>
+            </div>
 
-        <div v-show="showQuestionDetails">
-
-              <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
-
-        </div>
+            <div v-show="showQuestionDetails">
+                <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
+            </div>
 
             <div v-if="selectedSubjectId !== null">
               <span class="badge badge-pill badge-primary">CBE ID {{createdCBE.cbeId}}</span>
               <span class="badge badge-pill badge-primary">CBE Name {{createdCBE.cbeName}}</span>
             </div>
+
         </template>
       </split-pane>
     </div>

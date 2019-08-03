@@ -1,50 +1,56 @@
 <template>
-    <div class="form-row align-items-left col-lg-10 ml-1">   
+  <div class="form-row form-horizontal">
 
-  <div class="form-group row">
-    <label for="colFormLabel" class="col-md-2 col-form-label">Name</label>
-    <div class="ml-4">
-      <input v-model="cbeName"  class="form-control ml-5" id="colFormLabel" placeholder="Name">
-    </div>
-  </div>
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="colFormLabel">Name</label>
+        <div class="input-group input-group-lg">
+          <input v-model="cbeName"  class="form-control" id="colFormLabel" placeholder="Name">
+        </div>
+      </div>
 
-  <div class="form-group row">
-    <label for="colFormLabel" class="col-md-2 col-form-label">Title</label>
-    <div class="ml-4">
-      <input  v-model="cbeTitle" class="form-control ml-5" id="colFormLabel" placeholder="Title">
+      <div class="form-group">
+        <label for="colFormLabel">Title</label>
+        <div class="input-group input-group-lg">
+          <input  v-model="cbeTitle" class="form-control" id="colFormLabel" placeholder="Title">
+        </div>
+      </div>
     </div>
-  </div>
-      
-  <div class="form-group row">
-    <label for="colFormLabel" class="col-md-2 col-form-label">Description</label>
-    <div class="ml-4">
-      <input v-model="cbeDescription" class="form-control ml-5" id="colFormLabel" placeholder="Description">
-    </div>
-  </div>
-      
-  <div class="form-group row">
-    <label for="colFormLabel" class="col-md-2 col-form-label">Time</label>
-    <div class="ml-4">
-      <input v-model="cbeTimeLimit" class="form-control ml-5" id="colFormLabel" placeholder="Time Limit">
-    </div>
-  </div>
 
-  <div class="form-group row">
-    <label for="colFormLabel" class="col-sm-2 col-form-label">Pauses</label>
-    <div class="ml-4">
-      <input v-model="cbeNumberOfPauses" class="form-control ml-5" id="colFormLabel" placeholder="Pauses">
-    </div>
-  </div>
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="colFormLabel">Description</label>
+        <div class="input-group input-group-lg">
+          <input v-model="cbeDescription" class="form-control" id="colFormLabel" placeholder="Description">
+        </div>
+      </div>
 
-    <div class="form-group row">
-    <label for="colFormLabel" class="col-sm-2 col-form-label">Length</label>
-    <div class="ml-4">
-      <input v-model="cbeLengthOfPauses" class="form-control ml-5" id="colFormLabel" placeholder="Length of pauses">
+      <div class="form-group">
+        <label for="colFormLabel">Time</label>
+        <div class="input-group input-group-lg">
+          <input v-model="cbeTimeLimit" class="form-control" id="colFormLabel" placeholder="Time Limit">
+        </div>
+      </div>
     </div>
-  </div>
-      
+
+    <div class="col-sm-6">
+      <div class="form-group">
+        <label for="colFormLabel">Pauses</label>
+        <div class="input-group input-group-lg">
+          <input v-model="cbeNumberOfPauses" class="form-control" id="colFormLabel" placeholder="Pauses">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="colFormLabel">Length</label>
+        <div class="input-group input-group-lg">
+          <input v-model="cbeLengthOfPauses" class="form-control" id="colFormLabel" placeholder="Length of pauses">
+        </div>
+      </div>
+    </div>
+
        
-    </div>
+  </div>
 </template>
 
 <script>
