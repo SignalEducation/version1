@@ -22,5 +22,4 @@ FactoryBot.define do
     processed { false }
     error { false }
   end
-
 end

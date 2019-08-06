@@ -35,6 +35,7 @@
 #  original_stripe_data        :text
 #  paypal_payment_guid         :string
 #  order_id                    :bigint(8)
+#  requires_3d_secure          :boolean          default(FALSE)
 #
 
 class Invoice < ApplicationRecord
@@ -168,6 +169,12 @@ class Invoice < ApplicationRecord
     inv
   end
 
+  def mark_payment_action_required
+    update!(requires_3d_secure: true)
+    subscription.mark_payment_action_required!
+    send_3d_secure_email
+  end
+
   ## Updates the Invoice from stripe data sent to a StripeApiEvent ##
   def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)
@@ -202,6 +209,17 @@ class Invoice < ApplicationRecord
     self.invoice_line_items.empty?
   end
 
+  def send_receipt(account_url)
+    return if Rails.env.test?
+    invoice_url = UrlHelper.instance.subscription_invoices_url(
+      id, locale: 'en', format: 'pdf', host: LEARNSIGNAL_HOST
+    )
+    MandrillWorker.perform_async(
+      user_id, 'send_successful_payment_email', account_url,
+      invoice_url
+    )
+  end
+
   ## Used in the views to show state of the invoice ##
   def status
     if self.paid && self.payment_closed
@@ -221,6 +239,11 @@ class Invoice < ApplicationRecord
   end
 
   protected
+
+  def send_3d_secure_email
+    # TODO: QAMIR to take over from here
+    # MandrillWorker.perform_async
+  end
 
   def set_vat_rate
     country = user.country

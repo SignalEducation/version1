@@ -97,7 +97,7 @@ class Subscription < ApplicationRecord
     end
 
     event :record_error do
-      transition [:active, :pending] => :errored
+      transition %i[active pending] => :errored
     end
 
     event :cancel_pending do
@@ -105,14 +105,20 @@ class Subscription < ApplicationRecord
     end
 
     event :cancel do
-      transition [:pending, :active, :errored, :pending_cancellation, :paused] => :cancelled
+      transition %i[pending active errored pending_cancellation
+                    paused pending_3d_secure] => :cancelled
     end
 
     event :restart do
-      transition [:errored, :pending_cancellation, :paused] => :active
+      transition %i[errored pending_cancellation paused
+                    pending_3d_secure] => :active
     end
 
-    state all - [:active, :errored, :pending_cancellation] do
+    event :mark_payment_action_required do
+      transition all - [:pending] => :pending_3d_secure
+    end
+
+    state all - %i[active errored pending_cancellation] do
       def valid_subscription?
         false
       end
@@ -124,7 +130,7 @@ class Subscription < ApplicationRecord
       end
     end
 
-    state all - [:active, :paused, :pending_cancellation, :errored] do
+    state all - %i[active paused pending_cancellation errored] do
       def can_change_plan?
         false
       end
@@ -388,6 +394,17 @@ class Subscription < ApplicationRecord
       errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe'))
     end
     self
+  end
+
+  def update_invoice_payment_success
+    stripe_sub = StripeService.new.get_subscription(stripe_guid)
+    update!(stripe_status: stripe_sub.status,
+            next_renewal_date: Time.at(stripe_sub.current_period_end))
+    if pending?
+      start!
+    elsif !active?
+      restart!
+    end
   end
 
   def user_readable_status
