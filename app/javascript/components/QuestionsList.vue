@@ -8,7 +8,7 @@
                 <div class="col-md-10">
 
                     
-                <select  :value="this.$store.selectedQuestionType" class="form-control form-control-sm">         
+                <select  :value="this.$store.selectedQuestionType" class="form-control form-control-sm" @change="onChange($event)" >         
                 <option class="col-md-8" v-for="option in this.$store.questionTypes" v-bind:value="option.name">
                     {{option.name}}
                 </option>   
@@ -60,6 +60,11 @@ export default {
                         console.log('Error' + e)
                     })
 
+            },
+            onChange(event) {
+                this.$store.commit('setSelectedQuestionType', 'event.target.value')
+                console.log(event.target.value)
+                console.log(this.$store.selectedQuestionType)
             }
     }
 
