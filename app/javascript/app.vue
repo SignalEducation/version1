@@ -49,7 +49,10 @@
 
                     <div v-show="showQuestionDetails">
 
-                          <CBEMultipleChoiceQuestion> </CBEMultipleChoiceQuestion>
+                      
+                      {{this.$store.state.currentQuestionType}}
+                          
+                          <CBEMultipleChoiceQuestion v-if="multipleChoiceSelected" > </CBEMultipleChoiceQuestion>
                     
                     </div>
 
@@ -121,7 +124,12 @@
         computed: {
             currentCBEId (){
               return this.$store.state.currentCBEId
-            }
+            },
+             multipleChoiceSelected (){
+              if ( this.$store.state.currentQuestionType  == 'Multiple Choice') { 
+                return true
+              }
+            },
         },
         methods: {
             makeCBESectionVisible: function(page, index) {
