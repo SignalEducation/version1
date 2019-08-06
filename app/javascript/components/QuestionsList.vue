@@ -5,9 +5,7 @@
 
             <div v-if="isLoaded">
                 <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"></label>
-                <div class="col-md-10">
-
-                    
+                <div class="col-md-10">                
                 <select  :value="this.$store.selectedQuestionType" class="form-control form-control-sm" @change="onChange($event)" >         
                 <option class="col-md-8" v-for="option in this.$store.questionTypes" v-bind:value="option.name">
                     {{option.name}}
@@ -26,7 +24,7 @@
 <script>
     import axios from 'axios'
     
-export default {
+    export default {
     data: function () {
             return {
             isLoaded: false
@@ -62,9 +60,9 @@ export default {
 
             },
             onChange(event) {
-                this.$store.commit('setSelectedQuestionType', 'event.target.value')
+                this.$store.commit('setCurrentQuestionType', event.target.value)
                 console.log(event.target.value)
-                console.log(this.$store.selectedQuestionType)
+                console.log(this.$store.state.currentQuestionType)
             }
     }
 

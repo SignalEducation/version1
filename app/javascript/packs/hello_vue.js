@@ -63,8 +63,8 @@ export const store = new Vuex.Store({
         showSections: (state, getters) => {
             return getters.showSections
         },
-        selectedQuestionType: (state, getters) => {
-            return getters.selectedQuestionType
+        currentQuestionType: (state, getters) => {
+            return getters.currentQuestionType
         },
       },
 
@@ -105,14 +105,11 @@ export const store = new Vuex.Store({
         setSectionTypes(state, value) {
             state.sectionTypes  = value
         },
-        setShowQuestions: (state, getters) => {
+        setShowQuestions: (state, value) => {
             state.showQuestions  = value
         },
-        setShowSections: (state, getters) => {
-            state.showSections  = value
-        },
-        setSelectedQuestionType: (state, getters) => {
-            state.showSections  = value
+        setCurrentQuestionType: (state, value) => {
+            state.currentQuestionType  = value
         },
     }
 
