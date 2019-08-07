@@ -32,7 +32,7 @@ class EnrollmentManagementController < ApplicationController
       flash[:error] = t('controllers.enrollments.admin_update.flash.error')
     end
 
-    redirect_to enrollment_management_url(@enrollment)
+    redirect_to user_activity_url(@enrollment.user)
   end
 
   def show

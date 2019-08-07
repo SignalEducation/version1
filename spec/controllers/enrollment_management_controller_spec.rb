@@ -59,7 +59,7 @@ RSpec.describe EnrollmentManagementController, :type => :controller do
         expect(flash[:error]).to be_nil
         expect(flash[:success]).to eq(I18n.t('controllers.enrollments.admin_update.flash.success'))
         expect(response.status).to eq(302)
-        expect(response).to redirect_to(enrollment_management_url(enrollment_1))
+        expect(response).to redirect_to(user_activity_url(enrollment_1.user))
       end
     end
 
