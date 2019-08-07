@@ -106,6 +106,24 @@ describe UserAccountsController, type: :controller do
         expect(response).to render_template(:account_show)
         expect(Subscription.count).to eq(2)
       end
+
+
+      describe "GET show_invoice" do
+        it 'should see show_invoice pendin' do
+          get :account_show
+
+        end
+      end
+
+
+      describe "send_sca_email" do
+        it 'should seend send_sca_email' do
+          get :account_show
+
+        end
+      end
+
+
     end
   end
 end
