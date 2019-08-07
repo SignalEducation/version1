@@ -28,7 +28,7 @@ class Subscriptions::PlanChangesController < ApplicationController
     end
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
-    redirect_to account_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'account-info')
   end
 
   private

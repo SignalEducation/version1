@@ -267,7 +267,7 @@ describe SubscriptionsController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.un_cancel.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+        expect(response).to redirect_to account_url(anchor: 'account-info')
 
         expect(a_request(:get, get_url).with(body: nil)).to have_been_made.once
         expect(a_request(:get, get_sub_url).with(body: nil)).to have_been_made.at_most_times(3)
@@ -279,7 +279,7 @@ describe SubscriptionsController, type: :controller do
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq(I18n.t('controllers.application.you_are_not_permitted_to_do_that'))
         expect(response.status).to eq(302)
-        redirect_to account_url(anchor: 'subscriptions')
+        redirect_to account_url(anchor: 'account-info')
       end
 
     end
@@ -335,7 +335,7 @@ describe SubscriptionsController, type: :controller do
         expect(flash[:success]).to eq(I18n.t('controllers.subscriptions.destroy.flash.success'))
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(302)
-        expect(response).to redirect_to account_url(anchor: 'subscriptions')
+        expect(response).to redirect_to account_url(anchor: 'account-info')
       end
     end
   end

@@ -42,12 +42,11 @@ class UserAccountsController < ApplicationController
   def update_user
     if @user&.update_attributes(allowed_params)
       flash[:success] = I18n.t('controllers.users.update.flash.success')
-      redirect_to account_url
     else
       session[:user_update_errors] = @user.errors unless @user.errors.empty?
       session[:valid_params] = [@user.first_name, @user.last_name, @user.email, @user.date_of_birth] unless @user.errors.empty?
-      redirect_to account_url(anchor: 'personal-details-modal')
     end
+    redirect_to account_url
   end
 
   def change_password
