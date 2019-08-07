@@ -9,22 +9,19 @@ class Api::StripeV02Controller < Api::BaseController
     Rails.logger.error "INFO: Api/StripeV02#Create: Notice: event-type: #{event_json["type"]}, api-version: #{event_json["api_version"]}" if event_json
 
     if event_json && StripeApiEvent::KNOWN_PAYLOAD_TYPES.include?(event_json["type"]) && StripeApiEvent::KNOWN_API_VERSIONS.include?(event_json["api_version"])
-      puts "***** KNOWN API EVENT ****"
+
       existing_events = StripeApiEvent.where(guid: event_json["id"])
       if existing_events.any?
         Rails.logger.error "INFO: Api/StripeV02#Create: Record already exists with that guid/id: event-id: #{event_json['id']}"
       else
         
         processing_delay = StripeApiEvent::DELAYED_TYPES.include?(event_json["type"]) ? 5.minutes : 1.minutes
-        puts "***** Sending to SikeKiq ****"
+
         StripeApiProcessorWorker.perform_at(processing_delay, event_json["id"],
                                             event_json["api_version"],
                                             account_url,
                                             event_json)
                                           
-                                          
-        puts "***** Sent to SikeKiq ****"
-
       end
     end
     head :no_content

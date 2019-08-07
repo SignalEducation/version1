@@ -78,6 +78,7 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def disseminate_payload
+<<<<<<< HEAD
     return unless payload && payload.is_a?(Hash) && payload[:type].present?
     if Invoice::STRIPE_LIVE_MODE == payload[:livemode]
       webhook_object = payload[:data][:object]
@@ -104,6 +105,37 @@ class StripeApiEvent < ApplicationRecord
         process_charge_refunded(webhook_object[:invoice], webhook_object)
       when 'coupon.updated'
         process_coupon_updated(webhook_object[:id])
+=======
+    if self.payload && self.payload.class == Hash && self.payload['type']
+      Rails.logger.debug "DEBUG: Processing Stripe event #{self.payload['type']}"
+      if Invoice::STRIPE_LIVE_MODE == self.payload['livemode']
+        #If the payload livemode matches the environment variable livemode
+       
+        case self.payload['type']
+          when 'invoice.created'
+            process_invoice_created(self.payload)
+          when 'invoice.payment_succeeded'
+            process_invoice_payment_success(self.payload[:data][:object][:customer], self.payload[:data][:object][:id], self.payload[:data][:object][:subscription])
+          when 'invoice.payment_failed'
+            process_invoice_payment_failed(self.payload[:data][:object][:customer], self.payload[:data][:object][:next_payment_attempt], self.payload[:data][:object][:subscription], self.payload[:data][:object][:id])
+          when 'invoice.payment_action_required'
+            process_payment_action_required()
+          when 'customer.subscription.deleted'
+            process_customer_subscription_deleted(self.payload[:data][:object][:customer], self.payload[:data][:object][:id])
+          when 'charge.succeeded'
+            process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'charge.failed'
+            process_charge_event(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'charge.refunded'
+            process_charge_refunded(self.payload[:data][:object][:invoice], self.payload[:data][:object])
+          when 'coupon.updated'
+            process_coupon_updated(self.payload[:data][:object][:id])
+          
+          else
+            set_process_error "Unknown event type - #{self.payload[:type]}"
+        end
+        self.save
+>>>>>>> Code cleanup
       else
         set_process_error "Unknown event type - #{payload[:type]}"
       end
@@ -117,9 +149,16 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def get_data_from_stripe
+<<<<<<< HEAD
     if guid
       response = Stripe::Event.retrieve(guid)
       assign_attributes(payload: response.to_hash)
+=======
+
+    if self.guid
+      response = Stripe::Event.retrieve(self.guid)
+      self.payload = response.to_hash
+>>>>>>> Code cleanup
     else
       assign_attributes(
         error: true,
@@ -146,7 +185,6 @@ class StripeApiEvent < ApplicationRecord
 
 
   def process_payment_action_required
-    puts ">>>> ****** process_payment_action_required "
   end
 
   def process_invoice_created(payload)
