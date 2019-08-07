@@ -2,8 +2,9 @@
 
 module Api
     module V1
-      class CbeSectionTypeController < Api::V1::ApplicationController
+      class CbeSectionTypesController < Api::V1::ApplicationController
         def index
+          binding.pry
           render json: CbeSectionType.all.to_json(only: [:id, :name])
         end
       end

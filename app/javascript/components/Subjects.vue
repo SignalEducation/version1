@@ -61,7 +61,7 @@
 
             },
             fetchSectionTypes: function (page, index) {
-                axios.get('http://localhost:3000/api/cbe_section_types/')
+                axios.get('http://localhost:3000/api/v1/cbe_section_types/')
                     .then(response => {
                         this.$store.SectionTypes = response.data
 

@@ -50,9 +50,9 @@
                     <div v-show="showQuestionDetails">
 
                       
-                      {{this.$store.state.currentQuestionType}}
-                          
-                          <CBEMultipleChoiceQuestion v-if="multipleChoiceSelected" > </CBEMultipleChoiceQuestion>
+                      {{this.$store.state.currentQuestionType}}   
+
+                          <CBEMultipleChoiceQuestion v-show="multipleChoiceSelected">!</CBEMultipleChoiceQuestion>
                     
                     </div>
 
@@ -126,9 +126,7 @@
               return this.$store.state.currentCBEId
             },
              multipleChoiceSelected (){
-              if ( this.$store.state.currentQuestionType  == 'Multiple Choice') { 
                 return true
-              }
             },
         },
         methods: {

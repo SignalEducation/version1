@@ -15,7 +15,9 @@ class Cbe < ApplicationRecord
   has_many :cbe_sections, dependent: :destroy
   has_many :cbe_questions, dependent: :destroy
   has_many :cbe_introduction_pages, dependent: :destroy
+  has_many :cbe_section_types, dependent: :destroy
   has_one :cbe_agreement, dependent: :destroy
+  
 
   validates :name, :title, :description, :subject_course_id, presence: true
 

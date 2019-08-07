@@ -11,7 +11,7 @@
 
             <div>
                 <div>
-                    <button v-on:click="saveSection">Save</button>
+                    <button v-on:click="saveSection">Save Section</button>
                       <div v-show="this.$emit.showQuestions">
                           <span class="badge badge-pill badge-primary">Section ID {{this.$store.state.currentSectionId}}</span>
                        </div>
