@@ -141,8 +141,6 @@ class SubscriptionPaymentCard < ApplicationRecord
   # instance methods
 
   def create_on_stripe_using_token
-
-    pry.binding
     if self.stripe_token.to_s.length > 0 && self.user.stripe_customer_id && self.stripe_card_guid.blank?
       stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
       new_card_hash = stripe_customer.sources.create({source: self.stripe_token}).to_hash

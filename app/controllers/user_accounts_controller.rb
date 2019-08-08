@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'securerandom'
 
 class UserAccountsController < ApplicationController
   before_action :logged_in_required
@@ -69,8 +68,11 @@ class UserAccountsController < ApplicationController
   def show_invoice
       email_sca_guid = params['guid']
       @invoice = Invoice.where(:sca_verification_guid => email_sca_guid).last
+      stripe_guid = @invoice.stripe_guid
+      stripe_invoice = StripeService.new.get_invoice(stripe_guid)
+      @the_secret = stripe_invoice.payment_intent.client_secret
   end
-  
+
   protected 
 
   def change_password_params
@@ -91,8 +93,5 @@ class UserAccountsController < ApplicationController
     seo_title_maker('Account Details', '', true)
   end
 
-  def generate_sca_guid
-    SecureRandom.uuid
-  end
 
 end
