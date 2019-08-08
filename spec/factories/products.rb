@@ -31,6 +31,15 @@ FactoryBot.define do
     mock_exam
   end
 
+  trait :for_mock do
+    product_type 'mock_exam'
+  end
+
+  trait :for_corrections do
+    product_type 'correction_pack'
+    correction_pack_count 1
+  end
+
   trait :inactive do
     active { false }
   end

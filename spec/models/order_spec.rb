@@ -85,13 +85,78 @@ describe Order do
   it { expect(Order).to respond_to(:all_for_product) }
   it { expect(Order).to respond_to(:all_for_user) }
 
+  describe 'orders_completed_in_time' do
+    let(:mock_product) { create(:product, :for_mock) }
+
+    before :each do
+      create_list(:order, 3, state: 'completed', product: mock_product,
+                  created_at: 2.days.ago)
+      create_list(:order, 4, state: 'completed', product: mock_product)
+    end
+
+    it 'returns the completed orders created since the specified time' do
+      expect(Order.orders_completed_in_time(24.hours.ago).count).to eq 4
+      expect(Order.orders_completed_in_time(3.days.ago).count).to eq 7
+    end
+
+    it 'does not return un-completed orders' do
+      create_list(:order, 4, state: 'pending', product: mock_product)
+
+      expect(Order.orders_completed_in_time(3.days.ago).count).to eq 7
+    end
+  end
+
   # class methods
+
+  describe '.send_daily_orders_update' do
+    let(:mock_product) { create(:product, :for_mock) }
+
+    it 'calls the orders_completed_in_time scope for 24.hours.ago' do
+      expect(Order).to(
+        receive(:orders_completed_in_time).
+          with(instance_of ActiveSupport::TimeWithZone).and_return []
+      )
+
+      Order.send_daily_orders_update
+    end
+
+    it 'calls the SlackService when there are relevant orders' do
+      create_list(:order, 4, state: 'completed', product: mock_product)
+      expect_any_instance_of(SlackService).to receive(:notify_channel)
+
+      Order.send_daily_orders_update
+    end
+
+    it 'doesn not call slack when there are no relevant orders' do
+      create_list(:order, 3, state: 'completed', product: mock_product,
+                  created_at: 2.days.ago)
+
+      expect_any_instance_of(SlackService).not_to receive(:notify_channel)
+
+      Order.send_daily_orders_update
+    end
+  end
+
+  describe '.product_type_count' do
+    let(:mock_product) { create(:product, :for_mock) }
+    let(:corrections_product) { create(:product, :for_corrections) }
+
+    before :each do
+      create_list(:order, 3, product: mock_product)
+      create_list(:order, 4, product: corrections_product)
+    end
+
+    it 'returns the correct count for mock exams' do
+      expect(Order.product_type_count('mock_exam')).to eq 3
+    end
+    it 'returns the correct count for corrections' do
+      expect(Order.product_type_count('correction_pack')).to eq 4
+    end
+  end
 
   # instance methods
   it { should respond_to(:destroyable?) }
 
   it { should respond_to(:mock_exam) }
   it { should respond_to(:stripe_token) }
-
-
 end
