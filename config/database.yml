@@ -16,7 +16,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/learnsignal_v3_test
+  database: learnsignal_dev
 
 staging:
   <<: *default
@@ -33,4 +33,5 @@ production:
   username: <%= ENV['DB_USERNAME'] %>
   password: <%= ENV['DB_PASSWORD'] %>
   database: <%= ENV['DB_NAME'] %>
+
 

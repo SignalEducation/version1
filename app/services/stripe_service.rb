@@ -66,7 +66,7 @@ class StripeService
     end
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
     Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::PaymentError, "Sorry! Your request was declined because - #{err[:message]}"
   rescue => e
@@ -88,12 +88,12 @@ class StripeService
     if stripe_subscription = get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
       ActiveRecord::Base.transaction do
         new_sub = Subscription.new(
-          user_id: user.id,
-          subscription_plan_id: new_plan_id,
-          complimentary: false,
-          livemode: (stripe_subscription[:plan][:livemode]),
-          stripe_status: stripe_subscription[:status],
-          changed_from: old_sub
+            user_id: user.id,
+            subscription_plan_id: new_plan_id,
+            complimentary: false,
+            livemode: (stripe_subscription[:plan][:livemode]),
+            stripe_status: stripe_subscription[:status],
+            changed_from: old_sub
         )
         # mass-assign-protected attributes
 
@@ -202,17 +202,17 @@ class StripeService
 
   def create_order(product, user)
     Stripe::Order.create(
-      currency: product.currency.iso_code,
-      customer: user.stripe_customer_id,
-      email: user.email,
-      items: [{ amount: (product.price.to_f * 100).to_i,
-                currency: product.currency.iso_code,
-                quantity: 1,
-                parent: product.stripe_sku_guid }]
+        currency: product.currency.iso_code,
+        customer: user.stripe_customer_id,
+        email: user.email,
+        items: [{amount: (product.price.to_f * 100).to_i,
+                 currency: product.currency.iso_code,
+                 quantity: 1,
+                 parent: product.stripe_sku_guid}]
     )
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
     Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::PaymentError, "Sorry! Your request was declined because - #{err[:message]}"
   rescue => e
@@ -230,7 +230,7 @@ class StripeService
     stripe_subscription.save
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
     Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   end
@@ -246,18 +246,18 @@ class StripeService
     )
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = e
     Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   rescue => e
-    Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect}"
+    Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect} --- #{e} ---- "
     raise Learnsignal::SubscriptionError, 'Sorry Something went wrong! Please contact us for assistance.'
   end
 
   def update_subscription_plan(subscription_plan, stripe_plan)
     subscription_plan.update(
-      stripe_guid: stripe_plan.id,
-      livemode: stripe_plan[:livemode]
+        stripe_guid: stripe_plan.id,
+        livemode: stripe_plan[:livemode]
     )
   end
 

@@ -37,6 +37,7 @@
 #  order_id                    :bigint(8)
 #  requires_3d_secure          :boolean          default(FALSE)
 #
+require 'securerandom'
 
 class Invoice < ApplicationRecord
   include LearnSignalModelExtras
@@ -238,12 +239,31 @@ class Invoice < ApplicationRecord
     end
   end
 
-  protected
+  
 
   def send_3d_secure_email
     # TODO: QAMIR to take over from here
     # MandrillWorker.perform_async
+    # Expecting the invoice guid to come in from stripe
+    # Hard code for now
+
+    guid = generate_sca_guid
+
+    if self.update_attribute(:sca_verification_guid, guid)
+
+      invoice_url = UrlHelper.instance.show_invoice_url(
+        guid, host: "http://localhost:3000", locale: 'en'
+      )
+
+      MandrillWorker.perform_async(self.user.id, 'send_sca_confirmation_email', invoice_url)
+    else
+      Rails.logger.error "ERROR: UserAccountsController#send_sca_email: User #{self.user.id} "
+    end
+
+    return guid
   end
+
+  protected
 
   def set_vat_rate
     country = user.country
@@ -264,4 +284,10 @@ class Invoice < ApplicationRecord
   def strip_invoice?
     subscription_guid.present?
   end
+
+
+  def generate_sca_guid
+    SecureRandom.uuid
+  end
+
 end

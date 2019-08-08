@@ -45,7 +45,7 @@ class SubscriptionsController < ApplicationController
       elsif params[:plan_guid].present? && @plans.map(&:guid).include?(params[:plan_guid])
         @plans.where(guid: params[:plan_guid].to_s).first.id
       else
-        params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
+        params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 1)&.first&.id
       end
 
     @subscription =
@@ -53,6 +53,7 @@ class SubscriptionsController < ApplicationController
         new(user_id: current_user.id,
             subscription_plan_id: subscription_plan_id)
 
+  
     # IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
   end

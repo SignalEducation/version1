@@ -11,7 +11,7 @@
 #  destroyed_at                  :datetime
 #  subject_course_id             :integer
 #  sorting_order                 :integer
-#  custom_styles                 :boolean          default(FALSE)
+#  custom_styles                 :boolean          default(TRUE)
 #
 
 class QuizQuestion < ApplicationRecord

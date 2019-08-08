@@ -38,7 +38,7 @@
 #  name_url                        :string
 #  profile_image_file_name         :string
 #  profile_image_content_type      :string
-#  profile_image_file_size         :integer
+#  profile_image_file_size         :bigint(8)
 #  profile_image_updated_at        :datetime
 #  email_verification_code         :string
 #  email_verified_at               :datetime
@@ -105,6 +105,7 @@ class User < ApplicationRecord
   has_many :ahoy_events, :class_name => 'Ahoy::Event'
   has_many :exercises
   has_many :corrections, foreign_key: :corrector_id, class_name: 'Exercise'
+  has_many :payment_intents
 
   has_attached_file :profile_image, default_url: 'images/missing_image.jpg'
 
