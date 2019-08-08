@@ -66,10 +66,9 @@ class SubscriptionsController < ApplicationController
 
     @subscription, client_secret = subscription_object.create_and_return_subscription(params)
     if @subscription&.save
-      case subscription_object
-      when paypal?
+      if subscription_object.paypal?
         redirect_to @subscription.paypal_approval_url
-      when stripe?
+      elsif subscription_object.stripe?
         render json: { subscription_id: @subscription.id,
                        status: @subscription.stripe_status,
                        client_secret: client_secret }, status: :ok

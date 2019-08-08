@@ -235,21 +235,6 @@ class StripeService
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   end
 
-  def get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
-    stripe_customer = get_customer(old_sub.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(old_sub.stripe_guid)
-    stripe_subscription.items.first.plan = new_subscription_plan.stripe_guid
-    stripe_subscription.prorate = true
-    stripe_subscription.trial_end = 'now'
-
-    stripe_subscription.save
-  rescue Stripe::CardError => e
-    body = e.json_body
-    err  = body[:error]
-    Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-    raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
-  end
-
   def create_subscription(subscription, stripe_customer_id, coupon)
     Stripe::Subscription.create(
       customer: stripe_customer_id,

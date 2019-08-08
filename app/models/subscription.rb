@@ -62,9 +62,7 @@ class Subscription < ApplicationRecord
   validates :stripe_status, inclusion: { in: STATUSES }, allow_blank: true
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
   validates :cancellation_reason, presence: true, if: proc { |sub| sub.cancelling_subscription }
-
-  # validates :livemode, inclusion: { in: [Invoice::STRIPE_LIVE_MODE] }, on: :update
-  validates :stripe_guid, :stripe_customer_id, maximum: 255, allow_blank: true
+  validates :stripe_guid, :stripe_customer_id, length: { maximum: 255 }, allow_blank: true
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
