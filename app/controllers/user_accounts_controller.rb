@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'securerandom'
 
 class UserAccountsController < ApplicationController
   before_action :logged_in_required
@@ -77,39 +76,11 @@ class UserAccountsController < ApplicationController
       
       #sca_verification_guid = generate_sca_guid
       email_sca_guid = params['guid']
-      
-      #Check the guid belongs to this user
-
-      #If it is then call stripe's payment intent
-      
-       @invoice = Invoice.find 54856
-
-      #stripe_invoice = Stripe::Invoice.retrieve(@invoice.stripe_guid)
-      #@the_secret = stripe_invoice.payment_intent.client_secret
+      @invoice = Invoice.where(:sca_verification_guid => email_sca_guid).last
+      stripe_guid = @invoice.stripe_guid
+      stripe_invoice = StripeService.new.get_invoice(stripe_guid)
+      @the_secret = stripe_invoice.payment_intent.client_secret
   end
-
-  def send_sca_email
-    # Expecting the invoice guid to come in from stripe
-    # Hard code for now
-    @invoice = Invoice.find 54857
-
-    guid = generate_sca_guid
-
-    if @invoice.update_attribute(:sca_verification_guid, guid)
-
-
-      invoice_url = UrlHelper.instance.show_invoice_url(
-        guid, host: "http://localhost:3000", locale: 'en'
-      )
-
-      MandrillWorker.perform_async(@invoice.user.id, 'send_sca_confirmation_email', invoice_url)
-    else
-      Rails.logger.error "ERROR: UserAccountsController#send_sca_email: User #{@invoice.user.id} "
-    end
-
-    return guid
-  end
-
 
   protected 
 
@@ -131,8 +102,5 @@ class UserAccountsController < ApplicationController
     seo_title_maker('Account Details', '', true)
   end
 
-  def generate_sca_guid
-    SecureRandom.uuid
-  end
 
 end
