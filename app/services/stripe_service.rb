@@ -124,11 +124,6 @@ class StripeService
   end
 
   def create_and_return_subscription(subscription, stripe_token, coupon)
-<<<<<<< HEAD
-=======
-    create_intent(subscription)
-    stripe_subscription = create_subscription(subscription, stripe_token, coupon)
->>>>>>> Code cleanup
     stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
     stripe_customer.source = stripe_token
     stripe_customer.save
@@ -236,57 +231,7 @@ class StripeService
     raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
   end
 
-<<<<<<< HEAD
   def create_subscription(subscription, stripe_customer_id, coupon)
-=======
-  #
-  # TODO - QH - refactor create_intent to make it generic, remove hardcoded values
-  #
-  def create_intent(subscription)
-
-    begin
-      stripe_intent = Stripe::PaymentIntent.create({
-                                                     amount: 1099,
-                                                     currency: 'eur',
-                                                  })
-      rescue Stripe::StripeError => e
-        Rails.logger.error "DEBUG: PaymentIntent - Create: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Message: #{err[:message]}"
-    end
-      
-    payment_intent = PaymentIntent.create!(
-      intent_id: stripe_intent.id,
-      client_secret: stripe_intent.client_secret,
-      currency: stripe_intent.currency,
-      next_action: stripe_intent.next_action,
-      payment_method_options: stripe_intent.payment_method_options,
-      payment_method_types: stripe_intent.payment_method_types,
-      receipt_email: stripe_intent.receipt_email,
-      status: stripe_intent.status,
-      amount: stripe_intent.amount,
-      charges: stripe_intent.charges,
-      status: stripe_intent.status,
-      data: stripe_intent,  
-      user_id: subscription.user.id,                           
-    )
-
-    subscription.user.stripe_customer_id
-
-  end
-
-
-  def process_intent
-
-  end
-
-  #
-  # END TODO - QH - refactor create_intent 
-  #
-
-
-  def create_subscription(subscription, stripe_token, coupon)
-    create_intent(subscription)
-    
->>>>>>> Code cleanup
     Stripe::Subscription.create(
       customer: stripe_customer_id,
       items: [{ plan: subscription.subscription_plan.stripe_guid,
