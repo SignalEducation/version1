@@ -6,7 +6,7 @@ module Admin
     before_action do
       ensure_user_has_access_rights(%w[exercise_corrections_access])
     end
-    before_action :set_exercise, except: :index
+    before_action :set_exercise, except: %i[index generate_daily_summary]
 
     layout 'management'
 
@@ -46,6 +46,11 @@ module Admin
       else
         render action: :edit
       end
+    end
+
+    def generate_daily_summary
+      Order.send_daily_orders_update
+      redirect_to admin_exercises_path, notice: 'Daily summary sent to Slack'
     end
 
     private
