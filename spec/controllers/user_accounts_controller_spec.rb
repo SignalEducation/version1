@@ -118,7 +118,9 @@ describe UserAccountsController, type: :controller do
 
       describe "send_sca_email" do
         it 'should seend send_sca_email' do
-          get :account_show
+          # Check user email/account verified 
+          # Send Invoice Payment verification email
+          
 
         end
       end

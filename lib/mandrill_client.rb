@@ -102,7 +102,12 @@ class MandrillClient
 
     # Send SCA confirmation email
     def send_sca_confirmation_email(email_guid)
-
+     #binding.pry
+      msg = message_stub.merge({"subject" => "Verify Invoice"})
+      t = msg["global_merge_vars"] << { "name" => "URL", "content" => email_guid }
+      x = send_template('invoice-actionable', msg)
+      #binding.pry
+      
     end
 
   private
