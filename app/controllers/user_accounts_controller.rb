@@ -83,10 +83,10 @@ class UserAccountsController < ApplicationController
 
       #If it is then call stripe's payment intent
       
-      @invoice = Invoice.find 54856
+       @invoice = Invoice.find 54856
 
-      stripe_invoice = Stripe::Invoice.retrieve(@invoice.stripe_guid)
-      @the_secret = stripe_invoice.payment_intent.client_secret
+      #stripe_invoice = Stripe::Invoice.retrieve(@invoice.stripe_guid)
+      #@the_secret = stripe_invoice.payment_intent.client_secret
   end
 
   def send_sca_email
@@ -95,7 +95,19 @@ class UserAccountsController < ApplicationController
     @invoice = Invoice.find 54857
 
     guid = generate_sca_guid
-    @invoice.update_attribute(:sca_verification_guid, guid)
+
+    if @invoice.update_attribute(:sca_verification_guid, guid)
+
+
+      invoice_url = UrlHelper.instance.show_invoice_url(
+        guid, host: "http://localhost:3000", locale: 'en'
+      )
+
+      MandrillWorker.perform_async(@invoice.user.id, 'send_sca_confirmation_email', invoice_url)
+    else
+      Rails.logger.error "ERROR: UserAccountsController#send_sca_email: User #{@invoice.user.id} "
+    end
+
     return guid
   end
 

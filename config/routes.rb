@@ -102,6 +102,7 @@ Rails.application.routes.draw do
     patch 'update_exam_body_user_details', to: 'enrollments#update_exam_body_user_details', as: :update_exam_body_user_details
     get 'subscription_invoice/:id',        to: 'user_accounts#subscription_invoice',        as: :subscription_invoices
     get 'show_invoice/:guid',              to: 'user_accounts#show_invoice',                as: :show_invoice
+    post 'send_sca_email'                  to: 'user_accounts#send_sca_email'               as: send_sca_email
 
     # User Account Verification
     get 'user_verification/:email_verification_code',         to: 'user_verifications#update',                   as: :user_verification
