@@ -247,11 +247,6 @@ class Invoice < ApplicationRecord
   
 
   def send_3d_secure_email
-    # TODO: QAMIR to take over from here
-    # MandrillWorker.perform_async
-    # Expecting the invoice guid to come in from stripe
-    # Hard code for now
-
     guid = generate_sca_guid
 
     if self.update_attribute(:sca_verification_guid, guid)
