@@ -37,8 +37,14 @@
         stripe.handleCardPayment(
         '#{@the_secret}',
             ).then(function(result) {
-            // Handle result.error or result.paymentIntent
-                console.log(result.paymentIntent.status);
+              $.ajax ({
+                    url: "/sca_successful",
+                    type: "POST",
+                    data: {id: "#{@invoice.id}"},
+                    success: function(data) {
+                      console.log(data);
+                    }
+                  })
             });
         
     }

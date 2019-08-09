@@ -176,6 +176,11 @@ class Invoice < ApplicationRecord
     send_3d_secure_email
   end
 
+  def mark_payment_action_successful
+    update!(requires_3d_secure: false)
+    subscription.restart!
+  end
+
   ## Updates the Invoice from stripe data sent to a StripeApiEvent ##
   def update_from_stripe(invoice_guid)
     stripe_invoice = Stripe::Invoice.retrieve(invoice_guid)

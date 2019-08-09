@@ -60,10 +60,14 @@ class UserAccountsController < ApplicationController
     redirect_to account_url
   end
 
+  def sca_successful
+    @invoice = Invoice.find(params[:id])
+    @invoice.mark_payment_action_successful
+  end
+
   def subscription_invoice
     redirect_to pdf_invoice_path(format: :pdf), params
   end
-
 
   def show_invoice
       email_sca_guid = params['guid']
