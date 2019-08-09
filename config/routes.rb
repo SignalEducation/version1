@@ -15,11 +15,26 @@ Rails.application.routes.draw do
     post 'stripe_webhooks', to: 'stripe_webhooks#create'
     post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
+
+    scope module: :v1, constraints: ApiConstraint.new(version: 1) do
+      resources :cbes, only: :create do
+        resources :cbe_sections, only: :create
+      end
+
+      resources :subjects, only: :index
+      resources :cbe_question_types, only: :index
+      resources :cbe_section_types, only: :index
+      resources :cbe_question_statuses, only: :index
+    end
   end
 
   namespace :admin do
     resources :exercises, only: [:index, :show, :edit, :update]
-    post 'search_exercises', to: 'exercises#index', as: :search_exercises
+    resources :cbes, only: :new
+  end
+
+  resources :cbes do
+    get 'new', to: 'cbes#new', as: :new_cbe
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -114,7 +129,6 @@ Rails.application.routes.draw do
     resources :content_pages, except: [:show]
     resources :content_activations, only: [:new, :create]
     resource :preferred_exam_body, only: [:edit, :update]
-
     resources :invoices, only: :show do
       get 'pdf', action: :pdf, on: :member
     end
