@@ -127,7 +127,10 @@ class StripeService
     stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
     stripe_customer.source = stripe_token
     stripe_customer.save
+
     stripe_subscription = create_subscription(subscription, stripe_customer.id, coupon)
+    client_secret       = stripe_subscription[:latest_invoice][:payment_intent][:client_secret]
+
     subscription.assign_attributes(
       complimentary: false,
       livemode: stripe_subscription[:plan][:livemode],
@@ -136,10 +139,11 @@ class StripeService
       next_renewal_date: Time.at(stripe_subscription.current_period_end),
       stripe_customer_id: stripe_customer.id,
       coupon_id: coupon.try(:id),
-      stripe_customer_data: stripe_customer.to_hash.deep_dup
+      stripe_customer_data: stripe_customer.to_hash.deep_dup,
+      payment_intent: stripe_subscription[:latest_invoice][:payment_intent][:status]
     )
 
-    subscription
+    [subscription, client_secret]
   end
 
   def cancel_subscription(subscription)
@@ -237,7 +241,8 @@ class StripeService
       items: [{ plan: subscription.subscription_plan.stripe_guid,
                 quantity: 1 }],
       coupon: coupon.try(:code),
-      trial_end: 'now'
+      trial_end: 'now',
+      expand: ['latest_invoice.payment_intent']
     )
   rescue Stripe::CardError => e
     body = e.json_body

@@ -126,6 +126,8 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "POST 'create'" do
+      let(:client_secret) { Faker::Alphanumeric.alphanumeric }
+
       it 'should respond okay with correct params' do
         sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
                    "created": 1539850277, "currency": "eur", "flow": "receiver", "livemode": false, "status": "pending"
@@ -145,22 +147,27 @@ describe SubscriptionsController, type: :controller do
         stub_customer_update_request(update_url, update_request_body, update_response_body)
 
         post_url = 'https://api.stripe.com/v1/subscriptions'
-        post_request_body = {"customer"=>basic_student.stripe_customer_id, "items": [{"plan"=>"stripe_plan_guid_m", "quantity"=>"1"}], "trial_end"=>"now"}
+        post_request_body = { "customer"=>basic_student.stripe_customer_id, "expand"=>["latest_invoice.payment_intent"], "items": [{"plan"=>"stripe_plan_guid_m", "quantity"=>"1"}], "trial_end"=>"now"}
 
         post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
                               "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
                                                                          "object": "plan", "active": true,
                                                                          "amount": 999, "livemode": false },
-                              "status": "active"
+                              "status": 'active',
+                              "latest_invoice": { "payment_intent": { "client_secret": client_secret } }
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
+
         post :create, params: { subscription: upgrade_params.merge(subscription_plan_id: subscription_plan_gbp_m.id, user_id: basic_student.id) }
+        body = JSON.parse(response.body)
+
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to personal_upgrade_complete_url
-
+        expect(body['status']).to eq('active')
+        expect(body['client_secret']).to eq(client_secret)
+        expect(response.status).to eq(200)
+        expect(body.keys).to eq(%w[subscription_id status client_secret])
         expect(a_request(:get, get_url).with(body: nil)).to have_been_made.at_most_times(3)
         expect(a_request(:post, post_url).with(body: post_request_body)).to have_been_made.once
       end
@@ -202,22 +209,23 @@ describe SubscriptionsController, type: :controller do
         stub_customer_update_request(update_url, update_request_body, update_response_body)
 
         post_url = 'https://api.stripe.com/v1/subscriptions'
-        post_request_body = {"customer"=>basic_student.stripe_customer_id, items: [{"plan"=>"stripe_plan_guid_m", quantity: 1}],
-                             "trial_end"=>"now"}
+        post_request_body = {"customer"=>basic_student.stripe_customer_id, "expand"=>["latest_invoice.payment_intent"],
+                             items: [{"plan"=>"stripe_plan_guid_m", quantity: 1}], "trial_end"=>"now"}
 
         post_response_body = {"id": "sub_Do8snl73Oh0FRL", "object": "subscription", "livemode": false,
                               "current_period_end": 1540455078, "plan": {"id": "test-mubaohLn5BuRVQ8rOE4M",
                                                                          "object": "plan", "active": true,
                                                                          "amount": 999, "livemode": false },
-                              "status": "active"
+                              "status": "active",
+                              "latest_invoice": { "payment_intent": { "client_secret": client_secret } }
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
         post :create, params: { subscription: upgrade_params }
+
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
-        expect(response.status).to eq(302)
-        expect(response).to redirect_to personal_upgrade_complete_url
+        expect(response.status).to eq(200)
         expect(a_request(:get, get_url).with(body: nil)).to have_been_made.at_most_times(3)
         expect(a_request(:post, post_url).with(body: post_request_body)).to have_been_made.once
 

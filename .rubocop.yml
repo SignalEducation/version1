@@ -24,6 +24,9 @@ Metrics/LineLength:
 Style/Documentation:
   Enabled: false
 
+Style/RaiseArgs:
+  EnforcedStyle: exploded
+
 Naming/FileName:
     Enabled: false
 
