@@ -11,7 +11,14 @@ class SlackService
     send_notification(message)
   end
 
-  def order_summary_attachment(orders)
+  def daily_order_summary(orders)
+    notify_channel('corrections', order_attachment(orders),
+                   icon_emoji: ':chart_with_upwards_trend:')
+  end
+
+  private
+
+  def order_attachment(orders)
     [{ fallback: 'Daily Orders Summary (Last 24hrs)',
        title: 'Daily Orders Summary (Last 24hrs)',
        color: '#7CD197',
@@ -23,8 +30,6 @@ class SlackService
            short: true }
        ] }]
   end
-
-  private
 
   def slack_client
     @client ||= Slack::Web::Client.new

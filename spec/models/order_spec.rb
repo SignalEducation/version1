@@ -32,6 +32,20 @@ describe Order do
   it { should belong_to(:user) }
   it { should have_one(:order_transaction) }
 
+  describe 'factories' do
+    it 'has a valid factory' do
+      expect(build(:order)).to be_valid
+    end
+
+    it 'has a valid stripe factory' do
+      expect(build(:order, :for_stripe)).to be_valid
+    end
+
+    it 'has a valid paypal factory' do
+      expect(build(:order, :for_paypal)).to be_valid
+    end
+  end
+
   # validation
   it 'is invalid without a product' do
     expect(build_stubbed(:order, product: nil)).not_to be_valid
@@ -43,41 +57,74 @@ describe Order do
 
   describe 'for Stripe orders' do
     describe 'when a valid stripe order' do
-      it 'validates the stripe_guid' do
-        expect(build_stubbed(:order, stripe_token: 'token', stripe_guid: nil)).not_to be_valid
-      end
+      let(:order) { build_stubbed(:order, :for_stripe)}
 
       it 'validates the stripe_customer_id' do
-        expect(build_stubbed(:order, stripe_token: 'token', stripe_customer_id: nil)).not_to be_valid
+        order.stripe_customer_id = nil
+        expect(order).not_to be_valid
       end
 
-      it 'validates the stripe_status' do
-        expect(build_stubbed(:order, stripe_token: 'token', stripe_status: nil)).not_to be_valid
+      it 'validates the stripe_payment_method_id' do
+        order.stripe_payment_method_id = nil
+        expect(order).not_to be_valid
+      end
+
+      it 'validates the stripe_payment_intent_id' do
+        order.stripe_payment_intent_id = nil
+        expect(order).not_to be_valid
       end
     end
 
     describe 'when not a stripe order' do
-      it 'does not validate the stripe_guid' do
-        expect(build_stubbed(:order, stripe_guid: nil)).to be_valid
+      let(:order) { build_stubbed(:order)}
+
+      it 'does not validate the stripe_payment_method_id' do
+        order.stripe_payment_method_id = nil
+        expect(order).to be_valid
       end
 
       it 'does not validate the stripe_customer_id' do
-        expect(build_stubbed(:order, stripe_customer_id: nil)).to be_valid
+        order.stripe_customer_id = nil
+        expect(order).to be_valid
       end
 
-      it 'does not validate the stripe_status' do
-        expect(build_stubbed(:order, stripe_status: nil)).to be_valid
+      it 'does not validate the stripe_payment_method_id' do
+        order.stripe_payment_method_id = nil
+        expect(order).to be_valid
+      end
+    end
+  end
+
+  describe 'for PayPal orders' do
+    describe 'when a valid paypal order' do
+      let(:order) { build_stubbed(:order, :for_paypal)}
+
+      it 'validates the paypal_status' do
+        order.paypal_status = nil
+        expect(order).not_to be_valid
+      end
+    end
+
+    describe 'when not a stripe order' do
+      let(:order) { build_stubbed(:order)}
+
+      it 'does not validate the paypal_guid' do
+        order.paypal_guid = nil
+        expect(order).to be_valid
+      end
+
+      it 'does not validate the paypal_status' do
+        order.paypal_status = nil
+        expect(order).to be_valid
       end
     end
   end
 
   it { should_not validate_presence_of(:coupon_code) }
-
   it { should_not validate_presence_of(:subject_course_id) }
 
   # callbacks
   it { should callback(:check_dependencies).before(:destroy) }
-  it { should callback(:create_order_transaction).after(:create) }
 
   # scopes
   it { expect(Order).to respond_to(:all_in_order) }
@@ -156,9 +203,29 @@ describe Order do
 
   # instance methods
   it { should respond_to(:destroyable?) }
-
   it { should respond_to(:mock_exam) }
-  it { should respond_to(:stripe_token) }
+  it { should respond_to(:stripe_client_secret) }
 
+  describe 'confirm_payment_intent' do
+    let(:order) { create(:order) }
 
+    it 'calls #confirm_purchase on the StripeService' do
+      intent = double(status: 'succeeded')
+      expect_any_instance_of(StripeService).to(
+        receive(:confirm_purchase).with(order).and_return(intent)
+      )
+
+      order.confirm_payment_intent
+    end
+
+    it 'calls transition[confirm_3d_secure] if the intent is succeeded' do
+      intent = double(status: 'succeeded')
+      allow_any_instance_of(StripeService).to(
+        receive(:confirm_purchase).with(order).and_return(intent)
+      )
+      expect(order).to receive(:confirm_3d_secure)
+
+      order.confirm_payment_intent
+    end
+  end
 end

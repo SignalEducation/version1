@@ -343,7 +343,7 @@ class ApplicationController < ActionController::Base
 
   def product_checkout_special_link(exam_body_id, product_id = nil)
     if current_user
-      new_order_url(product_id)
+      new_product_order_url(product_id)
     else
       sign_in_or_register_url(exam_body_id: exam_body_id, product_id: product_id)
     end

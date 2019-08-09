@@ -1,97 +1,118 @@
 # frozen_string_literal: true
 
 class OrdersController < ApplicationController
-  # TODO, Review this controller split student and admin actions
-
   before_action :logged_in_required
-  before_action only: %i[index show] do
-    ensure_user_has_access_rights(%w[user_management_access stripe_management_access])
-  end
-  before_action :set_order, only: %i[show execute]
-
-  def index
-    @orders = Order.includes(:user, :product).paginate(per_page: 50, page: params[:page]).all_in_order
-    @layout = 'management'
-
-    seo_title_maker('Orders', '', true)
-  end
-
-  def show
-    @layout = 'management'
-
-    seo_title_maker('Orders', '', true)
-  end
+  before_action :set_order, only: %i[execute update]
+  before_action :set_navbar, only: :create
 
   def new
-    @order     = Order.new
-    @product   = Product.find(params[:product_id])
-    @layout    = 'standard'
+    @product = Product.find(params[:product_id])
+    @order   = @product.orders.build
+    @layout  = 'standard'
 
-    seo_title_maker("#{@product.mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
+    seo_title_maker("#{@order.product.mock_exam.name} Payment | LearnSignal", 'Get access to ACCA question and solution correction packs from learnsignal designed by experts to help you pass your exams the first time.', true)
   end
 
   def create
-    order        = current_user.orders.build(allowed_params)
-    order_object = PurchaseService.new(order)
+    order_object = PurchaseService.new(current_user.orders.build(order_params))
     @order       = order_object.create_purchase
 
     @order.transaction do
-      if @order.save # an order invoice will be created by order model callback
-        if order_object.stripe? && @order.complete
-          flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
-          redirect_to user_exercises_path(current_user)
-        elsif order_object.paypal?
-          redirect_to @order.paypal_approval_url
-        else
-          flash[:error] = 'Something went wrong. Please try again.'
-          redirect_to new_order_url(product_id: @order.product_id)
-        end
+      if @order.save
+        generate_order_response(@order, order_object)
       else
-        flash[:error] = 'Something went wrong. Please try again. Or contact us for assistance'
-        redirect_to new_order_url(product_id: @order.product_id)
+        respond_to do |format|
+          format.html { render_general_html_error(@order.product_id) }
+          format.json { render_general_json_error }
+        end
       end
     end
-
-    @navbar = false
   rescue Learnsignal::PaymentError => e
-    flash[:error] = e.message
-    redirect_to new_order_url(product_id: allowed_params['product_id'])
+    respond_to do |format|
+      format.html do
+        render_general_html_error(order_params['product_id'], e.message)
+      end
+      format.json { render_general_json_error(e.message) }
+    end
+  end
+
+  def update
+    if @order.stripe? && @order.pending_3d_secure? &&
+       @order.confirm_payment_intent
+      render json: { order_id: @order.id, status: @order.state }, status: :ok
+    else
+      render json: {
+        order_id: @order.id, status: @order.state,
+        error: {
+          message: 'Your payment request was declined. Please contact us for ' \
+          'assistance!'
+        }
+      }, status: :unprocessable_entity
+    end
+  rescue Learnsignal::PaymentError => e
+    render json: { error: { message: e.message } }, status: :unprocessable_entity
   end
 
   def execute
     case params[:payment_processor]
     when 'paypal'
       PaypalService.new.execute_payment(@order, params[:paymentId], params[:PayerID])
-      flash[:success] = I18n.t('controllers.orders.create.flash.mock_exam_success')
+      flash[:success] =
+        I18n.t('controllers.orders.create.flash.mock_exam_success')
       redirect_to user_exercises_path(current_user)
     else
-      flash[:error] = 'Your payment request was declined. Please contact us for assistance!'
-      redirect_to new_order_url(product_id: @order.product_id)
+      render_general_html_error(@order.product_id, 'Your payment request was ' \
+                                'declined. Please contact us for assistance!')
     end
   rescue Learnsignal::PaymentError => e
-    flash[:error] = e.message
-    redirect_to new_order_path(product_id: @order.product_id)
+    render_general_html_error(@order.product_id, e.message)
   end
 
   def complete
-    @order = Order.find_by(reference_guid: params[:reference_guid])
-
-    return if @order.present?
+    return if (@order = Order.find_by(reference_guid: params[:reference_guid]))
 
     redirect_to root_url
     flash[:error] = 'Sorry something went wrong. Please try again or contact us for assistance.'
   end
 
-  protected
+  private
 
-  def set_order
-    @order = Order.find(params[:id]) if params[:id].to_i.positive?
+  def order_params
+    params.require(:order).permit(
+      :subject_course_id, :product_id, :user_id, :stripe_payment_method_id,
+      :use_paypal, :paypal_approval_url, :stripe_payment_intent_id
+    )
   end
 
-  def allowed_params
-    params.require(:order).permit(
-      :subject_course_id, :product_id, :user_id,
-      :stripe_token, :use_paypal, :paypal_approval_url
-    )
+  def generate_order_response(order, order_object)
+    if order_object.stripe? && (order.pending_3d_secure? || order.complete)
+      render 'create', status: :ok
+    elsif order_object.paypal?
+      redirect_to order.paypal_approval_url
+    else
+      respond_to do |format|
+        format.html { render_general_html_error(order.product_id) }
+        format.json { render_general_json_error }
+      end
+    end
+  end
+
+  def render_general_html_error(product_id, message = nil)
+    flash[:error] = message || 'Something went wrong. Please try again.'
+    redirect_to new_product_order_url(product_id: product_id)
+  end
+
+  def render_general_json_error(message = nil)
+    render json: {
+      error: { message: (message || 'Something went wrong. Please try again.') }
+    }, status: :unprocessable_entity
+  end
+
+  def set_navbar
+    @navbar = false
+  end
+
+  def set_order
+    @order = Order.find(params[:id]) if params[:id].present?
   end
 end

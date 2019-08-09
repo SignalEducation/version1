@@ -54,7 +54,7 @@ class PaypalService
       },
       redirect_urls: {
         return_url: execute_order_url(id: order.id, host: LEARNSIGNAL_HOST, payment_processor: 'paypal'),
-        cancel_url: new_order_url(product_id: order.product_id, host: LEARNSIGNAL_HOST, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
+        cancel_url: new_product_order_url(product_id: order.product_id, host: LEARNSIGNAL_HOST, flash: 'It seems you cancelled your order on Paypal. Still want to purchase?')
       },
       transactions: [
         {

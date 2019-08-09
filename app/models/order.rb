@@ -27,7 +27,7 @@
 class Order < ApplicationRecord
   include LearnSignalModelExtras
   serialize :stripe_order_payment_data, JSON
-  attr_accessor :use_paypal, :paypal_approval_url, :stripe_token
+  attr_accessor :use_paypal, :paypal_approval_url, :stripe_client_secret
 
   ORDER_STATUS = %w[created paid canceled].freeze
 
@@ -43,13 +43,14 @@ class Order < ApplicationRecord
 
   # validation
   validates :reference_guid, uniqueness: true, allow_blank: true
-  validates :stripe_status, :stripe_guid, :stripe_customer_id, presence: true, if: :stripe?
+  validates :stripe_customer_id, :stripe_payment_method_id,
+            :stripe_payment_intent_id, presence: true, if: :stripe?
+  validates :paypal_guid, :paypal_status, presence: true, if: :paypal?
 
   # callbacks
   before_create :assign_random_guid
   before_create :generate_invoice
   before_destroy :check_dependencies
-  after_create :create_order_transaction
 
   # scopes
   scope :all_in_order,    -> { order(:product_id) }
@@ -68,12 +69,20 @@ class Order < ApplicationRecord
       transition %i[pending errored] => :completed
     end
 
+    event :mark_payment_action_required do
+      transition all => :pending_3d_secure
+    end
+
+    event :confirm_3d_secure do
+      transition pending_3d_secure: :completed
+    end
+
     event :record_error do
       transition pending: :errored
     end
 
     after_transition all => :completed do |order, _transition|
-      order.execute_order_completion
+      order.execute_order_completion unless Rails.env.test?
       order.generate_exercises
     end
   end
@@ -82,9 +91,7 @@ class Order < ApplicationRecord
 
   def self.send_daily_orders_update
     return if (orders = orders_completed_in_time(24.hours.ago)) && orders.empty?
-    slack = SlackService.new
-    slack.notify_channel('corrections', slack.order_summary_attachment(orders),
-                         icon_emoji: ':chart_with_upwards_trend:')
+    SlackService.new.daily_order_summary(orders)
   end
 
   def self.product_type_count(product_type)
@@ -93,18 +100,19 @@ class Order < ApplicationRecord
 
   # INSTANCE METHODS ===========================================================
 
+  def confirm_payment_intent
+    StripeService.new.confirm_purchase(self)
+    confirm_3d_secure
+  end
+
   def destroyable?
     false
   end
 
   def execute_order_completion
-    return if Rails.env.test?
-    MandrillWorker.perform_async(user_id,
-                                 'send_mock_exam_email',
+    MandrillWorker.perform_async(user_id, 'send_mock_exam_email',
                                  user_exercise_url(user_id),
-                                 product.mock_exam.name,
-                                 reference_guid)
-
+                                 product.mock_exam.name, reference_guid)
     invoice.update(paid: true, payment_closed: true)
   end
 
@@ -113,8 +121,13 @@ class Order < ApplicationRecord
     (1..count).each { user.exercises.create(product_id: product_id) }
   end
 
+  def paypal?
+    paypal_guid.present?
+  end
+
   def stripe?
-    stripe_token.present? || stripe_guid.present?
+    stripe_client_secret.present? || stripe_payment_intent_id.present? ||
+      stripe_payment_method_id.present?
   end
 
   def generate_invoice
@@ -122,8 +135,6 @@ class Order < ApplicationRecord
                        sub_total: product.price, total: product.price,
                        issued_at: updated_at, object_type: 'invoice',
                        amount_due: product.price }
-    invoice_params.merge!(paid: true, payment_closed: true) if stripe? && stripe_status == 'paid'
-
     self.invoice = Invoice.new(invoice_params)
     invoice.invoice_line_items << InvoiceLineItem.new(amount: invoice.total,
                                                       currency_id: invoice.currency_id)
@@ -141,11 +152,6 @@ class Order < ApplicationRecord
     return if destroyable?
     errors.add(:base, I18n.t('models.general.dependencies_exist'))
     false
-  end
-
-  def create_order_transaction
-    OrderTransaction.create_from_stripe_data(stripe_order_payment_data,
-                                             user_id, id, product_id)
   end
 
   def user_exercise_url(user_id)

@@ -14,63 +14,36 @@ class StripeService
     Stripe::Customer.retrieve(stripe_customer_id)
   end
 
-  # PLANS ======================================================================
-
-  def create_plan(subscription_plan)
-    stripe_plan = Stripe::Plan.create(
-      amount: (subscription_plan.price.to_f * 100).to_i,
-      currency: subscription_plan.currency.iso_code.downcase,
-      interval: Rails.env.staging? ? 'day' : 'month',
-      interval_count: subscription_plan.payment_frequency_in_months,
-      product: {
-        name: "LearnSignal #{subscription_plan.name}",
-        statement_descriptor: 'LearnSignal'
-      },
-      id: stripe_plan_id
-    )
-    update_subscription_plan(subscription_plan, stripe_plan)
+  def set_order_status(intent, order)
+    if intent.status == 'requires_action' &&
+       stripe_intent.next_action.type == 'use_stripe_sdk'
+      order.state = 'pending_3d_secure'
+    elsif intent.status != 'succeeded'
+      order.state = 'errored'
+    end
+    order
   end
 
-  def get_plan(stripe_plan_id)
-    Stripe::Plan.retrieve(id: stripe_plan_id, expand: ['product'])
+  def create_purchase(order)
+    stripe_intent = create_payment_intent(order)
+    order = set_order_status(stripe_intent, order)
+    order.assign_attributes(stripe_customer_id: stripe_intent.customer,
+                            stripe_payment_intent_id: stripe_intent.id,
+                            stripe_client_secret: stripe_intent.client_secret)
+    order
+  rescue Stripe::CardError => e
+    raise_payment_error(e.json_body[:error], __method__.to_s, :decline_reason)
+  rescue => e
+    raise_payment_error(e, __method__.to_s, :generic)
   end
 
-  def update_plan(subscription_plan)
-    stripe_plan              = get_plan(subscription_plan.stripe_guid)
-    stripe_plan.product.name = "LearnSignal #{subscription_plan.name}"
-    stripe_plan.product.save
-  end
-
-  def delete_plan(stripe_plan_id)
-    plan = get_plan(stripe_plan_id)
-    plan&.delete
-  end
-
-  # ORDERS =====================================================================
-
-  def complete_purchase(order)
-    stripe_order = create_order(order.product, order.user)
-    order.assign_attributes(stripe_customer_id: stripe_order.customer,
-                            stripe_guid: stripe_order.id,
-                            live_mode: stripe_order.livemode,
-                            stripe_status: stripe_order.status)
-    if order.valid?
-      pay_order = stripe_order.pay(source: order.stripe_token)
-      order.stripe_status = pay_order.status
-      order.stripe_order_payment_data = pay_order
-      order
-    else
-      Rails.logger.error "DEBUG: Orders#create Unable to PAY an order - Order ID #{order.id} is not valid"
-      raise Learnsignal::PaymentError, 'Sorry Something went wrong! Please contact us for assistance.'
+  def confirm_purchase(order)
+    intent = Stripe::PaymentIntent.confirm(order.stripe_payment_intent_id)
+    unless intent.status == 'succeeded'
+      raise_payment_error({}, __method__.to_s, :generic)
     end
   rescue Stripe::CardError => e
-    body = e.json_body
-    err = body[:error]
-    Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-    raise Learnsignal::PaymentError, "Sorry! Your request was declined because - #{err[:message]}"
-  rescue => e
-    Rails.logger.error "DEBUG: Orders#create Failure for unknown reason - Error: #{e.inspect}"
-    raise Learnsignal::PaymentError, 'Sorry Something went wrong! Please contact us for assistance.'
+    raise_payment_error(e.json_body[:error], __method__.to_s, :decline_reason)
   end
 
   # SUBSCRIPTIONS ==============================================================
@@ -112,12 +85,8 @@ class StripeService
         return new_sub
       end
     end
-  rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - AR.Transaction failed.  Details: #{e.inspect}")
-    raise Learnsignal::SubscriptionError, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
-  rescue => e
-    Rails.logger.error("ERROR: Subscription#upgrade_plan - failed to update Subscription at Stripe.  Details: #{e.inspect}")
-    raise Learnsignal::SubscriptionError, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
+  rescue ActiveRecord::RecordInvalid, StandardError => e
+    raise_subscription_error(e, __method__.to_s, :sub_change)
   end
 
   def create_and_return_subscription(subscription_object, stripe_token, coupon)
@@ -160,16 +129,17 @@ class StripeService
         subscription.update(stripe_status: 'canceled-pending')
         subscription.cancel_pending
       else
-        Rails.logger.error "ERROR: Subscription#cancel failed to cancel an 'active' sub. Self:#{subscription}. StripeResponse:#{response}."
-        raise Learnsignal::SubscriptionError, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
+        raise_subscription_error({}, __method__.to_s, :sub_change)
       end
     else
-      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
-      raise Learnsignal::SubscriptionError, 'Subscription#cancel failed because it did not have a stripe_customer_id OR a stripe_guid.'
+      raise_subscription_error(
+        {}, __method__.to_s, :custom,
+        'Subscription#cancel failed because it did not have a ' \
+        'stripe_customer_id OR a stripe_guid.'
+      )
     end
   rescue Stripe::StripeError => e
-    Rails.logger.error "DEBUG: Subscription#cancel_immediately got an error on Stripe #{e.inspect}"
-    raise Learnsignal::SubscriptionError, 'Sorry! There was an error cancelling the subscription.'
+    raise_subscription_error(e, __method__.to_s, :sub_cancellation)
   end
 
   def cancel_subscription_immediately(subscription)
@@ -181,16 +151,13 @@ class StripeService
         subscription.update(stripe_status: 'canceled')
         subscription.cancel
       else
-        Rails.logger.error "ERROR: Subscription#cancel_immediately failed to cancel an 'active' sub. Self:#{subscription}. StripeResponse:#{response}."
-        raise Learnsignal::SubscriptionError, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
+        raise_subscription_error({}, __method__.to_s, :sub_change)
       end
     else
-      Rails.logger.error "ERROR: Subscription#cancel failed because it didn't have a stripe_customer_id OR a stripe_guid. Subscription:#{self}."
-      raise Learnsignal::SubscriptionError, 'Subscription#cancel failed because it did not have a stripe_customer_id OR a stripe_guid.'
+      raise_subscription_error({}, __method__.to_s, :sub_cancellation)
     end
   rescue Stripe::StripeError => e
-    Rails.logger.error "DEBUG: Subscription#cancel_immediately got an error on Stripe #{e.inspect}"
-    raise Learnsignal::SubscriptionError, 'Sorry! There was an error cancelling the subscription.'
+    raise_subscription_error(e, __method__.to_s, :sub_cancellation)
   end
 
   # INVOICES ===================================================================
@@ -203,24 +170,17 @@ class StripeService
 
   private
 
-  def create_order(product, user)
-    Stripe::Order.create(
-      currency: product.currency.iso_code,
-      customer: user.stripe_customer_id,
-      email: user.email,
-      items: [{ amount: (product.price.to_f * 100).to_i,
-                currency: product.currency.iso_code,
-                quantity: 1,
-                parent: product.stripe_sku_guid }]
+  def create_payment_intent(order)
+    Stripe::PaymentMethod.attach(order.stripe_payment_method_id,
+                                 customer: order.user.stripe_customer_id)
+    Stripe::PaymentIntent.create(
+      payment_method: order.stripe_payment_method_id,
+      customer: order.user.stripe_customer_id,
+      amount: (order.product.price * 100).to_i,
+      currency: order.product.currency.iso_code,
+      confirmation_method: 'manual',
+      confirm: true
     )
-  rescue Stripe::CardError => e
-    body = e.json_body
-    err = body[:error]
-    Rails.logger.error "DEBUG: Orders#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-    raise Learnsignal::PaymentError, "Sorry! Your request was declined because - #{err[:message]}"
-  rescue => e
-    Rails.logger.error "DEBUG: Orders#create Failure for unknown reason - Error: #{e.inspect}"
-    raise Learnsignal::PaymentError, 'Sorry Something went wrong! Please contact us for assistance.'
   end
 
   def get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
@@ -232,10 +192,7 @@ class StripeService
 
     stripe_subscription.save
   rescue Stripe::CardError => e
-    body = e.json_body
-    err = body[:error]
-    Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-    raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
+    raise_subscription_error(e.json_body[:error], __method__.to_s, :generic)
   end
 
   def create_subscription(subscription, stripe_customer_id, coupon)
@@ -248,23 +205,10 @@ class StripeService
       expand: ['latest_invoice.payment_intent']
     )
   rescue Stripe::CardError => e
-    err = e
-    Rails.logger.error "DEBUG: Subscription#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
-    raise Learnsignal::SubscriptionError, "Sorry! Your request was declined because - #{err[:message]}"
+    raise_subscription_error(e.json_body[:error], __method__.to_s,
+                             :decline_reason)
   rescue => e
-    Rails.logger.error "DEBUG: Subscription#create Failure for unknown reason - Error: #{e.inspect} --- #{e} ---- "
-    raise Learnsignal::SubscriptionError, 'Sorry Something went wrong! Please contact us for assistance.'
-  end
-
-  def update_subscription_plan(subscription_plan, stripe_plan)
-    subscription_plan.update(
-      stripe_guid: stripe_plan.id,
-      livemode: stripe_plan[:livemode]
-    )
-  end
-
-  def stripe_plan_id
-    Rails.env + '-' + ApplicationController.generate_random_code(20)
+    raise_subscription_error(e, __method__.to_s, :generic)
   end
 
   def validate_plan_changable(subscription, new_plan, user)
@@ -286,6 +230,33 @@ class StripeService
     elsif user.subscription_payment_cards.all_default_cards.empty?
       raise Learnsignal::SubscriptionError,
             I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card')
+    end
+  end
+
+  def raise_payment_error(err, method, type)
+    Rails.logger.error "StripeService##{method} - #{err.inspect}"
+    raise Learnsignal::PaymentError, return_message(err, type)
+  end
+
+  def raise_subscription_error(err, method, type, msg = '')
+    Rails.logger.error "StripeService##{method} - #{err.inspect}"
+    raise Learnsignal::SubscriptionError, return_message(err, type, msg)
+  end
+
+  def return_message(e, type, msg)
+    case type
+    when :generic
+      'Sorry Something went wrong! Please contact us for assistance.'
+    when :decline_reason
+      "Sorry! Your request was declined because - #{e[:message]}"
+    when :sub_cancellation
+      'Sorry! There was an error cancelling the subscription.'
+    when :sub_change
+      I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
+    when :custom
+      msg
+    else
+      'Sorry Something went wrong! Please contact us for assistance.'
     end
   end
 end
