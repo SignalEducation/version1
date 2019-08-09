@@ -131,7 +131,7 @@ class SubscriptionsController < ApplicationController
       flash[:error] = I18n.t('controllers.application.you_are_not_permitted_to_do_that')
     end
 
-    redirect_to account_url(anchor: 'subscriptions')
+    redirect_to account_url(anchor: 'account-info')
   end
 
   # Setting current subscription to cancel-pending or canceled. We don't actually delete the Subscription Record
@@ -148,7 +148,7 @@ class SubscriptionsController < ApplicationController
     end
 
     if current_user.standard_student_user?
-      redirect_to account_url(anchor: 'subscriptions')
+      redirect_to account_url(anchor: 'account-info')
     else
       redirect_to user_subscription_status_url(@subscription.user)
     end
