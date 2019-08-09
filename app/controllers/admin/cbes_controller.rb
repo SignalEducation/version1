@@ -10,6 +10,10 @@ module Admin
 
     skip_before_action :verify_authenticity_token
 
+    def index
+      @cbes = Cbe.all
+    end
+
     def new; end
 
     protected

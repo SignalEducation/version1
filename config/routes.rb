@@ -30,7 +30,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :exercises, only: [:index, :show, :edit, :update]
-    resources :cbes, only: :new
+    resources :cbes, only: [:index, :new]
   end
 
   resources :cbes do

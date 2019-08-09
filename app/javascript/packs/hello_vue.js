@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const el = document.body.appendChild(document.createElement('vueapp'))
     const vue = new Vue({
         store: store,
-        el: 'vueapp',
+        el: '#cbes-new-view',
         template: '<App/>',
         components: {App},
         render: h => h(App)
