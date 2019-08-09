@@ -28,7 +28,7 @@
 
             .collapse{id: "sub-#{subscription.id}"}
               .pt-5.pb-4
-                -if subscription.stripe?
+                -if subscription.stripe? && @default_payment_card
                   %div
                     %h4.mb-4.text-gray2 Payment Details
                     %p
