@@ -22,10 +22,9 @@ class StripeApiEvent < ApplicationRecord
   # CONSTANTS ==================================================================
 
   KNOWN_API_VERSIONS = %w[2015-02-18 2017-06-05 2017-05-25 2019-05-16].freeze
-  KNOWN_PAYLOAD_TYPES =
-    %w[invoice.created invoice.payment_succeeded invoice.payment_failed
-       customer.subscription.deleted charge.failed charge.succeeded
-       charge.refunded coupon.updated].freeze
+  KNOWN_PAYLOAD_TYPES = %w[invoice.created invoice.payment_succeeded invoice.payment_failed
+                        customer.subscription.deleted charge.failed charge.succeeded
+                        charge.refunded coupon.updated].freeze
   DELAYED_TYPES = %w[invoice.payment_succeeded invoice.payment_failed
                      charge.failed charge.succeeded].freeze
 
