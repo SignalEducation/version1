@@ -15,7 +15,7 @@
         .form-group
           =f.label :exam_body_id, t('views.groups.form.exam_body')
           .input-group.input-group-lg
-            =f.collection_select :exam_body_id, ExamBody.all_active, :id, :name, {include_blank: t('views.general.select')}, class: 'form-control custom-select'
+            =f.collection_select :exam_body_id, ExamBody.all_in_order, :id, :name, {include_blank: t('views.general.select')}, class: 'form-control custom-select'
 
         .form-group.pt-3
           .checkbox

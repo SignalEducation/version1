@@ -57,6 +57,7 @@ describe Group do
   # scopes
   it { expect(Group).to respond_to(:all_in_order) }
   it { expect(Group).to respond_to(:all_active) }
+  it { expect(Group).to respond_to(:with_active_body) }
 
   # class methods
 
