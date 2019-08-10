@@ -145,7 +145,7 @@ class SubscriptionPaymentCard < ApplicationRecord
       stripe_customer = Stripe::Customer.retrieve(self.user.stripe_customer_id)
       new_card_hash = stripe_customer.sources.create({source: self.stripe_token}).to_hash
 
-      if stripe_customer && new_caråd_hash
+      if stripe_customer && new_card_hash
         self.stripe_card_guid = new_card_hash[:id]
         self.status = (new_card_hash[:cvc_check] == 'pass') ? 'card-live' : 'not-live'
         self.brand = new_card_hash[:brand]
