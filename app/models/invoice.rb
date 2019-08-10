@@ -40,6 +40,7 @@
 
 class Invoice < ApplicationRecord
   include LearnSignalModelExtras
+  require 'securerandom'
 
   serialize :original_stripe_data, Hash
 
@@ -70,6 +71,7 @@ class Invoice < ApplicationRecord
   # callbacks
   after_create :set_vat_rate
   after_create :set_issued_at
+  after_create :generate_sca_guid
 
   # scopes
   scope :all_in_order,  -> { order(user_id: :asc, id: :desc) }
@@ -191,7 +193,7 @@ class Invoice < ApplicationRecord
           total: stripe_invoice[:total].to_i / 100.0,
           total_tax: stripe_invoice[:tax].to_i / 100.0,
           payment_attempted: stripe_invoice[:attempted],
-          payment_closed: stripe_data_hash[:status_transitions][:finalized_at].present?,
+          payment_closed: stripe_invoice[:status_transitions][:finalized_at].present?,
           forgiven: stripe_invoice[:status] == 'uncollectible',
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
@@ -225,30 +227,33 @@ class Invoice < ApplicationRecord
     )
   end
 
+  def send_3d_secure_email
+    return if Rails.env.test?
+
+    invoice_url = UrlHelper.instance.show_invoice_url(sca_verification_guid,
+                                                      locale: 'en',
+                                                      host: LEARNSIGNAL_HOST)
+    MandrillWorker.perform_async(user_id, 'send_sca_confirmation_email', invoice_url)
+  end
+
   ## Used in the views to show state of the invoice ##
   def status
-    if self.paid && self.payment_closed
+    if paid && payment_closed
       'Paid'
-    elsif !self.paid && !self.payment_closed && !self.payment_attempted
+    elsif requires_3d_secure && !paid && !payment_closed
+      'Pending Authentication'
+    elsif payment_attempted && next_payment_attempt_at.to_i > 0
+      'Past Due'
+    elsif !paid && !payment_closed
       'Pending'
-    elsif self.payment_attempted && self.next_payment_attempt_at.to_i > 0
-      ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
-              ' made to charge your card - next attempt at ' +
-              Time.at(next_payment_attempt_at).to_s(:standard)
-    elsif self.payment_attempted
-      ActionController::Base.helpers.pluralize(attempt_count, 'attempt') +
-              ' made to charge your card'
+    elsif payment_attempted && payment_closed && !paid
+      'Closed'
     else
       'Other'
     end
   end
 
   protected
-
-  def send_3d_secure_email
-    # TODO: QAMIR to take over from here
-    # MandrillWorker.perform_async
-  end
 
   def set_vat_rate
     country = user.country
@@ -263,7 +268,13 @@ class Invoice < ApplicationRecord
   def set_issued_at
     return if self.issued_at.present?
 
-    self.update(issued_at: Time.zone.now)
+    update(issued_at: Time.zone.now)
+  end
+
+  def generate_sca_guid
+    return if sca_verification_guid.present?
+
+    update(sca_verification_guid: SecureRandom.uuid)
   end
 
   def strip_invoice?

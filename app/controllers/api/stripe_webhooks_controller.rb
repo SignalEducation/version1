@@ -15,18 +15,19 @@ module Api
                          "#{e.inspect}\nEvent: #{@event_json['id']}")
       head :not_found
     end
-  end
 
-  private
+    private
 
-  def process_json
-    @event_json = JSON.parse(request.body.read) if request.body.present?
-  end
+    def process_json
+      @event_json = JSON.parse(request.body.read) if request.body.present?
+    end
 
-  def record_webhook(event_json)
-    StripeApiProcessorWorker.perform_at(
-      StripeApiEvent.processing_delay(event_json['type']),
-      event_json['id'], event_json['api_version'], account_url
-    )
+    def record_webhook(event_json)
+      StripeApiProcessorWorker.perform_at(
+          StripeApiEvent.processing_delay(event_json['type']),
+          event_json['id'], event_json['api_version'], account_url
+      )
+    end
+
   end
 end

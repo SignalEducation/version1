@@ -78,15 +78,14 @@ class UserAccountsController < ApplicationController
       # From invoice get stripe guid
       # Then call process with Stripe's call
       
-      #sca_verification_guid = generate_sca_guid
       email_sca_guid = params['guid']
-      @invoice = Invoice.where(:sca_verification_guid => email_sca_guid).last
+      @invoice = Invoice.where(sca_verification_guid: email_sca_guid).last
       stripe_guid = @invoice.stripe_guid
       stripe_invoice = StripeService.new.get_invoice(stripe_guid)
       @the_secret = stripe_invoice.payment_intent.client_secret
   end
 
-  protected 
+  protected
 
   def change_password_params
     params.require(:user).permit(:current_password, :password, :password_confirmation)
