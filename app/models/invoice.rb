@@ -46,6 +46,7 @@ class Invoice < ApplicationRecord
 
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
+  CLOSED_STATUSES = %w[paid uncollectible void].freeze
 
   # relationships
   belongs_to :currency
@@ -193,7 +194,7 @@ class Invoice < ApplicationRecord
           total: stripe_invoice[:total].to_i / 100.0,
           total_tax: stripe_invoice[:tax].to_i / 100.0,
           payment_attempted: stripe_invoice[:attempted],
-          payment_closed: stripe_invoice[:status_transitions][:finalized_at].present?,
+          payment_closed: CLOSED_STATUSES.include?(stripe_invoice[:status]),
           forgiven: stripe_invoice[:status] == 'uncollectible',
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
@@ -240,7 +241,7 @@ class Invoice < ApplicationRecord
   def status
     if paid && payment_closed
       'Paid'
-    elsif requires_3d_secure && !paid && !payment_closed
+    elsif requires_3d_secure && !i && !payment_closed
       'Pending Authentication'
     elsif payment_attempted && next_payment_attempt_at.to_i > 0
       'Past Due'

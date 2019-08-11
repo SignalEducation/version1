@@ -32,9 +32,14 @@
                               %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
                                 =invoice.status
                             %td
-                              =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
-                                .btn.btn-link.btn-xs
-                                  View
+                              -if invoice.requires_3d_secure
+                                =link_to show_invoice_url(invoice.sca_verification_guid) do
+                                  .btn.btn-primary.btn-xs
+                                    Authenticate
+                              -else
+                                =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+                                  .btn.btn-link.btn-xs
+                                    View
             -else
               .row.row-lg
                 .col-sm
