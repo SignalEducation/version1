@@ -28,25 +28,32 @@
 
 :javascript
 
-    // WARNING: What are the implications of 
+    var stripe      = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
 
-    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    function ReAuth() {
 
-    function ReAuth() { /* do stuff on page load */
-        
-        stripe.handleCardPayment(
-        '#{@the_secret}',
-            ).then(function(result) {
+        stripe.handleCardPayment('#{@the_secret}').then(function(result) {
+            if (result.error) {
+              resetForm(result.error);
+            } else {
               $.ajax ({
                     url: "/sca_successful",
                     type: "POST",
                     data: {id: "#{@invoice.id}"},
                     success: function(data) {
                       console.log(data);
+                    },
+                    error: function(xhr,status,error){
+                      resetForm(error);
                     }
-                  })
-            });
-        
+              });
+            }
+        });
+    }
+
+    function resetForm(error){
+        console.log(error);
+        // Display error message & feedback to user
     }
 
     window.onload = ReAuth;

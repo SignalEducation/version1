@@ -61,7 +61,12 @@ class UserAccountsController < ApplicationController
 
   def sca_successful
     @invoice = Invoice.find(params[:id])
-    @invoice.mark_payment_action_successful
+
+    if @invoice.mark_payment_action_successful
+      render json: {}, status: :ok
+    else
+      render json: {}, status: :internal_server_error
+    end
   end
 
   def subscription_invoice
