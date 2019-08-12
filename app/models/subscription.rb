@@ -109,7 +109,7 @@ class Subscription < ApplicationRecord
 
     event :restart do
       transition %i[errored pending_cancellation paused
-                    pending_3d_secure] => :active
+                    pending_3d_secure cancelled] => :active
     end
 
     event :mark_payment_action_required do
@@ -246,8 +246,7 @@ class Subscription < ApplicationRecord
           next_renewal_date: Time.zone.at(stripe_subscription.current_period_end),
           stripe_customer_data: stripe_customer.to_hash.deep_dup
         )
-
-        start
+        restart
       end
     end
 
