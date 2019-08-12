@@ -49,4 +49,7 @@
                         %span= "Claimed By (#{exercise.corrector.name})"
                       -else
                         =link_to 'Claim', admin_exercise_path(exercise, exercise: { corrector_id: current_user.id }), method: :patch, class: 'btn btn-secondary btn-xs'
-
+          .row
+            .col-sm
+              .search-container
+                =link_to 'Generate Daily Summary', generate_daily_summary_admin_exercises_path
