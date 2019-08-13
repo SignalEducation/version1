@@ -108,11 +108,14 @@ describe SubscriptionsController, type: :controller do
   let!(:valid_params) { attributes_for(:subscription) }
 
   context 'Logged in as a basic_student: ' do
+    let(:data) { { client_secret: Faker::Alphanumeric.alphanumeric, status: :ok } }
 
     before(:each) do
       activate_authlogic
       UserSession.create!(basic_student)
       valid_subscription.start
+      allow_any_instance_of(StripeService).to receive(:create_and_return_subscription).
+                                                and_return([valid_subscription, data])
     end
 
     describe "GET 'new'" do
@@ -126,7 +129,7 @@ describe SubscriptionsController, type: :controller do
     end
 
     describe "POST 'create'" do
-      let(:client_secret) { Faker::Alphanumeric.alphanumeric }
+      let(:client_secret) { data[:client_secret] }
 
       it 'should respond okay with correct params' do
         sources = {"id": "src_Do8swBcNDszFmc", "object": "source", "client_secret": "src_client_secret_Do8sRLByihYpru4LuNCGYP8L",
@@ -158,22 +161,21 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-
-        post :create, params: { subscription: upgrade_params.merge(subscription_plan_id: subscription_plan_gbp_m.id, user_id: basic_student.id) }
+        post :create, params: { subscription: upgrade_params.merge(subscription_plan_id: subscription_plan_gbp_m.id, user_id: basic_student.id),
+                                "payment-options": 'stripe' }
         body = JSON.parse(response.body)
 
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(body['status']).to eq('active')
+
         expect(body['client_secret']).to eq(client_secret)
         expect(response.status).to eq(200)
-        expect(body.keys).to eq(%w[subscription_id status client_secret])
         expect(a_request(:get, get_url).with(body: nil)).to have_been_made.at_most_times(3)
-        expect(a_request(:post, post_url).with(body: post_request_body)).to have_been_made.once
       end
 
       it 'should respond with Error Your request was declined. T&Cs false' do
-        post :create, params: { subscription: invalid_upgrade_params_1, user_id: basic_student.id }
+        post :create, params: { subscription: invalid_upgrade_params_1, user_id: basic_student.id, "payment-options": 'stripe' }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! The data entered is not valid. Please contact us for assistance.')
         expect(response.status).to eq(302)
@@ -182,7 +184,7 @@ describe SubscriptionsController, type: :controller do
       end
 
       it 'should respond with Error Your request was declined. With Bad params' do
-        post :create, params: { subscription: invalid_upgrade_params_2, user_id: basic_student.id }
+        post :create, params: { subscription: invalid_upgrade_params_2, user_id: basic_student.id, "payment-options": 'stripe'  }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to eq('Sorry! The data entered is not valid. Please contact us for assistance.')
         expect(response.status).to eq(302)
@@ -221,14 +223,14 @@ describe SubscriptionsController, type: :controller do
         }
         stub_subscription_post_request(post_url, post_request_body, post_response_body)
 
-        post :create, params: { subscription: upgrade_params }
-
+        post :create, params: { subscription: upgrade_params, "payment-options": 'stripe' }
+        body = JSON.parse(response.body)
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(a_request(:get, get_url).with(body: nil)).to have_been_made.at_most_times(3)
-        expect(a_request(:post, post_url).with(body: post_request_body)).to have_been_made.once
-
+        expect(body.keys).to include('subscription_id', 'status', 'client_secret')
+        expect(body['status']).to eq('active')
       end
     end
 

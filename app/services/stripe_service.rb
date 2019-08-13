@@ -123,27 +123,33 @@ class StripeService
     raise Learnsignal::SubscriptionError, I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
   end
 
-  def create_and_return_subscription(subscription, stripe_token, coupon)
-    stripe_customer = Stripe::Customer.retrieve(subscription.user.stripe_customer_id)
-    stripe_customer.source = stripe_token
-    stripe_customer.save
+  def create_and_return_subscription(subscription_object, stripe_token, coupon)
+    customer_id     = subscription_object.user.stripe_customer_id
+    customer        = Stripe::Customer.retrieve(customer_id)
+    customer.source = stripe_token
+    customer.save
 
-    stripe_subscription = create_subscription(subscription, stripe_customer.id, coupon)
-    client_secret       = stripe_subscription[:latest_invoice][:payment_intent][:client_secret]
+    subscription        = create_subscription(subscription, customer.id, coupon)
+    client_secret       = subscription[:latest_invoice][:payment_intent][:client_secret]
+    subscription_object = merge_subscription_data(subscription_object, subscription, customer, coupon)
+    [subscription_object, { client_secret: client_secret, status: :ok }]
+  rescue Stripe::CardError => e
+    [subscription_object, { error: e, error_message: e.message, status: :error }]
+  end
 
-    subscription.assign_attributes(
-      complimentary: false,
-      livemode: stripe_subscription[:plan][:livemode],
-      stripe_status: stripe_subscription.status,
-      stripe_guid: stripe_subscription.id,
-      next_renewal_date: Time.at(stripe_subscription.current_period_end),
-      stripe_customer_id: stripe_customer.id,
-      coupon_id: coupon.try(:id),
-      stripe_customer_data: stripe_customer.to_hash.deep_dup,
-      payment_intent: stripe_subscription[:latest_invoice][:payment_intent][:status]
-    )
+  def merge_subscription_data(subscription_object, subscription, customer, coupon)
+    subscription_object.
+      assign_attributes(complimentary: false,
+                        livemode: subscription[:plan][:livemode],
+                        stripe_status: subscription.status,
+                        stripe_guid: subscription.id,
+                        next_renewal_date: Time.zone.at(subscription.current_period_end),
+                        stripe_customer_id: customer.id,
+                        coupon_id: coupon.try(:id),
+                        stripe_customer_data: customer.to_hash.deep_dup,
+                        payment_intent: subscription[:latest_invoice][:payment_intent][:status])
 
-    [subscription, client_secret]
+    subscription_object
   end
 
   def cancel_subscription(subscription)

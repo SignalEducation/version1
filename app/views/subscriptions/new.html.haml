@@ -32,7 +32,7 @@
               .container.payment
                 .row
                   .col-lg-6.mb-5.mb-xl-0
-                    %fieldset
+                    %fieldset{id: 'plans-options' }
                       %legend.sr-only Select a Plan
                       - if params[:prioritise_plan_frequency].present? || (params[:plan_guid].present?  && @plans.map(&:guid).include?(params[:plan_guid]))
                         =render partial: 'single_plan_checkout', locals: { subscription: @subscription, plans: @plans }
@@ -169,7 +169,6 @@
     });
   }
 
-
   function intervalSummary(frequency) {
     switch (frequency) {
       case '1':
@@ -191,8 +190,6 @@
     }
   }
 
-
-
   function updateCheckoutTotal() {
     var selectedPlan = $("input[name='plans']:checked");
 
@@ -207,6 +204,7 @@
 
   $(document).on('ready', function() {
     initializePlan();
+
     $('input[type=radio][name=plans]').bind('change', function(event) {
       event.preventDefault();
       choosePlan($(this).val());
@@ -280,17 +278,16 @@
       }
     };
 
-    var stripe      = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
-    var elements    = stripe.elements();
+    var stripe       = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+    var elements     = stripe.elements();
     var displayError = document.getElementById('card-errors');
-    var cardElement = elements.create('card', { hidePostalCode: true, style: style });
+    var cardElement  = elements.create('card', { hidePostalCode: true, style: style });
 
     cardElement.mount('#card-element');
 
     cardElement.addEventListener('change', function(event) {
-
       if (event.error) {
-        resetForm(event.error);
+        resetForm(event.error.message);
       } else {
         displayError.textContent = '';
       }
@@ -302,9 +299,10 @@
       event.preventDefault();
 
       //Replace submit button with spinning JS
-      $('#card_submit').prop('disabled',true);
+      $('#plans-options').prop('disabled', true);
+      $('#card_submit').prop('disabled', true);
+      $('#paypal_submit').prop('disabled', true);
       $('#card_submit').hide();
-      $('#paypal_submit').prop('disabled',true);
       $('#paypal_submit').hide();
       $(".sk-circle").show();
 
@@ -313,7 +311,7 @@
       } else {
         stripe.createToken(cardElement).then(function(result) {
           if (result.error) {
-            resetForm(result.error);
+            resetForm(result.error.message);
           } else {
             createSubscription(result.token);
           }
@@ -330,15 +328,15 @@
         url: $(form).attr('action'),
         data: $(form).serialize(),
         dataType: 'json',
-        success: function(data,status,xhr){
+        success: function(data, status, xhr){
           if(data.status == 'incomplete'){
             handlePayment(data.client_secret, data.subscription_id)
           }else if(data.status == 'active'){
             window.location.replace("#{personal_upgrade_complete_url}");
           }
         },
-        error: function(xhr,status,error){
-          resetForm(error);
+        error: function(data, status, error){
+          resetForm(data.responseJSON.error);
         }
       });
     }
@@ -346,7 +344,7 @@
     function handlePayment(client_secret, subscription_id){
       stripe.handleCardPayment(client_secret, cardElement).then(function(result) {
           if (result.error) {
-            resetForm(result.error);
+            resetForm(result.error.message);
           } else {
             $.ajax({
               type: 'post',
@@ -367,11 +365,12 @@
 
     function resetForm(error){
       $('#card_submit').show();
-      $('#card_submit').prop('disabled',false);
       $('#paypal_submit').show();
-      $('#paypal_submit').prop('disabled',false);
+      $('.custom-check').prop('disabled', false);
+      $('#card_submit').prop('disabled', false);
+      $('#paypal_submit').prop('disabled', false);
       $(".sk-circle").hide();
 
-      displayError.textContent = error.message;
+      displayError.textContent = error;
     }
   })

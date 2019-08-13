@@ -48,36 +48,22 @@ class SubscriptionsController < ApplicationController
         params[:subscription_plan_id] || @plans.where(payment_frequency_in_months: 12)&.first&.id
       end
 
-    @subscription =
-      Subscription.includes(:exam_body).
-        new(user_id: current_user.id,
-            subscription_plan_id: subscription_plan_id)
+    @subscription = Subscription.includes(:exam_body).
+                      new(user_id: current_user.id, subscription_plan_id: subscription_plan_id)
 
-    # IntercomUpgradePageLoadedEventWorker.perform_async(current_user.id, country.name) unless Rails.env.test?
     seo_title_maker('Course Membership Payment | LearnSignal', 'Pay monthly, quarterly or yearly for learnsignal and access professional course materials, expert notes and corrected questions anytime, anywhere.', false)
   end
 
   def create
     @subscription = Subscription.new(subscription_params)
 
-    subscription_object = SubscriptionService.new(@subscription)
-    subscription_object.check_valid_subscription?(params)
-    subscription_object.check_for_valid_coupon?(params[:hidden_coupon_code])
+    subscription_service = SubscriptionService.new(@subscription)
+    subscription_service.check_valid_subscription?(params)
+    subscription_service.check_for_valid_coupon?(params[:hidden_coupon_code])
 
-    @subscription, client_secret = subscription_object.create_and_return_subscription(params)
-    if @subscription&.save
-      if subscription_object.paypal?
-        redirect_to @subscription.paypal_approval_url
-      elsif subscription_object.stripe?
-        render json: { subscription_id: @subscription.id,
-                       status: @subscription.stripe_status,
-                       client_secret: client_secret }, status: :ok
-      end
-    else
-      Rails.logger.info "DEBUG: Subscription Failed to save for unknown reason - #{@subscription.inspect}"
-      flash[:error] = 'Your request was declined. Please contact us for assistance!'
-      redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
-    end
+    # call private stripe_subscription or paypal_subscription method
+    send("#{params['payment-options']}_subscription",
+         @subscription, subscription_service, params)
   rescue Learnsignal::SubscriptionError => e
     flash[:error] = e.message
     redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
@@ -160,6 +146,41 @@ class SubscriptionsController < ApplicationController
   end
 
   private
+
+  def stripe_subscription(subscription, subscription_service, params)
+    token               = params[:subscription][:stripe_token]
+    coupon              = subscription_service.coupon
+    @subscription, data = StripeService.new.
+                            create_and_return_subscription(subscription, token, coupon)
+
+    if @subscription.save
+      if data[:status] == :ok
+        render json: { subscription_id: @subscription.id,
+                       status: @subscription.stripe_status,
+                       client_secret: data[:client_secret] }, status: data[:status]
+      else
+        render json: { subscription_id: @subscription.id,
+                       error: data[:error_message] }, status: data[:status]
+      end
+    else
+      render json: { subscription_id: @subscription.id,
+                     error: data[:error_message] }, status: :error
+    end
+  end
+
+  def paypal_subscription(subscription, _subscription_service, _params)
+    subscription.save!
+    @subscription = PaypalSubscriptionsService.new(subscription).create_and_return_subscription
+
+    if @subscription.save
+      redirect_to subscription.paypal_approval_url
+    else
+      Rails.logger.error "DEBUG: Subscription Failed to save for unknown reason - #{subscription.inspect}"
+      flash[:error] = 'Your request was declined. Please contact us for assistance!'
+
+      redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
+    end
+  end
 
   def get_relevant_subscription_plans
     country  = IpAddress.get_country(request.remote_ip) || current_user.country

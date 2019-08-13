@@ -12,7 +12,7 @@ class PaypalSubscriptionsService
     agreement = create_billing_agreement(subscription: @subscription)
     @subscription.assign_attributes(
       paypal_token: agreement.token,
-      paypal_approval_url: agreement.links.find{|v| v.rel == "approval_url" }.href,
+      paypal_approval_url: agreement.links.find { |v| v.rel == 'approval_url' }.href,
       paypal_status: agreement.state
     )
     @subscription

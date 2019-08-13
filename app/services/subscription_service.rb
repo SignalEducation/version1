@@ -31,6 +31,7 @@ class SubscriptionService
     elsif paypal?
       @subscription.save!
       @subscription = PaypalSubscriptionsService.new(@subscription).create_and_return_subscription
+      [@subscription, nil]
     end
   end
 
