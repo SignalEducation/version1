@@ -126,7 +126,7 @@ class StripeService
     customer.source = stripe_token
     customer.save
 
-    subscription        = create_subscription(subscription, customer.id, coupon)
+    subscription        = create_subscription(subscription_object, customer.id, coupon)
     client_secret       = subscription[:latest_invoice][:payment_intent][:client_secret]
     subscription_object = merge_subscription_data(subscription_object, subscription, customer, coupon)
     [subscription_object, { client_secret: client_secret, status: :ok }]
