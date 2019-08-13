@@ -7,12 +7,11 @@ class PurchaseService
 
   def create_purchase
     if stripe?
-      StripeService.new.complete_purchase(order)
+      StripeService.new.create_purchase(order)
     elsif paypal?
       order.save!
       PaypalService.new.create_purchase(order)
     end
-
     order
   end
 
@@ -21,6 +20,6 @@ class PurchaseService
   end
 
   def stripe?
-    order.stripe_token.present? || order.stripe_guid.present?
+    order.stripe_payment_method_id.present? || order.stripe_guid.present?
   end
 end

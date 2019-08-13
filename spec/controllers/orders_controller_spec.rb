@@ -37,10 +37,11 @@ describe OrdersController, type: :controller do
   let!(:mock_exam_1)         { FactoryBot.create(:mock_exam) }
   let!(:product_1)           { FactoryBot.create(:product, currency_id: gbp.id, mock_exam_id: mock_exam_1.id, price: '99.9') }
   let!(:product_2)           { FactoryBot.create(:product, currency_id: gbp.id) }
-  let!(:valid_params)        { FactoryBot.attributes_for(:order, product_id: product_1.id, stripe_token: 'tok_afsdafdfafsd') }
+  let!(:valid_params)        { FactoryBot.attributes_for(:order, product_id: product_1.id, stripe_payment_method_id: 'pi_afsdafdfafsd') }
   let(:order_1)              { FactoryBot.create(:order, product_id: product_1.id,
                                                  stripe_customer_id: 'cus_fadsfdsf',
-                                                 stripe_guid: 'dsafdsfdsfdf',
+                                                 stripe_payment_method_id: 'pm_dsafdsfdsfdf',
+                                                 stripe_payment_intent_id: 'pi_dsafdsfdsfdf',
                                                  stripe_order_payment_data: { currency: gbp.iso_code },
                                                  stripe_status: 'paid') }
   let(:order_2)               { FactoryBot.create(:order, stripe_order_payment_data: { currency: gbp.iso_code }) }
@@ -49,26 +50,6 @@ describe OrdersController, type: :controller do
     before(:each) do
       activate_authlogic
       UserSession.create!(basic_student)
-    end
-
-    describe "GET 'index'" do
-      it 'should respond OK' do
-        get :index
-        expect_bounce_as_not_allowed
-      end
-    end
-
-    describe "GET 'show/#id'" do
-      it 'should see order_1' do
-        get :show, params: { id: order_1.id }
-        expect_bounce_as_not_allowed
-      end
-
-      # optional - some other object
-      it 'should see order_2' do
-        get :show, params: { id: order_2.id }
-        expect_bounce_as_not_allowed
-      end
     end
 
     describe "GET 'new'" do
@@ -87,12 +68,13 @@ describe OrdersController, type: :controller do
       end
 
       it 'should report OK for valid params' do
-        post :create, params: { order: valid_params }
-        expect_create_success_with_model('order', user_exercises_url(basic_student), 'Your Purchase was successful, please follow the instructions below')
+        post :create, params: { product_id: product_1.id, order: valid_params }, format: :json
+        expect(response.status).to eq 200
+        expect(response.body).not_to be_nil
       end
 
       it 'should report error for invalid params' do
-        post :create, params: { order: {valid_params.keys.first => ''} }
+        post :create, params: { product_id: product_1.id, order: {valid_params.keys.first => ''} }
         expect(flash[:error]).not_to be_nil
       end
     end

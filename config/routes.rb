@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       get 'generate_daily_summary', on: :collection
     end
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
+    resources :orders, only: [:index, :show]
   end
 
   # all standard, user-facing "resources" go inside this scope
@@ -176,7 +177,11 @@ Rails.application.routes.draw do
     resources :faq_sections, concerns: :supports_reordering
     resources :home_pages
     resources :mock_exams, concerns: :supports_reordering, path: '/admin/mock_exams'
-    resources :products, concerns: :supports_reordering
+    resources :products, concerns: :supports_reordering, shallow: true do
+      resources :orders, except: [:index, :show] do
+        get 'execute', on: :member
+      end
+    end
     resources :quiz_questions, except: [:index], concerns: :supports_reordering
     resources :refunds
     resources :vat_codes
@@ -210,12 +215,6 @@ Rails.application.routes.draw do
     resources :management_consoles
     get '/system_requirements', to: 'management_consoles#system_requirements', as: :system_requirements
     get '/public_resources', to: 'management_consoles#public_resources', as: :public_resources
-
-    resources :orders, except: [:new] do
-      get 'execute', on: :member
-    end
-    get 'order/new/:product_id', to: 'orders#new', as: :new_order
-    get 'order/order_complete/:reference_guid', to: 'orders#order_complete', as: :order_complete
 
     # Reports
     get '/reports',                       to: 'reports#index',                            as: :reports

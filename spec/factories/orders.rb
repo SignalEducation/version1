@@ -31,4 +31,17 @@ FactoryBot.define do
     terms_and_conditions { true }
     sequence(:reference_guid) { |n| "Order_#{ApplicationController.generate_random_number(10)}#{n}" }
   end
+
+  trait :for_stripe do
+    stripe_customer_id       'cus_test32423235243532'
+    stripe_payment_method_id 'pm_32454254254353'
+    stripe_payment_intent_id 'pi_542524553453254'
+  end
+
+  trait :for_paypal do
+    use_paypal          true
+    paypal_guid         'paypal_test_34252553'
+    paypal_approval_url 'sandbox.paypal.com'
+    paypal_status       'PENDING'
+  end
 end

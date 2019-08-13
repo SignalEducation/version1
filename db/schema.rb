@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_02_110608) do
+ActiveRecord::Schema.define(version: 2019_08_09_094924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -746,6 +746,8 @@ ActiveRecord::Schema.define(version: 2019_08_02_110608) do
     t.string "paypal_guid"
     t.string "paypal_status"
     t.string "state"
+    t.string "stripe_payment_method_id"
+    t.string "stripe_payment_intent_id"
     t.index ["product_id"], name: "index_orders_on_product_id"
     t.index ["stripe_customer_id"], name: "index_orders_on_stripe_customer_id"
     t.index ["stripe_guid"], name: "index_orders_on_stripe_guid"
