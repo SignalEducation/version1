@@ -85,35 +85,35 @@ class SubscriptionPaymentCard < ApplicationRecord
   scope :all_default_cards, -> { where(is_default_card: true) }
 
   # class methods
-  def self.build_from_stripe_data(stripe_card_data, user_id=nil)
+  def self.build_from_stripe_data(stripe_card_data, user_id = nil)
     user = User.find(user_id)
     country_id = Country.find_by_iso_code(stripe_card_data[:country].to_s.upcase).try(:id) || user.try(:country_id)
     x = SubscriptionPaymentCard.new(
-            user_id: user.id,
-            stripe_card_guid: stripe_card_data[:id],
-            brand: stripe_card_data[:brand],
-            last_4: stripe_card_data[:last4],
-            expiry_month: stripe_card_data[:exp_month],
-            expiry_year: stripe_card_data[:exp_year],
-            address_line1: stripe_card_data[:address_line1],
-            address_line2: stripe_card_data[:address_line2],
-            address_city: stripe_card_data[:address_city],
-            address_zip: stripe_card_data[:address_zip],
-            address_state: stripe_card_data[:address_state],
-            address_country: stripe_card_data[:address_country],
-            account_country: stripe_card_data[:country],
-            account_country_id: country_id,
-            stripe_object_name: stripe_card_data[:object],
-            funding: stripe_card_data[:funding],
-            cardholder_name: stripe_card_data[:name],
-            fingerprint: stripe_card_data[:fingerprint],
-            cvc_checked: stripe_card_data[:cvc_check],
-            address_line1_check: stripe_card_data[:address_line1_check],
-            address_zip_check: stripe_card_data[:address_zip_check],
-            dynamic_last4: stripe_card_data[:dynamic_last4],
-            customer_guid: stripe_card_data[:customer],
-            is_default_card: true,
-            status: 'card-live'
+        user_id: user.id,
+        stripe_card_guid: stripe_card_data[:id],
+        brand: stripe_card_data[:brand],
+        last_4: stripe_card_data[:last4],
+        expiry_month: stripe_card_data[:exp_month],
+        expiry_year: stripe_card_data[:exp_year],
+        address_line1: stripe_card_data[:address_line1],
+        address_line2: stripe_card_data[:address_line2],
+        address_city: stripe_card_data[:address_city],
+        address_zip: stripe_card_data[:address_zip],
+        address_state: stripe_card_data[:address_state],
+        address_country: stripe_card_data[:address_country],
+        account_country: stripe_card_data[:country],
+        account_country_id: country_id,
+        stripe_object_name: stripe_card_data[:object],
+        funding: stripe_card_data[:funding],
+        cardholder_name: stripe_card_data[:name],
+        fingerprint: stripe_card_data[:fingerprint],
+        cvc_checked: stripe_card_data[:cvc_check],
+        address_line1_check: stripe_card_data[:address_line1_check],
+        address_zip_check: stripe_card_data[:address_zip_check],
+        dynamic_last4: stripe_card_data[:dynamic_last4],
+        customer_guid: stripe_card_data[:customer],
+        is_default_card: true,
+        status: 'card-live'
     )
 
     unless x.save
@@ -179,7 +179,7 @@ class SubscriptionPaymentCard < ApplicationRecord
 
   rescue Stripe::CardError => e
     body = e.json_body
-    err  = body[:error]
+    err = body[:error]
 
     Rails.logger.error "DEBUG: SubPaymentCard#create Card Declined with - Status: #{e.http_status}, Type: #{err[:type]}, Code: #{err[:code]}, Param: #{err[:param]}, Message: #{err[:message]}"
 
@@ -201,9 +201,9 @@ class SubscriptionPaymentCard < ApplicationRecord
     unless self.read_attribute(:status) == 'expired'
       if self.expiry_year && self.expiry_month
         expires_on = Date.new(self.expiry_year, self.expiry_month, 1) + 1.month
-        if expires_on < Proc.new{Time.now}.call && self.id.nil?
+        if expires_on < proc {Time.now}.call && self.id.nil?
           self.assign_attributes(status: 'expired')
-        elsif expires_on < Proc.new{Time.now}.call
+        elsif expires_on < proc {Time.now}.call
           self.update_column(:status, 'expired')
         end
       end

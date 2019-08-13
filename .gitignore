@@ -72,3 +72,10 @@ TAGS
 
 # .env files
 *.env
+
+# webpacker compiled files 
+./public/packs/*
+
+
+# redis db
+./dump.rdb
