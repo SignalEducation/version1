@@ -19,7 +19,7 @@
 
 FactoryBot.define do
   factory :student_access do
-    user_id { 1 }
+    user
     trial_seconds_limit { ENV['FREE_TRIAL_LIMIT_IN_SECONDS'].to_i }
     trial_days_limit { ENV['FREE_TRIAL_DAYS'].to_i }
     content_seconds_consumed { 0 }

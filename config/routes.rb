@@ -18,8 +18,11 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    resources :exercises, only: [:index, :show, :edit, :update] do
+    resources :exercises, only: [:index, :show, :new, :create, :edit, :update] do
       get 'generate_daily_summary', on: :collection
+    end
+    resources :user do
+      resources :exercises, only: [:index, :new, :create]
     end
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
     resources :orders, only: [:index, :show]
