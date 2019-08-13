@@ -115,7 +115,7 @@ Rails.application.routes.draw do
     resources :content_activations, only: [:new, :create]
     resource :preferred_exam_body, only: [:edit, :update]
 
-    resources :invoices, only: :show do
+    resources :invoices, only: [:show, :update] do
       get 'pdf', action: :pdf, on: :member
     end
 

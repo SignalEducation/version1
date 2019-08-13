@@ -73,17 +73,23 @@ class UserAccountsController < ApplicationController
   end
 
   def show_invoice
-    email_sca_guid = params['guid']
-    @invoice = Invoice.find_by(sca_verification_guid: email_sca_guid)
-    stripe_guid = @invoice.stripe_guid
-    stripe_client_secret(stripe_guid) unless Rails.env.test?
+    @invoice       = Invoice.find_by(sca_verification_guid: params['guid'])
+    @subscription  = @invoice.subscription
+    @card          = default_payment_card(@invoice.user_id)
+    @client_secret = stripe_client_secret(@invoice)
   end
 
   protected
 
-  def stripe_client_secret(stripe_guid)
-    stripe_invoice = StripeService.new.get_invoice(stripe_guid)
-    @client_secret = stripe_invoice.payment_intent.client_secret
+  def default_payment_card(user_id)
+    @subscription_payment_cards = SubscriptionPaymentCard.where(user_id: user_id).all_in_order
+    @default_payment_card       = @subscription_payment_cards.all_default_cards.first
+  end
+
+  def stripe_client_secret(invoice)
+    return if Rails.env.test?
+    stripe_invoice = StripeService.new.get_invoice(invoice.stripe_guid)
+    stripe_invoice.payment_intent.client_secret
   end
 
   def change_password_params

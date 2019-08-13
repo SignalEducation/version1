@@ -30,6 +30,7 @@
 class SubscriptionPlan < ApplicationRecord
   include ActionView::Helpers::TextHelper
   include LearnSignalModelExtras
+  include Filterable
 
   # Constants
   PAYMENT_FREQUENCIES = [1,3,6,12]
@@ -70,12 +71,17 @@ class SubscriptionPlan < ApplicationRecord
   scope :for_exam_body, lambda { |body_id| where(exam_body_id: body_id) }
   scope :yearly, -> { where(payment_frequency_in_months: 12) }
 
+  search_scope :prioritise_plan_frequency, ->(frequency) { find_by(payment_frequency_in_months: frequency) }
+  search_scope :plan_guid,                 ->(guid)      { find_by(guid: guid) }
+  search_scope :subscription_plan_id,      ->(id)        { find_by(id: id) }
+
   # class methods
   def self.get_relevant(user, currency, exam_body_id)
-    plans = self.in_currency(currency.id)
-                .generally_available
-                .all_active
-                .all_in_order
+    plans = in_currency(currency.id).
+              generally_available.
+              all_active.
+              all_in_order
+
     if exam_body_id && (body = ExamBody.find(exam_body_id))
       plans.where(exam_body_id: body.id)
     elsif body = user.preferred_exam_body

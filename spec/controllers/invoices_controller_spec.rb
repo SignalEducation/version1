@@ -52,6 +52,19 @@ describe InvoicesController, type: :controller do
       end
     end
 
+    describe 'update' do
+      it 'should update the invoice.' do
+        patch :update, params: { id: invoice.id, status: 'succeeded' }
+        invoice.reload
+
+        body = JSON.parse(response.body)
+        expect(invoice.paid).to be_truthy
+        expect(invoice.payment_closed).to be_truthy
+        expect(response.status).to eq(200)
+        expect(body['message']).to eq('updated')
+      end
+    end
+
     describe 'pdf' do
       it 'should render pdf' do
         get :pdf, params: { id: invoice.id, format: :pdf }

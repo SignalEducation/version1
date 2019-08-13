@@ -1,49 +1,145 @@
-%article.account.bg-white
+.bg-gray5.py-5
   .container
-    %header
-      .d-flex.flex-wrap.flex-sm-nowrap.justify-content-between.align-items-center.py-5.py-md-6
-        .mw-0
-          %h1.mb-0.h1-hero.mr-2 Invoice Payment Required
-        .mw-0
-          %h5.mb-0.text-gray2
-            =@user.full_name
-    
-    %h4.text-gray2 Latest Invoice
-    .table-responsive
-    %table.table
-      %thead
-      %tr
-        %th Reference N.
-        %th Date Created
-        %th Amount Charged
-        %th Status
-      %tbody
-        %tr
-          %td=@invoice.id
-          %td=humanize_datetime(@invoice.issued_at)
-          %td=number_in_local_currency(@invoice.total, @invoice.currency)
-          %td=@invoice.status
-        
-        
+    %article.card.mb-3
+      .card-body.card-body
+        %h2.mb-5.text-gray2
+          %article.card.mb-5
+            .card-body.card-body-sm
+              .row
+                .col-md-8
+                  %h3.text-gray2
+                    %span.mr-1
+                      ="Invoice #{@invoice.id}"
+
+                    %span.badge.badge-warning.align-middle{class: @invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
+                      =@invoice.status.capitalize
+
+                  %p.mb-1
+                    Date Created
+                    %span=humanize_datetime(@invoice.issued_at)
+                  %p.mb-1
+                    Amount due:
+                    %span
+                      =number_in_local_currency(@invoice.total, @invoice.currency)
+                  %p.mb-1
+                    =@subscription.user_readable_name
+                  -if @invoice.status == 'Pending'
+                    %p
+                      Invoice pending, please add a new payment card.
+
+                -if @invoice.status == 'Pending'
+                  .col-md-4.text-md-right
+                    %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm add-card'}
+                      =t('views.users.show.new_card')
+
+#add-card.col-md-12.l-margin-top-big
+
+=render partial: 'add_card_modal_ajax'
 
 :javascript
-  var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
-  
+  var style = {
+    base: {
+      color: '#32325d',
+      lineHeight: '18px',
+      fontFamily: '"OakesGrotesk", "Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      }
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a'
+    }
+  };
+
+  var stripe              = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+  var elements            = stripe.elements();
+  var form                = document.getElementById('new-subscription-payment-card-form');
+  var subscription_status = "#{@invoice.subscription.state}"
+  var client_secret       = '#{@client_secret}'
+  var card                = elements.create('card', {hidePostalCode: true, style: style});
+
+  card.mount('#card-element');
+  $(".sk-circle").hide();
+
   function ReAuth() {
-    stripe.handleCardPayment('#{@client_secret}',).then(function(result) {
-      if (result.error) {
-        resetForm(result.error);
-      } else {
-        $.ajax ({
-        url: "/sca_successful",
-        type: "POST",
-        data: {id: "#{@invoice.id}"}
-      })
-    });    
+    if (subscription_status == 'pending_3d_secure') {
+      stripe.handleCardPayment('#{@client_secret}').then(function(result) {
+        if (result.error) {
+          resetForm(result.error);
+        } else {
+          $.ajax ({
+            url: "/sca_successful",
+            type: "POST",
+            data: {id: "#{@invoice.id}"}
+          })
+        }
+      });
+    }
   }
+
+  function createToken() {
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        $('#card_submit').prop('disabled',false);
+        $('#card_submit').show();
+        $(".sk-circle").hide();
+      } else {
+        handlePayment(result.token);
+      }
+    });
+  };
+
+  function handlePayment(token){
+    stripe.handleCardPayment(client_secret, card).then(function(result) {
+      if (result.error) {
+        console.log(result)
+      } else {
+        console.log(result)
+        $.ajax({
+          type: 'patch',
+          url: "#{invoice_path(@invoice.id)}",
+          data: { status: result.paymentIntent.status },
+          dataType: 'json',
+          success: function(data,status,xhr){
+            stripeTokenHandler(token);
+          }
+        });
+      }
+    });
+  }
+
+  function stripeTokenHandler(token) {
+    $('#subscription_payment_card_stripe_token').val(token.id);
+
+    $.ajax({
+      type: $(form).attr('method'),
+      url:  $(form).attr('action'),
+      data: $(form).serialize(),
+      dataType: 'json',
+    });
+
+    location.reload();
+  }
+
+  // Create a token when the form is submitted.
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    $('#card_submit').prop('disabled',true);
+    $('#card_submit').hide();
+    $(".sk-circle").show();
+
+    createToken();
+  });
+
   function resetForm(error){
     console.log(error);
     // Display error message & feedback to user
   }
-  
-window.onload = ReAuth;
+
+  window.onload = ReAuth;
