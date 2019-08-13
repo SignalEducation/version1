@@ -29,7 +29,6 @@ class Order < ApplicationRecord
   serialize :stripe_order_payment_data, JSON
   attr_accessor :use_paypal, :paypal_approval_url, :stripe_token
 
-  # Constants
   ORDER_STATUS = %w[created paid canceled].freeze
 
   # relationships
@@ -40,7 +39,6 @@ class Order < ApplicationRecord
   has_one :order_transaction
   has_one :invoice, autosave: true
 
-  # delegates
   delegate :mock_exam, to: :product
 
   # validation
@@ -59,8 +57,9 @@ class Order < ApplicationRecord
   scope :all_for_course,  ->(course_id)  { where(subject_course_id: course_id) }
   scope :all_for_product, ->(product_id) { where(product_id: product_id) }
   scope :all_for_user,    ->(user_id)    { where(user_id: user_id) }
-
-  # INSTANCE METHODS ===========================================================
+  scope :orders_completed_in_time, lambda { |time|
+    with_state(:completed).where('orders.created_at > (?)', time)
+  }
 
   # STATE MACHINE ==============================================================
 
@@ -81,6 +80,17 @@ class Order < ApplicationRecord
 
   # CLASS METHODS ==============================================================
 
+  def self.send_daily_orders_update
+    return if (orders = orders_completed_in_time(24.hours.ago)) && orders.empty?
+    slack = SlackService.new
+    slack.notify_channel('corrections', slack.order_summary_attachment(orders),
+                         icon_emoji: ':chart_with_upwards_trend:')
+  end
+
+  def self.product_type_count(product_type)
+    joins(:product).where(products: { product_type: product_type }).count
+  end
+
   # INSTANCE METHODS ===========================================================
 
   def destroyable?
@@ -89,7 +99,6 @@ class Order < ApplicationRecord
 
   def execute_order_completion
     return if Rails.env.test?
-
     MandrillWorker.perform_async(user_id,
                                  'send_mock_exam_email',
                                  user_exercise_url(user_id),
@@ -101,7 +110,6 @@ class Order < ApplicationRecord
 
   def generate_exercises
     count = product.correction_pack_count || 1
-
     (1..count).each { user.exercises.create(product_id: product_id) }
   end
 
@@ -110,12 +118,9 @@ class Order < ApplicationRecord
   end
 
   def generate_invoice
-    invoice_params = { user_id: user_id,
-                       currency_id: product.currency_id,
-                       sub_total: product.price,
-                       total: product.price,
-                       issued_at: updated_at,
-                       object_type: 'invoice',
+    invoice_params = { user_id: user_id, currency_id: product.currency_id,
+                       sub_total: product.price, total: product.price,
+                       issued_at: updated_at, object_type: 'invoice',
                        amount_due: product.price }
     invoice_params.merge!(paid: true, payment_closed: true) if stripe? && stripe_status == 'paid'
 
@@ -134,14 +139,13 @@ class Order < ApplicationRecord
 
   def check_dependencies
     return if destroyable?
-
     errors.add(:base, I18n.t('models.general.dependencies_exist'))
     false
   end
 
   def create_order_transaction
-    OrderTransaction.
-      create_from_stripe_data(stripe_order_payment_data, user_id, id, product_id)
+    OrderTransaction.create_from_stripe_data(stripe_order_payment_data,
+                                             user_id, id, product_id)
   end
 
   def user_exercise_url(user_id)

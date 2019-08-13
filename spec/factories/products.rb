@@ -29,6 +29,15 @@ FactoryBot.define do
     sequence(:stripe_sku_guid) { |n| "stripe-sku-guid-#{n}" }
     currency
     mock_exam
+
+    factory :mock_product do
+      product_type 'mock_exam'
+    end
+
+    factory :correction_product do
+      product_type 'correction_pack'
+      correction_pack_count 1
+    end
   end
 
   trait :inactive do
