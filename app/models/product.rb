@@ -76,33 +76,13 @@ class Product < ApplicationRecord
     end
   end
 
-  ## Creates product object on stripe and updates attributes here with response data ##
+  private
+
   def create_on_stripe
-    return if Rails.env.test?
-
-    stripe_product   = Stripe::Product.create(name: name, shippable: false, active: active)
-    self.live_mode   = stripe_product.livemode
-    self.stripe_guid = stripe_product.id
-
-    stripe_sku = Stripe::SKU.create(product: stripe_product.id,
-                                    currency: currency.iso_code,
-                                    price: (price.to_f * 100).to_i,
-                                    active: true,
-                                    inventory: { type: 'infinite' })
-    self.stripe_sku_guid = stripe_sku.id
-    save!
+    StripeProductWorker.perform_async(id, :create) unless Rails.env.test?
   end
 
-  ## Updates stripe product object ##
   def update_on_stripe
-    unless Rails.env.test?
-      stripe_product = Stripe::Product.retrieve(id: stripe_guid)
-      stripe_product.name = name
-      stripe_product.active = active
-      stripe_product.save
-    end
-  rescue => e
-    errors.add(:stripe, e.message)
-    false
+    StripeProductWorker.perform_async(id, :update) unless Rails.env.test?
   end
 end

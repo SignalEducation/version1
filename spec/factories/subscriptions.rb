@@ -38,17 +38,18 @@ FactoryBot.define do
     terms_and_conditions  { true }
 
     factory :stripe_subscription do
-      sequence(:stripe_guid)      { |n| "sub_DUMMY-#{n}" }
+      sequence(:stripe_guid) { |n| "sub_DUMMY-#{n}" }
+      stripe_customer_id     { 'cus_1235455' }
     end
 
     factory :valid_subscription do
       stripe_status        { 'active' }
-      active                { true }
+      active               { true }
     end
 
     factory :invalid_subscription do
       stripe_status        { 'canceled' }
-      active                { true }
+      active               { true }
     end
 
     factory :active_subscription do
@@ -58,7 +59,7 @@ FactoryBot.define do
 
     factory :past_due_subscription do
       stripe_status        { 'past_due' }
-      active                { true }
+      active               { true }
     end
 
     factory :canceled_pending_subscription do

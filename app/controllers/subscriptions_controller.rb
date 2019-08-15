@@ -121,8 +121,8 @@ class SubscriptionsController < ApplicationController
   def stripe_subscription(subscription, subscription_service, params)
     token               = params[:subscription][:stripe_token]
     coupon              = subscription_service.coupon
-    @subscription, data = StripeService.new.
-                            create_and_return_subscription(subscription, token, coupon)
+    @subscription, data = StripeSubscriptionService.new(subscription).
+                            create_and_return_subscription(token, coupon)
 
     if @subscription.save
       if data[:status] == :ok

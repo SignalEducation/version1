@@ -64,6 +64,8 @@ class Subscription < ApplicationRecord
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
   validates :cancellation_reason, presence: true, if: proc { |sub| sub.cancelling_subscription }
   validates :stripe_guid, :stripe_customer_id, length: { maximum: 255 }, allow_blank: true
+  validate :plan_change_currencies, :plan_change_active, :subscription_change_allowable,
+           :user_has_default_card, :user_is_student, if: proc { |sub| sub.changed_from.present? }
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
@@ -363,7 +365,7 @@ class Subscription < ApplicationRecord
   end
 
   def update_invoice_payment_success
-    stripe_sub = StripeService.new.get_subscription(stripe_guid)
+    stripe_sub = StripeSubscriptionService.new(self).retrieve_subscription
     update!(stripe_status: stripe_sub.status,
             next_renewal_date: Time.at(stripe_sub.current_period_end))
     if pending?
@@ -441,5 +443,30 @@ class Subscription < ApplicationRecord
     return if Rails.env.test?
 
     HubSpotContactWorker.perform_async(id)
+  end
+
+  def subscription_change_allowable
+    return if %w[active past_due].include?(changed_from.stripe_status)
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded'))
+  end
+
+  def user_has_default_card
+    return unless user.default_card.nil?
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card'))
+  end
+
+  def user_is_student
+    return if user.standard_student_user?
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade'))
+  end
+
+  def plan_change_active
+    return if subscription_plan.active?
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.choose_different_plan'))
+  end
+
+  def plan_change_currencies
+    return if changed_from.subscription_plan.currency_id == subscription_plan.currency_id
+    errors.add(:base, I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch'))
   end
 end

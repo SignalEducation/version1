@@ -287,8 +287,8 @@ describe StripeApiEvent do
           allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
           allow(api_event).to receive(:get_data_from_stripe)
           allow(Invoice).to receive(:find_by).and_return(invoice)
-          allow_any_instance_of(StripeService).to(
-            receive(:get_subscription)
+          allow_any_instance_of(StripeSubscriptionService).to(
+            receive(:retrieve_subscription)
           ).and_return(double(status: 'active', current_period_end: Time.now))
         end
 

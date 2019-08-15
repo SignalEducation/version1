@@ -12,7 +12,7 @@ class SubscriptionService
     if paypal?
       PaypalSubscriptionsService.new(@subscription).change_plan(new_plan_id)
     elsif stripe?
-      StripeService.new.change_plan(@subscription, new_plan_id)
+      StripeSubscriptionService.new(@subscription).change_plan(new_plan_id)
     end
   end
 
@@ -25,21 +25,11 @@ class SubscriptionService
     raise Learnsignal::SubscriptionError.new('Sorry! That is not a valid coupon code.')
   end
 
-  def create_and_return_subscription(params)
-    if stripe?
-      @subscription, _client_secret = StripeService.new.create_and_return_subscription(@subscription, params[:subscription][:stripe_token], @coupon)
-    elsif paypal?
-      @subscription.save!
-      @subscription = PaypalSubscriptionsService.new(@subscription).create_and_return_subscription
-      [@subscription, nil]
-    end
-  end
-
   def cancel_subscription
     if paypal?
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement
     elsif stripe?
-      StripeService.new.cancel_subscription(@subscription)
+      StripeSubscriptionService.new(@subscription).cancel_subscription
     end
   end
 
@@ -47,7 +37,7 @@ class SubscriptionService
     if paypal?
       PaypalSubscriptionsService.new(@subscription).cancel_billing_agreement_immediately
     elsif stripe?
-      StripeService.new.cancel_subscription_immediately(@subscription)
+      StripeSubscriptionService.new(@subscription).cancel_subscription(immediately: true)
     end
   end
 

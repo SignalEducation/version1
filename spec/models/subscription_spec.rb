@@ -151,8 +151,8 @@ describe Subscription do
         stripe_sub = double({
           status: 'canceled', current_period_end: Time.zone.now
         })
-        allow_any_instance_of(StripeService).to(
-          receive(:get_subscription)
+        allow_any_instance_of(StripeSubscriptionService).to(
+          receive(:retrieve_subscription)
         ).and_return(stripe_sub)
         allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
       end
