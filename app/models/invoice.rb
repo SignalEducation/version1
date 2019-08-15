@@ -46,7 +46,6 @@ class Invoice < ApplicationRecord
 
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
-  CLOSED_STATUSES = %w[paid uncollectible void].freeze
 
   # relationships
   belongs_to :currency
@@ -104,7 +103,7 @@ class Invoice < ApplicationRecord
           stripe_customer_guid: stripe_data_hash[:customer],
           object_type: stripe_data_hash[:object],
           payment_attempted: stripe_data_hash[:attempted],
-          payment_closed: stripe_data_hash[:status_transitions][:finalized_at].present?,
+          payment_closed: stripe_data_hash[:closed],
           forgiven: stripe_data_hash[:status] == 'uncollectible',
           paid: stripe_data_hash[:paid],
           livemode: stripe_data_hash[:livemode],
@@ -194,7 +193,7 @@ class Invoice < ApplicationRecord
           total: stripe_invoice[:total].to_i / 100.0,
           total_tax: stripe_invoice[:tax].to_i / 100.0,
           payment_attempted: stripe_invoice[:attempted],
-          payment_closed: CLOSED_STATUSES.include?(stripe_invoice[:status]),
+          payment_closed: stripe_invoice[:closed],
           forgiven: stripe_invoice[:status] == 'uncollectible',
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
