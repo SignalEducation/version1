@@ -31,8 +31,13 @@ class SubscriptionsController < ApplicationController
     send("#{params['payment-options']}_subscription",
          @subscription, subscription_service, params)
   rescue Learnsignal::SubscriptionError => e
-    flash[:error] = e.message
-    redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
+    if request.xhr?
+      render json: { subscription_id: @subscription.id,
+                     error: e.message }, status: :error
+    else
+      flash[:error] = e.message
+      redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
+    end
   end
 
   def execute
