@@ -4,7 +4,7 @@ class InvoicesController < ApplicationController
   before_action :logged_in_required
   before_action -> { ensure_user_has_access_rights(%w[user_management_access]) }, only: :show
   before_action -> { ensure_user_has_access_rights(%w[student_user user_management_access]) }, only: :pdf
-  before_action :set_invoice, only: %i[show pdf]
+  before_action :set_invoice, except: :index
 
   def index
     @invoices = current_user.invoices.order(created_at: :desc)
@@ -13,6 +13,19 @@ class InvoicesController < ApplicationController
   def show
     @user   = @invoice.user
     @layout = 'management'
+  end
+
+  def update
+    return_hash =
+      case params[:status]
+      when 'succeeded'
+        @invoice.update(paid: true, payment_closed: true)
+        { message: 'updated', status: :ok }
+      else
+        { error: 'something wrong happened, please check with admin team.', status: :error }
+      end
+
+    render json: return_hash
   end
 
   def pdf

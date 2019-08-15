@@ -31,12 +31,12 @@ FactoryBot.define do
     mock_exam
 
     factory :mock_product do
-      product_type 'mock_exam'
+      product_type { 'mock_exam' }
     end
 
     factory :correction_product do
-      product_type 'correction_pack'
-      correction_pack_count 1
+      product_type { 'correction_pack' }
+      correction_pack_count { 1 }
     end
   end
 

@@ -41,26 +41,29 @@ describe SubscriptionsController, type: :controller do
     create(
         :student_subscription_plan_m,
         currency: gbp, price: 7.50, stripe_guid: 'stripe_plan_guid_m',
-        payment_frequency_in_months: 3
+        payment_frequency_in_months: 3,
+        exam_body: exam_body_1
     )
   }
   let!(:subscription_plan_gbp_q) {
     create(
         :student_subscription_plan_q,
         currency: gbp, price: 22.50, stripe_guid: 'stripe_plan_guid_q',
-        payment_frequency_in_months: 3
+        payment_frequency_in_months: 3,
+        exam_body: exam_body_1
     )
   }
   let!(:subscription_plan_gbp_y) {
     create(
         :student_subscription_plan_y,
         currency: gbp, price: 87.99, stripe_guid: 'stripe_plan_guid_y',
-        payment_frequency_in_months: 3
+        payment_frequency_in_months: 12,
+        exam_body: exam_body_1
     )
   }
 
   let!(:student_user_group ) { create(:student_user_group ) }
-  let!(:basic_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
+  let!(:basic_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id, country: uk) }
   let!(:valid_subscription_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
   let!(:canceled_pending_student) { create(:basic_student, user_group: student_user_group, preferred_exam_body_id: exam_body_1.id) }
 

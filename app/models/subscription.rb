@@ -29,6 +29,7 @@
 
 class Subscription < ApplicationRecord
   include LearnSignalModelExtras
+
   serialize :stripe_customer_data, Hash
   attr_accessor :use_paypal, :paypal_approval_url, :cancelling_subscription,
                 :payment_intent, :client_secret

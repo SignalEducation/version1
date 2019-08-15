@@ -28,8 +28,11 @@
 #
 
 require 'rails_helper'
+require 'concerns/filterable_spec.rb'
 
-describe SubscriptionPlan do
+describe SubscriptionPlan, type: :model do
+  it_behaves_like 'filterable'
+
   # Constants
   it { expect(SubscriptionPlan.const_defined?(:PAYMENT_FREQUENCIES)).to eq(true) }
   it 'should have a valid factory' do
@@ -166,6 +169,12 @@ describe SubscriptionPlan do
 
         expect(plan.description).to include('A subscription for the LearnSignal online training service.')
       end
+    end
+  end
+
+  describe '.search_scopes' do
+    it 'has the correct search_scopes' do
+      expect(SubscriptionPlan.search_scopes).to eq(%i[prioritise_plan_frequency plan_guid subscription_plan_id])
     end
   end
 end
