@@ -13,13 +13,31 @@
             .row
               .col-sm-6
                 .form-group
+                  -if f.object&.submission&.present?
+                    =f.label :submission, t('views.mock_exams.form.file'), class: 'control-label'
+                    .form-control-static
+                      =link_to f.object.submission_file_name, f.object.submission.url, target: '_blank'
+                      =number_to_human_size(f.object.submission_file_size)
+                      %br/
+                      =f.label :submission, t('views.mock_exams.form.file_replacement'), class: 'control-label'
+                      .input-group.input-group-lg
+                        =f.file_field :submission, class: 'form-control'
+                  -else
+                    =f.label :submission, t('views.mock_exams.form.file'), class: 'control-label'
+                    .input-group.input-group-lg
+                      =f.file_field :submission, class: 'form-control'
+            .row
+              .col-sm-6
+                .form-group
                   -if f.object&.correction&.present?
                     =f.label :correction, t('views.exercises.admin.form.correction'), class: 'control-label'
                     .form-control-static
                       =link_to f.object.correction_file_name, f.object.correction.url, target: '_blank'
                       =number_to_human_size(f.object.correction_file_size)
                       %br/
-                      =f.label :correction, t('views.white_papers.form.file_replacement'), class: 'control-label'
+                      =f.label :correction, t('views.mock_exams.form.correction_replacement'), class: 'control-label'
+                      .input-group.input-group-lg
+                        =f.file_field :correction, class: 'form-control'
                   -else
                     =f.label :correction, t('views.exercises.admin.form.correction'), class: 'control-label'
                     .input-group.input-group-lg
