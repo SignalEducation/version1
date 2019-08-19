@@ -1,0 +1,2 @@
+class CbeAgreement < ApplicationRecord
+end
