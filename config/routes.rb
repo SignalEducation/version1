@@ -17,18 +17,15 @@ Rails.application.routes.draw do
     post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
 
-    namespace :v1, constraints: ApiConstraint.new(version: 1) do
-      namespace :cbe, format: 'json' do
-        resources :multiple_choice_questions, only: [:index, :create]
-        resources :question_types,            only: :index
-        resources :question_statuses,         only: :index
-        resources :section_types,             only: :index
+    scope module: :v1, constraints: ApiConstraint.new(version: 1) do
+      resources :cbes do
+        resources :cbe_sections, only: [:create, :index]
       end
-
-      resources :subject_courses, only: :index
-      resources :cbes, format: 'json', only: [:index, :create] do
-        resources :sections, controller: 'cbe/sections', only: [:index, :create]
-      end
+      get :cbe_data, to: 'cbes#index'
+      resources :subjects, only: :index
+      resources :cbe_question_types, only: :index
+      resources :cbe_section_types, only: :index
+      resources :cbe_question_statuses, only: :index
     end
   end
 

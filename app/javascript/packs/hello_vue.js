@@ -132,14 +132,15 @@ export const store = new Vuex.Store({
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-  const el = document.body.appendChild(document.createElement('vueapp'))
-  const vue = new Vue({
-    store: store,
-    el: '#cbes-new-view',
-    template: '<App/>',
-    components: { App },
-    render: h => h(App)
-  })
+    const el = document.body.appendChild(document.createElement('vueapp'))
+    const vue = new Vue({
+        store: store,
+        el: '#cbes-new-view',
+        template: '<App/>',
+        components: {App},
+        render: h => h(App)
+    })
+
 })
 
 document.addEventListener('DOMContentLoaded', () => {
