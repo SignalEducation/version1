@@ -35,8 +35,4 @@ RSpec.describe Exercise, type: :model do
       )
     end
   end
-
-  it 'has a valid factory' do
-    expect(build(:exercise)).to be_valid
-  end
 end

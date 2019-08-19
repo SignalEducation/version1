@@ -1,0 +1,2 @@
+class CbeIntroductionPage < ApplicationRecord
+end
