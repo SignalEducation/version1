@@ -58,6 +58,8 @@
             =render partial: 'layouts/flash_messages'
 
           =yield
+
+
           
   -#%body.page-light
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
