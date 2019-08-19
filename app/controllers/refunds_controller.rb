@@ -5,7 +5,7 @@ class RefundsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[user_management_access stripe_management_access])
   end
-  before_action :set_layout
+  before_action :management_layout
 
   def show
     @refund = Refund.find_by(id: params[:id])
@@ -36,10 +36,6 @@ class RefundsController < ApplicationController
   end
 
   protected
-
-  def set_layout
-    @layout = 'management'
-  end
 
   def allowed_params
     params.require(:refund).permit(:stripe_charge_guid, :charge_id, :invoice_id, :subscription_id, :user_id, :manager_id, :amount, :reason)

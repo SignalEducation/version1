@@ -2,9 +2,8 @@
 
 class SubjectCourseResourcesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[content_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[content_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -62,7 +61,6 @@ class SubjectCourseResourcesController < ApplicationController
   def get_variables
     @subject_course_resource = SubjectCourseResource.find_by(id: params[:id]) if params[:id].to_i > 0
     @subject_courses = SubjectCourse.all_active.all_in_order
-    @layout = 'management'
   end
 
   def allowed_params

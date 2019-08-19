@@ -2,9 +2,10 @@
 
 class HomePagesController < ApplicationController
   before_action :logged_in_required
-  before_action  do
+  before_action do
     ensure_user_has_access_rights(%w[system_requirements_access marketing_resources_access])
   end
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -62,7 +63,6 @@ class HomePagesController < ApplicationController
     @subscription_plan_categories = SubscriptionPlanCategory.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
     @groups = Group.all_active.all_in_order
-    @layout = 'management'
   end
 
   def allowed_params

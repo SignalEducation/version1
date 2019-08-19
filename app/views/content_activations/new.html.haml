@@ -1,34 +1,25 @@
 .container
   %header.management-console-section
     %h1
-      ="Create New Activation Worker"
+      Create New Activation Worker
 
-  %section.pb-7                 
+  %section.pb-7
     .col-md-12
-      =form_tag(content_activations_url, method: 'post') do
-        =hidden_field_tag :id, params[:id]
-        =hidden_field_tag :type, params[:type]
-        .row.l-margin-top
-          .form-group
-            .row.l-margin-top.col-md-offset-10
-              .col-md-16.col-md-offset-10
-              %label
-                ='Select a valid Date & Time'                    
-                %span.custom-date-select.input-group.input-group-lg                                                         
-                  =date_select :activation_date, :date, class: 'form-control custom-select'
-                .row.l-margin-top
-                  .col-md-8.col-md-offset-2.text-center
-                    %button{:type => "submit", class: 'btn btn-red'} Save
-
-        
-
-
-
+      =form_tag(content_activations_url, method: 'post', class: 'form-inline') do
+        .box-item.form-box.mb-7
+          =hidden_field_tag :id, params[:id]
+          =hidden_field_tag :type, params[:type]
+          .row
+            .col-sm
+              .search-container
+                #datetimepicker1.input-group.date
+                  =text_field_tag :activation_date, params[:activation_date], class: 'form-control', id: 'datetimepicker', placeholder: 'Select date and time.'
+                  %button.btn.btn-primary{ type: 'submit'}=t('views.general.save')
 
 :javascript
-
-  $(document).ready(function(){
-    $("#dateTimePicker").kendoDateTimePicker({
-      format: "dd/MM/yyyy HH:mm:ss"
-    });
+  $('#datetimepicker').datetimepicker({
+    sideBySide: true,
+    format: 'DD-MM-YYYY HH:mm'
   });
+
+

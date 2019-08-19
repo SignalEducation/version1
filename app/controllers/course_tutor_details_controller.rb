@@ -5,6 +5,7 @@ class CourseTutorDetailsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[system_requirements_access content_management_access user_management_access])
   end
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -60,9 +61,8 @@ class CourseTutorDetailsController < ApplicationController
 
   def get_variables
     @course_tutor_detail = CourseTutorDetail.where(id: params[:id]).first if params[:id].to_i > 0
-    @subject_course = SubjectCourse.where(id: params[:subject_course_id]).first if params[:subject_course_id].to_i > 0
-    @layout = 'management'
-    @tutor_users = User.all_tutors.all_in_order
+    @subject_course      = SubjectCourse.where(id: params[:subject_course_id]).first if params[:subject_course_id].to_i > 0
+    @tutor_users         = User.all_tutors.all_in_order
   end
 
   def allowed_params

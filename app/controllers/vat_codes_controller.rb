@@ -5,6 +5,7 @@ class VatCodesController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[system_requirements_access stripe_management_access])
   end
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -55,7 +56,6 @@ class VatCodesController < ApplicationController
     @vat_code = VatCode.find_by(id: params[:id]) if params[:id].to_i.positive?
     @countries = Country.all_in_order
     seo_title_maker(@vat_code.try(:name) || 'VAT Codes', '', true)
-    @layout = 'management'
   end
 
   def allowed_params

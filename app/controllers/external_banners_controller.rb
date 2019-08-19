@@ -5,16 +5,14 @@ class ExternalBannersController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[content_management_access marketing_resources_access])
   end
-  before_action :get_variables
+  before_action :management_layout
+  before_action :set_external_banner, only: %i[show edit update destroy]
 
   def index
     @external_banners = ExternalBanner.all_without_parent.all_in_order
   end
 
-  def show
-    # Preview for managers
-    @banner = @external_banner
-  end
+  def show; end
 
   def new
     @external_banner = ExternalBanner.new(sorting_order: 1, active: true, background_colour: '#FFFFFF')
@@ -62,9 +60,8 @@ class ExternalBannersController < ApplicationController
 
   protected
 
-  def get_variables
+  def set_external_banner
     @external_banner = ExternalBanner.where(id: params[:id]).first if params[:id].to_i > 0
-    @layout = 'management'
   end
 
   def allowed_params

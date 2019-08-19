@@ -2,10 +2,9 @@
 
 class ExamBodiesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[system_requirements_access])
-  end
-  before_action :get_variables
+  before_action { ensure_user_has_access_rights(%w[system_requirements_access]) }
+  before_action :management_layout
+  before_action :set_exam_body, only: %i[show edit update destroy]
 
   def index
     @exam_bodies = ExamBody.all_in_order
@@ -51,9 +50,8 @@ class ExamBodiesController < ApplicationController
 
   protected
 
-  def get_variables
-    @exam_body = ExamBody.where(id: params[:id]).first if params[:id].to_i > 0
-    @layout = 'management'
+  def set_exam_body
+    @exam_body = ExamBody.find(params[:id])
   end
 
   def allowed_params
