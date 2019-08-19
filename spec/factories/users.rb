@@ -60,8 +60,8 @@
 FactoryBot.define do
   factory :user do
     sequence(:email)      { |n| "john.smith-#{n}@example.com" }
-    first_name            { Faker::Name.first_name }
-    last_name             { Faker::Name.last_name }
+    first_name            { 'John' }
+    last_name             { 'Smith' }
     association           :country
     password              { '123123123' }
     password_confirmation { '123123123' }
