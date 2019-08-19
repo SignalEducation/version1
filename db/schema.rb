@@ -89,6 +89,104 @@ ActiveRecord::Schema.define(version: 2019_08_24_094128) do
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
   end
 
+  create_table "cbe_agreements", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_agreement_id"
+    t.index ["cbe_agreement_id"], name: "index_cbe_agreements_on_cbe_agreement_id"
+  end
+
+  create_table "cbe_introduction_pages", force: :cascade do |t|
+    t.integer "number"
+    t.text "content"
+    t.string "title"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_introduction_page_id"
+    t.index ["cbe_introduction_page_id"], name: "index_cbe_introduction_pages_on_cbe_introduction_page_id"
+  end
+
+  create_table "cbe_multiple_choice_questions", force: :cascade do |t|
+    t.string "label"
+    t.boolean "is_correct_answer"
+    t.bigint "cbe_question_grouping_id"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cbe_question_grouping_id"], name: "index_cbe_multiple_choice_questions_on_cbe_question_grouping_id"
+  end
+
+  create_table "cbe_question_groupings", force: :cascade do |t|
+    t.bigint "cbe_id"
+    t.bigint "cbe_section_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cbe_id", "cbe_section_id"], name: "index_cbe_question_groupings_on_cbe_id_and_cbe_section_id", unique: true
+    t.index ["cbe_id"], name: "index_cbe_question_groupings_on_cbe_id"
+    t.index ["cbe_section_id"], name: "index_cbe_question_groupings_on_cbe_section_id"
+  end
+
+  create_table "cbe_question_statuses", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_cbe_question_statuses_on_name", unique: true
+  end
+
+  create_table "cbe_question_types", force: :cascade do |t|
+    t.string "name"
+    t.integer "order"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_question_id"
+    t.index ["cbe_question_id"], name: "index_cbe_question_types_on_cbe_question_id"
+  end
+
+  create_table "cbe_questions", force: :cascade do |t|
+    t.string "label"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_question_id"
+    t.index ["cbe_question_id"], name: "index_cbe_questions_on_cbe_question_id"
+  end
+
+  create_table "cbe_section_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_cbe_section_types_on_name", unique: true
+  end
+
+  create_table "cbe_sections", force: :cascade do |t|
+    t.text "scenario_description"
+    t.text "question_description"
+    t.string "scenario_label"
+    t.string "question_label"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.bigint "cbe_id"
+    t.index ["cbe_id"], name: "index_cbe_sections_on_cbe_id"
+  end
+
+  create_table "cbes", force: :cascade do |t|
+    t.string "name"
+    t.string "title"
+    t.text "description"
+    t.float "exam_time"
+    t.float "hard_time_limit"
+    t.integer "number_of_pauses_allowed"
+    t.integer "length_of_pauses"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "subject_course_id"
+    t.index ["subject_course_id"], name: "index_cbes_on_subject_course_id"
+  end
+
   create_table "charges", id: :serial, force: :cascade do |t|
     t.integer "subscription_id"
     t.integer "invoice_id"
@@ -762,6 +860,24 @@ ActiveRecord::Schema.define(version: 2019_08_24_094128) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "payment_intents", force: :cascade do |t|
+    t.string "intent_id"
+    t.string "client_secret"
+    t.string "currency"
+    t.string "next_action"
+    t.string "payment_method_options"
+    t.string "payment_method_types"
+    t.string "receipt_email"
+    t.string "status"
+    t.integer "amount"
+    t.string "charges"
+    t.jsonb "data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_payment_intents_on_user_id"
+  end
+
   create_table "paypal_webhooks", id: :serial, force: :cascade do |t|
     t.string "guid"
     t.string "event_type"
@@ -1378,11 +1494,21 @@ ActiveRecord::Schema.define(version: 2019_08_24_094128) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
+  add_foreign_key "cbe_agreements", "cbe_agreements"
+  add_foreign_key "cbe_introduction_pages", "cbe_introduction_pages"
+  add_foreign_key "cbe_multiple_choice_questions", "cbe_question_groupings"
+  add_foreign_key "cbe_question_groupings", "cbe_sections"
+  add_foreign_key "cbe_question_groupings", "cbes"
+  add_foreign_key "cbe_question_types", "cbe_questions"
+  add_foreign_key "cbe_questions", "cbe_questions"
+  add_foreign_key "cbe_sections", "cbes"
+  add_foreign_key "cbes", "subject_courses"
   add_foreign_key "exercises", "products"
   add_foreign_key "exercises", "users"
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "invoices", "orders"
+  add_foreign_key "payment_intents", "users"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
   add_foreign_key "users", "currencies"
