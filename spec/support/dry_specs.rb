@@ -88,7 +88,6 @@ def expect_create_error_with_model(model_name, assign_name = nil)
 end
 
 def expect_update_success_with_model(model_name, destination, assign_name = nil)
-  # binding.pry
   assign_name = model_name if assign_name.nil?
   expect(flash[:error]).to be_nil
   expect(flash[:success]).to eq(I18n.t("controllers.#{assign_name.pluralize}.update.flash.success"))
