@@ -13,7 +13,7 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   load "db/seed_data/currency_seed.rb"
   load "db/seed_data/countries_seed.rb"
   puts " \n >> exam_body group user_group currency countries"
-        #load "db/seed_data/user_countries.rb"
+  #load "db/seed_data/user_countries.rb"
   print "* " * 100
   load "db/seed_data/subject_course.rb"
   load "db/seed_data/user_seed.rb"
@@ -26,8 +26,10 @@ unless Rails.env.test? # don't want this stuff to run in the test DB
   load "db/seed_data/course_content_data.rb"
   load "db/seed_data/home_page_seed.rb"
   puts "\n course course_content_data"
-        
 
+  print ">> CBE DATA "
+  load "db/seed_data/cbe_section_type.rb"
+  load "db/seed_data/cbe_question_status.rb"
 
   print "* " * 100
   puts "\n Completed the db/seed process"

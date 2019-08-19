@@ -15,17 +15,33 @@ Rails.application.routes.draw do
     post 'stripe_webhooks', to: 'stripe_webhooks#create'
     post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
+
+    scope module: :v1, constraints: ApiConstraint.new(version: 1) do
+      resources :cbes do
+        resources :cbe_sections, only: [:create, :index]
+      end
+      get :cbe_data, to: 'cbes#index'
+      resources :subjects, only: :index
+      resources :cbe_question_types, only: :index
+      resources :cbe_section_types, only: :index
+      resources :cbe_question_statuses, only: :index
+    end
   end
 
   namespace :admin do
-    resources :exercises, only: [:index, :show, :new, :create, :edit, :update] do
+    resources :exercises, only: [:index, :show, :edit, :update] do
       get 'generate_daily_summary', on: :collection
-    end
-    resources :user do
-      resources :exercises, only: [:index, :new, :create]
     end
     post 'search_exercises', to: 'exercises#index', as: :search_exercises
     resources :orders, only: [:index, :show]
+
+    scope :cbes do
+      resources :cbes, only: [:index, :new, :show]
+    end
+  end
+
+  resources :cbes do
+    get 'new', to: 'cbes#new', as: :new_cbe
   end
 
   # all standard, user-facing "resources" go inside this scope

@@ -1067,7 +1067,6 @@ en:
         product_id: Product
         file: Upload a PDF of your solution
         file_replacement: Upload a replacement solution
-        correction_replacement: Upload a replacement correction
         cover_image: Upload the Cover Image File
         sorting_order: Sorting Order
 

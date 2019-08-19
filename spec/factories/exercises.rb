@@ -24,7 +24,7 @@
 
 FactoryBot.define do
   factory :exercise do
-    product
-    user
+    product { nil }
+    state { "MyString" }
   end
 end
