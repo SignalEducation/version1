@@ -12,6 +12,8 @@
 
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
+    -# VueJS include
+    = javascript_pack_tag 'application'
 
     %script{type: 'text/javascript', src: 'https://js.stripe.com/v3/'}
 
@@ -43,6 +45,20 @@
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
+  = javascript_pack_tag 'hello_vue'
+
+  - if controller_name == 'cbes' 
+    %body.page-light
+      #console-wrapper
+        .d-none.d-sm-block
+          =render partial: 'layouts/management_side_navbar'
+
+        .main-content
+          -if flash[:success] || flash[:error] || flash[:warning]
+            =render partial: 'layouts/flash_messages'
+
+          =yield
+          
   -#%body.page-light
   %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
     -if controller_name == 'courses' || controller_name == 'course_module_elements' || controller_name == 'preview_course_module_elements' || controller_name == 'content_activations'

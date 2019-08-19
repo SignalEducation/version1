@@ -73,7 +73,7 @@ gem 'stackprof'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-
+gem 'webpacker', '~> 3.5'
 gem 'rack-cors'
 
 # Environment-specific gems
