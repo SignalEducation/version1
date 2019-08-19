@@ -1,0 +1,55 @@
+<div class="container">
+  <header class="management-console-section">
+    <h1>
+      CBEs
+    </h1>
+  </header>
+  <section class="pb-7">
+    <%= render partial: 'management_consoles/course_content_nav' %>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="box-item table-box">
+          <div class="row">
+            <div class="col-sm">
+              <%= link_to 'New CBE', new_admin_cbe_url, class: 'btn btn-primary btn-sm', title: t('views.general.new_tooltip') %>
+            </div>
+          </div>
+          <div class="table-responsive pt-4">
+            <table class="table sorted_table">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Course</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @cbes.each do |cbe| %>
+                <tr>
+                  <td>
+                    <%= cbe.name %>
+                  </td>
+                  <td>
+                    <%= cbe.subject_course.name %>
+                  </td>
+                  <td>
+                    <%= link_to t('views.general.edit'), '#', class: 'btn btn-xs btn-primary' %>
+                  </td>
+                  <td>
+                    <%= link_to t('views.general.show'), "cbes/#{cbe.id}", class: 'btn btn-xs btn-secondary' %>
+                  </td>
+                  <td></td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
