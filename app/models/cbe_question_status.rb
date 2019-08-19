@@ -1,0 +1,2 @@
+class CbeQuestionStatus < ApplicationRecord
+end
