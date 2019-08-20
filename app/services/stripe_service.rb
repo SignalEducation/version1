@@ -83,7 +83,7 @@ class StripeService
 
   def create_stripe_product(product)
     Stripe::Product.create(name: product.name, shippable: false,
-                           active: product.active, type: 'service')
+                           active: product.active, type: 'good')
   end
 
   def create_stripe_sku(product, stripe_product)
@@ -103,7 +103,7 @@ class StripeService
     raise Learnsignal::SubscriptionError, return_message(err, type, msg)
   end
 
-  def return_message(e, type, msg)
+  def return_message(e, type, msg = '')
     case type
     when :decline then "Your request was declined because - #{e[:message]}"
     when :sub_cancellation
