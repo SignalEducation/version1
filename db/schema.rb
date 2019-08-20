@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_09_094924) do
+ActiveRecord::Schema.define(version: 2019_08_20_200254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -112,11 +112,18 @@ ActiveRecord::Schema.define(version: 2019_08_09_094924) do
   create_table "cbe_multiple_choice_questions", force: :cascade do |t|
     t.string "label"
     t.boolean "is_correct_answer"
-    t.bigint "cbe_question_grouping_id"
     t.integer "order"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["cbe_question_grouping_id"], name: "index_cbe_multiple_choice_questions_on_cbe_question_grouping_id"
+    t.string "question_1"
+    t.string "question_2"
+    t.string "question_3"
+    t.string "question_4"
+    t.integer "correct_answer"
+    t.string "name"
+    t.string "description"
+    t.bigint "cbe_section_id"
+    t.index ["cbe_section_id"], name: "index_cbe_multiple_choice_questions_on_cbe_section_id"
   end
 
   create_table "cbe_question_groupings", force: :cascade do |t|
@@ -1494,7 +1501,7 @@ ActiveRecord::Schema.define(version: 2019_08_09_094924) do
 
   add_foreign_key "cbe_agreements", "cbe_agreements"
   add_foreign_key "cbe_introduction_pages", "cbe_introduction_pages"
-  add_foreign_key "cbe_multiple_choice_questions", "cbe_question_groupings"
+  add_foreign_key "cbe_multiple_choice_questions", "cbe_sections"
   add_foreign_key "cbe_question_groupings", "cbe_sections"
   add_foreign_key "cbe_question_groupings", "cbes"
   add_foreign_key "cbe_question_types", "cbe_questions"
