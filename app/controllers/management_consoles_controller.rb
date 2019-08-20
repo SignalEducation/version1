@@ -8,7 +8,7 @@ class ManagementConsolesController < ApplicationController
   before_action only: :system_requirements do
     ensure_user_has_access_rights(%w[marketing_resources_access system_requirements_access])
   end
-  before_action :set_layout
+  before_action :management_layout
 
   def index; end
 
@@ -18,11 +18,5 @@ class ManagementConsolesController < ApplicationController
 
   def public_resources
     @faq_sections = FaqSection.paginate(per_page: 50, page: params[:page]).all_in_order
-  end
-
-  protected
-
-  def set_layout
-    @layout = 'management'
   end
 end

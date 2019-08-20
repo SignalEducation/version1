@@ -61,6 +61,10 @@ class ApplicationController < ActionController::Base
     @banner = ExternalBanner.all_without_parent.render_for(controller_name).all_in_order.first
   end
 
+  def management_layout
+    @layout = 'management'
+  end
+
   def logged_in_required
     return if current_user
 

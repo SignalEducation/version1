@@ -2,9 +2,8 @@
 
 class CountriesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w(system_requirements_access))
-  end
+  before_action { ensure_user_has_access_rights(%w[system_requirements_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   # Standard Actions #
@@ -65,10 +64,10 @@ class CountriesController < ApplicationController
 
   def get_variables
     @continents = Country::CONTINENTS
-    @country = Country.where(id: params[:id]).first if params[:id].to_i > 0
+    @country    = Country.find_by(id: params[:id])
     @currencies = Currency.all_in_order
+
     seo_title_maker(@country.try(:name) || 'Countries', '', true)
-    @layout = 'management'
   end
 
   def allowed_params

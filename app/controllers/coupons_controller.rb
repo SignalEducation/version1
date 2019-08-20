@@ -5,7 +5,8 @@ class CouponsController < ApplicationController
   before_action except: [:validate_coupon] do
     ensure_user_has_access_rights(%w[stripe_management_access])
   end
-  before_action :get_variables
+  before_action :management_layout
+  before_action :set_coupon, only: %i[show destroy]
 
   def index
     @coupons = Coupon.paginate(per_page: 50, page: params[:page]).all_in_order
@@ -15,6 +16,7 @@ class CouponsController < ApplicationController
 
   def new
     @coupon = Coupon.new
+    @currencies = Currency.all_in_order.all_active
   end
 
   def create
@@ -51,10 +53,8 @@ class CouponsController < ApplicationController
 
   protected
 
-  def get_variables
-    @coupon = Coupon.where(id: params[:id]).first if params[:id].to_i > 0
-    @currencies = Currency.all_in_order.all_active
-    @layout = 'management'
+  def set_coupon
+    @coupon = Coupon.find(params[:id])
   end
 
   def allowed_params

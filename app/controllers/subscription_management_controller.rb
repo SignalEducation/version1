@@ -2,10 +2,8 @@
 
 class SubscriptionManagementController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[user_management_access])
-  end
-  before_action :set_layout
+  before_action { ensure_user_has_access_rights(%w[user_management_access]) }
+  before_action :management_layout
   before_action :set_subscrition, except: %i[show pdf_invoice]
   before_action :set_invoice, only: %i[invoice pdf_invoice charge]
 
@@ -108,9 +106,5 @@ class SubscriptionManagementController < ApplicationController
 
   def set_invoice
     @invoice = Invoice.find_by(id: params[:invoice_id])
-  end
-
-  def set_layout
-    @layout = 'management'
   end
 end

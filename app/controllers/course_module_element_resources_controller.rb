@@ -2,9 +2,8 @@
 
 class CourseModuleElementResourcesController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w(content_management_access))
-  end
+  before_action { ensure_user_has_access_rights(%w[content_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -53,7 +52,6 @@ class CourseModuleElementResourcesController < ApplicationController
     @course_module_element = CourseModuleElement.where(id: params[:course_module_element_id]).first
     @course_module_element_resource = CourseModuleElementResource.where(id: params[:id]).first if params[:id].to_i > 0
     @mathjax_required = true
-    @layout = 'management'
   end
 
   def allowed_params

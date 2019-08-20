@@ -3,11 +3,11 @@
 class ReferralCodesController < ApplicationController
   include ApplicationHelper
 
-  before_action :logged_in_required, except: [:referral]
+  before_action :logged_in_required, except: :referral
+  before_action :management_layout, except: :referral
   before_action except: [:referral] do
     ensure_user_has_access_rights(%w[user_management_access])
   end
-  before_action :set_layout, except: [:referral]
 
   def index
     @referral_codes = ReferralCode.paginate(per_page: 50, page: params[:page]).with_children.all_in_order
@@ -52,11 +52,5 @@ class ReferralCodesController < ApplicationController
       format.csv { send_data @referral_codes.to_csv() }
       format.xls { send_data @referral_codes.to_csv(col_sep: "\t", headers: true), filename: "referral-codes-#{Date.today}.xls" }
     end
-  end
-
-  protected
-
-  def set_layout
-    @layout = 'management'
   end
 end

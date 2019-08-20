@@ -5,6 +5,7 @@ class ExamSittingsController < ApplicationController
   before_action do
     ensure_user_has_access_rights(%w[system_requirements_access content_management_access])
   end
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -73,10 +74,9 @@ class ExamSittingsController < ApplicationController
   protected
 
   def get_variables
-    @exam_sitting = ExamSitting.where(id: params[:id]).first if params[:id].to_i > 0
+    @exam_sitting    = ExamSitting.where(id: params[:id]).first if params[:id].to_i > 0
+    @exam_bodies     = ExamBody.all_in_order
     @subject_courses = SubjectCourse.all_active.all_in_order
-    @exam_bodies = ExamBody.all_in_order
-    @layout = 'management'
   end
 
   def allowed_params

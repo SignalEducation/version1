@@ -3,9 +3,9 @@
 class ProductsController < ApplicationController
   before_action :logged_in_required
   before_action { ensure_user_has_access_rights(%w[stripe_management_access]) }
-  before_action :seo_title,   except: %i[reorder]
-  before_action :set_layout,  except: %i[reorder]
-  before_action :set_product, only:   %i[show edit update destroy]
+  before_action :seo_title,         except: :reorder
+  before_action :management_layout, except: :reorder
+  before_action :set_product, only: %i[show edit update destroy]
 
   def index
     @products = Product.includes(:currency, :mock_exam, :orders).
@@ -69,10 +69,6 @@ class ProductsController < ApplicationController
 
   def set_product
     @product = Product.find(params[:id])
-  end
-
-  def set_layout
-    @layout = 'management'
   end
 
   def seo_title

@@ -2,9 +2,8 @@
 
 class UserGroupsController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[user_group_management_access])
-  end
+  before_action { ensure_user_has_access_rights(%w[user_group_management_access]) }
+  before_action :management_layout
   before_action :get_variables
 
   def index
@@ -54,7 +53,6 @@ class UserGroupsController < ApplicationController
   def get_variables
     @user_group = UserGroup.find_by(id: params[:id]) if params[:id].to_i.positive?
     seo_title_maker(@user_group.try(:name) || 'User groups', '', true)
-    @layout = 'management'
   end
 
   def allowed_params

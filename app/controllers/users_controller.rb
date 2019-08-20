@@ -2,10 +2,8 @@
 
 class UsersController < ApplicationController
   before_action :logged_in_required
-  before_action do
-    ensure_user_has_access_rights(%w[user_management_access])
-  end
-  before_action :layout_variables
+  before_action { ensure_user_has_access_rights(%w[user_management_access]) }
+  before_action :management_layout
   before_action :get_variables, except: %i[user_personal_details user_subscription_status
                                            user_activity_details user_purchases_details
                                            user_courses_status user_referral_details]
@@ -167,10 +165,6 @@ class UsersController < ApplicationController
     @countries   = Country.all_in_order
 
     seo_title_maker('Users Management', '', true)
-  end
-
-  def layout_variables
-    @layout = 'management'
   end
 
   def get_user_variables
