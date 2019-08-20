@@ -117,8 +117,10 @@ describe SubscriptionsController, type: :controller do
       activate_authlogic
       UserSession.create!(basic_student)
       valid_subscription.start
-      allow_any_instance_of(StripeService).to receive(:create_and_return_subscription).
-                                                and_return([valid_subscription, data])
+      allow_any_instance_of(StripeSubscriptionService).to(
+        receive(:create_and_return_subscription).
+          and_return([valid_subscription, data])
+      )
     end
 
     describe "GET 'new'" do

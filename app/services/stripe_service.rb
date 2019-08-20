@@ -1,17 +1,11 @@
 # frozen_string_literal: true
 
 class StripeService
-  # CUSTOMERS ==================================================================
-
   def create_customer!(user)
     customer = Stripe::Customer.create(email: user.email)
     user.update!(stripe_customer_id: customer.id)
 
     customer
-  end
-
-  def get_customer(stripe_customer_id)
-    Stripe::Customer.retrieve(stripe_customer_id)
   end
 
   def set_order_status(intent, order)
@@ -46,118 +40,22 @@ class StripeService
     raise_payment_error(e.json_body[:error], __method__.to_s, :decline_reason)
   end
 
-  # SUBSCRIPTIONS ==============================================================
+  # PRODUCTS ===================================================================
 
-  def get_subscription(sub_id)
-    Stripe::Subscription.retrieve(id: sub_id)
+  def create_product(product)
+    stripe_product = create_stripe_product(product)
+    stripe_sku = create_stripe_sku(product, stripe_product)
+
+    product.update!(live_mode: stripe_product.livemode,
+                    stripe_guid: stripe_product.id,
+                    stripe_sku_guid: stripe_sku.id)
   end
 
-  def change_plan(old_sub, new_plan_id)
-    user = old_sub.user
-    new_subscription_plan = SubscriptionPlan.find(new_plan_id)
-    validate_plan_changable(old_sub, new_subscription_plan, user)
-
-    if stripe_subscription = get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
-      ActiveRecord::Base.transaction do
-        new_sub = Subscription.new(user_id: user.id,
-                                   subscription_plan_id: new_plan_id,
-                                   complimentary: false,
-                                   livemode: (stripe_subscription[:plan][:livemode]),
-                                   stripe_status: stripe_subscription[:status],
-                                   changed_from: old_sub)
-        # mass-assign-protected attributes
-
-        ## This means it will have the same stripe_guid as the old Subscription ##
-        new_sub.stripe_guid = stripe_subscription[:id]
-
-        new_sub.next_renewal_date = Time.at(stripe_subscription[:current_period_end])
-        new_sub.stripe_customer_id = old_sub.stripe_customer_id
-        new_sub.stripe_customer_data = get_customer(old_sub.stripe_customer_id).to_hash
-        new_sub.save(validate: false)
-        new_sub.start
-
-        user.student_access.update(subscription_id: new_sub.id, account_type: 'Subscription', content_access: true)
-
-        # Only one subscription is active for a user at a time; when creating new subscriptions old ones must be set to active: false.
-        old_sub.update(stripe_status: 'canceled')
-        old_sub.cancel
-
-        return new_sub
-      end
-    end
-  rescue ActiveRecord::RecordInvalid, StandardError => e
-    raise_subscription_error(e, __method__.to_s, :sub_change)
-  end
-
-  def create_and_return_subscription(subscription_object, stripe_token, coupon)
-    customer_id     = subscription_object.user.stripe_customer_id
-    customer        = Stripe::Customer.retrieve(customer_id)
-    customer.source = stripe_token
-    customer.save
-
-    subscription        = create_subscription(subscription_object, customer.id, coupon)
-    client_secret       = subscription[:latest_invoice][:payment_intent][:client_secret]
-    subscription_object = merge_subscription_data(subscription_object, subscription, customer, coupon)
-    [subscription_object, { client_secret: client_secret, status: :ok }]
-  rescue Stripe::CardError => e
-    [subscription_object, { error: e, error_message: e.message, status: :error }]
-  end
-
-  def merge_subscription_data(subscription_object, subscription, customer, coupon)
-    subscription_object.
-      assign_attributes(complimentary: false,
-                        livemode: subscription[:plan][:livemode],
-                        stripe_status: subscription.status,
-                        stripe_guid: subscription.id,
-                        next_renewal_date: Time.zone.at(subscription.current_period_end),
-                        stripe_customer_id: customer.id,
-                        coupon_id: coupon.try(:id),
-                        stripe_customer_data: customer.to_hash.deep_dup,
-                        payment_intent: subscription[:latest_invoice][:payment_intent][:status])
-
-    subscription_object
-  end
-
-  def cancel_subscription(subscription)
-    if subscription.stripe_customer_id && subscription.stripe_guid
-      stripe_customer                          = Stripe::Customer.retrieve(subscription.stripe_customer_id)
-      stripe_subscription                      = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
-      stripe_subscription.cancel_at_period_end = true
-      response                                 = stripe_subscription.save.to_hash
-
-      if response[:status] == 'canceled'
-        subscription.update(stripe_status: 'canceled-pending')
-        subscription.cancel_pending
-      else
-        raise_subscription_error({}, __method__.to_s, :sub_change)
-      end
-    else
-      raise_subscription_error(
-        {}, __method__.to_s, :custom,
-        'Subscription#cancel failed because it did not have a ' \
-        'stripe_customer_id OR a stripe_guid.'
-      )
-    end
-  rescue Stripe::StripeError => e
-    raise_subscription_error(e, __method__.to_s, :sub_cancellation)
-  end
-
-  def cancel_subscription_immediately(subscription)
-    if subscription.stripe_customer_id && subscription.stripe_guid
-      stripe_customer = Stripe::Customer.retrieve(subscription.stripe_customer_id)
-      stripe_subscription = stripe_customer.subscriptions.retrieve(subscription.stripe_guid)
-      response = stripe_subscription.delete.to_hash
-      if response[:status] == 'canceled'
-        subscription.update(stripe_status: 'canceled')
-        subscription.cancel
-      else
-        raise_subscription_error({}, __method__.to_s, :sub_change)
-      end
-    else
-      raise_subscription_error({}, __method__.to_s, :sub_cancellation)
-    end
-  rescue Stripe::StripeError => e
-    raise_subscription_error(e, __method__.to_s, :sub_cancellation)
+  def update_product(product)
+    stripe_product = Stripe::Product.retrieve(id: product.stripe_guid)
+    stripe_product.name = product.name
+    stripe_product.active = product.active
+    stripe_product.save
   end
 
   # INVOICES ===================================================================
@@ -183,54 +81,16 @@ class StripeService
     )
   end
 
-  def get_updated_subscription_from_stripe(old_sub, new_subscription_plan)
-    stripe_customer = get_customer(old_sub.stripe_customer_id)
-    stripe_subscription = stripe_customer.subscriptions.retrieve(old_sub.stripe_guid)
-    stripe_subscription.items.first.plan = new_subscription_plan.stripe_guid
-    stripe_subscription.prorate = true
-    stripe_subscription.trial_end = 'now'
-
-    stripe_subscription.save
-  rescue Stripe::CardError => e
-    raise_subscription_error(e.json_body[:error], __method__.to_s, :generic)
+  def create_stripe_product(product)
+    Stripe::Product.create(name: product.name, shippable: false,
+                           active: product.active, type: 'service')
   end
 
-  def create_subscription(subscription, stripe_customer_id, coupon)
-    Stripe::Subscription.create(
-      customer: stripe_customer_id,
-      items: [{ plan: subscription.subscription_plan.stripe_guid,
-                quantity: 1 }],
-      coupon: coupon.try(:code),
-      trial_end: 'now',
-      expand: ['latest_invoice.payment_intent']
-    )
-  rescue Stripe::CardError => e
-    raise_subscription_error(e.json_body[:error], __method__.to_s,
-                             :decline_reason)
-  rescue => e
-    raise_subscription_error(e, __method__.to_s, :generic)
-  end
-
-  def validate_plan_changable(subscription, new_plan, user)
-    if subscription.user.default_card.nil?
-      raise Learnsignal::SubscriptionError,
-            I18n.t('controllers.subscriptions.update.flash.invalid_card')
-    elsif subscription.subscription_plan.currency_id != new_plan.currency_id
-      raise Learnsignal::SubscriptionError,
-            I18n.t('models.subscriptions.upgrade_plan.currencies_mismatch')
-    elsif !new_plan.active?
-      raise Learnsignal::SubscriptionError,
-            I18n.t('models.subscriptions.upgrade_plan.new_plan_is_inactive')
-    elsif %w[active past_due].exclude?(subscription.stripe_status)
-      raise Learnsignal::SubscriptionError,
-            I18n.t('models.subscriptions.upgrade_plan.this_subscription_cant_be_upgraded')
-    elsif !user.standard_student_user?
-      raise Learnsignal::SubscriptionError,
-            I18n.t('models.subscriptions.upgrade_plan.you_are_not_permitted_to_upgrade')
-    elsif user.subscription_payment_cards.all_default_cards.empty?
-      raise Learnsignal::SubscriptionError,
-            I18n.t('models.subscriptions.upgrade_plan.you_have_no_default_payment_card')
-    end
+  def create_stripe_sku(product, stripe_product)
+    Stripe::SKU.create(product: stripe_product.id,
+                       currency: product.currency.iso_code,
+                       price: (product.price.to_f * 100).to_i,
+                       inventory: { type: 'infinite' })
   end
 
   def raise_payment_error(err, method, type)
@@ -245,16 +105,12 @@ class StripeService
 
   def return_message(e, type, msg)
     case type
-    when :generic
-      'Sorry Something went wrong! Please contact us for assistance.'
-    when :decline_reason
-      "Sorry! Your request was declined because - #{e[:message]}"
+    when :decline then "Your request was declined because - #{e[:message]}"
     when :sub_cancellation
       'Sorry! There was an error cancelling the subscription.'
     when :sub_change
       I18n.t('models.subscriptions.upgrade_plan.processing_error_at_stripe')
-    when :custom
-      msg
+    when :custom then msg
     else
       'Sorry Something went wrong! Please contact us for assistance.'
     end
