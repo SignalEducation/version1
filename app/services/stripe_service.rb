@@ -10,7 +10,7 @@ class StripeService
 
   def set_order_status(intent, order)
     if intent.status == 'requires_action' &&
-       stripe_intent.next_action.type == 'use_stripe_sdk'
+       intent.next_action.type == 'use_stripe_sdk'
       order.state = 'pending_3d_secure'
     elsif intent.status != 'succeeded'
       order.state = 'errored'
