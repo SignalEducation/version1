@@ -74,7 +74,6 @@ TAGS
 *.env
 
 # webpacker compiled files 
-./public/packs/*
 /public/packs
 /public/packs-test
 /node_modules
