@@ -147,6 +147,7 @@ FactoryBot.define do
       email_verification_code         { nil }
       email_verified_at               { Time.now }
       stripe_customer_id                { nil }
+      association :user_group, factory: :complimentary_user_group
     end
 
     factory :unverified_comp_user do
