@@ -78,4 +78,12 @@ TAGS
 
 
 # redis db
-./dump.rdb
+dump.rdb
+
+/public/packs
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
+
+.vscode

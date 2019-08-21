@@ -12,14 +12,13 @@ import Show from 'Show'
 import splitPane from 'vue-splitpane'
 import VeeValidate from 'vee-validate';
 import VueRouter from 'vue-router'
-
+import BootstrapVue from 'bootstrap-vue'
 
 Vue.use(Vuex)
-Vue.component('split-pane', splitPane);
-Vue.use(VeeValidate);
-Vue.use(VueRouter);
-
-
+Vue.component('split-pane', splitPane)
+Vue.use(VeeValidate)
+Vue.use(VueRouter)
+Vue.use(BootstrapVue)
 
 export const store = new Vuex.Store({
     state: {
@@ -43,6 +42,7 @@ export const store = new Vuex.Store({
         showSections: false,
         selectedQuestionType: null,
         multipleChoiceSelected: false,
+        currentMultilpleQuestionId: null,
     },
 
     getters: {
@@ -73,7 +73,10 @@ export const store = new Vuex.Store({
         },
         multipleChoiceSelected: (state, getters) => {
             return getters.multipleChoiceSelected
-        }
+        },
+        currentMultilpleQuestionId: (state, getters) => {
+            return getters.currentMultilpleQuestionId
+        },
       },
 
     mutations: {
@@ -121,7 +124,12 @@ export const store = new Vuex.Store({
         },
         setMultipleChoiceSelected: (state, value) => {
             state.multipleChoiceSelected  = value
-        },       
+        },
+        currentMultilpleQuestionId: (state, value) => {
+            console.log ("*** Setting")
+            state.currentMultilpleQuestionId = value
+            
+        }
     }
 })
 

@@ -1,3 +1,2 @@
 class CbeMultipleChoiceQuestion < ApplicationRecord
-  
 end
