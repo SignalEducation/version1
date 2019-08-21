@@ -25,9 +25,7 @@ Rails.application.routes.draw do
       resources :cbe_question_types, only: :index
       resources :cbe_section_types, only: :index
       resources :cbe_question_statuses, only: :index
-      get :cbe_multiple_choice_questions, to: 'cbe_multiple_choice_questions#index'
-      post :cbe_multiple_choice_questions, to: 'cbe_multiple_choice_questions#create'
-
+      resources :cbe_multiple_choice_questions, only: [:index, :create]
     end
   end
 

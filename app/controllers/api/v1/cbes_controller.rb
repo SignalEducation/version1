@@ -3,7 +3,7 @@
 module Api
   module V1
     class CbesController < Api::V1::ApplicationController
-
+      
       def create
         cbe = Cbe.create(cbe_params)
         res = {cbeId: cbe.id, cbeName: cbe.name}
