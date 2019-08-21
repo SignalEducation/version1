@@ -21,7 +21,7 @@ describe StripeSubscriptionService, type: :service do
   describe '#change_plan' do
     let(:sub_plan) { create(:subscription_plan) }
     let(:new_sub) { create(:subscription, subscription_plan_id: sub_plan.id) }
-    let(:stripe_sub) { 
+    let(:stripe_sub) {
       double(
         latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
         status: 'active'
@@ -62,13 +62,13 @@ describe StripeSubscriptionService, type: :service do
     end
 
     describe 'for payments failing 3DS' do
-      let(:stripe_sub_3ds) { 
+      let(:stripe_sub_3ds) {
         double(
           latest_invoice: { payment_intent: { client_secret: 'cs_123456' }},
           status: 'past_due'
         )
       }
-      
+
       it 'calls #mark_payment_action_required on the subscription' do
         allow(subject).to receive(:create_subscription).
                           and_return([new_sub, stripe_sub_3ds])
@@ -103,7 +103,7 @@ describe StripeSubscriptionService, type: :service do
       allow(Stripe::Customer).to receive(:update).and_return(stripe_customer)
       allow(subject).to receive(:merge_subscription_data).and_return(new_sub)
       expect(subject).to receive(:create_stripe_subscription).and_return(stripe_sub)
-      
+
       subject.create_and_return_subscription('sk_test_token', nil)
     end
 
@@ -111,7 +111,7 @@ describe StripeSubscriptionService, type: :service do
       allow(Stripe::Customer).to receive(:update).and_return(stripe_customer)
       allow(subject).to receive(:create_stripe_subscription).and_return(stripe_sub)
       expect(subject).to receive(:merge_subscription_data).and_return(new_sub)
-      
+
       subject.create_and_return_subscription('sk_test_token', nil)
     end
 
@@ -360,7 +360,7 @@ describe StripeSubscriptionService, type: :service do
   end
 
   describe '#update_old_subscription' do
-    let(:sub_plan) { create(:subscription_plan) }    
+    let(:sub_plan) { create(:subscription_plan) }
     let(:real_sub) { create(:subscription) }
     let(:new_sub) { create(:subscription, subscription_plan_id: sub_plan.id) }
 

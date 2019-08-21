@@ -74,7 +74,11 @@ TAGS
 *.env
 
 # webpacker compiled files
+<<<<<<< HEAD
 public/packs/*
+=======
+/public/packs/*
+>>>>>>> CBE backend refactor.
 
 
 # redis db
