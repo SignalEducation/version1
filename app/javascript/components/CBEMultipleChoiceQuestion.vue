@@ -72,35 +72,32 @@ export default {
             question_3: null,
             question_4: null,
             multipleChoiceDetails: [],
-        }},
-
+				}},
+				
         methods: {
-                saveNewMultipleChoiceQuestion: function (page, index) {
-                this.multipleChoiceDetails = {}
-                this.multipleChoiceDetails['cbe_section_id'] =  this.$store.state.currentSectionId
-                this.multipleChoiceDetails['name'] =  this.questionName
-                this.multipleChoiceDetails['questionDescription'] =  this.questionDescription
-                this.multipleChoiceDetails['question_1'] =  this.question_1
-                this.multipleChoiceDetails['question_2'] =  this.question_2
-                this.multipleChoiceDetails['question_3'] =  this.question_3
-                this.multipleChoiceDetails['question_4'] =  this.question_4
-                this.multipleChoiceDetails['correctAnswer'] =  this.correctAnswer
-
-
-                console.log(this.multipleChoiceDetails)
-
-                {cbe_multiple_choice_question: this.cbeDetails}
-                axios.post('http://localhost:3000/api/cbe_multiple_choice_questions/', {cbe_multiple_choice_question: this.multipleChoiceDetails} )
-                    .then(response => {
-                        console.log(this.multipleChoiceDetails)
-                        console.log(response.status)
-                        console.log(response.data)
-
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-            },
+					saveNewMultipleChoiceQuestion: function (page, index) {
+						this.multipleChoiceDetails = {}
+						this.multipleChoiceDetails['cbe_section_id'] =  this.$store.state.currentSectionId
+						this.multipleChoiceDetails['name'] =  this.questionName
+						this.multipleChoiceDetails['questionDescription'] =  this.questionDescription
+						this.multipleChoiceDetails['question_1'] =  this.question_1
+						this.multipleChoiceDetails['question_2'] =  this.question_2
+						this.multipleChoiceDetails['question_3'] =  this.question_3
+						this.multipleChoiceDetails['question_4'] =  this.question_4
+						this.multipleChoiceDetails['correctAnswer'] =  this.correctAnswer
+									
+						console.log(this.multipleChoiceDetails)
+						{cbe_multiple_choice_question: this.cbeDetails}
+						axios.post('http://localhost:3000/api/cbe_multiple_choice_questions/', {cbe_multiple_choice_question: this.multipleChoiceDetails} )
+							.then(response => {
+								console.log(this.multipleChoiceDetails)
+								console.log(response.status)
+								console.log(response.data)
+							})
+							.catch(error => {
+									console.log(error)
+							})
+			},
 }
 
 }
