@@ -1,0 +1,98 @@
+require 'rails_helper'
+
+RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
+  let!(:cbe) { create(:cbe, :with_subject_course) }
+
+  describe 'get /api/v1/cbe/sections' do
+    context 'return all records' do
+      let!(:sections) { create_list(:cbe_section, 5, cbe: cbe) }
+
+      before { get "/api/v1/cbes/#{cbe.id}/sections" }
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns sections json data' do
+        body = JSON.parse(response.body)
+
+        expect(body.size).to eq(5)
+        expect(body.map { |j| j['id'] }).to match_array(sections.pluck(:id))
+        expect(body.map { |j| j['name'] }).to match_array(sections.pluck(:name))
+        expect(body.map(&:keys).uniq).to contain_exactly(%w[id
+                                                            name
+                                                            scenario_description
+                                                            question_description
+                                                            scenario_label
+                                                            question_label
+                                                            cbe
+                                                            subject_course
+                                                            exam_body])
+      end
+    end
+
+    context 'return an empty record' do
+      before { get "/api/v1/cbes/#{cbe.id}/sections" }
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns empty data' do
+        body = JSON.parse(response.body)
+        expect(body).to be_empty
+      end
+    end
+  end
+
+  describe 'post /api/v1/cbe/sections' do
+    context 'create a valid CBE section' do
+      let(:section) { build(:cbe_section, cbe: cbe) }
+
+      before do
+        post "/api/v1/cbes/#{cbe.id}/sections", params: { cbe_section: section.attributes }
+      end
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns sections json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['name']).to eq(section.name)
+        expect(body['scenario_description']).to eq(section.scenario_description)
+        expect(body['question_description']).to eq(section.question_description)
+        expect(body['scenario_label']).to eq(section.scenario_label)
+        expect(body['question_label']).to eq(section.question_label)
+        expect([body.keys]).to contain_exactly(%w[id
+                                                  name
+                                                  scenario_description
+                                                  question_description
+                                                  scenario_label
+                                                  question_label
+                                                  cbe
+                                                  subject_course
+                                                  exam_body])
+      end
+    end
+
+    context 'try to create a invalid CBE section' do
+      let(:section) { build(:cbe_section) }
+
+      before do
+        post "/api/v1/cbes/#{cbe.id}/sections", params: { cbe_section: section.attributes }
+      end
+
+      it 'returns HTTP status 422' do
+        expect(response).to have_http_status 422
+      end
+
+      it 'returns empty data' do
+        body = JSON.parse(response.body)
+
+        expect(body['errors']).to eq('cbe' => ['must exist'], 'cbe_id' => ['can\'t be blank'])
+      end
+    end
+  end
+end

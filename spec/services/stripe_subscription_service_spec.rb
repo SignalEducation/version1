@@ -75,7 +75,7 @@ describe StripeSubscriptionService, type: :service do
       allow(Stripe::Customer).to receive(:update).and_return(stripe_customer)
       allow(subject).to receive(:merge_subscription_data).and_return(new_sub)
       expect(subject).to receive(:create_stripe_subscription).and_return(stripe_sub)
-      
+
       subject.create_and_return_subscription('sk_test_token', nil)
     end
 
@@ -83,7 +83,7 @@ describe StripeSubscriptionService, type: :service do
       allow(Stripe::Customer).to receive(:update).and_return(stripe_customer)
       allow(subject).to receive(:create_stripe_subscription).and_return(stripe_sub)
       expect(subject).to receive(:merge_subscription_data).and_return(new_sub)
-      
+
       subject.create_and_return_subscription('sk_test_token', nil)
     end
 
@@ -201,7 +201,8 @@ describe StripeSubscriptionService, type: :service do
   end
 
   describe '#create_new_subscription' do
-    let(:user) { create(:student_user) }
+    let(:student_user_group ) { FactoryBot.create(:student_user_group ) }
+    let(:user) { create(:student_user, user_group: student_user_group) }
     let(:test_sub) { create(:stripe_subscription, user: user, state: 'active') }
     let(:sub_plan) { create(:subscription_plan, currency: test_sub.currency) }
     let(:stripe_sub) {
@@ -298,7 +299,7 @@ describe StripeSubscriptionService, type: :service do
   end
 
   describe '#update_old_subscription' do
-    let(:sub_plan) { create(:subscription_plan) }    
+    let(:sub_plan) { create(:subscription_plan) }
     let(:real_sub) { create(:subscription) }
     let(:new_sub) { create(:subscription, subscription_plan_id: sub_plan.id) }
 
