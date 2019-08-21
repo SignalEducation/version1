@@ -3,12 +3,9 @@
 module Admin
   class ExercisesController < ApplicationController
     before_action :logged_in_required
-    before_action do
-      ensure_user_has_access_rights(%w[exercise_corrections_access])
-    end
+    before_action { ensure_user_has_access_rights(%w[exercise_corrections_access]) }
     before_action :set_exercise, except: %i[index generate_daily_summary]
-
-    layout 'management'
+    before_action :management_layout
 
     def index
       @filters = { state: 'submitted', product: '', corrector: '', search: '' }
