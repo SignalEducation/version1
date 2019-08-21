@@ -48,7 +48,7 @@ export const store = new Vuex.Store({
     getters: {
         // ...
         currentCbeId: (state, getters) => {
-          return getters.currentCbeId
+            return getters.currentCbeId
         },
         questionTypes: (state, getters) => {
             return getters.questionTypes
@@ -74,54 +74,54 @@ export const store = new Vuex.Store({
         multipleChoiceSelected: (state, getters) => {
             return getters.multipleChoiceSelected
         }
-      },
+    },
 
     mutations: {
         setCurrentCbeId(state, value) {
-            state.currentCbeId  = value
+            state.currentCbeId = value
         },
         setCurrentSectionId(state, value) {
-            state.currentSectionId  = value
+            state.currentSectionId = value
         },
         setCbeName(state, value) {
-            state.cbeName  = value
+            state.cbeName = value
         },
         setCbeSectionName(state, value) {
-            state.cbeSectionName  = value
+            state.cbeSectionName = value
         },
         setCbeTitle(state, value) {
-            state.cbeTitle  = value
+            state.cbeTitle = value
         },
         setCbeDescription(state, value) {
-            state.cbeDescription  = value
+            state.cbeDescription = value
         },
         setCbeTimeLimit(state, value) {
-            state.cbeTimeLimit  = value
+            state.cbeTimeLimit = value
         },
         setCbeNumberOfPauses(state, value) {
-            state.cbeNumberOfPauses  = value
+            state.cbeNumberOfPauses = value
         },
         setCbeLengthOfPauses(state, value) {
-            state.cbeLengthOfPauses  = value
+            state.cbeLengthOfPauses = value
         },
         setQuestionTypes(state, value) {
-            state.questionTypes  = value
+            state.questionTypes = value
         },
         setQuestionStatuses(state, value) {
-            state.questionStatuses  = value
+            state.questionStatuses = value
         },
         setSectionTypes(state, value) {
-            state.sectionTypes  = value
+            state.sectionTypes = value
         },
         setShowQuestions: (state, value) => {
-            state.showQuestions  = value
+            state.showQuestions = value
         },
         setCurrentQuestionType: (state, value) => {
-            state.currentQuestionType  = value
+            state.currentQuestionType = value
         },
         setMultipleChoiceSelected: (state, value) => {
-            state.multipleChoiceSelected  = value
-        },       
+            state.multipleChoiceSelected = value
+        },
     }
 })
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         store: store,
         el: '#cbes-new-view',
         template: '<App/>',
-        components: {App},
+        components: { App },
         render: h => h(App)
     })
 
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         store: store,
         el: '#cbes-show-view',
         template: '<Show/>',
-        components: {Show},
+        components: { Show },
         render: h => h(Show)
     })
 

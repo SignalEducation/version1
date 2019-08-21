@@ -11,23 +11,24 @@ Rails.application.routes.draw do
   get '404' => redirect('404-page')
   get '500' => redirect('500-page')
 
+  # API
   namespace :api do
     post 'stripe_webhooks', to: 'stripe_webhooks#create'
     post 'stripe_v02',      to: 'stripe_webhooks#create'
     post 'paypal_webhooks', to: 'paypal_webhooks#create'
 
-    scope module: :v1, constraints: ApiConstraint.new(version: 1) do
-      resources :cbes do
-        resources :cbe_sections, only: [:create, :index]
+    namespace :v1, constraints: ApiConstraint.new(version: 1) do
+      namespace :cbe, format: 'json' do
+        resources :multiple_choice_questions, only: [:index, :create]
+        resources :question_types,            only: :index
+        resources :question_statuses,         only: :index
+        resources :section_types,             only: :index
       end
-      get :cbe_data, to: 'cbes#index'
-      resources :subjects, only: :index
-      resources :cbe_question_types, only: :index
-      resources :cbe_section_types, only: :index
-      resources :cbe_question_statuses, only: :index
-      get :cbe_multiple_choice_questions, to: 'cbe_multiple_choice_questions#index'
-      post :cbe_multiple_choice_questions, to: 'cbe_multiple_choice_questions#create'
 
+      resources :subject_courses, only: :index
+      resources :cbes, format: 'json', only: [:index, :create] do
+        resources :sections, controller: 'cbe/sections', only: [:index, :create]
+      end
     end
   end
 
@@ -35,17 +36,14 @@ Rails.application.routes.draw do
     resources :exercises, only: [:index, :show, :edit, :update] do
       get 'generate_daily_summary', on: :collection
     end
-    post 'search_exercises', to: 'exercises#index', as: :search_exercises
+
+    resources :cbes,   only: [:index, :new, :show]
     resources :orders, only: [:index, :show]
-
-    scope :cbes do
-      resources :cbes, only: [:index, :new, :show]
-    end
+    post 'search_exercises', to: 'exercises#index', as: :search_exercises
   end
 
-  resources :cbes do
-    get 'new', to: 'cbes#new', as: :new_cbe
-  end
+  # CBE
+  resources :cbes, only: :new
 
   # all standard, user-facing "resources" go inside this scope
   scope '(:locale)', locale: /en/ do # /en\nl\pl/
