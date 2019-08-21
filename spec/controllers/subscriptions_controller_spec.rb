@@ -373,11 +373,13 @@ describe SubscriptionsController, type: :controller do
 
     describe "GET 'personal_upgrade_complete'" do
       it 'should render upgrade complete page' do
-        get :personal_upgrade_complete
+        get :personal_upgrade_complete, params: { completion_guid: valid_subscription.completion_guid }
         expect(flash[:success]).to be_nil
         expect(flash[:error]).to be_nil
         expect(response.status).to eq(200)
         expect(response).to render_template(:personal_upgrade_complete)
+        valid_subscription.reload
+        expect(valid_subscription.completion_guid).to eq(nil)
       end
     end
   end

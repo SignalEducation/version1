@@ -1,36 +1,67 @@
-.bg-gray5.py-5
-  .container
-    %article.card.mb-3
-      .card-body.card-body
-        %h2.mb-5.text-gray2
-          %article.card.mb-5
-            .card-body.card-body-sm
-              .row
-                .col-md-8
-                  %h3.text-gray2
-                    %span.mr-1
-                      ="Invoice #{@invoice.id}"
+%main
+  %article.bg-gray5
+    .container
+      %header.hero-section
+        %h1.h2-hero.mb-2
+          Confirm payment
+        %p
+          ="You'll be asked to verify your identity with your bank."
 
-                    %span.badge.badge-warning.align-middle{class: @invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
-                      =@invoice.status.capitalize
 
-                  %p.mb-1
-                    Date Created
-                    %span=humanize_datetime(@invoice.issued_at)
-                  %p.mb-1
-                    Amount due:
-                    %span
-                      =number_in_local_currency(@invoice.total, @invoice.currency)
-                  %p.mb-1
-                    =@subscription.user_readable_name
-                  -if @invoice.status == 'Pending'
-                    %p
-                      Invoice pending, please add a new payment card.
+      %section.pb-md-6.pb-5
+        .row
+          .col-sm-10.offset-1
 
-                -if @invoice.status == 'Pending'
-                  .col-md-4.text-md-right
-                    %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm add-card'}
-                      =t('views.users.show.new_card')
+
+            .invoice-show-section
+              .form-box
+                .row
+                  .col-12.col-md-6.mb-4
+                    .invoice-details
+                      %h3.text-gray2
+                        %span.mr-1
+                          ="Invoice #{@invoice.id}"
+                      %p.mb-1
+                        =@subscription.user_readable_name
+                      %p.mb-1
+                        Date Created
+                        %span=humanize_datetime(@invoice.issued_at)
+                      %p.mb-1
+                        Amount due:
+                        %span
+                          =number_in_local_currency(@invoice.total, @invoice.currency)
+
+                  .col-12.col-md-6.mb-4
+                    .invoice-payment-details
+                      .invoice-payment-details-wrap
+                        %span.payment-content
+                          =image_tag('ico-card.svg', alt: 'Credit Card Icon', class: 'logo-icon mr-2 mr-sm-3')
+                          =@card.brand
+                          &#8226;
+                          &#8226;
+                          &#8226;
+                          =@card.last_4
+
+
+                      -if @invoice.status == 'Pending'
+                        %p
+                          Invoice pending, please add a new payment card.
+
+                        .col-md-4.text-md-right
+                          %a{data: {target: '#add-card-modal', toggle: 'modal'}, href: '#', class: 'btn btn-primary btn-sm add-card'}
+                            =t('views.users.show.new_card')
+
+                      -else
+                        .mt-5.text-center
+                          .btn.btn-primary.btn-sm#triggerAuth{onclick: 'ReAuth(); return false;'}
+                            ='Confirm Payment'
+                          .spinner
+                            .bounce1
+                            .bounce2
+                            .bounce3
+
+
+
 
 #add-card.col-md-12.l-margin-top-big
 
@@ -63,12 +94,16 @@
 
   card.mount('#card-element');
   $(".sk-circle").hide();
+  $(".spinner").hide();
 
   function ReAuth() {
     if (subscription_status == 'pending_3d_secure') {
+      $(".spinner").show();
+      $("#triggerAuth").hide();
       stripe.handleCardPayment('#{@client_secret}').then(function(result) {
         if (result.error) {
           resetForm(result.error);
+          $('#add-card-modal').modal('show');
         } else {
           $.ajax ({
             url: "/sca_successful",
@@ -142,4 +177,4 @@
     // Display error message & feedback to user
   }
 
-  window.onload = ReAuth;
+  //window.onload = ReAuth;

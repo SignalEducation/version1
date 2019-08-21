@@ -23,23 +23,24 @@
                           %th PDF
                       %tbody
                         -@invoices.each do |invoice|
-                          %tr
-                            %td=invoice.id
-                            %td=humanize_datetime(invoice.issued_at)
-                            %td=number_in_local_currency(invoice.total, invoice.currency)
-                            %td=invoice_type(invoice)
-                            %td
-                              %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
-                                =invoice.status
-                            %td
-                              -if invoice.requires_3d_secure
-                                =link_to show_invoice_url(invoice.sca_verification_guid) do
-                                  .btn.btn-primary.btn-xs
-                                    Authenticate
-                              -else
-                                =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
-                                  .btn.btn-link.btn-xs
-                                    View
+                          - unless invoice.status == 'Pending'
+                            %tr
+                              %td=invoice.id
+                              %td=humanize_datetime(invoice.issued_at)
+                              %td=number_in_local_currency(invoice.total, invoice.currency)
+                              %td=invoice_type(invoice)
+                              %td
+                                %span{class: invoice.status == 'Paid' ? 'text-success' : 'text-danger'}
+                                  =invoice.status
+                              %td
+                                -if invoice.requires_3d_secure
+                                  =link_to show_invoice_url(invoice.sca_verification_guid) do
+                                    .btn.btn-primary.btn-xs
+                                      Authenticate
+                                -else
+                                  =link_to subscription_invoices_url(invoice.id, format: 'pdf'), target: '_blank' do
+                                    .btn.btn-link.btn-xs
+                                      View
             -else
               .row.row-lg
                 .col-sm

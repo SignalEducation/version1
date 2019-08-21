@@ -161,13 +161,13 @@ describe StripeApiEvent do
       describe 'for invoice.payment_action_required webhook' do
         let(:payload) {{
           type: 'invoice.payment_action_required', livemode: false,
-          data: { object: { id: 'test_id' }}
+          data: { object: { id: 'test_id', subscription: 'test_sub_id'}}
         }}
         let(:api_event) { build(:stripe_api_event, payload: payload) }
 
         it 'call #process_payment_action_required' do
           expect(api_event).to(
-            receive(:process_payment_action_required).with('test_id')
+            receive(:process_payment_action_required).with('test_id', 'test_sub_id')
           )
 
           api_event.disseminate_payload
@@ -331,24 +331,27 @@ describe StripeApiEvent do
           allow(Invoice).to receive(:find_by).and_return(nil)
           expect(api_event).to receive(:set_process_error)
 
-          api_event.send(:process_payment_action_required, 'test_id')
+          api_event.send(:process_payment_action_required, 'test_id', 'test_sub_id')
         end
       end
 
       describe 'when an invoice exists' do
         let(:api_event) { build(:stripe_api_event) }
         let(:invoice) { build_stubbed(:invoice) }
+        let(:subscription) { build_stubbed(:subscription) }
 
         before :each do
           allow_any_instance_of(SubscriptionPlanService).to receive(:queue_async)
           allow(api_event).to receive(:get_data_from_stripe)
           allow(Invoice).to receive(:find_by).and_return(invoice)
+          allow(Subscription).to receive(:find_by).and_return(subscription)
+          allow(subscription).to receive_message_chain(:invoices, :count).and_return(2)
         end
 
         it 'calls #mark_required_payment_action on the invoice' do
           expect(invoice).to receive(:mark_payment_action_required)
 
-          api_event.send(:process_payment_action_required, 'inv_12345')
+          api_event.send(:process_payment_action_required, 'inv_12345', 'sub_12345')
         end
 
         it 'calls #update on the StripeApiEvent' do
@@ -358,7 +361,7 @@ describe StripeApiEvent do
             error_message: nil
           ))
 
-          api_event.send(:process_payment_action_required, 'inv_12345')
+          api_event.send(:process_payment_action_required, 'inv_12345', 'sub_12345')
         end
       end
     end

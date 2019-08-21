@@ -61,7 +61,11 @@ module Subscriptions
     end
 
     def default_plan
-      @plans.find_by(payment_frequency_in_months: 12)
+      if @plans.yearly.any?
+        @plans.find_by(payment_frequency_in_months: 12)
+      else
+        @plans.first
+      end
     end
   end
 end

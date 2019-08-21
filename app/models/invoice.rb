@@ -46,6 +46,7 @@ class Invoice < ApplicationRecord
 
   # Constants
   STRIPE_LIVE_MODE = (ENV['LEARNSIGNAL_V3_STRIPE_LIVE_MODE'] == 'live')
+  CLOSED_STATUSES = %w[paid uncollectible void].freeze
 
   # relationships
   belongs_to :currency
@@ -85,9 +86,9 @@ class Invoice < ApplicationRecord
     inv = nil
     # This is wrapped in a transaction block to ensure that the Invoice record does not save unless all the InvoiceLineItems save successfully. If an InvoiceLineItem record fails all other records including the parent Invoice record will be rolled back.
     Invoice.transaction do
-      user = User.find_by_stripe_customer_id(stripe_data_hash[:customer])
-      subscription = Subscription.where(stripe_guid: stripe_data_hash[:subscription]).last
-      currency = Currency.find_by_iso_code(stripe_data_hash[:currency].upcase)
+      user = User.find_by(stripe_customer_id: stripe_data_hash[:customer])
+      subscription = Subscription.find_by(stripe_guid: stripe_data_hash[:subscription])
+      currency = Currency.find_by(iso_code: stripe_data_hash[:currency].upcase)
 
       if user && subscription && currency
         inv = Invoice.new(
@@ -193,7 +194,7 @@ class Invoice < ApplicationRecord
           total: stripe_invoice[:total].to_i / 100.0,
           total_tax: stripe_invoice[:tax].to_i / 100.0,
           payment_attempted: stripe_invoice[:attempted],
-          payment_closed: stripe_invoice[:closed],
+          payment_closed: CLOSED_STATUSES.include?(stripe_invoice[:status]),
           forgiven: stripe_invoice[:status] == 'uncollectible',
           paid: stripe_invoice[:paid],
           livemode: stripe_invoice[:livemode],
@@ -258,10 +259,10 @@ class Invoice < ApplicationRecord
   def set_vat_rate
     country = user.country
 
-    if country && country.vat_codes.any?
+    if country&.vat_codes.any?
       vat_code = country.vat_codes.first
-      vat_rate_id = VatRate.find_by_vat_code_id(vat_code.id).try(:id)
-      self.update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
+      vat_rate_id = VatRate.find_by(vat_code_id: vat_code.id).try(:id)
+      update_attribute(:vat_rate_id, vat_rate_id) if vat_rate_id
     end
   end
 

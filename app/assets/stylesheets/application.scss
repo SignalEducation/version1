@@ -4576,6 +4576,46 @@ a.card:hover .card-title .card-explanation {
     padding: 0;
   }
 }
+.invoice-show-section {
+  padding: 0 2rem;
+}
+@media (min-width:768px) {
+  .invoice-show-section {
+    padding: 0 1rem;
+  }
+}
+.invoice-details {
+  padding: 0 1rem;
+  @media (min-width:980px) {
+    .invoice-details {
+      padding: 0 3rem;
+    }
+  }
+
+}
+.invoice-payment-details {
+  padding: 0 1rem;
+  text-align: center;
+  @media (min-width:980px) {
+    .invoice-payment-details {
+      padding: 0 3rem;
+    }
+  }
+}
+.invoice-payment-details-wrap {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #000032;
+  border-radius: 4px;
+  padding: 10px;
+  max-width: 300px;
+  &.payment-content {
+    text-align: center;
+  }
+
+}
 .management-console-section {
   padding: 2rem;
   text-align: center;
