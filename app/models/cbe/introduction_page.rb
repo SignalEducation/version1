@@ -5,5 +5,5 @@ class Cbe::IntroductionPage < ApplicationRecord
   belongs_to :cbe
 
   # validations
-  validates :title, :content, :cbe_id, presence: true
+  validates :content, :cbe_id, presence: true
 end

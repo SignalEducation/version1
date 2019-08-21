@@ -1,2 +1,0 @@
-class CbeAgreement < ApplicationRecord
-end
