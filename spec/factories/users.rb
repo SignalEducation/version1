@@ -60,39 +60,38 @@
 FactoryBot.define do
   factory :user do
     sequence(:email)      { |n| "john.smith-#{n}@example.com" }
-    first_name            { 'John' }
-    last_name             { 'Smith' }
+    first_name            { Faker::Name.first_name }
+    last_name             { Faker::Name.last_name }
     association           :country
     password              { '123123123' }
     password_confirmation { '123123123' }
-    active                                    { true }
-    terms_and_conditions                      { true }
-    locale                                    { 'en' }
-    date_of_birth                              { '2001-10-03' }
-    student_number                             { '123456789' }
+    active                { true }
+    terms_and_conditions  { true }
+    locale                { 'en' }
+    date_of_birth         { '2001-10-03' }
+    student_number        { '123456789' }
     association :user_group
     association :preferred_exam_body, factory: :exam_body
 
     factory :basic_student do
-      sequence(:email)                  { |n| "trial.student-#{n}@example.com" }
-      active                            { true }
-      sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
+      sequence(:email)                { |n| "trial.student-#{n}@example.com" }
+      active                          { true }
+      sequence(:stripe_customer_id)   { |n| "cu_abc#{n}" }
       email_verified                  { true }
       email_verification_code         { nil }
       email_verified_at               { Time.now }
-
     end
 
     factory :student_user do
-      sequence(:email)                  { |n| "individual.student-#{n}@example.com" }
-      active                            { true }
-      free_trial                        { true }
-      sequence(:stripe_customer_id)     { |n| "cu_abc#{n}" }
-      account_activation_code           { 'abc123' }
+      sequence(:email)                { |n| "individual.student-#{n}@example.com" }
+      active                          { true }
+      free_trial                      { true }
+      sequence(:stripe_customer_id)   { |n| "cu_abc#{n}" }
+      account_activation_code         { 'abc123' }
       email_verified                  { true }
       email_verification_code         { nil }
       email_verified_at               { Time.now }
-
+      association :user_group
 
       factory :inactive_student_user do
         sequence(:email)                { |n| "inactive-indie-student-#{n}@example.com" }
@@ -140,12 +139,12 @@ FactoryBot.define do
     end
 
     factory :comp_user do
-      sequence(:email)                  { |n| "comp.user-#{n}@example.com" }
-      active                            { true }
-      email_verified                  { true }
-      email_verification_code         { nil }
-      email_verified_at               { Time.now }
-      stripe_customer_id                { nil }
+      sequence(:email)        { |n| "comp.user-#{n}@example.com" }
+      active                  { true }
+      email_verified          { true }
+      email_verification_code { nil }
+      email_verified_at       { Time.now }
+      stripe_customer_id      { nil }
     end
 
     factory :unverified_comp_user do
