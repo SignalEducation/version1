@@ -7,6 +7,9 @@
                 <Subjects ref="subjects"></Subjects>
             </div>
 
+
+            <CBENavigation>  </CBENavigation>
+
             <div class="form-group row">
                 <div class="col-md-10">
                   <button v-on:click="createNewCBE" class='btn btn-secondary'>Create a new CBE</button>
@@ -61,6 +64,7 @@
     import CBESettings from './components/CBESettings'
     import CBEDetails from './components/CBEDetails'
     import CBESection from './components/CBESection'
+    import CBENavigation from './components/CBENavigation'
     import CBEMultipleChoiceQuestion from './components/CBEMultipleChoiceQuestion'
     import QuestionsList from './components/QuestionsList'
     import splitPane from 'vue-splitpane'
@@ -76,6 +80,7 @@
            Subjects,
            CBEMultipleChoiceQuestion,
            QuestionsList,
+           CBENavigation,
         },
 
         data: function () {

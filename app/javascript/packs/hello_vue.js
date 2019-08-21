@@ -12,12 +12,14 @@ import Show from 'Show'
 import splitPane from 'vue-splitpane'
 import VeeValidate from 'vee-validate';
 import VueRouter from 'vue-router'
+import BootstrapVue from 'bootstrap-vue'
 
 
 Vue.use(Vuex)
-Vue.component('split-pane', splitPane);
-Vue.use(VeeValidate);
-Vue.use(VueRouter);
+Vue.component('split-pane', splitPane)
+Vue.use(VeeValidate)
+Vue.use(VueRouter)
+Vue.use(BootstrapVue)
 
 
 
