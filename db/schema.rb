@@ -806,24 +806,6 @@ ActiveRecord::Schema.define(version: 2019_08_27_092543) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "payment_intents", force: :cascade do |t|
-    t.string "intent_id"
-    t.string "client_secret"
-    t.string "currency"
-    t.string "next_action"
-    t.string "payment_method_options"
-    t.string "payment_method_types"
-    t.string "receipt_email"
-    t.string "status"
-    t.integer "amount"
-    t.string "charges"
-    t.jsonb "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id"
-    t.index ["user_id"], name: "index_payment_intents_on_user_id"
-  end
-
   create_table "paypal_webhooks", id: :serial, force: :cascade do |t|
     t.string "guid"
     t.string "event_type"
@@ -1400,7 +1382,6 @@ ActiveRecord::Schema.define(version: 2019_08_27_092543) do
   add_foreign_key "exercises", "users", column: "corrector_id"
   add_foreign_key "groups", "exam_bodies"
   add_foreign_key "invoices", "orders"
-  add_foreign_key "payment_intents", "users"
   add_foreign_key "subscription_plans", "exam_bodies"
   add_foreign_key "subscriptions", "subscriptions", column: "changed_from_id"
   add_foreign_key "users", "currencies"
