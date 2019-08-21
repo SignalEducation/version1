@@ -7,8 +7,7 @@ module Admin
       ensure_user_has_access_rights(%w[user_management_access stripe_management_access])
     end
     before_action :set_order, only: :show
-
-    layout 'management'
+    before_action :management_layout
 
     def index
       @orders = Order.includes(:user, :product).paginate(per_page: 50, page: params[:page]).all_in_order
