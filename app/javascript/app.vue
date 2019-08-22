@@ -58,6 +58,7 @@
 
 
 <script>
+    import { apiMixin } from '../mixins/apiMixin.js'
     import axios from 'axios'
     import Admin from './components/Admin'
     import Exam from './components/Exam'
@@ -82,6 +83,7 @@
            CBEMultipleChoiceQuestion,
            QuestionsList,
            CBENavigation,
+           mixins: [apiMixin]
         },
 
         data: function () {
