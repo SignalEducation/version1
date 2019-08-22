@@ -14,7 +14,7 @@
     </div>
     <!-- Debug CBE - Allows you to manually set the current cbe -->
     
-    <b-button>Add a Section</b-button>
+    <b-button  @click="showCbeSection">Add a Section</b-button>
     <div role="tablist">
     <div v-for="cbe_section in this.cbes.cbe_sections">
       <b-card no-body class="mb-1">
@@ -45,6 +45,8 @@
      data: function(){
        return {
          currentCbeId: 109,
+         newSections: [],
+         sampleSection: {"id": 5,"name": "Section A"},
           cbes: {
               "cbe_id": 1,
               "name": "ACCA CBE",
@@ -79,6 +81,9 @@
       methods: { 
         setCurrentCBE: function (page, index) {
           this.$store.commit('setCurrentCbeId', this.currentCbeId)
+        },
+        showCbeSection: function(page, index) {
+           this.$store.state.showSections = true
         }
       }
     }

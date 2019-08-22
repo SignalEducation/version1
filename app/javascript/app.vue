@@ -106,6 +106,10 @@
                 showQuestionSelection: false,
             }
         },
+        events: {
+          eventShowCBESections: function(data) {
+            this.makeCBESectionVisible
+          }},
         computed: {
             currentCBEId (){
               return this.$store.state.currentCBEId
