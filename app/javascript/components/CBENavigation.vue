@@ -4,6 +4,16 @@
   <section>
     <h1>CBE Details</h1>
     <p> {{ this.cbes.name }}</p>
+    <p> {{ this.$store.state.currentCbeId}}</p>
+
+
+    <!-- Debug CBE - Allows you to manually set the current cbe -->
+    <div>
+        <input v-model="currentCbeId" placeholder="Set current CBE">
+        <button v-on:click="setCurrentCBE">Set as Current CBE ID</button>
+    </div>
+    <!-- Debug CBE - Allows you to manually set the current cbe -->
+    
     <b-button>Add a Section</b-button>
     <div role="tablist">
     <div v-for="cbe_section in this.cbes.cbe_sections">
@@ -34,6 +44,7 @@
   export default {
      data: function(){
        return {
+         currentCbeId: 109,
           cbes: {
               "cbe_id": 1,
               "name": "ACCA CBE",
@@ -63,6 +74,11 @@
             {"id": 7, "cbe_section_id": 5,"text": "What is a P&L?","type": "Multiple Choice","correctAnswer": false},
             {"id": 8, "cbe_section_id": 5,"text": "When was the ACCA founded?","type": "Multiple Choice","correctAnswer": false}
           ]
+        }
+      },
+      methods: { 
+        setCurrentCBE: function (page, index) {
+          this.$store.commit('setCurrentCbeId', this.currentCbeId)
         }
       }
     }

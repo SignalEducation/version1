@@ -7,8 +7,9 @@
                 <Subjects ref="subjects"></Subjects>
             </div>
 
+  
 
-            <CBENavigation>  </CBENavigation>
+            <CBENavigation> </CBENavigation>
 
             <div class="form-group row">
                 <div class="col-md-10">
