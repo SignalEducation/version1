@@ -15,9 +15,9 @@
           <b-card-body>
             <b-card-text>Section Questions</b-card-text>
             <div v-for="question in cbeQuestions">
-              <p v-if="cbe_section.id == question.cbe_section_id"> 
-                {{question.text}}  
-              </p>
+              <b-card v-if="cbe_section.id == question.cbe_section_id"> 
+                {{question.text}}  <b-link href="#foo">Edit</b-link>
+              </b-card>
             </div>
             <b-button>Add a question</b-button>
           </b-card-body>
