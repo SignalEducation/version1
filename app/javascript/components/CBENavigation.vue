@@ -29,6 +29,13 @@
                 {{question.text}}  <b-link href="#foo">Edit</b-link>
               </b-card>
             </div>
+
+        <!-- Add a question -->
+            <div class="input-group input-group-lg">
+              {{this.$store.selectedQuestionType}}
+            </div>
+        <!-- Add a question -->
+
             <b-button>Add a question</b-button>
           </b-card-body>
         </b-collapse>
@@ -41,11 +48,15 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default {
+    
      data: function(){
        return {
          currentCbeId: 109,
          newSections: [],
+         questionTypes: [],
          sampleSection: {"id": 5,"name": "Section A"},
           cbes: {
               "cbe_id": 1,
@@ -78,13 +89,29 @@
           ]
         }
       },
+      mounted() {
+        this.fetchQuestionTypes()
+      },
       methods: { 
         setCurrentCBE: function (page, index) {
           this.$store.commit('setCurrentCbeId', this.currentCbeId)
         },
         showCbeSection: function(page, index) {
            this.$store.state.showSections = true
-        }
+        },
+        fetchQuestionTypes: function (page, index) {
+            axios.get('http://localhost:3000/api/cbe_question_types/')
+                .then(response => {
+                  console.log("Loaded question types")
+                    this.$store.questionTypes = response.data
+                    this.questionTypes = this.$store.questionTypes
+                    console.log(response.data[0].data)
+                })
+                .catch(e => {
+                    console.log('Error' + e)
+                })
+        },  
+
       }
     }
 

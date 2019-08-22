@@ -8,7 +8,7 @@
             </div>
 
   
-
+            {{this.$store.state.multipleChoiceSelected}}
             <CBENavigation> </CBENavigation>
 
             <div class="form-group row">
@@ -86,24 +86,24 @@
 
         data: function () {
             return {
-                createdCBE: [],
-                selectedSubjectId: null,
-                message: 'Test',
-                cbeQuestionValid: false,
-                cbeDetails: [],
-                testName: [],
-                options: [],
-                showCBESection: false,
-                showCBEDetails: false,
-                showSubjects: true,
-                cbeSectionButton: false,
-                sectionDetails: {},
-                sectionName: null,
-                sectionLabel: null,
-                sectionDescription: null,
-                createdSection: null,
-                showQuestionDetails: false,
-                showQuestionSelection: false,
+              createdCBE: [],
+              selectedSubjectId: null,
+              message: 'Test',
+              cbeQuestionValid: false,
+              cbeDetails: [],
+              testName: [],
+              options: [],
+              showCBESection: false,
+              showCBEDetails: false,
+              showSubjects: true,
+              cbeSectionButton: false,
+              sectionDetails: {},
+              sectionName: null,
+              sectionLabel: null,
+              sectionDescription: null,
+              createdSection: null,
+              showQuestionDetails: false,
+              showQuestionSelection: false,
             }
         },
         events: {
