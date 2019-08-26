@@ -3,7 +3,7 @@
   %a.btn.btn-text.btn-collapse.w-100.text-left{'data-toggle': "collapse", href: "#collapse_#{course_module.name_url}_#{counter}", role: "button", 'aria-expanded': "false", 'aria-controls': "collapse_#{course_module.name_url}_#{counter}",id: course_module.id}
     .lesson-item.w-100{class: @completed_student_exam_tracks && @completed_course_module_ids.include?(course_module.id) ? 'completed' : ''}
       %i.material-icons.icon-bg-round{"aria-label" => "", :role => "img"}
-        - if current_user && course_module.all_content_restricted? && !(current_user.active_subscription_for_exam_body?(@group.exam_body_id) || current_user.user_group.site_admin)
+        - if current_user && course_module.all_content_restricted? && !current_user.can_view_content?(@group.exam_body_id)
           lock_outline
         - else
           check

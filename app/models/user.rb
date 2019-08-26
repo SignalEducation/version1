@@ -356,6 +356,11 @@ class User < ApplicationRecord
 
   ### INSTANCE METHODS =========================================================
 
+  def can_view_content?(exam_body_id)
+    valid_subscription_for_exam_body?(exam_body_id) || user_group.site_admin ||
+      complimentary_user?
+  end
+
   def check_country(ip_address)
     UserCountryWorker.perform_async(self.id, ip_address)
   end
