@@ -80,5 +80,4 @@
         console.log(this.$store.state.multipleChoiceSelected);
       }
     }
-  };
 </script>
