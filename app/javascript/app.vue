@@ -7,6 +7,9 @@
                 <Subjects ref="subjects"></Subjects>
             </div>
 
+            {{this.$store.state.multipleChoiceSelected}}
+            <CBENavigation> </CBENavigation>
+
             <div class="form-group row">
                 <div class="col-md-10">
                   <button v-on:click="createNewCBE" class='btn btn-secondary'>Create a new CBE</button>
@@ -61,6 +64,7 @@
     import CBESettings from './components/CBESettings'
     import CBEDetails from './components/CBEDetails'
     import CBESection from './components/CBESection'
+    import CBENavigation from './components/CBENavigation'
     import CBEMultipleChoiceQuestion from './components/CBEMultipleChoiceQuestion'
     import QuestionsList from './components/QuestionsList'
     import splitPane from 'vue-splitpane'
@@ -76,30 +80,35 @@
            Subjects,
            CBEMultipleChoiceQuestion,
            QuestionsList,
+           CBENavigation,
         },
 
         data: function () {
             return {
-                createdCBE: [],
-                selectedSubjectId: null,
-                message: 'Test',
-                cbeQuestionValid: false,
-                cbeDetails: [],
-                testName: [],
-                options: [],
-                showCBESection: false,
-                showCBEDetails: false,
-                showSubjects: true,
-                cbeSectionButton: false,
-                sectionDetails: {},
-                sectionName: null,
-                sectionLabel: null,
-                sectionDescription: null,
-                createdSection: null,
-                showQuestionDetails: false,
-                showQuestionSelection: false,
+              createdCBE: [],
+              selectedSubjectId: null,
+              message: 'Test',
+              cbeQuestionValid: false,
+              cbeDetails: [],
+              testName: [],
+              options: [],
+              showCBESection: false,
+              showCBEDetails: false,
+              showSubjects: true,
+              cbeSectionButton: false,
+              sectionDetails: {},
+              sectionName: null,
+              sectionLabel: null,
+              sectionDescription: null,
+              createdSection: null,
+              showQuestionDetails: false,
+              showQuestionSelection: false,
             }
         },
+        events: {
+          eventShowCBESections: function(data) {
+            this.makeCBESectionVisible
+          }},
         computed: {
             currentCBEId (){
               return this.$store.state.currentCBEId

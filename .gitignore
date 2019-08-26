@@ -79,3 +79,9 @@ public/packs/*
 
 # redis db
 ./dump.rdb
+/public/packs-test
+/node_modules
+yarn-debug.log*
+.yarn-integrity
+
+.vscode 

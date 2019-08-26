@@ -6,13 +6,13 @@ module Api
 
       def create
         cbe = Cbe.create(cbe_params)
-        res = {cbeId: cbe.id, cbeName: cbe.name}
+        res = { cbeId: cbe.id, cbeName: cbe.name }
         render json: (res.as_json)
       end
 
       def index
-        all_cbes=Cbe.all
-        all_cbes = all_cbes.to_json(:only => [:id, :name])
+        all_cbes = Cbe.all
+        all_cbes = all_cbes.to_json(only:  %i[id, name])
         render json: (all_cbes)
       end
     
