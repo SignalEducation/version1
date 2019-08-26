@@ -9,7 +9,8 @@ class Cbe::Section < ApplicationRecord
                        inverse_of: :section, dependent: :destroy
 
   # validations
-  validates :name, :kind, :cbe_id, presence: true
+  #validates :name, :kind, :cbe_id, presence: true
+  validates :name, :content, :cbe_id, presence: true
 
   # enums
   enum kind: { objective: 0, constructed_response: 1, objective_test_case: 2 }
