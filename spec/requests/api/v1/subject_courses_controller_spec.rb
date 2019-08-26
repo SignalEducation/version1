@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Api::V1::SubjectCoursesController', type: :request do
   describe 'get /api/v1/subject_courses' do
     context 'return all records' do
-      let!(:subject_courses) { create_list(:subject_course, 5) }
+      let!(:subject_courses) { create_list(:active_subject_course, 5) }
 
       before { get '/api/v1/subject_courses' }
 
