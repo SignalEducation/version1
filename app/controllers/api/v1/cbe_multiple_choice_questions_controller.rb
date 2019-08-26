@@ -1,8 +1,6 @@
 
 module Api
     module V1
-
-      
       class CbeMultipleChoiceQuestionsController < Api::V1::ApplicationController
           
         def create

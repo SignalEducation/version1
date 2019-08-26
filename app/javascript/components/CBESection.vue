@@ -52,6 +52,7 @@ export default {
                     .then(response => {
                      this.createdSection = response.data       
                         this.$store.commit('setCurrentSectionId', this.createdSection.cbeSectionId)
+                        console.log(response.data )
                         if (this.$store.state.currentSectionId > 0 ) {
                             this.$store.state.showQuestions = true
                             this.$store.state.showSections = false
