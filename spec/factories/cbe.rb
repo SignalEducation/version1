@@ -5,6 +5,7 @@ FactoryBot.define do
     content           { Faker::Lorem.paragraph }
     agreement_content { Faker::Lorem.paragraph }
     score             { Faker::Number.decimal(l_digits: 1, r_digits: 2) }
+    exam_time         { Faker::Number.decimal }
 
     trait :active do
       active { true }
@@ -15,7 +16,6 @@ FactoryBot.define do
     end
 
     trait :optional_settings do
-      exam_time                 { Faker::Number.decimal }
       number_of_pauses_allowed  { Faker::Number.number(1) }
       length_of_pauses          { Faker::Number.number(2) }
       hard_time_limit           { Faker::Number.decimal }

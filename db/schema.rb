@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_26_071920) do
+ActiveRecord::Schema.define(version: 2019_08_27_092543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -618,8 +618,8 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.bigint "exam_body_id"
     t.string "background_colour"
+    t.bigint "exam_body_id"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -754,6 +754,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
+    t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
   end
 
   create_table "order_transactions", id: :serial, force: :cascade do |t|
@@ -817,7 +818,6 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -827,6 +827,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
+    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
@@ -1233,6 +1234,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
+    t.string "temp_guid"
     t.string "completion_guid"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
   end
