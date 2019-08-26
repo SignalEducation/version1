@@ -22,7 +22,7 @@ RSpec.describe Cbe::Section, type: :model do
 
   describe 'Validations' do
     it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:kind) }
+    xit { should validate_presence_of(:kind) }
     it { should validate_presence_of(:cbe_id) }
   end
 

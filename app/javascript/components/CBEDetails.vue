@@ -1,92 +1,110 @@
 <template>
   <div class="form-row form-horizontal">
-    <div class="col-sm-6">
-      <div class="form-group">
-        <label for="colFormLabel">Name</label>
-        <div class="input-group input-group-lg">
-          <input v-model="cbeName" class="form-control" id="colFormLabel" placeholder="Name" />
+    <div class="row">
+      <h4>CBE Details</h4>
+      <div class="col-sm-12">
+        <div class="form-group">
+          <label for="colFormLabelSm">Subject Course</label>
+          <div class="input-group input-group-lg">
+            <select v-model="cbeSubjectCourseId" class="form-control custom-select">
+              <option class="col-md-8" v-for="course in subjectCourses" v-bind:value="course.id">
+                {{ course.name }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="colFormLabel">Title</label>
-        <div class="input-group input-group-lg">
-          <input v-model="cbeTitle" class="form-control" id="colFormLabel" placeholder="Title" />
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="colFormLabel">Name</label>
+          <div class="input-group input-group-lg">
+            <input v-model="cbeName" class="form-control" id="colFormLabel" placeholder="Name" />
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="col-sm-6">
-      <div class="form-group">
-        <label for="colFormLabel">Description</label>
-        <div class="input-group input-group-lg">
-          <input v-model="cbeDescription" class="form-control" id="colFormLabel" placeholder="Description"/>
+        <div class="form-group">
+          <label for="colFormLabel">Time</label>
+          <div class="input-group input-group-lg">
+            <input v-model="cbeExamTime" class="form-control" id="colFormLabel" placeholder="Time Limit"/>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="colFormLabel">Time</label>
-        <div class="input-group input-group-lg">
-          <input v-model="cbeTimeLimit" class="form-control" id="colFormLabel" placeholder="Time Limit"/>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6">
-      <div class="form-group">
-        <label for="colFormLabel">Pauses</label>
-        <div class="input-group input-group-lg">
-          <input v-model="cbeNumberOfPauses" class="form-control" id="colFormLabel" placeholder="Pauses"/>
-        </div>
       </div>
 
-      <div class="form-group">
-        <label for="colFormLabel">Length</label>
-        <div class="input-group input-group-lg">
-          <input v-model="cbeLengthOfPauses" class="form-control" id="colFormLabel" placeholder="Length of pauses"/>
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="colFormLabel">Total Score</label>
+          <div class="input-group input-group-lg">
+            <input v-model="cbeScore" class="form-control" id="colFormLabel" placeholder="Total Score"/>
+          </div>
         </div>
+
+        <div class="form-group">
+          <label for="colFormLabel">Agreement Text</label>
+          <div class="input-group input-group-lg">
+            <input v-model="cbeAgreementContent" class="form-control" id="colFormLabel" placeholder="Agreement Text" />
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import axios from "axios";
+
   export default {
+    mounted() {
+      this.showSubjects();
+    },
     data: function() {
       return {
         cbeName: null,
-        cbeTitle: null,
-        cbeDescription: null,
-        cbeSectionName: null,
-        cbeTimeLimit: null,
-        cbeNumberOfPauses: null,
-        cbeLengthOfPauses: null
+        cbeExamTime: null,
+        cbeAgreementContent: null,
+        cbeActive: null,
+        cbeScore: null,
+        cbeSubjectCourseId: null,
+        subjectCourses: [],
       };
     },
-    props: ["showCBEDetails", "selectedSubject"],
+    methods: {
+      showSubjects: function (page, index) {
+        axios
+          .get("/api/v1/subject_courses/")
+          .then(response => {
+            this.subjectCourses = response.data;
+          })
+          .catch(e => {
+            console.log(e);
+
+          });
+      },
+
+    },
+    props: [
+      "showCBEDetails",
+      "selectedSubject"
+    ],
 
     watch: {
       cbeName: function(val) {
         this.$store.commit("setCbeName", this.cbeName);
       },
-      cbeTitle: function(val) {
-        this.$store.commit("setCbeTitle", this.cbeTitle);
+      cbeAgreementContent: function(val) {
+        this.$store.commit("setCbeAgreementContent", this.cbeAgreementContent);
       },
-      cbeDescription: function(val) {
-        this.$store.commit("setCbeDescription", this.cbeDescription);
+      cbeExamTime: function(val) {
+        this.$store.commit("setCbeExamTime", this.cbeExamTime);
       },
-      setCbeSectionName: function(val) {
-        this.$store.commit("setCbeSectionName", this.cbeSectionName);
+      cbeScore: function(val) {
+        this.$store.commit("setCbeScore", this.cbeScore);
       },
-      cbeTimeLimit: function(val) {
-        this.$store.commit("setCbeTimeLimit", this.cbeTimeLimit);
+      cbeSubjectCourseId: function(val) {
+        this.$store.commit("setCbeSubjectCourseId", this.cbeSubjectCourseId);
       },
-      cbeNumberOfPauses: function(val) {
-        this.$store.commit("setCbeNumberOfPauses", this.cbeNumberOfPauses);
-      },
-      cbeLengthOfPauses: function(val) {
-        this.$store.commit("setCbeLengthOfPauses", this.cbeLengthOfPauses);
-      }
     }
   };
 </script>

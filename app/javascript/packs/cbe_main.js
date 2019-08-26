@@ -1,6 +1,6 @@
 /* eslint no-console: 0 */
-// Run this example by adding <%= javascript_pack_tag 'hello_vue' %> (and
-// <%= stylesheet_pack_tag 'hello_vue' %> if you have styles in your component)
+// Run this example by adding <%= javascript_pack_tag 'cbe_main' %> (and
+// <%= stylesheet_pack_tag 'cbe_main' %> if you have styles in your component)
 // to the head of your layout file,
 // like app/views/layouts/application.html.erb.
 // All it does is render <div>Hello Vue</div> at the bottom of the page.
@@ -13,6 +13,7 @@ import splitPane from 'vue-splitpane'
 import VeeValidate from 'vee-validate';
 import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
+import { connect } from 'tls';
 
 Vue.use(Vuex)
 Vue.component('split-pane', splitPane);
@@ -24,25 +25,21 @@ export const store = new Vuex.Store({
   state: {
     currentCbeId: null,
     currentSectionId: null,
-    currentSubjectId: null,
+    currentSubjectCourseId: null,
     cbeName: null,
     cbeSectionName: null,
     cbeTitle: null,
     cbeDescription: null,
     cbeTimeLimit: null,
-    cbeNumberOfAllowablePauses: null,
-    cbeNumberOfPauses: null,
-    cbeLengthOfPauses: null,
     cbeQuestionTypes: [],
     cbeQuestionStatuses: [],
     cbeSectionTypes: [],
-    cbeQuestionTypes: [],
-    cbeQuestionStatuses: [],
     showQuestions: false,
     showSections: false,
+    showCBEDetails: false,
     selectedQuestionType: null,
-    multipleChoiceSelected: false,
-    currentMultilpleQuestionId: null,
+    currentQuestionId: null,
+    cbeQuestions: []
   },
 
   getters: {
@@ -75,7 +72,21 @@ export const store = new Vuex.Store({
     },
     currentMultilpleQuestionId: (state, getters) => {
       return getters.currentMultilpleQuestionId
+    },
+    currentSubjectCourseId: (state, getters) => {
+      return getters.currentSubjectCourseId
+    },
+    showCBEDetails: (state, getters) => {
+      return getters.showCBEDetails
+    },
+    cbeQuestions: (state, getters) => {
+      return $store.state.cbeQuestions
+    },
+    questionById: (state) => (id) => {
+     console.log("** Question by id " + id)
+      return state.cbeQuestions.find(question => question.id === id)
     }
+
   },
 
   mutations: {
@@ -91,20 +102,17 @@ export const store = new Vuex.Store({
     setCbeSectionName(state, value) {
       state.cbeSectionName = value
     },
-    setCbeTitle(state, value) {
-      state.cbeTitle = value
+    setCbeAgreementContent(state, value) {
+      state.cbeAgreementContent = value
     },
-    setCbeDescription(state, value) {
-      state.cbeDescription = value
+    setCbeExamTime(state, value) {
+      state.cbeExamTime = value
     },
-    setCbeTimeLimit(state, value) {
-      state.cbeTimeLimit = value
+    setCbeScore(state, value) {
+      state.cbeScore = value
     },
-    setCbeNumberOfPauses(state, value) {
-      state.cbeNumberOfPauses = value
-    },
-    setCbeLengthOfPauses(state, value) {
-      state.cbeLengthOfPauses = value
+    setCbeSubjectCourseId(state, value) {
+      state.cbeSubjectCourseId = value
     },
     setQuestionTypes(state, value) {
       state.questionTypes = value
@@ -127,29 +135,47 @@ export const store = new Vuex.Store({
     currentMultilpleQuestionId: (state, value) => {
       state.currentMultilpleQuestionId = value
 
-    }
+    },
+    currentSubjectCourseId: (state, value) => {
+      state.currentSubjectCourseId = value
+    },
+    addCbeQuestion: (state, value) => {
+      state.cbeQuestions.push({value})
+    },
+  },
+
+  /*
+  computed:{
+    cbeQuestions(){
+      return this.$store.state.cbeQuestions;
+    },
+  },
+
+  */
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const element = document.getElementById('cbes-new-view');
+  if (element != null){
+    const vue = new Vue({
+      store: store,
+      el: element,
+      template: '<App/>',
+      components: { App },
+      render: h => h(App)
+    })
   }
-})
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-  const el = document.body.appendChild(document.createElement('vueapp'))
-  const vue = new Vue({
-    store: store,
-    el: '#cbes-new-view',
-    template: '<App/>',
-    components: { App },
-    render: h => h(App)
-  })
-})
-
-document.addEventListener('DOMContentLoaded', () => {
-  const el = document.body.appendChild(document.createElement('vueapp'))
-  const vue = new Vue({
-    store: store,
-    el: '#cbes-show-view',
-    template: '<Show/>',
-    components: { Show },
-    render: h => h(Show)
-  })
-
-})
+  const element = document.getElementById('cbes-show-view');
+  if (element != null){
+    const vue = new Vue({
+      store: store,
+      el: element,
+      template: '<Show/>',
+      components: { Show },
+      render: h => h(Show)
+    })
+  }
+});
