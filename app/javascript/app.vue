@@ -187,7 +187,7 @@ export default {
       this.sectionDetails["cbe_id"] = this.$store.state.currentCbeId;
 
       axios
-        .post("http://localhost:3000/api/cbe/sections", {
+        .post("http://localhost:3000api/v1/cbe/sections/create", {
           cbe_section: this.sectionDetails
         })
         .then(response => {

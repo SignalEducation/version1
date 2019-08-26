@@ -23,12 +23,25 @@
   export default {
     data: function() {
       return {
-        isLoaded: false
+        isLoaded: false,
+        questionTypes: [ 'Multiple Choice', 
+          'Multiple Response', 
+          'Complete', 
+          'Fill In The Blank', 
+          'Drag & Drop','Dropdown List',
+          'Hot Spot',
+          'Spreadsheet',
+          'Open Text' ],
       };
     },
-    mounted() {
+   /*  
+   
+   TODO - commented out until we use the API to get question types, hardcoded for now. 
+   
+   mounted() {
       this.fetchQuestionTypes();
     },
+    */
     computed: {
       selectedSearchType: {
         get() {
@@ -39,18 +52,25 @@
         }
       }
     },
-    methods: {
-      fetchQuestionTypes: function(page, index) {
+    /*
+      methods: {
+
+        TODO - commented out until we use the API to get question types, hardcoded for now. 
+        fetchQuestionTypes: function(page, index) {
+
+        
         axios
-          .get("http://localhost:3000/api/v1/cbe/question_types/")
-          .then(response => {
-            this.$store.questionTypes = response.data;
-            this.isLoaded = true;
-          })
-          .catch(e => {
-            console.log("Error" + e);
-          });
-      },
+            .get("http://localhost:3000/api/v1/cbe/question_types/")
+            .then(response => {
+              this.$store.questionTypes = response.data;
+              this.isLoaded = true;
+            })
+            .catch(e => {
+              console.log("Error" + e);
+            });
+            
+        },
+      */
       onChange(event) {
         this.$store.commit("setCurrentQuestionType", event.target.value);
         console.log(event.target.value);
@@ -61,5 +81,4 @@
         console.log(this.$store.state.multipleChoiceSelected);
       }
     }
-  };
 </script>

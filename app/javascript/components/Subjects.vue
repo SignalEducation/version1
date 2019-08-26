@@ -21,19 +21,36 @@
   export default {
     mounted() {
       this.showSubjects();
-      this.fetchQuestionTypes();
-      this.fetchQuestionStatuses();
+     // this.fetchQuestionTypes();
+     //  this.fetchQuestionStatuses();
       // TODO this.fetchSectionTypes()
     },
     data: function() {
       return {
         selectedSubject: null,
-        options: []
+         questionTypes: [ 
+          'Multiple Choice', 
+          'Multiple Response', 
+          'Complete', 
+          'Fill In The Blank', 
+          'Drag & Drop','Dropdown List',
+          'Hot Spot',
+          'Spreadsheet',
+          'Open Text' ]
+        ,
+        options: [
+          {id: 1, name: 'Course 1', exam_body_id: 1,  description: 'Course 1 description'},
+          {id: 2, name: 'Course 2', exam_body_id: 2,  description: 'Course 2 description'},
+          {id: 3, name: 'Course 3', exam_body_id: 2,  description: 'Course 3 description'},
+          {id: 4, name: 'Course 4', exam_body_id: 1,  description: 'Course 4 description'},
+        ],
       };
     },
     methods: {
       showSubjects: function(page, index) {
-        axios
+      this.$store.questionTypes = this.questionTypes
+      /* TODO comment back in when subjects from the backend  
+      axios
           .get("http://localhost:3000/api/subjects/")
           .then(response => {
             this.options = response.data;
@@ -41,6 +58,7 @@
           .catch(e => {
             console.log("Error");
           });
+          */
       },
       fetchQuestionTypes: function(page, index) {
         axios
