@@ -26,7 +26,7 @@ class StripeApiEvent < ApplicationRecord
                            customer.subscription.deleted charge.failed charge.succeeded
                            charge.refunded coupon.updated invoice.payment_action_required].freeze
   DELAYED_TYPES = %w[invoice.payment_succeeded invoice.payment_failed
-                     charge.failed charge.succeeded].freeze
+                     charge.failed charge.succeeded invoice.payment_action_required].freeze
 
   # RELATIONSHIPS ==============================================================
 
@@ -91,7 +91,7 @@ class StripeApiEvent < ApplicationRecord
           webhook_object[:subscription], webhook_object[:id]
         )
       when 'invoice.payment_action_required'
-        process_payment_action_required(webhook_object[:id])
+        process_payment_action_required(webhook_object[:id], webhook_object[:subscription])
       when 'customer.subscription.deleted'
         process_customer_subscription_deleted(webhook_object[:customer],
                                               webhook_object[:id])
@@ -170,9 +170,9 @@ class StripeApiEvent < ApplicationRecord
   end
 
   def process_invoice_payment_failed(stripe_customer_guid, stripe_next_attempt, stripe_subscription_guid, stripe_invoice_guid)
-    user = User.find_by_stripe_customer_id(stripe_customer_guid)
-    subscription = Subscription.where(stripe_guid: stripe_subscription_guid).last
-    invoice = Invoice.where(stripe_guid: stripe_invoice_guid).last
+    user = User.find_by(stripe_customer_id: stripe_customer_guid)
+    subscription = Subscription.find_by(stripe_guid: stripe_subscription_guid)
+    invoice = Invoice.find_by(stripe_guid: stripe_invoice_guid)
 
     if user && invoice && subscription
       invoice.update_from_stripe(stripe_invoice_guid)
@@ -180,27 +180,26 @@ class StripeApiEvent < ApplicationRecord
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
 
-      if stripe_next_attempt
-        #A NextPaymentAttempt Date value means that another payment attempt will be made
-        MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url) unless Rails.env.test?
-      else
-        #Final payment attempt has failed on stripe so we cancel the current subscription
-        MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
-      end
+      return unless stripe_next_attempt
+
+      # A NextPaymentAttempt Date value means that another payment attempt will be made
+      MandrillWorker.perform_async(user.id, 'send_card_payment_failed_email', self.account_url) unless Rails.env.test?
+
     else
       set_process_error "Error finding User-#{stripe_customer_guid}, Invoice-#{stripe_invoice_guid} OR Subscription- #{stripe_subscription_guid}. InvoicePaymentFailed Event"
     end
   end
 
-  def process_payment_action_required(stripe_inv_id)
+  def process_payment_action_required(stripe_inv_id, stripe_subscription_guid)
     invoice = Invoice.find_by(stripe_guid: stripe_inv_id)
+    subscription = Subscription.find_by(stripe_guid: stripe_subscription_guid)
 
-    if invoice
-      invoice.mark_payment_action_required
+    if invoice && subscription
+      invoice.mark_payment_action_required if subscription.invoices.count > 1
       update!(processed: true, processed_at: Time.zone.now, error: false,
               error_message: nil)
     else
-      set_process_error("Error finding Invoice by - #{stripe_inv_id}.
+      set_process_error("Error finding Invoice by - #{stripe_inv_id} or Subscription by - #{stripe_subscription_guid}.
                         InvoicePaymentSucceeded Event")
     end
   end
@@ -216,6 +215,7 @@ class StripeApiEvent < ApplicationRecord
 
       subscription.update_from_stripe
       subscription.cancel
+      MandrillWorker.perform_async(user.id, 'send_account_suspended_email') unless Rails.env.test?
     else
       set_process_error("Error deleting subscription. Couldn't find User with stripe_customer_guid: #{stripe_customer_guid} OR Couldn't find Subscription with stripe_subscription_guid: #{stripe_subscription_guid}")
     end

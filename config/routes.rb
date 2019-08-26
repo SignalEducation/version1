@@ -125,7 +125,7 @@ Rails.application.routes.draw do
 
     # Internal Landing Pages - post sign-up or upgrade or purchase
     get 'personal_sign_up_complete', to: 'student_sign_ups#show',                   as: :personal_sign_up_complete
-    get 'personal_upgrade_complete', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
+    get 'personal_upgrade_complete(/:completion_guid)', to: 'subscriptions#personal_upgrade_complete', as: :personal_upgrade_complete
 
     # Courses
     resources :courses, only: [:create] do

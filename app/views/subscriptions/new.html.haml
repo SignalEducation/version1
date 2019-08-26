@@ -19,6 +19,7 @@
             =render partial: 'layouts/error_messages', locals: { thing: @subscription, message: t('views.users.upgrade_subscription.error_panel_caption') }
             =f.hidden_field :user_id, value: current_user.id
             =f.hidden_field :subscription_plan_id, value: @subscription.subscription_plan_id
+            =f.hidden_field :completion_guid
             =f.hidden_field :stripe_token
             =f.hidden_field :use_paypal, value: false
 
@@ -332,7 +333,7 @@
           if(data.status == 'incomplete'){
             handlePayment(data.client_secret, data.subscription_id)
           }else if(data.status == 'active'){
-            window.location.replace("#{personal_upgrade_complete_url}");
+            window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
           }
         },
         error: function(data, status, error){
@@ -342,24 +343,30 @@
     }
 
     function handlePayment(client_secret, subscription_id){
+      let statusArray = ['active', 'succeeded'];
+      let intentStatus = '';
       stripe.handleCardPayment(client_secret, cardElement).then(function(result) {
           if (result.error) {
             resetForm(result.error.message);
+            intentStatus = 'pending';
           } else {
-            $.ajax({
-              type: 'post',
-              url: "#{subscriptions_status_from_stripe_path}",
-              data: { ...result['paymentIntent'], id: subscription_id },
-              dataType: 'json',
-              success: function(data,status,xhr){
-                console.log(data);
-                window.location.replace("#{personal_upgrade_complete_url}");
-              },
-              error: function(xhr,status,error){
-                resetForm(error);
+            intentStatus = result['paymentIntent']['status'];
+          }
+
+          $.ajax({
+            type: 'post',
+            url: "#{subscriptions_status_from_stripe_path}",
+            data: { status: intentStatus, id: subscription_id },
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if( $.inArray(intentStatus, statusArray) !== -1){
+                window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
               }
+            },
+            error: function(xhr,status,error){
+              resetForm(error);
+            }
           });
-        }
       });
     }
 

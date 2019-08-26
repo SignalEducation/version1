@@ -93,6 +93,10 @@ class Subscription < ApplicationRecord
       transition %i[pending pending_3d_secure] => :active
     end
 
+    event :mark_pending do
+      transition all => :pending
+    end
+
     event :pause do
       transition active: :paused
     end

@@ -31,11 +31,12 @@ FactoryBot.define do
   factory :subscription do
     user
     subscription_plan
-    next_renewal_date     { 6.days.from_now}
-    complimentary         { false }
-    stripe_status         { 'active' }
-    livemode              { false }
-    terms_and_conditions  { true }
+    next_renewal_date               { 6.days.from_now}
+    complimentary                   { false }
+    stripe_status                   { 'active' }
+    livemode                        { false }
+    terms_and_conditions            { true }
+    sequence(:completion_guid)      { |n| "guid_#{n}" }
 
     factory :stripe_subscription do
       sequence(:stripe_guid) { |n| "sub_DUMMY-#{n}" }
