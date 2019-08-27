@@ -1,13 +1,13 @@
-json.id                   section.id
-json.name                 section.name
-json.scenario_description section.scenario_description
-json.question_description section.question_description
-json.scenario_label       section.scenario_label
-json.question_label       section.question_label
+json.id             section.id
+json.name           section.name
+json.score          section.score
+json.kind           section.kind
+json.sorting_order  section.sorting_order
+json.content        section.content
 
 json.cbe do
   json.name section.cbe.name
-  json.description section.cbe.description
+  json.content section.cbe.content
 end
 
 json.subject_course do
