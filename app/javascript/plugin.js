@@ -4,4 +4,3 @@ export default {
     Vue.prototype.$devEndPoint = 'http://localhost:3000'
   }
 }
-

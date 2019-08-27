@@ -1,4 +1,3 @@
-
 <template>
   <p>{{message}}</p>
 </template>

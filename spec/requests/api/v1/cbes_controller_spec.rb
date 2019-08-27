@@ -20,11 +20,14 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
         expect(body.map(&:keys).uniq).to contain_exactly(%w[id
                                                             name
                                                             title
-                                                            description
+                                                            content
                                                             exam_time
                                                             hard_time_limit
                                                             number_of_pauses_allowed
                                                             length_of_pauses
+                                                            agreement_content
+                                                            active
+                                                            score
                                                             subject_course
                                                             exam_body])
       end
@@ -61,7 +64,7 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
 
         expect(body['name']).to eq(cbe.name)
         expect(body['title']).to eq(cbe.title)
-        expect(body['description']).to eq(cbe.description)
+        expect(body['content']).to eq(cbe.content)
         expect(body['exam_time']).to eq(cbe.exam_time)
         expect(body['hard_time_limit']).to eq(cbe.hard_time_limit)
         expect(body['number_of_pauses_allowed']).to eq(cbe.number_of_pauses_allowed)
@@ -69,11 +72,14 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
                                                   title
-                                                  description
+                                                  content
                                                   exam_time
                                                   hard_time_limit
                                                   number_of_pauses_allowed
                                                   length_of_pauses
+                                                  agreement_content
+                                                  active
+                                                  score
                                                   subject_course
                                                   exam_body])
       end

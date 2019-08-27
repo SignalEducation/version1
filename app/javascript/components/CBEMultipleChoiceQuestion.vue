@@ -76,6 +76,20 @@
       };
     },
     methods: {
+        addSection: function (page, index) {
+            this.questionDetails['name'] = this.sectionName
+            this.questionDetails['scenario_label'] = this.sectionLabel
+            this.questionDetails['scenario_description'] = this.sectionDescription
+            this.questionDetails['cbe_id'] = this.$store.state.currentCbeId
+
+            axios.post('http://localhost:3000/api/cbes/' + this.$store.state.currentCbeId + 'create_section', {cbe_section: this.sectionDetails})
+                .then(response => {
+                    this.createdSection = response.data
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
       saveNewMultipleChoiceQuestion: function(page, index) {
         this.multipleChoiceDetails = {};
         this.multipleChoiceDetails["cbe_section_id"]      = this.$store.state.currentSectionId;
