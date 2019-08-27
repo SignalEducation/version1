@@ -102,7 +102,7 @@ group :development, :test do
   gem 'rubocop-performance' # rubocop lint
   gem 'rubocop-rails' # rubocop lint
   gem 'ultrahook' # allows incoming webhooks from stripe
-  gem 'faker'
+  gem 'faker', '~> 2.1.2'
 end
 
 group :test do

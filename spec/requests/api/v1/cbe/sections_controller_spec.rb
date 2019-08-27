@@ -21,10 +21,10 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
         expect(body.map { |j| j['name'] }).to match_array(sections.pluck(:name))
         expect(body.map(&:keys).uniq).to contain_exactly(%w[id
                                                             name
-                                                            scenario_description
-                                                            question_description
-                                                            scenario_label
-                                                            question_label
+                                                            score
+                                                            kind
+                                                            sorting_order
+                                                            content
                                                             cbe
                                                             subject_course
                                                             exam_body])
@@ -61,16 +61,16 @@ RSpec.describe 'Api::V1::Cbe::SectionsController', type: :request do
         body = JSON.parse(response.body)
 
         expect(body['name']).to eq(section.name)
-        expect(body['scenario_description']).to eq(section.scenario_description)
-        expect(body['question_description']).to eq(section.question_description)
-        expect(body['scenario_label']).to eq(section.scenario_label)
-        expect(body['question_label']).to eq(section.question_label)
+        expect(body['score']).to eq(section.score)
+        expect(body['kind']).to eq(section.kind)
+        expect(body['sorting_order']).to eq(section.sorting_order)
+        expect(body['content']).to eq(section.content)
         expect([body.keys]).to contain_exactly(%w[id
                                                   name
-                                                  scenario_description
-                                                  question_description
-                                                  scenario_label
-                                                  question_label
+                                                  score
+                                                  kind
+                                                  sorting_order
+                                                  content
                                                   cbe
                                                   subject_course
                                                   exam_body])
