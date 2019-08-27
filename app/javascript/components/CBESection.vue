@@ -1,6 +1,9 @@
 <template>
   <div class="col-sm-12">
     <div class="form-group">
+      <h1>Section</h1>
+    </div>
+    <div class="form-group">
       <label for="colFormLabelSm">Section Title</label>
       <div class="input-group input-group-lg">
         <input v-model="sectionName" placeholder="Section Name" class="form-control" />
@@ -52,7 +55,7 @@ export default {
       this.sectionDetails["cbe_id"] = this.$store.state.currentCbeId;
       axios
         .post(
-          "http://localhost:3000/api/v1/cbe/sections/create",
+          "http://localhost:3000/api/v1/cbe/sections",
           { cbe_section: this.sectionDetails }
         )
         .then(response => {

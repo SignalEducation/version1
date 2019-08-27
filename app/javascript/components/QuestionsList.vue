@@ -6,10 +6,9 @@
         <div class="input-group input-group-lg">
           <select :value="this.$store.selectedQuestionType" class="form-control custom-select" @change="onChange($event)">
             <option class="col-md-8" v-for="option in this.$store.questionTypes" v-bind:value="option.name" >
-              {{option.name}}
+            {{option.name}}
             </option>
           </select>
-
           {{this.$store.selectedQuestionType}}
         </div>
       </div>

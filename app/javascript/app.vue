@@ -3,15 +3,52 @@
     <split-pane :min-percent="50" :default-percent="50" split="vertical">
       <p>View CBEs</p>
       <template slot="paneL">
-        <div v-if="showSubjects = true">
-          <Subjects ref="subjects"></Subjects>
-        </div>
-        {{this.$store.state.multipleChoiceSelected}}
+        <SubjectCourses></SubjectCourses>
+
+      
+        
         <CBENavigation></CBENavigation>
 
+
+        <!-- TODO Create a new CBE button commented out this will be down outside of this section -->
+        
+          <!--
+            <div class="form-group row">
+              <div class="col-md-10">
+                <button v-on:click="createNewCBE" class="btn btn-secondary">Create a new CBE b</button>
+              </div>
+            </div>c
+          -->
+        
+        <!-- Create a new CBE button -->
+
+
+        <div v-if="cbeSectionButton === true">
+          <button v-on:click="makeCBESectionVisible" class="btn btn-secondary">Add Section</button>
+        </div>
+
+        <div v-show="this.$store.state.showQuestions">
+          <button v-on:click="makeQuestionSelectionVisible" class="btn btn-secondary">Add Question</button>
+        </div>
+
+        <div v-show="showQuestionSelection">
+          <QuestionsList></QuestionsList>
+        </div>
+      </template>
+      <template slot="paneR">
+
+  <!-- TODO Create a new CBE button commented out this will be down outside of this section -->
+    
+        <div v-show="this.$store.state.showCBEDetails">
+          <CBEDetails></CBEDetails>
+    
+        </div>
+ <!-- TODO Create a new CBE button commented out this will be down outside of this section -->
         <div class="form-group row">
           <div class="col-md-10">
-            <button v-on:click="createNewCBE" class="btn btn-secondary">Create a new CBE</button>
+            <!--
+              <button v-on:click="createNewCBE" class="btn btn-secondary">Create a new CBE a</button>
+            -->
           </div>
         </div>
 
@@ -27,43 +64,24 @@
           <QuestionsList></QuestionsList>
         </div>
       </template>
-      <template slot="paneR">
-        <div v-show="showCBEDetails">
-          <CBEDetails></CBEDetails>
-          <button v-on:click="saveNewCBE" class="btn btn-primary">Save</button>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-md-10">
-            <button v-on:click="createNewCBE" class="btn btn-secondary">Create a new CBE</button>
-          </div>
-        </div>
-
-        <div v-if="cbeSectionButton === true">
-          <button v-on:click="makeCBESectionVisible" class="btn btn-secondary">Add Section</button>
-        </div>
-
-        <div v-show="this.$store.state.showQuestions">
-          <button v-on:click="makeQuestionSelectionVisible" class="btn btn-secondary">Add Question</button>
-        </div>
-
-        <div v-show="showQuestionSelection">
-          <QuestionsList></QuestionsList>
-        </div>
-      </template>
 
       <template slot="paneR">
-        <div v-show="showCBEDetails">
-          <CBEDetails></CBEDetails>
-          <button v-on:click="saveNewCBE" class="btn btn-primary">Save</button>
-        </div>
+        
+        <!-- TODO removing this as it's done in the CBENavigation component -->
+          <!--
+            <div v-show="showCBEDetails">
+              <CBEDetails></CBEDetails>
+              <button v-on:click="saveNewCBE" class="btn btn-primary">Save</button>
+            </div>
+          -->
+       <!-- TODO removing this as it's done in the CBENavigation component -->
 
         <div v-show="this.$store.state.showSections" class="btn btn-primary">
           <CBESection></CBESection>
         </div>
 
-        <div v-show="this.$store.state.multipleChoiceSelected">
-          <CBEMultipleChoiceQuestion></CBEMultipleChoiceQuestion>
+        <div v-show="this.$store.state.showCBEMultipleChoiceQuestion">
+          <CBEMultipleChoiceQuestion>afdsfdas</CBEMultipleChoiceQuestion>
         </div>
 
         <div v-if="selectedSubjectId !== null">
@@ -79,7 +97,7 @@
 import axios from "axios";
 import Admin from "./components/Admin";
 import Exam from "./components/Exam";
-import Subjects from "./components/Subjects";
+import SubjectCourses from "./components/SubjectCourses";
 import CBEDetails from "./components/CBEDetails";
 import CBESection from "./components/CBESection";
 import CBENavigation from "./components/CBENavigation";
@@ -93,7 +111,7 @@ export default {
     CBEDetails,
     CBESection,
     Exam,
-    Subjects,
+    SubjectCourses,
     CBEMultipleChoiceQuestion,
     QuestionsList,
     CBENavigation
@@ -187,7 +205,7 @@ export default {
       this.sectionDetails["cbe_id"] = this.$store.state.currentCbeId;
 
       axios
-        .post("http://localhost:3000api/v1/cbe/sections/create", {
+        .post("http://localhost:3000api/v1/cbe/sections", {
           cbe_section: this.sectionDetails
         })
         .then(response => {

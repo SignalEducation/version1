@@ -45,7 +45,7 @@
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
-  = javascript_pack_tag 'hello_vue'
+  = javascript_pack_tag 'cbe_main'
 
   - if controller_name == 'cbes' 
     %body.page-light

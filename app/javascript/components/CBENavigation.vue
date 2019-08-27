@@ -2,22 +2,44 @@
 
 
   <section>
-    <h1>CBE Details</h1>
-    <p> {{ this.cbes.name }}</p>
-    <p> {{ this.$store.state.currentCbeId}}</p>
 
-
+    <!-- Debug CBE - Current CBE state id value -->
+    <!--
+      <h1>CBE Details</h1>
+      <p> {{ this.cbes.name }}</p>
+      <p> {{ this.$store.state.currentCbeId}}</p>
+      <b-button @click="showQuestion">Add a question 1</b-button>
+    -->
     <!-- Debug CBE - Allows you to manually set the current cbe -->
-    <div>
-        <input v-model="currentCbeId" placeholder="Set current CBE">
-        <button v-on:click="setCurrentCBE">Set as Current CBE ID</button>
-    </div>
+    
+    <!-- Debug CBE - Allows you to manually set the current cbe -->
+    <!--
+      <div>
+          <input v-model="currentCbeId" placeholder="Set current CBE">
+          <button v-on:click="setCurrentCBE">Set as Current CBE ID</button>
+      </div>
+    -->
     <!-- Debug CBE - Allows you to manually set the current cbe -->
 
     <b-button  @click="showCbeSection">Add a Section</b-button>
+    
     <div role="tablist">
+
+    <!-- 
      Current CBE: {{ this.$store.state.currentCbeId}}
      Current CBESection : {{ this.$store.state.currentSectionId}}
+    -->
+    {{this.$store.state.getQuestionById(5)}}
+    {{this.$store.state.cbeQuestions}}
+    <div v-for="question in this.$store.state.cbeQuestions">
+      {{question.getQuestionById}}
+      <!--
+      <b-card v-if="cbe_section.id == question.cbe_section_id"> 
+        {{question.text}}  <b-link href="#foo">Edit</b-link>
+      </b-card>
+      -->
+    </div>
+
     <div v-for="cbe_section in cbes.cbe_sections">
 
       <b-card no-body class="mb-1">
@@ -27,28 +49,26 @@
         </b-card-header>
         <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
           <b-card-body>
-            <b-card-text>Section Questions</b-card-text>
-            <div v-for="question in cbeQuestions">
-              <b-card v-if="cbe_section.id == question.cbe_section_id"> 
-                {{question.text}}  <b-link href="#foo">Edit</b-link>
-              </b-card>
-            </div>
-
+            
         <!-- Add a question -->
 
 
 
         <!-- Add a question -->
 
-            <b-button>Add a question</b-button>
+            <b-button @click="showQuestion">Add a question A</b-button>
           </b-card-body>
         </b-collapse>
       </b-card>
 
     </div>
-    <b-button>Add a question</b-button>
-    <QuestionsList></QuestionsList>
 
+    <!-- TODO remove  --> 
+    <!--
+      <b-button>Add a question B</b-button>
+      <QuestionsList></QuestionsList>
+    -->
+    <!-- TODO --> 
     </div>
 
   </section>
@@ -93,7 +113,7 @@
             {"id": 3, "cbe_question_id": 5,"text": "1,000","type": "Multiple Choice","correctAnswer": false},
             {"id": 4, "cbe_question_id": 5,"text": "4,000","type": "Multiple Choice","correctAnswer": false}
           ],
-            cbeQuestions: [
+          cbeQuestions: [
             {"id": 5, "cbe_section_id": 5,"text": "How much does an Accountant Earn?","type": "Multiple Choice","correctAnswer": true},
             {"id": 6, "cbe_section_id": 5,"text": "How long does it take to become an accountant?","type": "Multiple Choice","correctAnswer": false},
             {"id": 7, "cbe_section_id": 5,"text": "What is a P&L?","type": "Multiple Choice","correctAnswer": false},
@@ -103,13 +123,20 @@
       },
       mounted() {
         this.fetchQuestionTypes()
+        //this.setCbeQuestions()
       },
       methods: { 
+        setCbeQuestions: function (page, index) {
+          //this.$store.commit(this.cbeQuestions)
+    
+        },
         setCurrentCBE: function (page, index) {
           this.$store.commit('setCurrentCbeId', this.currentCbeId)
         },
         showCbeSection: function(page, index) {
-           this.$store.state.showSections = true
+          this.$store.state.showCBEDetails = false
+          this.$store.state.showSections = true
+          this.$store.state.showCBEMultipleChoiceQuestion = false           
         },
         fetchQuestionTypes: function (page, index) {
             axios.get('http://localhost:3000/api/cbe_question_types/')
@@ -122,7 +149,15 @@
                 .catch(e => {
                     console.log('Error' + e)
                 })
-        },  
-      }
+        },
+        showQuestion: function(page, index) {
+          console.log("Show Question")
+          console.log(this.$store.state.showCBEMultipleChoiceQuestion)
+          this.$store.state.showSections = false
+          this.$store.state.showCBEDetails = false
+          this.$store.state.showCBEMultipleChoiceQuestion = true
+          console.log(this.$store.state.showCBEMultipleChoiceQuestion)
+        },
+      },
     }
 </script>

@@ -1,5 +1,10 @@
 <template>
+
   <div>
+
+    <div class="form-group">
+      <h1> Mutliple Choice Question</h1>
+    </div>
     <div class="form-group">
       <label for="colFormLabelSm">Question Name</label>
       <div class="input-group input-group-lg">
@@ -78,7 +83,7 @@
     methods: {
       saveNewMultipleChoiceQuestion: function(page, index) {
         this.multipleChoiceDetails = {};
-        this.multipleChoiceDetails["cbe_section_id"]      = this.$store.state.currentSectionId;
+        this.multipleChoiceDetails["cbe_section_id"]      = 5;
         this.multipleChoiceDetails["name"]                = this.questionName;
         this.multipleChoiceDetails["questionDescription"] = this.questionDescription;
         this.multipleChoiceDetails["question_1"]          = this.question_1;
@@ -87,9 +92,13 @@
         this.multipleChoiceDetails["question_4"]          = this.question_4;
         this.multipleChoiceDetails["correctAnswer"]       = this.correctAnswer;
 
-        console.log(this.multipleChoiceDetails);
+        console.log("*** >>>> Q >>>" + this.multipleChoiceDetails.cbe_section_id);
 
-        {cbe_multiple_choice_question: this.cbeDetails;}
+        // {'cbe_multiple_choice_question' => this.cbeDetails}
+        this.$store.commit('addCbeQuestion', this.multipleChoiceDetails)
+        console.log("****** Vuex")
+        console.log(this.$store.state.cbeQuestions[0])
+        console.log("****** Vuex")
         axios
           .post("http://localhost:3000/api/v1/cbe/multiple_choice_questions/", {
             cbe_multiple_choice_question: this.multipleChoiceDetails
