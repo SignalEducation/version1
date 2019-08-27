@@ -21,10 +21,10 @@ module Api
 
         def section_params
           params.require(:cbe_section).permit(:name,
-                                              :scenario_description,
-                                              :question_description,
-                                              :scenario_label,
-                                              :question_label,
+                                              :score,
+                                              :kind,
+                                              :sorting_order,
+                                              :content,
                                               :cbe_id)
         end
       end

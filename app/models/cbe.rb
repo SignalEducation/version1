@@ -19,7 +19,7 @@ class Cbe < ApplicationRecord
   has_many :questions, through: :sections, class_name: 'Cbe::Question'
 
   # validations
-  validates :name, :title, :description, :subject_course_id, presence: true
+  validates :name, :title, :score, :content, :agreement_content, :subject_course_id, presence: true
 
   # instance methods
   def initialize_settings(exam_time = 120, pauses_allowed = 32, length_of_pauses = 15)
