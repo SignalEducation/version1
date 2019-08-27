@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
 class Cbe::Question < ApplicationRecord
+  # enum
+  include CbeQuestionTypes
+
   # relationships
   belongs_to :section, class_name: 'Cbe::Section', foreign_key: 'cbe_section_id',
                        inverse_of: :questions
+  has_many :answers, class_name: 'Cbe::Answer', inverse_of: :question,
+                     dependent: :destroy
 
-  # enums
-  enum kind: { multiple_choice: 0,
-               drag_drop: 1 }
+  # validations
+  validates :content, :kind, :cbe_section_id, :score, presence: true
+  validates :score, numericality: { greater_than_or_equal_to: 0 }
 end
