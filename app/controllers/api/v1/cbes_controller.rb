@@ -22,11 +22,14 @@ module Api
       def cbe_params
         params.require(:cbe).permit(:name,
                                     :title,
-                                    :description,
+                                    :content,
                                     :exam_time,
                                     :hard_time_limit,
                                     :number_of_pauses_allowed,
                                     :length_of_pauses,
+                                    :agreement_content,
+                                    :active,
+                                    :score,
                                     :subject_course_id)
       end
     end

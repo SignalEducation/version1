@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_26_071920) do
+ActiveRecord::Schema.define(version: 2019_08_27_092543) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -89,60 +89,75 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.index ["home_page_id"], name: "index_blog_posts_on_home_page_id"
   end
 
+  create_table "cbe_answers", force: :cascade do |t|
+    t.integer "kind"
+    t.json "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_question_id"
+    t.index ["cbe_question_id"], name: "index_cbe_answers_on_cbe_question_id"
+  end
+
   create_table "cbe_introduction_pages", force: :cascade do |t|
     t.integer "sorting_order"
     t.text "content"
     t.string "title"
-    t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "cbe_id"
     t.index ["cbe_id"], name: "index_cbe_introduction_pages_on_cbe_id"
   end
 
-  create_table "cbe_multiple_choice_questions", force: :cascade do |t|
-    t.string "label"
-    t.boolean "is_correct_answer"
-    t.integer "order"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "question_1"
-    t.string "question_2"
-    t.string "question_3"
-    t.string "question_4"
-    t.integer "correct_answer"
-    t.string "name"
-    t.string "description"
-    t.bigint "cbe_section_id"
-    t.index ["cbe_section_id"], name: "index_cbe_multiple_choice_questions_on_cbe_section_id"
-  end
-
   create_table "cbe_questions", force: :cascade do |t|
-    t.string "label"
-    t.text "description"
+    t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "kind"
     t.bigint "cbe_section_id"
+    t.float "score"
+    t.integer "sorting_order"
+    t.bigint "cbe_scenario_id"
+    t.index ["cbe_scenario_id"], name: "index_cbe_questions_on_cbe_scenario_id"
     t.index ["cbe_section_id"], name: "index_cbe_questions_on_cbe_section_id"
   end
 
+  create_table "cbe_resources", force: :cascade do |t|
+    t.string "name"
+    t.integer "sorting_order"
+    t.string "document_file_name"
+    t.string "document_content_type"
+    t.bigint "document_file_size"
+    t.datetime "document_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_id"
+    t.index ["cbe_id"], name: "index_cbe_resources_on_cbe_id"
+  end
+
+  create_table "cbe_scenarios", force: :cascade do |t|
+    t.string "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "cbe_section_id"
+    t.index ["cbe_section_id"], name: "index_cbe_scenarios_on_cbe_section_id"
+  end
+
   create_table "cbe_sections", force: :cascade do |t|
-    t.text "scenario_description"
-    t.text "question_description"
-    t.string "scenario_label"
-    t.string "question_label"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
     t.bigint "cbe_id"
+    t.float "score"
+    t.integer "kind"
+    t.integer "sorting_order"
+    t.text "content"
     t.index ["cbe_id"], name: "index_cbe_sections_on_cbe_id"
   end
 
   create_table "cbes", force: :cascade do |t|
     t.string "name"
     t.string "title"
-    t.text "description"
+    t.text "content"
     t.float "exam_time"
     t.float "hard_time_limit"
     t.integer "number_of_pauses_allowed"
@@ -150,6 +165,9 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "subject_course_id"
+    t.text "agreement_content"
+    t.boolean "active", default: false, null: false
+    t.float "score"
     t.index ["subject_course_id"], name: "index_cbes_on_subject_course_id"
   end
 
@@ -480,7 +498,6 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.string "logo_image"
     t.string "registration_form_heading"
     t.string "login_form_heading"
-    t.string "audience_guid"
     t.string "landing_page_h1"
     t.text "landing_page_paragraph"
     t.index ["name"], name: "index_exam_bodies_on_name"
@@ -601,8 +618,8 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.string "background_image_content_type"
     t.integer "background_image_file_size"
     t.datetime "background_image_updated_at"
-    t.string "background_colour"
     t.bigint "exam_body_id"
+    t.string "background_colour"
     t.string "seo_title"
     t.string "seo_description"
     t.string "short_description"
@@ -737,7 +754,6 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.integer "cover_image_file_size"
     t.datetime "cover_image_updated_at"
     t.index ["name"], name: "index_mock_exams_on_name"
-    t.index ["subject_course_id"], name: "index_mock_exams_on_subject_course_id"
   end
 
   create_table "order_transactions", id: :serial, force: :cascade do |t|
@@ -801,6 +817,7 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
 
   create_table "products", id: :serial, force: :cascade do |t|
     t.string "name"
+    t.integer "subject_course_id"
     t.integer "mock_exam_id"
     t.string "stripe_guid"
     t.boolean "live_mode", default: false
@@ -810,10 +827,11 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.integer "currency_id"
     t.decimal "price"
     t.string "stripe_sku_guid"
-    t.integer "subject_course_id"
     t.integer "sorting_order"
     t.integer "product_type", default: 0
     t.integer "correction_pack_count"
+    t.bigint "cbe_id"
+    t.index ["cbe_id"], name: "index_products_on_cbe_id"
     t.index ["mock_exam_id"], name: "index_products_on_mock_exam_id"
     t.index ["name"], name: "index_products_on_name"
     t.index ["stripe_guid"], name: "index_products_on_stripe_guid"
@@ -1215,7 +1233,6 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.string "cancellation_reason"
     t.text "cancellation_note"
     t.bigint "changed_from_id"
-    t.string "temp_guid"
     t.string "completion_guid"
     t.index ["changed_from_id"], name: "index_subscriptions_on_changed_from_id"
   end
@@ -1356,7 +1373,6 @@ ActiveRecord::Schema.define(version: 2019_08_26_071920) do
     t.index ["user_id"], name: "index_visits_on_user_id"
   end
 
-  add_foreign_key "cbe_multiple_choice_questions", "cbe_sections"
   add_foreign_key "cbe_sections", "cbes"
   add_foreign_key "cbes", "subject_courses"
   add_foreign_key "exercises", "products"
