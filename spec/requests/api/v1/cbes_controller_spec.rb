@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::CbesController', type: :request do
@@ -28,6 +30,9 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                             agreement_content
                                                             active
                                                             score
+                                                            introduction_pages
+                                                            sections
+                                                            questions
                                                             subject_course
                                                             exam_body])
       end
@@ -43,6 +48,41 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
       it 'returns empty data' do
         body = JSON.parse(response.body)
         expect(body).to be_empty
+      end
+    end
+  end
+
+  describe 'get /api/v1/cbes/:id' do
+    context 'return a CBE' do
+      let!(:cbe) { create(:cbe, :with_subject_course) }
+
+      before { get "/api/v1/cbes/#{cbe.id}" }
+
+      it 'returns HTTP status 200' do
+        expect(response).to have_http_status 200
+      end
+
+      it 'returns cbes json data' do
+        body = JSON.parse(response.body)
+
+        expect(body['id']).to eq(cbe.id)
+        expect(body['name']).to eq(cbe.name)
+        expect([body.keys]).to contain_exactly(%w[id
+                                                name
+                                                title
+                                                content
+                                                exam_time
+                                                hard_time_limit
+                                                number_of_pauses_allowed
+                                                length_of_pauses
+                                                agreement_content
+                                                active
+                                                score
+                                                introduction_pages
+                                                sections
+                                                questions
+                                                subject_course
+                                                exam_body])
       end
     end
   end
@@ -63,8 +103,8 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
         body = JSON.parse(response.body)
 
         expect(body['name']).to eq(cbe.name)
-        #expect(body['title']).to eq(cbe.title)
-        #expect(body['content']).to eq(cbe.content)
+        expect(body['title']).to eq(cbe.title)
+        expect(body['content']).to eq(cbe.content)
         expect(body['exam_time']).to eq(cbe.exam_time)
         expect(body['hard_time_limit']).to eq(cbe.hard_time_limit)
         expect(body['number_of_pauses_allowed']).to eq(cbe.number_of_pauses_allowed)
@@ -80,6 +120,9 @@ RSpec.describe 'Api::V1::CbesController', type: :request do
                                                   agreement_content
                                                   active
                                                   score
+                                                  introduction_pages
+                                                  sections
+                                                  questions
                                                   subject_course
                                                   exam_body])
       end

@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout_variables
-    @layout = 'standard'
+    @layout ||= 'standard'
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'
