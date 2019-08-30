@@ -1,15 +1,6 @@
 !!! 5
 %html{lang: params[:locale] || 'en'}
   %head
-    %meta{charset: 'utf-8'}
-    %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
-    %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
-    %title
-      -if @seo_title
-        =@seo_title
-      -else
-        The Smarter Way to Study | learnsignal
-
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
     -# VueJS include
@@ -50,15 +41,11 @@
 
   - if controller_name == 'cbes'
     %body.page-light
-      #console-wrapper
-        .d-none.d-sm-block
-          =render partial: 'layouts/management_side_navbar'
+      .main-content
+        -if flash[:success] || flash[:error] || flash[:warning]
+          =render partial: 'layouts/flash_messages'
 
-        .main-content
-          -if flash[:success] || flash[:error] || flash[:warning]
-            =render partial: 'layouts/flash_messages'
-
-          =yield
+        =yield
 
   - else
     %body{class: (controller_name == 'student_sign_ups' && action_name != 'new') ? 'page-light' : ''}
@@ -97,7 +84,6 @@
             -if flash[:success] || flash[:error] || flash[:warning]
               =render partial: 'layouts/flash_messages'
             =yield
-
       -else
         =render partial: 'layouts/navbar'
         -if @top_margin

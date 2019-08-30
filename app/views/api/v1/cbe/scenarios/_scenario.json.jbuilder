@@ -1,6 +1,3 @@
 json.id               scenario.id
 json.content          scenario.content
-
-json.cbe_section do
-  json.partial! 'api/v1/cbe/sections/section', locals: { section: scenario.section }
-end
+json.section_id       scenario.cbe_section_id

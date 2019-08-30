@@ -5,7 +5,7 @@ class Cbe::Scenario < ApplicationRecord
   belongs_to :section, class_name: 'Cbe::Section', foreign_key: 'cbe_section_id',
                        inverse_of: :scenarios
   has_many :questions, class_name: 'Cbe::Question', inverse_of: :scenario,
-           dependent: :destroy
+                       dependent: :destroy
 
   # validations
   validates :content, :cbe_section_id, presence: true

@@ -12,42 +12,41 @@
     <div class="form-group">
       <button v-on:click="saveScenario" class="btn btn-primary">Save Scenario</button>
     </div>
-
   </div>
 </template>
 
 <script>
-  import axios from "axios";
+import axios from "axios";
 
-  export default {
-    props: ['sectionId'],
-    data: function() {
-      return {
-        scenarioDetails: {},
-        scenarioContent: null
-      };
-    },
-    methods: {
-      saveScenario: function() {
-        this.scenarioDetails = {};
-        this.scenarioDetails['content'] = this.scenarioContent;
-        this.scenarioDetails['cbe_section_id'] = this.sectionId;
+export default {
+  props: ['sectionId'],
+  data: function() {
+    return {
+      scenarioDetails: {},
+      scenarioContent: null
+    };
+  },
+  methods: {
+    saveScenario: function() {
+      this.scenarioDetails = {};
+      this.scenarioDetails['content'] = this.scenarioContent;
+      this.scenarioDetails['cbe_section_id'] = this.sectionId;
 
-        axios
-          .post("/api/v1/cbe/scenarios/", {
-            scenario: this.scenarioDetails
-          })
-          .then(response => {
-            this.createdScenario = response.data;
-            this.scenarioDetails["id"] = this.createdScenario.id;
-            this.$emit('add-scenario', this.scenarioDetails);
-            this.scenarioDetails = {};
-            this.scenarioContent = '';
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
+      axios
+        .post("/api/v1/cbe/scenarios/", {
+          scenario: this.scenarioDetails
+        })
+        .then(response => {
+          this.createdScenario = response.data;
+          this.scenarioDetails["id"] = this.createdScenario.id;
+          this.$emit('add-scenario', this.scenarioDetails);
+          this.scenarioDetails = {};
+          this.scenarioContent = '';
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
-  };
+  }
+};
 </script>

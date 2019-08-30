@@ -8,6 +8,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-sm-12">
       <div class="form-group">
         <label for="sectionKindSelect">Section Type</label>
@@ -18,6 +19,7 @@
         </b-form-select>
       </div>
     </div>
+
     <div class="col-sm-12">
       <div class="form-group">
         <label for="sectionScore">Score</label>
@@ -26,6 +28,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-sm-12">
       <div class="form-group">
         <label for="sectionContent">Cover Page Content</label>
@@ -42,47 +45,47 @@
 </template>
 
 <script>
-  import axios from "axios";
+import axios from "axios";
 
-  export default {
-    data: function() {
-      return {
-        sectionDetails: {},
-        name: null,
-        score: null,
-        kind: null,
-        content: null,
-        sectionKinds: [ 'objective', 'objective_test_case', 'constructed_response' ]
-      };
-    },
-    methods: {
-      saveSection: function() {
-        this.sectionDetails["name"] = this.name;
-        this.sectionDetails["score"] = this.score;
-        this.sectionDetails["kind"] = this.kind;
-        this.sectionDetails["content"] = this.content;
-        this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
+export default {
+  data: function() {
+    return {
+      sectionDetails: {},
+      name: null,
+      score: null,
+      kind: null,
+      content: null,
+      sectionKinds: [ 'objective', 'objective_test_case', 'constructed_response' ]
+    };
+  },
+  methods: {
+    saveSection: function() {
+      this.sectionDetails["name"] = this.name;
+      this.sectionDetails["score"] = this.score;
+      this.sectionDetails["kind"] = this.kind;
+      this.sectionDetails["content"] = this.content;
+      this.sectionDetails["cbe_id"] = this.$store.state.cbeId;
 
-        axios
-          .post(
-            "/api/v1/cbes/"+ this.$store.state.cbeId + '/sections', { cbe_section: this.sectionDetails }
-          )
-          .then(response => {
-            this.createdSection = response.data;
-            if (this.createdSection.id > 0) {
-              this.sectionDetails["id"] = this.createdSection.id;
-              this.$emit('add-section', this.sectionDetails);
-              this.sectionDetails = {};
-              this.name = null;
-              this.kind = null;
-              this.score = null;
-              this.content = null;
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
+      axios
+        .post(
+          "/api/v1/cbes/"+ this.$store.state.cbeId + '/sections', { cbe_section: this.sectionDetails }
+        )
+        .then(response => {
+          this.createdSection = response.data;
+          if (this.createdSection.id > 0) {
+            this.sectionDetails["id"] = this.createdSection.id;
+            this.$emit('add-section', this.sectionDetails);
+            this.sectionDetails = {};
+            this.name = null;
+            this.kind = null;
+            this.score = null;
+            this.content = null;
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
-  };
+  }
+};
 </script>

@@ -38,6 +38,7 @@
                   <b-button variant="secondary" class="mr-1">Edit Section</b-button>
                 </div>
               </div>
+
               <hr/>
 
               <div v-if="section.kind === 'objective'">
@@ -108,7 +109,6 @@
                                         <b-button variant="secondary" class="mr-1">Edit Question</b-button>
                                       </div>
                                     </div>
-
                                   </b-card-body>
                                 </b-collapse>
                               </b-card>
@@ -129,8 +129,6 @@
                                 </b-card-body>
                               </b-collapse>
                             </b-card>
-
-
                           </b-card-text>
                         </b-tab>
                         <b-tab title="New Scenario">
@@ -138,7 +136,6 @@
                             <CBEScenario v-bind:section-id="section.id" v-on:add-scenario="updateScenarios"></CBEScenario>
                           </b-card-text>
                         </b-tab>
-
                       </b-tabs>
                     </b-card>
                   </div>
@@ -148,99 +145,97 @@
             <b-tab title="New Section">
               <CBESection v-on:add-section="updateSections"></CBESection>
             </b-tab>
-
           </b-tabs>
         </b-card>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-    import CBEDetails from "./components/CBEDetails";
-    import CBESection from "./components/CBESection";
-    import CBEScenario from "./components/CBEScenario";
-    import CBEQuestion from "./components/CBEQuestion";
+import CBEDetails from "./components/CBEDetails";
+import CBESection from "./components/CBESection";
+import CBEScenario from "./components/CBEScenario";
+import CBEQuestion from "./components/CBEQuestion";
 
-    export default {
-      components: {
-        CBEDetails,
-        CBESection,
-        CBEScenario,
-        CBEQuestion
-      },
-      data: function() {
-        return {
-            cbeDetails: [],
-            sections: [],
-        };
-      },
-      methods: {
-        updateSections: function(data) {
-            this.sections.push(data);
-        },
-        updateScenarios: function(data) {
-            let sectionIndex = 0;
-            this.sections.forEach((s, i) => {
-                if (s.id === data.cbe_section_id) {
-                    sectionIndex =  i;
-                }
-            });
-            let currentSection = this.sections[sectionIndex];
-            if (currentSection.hasOwnProperty('scenarios')) {
-                console.log(currentSection);
-            } else {
-                // This $set syntax is required by Vue to ensure the section.questions array is reactive
-                // It is inside the conditional to ensure section.questions is not reset to empty
-                this.$set(currentSection, 'scenarios', []);
-            }
-            currentSection.scenarios.push(data);
-        },
-        updateQuestions: function(data) {
-            let sectionIndex = 0;
-            this.sections.forEach((s, i) => {
-                if (s.id === data.cbe_section_id) {
-                    sectionIndex =  i;
-                }
-            });
-            let currentSection = this.sections[sectionIndex];
-            if (currentSection.hasOwnProperty('questions')) {
-                console.log(currentSection);
-            } else {
-                // This $set syntax is required by Vue to ensure the section.questions array is reactive
-                // It is inside the conditional to ensure section.questions is not reset to empty
-                this.$set(currentSection, 'questions', []);
-            }
-            currentSection.questions.push(data);
-        },
-        updateScenarioQuestions: function(data) {
-            let scenarioIndex = 0;
-            let sectionIndex = 0;
-
-            this.sections.forEach((s, i) => {
-                if (s.id === data.cbe_section_id) {
-                    sectionIndex = i;
-                }
-            });
-            let currentSection = this.sections[sectionIndex];
-
-            currentSection.scenarios.forEach((s, i) => {
-                if (s.id === data.cbe_scenario_id) {
-                    scenarioIndex =  i;
-                }
-            });
-            let currentScenario = currentSection.scenarios[scenarioIndex];
-            if (currentScenario.hasOwnProperty('questions')) {
-                console.log(currentScenario);
-            } else {
-                // This $set syntax is required by Vue to ensure the section.questions array is reactive
-                // It is inside the conditional to ensure section.questions is not reset to empty
-                this.$set(currentScenario, 'questions', []);
-            }
-            currentScenario.questions.push(data);
-        }
-
-      }
+export default {
+  components: {
+    CBEDetails,
+    CBESection,
+    CBEScenario,
+    CBEQuestion
+  },
+  data: function() {
+    return {
+        cbeDetails: [],
+        sections: [],
     };
+  },
+  methods: {
+    updateSections: function(data) {
+        this.sections.push(data);
+    },
+    updateScenarios: function(data) {
+        let sectionIndex = 0;
+        this.sections.forEach((s, i) => {
+            if (s.id === data.cbe_section_id) {
+                sectionIndex =  i;
+            }
+        });
+        let currentSection = this.sections[sectionIndex];
+        if (currentSection.hasOwnProperty('scenarios')) {
+            console.log(currentSection);
+        } else {
+            // This $set syntax is required by Vue to ensure the section.questions array is reactive
+            // It is inside the conditional to ensure section.questions is not reset to empty
+            this.$set(currentSection, 'scenarios', []);
+        }
+        currentSection.scenarios.push(data);
+    },
+    updateQuestions: function(data) {
+        let sectionIndex = 0;
+        this.sections.forEach((s, i) => {
+            if (s.id === data.cbe_section_id) {
+                sectionIndex =  i;
+            }
+        });
+        let currentSection = this.sections[sectionIndex];
+        if (currentSection.hasOwnProperty('questions')) {
+            console.log(currentSection);
+        } else {
+            // This $set syntax is required by Vue to ensure the section.questions array is reactive
+            // It is inside the conditional to ensure section.questions is not reset to empty
+            this.$set(currentSection, 'questions', []);
+        }
+        currentSection.questions.push(data);
+    },
+    updateScenarioQuestions: function(data) {
+        let scenarioIndex = 0;
+        let sectionIndex = 0;
+
+        this.sections.forEach((s, i) => {
+            if (s.id === data.cbe_section_id) {
+                sectionIndex = i;
+            }
+        });
+        let currentSection = this.sections[sectionIndex];
+
+        currentSection.scenarios.forEach((s, i) => {
+            if (s.id === data.cbe_scenario_id) {
+                scenarioIndex =  i;
+            }
+        });
+        let currentScenario = currentSection.scenarios[scenarioIndex];
+        if (currentScenario.hasOwnProperty('questions')) {
+            console.log(currentScenario);
+        } else {
+            // This $set syntax is required by Vue to ensure the section.questions array is reactive
+            // It is inside the conditional to ensure section.questions is not reset to empty
+            this.$set(currentScenario, 'questions', []);
+        }
+        currentScenario.questions.push(data);
+    }
+
+  }
+};
 </script>
