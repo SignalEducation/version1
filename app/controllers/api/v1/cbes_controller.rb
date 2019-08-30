@@ -7,6 +7,10 @@ module Api
         @cbes = ::Cbe.all
       end
 
+      def show
+        @cbe = ::Cbe.find(params[:id])
+      end
+
       def create
         @cbe = ::Cbe.new(cbe_params)
 
@@ -21,6 +25,8 @@ module Api
 
       def cbe_params
         params.require(:cbe).permit(:name,
+                                    :title,
+                                    :content,
                                     :exam_time,
                                     :agreement_content,
                                     :active,

@@ -37,37 +37,34 @@
 
 FactoryBot.define do
   factory :subject_course do
-    sequence(:name)      { |x| "Subject Course #{x}" }
-    sequence(:name_url)  { |x| "subject-course-#{x}" }
-    sorting_order { 1 }
-    active { false }
-    cme_count { 1 }
-    video_count { 1 }
-    quiz_count { 1 }
-    # question_count { 1 }
-    description { "MyText" }
-    # short_description { "MyString" }
-    # email_content { "MyString" }
+    sequence(:name)                         { |n| "#{Faker::Lorem.word}-#{n}" }
+    name_url                                { Faker::Internet.slug }
+    sorting_order                           { 1 }
+    active                                  { false }
+    cme_count                               { 1 }
+    video_count                             { 1 }
+    quiz_count                              { 1 }
+    description                             { Faker::Lorem.sentence }
     default_number_of_possible_exam_answers { 4 }
-    quiz_pass_rate { 10 }
+    quiz_pass_rate                          { 10 }
+    survey_url                              { 'SurveyURL' }
+    category_label                          { 'Category' }
+    icon_label                              { 'Icon' }
     group
-    survey_url { 'SurveyURL' }
     exam_body
-    category_label { 'Category' }
-    icon_label { 'Icon' }
 
     factory :active_subject_course do
-      active                       { true }
-      preview                       { false }
+      active  { true }
+      preview { false }
     end
 
     factory :inactive_subject_course do
-      active                       { false }
+      active { false }
     end
 
     factory :preview_subject_course do
-      active                       { true }
-      preview                       { true }
+      active  { true }
+      preview { true }
     end
   end
 end
