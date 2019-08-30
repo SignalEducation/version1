@@ -2,7 +2,6 @@
   <div>
     <h4>CBE Details</h4>
     <div class="row ">
-
       <div class="col-sm-6">
         <div class="form-group">
           <label for="subjectCoursesSelect">Course</label>
@@ -46,7 +45,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <div class="row mt-3">
@@ -55,7 +53,6 @@
         <button v-on:click="saveNewCBE" class="btn btn-primary">Save CBE</button>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -97,14 +94,14 @@
     methods: {
       getSubjects: function () {
         axios
-                .get("/api/v1/subject_courses/")
-                .then(response => {
-                  this.subjectCourses = response.data;
-                })
-                .catch(e => {
-                  console.log(e);
+          .get("/api/v1/subject_courses/")
+          .then(response => {
+            this.subjectCourses = response.data;
+          })
+          .catch(e => {
+            console.log(e);
 
-                });
+          });
       },
       saveNewCBE: function() {
         this.cbeDetails = {};
@@ -115,17 +112,17 @@
         this.cbeDetails["subject_course_id"] = this.$store.state.cbeDetails.cbeSubjectCourseId;
 
         axios
-                .post("/api/v1/cbes/", { cbe: this.cbeDetails })
-                .then(response => {
-                  this.createdCBE = response.data;
-                  if (this.createdCBE.id > 0) {
-                    this.$store.commit("setCbeId", this.createdCBE.id);
-                    this.$store.commit("hideDetailsForm", true);
-                  }
-                })
-                .catch(error => {
-                  console.log(error);
-                });
+          .post("/api/v1/cbes/", { cbe: this.cbeDetails })
+          .then(response => {
+            this.createdCBE = response.data;
+            if (this.createdCBE.id > 0) {
+              this.$store.commit("setCbeId", this.createdCBE.id);
+              this.$store.commit("hideDetailsForm", true);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
     }
 

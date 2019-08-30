@@ -17,14 +17,12 @@
 
 
 # Ignore all logfiles and tempfiles.
-/spec/tmp
-/public/system
-
-# Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+/spec/tmp
+/public/system
 
 # Ignore uploaded files in development
 /storage/*
@@ -51,6 +49,9 @@ config/secrets.yml
 # Mac file managment stuff
 .DS_Store
 
+# Foreman proc file
+Procfile
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
@@ -69,19 +70,17 @@ TAGS
 
 # Ignore VSC file
 *.code-workspace
+.vscode
 
 # .env files
 *.env
 
 # webpacker compiled files
-/public/packs/*
-
-
-# redis db
-./dump.rdb
+/public/packs/
 /public/packs-test
 /node_modules
 yarn-debug.log*
 .yarn-integrity
 
-.vscode 
+# redis db
+dump.rdb

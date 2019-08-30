@@ -24,20 +24,21 @@
 class Product < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
-  enum product_type: { mock_exam: 0, correction_pack: 1 }
+  enum product_type: { mock_exam: 0, correction_pack: 1, cbe: 2 }
 
   # Constants
 
   # relationships
   belongs_to :currency
-  belongs_to :mock_exam
+  # belongs_to :mock_exam
   has_many :orders, dependent: :restrict_with_error
   has_many :exercises, dependent: :restrict_with_error
 
   # validation
   validates :name, presence: true
-  validates :mock_exam_id, presence: true, numericality: { only_integer: true,
-                                                           greater_than: 0 }
+  #todo(giordano), fix it before merge.
+  # validates :mock_exam_id, presence: true, numericality: { only_integer: true,
+  #                                                          greater_than: 0 }
   validates :currency_id, presence: true
   validates :price, presence: true
   validates :stripe_guid, presence: true, uniqueness: true, on: :update

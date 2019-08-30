@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_layout_variables
-    @layout = 'standard'
+    @layout ||= 'standard'
     @navbar = 'standard'
     @top_margin = true
     @footer = 'standard'
@@ -63,6 +63,10 @@ class ApplicationController < ActionController::Base
 
   def management_layout
     @layout = 'management'
+  end
+
+  def cbe_layout
+    @layout = 'cbe'
   end
 
   def logged_in_required

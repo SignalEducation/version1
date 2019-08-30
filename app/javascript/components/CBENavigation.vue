@@ -1,19 +1,13 @@
 <template>
-
-
   <section>
-
     <h1>CBE Details</h1>
+
     <p> {{ this.cbes.name }}</p>
     <p> {{ currentCbeId}}</p>
     <b-button @click="showQuestion">Add a question 1</b-button>
 
-
     <div role="tablist" class="pt-5">
-
       <div v-for="(cbe_section, index) in cbeSections">
-
-
         <b-card no-body class="mb-1">
           <b-card-header header-tag="header" class="p-1" role="tab">
             <b-button block href="#" v-b-toggle="'accordion-' + index" variant="info">{{ cbe_section.name }}</b-button>
@@ -31,7 +25,6 @@
           </b-collapse>
         </b-card>
 
-
         <!--
         <b-card v-if="cbe_section.id == question.cbe_section_id">
           {{question.text}}  <b-link href="#foo">Edit</b-link>
@@ -40,23 +33,19 @@
       </div>
 
       <b-button  @click="showCbeSection">Add a Section</b-button>
-
-
     </div>
-
   </section>
-
 </template>
 
 <script>
   import axios from 'axios'
   import QuestionsList from './QuestionsList'
- 
+
   export default {
     components: {
       QuestionsList,
     },
-    
+
      data: function(){
        return {
          currentCbeId: 109,
@@ -91,10 +80,10 @@
         this.fetchQuestionTypes()
         //this.setCbeQuestions()
       },
-      methods: { 
+      methods: {
         setCbeQuestions: function (page, index) {
           //this.$store.commit(this.cbeQuestions)
-    
+
         },
         setCurrentCBE: function (page, index) {
           this.$store.commit('setCurrentCbeId', this.currentCbeId)
@@ -102,19 +91,19 @@
         showCbeSection: function(page, index) {
           this.$store.state.showCBEDetails = false
           this.$store.state.showSections = true
-          this.$store.state.showCBEMultipleChoiceQuestion = false           
+          this.$store.state.showCBEMultipleChoiceQuestion = false
         },
         fetchQuestionTypes: function (page, index) {
-            axios.get('http://localhost:3000/api/cbe_question_types/')
-                .then(response => {
-                  console.log("Loaded question types")
-                    this.$store.questionTypes = response.data
-                    this.questionTypes = this.$store.questionTypes
-                    //console.log(response.data[0].data)
-                })
-                .catch(e => {
-                    console.log('Error' + e)
-                })
+          axios.get('http://localhost:3000/api/cbe_question_types/')
+            .then(response => {
+              console.log("Loaded question types")
+                this.$store.questionTypes = response.data
+                this.questionTypes = this.$store.questionTypes
+                //console.log(response.data[0].data)
+            })
+            .catch(e => {
+                console.log('Error' + e)
+            })
         },
         showQuestion: function(page, index) {
           console.log("Show Question")

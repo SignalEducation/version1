@@ -28,14 +28,14 @@
 
 FactoryBot.define do
   factory :group do
-    sequence(:name)           { |n| "Group #{n}" }
-    sequence(:name_url)           { |n| "group-#{n}" }
-    description { 'Basic Description of the Course' }
+    name                  { Faker::Movies::LordOfTheRings.location }
+    name_url              { Faker::Internet.slug }
+    description           { Faker::Lorem.sentence }
+    active                { true }
+    sorting_order         { 1 }
+    short_description     { 'A short description' }
+    seo_description       { 'The SEO description' }
+    seo_title             { Faker::Internet.domain_name }
     exam_body
-    active { true }
-    sorting_order { 1 }
-    short_description { 'A short description' }
-    seo_description { 'The SEO description' }
-    sequence(:seo_title)           { |n| "Group #{n}" }
   end
 end

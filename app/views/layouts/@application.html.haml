@@ -1,11 +1,19 @@
 !!! 5
 %html{lang: params[:locale] || 'en'}
   %head
+    %meta{charset: 'utf-8'}
+    %meta{http: {equiv:'X-UA-Compatible'}, content:'IE=edge'}
+    %meta{name: 'viewport', content: 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=0'}
+    %title
+      -if @seo_title
+        =@seo_title
+      -else
+        The Smarter Way to Study | learnsignal
 
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
     -# VueJS include
-    = javascript_pack_tag 'cbe_main'
+    = javascript_pack_tag 'application'
 
     =render partial: 'layouts/google_tag_manager'
 
@@ -39,6 +47,7 @@
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
+  = javascript_pack_tag 'hello_vue'
 
   - if controller_name == 'cbes'
     %body.page-light

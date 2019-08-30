@@ -9,19 +9,20 @@
           <input v-model="questionKind" placeholder="Kind" class="form-control" />
         </div>
       </div>
+
       <div class="form-group">
         <label for="colFormLabelSm">Content</label>
         <div class="input-group input-group-lg">
           <input v-model="questionContent" placeholder="Content" class="form-control"/>
         </div>
       </div>
+
       <div class="form-group">
         <label for="colFormLabelSm">Score</label>
         <div class="input-group input-group-lg">
           <input v-model="questionScore" placeholder="Score" class="form-control"/>
         </div>
       </div>
-
 
       <div class="form-group">
         <button v-on:click="saveQuestion" class="btn btn-primary">Save Question</button>

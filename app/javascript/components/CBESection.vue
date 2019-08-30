@@ -37,9 +37,6 @@
         <button v-on:click="saveSection" class="btn btn-primary">Save Section</button>
       </div>
     </div>
-
-
-
   </div>
 </template>
 
