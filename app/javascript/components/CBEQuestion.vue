@@ -10,6 +10,7 @@
         </b-form-select>
       </div>
     </div>
+
     <div class="col-sm-6">
       <div class="form-group">
         <label for="questionScore">Score</label>
@@ -18,6 +19,7 @@
         </div>
       </div>
     </div>
+
     <div class="col-sm-12">
       <div class="form-group">
         <label for="questionContent">Content</label>
@@ -30,62 +32,61 @@
     <div class="form-group">
       <button v-on:click="saveQuestion" class="btn btn-primary">Save Question</button>
     </div>
-
   </div>
 </template>
 
 <script>
-  import axios from "axios";
+import axios from "axios";
 
-  export default {
-    props: ['sectionId', 'scenarioId'],
-    data: function() {
-      return {
-        questionDetails: {},
-        questionKind: null,
-        questionContent: null,
-        questionScore: null,
-        selectedSelectQuestion: null,
-        questionKinds: [
-          'multiple_choice',
-          'multiple_response',
-          'complete',
-          'fill_in_the_blank',
-          'drag_drop',
-          'dropdown_list',
-          'hot_spot',
-          'spreadsheet',
-          'open'
-        ]
-      };
-    },
-    methods: {
-      saveQuestion: function(page, index) {
-        this.questionDetails = {};
-        this.questionDetails['kind'] = this.questionKind;
-        this.questionDetails['content'] = this.questionContent;
-        this.questionDetails['score'] = this.questionScore;
-        this.questionDetails['cbe_section_id'] = this.sectionId;
-        this.questionDetails['cbe_scenario_id'] = this.scenarioId;
-        console.log(this.questionDetails);
+export default {
+  props: ['sectionId', 'scenarioId'],
+  data: function() {
+    return {
+      questionDetails: {},
+      questionKind: null,
+      questionContent: null,
+      questionScore: null,
+      selectedSelectQuestion: null,
+      questionKinds: [
+        'multiple_choice',
+        'multiple_response',
+        'complete',
+        'fill_in_the_blank',
+        'drag_drop',
+        'dropdown_list',
+        'hot_spot',
+        'spreadsheet',
+        'open'
+      ]
+    };
+  },
+  methods: {
+    saveQuestion: function(page, index) {
+      this.questionDetails = {};
+      this.questionDetails['kind'] = this.questionKind;
+      this.questionDetails['content'] = this.questionContent;
+      this.questionDetails['score'] = this.questionScore;
+      this.questionDetails['cbe_section_id'] = this.sectionId;
+      this.questionDetails['cbe_scenario_id'] = this.scenarioId;
+      console.log(this.questionDetails);
 
-        axios
-          .post("/api/v1/cbe/questions/", {
-            question: this.questionDetails
-          })
-          .then(response => {
-            this.createdQuestion = response.data;
-            this.questionDetails["id"] = this.createdQuestion.id;
-            this.$emit('add-question', this.questionDetails);
-            this.questionDetails = {};
-            this.questionKind = '';
-            this.questionContent = '';
-            this.questionScore = '';
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
+      axios
+        .post("/api/v1/cbe/questions/", {
+          question: this.questionDetails
+        })
+        .then(response => {
+          this.createdQuestion = response.data;
+          this.questionDetails["id"] = this.createdQuestion.id;
+          this.$emit('add-question', this.questionDetails);
+          this.questionDetails = {};
+          this.questionKind = '';
+          this.questionContent = '';
+          this.questionScore = '';
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
-  };
+  }
+};
 </script>

@@ -66,14 +66,14 @@ class SubjectCourse < ApplicationRecord
   accepts_nested_attributes_for :course_sections
 
   # validation
-  validates :name, presence: true, uniqueness: true, length: {maximum: 255}
-  validates :category_label, presence: true, length: {maximum: 255}
-  validates :icon_label, presence: true, length: {maximum: 255}
-  validates :name_url, presence: true, uniqueness: true, length: {maximum: 255}
+  validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :category_label, presence: true, length: { maximum: 255 }
+  validates :icon_label, presence: true, length: { maximum: 255 }
+  validates :name_url, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :description, presence: true
   validates :group_id, presence: true
   validates :quiz_pass_rate, presence: true
-  validates :survey_url, presence: true, length: {maximum: 255}
+  validates :survey_url, presence: true, length: { maximum: 255 }
   validates_attachment_content_type :background_image, content_type: /\Aimage\/.*\Z/
 
 
