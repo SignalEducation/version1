@@ -13,6 +13,7 @@
             =render partial: 'layouts/flash_messages'
           =form_for(@subscription, url: subscriptions_plan_changes_path(id: @subscription.id), method: :post, html: {class: 'form-horizontal', role: 'form', id: 'upgrade-subscription-form'}) do |f|
             =f.hidden_field :subscription_plan_id
+            =f.hidden_field :use_paypal, value: @subscription.paypal?
             .row.row-md
               -@subscription.upgrade_options.each do |plan|
                 .col-lg
@@ -67,6 +68,7 @@
                       ='Selecting this Plan will result in an immediate charge and start a new billing period from this date.'
                     %p
                       ='Any remaining time paid for on your current billing will be credited to your account, and used for this payment and any future payments until all credit is used.'
+                    %div.invalid-details
                 .row
                   .col-sm-6.offset-1
                     .d-flex.justify-content-between.align-items-center.pt-3
@@ -122,6 +124,10 @@
   }
 
   $(document).on('ready', function() {
+    var displayError = $('.invalid-details');
+    displayError.text('');
+    var stripe = Stripe('#{ENV['LEARNSIGNAL_V3_STRIPE_PUBLIC_KEY']}');
+
     $(".sk-circle").hide();
     choosePlan($('.plan-option')[0]);
     $('.option').bind('click', function(event) {
@@ -133,12 +139,78 @@
       event.preventDefault();
       choosePlan(this);
     });
-  });
 
-  $("#upgrade-subscription-form").submit(function(ev) {
-    ev.preventDefault();
-    $(".sk-circle").show();
-    $("#changePlan").hide();
-    this.submit();
+    $("#upgrade-subscription-form").submit(function(ev) {
+      ev.preventDefault();
+      $(".sk-circle").show();
+      displayError.text('');
+      $("#changePlan").hide();
+
+      if ($('#subscription_use_paypal').val() === 'true') {
+        this.submit();
+      } else {
+        upgradeStripeSubscription();
+      }
+    });
+
+    function upgradeStripeSubscription(){
+      var form = $('#upgrade-subscription-form');
+
+      $.ajax({
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        data: $(form).serialize(),
+        dataType: 'json',
+        success: function(data, status, xhr){
+          if($.inArray(data.status, [ 'incomplete', 'past_due'])){
+            handleStripeAction(data.client_secret, data.subscription_id)
+          } else if(data.status == 'active'){
+            window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+          }
+        },
+        error: function(request, status, error){
+          if (request.status === 500) {
+            resetForm('Something went wrong. Please try again.');
+          } else {
+            resetForm(request.responseJSON.error);
+          }
+        }
+      });
+    }
+
+    function handleStripeAction(client_secret, subscription_id){
+      let statusArray = ['active', 'succeeded'];
+      let intentStatus = '';
+      stripe.handleCardPayment(client_secret).then(function(result) {
+        if (result.error) {
+          resetForm(result.error.message);
+          intentStatus = 'pending';
+        } else {
+          intentStatus = result['paymentIntent']['status'];
+        }
+
+        $.ajax({
+          type: 'post',
+          url: "/subscriptions/plan_changes/" + subscription_id + "/status_from_stripe",
+          data: { status: intentStatus, id: subscription_id },
+          dataType: 'json',
+          success: function(data,status,xhr){
+            if( $.inArray(intentStatus, statusArray) !== -1){
+              window.location.replace("#{personal_upgrade_complete_url(@subscription.completion_guid)}");
+            }
+          },
+          error: function(xhr,status,error){
+            resetForm(error);
+          }
+        });
+      });
+    }
+
+    function resetForm(error){
+      $(".sk-circle").hide();
+      $("#changePlan").show();
+      displayError.text(error);
+      $("#changePlan").attr("disabled", false);
+    }
   });
 
