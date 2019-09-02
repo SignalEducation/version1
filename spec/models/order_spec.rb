@@ -217,15 +217,5 @@ describe Order do
 
       order.confirm_payment_intent
     end
-
-    it 'calls transition[confirm_3d_secure] if the intent is succeeded' do
-      intent = double(status: 'succeeded')
-      allow_any_instance_of(StripeService).to(
-        receive(:confirm_purchase).with(order).and_return(intent)
-      )
-      expect(order).to receive(:confirm_3d_secure)
-
-      order.confirm_payment_intent
-    end
   end
 end

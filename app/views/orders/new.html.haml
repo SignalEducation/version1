@@ -256,24 +256,30 @@
     };
 
     function handlePayment(client_secret, order_id){
+      let orderStatus = '';
       stripe.handleCardAction(client_secret, card).then(function(result) {
-          if (result.error) {
-            resetForm(result.error);
-          } else {
-            $.ajax({
-              type: 'PATCH',
-              url: '/orders/' + order_id,
-              data: { stripe_payment_intent_id: result.paymentIntent.id, id: order_id },
-              dataType: 'json',
-              success: function(data,status,xhr){
-                console.log(data);
-                window.location.replace("#{user_exercises_path(current_user)}");
-              },
-              error: function(xhr,status,error){
-                resetForm(xhr.responseJSON.error);
-              }
-          });
+        if (result.error) {
+          resetForm(result.error);
+          orderStatus = 'pending';
+        } else {
+          orderStatus = result['paymentIntent']['status'];
         }
+          $.ajax({
+            type: 'PATCH',
+            url: '/orders/' + order_id,
+            data: { status: orderStatus },
+            dataType: 'json',
+            success: function(data,status,xhr){
+              if (data.status == 'completed') {
+                window.location.replace("#{user_exercises_path(current_user)}");
+              } else {
+                resetForm(data);
+              }
+            },
+            error: function(xhr,status,error){
+              resetForm(xhr.responseJSON.error);
+            }
+        });
       });
     };
 
