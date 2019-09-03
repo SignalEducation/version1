@@ -44,7 +44,9 @@ Rails.application.routes.draw do
 
     namespace :subscriptions do
       resources :cancellations, only: [:new, :create]
-      resources :plan_changes, only: [:show, :new, :create]
+      resources :plan_changes, only: [:show, :new, :create] do
+        post :status_from_stripe, on: :member
+      end
       post 'status_from_stripe'
     end
 

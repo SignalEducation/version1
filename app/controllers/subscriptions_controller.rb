@@ -33,8 +33,8 @@ class SubscriptionsController < ApplicationController
          @subscription, subscription_service, params)
   rescue Learnsignal::SubscriptionError => e
     if request.xhr?
-      render json: { subscription_id: @subscription.id,
-                     error: e.message }, status: :error
+      render json: { subscription_id: @subscription&.id,
+                     error: e.message }, status: :bad_request
     else
       flash[:error] = e.message
       redirect_to new_subscription_url(subscription_plan_id: params[:subscription][:subscription_plan_id])
@@ -129,10 +129,7 @@ class SubscriptionsController < ApplicationController
 
     if @subscription.save
       if data[:status] == :ok
-        render json: { subscription_id: @subscription.id,
-                       status: @subscription.stripe_status,
-                       completion_guid: @subscription.completion_guid,
-                       client_secret: data[:client_secret] }, status: data[:status]
+        render :create
       else
         render json: { subscription_id: @subscription.id,
                        error: data[:error_message] }, status: data[:status]

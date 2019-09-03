@@ -64,8 +64,9 @@ class Subscription < ApplicationRecord
   validates :paypal_status, inclusion: { in: PAYPAL_STATUSES }, allow_blank: true
   validates :cancellation_reason, presence: true, if: proc { |sub| sub.cancelling_subscription }
   validates :stripe_guid, :stripe_customer_id, length: { maximum: 255 }, allow_blank: true
-  validate :plan_change_currencies, :plan_change_active, :subscription_change_allowable,
-           :user_has_default_card, :user_is_student, if: proc { |sub| sub.changed_from.present? }
+  validate :plan_change_currencies, :plan_change_active,
+           :subscription_change_allowable, :user_has_default_card,
+           :user_is_student, if: proc { |sub| sub.changed_from.present? }, on: :create
 
   # callbacks
   after_create :create_subscription_payment_card, if: :stripe_token # If new card details
@@ -408,6 +409,12 @@ class Subscription < ApplicationRecord
 
   def stripe?
     stripe_guid.present?
+  end
+
+  def subscription_type
+    return 'stripe' if stripe?
+    return 'paypal' if paypal?
+    'unknown'
   end
 
   protected
