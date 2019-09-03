@@ -8,16 +8,6 @@ class StripeService
     customer
   end
 
-  def set_order_status(intent, order)
-    if intent.status == 'requires_action' &&
-       intent.next_action.type == 'use_stripe_sdk'
-      order.state = 'pending_3d_secure'
-    elsif intent.status != 'succeeded'
-      order.state = 'errored'
-    end
-    order
-  end
-
   def create_purchase(order)
     stripe_intent = create_payment_intent(order)
     order = set_order_status(stripe_intent, order)
@@ -33,6 +23,7 @@ class StripeService
 
   def confirm_purchase(order)
     intent = Stripe::PaymentIntent.confirm(order.stripe_payment_intent_id)
+    order.confirm_3d_secure
     unless intent.status == 'succeeded'
       raise_payment_error({}, __method__.to_s, :generic)
     end
@@ -114,5 +105,15 @@ class StripeService
     else
       'Sorry Something went wrong! Please contact us for assistance.'
     end
+  end
+
+  def set_order_status(intent, order)
+    if intent.status == 'requires_action' &&
+       intent.next_action.type == 'use_stripe_sdk'
+      order.state = 'pending_3d_secure'
+    elsif intent.status != 'succeeded'
+      order.state = 'errored'
+    end
+    order
   end
 end

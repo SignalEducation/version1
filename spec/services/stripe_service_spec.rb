@@ -3,7 +3,7 @@ require 'rails_helper'
 describe StripeService, type: :service do
 
   # CUSTOMERS ==================================================================
-  context 'custumers' do
+  context 'customers' do
     describe '#create_customer!' do
       let(:user) { create(:user) }
 
@@ -18,6 +18,100 @@ describe StripeService, type: :service do
 
         expect { subject.create_customer!(user) }.to change { user.stripe_customer_id }.from(nil).to('stripe_test_id')
       end
+    end
+  end
+
+  describe '#create_purchase' do
+    let(:order) { build_stubbed(:order) }
+    let(:stripe_intent) {
+      double(customer: 'cus_12345', id: 'in_12345', client_secret: 'cs_123456')
+    }
+
+    it 'creates a Stripe PaymentIntent' do
+      expect(subject).to receive(:create_payment_intent).with(order).and_return(stripe_intent)
+      allow(subject).to receive(:set_order_status).and_return(order)
+
+      subject.create_purchase(order)
+    end
+
+    it 'assigns the correct attributes to an order' do
+      expect(order).to receive(:assign_attributes).with(
+        hash_including({
+          stripe_customer_id: 'cus_12345',
+          stripe_payment_intent_id: 'in_12345',
+          stripe_client_secret: 'cs_123456'
+        })
+      )
+      allow(subject).to receive(:create_payment_intent).and_return(stripe_intent)
+      allow(subject).to receive(:set_order_status).and_return(order)
+
+      subject.create_purchase(order)
+    end
+
+    it 'returns an order' do
+      allow(subject).to receive(:create_payment_intent).and_return(stripe_intent)
+      allow(subject).to receive(:set_order_status).and_return(order)
+
+      expect(subject.create_purchase(order)).to be_kind_of Order
+    end
+  end
+
+  describe '#set_order_status' do
+    let(:order) { create(:order) }
+
+    describe 'for 3DS payments' do
+      let(:stripe_intent) {
+        double(status: 'requires_action', next_action: double(type: 'use_stripe_sdk'))
+      }
+
+      it 'sets the status of the Order based on 3DS requirements (from Stripe)' do
+        expect(order.state).to eq 'pending'
+
+        subject.send(:set_order_status, stripe_intent, order)
+
+        expect(order.state).to eq 'pending_3d_secure'
+      end
+    end
+
+    describe 'for non-3DS payments' do
+      let(:failed_stripe_intent) { double(status: 'failed') }
+      let(:successful_stripe_intent) { double(status: 'succeeded') }
+
+      it 'sets the relevant Order status for failed PaymentIntents' do
+        expect(order.state).to eq 'pending'
+
+        subject.send(:set_order_status, failed_stripe_intent, order)
+
+        expect(order.state).to eq 'errored'
+      end
+
+      it 'sets the relevant Order status for successful PaymentIntents' do
+        expect(order.state).to eq 'pending'
+
+        subject.send(:set_order_status, successful_stripe_intent, order)
+
+        expect(order.state).to eq 'pending'
+      end
+    end 
+  end
+
+  describe '#confirm_purchase' do
+    let(:order) { build_stubbed(:order) }    
+
+    it 'calls transition[confirm_3d_secure] if the intent is successful' do
+      intent = double(status: 'succeeded')
+      allow(Stripe::PaymentIntent).to receive(:confirm).and_return(intent)
+      expect(order).to receive(:confirm_3d_secure)
+
+      order.confirm_payment_intent
+    end
+
+    it 'raises a LearnSignal::PaymentError if we get any Stripe::CardError' do
+      allow_any_instance_of(Stripe::PaymentIntent).to(
+        receive(:confirm).and_raise(Stripe::CardError)
+      )
+
+      expect{ order.confirm_purchase }.to raise_error{ Learnsignal::PaymentError }
     end
   end
 

@@ -37,17 +37,11 @@ class OrdersController < ApplicationController
   end
 
   def update
-    if @order.stripe? && @order.pending_3d_secure? &&
-       @order.confirm_payment_intent
-      render json: { order_id: @order.id, status: @order.state }, status: :ok
+    if @order.stripe? && @order.pending_3d_secure?
+      update_status(params[:status])
     else
-      render json: {
-        order_id: @order.id, status: @order.state,
-        error: {
-          message: 'Your payment request was declined. Please contact us for ' \
-          'assistance!'
-        }
-      }, status: :unprocessable_entity
+      raise(Learnsignal::PaymentError, 'Your payment was declined. Please ' \
+            'contact us for assistance!')
     end
   rescue Learnsignal::PaymentError => e
     render json: { error: { message: e.message } }, status: :unprocessable_entity
@@ -66,13 +60,6 @@ class OrdersController < ApplicationController
     end
   rescue Learnsignal::PaymentError => e
     render_general_html_error(@order.product_id, e.message)
-  end
-
-  def complete
-    return if (@order = Order.find_by(reference_guid: params[:reference_guid]))
-
-    redirect_to root_url
-    flash[:error] = 'Sorry something went wrong. Please try again or contact us for assistance.'
   end
 
   private
@@ -113,6 +100,19 @@ class OrdersController < ApplicationController
   end
 
   def set_order
-    @order = Order.find(params[:id]) if params[:id].present?
+    @order = Order.find_by(id: params[:id])
+  end
+
+  def update_status(status)
+    case status
+    when 'requires_confirmation'
+      @order.confirm_payment_intent
+    when 'succeeded'
+      @order.confirm_3d_secure unless @order.completed?
+    else
+      @order.mark_pending
+      raise Learnsignal::PaymentError, 'Your payment was declined. Please try again.'
+    end
+    render 'create', status: :ok
   end
 end
