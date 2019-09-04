@@ -1,54 +1,61 @@
 <template>
-  <div class="form-row form-horizontal">
-    <div class="row">
-      <h4>CBE Details</h4>
+  <div>
+    <h4>CBE Details</h4>
+    <div class="row ">
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="subjectCoursesSelect">Course</label>
+          <b-form-select v-model="subjectCourseId" :options="subjectCourses" id="subjectCoursesSelect" class="input-group input-group-lg">
+            <template slot="first">
+              <option :value="null" disabled>-- Please select a course --</option>
+            </template>
+          </b-form-select>
+        </div>
+      </div>
+
+      <div class="col-sm-6 ">
+        <b-form-group id="checkbox-input-group" class="mt-5 mx-4">
+          <b-form-checkbox v-model="active" id="active-checkbox">Active</b-form-checkbox>
+        </b-form-group>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="cbeName">Name</label>
+          <div class="input-group input-group-lg">
+            <input v-model="name" class="form-control" id="cbeName" placeholder="Name" />
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="form-group">
+          <label for="cbeExamTime">Time</label>
+          <div class="input-group input-group-lg">
+            <input v-model="examTime" class="form-control" id="cbeExamTime" placeholder="Time Limit"/>
+          </div>
+        </div>
+      </div>
+
       <div class="col-sm-12">
         <div class="form-group">
-          <label for="colFormLabelSm">Subject Course</label>
+          <label for="cbeAgreementContent">Agreement Text</label>
           <div class="input-group input-group-lg">
-            <select v-model="cbeSubjectCourseId" class="form-control custom-select">
-              <option class="col-md-8" v-for="course in subjectCourses" v-bind:value="course.id">
-                {{ course.name }}
-              </option>
-            </select>
+            <textarea v-model="agreementContent" class="form-control" id="cbeAgreementContent" placeholder="Agreement Text" ></textarea>
           </div>
         </div>
       </div>
 
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="colFormLabel">Name</label>
-          <div class="input-group input-group-lg">
-            <input v-model="cbeName" class="form-control" id="colFormLabel" placeholder="Name" />
-          </div>
-        </div>
+    </div>
 
-        <div class="form-group">
-          <label for="colFormLabel">Time</label>
-          <div class="input-group input-group-lg">
-            <input v-model="cbeExamTime" class="form-control" id="colFormLabel" placeholder="Time Limit"/>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="col-sm-6">
-        <div class="form-group">
-          <label for="colFormLabel">Total Score</label>
-          <div class="input-group input-group-lg">
-            <input v-model="cbeScore" class="form-control" id="colFormLabel" placeholder="Total Score"/>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="colFormLabel">Agreement Text</label>
-          <div class="input-group input-group-lg">
-            <input v-model="cbeAgreementContent" class="form-control" id="colFormLabel" placeholder="Agreement Text" />
-          </div>
-        </div>
-
+    <div class="row mt-3">
+      <div class="col-sm-12">
+        <!-- Save CBE -->
+        <button v-on:click="saveNewCBE" class="btn btn-primary">Save CBE</button>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -57,73 +64,70 @@
 
   export default {
     mounted() {
-      this.showSubjects();
+      this.getSubjects();
     },
     data: function() {
       return {
-        cbeName: null,
-        cbeExamTime: null,
-        cbeAgreementContent: null,
-        cbeActive: null,
-        cbeScore: null,
-        cbeSubjectCourseId: null,
+        name: null,
+        agreementContent: null,
+        examTime: null,
+        active: false,
+        subjectCourseId: null,
         subjectCourses: [],
+        createdCBE: []
       };
     },
-    methods: {
-      showSubjects: function (page, index) {
-        axios
-          .get("/api/v1/subject_courses/")
-          .then(response => {
-            this.subjectCourses = response.data;
-          })
-          .catch(e => {
-            console.log(e);
-
-          });
-      },
-
-    },
-    props: [
-      "showCBEDetails",
-      "selectedSubject"
-    ],
-
     watch: {
-      cbeName: function(val) {
-        this.$store.commit("setCbeName", this.cbeName);
+      name: function() {
+        this.$store.commit("setCbeName", this.name);
       },
-      cbeAgreementContent: function(val) {
-        this.$store.commit("setCbeAgreementContent", this.cbeAgreementContent);
+      agreementContent: function() {
+        this.$store.commit("setCbeAgreementContent", this.agreementContent);
       },
-      cbeExamTime: function(val) {
-        this.$store.commit("setCbeExamTime", this.cbeExamTime);
+      examTime: function() {
+        this.$store.commit("setCbeExamTime", this.examTime);
       },
-      cbeScore: function(val) {
-        this.$store.commit("setCbeScore", this.cbeScore);
+      subjectCourseId: function() {
+        this.$store.commit("setCbeSubjectCourseId", this.subjectCourseId);
       },
-      cbeSubjectCourseId: function(val) {
-        this.$store.commit("setCbeSubjectCourseId", this.cbeSubjectCourseId);
+      active: function() {
+        this.$store.commit("setCbeActive", this.active);
+      }
+    },
+    methods: {
+      getSubjects: function () {
+        axios
+                .get("/api/v1/subject_courses/")
+                .then(response => {
+                  this.subjectCourses = response.data;
+                })
+                .catch(e => {
+                  console.log(e);
+
+                });
       },
+      saveNewCBE: function() {
+        this.cbeDetails = {};
+        this.cbeDetails["name"] = this.$store.state.cbeDetails.cbeName;
+        this.cbeDetails["agreement_content"] = this.$store.state.cbeDetails.cbeAgreementContent;
+        this.cbeDetails["exam_time"] = this.$store.state.cbeDetails.cbeExamTime;
+        this.cbeDetails["active"] = this.$store.state.cbeDetails.cbeActive;
+        this.cbeDetails["subject_course_id"] = this.$store.state.cbeDetails.cbeSubjectCourseId;
+
+        axios
+                .post("/api/v1/cbes/", { cbe: this.cbeDetails })
+                .then(response => {
+                  this.createdCBE = response.data;
+                  if (this.createdCBE.id > 0) {
+                    this.$store.commit("setCbeId", this.createdCBE.id);
+                    this.$store.commit("hideDetailsForm", true);
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+      }
     }
+
   };
 </script>
-
-<style lang="scss" scoped>
-  input,
-  output,
-  textarea,
-  select,
-  button {
-    clear: both;
-    float: right;
-    width: 70%;
-  }
-
-  label {
-    float: left;
-    width: 30%;
-    text-align: right;
-    padding: 0.25em 1em 0 0;
-  }
-</style>
