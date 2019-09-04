@@ -13,7 +13,7 @@
     =stylesheet_link_tag 'application', media: 'all'
     =javascript_include_tag 'application', modernizr: :true
     -# VueJS include
-    = javascript_pack_tag 'application'
+    = javascript_pack_tag 'cbe_main'
 
     =render partial: 'layouts/google_tag_manager'
 
@@ -47,7 +47,6 @@
     -if Rails.env.production?
       =render partial: 'layouts/cookie_banner'
 
-  = javascript_pack_tag 'cbe_main'
 
   - if controller_name == 'cbes'
     %body.page-light

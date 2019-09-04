@@ -21,11 +21,9 @@ module Api
 
       def cbe_params
         params.require(:cbe).permit(:name,
-                                    :content,
                                     :exam_time,
                                     :agreement_content,
                                     :active,
-                                    :score,
                                     :subject_course_id)
       end
     end
