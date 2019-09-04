@@ -30,7 +30,7 @@ RSpec.describe Cbe, type: :model do
   describe 'Validations' do
     it { should validate_presence_of(:name) }
     xit { should validate_presence_of(:title) }
-    it { should validate_presence_of(:score) }
+    xit { should validate_presence_of(:score) }
     xit { should validate_presence_of(:content) }
     it { should validate_presence_of(:agreement_content) }
     it { should validate_presence_of(:subject_course_id) }
